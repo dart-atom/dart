@@ -7,8 +7,9 @@ homepage: https://github.com/dart-lang/atom-dartlang-experimental
 environment:
   sdk: '>=1.0.0 <2.0.0'
 
-#dependencies:
-#  lib_name: any
+dependencies:
+  logging: ^0.11.1
+
 dev_dependencies:
   grinder: ^0.7.0
   test: ^0.12.0

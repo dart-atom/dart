@@ -17,10 +17,10 @@ test() {
   log('test');
 }
 
-@Task()
+@DefaultTask()
 build() {
-  File inputFile = getFile('lib/atom_dart.dart');
-  File outputFile = getFile('lib/atom_dart.dart.js');
+  File inputFile = getFile('web/atom_dart.dart');
+  File outputFile = getFile('web/atom_dart.dart.js');
 
   Dart2js.compile(inputFile, csp: true);
   outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
@@ -28,9 +28,9 @@ build() {
 
 @Task()
 clean() {
-  delete(getFile('lib/atom_dart.dart.js'));
-  delete(getFile('lib/atom_dart.dart.js.deps'));
-  delete(getFile('lib/atom_dart.dart.js.map'));
+  delete(getFile('web/atom_dart.dart.js'));
+  delete(getFile('web/atom_dart.dart.js.deps'));
+  delete(getFile('web/atom_dart.dart.js.map'));
 }
 
 final String _jsPrefix = """
