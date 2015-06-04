@@ -2,23 +2,32 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'atom.dart';
+import 'atom/atom.dart';
 
-main() {
-  registerPackage(new AtomDartPackage());
-}
+main() => registerPackage(new AtomDartPackage());
 
 class AtomDartPackage extends AtomPackage {
   void packageActivated([Map state]) {
-    //atom.beep();
-
     atom.commands.add('atom-workspace', 'dart-lang:hello-world', (e) {
       atom.notifications.addInfo(
         'Hello world from dart-lang!', options: {'detail': 'Foo bar.'});
     });
+
+    atom.config.observe('dart-lang.sdkLocation', null, (value) {
+      print('SDK location = ${value}');
+    });
+
+    //atom.beep();
   }
 
-  void packageDeactivated() {
-
+  Map config() {
+    return {
+      'sdkLocation': {
+        'title': 'Dart SDK Location',
+        'description': 'The location of the Dart SDK',
+        'type': 'string',
+        'default': ''
+      }
+    };
   }
 }
