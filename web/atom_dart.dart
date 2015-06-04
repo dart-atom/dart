@@ -6,15 +6,14 @@ import 'package:atom_dart/atom/atom.dart';
 import 'package:logging/logging.dart';
 
 Logger _logger = new Logger("AtomDartPackage");
-main() {
 
+main() {
   Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen((LogRecord rec) {
     print('${rec.level.name}: ${rec.time}: ${rec.message}');
   });
 
   registerPackage(new AtomDartPackage());
-
 }
 
 class AtomDartPackage extends AtomPackage {
@@ -23,6 +22,13 @@ class AtomDartPackage extends AtomPackage {
     atom.commands.add('atom-workspace', 'dart-lang:hello-world', (e) {
       atom.notifications.addInfo(
         'Hello world from dart-lang!', options: {'detail': 'Foo bar.'});
+
+      BufferedProcess.create('ls',
+        args: ['-l'],
+        stdout: (str) => print("stdout: ${str}"),
+        stderr: (str) => print("stderr: ${str}"),
+        exit: (code) => print('exit code = ${code}'));
+
       _logger.fine("Hello notification from dart-lang");
     });
 

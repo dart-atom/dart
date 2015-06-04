@@ -111,3 +111,28 @@ class AtomEvent extends ProxyHolder {
   void stopPropagation() => invoke('stopPropagation');
   void stopImmediatePropagation() => invoke('stopImmediatePropagation');
 }
+
+class BufferedProcess extends ProxyHolder {
+  static BufferedProcess create(String command, {
+      List<String> args,
+      void stdout(String str),
+      void stderr(String str),
+      void exit(num code)
+  }) {
+    Map map = {'command': command};
+
+    if (args != null) map['args'] = args;
+    if (stdout != null) map['stdout'] = stdout;
+    if (stderr != null) map['stderr'] = stderr;
+    if (exit != null) map['exit'] = exit;
+
+    JsObject ctor = require('atom')['BufferedProcess'];
+    return new BufferedProcess._(new JsObject(ctor, [jsify(map)]));
+  }
+
+  BufferedProcess._(JsObject object) : super(object);
+
+  void kill() => invoke('kill');
+}
+
+// new JsObject(context['BufferedProcess'], [3, 4])

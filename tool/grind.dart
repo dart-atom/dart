@@ -17,7 +17,7 @@ test() {
   log('test');
 }
 
-@Task()
+@DefaultTask()
 build() {
   File inputFile = getFile('web/atom_dart.dart');
   File outputFile = getFile('web/atom_dart.dart.js');

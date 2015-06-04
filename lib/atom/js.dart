@@ -9,6 +9,8 @@ import 'dart:js';
 
 JsObject jsify(Map map) => new JsObject.jsify(map);
 
+JsObject require(String input) => context.callMethod("require", [input]);
+
 class ProxyHolder {
   final JsObject obj;
 
