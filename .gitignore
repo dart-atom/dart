@@ -8,3 +8,7 @@ packages
 pubspec.lock
 npm-debug.log
 node_modules
+
+*.dart.js
+*.dart.js.deps
+*.dart.js.map

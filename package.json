@@ -1,6 +1,6 @@
 {
   "name": "dart-lang",
-  "main": "./lib/temp",
+  "main": "./lib/atom_dart.dart.js",
   "version": "0.0.0",
   "description": "An experimental Dart plugin for Atom",
   "keywords": [

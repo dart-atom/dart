@@ -10,4 +10,5 @@ environment:
 #dependencies:
 #  lib_name: any
 dev_dependencies:
-  test: any
+  grinder: ^0.7.0
+  test: ^0.12.0
