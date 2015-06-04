@@ -1,0 +1,18 @@
+{
+  "name": "dart-lang",
+  "main": "./lib/temp",
+  "version": "0.0.0",
+  "description": "An experimental Dart plugin for Atom",
+  "keywords": [
+  ],
+  "activationCommands": {
+    "atom-workspace": "dart-lang:hello-world"
+  },
+  "repository": "https://github.com/dart-lang/atom-dartlang-experimental",
+  "license": "BSD",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}
