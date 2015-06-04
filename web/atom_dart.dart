@@ -2,23 +2,39 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'atom/atom.dart';
+import 'package:atom_dart/atom/atom.dart';
+import 'package:logging/logging.dart';
 
-main() => registerPackage(new AtomDartPackage());
+Logger _logger = new Logger("AtomDartPackage");
+main() {
+
+  Logger.root.level = Level.INFO;
+  Logger.root.onRecord.listen((LogRecord rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
+
+  registerPackage(new AtomDartPackage());
+
+}
 
 class AtomDartPackage extends AtomPackage {
   void packageActivated([Map state]) {
+
     atom.commands.add('atom-workspace', 'dart-lang:hello-world', (e) {
       atom.notifications.addInfo(
         'Hello world from dart-lang!', options: {'detail': 'Foo bar.'});
+      _logger.fine("Hello notification from dart-lang");
     });
 
     atom.config.observe('dart-lang.sdkLocation', null, (value) {
-      print('SDK location = ${value}');
+      _logger.info('SDK location = ${value}');
     });
 
     //atom.beep();
   }
+
+  void packageDeactivated() =>
+    _logger.fine('AtomDartPackage.packageDeactivated');
 
   Map config() {
     return {
