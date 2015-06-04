@@ -2,4 +2,23 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-main() => print('foo');
+import 'atom.dart';
+
+main() {
+  registerPackage(new AtomDartPackage());
+}
+
+class AtomDartPackage extends AtomPackage {
+  void packageActivated([Map state]) {
+    //atom.beep();
+
+    atom.commands.add('atom-workspace', 'dart-lang:hello-world', (e) {
+      atom.notifications.addInfo(
+        'Hello world from dart-lang!', options: {'detail': 'Foo bar.'});
+    });
+  }
+
+  void packageDeactivated() {
+
+  }
+}
