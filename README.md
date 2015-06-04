@@ -18,3 +18,9 @@ To work on `atom-dartlang-experimental`:
 - re-start Atom
 
 The plugin will be active in your copy of Atom.
+
+When making changes:
+
+- `type type type...`
+- from the command line, run `grind build`. This will re-compile the javascript.
+- from atom, hit `ctrl-option-command-l`. This will re-start atom.

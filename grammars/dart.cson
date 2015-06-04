@@ -83,7 +83,7 @@
     'patterns': [
       {
         'begin': '/\\*\\*'
-        'end': '\\*\\*/'
+        'end': '\\*/'
         'name': 'comment.block-dartdoc.dart'
         'patterns': [
           {
