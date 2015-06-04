@@ -6,10 +6,9 @@ import 'package:atom_dart/atom.dart';
 import 'package:logging/logging.dart';
 
 Logger _logger = new Logger("AtomDartPackage");
-
 main() {
 
-  Logger.root.level = Level.ALL;
+  Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen((LogRecord rec) {
     print('${rec.level.name}: ${rec.time}: ${rec.message}');
   });
@@ -20,20 +19,31 @@ main() {
 
 class AtomDartPackage extends AtomPackage {
   void packageActivated([Map state]) {
-    _logger.fine('AtomDartPackage.packageActivated, state: $state');
-
-    //atom.beep();
 
     atom.commands.add('atom-workspace', 'dart-lang:hello-world', (e) {
       atom.notifications.addInfo(
         'Hello world from dart-lang!', options: {'detail': 'Foo bar.'});
-      _logger.info("Hello notification from dart-lang");
+      _logger.fine("Hello notification from dart-lang");
     });
+
+    atom.config.observe('dart-lang.sdkLocation', null, (value) {
+      _logger.info('SDK location = ${value}');
+    });
+
+    //atom.beep();
   }
 
-  void packageDeactivated() {
+  void packageDeactivated() =>
     _logger.fine('AtomDartPackage.packageDeactivated');
 
-
+  Map config() {
+    return {
+      'sdkLocation': {
+        'title': 'Dart SDK Location',
+        'description': 'The location of the Dart SDK',
+        'type': 'string',
+        'default': ''
+      }
+    };
   }
 }
