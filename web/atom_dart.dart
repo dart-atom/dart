@@ -18,6 +18,7 @@ main() {
 
 class AtomDartPackage extends AtomPackage {
   void packageActivated([Map state]) {
+    _logger.fine("packageActivated");
 
     atom.commands.add('atom-workspace', 'dart-lang:hello-world', (e) {
       atom.notifications.addInfo(
@@ -28,19 +29,16 @@ class AtomDartPackage extends AtomPackage {
         stdout: (str) => print("stdout: ${str}"),
         stderr: (str) => print("stderr: ${str}"),
         exit: (code) => print('exit code = ${code}'));
-
-      _logger.fine("Hello notification from dart-lang");
     });
 
     atom.config.observe('dart-lang.sdkLocation', null, (value) {
       _logger.info('SDK location = ${value}');
     });
-
-    //atom.beep();
   }
 
-  void packageDeactivated() =>
-    _logger.fine('AtomDartPackage.packageDeactivated');
+  void packageDeactivated() {
+    _logger.fine('packageDeactivated');
+  }
 
   Map config() {
     return {

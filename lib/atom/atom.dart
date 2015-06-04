@@ -134,5 +134,3 @@ class BufferedProcess extends ProxyHolder {
 
   void kill() => invoke('kill');
 }
-
-// new JsObject(context['BufferedProcess'], [3, 4])
