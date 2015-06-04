@@ -17,10 +17,8 @@ To work on `atom-dartlang-experimental`:
 - from the repo directory, type `apm link` (you can install `apm` via the `Atom > Install Shell Commands` menu item)
 - re-start Atom
 
-The plugin will be active in your copy of Atom.
-
-When making changes:
+The plugin will be active in your copy of Atom. When making changes:
 
 - `type type type...`
-- from the command line, run `grind build`. This will re-compile the javascript.
-- from atom, hit `ctrl-option-command-l`. This will re-start atom.
+- from the command line, run `grind build`; this will re-compile the javascript
+- from atom, hit `ctrl-option-command-l`; this will re-start atom
