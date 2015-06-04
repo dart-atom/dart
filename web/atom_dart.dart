@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:atom_dart/atom.dart';
+import 'package:atom_dart/atom/atom.dart';
 import 'package:logging/logging.dart';
 
 Logger _logger = new Logger("AtomDartPackage");
