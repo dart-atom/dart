@@ -11,6 +11,12 @@ class AtomDartPackage extends AtomPackage {
     atom.commands.add('atom-workspace', 'dart-lang:hello-world', (e) {
       atom.notifications.addInfo(
         'Hello world from dart-lang!', options: {'detail': 'Foo bar.'});
+
+      BufferedProcess.create('ls',
+        args: ['-l'],
+        stdout: (str) => print("stdout: ${str}"),
+        stderr: (str) => print("stderr: ${str}"),
+        exit: (code) => print('exit code = ${code}'));
     });
 
     atom.config.observe('dart-lang.sdkLocation', null, (value) {
