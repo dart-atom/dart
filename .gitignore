@@ -6,3 +6,5 @@
 build/
 packages
 pubspec.lock
+npm-debug.log
+node_modules
