@@ -11,26 +11,31 @@ import 'package:grinder/grinder.dart';
 main(List args) => grind(args);
 
 @Task()
-test() {
-  // TODO:
-
-  log('test');
+analyze() {
+  new PubApp.global('tuneup').run(['check']);
 }
 
 @DefaultTask()
 build() {
-  File inputFile = getFile('web/atom_dart.dart');
-  File outputFile = getFile('web/atom_dart.dart.js');
+  File inputFile = getFile('web/entry.dart');
+  File outputFile = getFile('web/entry.dart.js');
 
   Dart2js.compile(inputFile, csp: true);
   outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
 }
 
 @Task()
+test() {
+  // TODO:
+
+  log('TODO: test');
+}
+
+@Task()
 clean() {
-  delete(getFile('web/atom_dart.dart.js'));
-  delete(getFile('web/atom_dart.dart.js.deps'));
-  delete(getFile('web/atom_dart.dart.js.map'));
+  delete(getFile('web/entry.dart.js'));
+  delete(getFile('web/entry.dart.js.deps'));
+  delete(getFile('web/entry.dart.js.map'));
 }
 
 final String _jsPrefix = """
@@ -46,5 +51,5 @@ self.Object = Object;
 
 String _patchJSFile(String input) {
   return _jsPrefix +
-      input.replaceAll(r'if (typeof document === "undefined") {', "if (true) {");
+      input.replaceAll(r'if (typeof document === "undefined") {', 'if (true) {');
 }

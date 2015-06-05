@@ -9,7 +9,7 @@ import 'dart:js';
 
 JsObject jsify(Map map) => new JsObject.jsify(map);
 
-JsObject require(String input) => context.callMethod("require", [input]);
+JsObject require(String input) => context.callMethod('require', [input]);
 
 class ProxyHolder {
   final JsObject obj;
@@ -30,5 +30,41 @@ class ProxyHolder {
     } else {
       return obj.callMethod(method);
     }
+  }
+
+  Disposable eventDisposable(String eventName, void callback(data)) {
+    return new Disposable(invoke(eventName, callback));
+  }
+}
+
+class Promise<T> extends ProxyHolder {
+  Promise(JsObject object) : super(object);
+
+  void then(void thenCallback(T response), [void errorCallback(e)]) {
+    invoke("then", thenCallback, errorCallback);
+  }
+
+  void error(void errorCallback(e)) => invoke("catch", errorCallback);
+}
+
+class Disposable extends ProxyHolder {
+  Disposable(JsObject object) : super(object);
+
+  void dispose() => invoke('dispose');
+}
+
+class Disposables {
+  List<Disposable> _disposables = [];
+
+  void add(Disposable disposable) {
+    _disposables.add(disposable);
+  }
+
+  void dispose() {
+    for (Disposable disposable in _disposables) {
+      disposable.dispose();
+    }
+
+    _disposables.clear();
   }
 }

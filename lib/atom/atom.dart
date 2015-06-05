@@ -5,12 +5,12 @@
 /// A Dart wrapper around the [Atom](https://atom.io/docs/api) apis.
 library atom;
 
-import 'dart:html';
+import 'dart:html' hide File, Directory;
 import 'dart:js';
 
 import 'js.dart';
 
-export 'js.dart' show ProxyHolder;
+export 'js.dart' show Disposable, Disposables, Promise, ProxyHolder;
 
 AtomPackage _package;
 
@@ -20,11 +20,8 @@ final Atom atom = new Atom();
 /// An Atom package. Register your package using [registerPackage].
 abstract class AtomPackage {
   Map config() => {};
-
   void packageActivated([Map state]) { }
-
   void packageDeactivated() { }
-
   Map serialize() => {};
 }
 
@@ -52,27 +49,45 @@ class Atom extends ProxyHolder {
   CommandRegistry _commands;
   Config _config;
   NotificationManager _notifications;
+  PackageManager _packages;
+  Project _project;
+  Workspace _workspace;
 
   Atom() : super(context['atom']) {
     _commands = new CommandRegistry(obj['commands']);
     _config = new Config(obj['config']);
     _notifications = new NotificationManager(obj['notifications']);
+    _packages = new PackageManager(obj['packages']);
+    _project = new Project(obj['project']);
+    _workspace = new Workspace(obj['workspace']);
   }
 
   CommandRegistry get commands => _commands;
   Config get config => _config;
   NotificationManager get notifications => _notifications;
+  PackageManager get packages => _packages;
+  Project get project => _project;
+  Workspace get workspace => _workspace;
 
   void beep() => invoke('beep');
+}
+
+/// Represents the state of the user interface for the entire window. Interact
+/// with this object to open files, be notified of current and future editors,
+/// and manipulate panes. To add panels, you'll need to use the [WorkspaceView]
+/// class for now until we establish APIs at the model layer.
+class Workspace extends ProxyHolder {
+  Workspace(JsObject object) : super(object);
+
+  // TODO:
+
 }
 
 class CommandRegistry extends ProxyHolder {
   CommandRegistry(JsObject object) : super(object);
 
   void add(String target, String commandName, void callback(AtomEvent event)) {
-    invoke('add', target, commandName, (e) {
-      callback(new AtomEvent(e));
-    });
+    invoke('add', target, commandName, (e) => callback(new AtomEvent(e)));
   }
 
   void dispatch(Element target, String commandName) =>
@@ -99,15 +114,125 @@ class Config extends ProxyHolder {
 class NotificationManager extends ProxyHolder {
   NotificationManager(JsObject object) : super(object);
 
+  void addSuccess(String message, {Map options}) =>
+      invoke('addSuccess', message, options);
+
   /// Show the given informational message. [options] can contain a `detail`
   /// message.
   void addInfo(String message, {Map options}) =>
       invoke('addInfo', message, options);
+
+  void addWarning(String message, {Map options}) =>
+      invoke('addWarning', message, options);
+
+  void addError(String message, {Map options}) =>
+      invoke('addError', message, options);
+
+  void addFatalError(String message, {Map options}) =>
+      invoke('addFatalError', message, options);
+}
+
+/// Package manager for coordinating the lifecycle of Atom packages. Packages
+/// can be loaded, activated, and deactivated, and unloaded.
+class PackageManager extends ProxyHolder {
+  PackageManager(JsObject object) : super(object);
+
+  /// Is the package with the given name bundled with Atom?
+  bool isBundledPackage(name) => invoke('isBundledPackage', name);
+
+  bool isPackageLoaded(String name) => invoke('isPackageLoaded', name);
+
+  bool isPackageDisabled(String name) => invoke('isPackageDisabled', name);
+
+  bool isPackageActive(String name) => invoke('isPackageActive', name);
+
+  List<String> getAvailablePackageNames() => invoke('getAvailablePackageNames');
+}
+
+/// Represents a project that's opened in Atom.
+class Project extends ProxyHolder {
+  Project(JsObject object) : super(object);
+
+  /// Fire an event when the project paths change. Each event is an list of
+  /// project paths.
+  Disposable onDidChangePaths(void callback(List<String> paths)) =>
+      eventDisposable('onDidChangePaths', callback);
+
+  List<String> getPaths() => invoke('getPaths');
+
+  List<Directory> getDirectories() {
+    return invoke('getDirectories').map((dir) => new Directory(dir)).toList();
+  }
+
+  /// Get the path to the project directory that contains the given path, and
+  /// the relative path from that project directory to the given path. Returns
+  /// an array with two elements: `projectPath` - the string path to the project
+  /// directory that contains the given path, or `null` if none is found.
+  /// `relativePath` - the relative path from the project directory to the given
+  /// path.
+  List<String> relativizePath(String fullPath) =>
+      invoke('relativizePath', fullPath);
+
+  /// Determines whether the given path (real or symbolic) is inside the
+  /// project's directory. This method does not actually check if the path
+  /// exists, it just checks their locations relative to each other.
+  bool contains(String pathToCheck) => invoke('contains', pathToCheck);
+}
+
+abstract class Entry extends ProxyHolder {
+  Entry(JsObject object) : super(object);
+
+  // TODO: onDidChange(callback)
+
+  bool isFile() => invoke('isFile');
+  bool isDirectory() => invoke('isDirectory');
+  bool existsSync() => invoke('existsSync');
+
+  String getBaseName() => invoke('getBaseName');
+  String getPath() => invoke('getPath');
+  String getRealPathSync() => invoke('getRealPathSync');
+
+  Directory getParent() => new Directory(invoke('getParent'));
+
+  String toString() => getPath();
+}
+
+class File extends Entry {
+  File(JsObject object) : super(object);
+
+  /// Get the SHA-1 digest of this file.
+  String getDigestSync() => invoke('getDigestSync');
+
+  String getEncoding() => invoke('getEncoding');
+
+  /// Reads the contents of the file. [flushCache] indicates whether to require
+  /// a direct read or if a cached copy is acceptable.
+  Promise<String> read([bool flushCache]) =>
+      new Promise(invoke('read', flushCache));
+
+  /// Overwrites the file with the given text.
+  void writeSync(String text) => invoke('writeSync', text);
+}
+
+class Directory extends Entry {
+  Directory(JsObject object) : super(object);
+
+  File getFile(filename) => new File(invoke('getFile', filename));
+  Directory getSubdirectory(String dirname) =>
+      new Directory(invoke('getSubdirectory', dirname));
+
+  List<Entry> getEntriesSync() {
+    // TODO: test this
+    return invoke('getEntriesSync').map((entry) {
+      return entry['isFile'] ? new File(entry) : new Directory(entry);
+    }).toList();
+  }
 }
 
 class AtomEvent extends ProxyHolder {
   AtomEvent(JsObject object) : super(object);
 
+  void abortKeyBinding() => invoke('abortKeyBinding');
   void stopPropagation() => invoke('stopPropagation');
   void stopImmediatePropagation() => invoke('stopImmediatePropagation');
 }
