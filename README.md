@@ -14,7 +14,8 @@ To work on `atom-dartlang-experimental`:
 
 - install [Atom](https://atom.io/)
 - clone this repo
-- from the repo directory, type `apm link` (you can install `apm` via the `Atom > Install Shell Commands` menu item)
+- from the repo directory, type `apm link` (you can install `apm` via the
+  `Atom > Install Shell Commands` menu item)
 - re-start Atom
 
 The plugin will be active in your copy of Atom. When making changes:
