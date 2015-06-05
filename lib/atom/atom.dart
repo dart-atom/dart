@@ -5,17 +5,21 @@
 /// A Dart wrapper around the [Atom](https://atom.io/docs/api) apis.
 library atom;
 
+import 'dart:async';
 import 'dart:html' hide File, Directory;
 import 'dart:js';
 
 import 'js.dart';
+import '../utils.dart';
 
-export 'js.dart' show Disposable, Disposables, Promise, ProxyHolder;
+export 'js.dart' show Promise, ProxyHolder;
 
 AtomPackage _package;
 
 /// The singleton instance of [Atom].
 final Atom atom = new Atom();
+
+final JsObject _ctx = context['atom'];
 
 /// An Atom package. Register your package using [registerPackage].
 abstract class AtomPackage {
@@ -53,7 +57,7 @@ class Atom extends ProxyHolder {
   Project _project;
   Workspace _workspace;
 
-  Atom() : super(context['atom']) {
+  Atom() : super(_ctx) {
     _commands = new CommandRegistry(obj['commands']);
     _config = new Config(obj['config']);
     _notifications = new NotificationManager(obj['notifications']);
@@ -105,9 +109,9 @@ class Config extends ProxyHolder {
 
   /// Add a listener for changes to a given key path. This will immediately call
   /// your callback with the current value of the config entry.
-  void observe(String keyPath, Map options, void callback(value)) {
+  Disposable observe(String keyPath, Map options, void callback(value)) {
     if (options == null) options = {};
-    invoke('observe', keyPath, options, callback);
+    return new JsDisposable(invoke('observe', keyPath, options, callback));
   }
 }
 
@@ -155,8 +159,7 @@ class Project extends ProxyHolder {
 
   /// Fire an event when the project paths change. Each event is an list of
   /// project paths.
-  Disposable onDidChangePaths(void callback(List<String> paths)) =>
-      eventDisposable('onDidChangePaths', callback);
+  Stream<List<String>> get onDidChangePaths => eventStream('onDidChangePaths');
 
   List<String> getPaths() => invoke('getPaths');
 
@@ -207,15 +210,18 @@ class File extends Entry {
 
   /// Reads the contents of the file. [flushCache] indicates whether to require
   /// a direct read or if a cached copy is acceptable.
-  Promise<String> read([bool flushCache]) =>
-      new Promise(invoke('read', flushCache));
+  Future<String> read([bool flushCache]) =>
+      promiseToFuture(invoke('read', flushCache));
 
   /// Overwrites the file with the given text.
   void writeSync(String text) => invoke('writeSync', text);
+
+  operator==(other) => other is File && getPath() == other.getPath();
 }
 
 class Directory extends Entry {
   Directory(JsObject object) : super(object);
+  Directory.fromPath(String path) : super(_create('Directory', path));
 
   File getFile(filename) => new File(invoke('getFile', filename));
   Directory getSubdirectory(String dirname) =>
@@ -227,6 +233,8 @@ class Directory extends Entry {
       return entry['isFile'] ? new File(entry) : new Directory(entry);
     }).toList();
   }
+
+  operator==(other) => other is Directory && getPath() == other.getPath();
 }
 
 class AtomEvent extends ProxyHolder {
@@ -258,4 +266,8 @@ class BufferedProcess extends ProxyHolder {
   BufferedProcess._(JsObject object) : super(object);
 
   void kill() => invoke('kill');
+}
+
+JsObject _create(String className, dynamic arg) {
+  return new JsObject(require('atom')[className], [arg]);
 }

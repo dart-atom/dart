@@ -5,11 +5,25 @@
 /// JavaScript utility code.
 library atom.js;
 
+import 'dart:async';
 import 'dart:js';
+
+import '../utils.dart';
 
 JsObject jsify(Map map) => new JsObject.jsify(map);
 
 JsObject require(String input) => context.callMethod('require', [input]);
+
+Future promiseToFuture(promise) {
+  if (promise is JsObject) promise = new Promise(promise);
+  Completer completer = new Completer();
+  promise.then((result) {
+    completer.complete(result);
+  }, (error) {
+    completer.completeError(error);
+  });
+  return completer.future;
+}
 
 class ProxyHolder {
   final JsObject obj;
@@ -32,8 +46,13 @@ class ProxyHolder {
     }
   }
 
-  Disposable eventDisposable(String eventName, void callback(data)) {
-    return new Disposable(invoke(eventName, callback));
+  Stream eventStream(String eventName) {
+    Disposable disposable;
+    StreamController<List<String>> controller = new StreamController.broadcast(
+        onCancel: () => disposable.dispose(), sync: true);
+    disposable = new JsDisposable(
+        invoke(eventName, (evt) => controller.add(evt)));
+    return controller.stream;
   }
 }
 
@@ -47,24 +66,8 @@ class Promise<T> extends ProxyHolder {
   void error(void errorCallback(e)) => invoke("catch", errorCallback);
 }
 
-class Disposable extends ProxyHolder {
-  Disposable(JsObject object) : super(object);
+class JsDisposable extends ProxyHolder implements Disposable {
+  JsDisposable(JsObject object) : super(object);
 
   void dispose() => invoke('dispose');
-}
-
-class Disposables {
-  List<Disposable> _disposables = [];
-
-  void add(Disposable disposable) {
-    _disposables.add(disposable);
-  }
-
-  void dispose() {
-    for (Disposable disposable in _disposables) {
-      disposable.dispose();
-    }
-
-    _disposables.clear();
-  }
 }
