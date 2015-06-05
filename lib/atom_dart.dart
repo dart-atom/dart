@@ -30,7 +30,9 @@ class AtomDartPackage extends AtomPackage {
     sdkManager = new SdkManager();
     sdkManager.onSdkChange.listen((Sdk sdk) {
       print("sdk changed to ${sdk}");
-      sdk.getVersion().then((ver) => print("version is ${ver}"));
+      if (sdk != null) {
+        sdk.getVersion().then((ver) => print("version is ${ver}"));
+      }
     });
     disposables.add(sdkManager);
 

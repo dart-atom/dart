@@ -28,9 +28,12 @@ build() {
 @Task()
 test() {
   // TODO:
-
   log('TODO: test');
 }
+
+@Task()
+@Depends(analyze, build, test)
+bot() => null;
 
 @Task()
 clean() {
