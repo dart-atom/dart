@@ -20,6 +20,7 @@ build() {
   File inputFile = getFile('web/entry.dart');
   File outputFile = getFile('web/entry.dart.js');
 
+  // --trust-type-annotations? --trust-primitives?
   Dart2js.compile(inputFile, csp: true);
   outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
 }

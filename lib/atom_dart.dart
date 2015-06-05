@@ -4,22 +4,35 @@
 
 library atom.dart;
 
-import 'package:atom_dart/atom/atom.dart';
 import 'package:logging/logging.dart';
+
+import 'atom/atom.dart';
+import 'sdk.dart';
+import 'utils.dart';
 
 export 'package:atom_dart/atom/atom.dart' show registerPackage;
 
 Logger _logger = new Logger("atom-dart");
 
 class AtomDartPackage extends AtomPackage {
-  Disposables disposables = new Disposables();
+  final Disposables disposables = new Disposables();
+  final Streams subscriptions = new Streams();
+
+  SdkManager sdkManager;
 
   void packageActivated([Map state]) {
     _logger.fine("packageActivated");
 
-    disposables.add(atom.project.onDidChangePaths((e) {
+    subscriptions.add(atom.project.onDidChangePaths.listen((e) {
       print("dirs = ${e}");
     }));
+
+    sdkManager = new SdkManager();
+    sdkManager.onSdkChange.listen((Sdk sdk) {
+      print("sdk changed to ${sdk}");
+      sdk.getVersion().then((ver) => print("version is ${ver}"));
+    });
+    disposables.add(sdkManager);
 
     atom.commands.add('atom-workspace', 'dart-lang:hello-world', (e) {
       atom.notifications.addInfo(
@@ -33,15 +46,12 @@ class AtomDartPackage extends AtomPackage {
 
       print("directories = ${atom.project.getDirectories()}");
     });
-
-    atom.config.observe('dart-lang.sdkLocation', null, (value) {
-      _logger.info('SDK location = ${value}');
-    });
   }
 
   void packageDeactivated() {
     _logger.fine('packageDeactivated');
     disposables.dispose();
+    subscriptions.cancel();
   }
 
   Map config() {
