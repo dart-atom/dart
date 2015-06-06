@@ -8,7 +8,7 @@ library atom.js;
 import 'dart:async';
 import 'dart:js';
 
-import '../utils.dart';
+import 'utils.dart';
 
 JsObject jsify(Map map) => new JsObject.jsify(map);
 

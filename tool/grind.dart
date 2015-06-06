@@ -50,10 +50,13 @@ self.window = window;
 self.atom = atom;
 self.exports = exports;
 self.Object = Object;
+self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
 
 """;
 
 String _patchJSFile(String input) {
-  return _jsPrefix +
-      input.replaceAll(r'if (typeof document === "undefined") {', 'if (true) {');
+  input = input.replaceAll(
+      'if (document.currentScript) {',
+      'if (true) { // document.currentScript');
+  return _jsPrefix + input;
 }

@@ -6,26 +6,24 @@ library atom.dart;
 
 import 'package:logging/logging.dart';
 
-import 'atom/atom.dart';
+import 'atom.dart';
 import 'sdk.dart';
 import 'utils.dart';
+import 'impl/rebuild.dart';
+import 'impl/smoketest.dart';
 
-export 'package:atom_dart/atom/atom.dart' show registerPackage;
+export 'atom.dart' show registerPackage;
 
 Logger _logger = new Logger("atom-dart");
 
 class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
-  final Streams subscriptions = new Streams();
+  final StreamSubscriptions subscriptions = new StreamSubscriptions();
 
   SdkManager sdkManager;
 
   void packageActivated([Map state]) {
     _logger.fine("packageActivated");
-
-    subscriptions.add(atom.project.onDidChangePaths.listen((e) {
-      print("dirs = ${e}");
-    }));
 
     sdkManager = new SdkManager();
     sdkManager.onSdkChange.listen((Sdk sdk) {
@@ -36,17 +34,13 @@ class AtomDartPackage extends AtomPackage {
     });
     disposables.add(sdkManager);
 
-    atom.commands.add('atom-workspace', 'dart-lang:hello-world', (e) {
-      atom.notifications.addInfo(
-        'Hello world from dart-lang!', options: {'detail': 'Foo bar.'});
+    // Register commands.
+    atom.commands.add('atom-workspace', 'dart-lang:smoke-test', (e) {
+      smokeTest();
+    });
 
-      // BufferedProcess.create('ls',
-      //   args: ['-l'],
-      //   stdout: (str) => print("stdout: ${str}"),
-      //   stderr: (str) => print("stderr: ${str}"),
-      //   exit: (code) => print('exit code = ${code}'));
-
-      print("directories = ${atom.project.getDirectories()}");
+    atom.commands.add('atom-workspace', 'dart-lang:rebuild-restart', (e) {
+      new RebuildJob().start();
     });
   }
 

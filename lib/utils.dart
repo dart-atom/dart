@@ -26,7 +26,7 @@ class Disposables implements Disposable {
   }
 }
 
-class Streams {
+class StreamSubscriptions {
   List<StreamSubscription> _subscriptions = [];
 
   void add(StreamSubscription subscription) {
