@@ -46,15 +46,19 @@
   }
 ]
 'repository':
-  # Parsing the interior of a dartdoc comment: ///{DART_DOC_INTERIOR}
-  # Not a top-level component
   'dartdoc':
     'patterns': [
       {
         'match': '\\[(.*?)\\]'
         'captures':
           '1':
-            'name': 'dartdoc.reference.dart'
+            'name': 'variable.name.source.dart'
+      }
+      {
+        'match': '`(.*?)`'
+        'captures':
+          '1':
+            'name': 'variable.other.source.dart'
       }
     ]
   'comments':
@@ -73,9 +77,6 @@
         'include': '#comments-doc'
       }
       {
-        'include': 'text.html.javadoc'
-      }
-      {
         'include': '#comments-inline'
       }
     ]
@@ -84,11 +85,8 @@
       {
         'begin': '/\\*\\*'
         'end': '\\*/'
-        'name': 'comment.block-dartdoc.dart'
+        'name': 'comment.block.documentation.dart'
         'patterns': [
-          {
-            'include': 'source.gfm'
-          }
           {
             'include': '#dartdoc'
           }
@@ -101,13 +99,10 @@
         'match': '(///)\\s*(.*?)$'
         'captures':
           '1':
-            'name': 'comment.triple-slash.dart'
+            'name': 'comment.block.triple-slash.dart'
           '2':
-            'name': 'source.gfm.comment.dartdoc.dart'
+            'name': 'comment.block.documentation.dart'
             'patterns': [
-              {
-                'include': 'source.gfm'
-              }
               {
                 'include': '#dartdoc'
               }

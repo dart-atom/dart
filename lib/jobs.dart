@@ -30,6 +30,8 @@ class JobManager {
 
   JobManager();
 
+  /// Return the active [Job]. This can return `null` if there is no currently
+  /// executing job.
   Job get activeJob {
     JobInstance instance = _jobs.firstWhere((j) => j.isRunning, orElse: () => null);
     return instance == null ? null : instance.job;
