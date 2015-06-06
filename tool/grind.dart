@@ -26,10 +26,7 @@ build() {
 }
 
 @Task()
-test() {
-  // TODO:
-  log('TODO: test');
-}
+test() => new PubApp.local('test').run(['-rexpanded']);
 
 @Task()
 @Depends(analyze, build, test)

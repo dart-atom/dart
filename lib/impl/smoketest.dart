@@ -7,6 +7,7 @@ library atom.smoketest;
 import 'dart:async';
 
 import '../atom.dart';
+import '../state.dart';
 
 void smokeTest() {
   // files
@@ -16,15 +17,14 @@ void smokeTest() {
   Directory dir = dirs.first;
   _printDir(dir);
   _printDir(dir.getParent());
-  // TODO: getEntriesSync currently does not work.
-  // List<Entry> children = dir.getEntriesSync();
-  // File childFile = children.firstWhere((e) => e is File);
-  // _printFile(childFile);
-  // _printFile(dir.getFile(childFile.getBaseName()));
-  // childFile.read().then((contents) => print('read file contents for ${childFile}'));
-  // Directory childDir = children.firstWhere((e) => e is Directory);
-  // _printDir(childDir);
-  // _printDir(dir.getSubdirectory(childDir.getBaseName()));
+  List<Entry> children = dir.getEntriesSync();
+  File childFile = children.firstWhere((e) => e is File);
+  _printFile(childFile);
+  _printFile(dir.getFile(childFile.getBaseName()));
+  childFile.read().then((contents) => print('read file contents for ${childFile}'));
+  Directory childDir = children.firstWhere((e) => e is Directory);
+  _printDir(childDir);
+  _printDir(dir.getSubdirectory(childDir.getBaseName()));
 
   // futures
   new Future(() => print('futures work ctor'));
@@ -45,9 +45,13 @@ void smokeTest() {
 
   // TODO:
   // events
-  // subscriptions.add(atom.project.onDidChangePaths.listen((e) {
+  // atom.project.onDidChangePaths.listen((e) {
   //   print("dirs = ${e}");
-  // }));
+  // });
+
+  // SdkManager
+  var sdk = sdkManager.sdk;
+  print('dart sdk: ${sdk}');
 }
 
 void _printEntry(Entry entry) {

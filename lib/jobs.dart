@@ -9,12 +9,16 @@ import 'dart:async';
 import 'atom.dart';
 import 'state.dart';
 
+/**
+ * An abstract representation of a long running task.
+ */
 abstract class Job {
   final String name;
 
   Job(this.name);
 
-  void start() => jobs.schedule(this);
+  /// Schedule the [Job] for execution.
+  void schedule() => jobs.schedule(this);
 
   Future run();
 

@@ -2,11 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library atom.dart;
+library atom.plugin;
 
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
+import 'dependencies.dart';
 import 'sdk.dart';
 import 'utils.dart';
 import 'impl/rebuild.dart';
@@ -20,19 +21,24 @@ class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
 
-  SdkManager sdkManager;
+  SdkManager _sdkManager;
+
+  AtomDartPackage();
 
   void packageActivated([Map state]) {
     _logger.fine("packageActivated");
 
-    sdkManager = new SdkManager();
-    sdkManager.onSdkChange.listen((Sdk sdk) {
+    if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
+
+    _sdkManager = new SdkManager();
+    _sdkManager.onSdkChange.listen((Sdk sdk) {
       print("sdk changed to ${sdk}");
       if (sdk != null) {
         sdk.getVersion().then((ver) => print("version is ${ver}"));
       }
     });
-    disposables.add(sdkManager);
+    disposables.add(_sdkManager);
+    deps[SdkManager] = _sdkManager;
 
     // Register commands.
     atom.commands.add('atom-workspace', 'dart-lang:smoke-test', (e) {
@@ -40,7 +46,7 @@ class AtomDartPackage extends AtomPackage {
     });
 
     atom.commands.add('atom-workspace', 'dart-lang:rebuild-restart', (e) {
-      new RebuildJob().start();
+      new RebuildJob().schedule();
     });
   }
 
