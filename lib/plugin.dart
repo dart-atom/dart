@@ -21,8 +21,6 @@ class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
 
-  SdkManager _sdkManager;
-
   AtomDartPackage();
 
   void packageActivated([Map state]) {
@@ -30,15 +28,15 @@ class AtomDartPackage extends AtomPackage {
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
 
-    _sdkManager = new SdkManager();
-    _sdkManager.onSdkChange.listen((Sdk sdk) {
+    SdkManager sdkManager = new SdkManager();
+    sdkManager.onSdkChange.listen((Sdk sdk) {
       print("sdk changed to ${sdk}");
       if (sdk != null) {
         sdk.getVersion().then((ver) => print("version is ${ver}"));
       }
     });
-    disposables.add(_sdkManager);
-    deps[SdkManager] = _sdkManager;
+    disposables.add(sdkManager);
+    deps[SdkManager] = sdkManager;
 
     // Register commands.
     atom.commands.add('atom-workspace', 'dart-lang:smoke-test', (e) {
