@@ -7,10 +7,5 @@
 # Fast fail the script on failures.
 set -e
 
-# Verify that the libraries are error free.
-dartanalyzer --fatal-warnings \
-  lib/atom_dart.dart \
-  test/all_test.dart
-
-# Run the tests.
-pub run test
+# Analyze, build and test.
+pub run grinder bot

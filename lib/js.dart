@@ -49,7 +49,7 @@ class ProxyHolder {
   Stream eventStream(String eventName) {
     Disposable disposable;
     StreamController<List<String>> controller = new StreamController.broadcast(
-        onCancel: () => disposable.dispose(), sync: true);
+        onCancel: () => disposable.dispose());
     disposable = new JsDisposable(
         invoke(eventName, (evt) => controller.add(evt)));
     return controller.stream;

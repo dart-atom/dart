@@ -187,14 +187,14 @@ abstract class Entry extends ProxyHolder {
 
   // TODO: onDidChange(callback)
 
-  // The objects also contain a 'path' property;
+  String get path => obj['path'];
 
   bool isFile() => invoke('isFile');
   bool isDirectory() => invoke('isDirectory');
   bool existsSync() => invoke('existsSync');
 
   String getBaseName() => invoke('getBaseName');
-  String getPath() => invoke('getPath'); // obj['path']?
+  String getPath() => invoke('getPath');
   String getRealPathSync() => invoke('getRealPathSync');
 
   Directory getParent() => new Directory(invoke('getParent'));
@@ -233,6 +233,7 @@ class Directory extends Entry {
 
   List<Entry> getEntriesSync() {
     return invoke('getEntriesSync').map((entry) {
+      entry = _cvt(entry);
       return entry.callMethod('isFile') ? new File(entry) : new Directory(entry);
     }).toList();
   }
@@ -274,8 +275,7 @@ class BufferedProcess extends ProxyHolder {
 }
 
 JsObject _create(String className, dynamic arg) {
-  JsObject object = new JsObject(require('atom')[className], [arg]);
-  return object;
+  return new JsObject(require('atom')[className], [arg]);
 }
 
 JsObject _cvt(JsObject object) {
