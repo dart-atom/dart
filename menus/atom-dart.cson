@@ -8,8 +8,8 @@
       'label': 'Dart'
       'submenu': [
         {
-          'label': 'Hello World'
-          'command': 'dart-lang:hello-world'
+          'label': 'Smoke Test'
+          'command': 'dart-lang:smoke-test'
         }
       ]
     ]

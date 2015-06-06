@@ -6,7 +6,7 @@ library atom.sdk;
 
 import 'dart:async';
 
-import 'atom/atom.dart';
+import 'atom.dart';
 import 'utils.dart';
 
 final String _sdkPrefPath = 'dart-lang.sdkLocation';
@@ -54,13 +54,8 @@ class Sdk {
   bool get isValidSdk => directory.getFile('version').existsSync();
 
   Future<String> getVersion() {
-    print("getVersion() called");
-    print("directory is '${directory}'");
-    // TODO: This method does not return. Are we creating the directory correctly?
     File f = directory.getFile('version');
-    print("file is ${f}");
     return f.read().then((data) {
-      print("data is ${data}");
       return data.trim();
     });
   }

@@ -10,7 +10,7 @@ import 'dart:html' hide File, Directory;
 import 'dart:js';
 
 import 'js.dart';
-import '../utils.dart';
+import 'utils.dart';
 
 export 'js.dart' show Promise, ProxyHolder;
 
@@ -187,12 +187,14 @@ abstract class Entry extends ProxyHolder {
 
   // TODO: onDidChange(callback)
 
+  // The objects also contain a 'path' property;
+
   bool isFile() => invoke('isFile');
   bool isDirectory() => invoke('isDirectory');
   bool existsSync() => invoke('existsSync');
 
   String getBaseName() => invoke('getBaseName');
-  String getPath() => invoke('getPath');
+  String getPath() => invoke('getPath'); // obj['path']?
   String getRealPathSync() => invoke('getRealPathSync');
 
   Directory getParent() => new Directory(invoke('getParent'));
@@ -216,6 +218,8 @@ class File extends Entry {
   /// Overwrites the file with the given text.
   void writeSync(String text) => invoke('writeSync', text);
 
+  int get hashCode => getPath().hashCode;
+
   operator==(other) => other is File && getPath() == other.getPath();
 }
 
@@ -223,16 +227,17 @@ class Directory extends Entry {
   Directory(JsObject object) : super(object);
   Directory.fromPath(String path) : super(_create('Directory', path));
 
-  File getFile(filename) => new File(invoke('getFile', filename));
+  File getFile(filename) => new File(_cvt(invoke('getFile', filename)));
   Directory getSubdirectory(String dirname) =>
       new Directory(invoke('getSubdirectory', dirname));
 
   List<Entry> getEntriesSync() {
-    // TODO: test this
     return invoke('getEntriesSync').map((entry) {
-      return entry['isFile'] ? new File(entry) : new Directory(entry);
+      return entry.callMethod('isFile') ? new File(entry) : new Directory(entry);
     }).toList();
   }
+
+  int get hashCode => getPath().hashCode;
 
   operator==(other) => other is Directory && getPath() == other.getPath();
 }
@@ -269,5 +274,13 @@ class BufferedProcess extends ProxyHolder {
 }
 
 JsObject _create(String className, dynamic arg) {
-  return new JsObject(require('atom')[className], [arg]);
+  JsObject object = new JsObject(require('atom')[className], [arg]);
+  return object;
+}
+
+JsObject _cvt(JsObject object) {
+  if (object == null) return null;
+  // TODO: We really shouldn't have to be wrapping objects we've already gotten
+  // from JS interop.
+  return new JsObject.fromBrowserObject(object);
 }
