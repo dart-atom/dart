@@ -244,11 +244,13 @@ class Directory extends Entry {
 }
 
 class AtomEvent extends ProxyHolder {
-  AtomEvent(JsObject object) : super(object);
+  AtomEvent(JsObject object) : super(_cvt(object));
 
   void abortKeyBinding() => invoke('abortKeyBinding');
   void stopPropagation() => invoke('stopPropagation');
   void stopImmediatePropagation() => invoke('stopImmediatePropagation');
+
+  String toString() => '[AtomEvent ${obj}]';
 }
 
 class BufferedProcess extends ProxyHolder {

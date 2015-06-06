@@ -10,6 +10,7 @@ import 'atom.dart';
 import 'dependencies.dart';
 import 'sdk.dart';
 import 'utils.dart';
+import 'impl/editing.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 
@@ -45,6 +46,10 @@ class AtomDartPackage extends AtomPackage {
 
     atom.commands.add('atom-workspace', 'dart-lang:rebuild-restart', (e) {
       new RebuildJob().schedule();
+    });
+
+    atom.commands.add('atom-text-editor', 'dart-lang:newline', (e) {
+      handleEnterKey(e);
     });
   }
 
