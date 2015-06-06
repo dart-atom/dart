@@ -227,6 +227,7 @@ class Directory extends Entry {
   Directory(JsObject object) : super(object);
   Directory.fromPath(String path) : super(_create('Directory', path));
 
+  // TODO: Should we move this _cvt guard into the File and Directory ctors?
   File getFile(filename) => new File(_cvt(invoke('getFile', filename)));
   Directory getSubdirectory(String dirname) =>
       new Directory(invoke('getSubdirectory', dirname));
@@ -243,14 +244,54 @@ class Directory extends Entry {
   operator==(other) => other is Directory && getPath() == other.getPath();
 }
 
+/// This cooresponds to an `atom-text-editor` custom element.
+class TextEditorView extends ProxyHolder {
+  TextEditorView(JsObject object) : super(_cvt(object));
+
+  TextEditor getModel() => new TextEditor(invoke('getModel'));
+}
+
+class TextEditor extends ProxyHolder {
+  TextEditor(JsObject object) : super(_cvt(object));
+
+  String getTitle() => invoke('getTitle');
+  String getLongTitle() => invoke('getLongTitle');
+  String getPath() => invoke('getPath');
+  bool isModified() => invoke('isModified');
+  bool isEmpty() => invoke('isEmpty');
+
+  void insertNewline() => invoke('insertNewline');
+
+  /// Returns a [Range] when the text has been inserted. Returns a `bool`
+  /// (`false`) when the text has not been inserted.
+  ///
+  /// TODO: implement [Range] return
+  ///
+  /// For [options]: `select` if true, selects the newly added text.
+  /// `autoIndent` if true, indents all inserted text appropriately.
+  /// `autoIndentNewline` if true, indent newline appropriately.
+  /// `autoDecreaseIndent` if true, decreases indent level appropriately (for
+  /// example, when a closing bracket is inserted). `normalizeLineEndings`
+  /// (optional) bool (default: true). `undo` if skip, skips the undo stack for
+  /// this operation.
+  dynamic insertText(String text, {Map options}) {
+    var result = invoke('insertText', text, options);
+    if (result is bool) return result;
+    //return new Range(result);
+    return null;
+  }
+
+  String toString() => getTitle();
+}
+
 class AtomEvent extends ProxyHolder {
   AtomEvent(JsObject object) : super(_cvt(object));
+
+  JsObject get currentTarget => obj['currentTarget'];
 
   void abortKeyBinding() => invoke('abortKeyBinding');
   void stopPropagation() => invoke('stopPropagation');
   void stopImmediatePropagation() => invoke('stopImmediatePropagation');
-
-  String toString() => '[AtomEvent ${obj}]';
 }
 
 class BufferedProcess extends ProxyHolder {
