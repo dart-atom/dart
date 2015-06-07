@@ -40,17 +40,12 @@ class AtomDartPackage extends AtomPackage {
     deps[SdkManager] = sdkManager;
 
     // Register commands.
-    atom.commands.add('atom-workspace', 'dart-lang:smoke-test', (e) {
-      smokeTest();
-    });
-
-    atom.commands.add('atom-workspace', 'dart-lang:rebuild-restart', (e) {
+    CommandRegistry cmds = atom.commands;
+    cmds.add('atom-workspace', 'dart-lang:smoke-test', (_) => smokeTest());
+    cmds.add('atom-workspace', 'dart-lang:rebuild-restart', (_) {
       new RebuildJob().schedule();
     });
-
-    atom.commands.add('atom-text-editor', 'dart-lang:newline', (e) {
-      handleEnterKey(e);
-    });
+    cmds.add('atom-text-editor', 'dart-lang:newline', handleEnterKey);
   }
 
   void packageDeactivated() {

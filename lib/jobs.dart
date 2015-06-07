@@ -2,12 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// A library to manage long running tasks. Create instances of [Job] for long
-/// running tasks. Use a [JobManager] to track tasks that are running.
-///
-///     MyFooJob job = new MyFooJob(baz);
-///     job.schedule();
-
 /**
  * A library to manage long running tasks. Create instances of [Job] for long
  * running tasks. Use a [JobManager] to track tasks that are running.
@@ -40,8 +34,11 @@ abstract class Job {
 
 class JobManager {
   List<JobInstance> _jobs = [];
+  NotificationManager _toasts;
 
-  JobManager();
+  JobManager() {
+    _toasts = atom.notifications;
+  }
 
   /// Return the active [Job]. This can return `null` if there is no currently
   /// executing job.
@@ -69,13 +66,16 @@ class JobManager {
 
     // TODO: fire event
     print('starting job "${job.name}"');
+    _toasts.addInfo('${job.name} started.');
 
     Future f = job.job.run();
-    f.whenComplete(() {
+    f.then((_) {
+      // TODO: We don't want to use notifications for job completion going forward.
+      _toasts.addSuccess('${job.name} completed.');
+    }).whenComplete(() {
       _complete(job);
     }).catchError((e) {
-      atom.notifications.addError('Error when running ${job.name}.',
-          options: {'detail': '${e}'});
+      _toasts.addError('${job.name} failed.', options: {'detail': '${e}'});
     });
   }
 
