@@ -23,10 +23,23 @@ final JsObject _ctx = context['atom'];
 
 /// An Atom package. Register your package using [registerPackage].
 abstract class AtomPackage {
+  Map<String, Function> _registeredMethods = {};
+
+  AtomPackage();
+
   Map config() => {};
   void packageActivated([Map state]) { }
   void packageDeactivated() { }
   Map serialize() => {};
+
+  /// Register a method for a service callback.
+  void registerMethod(String methodName, Disposable callback(JsObject obj)) {
+    if (_registeredMethods == null) {
+      throw new StateError('method must be registered in the package ctor');
+    }
+    _registeredMethods[methodName] = callback;
+    return null;
+  }
 }
 
 /**
@@ -47,6 +60,20 @@ void registerPackage(AtomPackage package) {
   exports['deactivate'] = _package.packageDeactivated;
   exports['config'] = jsify(_package.config());
   exports['serialize'] = _package.serialize;
+
+  package._registeredMethods.forEach((methodName, f) {
+    exports[methodName] = (arg) {
+      var result = f(arg);
+      if (result is Disposable) {
+        // Convert the returned Disposable to a JS object.
+        Map m = {'dispose': result.dispose};
+        return jsify(m);
+      } else {
+        return null;
+      }
+    };
+  });
+  package._registeredMethods = null;
 }
 
 class Atom extends ProxyHolder {
@@ -119,23 +146,27 @@ class Config extends ProxyHolder {
   }
 }
 
+/// A notification manager used to create notifications to be shown to the user.
 class NotificationManager extends ProxyHolder {
   NotificationManager(JsObject object) : super(object);
 
+  /// Add an success notification. [options] can contain a `detail` message.
   void addSuccess(String message, {Map options}) =>
       invoke('addSuccess', message, options);
 
-  /// Show the given informational message. [options] can contain a `detail`
-  /// message.
+  /// Add an informational notification. [options] can contain a `detail` message.
   void addInfo(String message, {Map options}) =>
       invoke('addInfo', message, options);
 
+  /// Add an warning notification. [options] can contain a `detail` message.
   void addWarning(String message, {Map options}) =>
       invoke('addWarning', message, options);
 
+  /// Add an error notification. [options] can contain a `detail` message.
   void addError(String message, {Map options}) =>
       invoke('addError', message, options);
 
+  /// Add an fatal error notification. [options] can contain a `detail` message.
   void addFatalError(String message, {Map options}) =>
       invoke('addFatalError', message, options);
 }
