@@ -10,7 +10,13 @@ import 'dart:js';
 
 import 'utils.dart';
 
-JsObject jsify(Map map) => new JsObject.jsify(map);
+JsObject jsify(obj) {
+  if (obj == null) return null;
+  if (obj is JsObject) return obj;
+  if (obj is List || obj is Map) return new JsObject.jsify(obj);
+  if (obj is ProxyHolder) return obj.obj;
+  return obj;
+}
 
 JsObject require(String input) => context.callMethod('require', [input]);
 
@@ -31,9 +37,9 @@ class ProxyHolder {
   ProxyHolder(this.obj);
 
   dynamic invoke(String method, [dynamic arg1, dynamic arg2, dynamic arg3]) {
-    if (arg1 is Map) arg1 = jsify(arg1);
-    if (arg2 is Map) arg2 = jsify(arg2);
-    if (arg3 is Map) arg3 = jsify(arg3);
+    if (arg1 != null) arg1 = jsify(arg1);
+    if (arg2 != null) arg2 = jsify(arg2);
+    if (arg3 != null) arg3 = jsify(arg3);
 
     if (arg3 != null) {
       return obj.callMethod(method, [arg1, arg2, arg3]);

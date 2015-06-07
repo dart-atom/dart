@@ -6,20 +6,57 @@ library atom.editing;
 
 import '../atom.dart';
 
-/// Handle special behavior for the enter key in Dart files.
+// TODO: If we're in a line comment, and the line is longer than the max line
+// length, extend the comment.
+// var prefLineLength = atom.config.get('editor.preferredLineLength',
+//   scope: editor.getRootScopeDescriptor());
+
+// TODO: If the line starts with `    ` continue the code block.
+
+// TODO: Syntax highlighting of code blocks in dartdoc comments.
+
+/// Handle special behavior for the enter key in Dart files. In particular, this
+/// method extends dartdoc comments and block comments to the next line.
 void handleEnterKey(AtomEvent event) {
-  //TextEditorView view = new TextEditorView(event.currentTarget);
-  //TextEditor editor = view.getModel();
+  TextEditorView view = new TextEditorView(event.currentTarget);
+  TextEditor editor = view.getModel();
 
-  // TODO: check if we're in a dartdoc comment; if not, abort the key binding
-  // TODO: is the selection is not empty, abort the key binding
+  Range selection = editor.getSelectedBufferRange();
 
-  // TODO: if we're in a line comment, and the line is longer than the max line
-  // length, then extent the comment.
+  // If the selection is not empty, abort the key binding.
+  if (selection.isNotEmpty()) {
+    event.abortKeyBinding();
+    return;
+  }
 
-  //print(editor.getTitle());
+  int bufferRow = selection.start.row;
+  String line = editor.lineTextForBufferRow(bufferRow);
+  String trimmedText = line.trimLeft();
+
+  if (trimmedText.startsWith('///')) {
+    editor.insertNewline();
+    editor.insertText('/// ');
+    return;
+  }
+
+  if (trimmedText.startsWith('/*')) {
+    editor.insertNewline();
+    editor.insertText(' * ');
+    return;
+  }
+
+  if (trimmedText.startsWith('* ')) {
+    if (bufferRow > 0) {
+      String previousLine = editor.lineTextForBufferRow(bufferRow - 1).trimLeft();
+
+      if (previousLine.startsWith('/*') || previousLine.startsWith('* ')) {
+        editor.insertNewline();
+        editor.insertText('* ');
+        return;
+      }
+    }
+  }
+
+  // If we're not in a dartdoc or block comment, abort the key binding.
   event.abortKeyBinding();
-
-  // editor.insertNewline();
-  // editor.insertText('/// ');
 }
