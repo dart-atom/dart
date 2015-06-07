@@ -7,7 +7,7 @@ import 'dart:async';
 import '../jobs.dart';
 
 class RebuildJob extends Job {
-  RebuildJob() : super("Rebuilding 'dart-lang'");
+  RebuildJob() : super("Rebuilding dart-lang");
 
   Future run() {
     return new Future.delayed(new Duration(seconds: 4));

@@ -7,12 +7,14 @@ library atom.plugin;
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
+import 'atom_statusbar.dart';
 import 'dependencies.dart';
 import 'sdk.dart';
 import 'utils.dart';
 import 'impl/editing.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
+import 'impl/status.dart';
 
 export 'atom.dart' show registerPackage;
 
@@ -22,7 +24,13 @@ class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
 
-  AtomDartPackage();
+  AtomDartPackage() {
+    // Register a method to consume the `status-bar` service API.
+    registerMethod('consumeStatusBar', (obj) {
+      // Create a new status bar display.
+      return new StatusDisplay(new StatusBar(obj));
+    });
+  }
 
   void packageActivated([Map state]) {
     _logger.fine("packageActivated");

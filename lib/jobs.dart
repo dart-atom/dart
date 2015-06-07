@@ -33,6 +33,7 @@ abstract class Job {
 }
 
 class JobManager {
+  StreamController<Job> _controller = new StreamController.broadcast();
   List<JobInstance> _jobs = [];
   NotificationManager _toasts;
 
@@ -53,24 +54,21 @@ class JobManager {
 
   void schedule(Job job) => _enqueue(job);
 
+  Stream<Job> get onJobChanged => _controller.stream;
+
   void _enqueue(Job job) {
     JobInstance instance = new JobInstance(this, job);
     _jobs.add(instance);
 
-    // TODO: We need a more sophisticated algorithim.
+    // TODO: We need a more sophisticated job scheduling algorithim.
     _exec(instance);
   }
 
   void _exec(JobInstance job) {
     job._running = true;
+    _controller.add(activeJob);
 
-    // TODO: fire event
-    print('starting job "${job.name}"');
-    _toasts.addInfo('${job.name} started.');
-
-    Future f = job.job.run();
-    f.then((_) {
-      // TODO: We don't want to use notifications for job completion going forward.
+    job.job.run().then((_) {
       _toasts.addSuccess('${job.name} completed.');
     }).whenComplete(() {
       _complete(job);
@@ -82,21 +80,17 @@ class JobManager {
   void _complete(JobInstance job) {
     job._running = false;
     _jobs.remove(job);
-
-    // TODO: fire event
-    print('finished job "${job.name}"');
+    _controller.add(activeJob);
   }
 }
 
 class JobInstance {
   final JobManager jobs;
   final Job job;
-
   bool _running = false;
 
   JobInstance(this.jobs, this.job);
 
   String get name => job.name;
-
   bool get isRunning => _running;
 }

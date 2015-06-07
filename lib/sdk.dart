@@ -25,6 +25,8 @@ class SdkManager implements Disposable {
 
   Sdk get sdk => _sdk;
 
+  // TODO: Also provide a debounced sdk change stream (observe sdk?).
+
   Stream<Sdk> get onSdkChange => _controller.stream;
 
   void _setTo(Directory dir) {
