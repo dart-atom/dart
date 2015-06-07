@@ -2,6 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// A library to manage long running tasks. Create instances of [Job] for long
+/// running tasks. Use a [JobManager] to track tasks that are running.
+///
+///     MyFooJob job = new MyFooJob(baz);
+///     job.schedule();
+
+/**
+ * A library to manage long running tasks. Create instances of [Job] for long
+ * running tasks. Use a [JobManager] to track tasks that are running.
+ *
+ *     MyFooJob job = new MyFooJob(baz);
+ *     job.schedule();
+ */
 library atom.jobs;
 
 import 'dart:async';
@@ -30,6 +43,8 @@ class JobManager {
 
   JobManager();
 
+  /// Return the active [Job]. This can return `null` if there is no currently
+  /// executing job.
   Job get activeJob {
     JobInstance instance = _jobs.firstWhere((j) => j.isRunning, orElse: () => null);
     return instance == null ? null : instance.job;

@@ -6,7 +6,7 @@
 library atom;
 
 import 'dart:async';
-import 'dart:html' hide File, Directory;
+import 'dart:html' hide File, Directory, Point;
 import 'dart:js';
 
 import 'js.dart';
@@ -103,7 +103,11 @@ class Config extends ProxyHolder {
 
   /// [keyPath] should be in the form `pluginid.keyid` - e.g.
   /// `dart-lang.sdkLocation`.
-  dynamic get(String keyPath) => invoke('get', keyPath);
+  dynamic get(String keyPath, {scope}) {
+    Map options;
+    if (scope != null) options = {'scope': scope};
+    return invoke('get', keyPath, options);
+  }
 
   void set(String keyPath, dynamic value) => invoke('set', keyPath, value);
 
@@ -227,6 +231,7 @@ class Directory extends Entry {
   Directory(JsObject object) : super(object);
   Directory.fromPath(String path) : super(_create('Directory', path));
 
+  // TODO: Should we move this _cvt guard into the File and Directory ctors?
   File getFile(filename) => new File(_cvt(invoke('getFile', filename)));
   Directory getSubdirectory(String dirname) =>
       new Directory(invoke('getSubdirectory', dirname));
@@ -243,8 +248,93 @@ class Directory extends Entry {
   operator==(other) => other is Directory && getPath() == other.getPath();
 }
 
+/// This cooresponds to an `atom-text-editor` custom element.
+class TextEditorView extends ProxyHolder {
+  TextEditorView(JsObject object) : super(_cvt(object));
+
+  TextEditor getModel() => new TextEditor(invoke('getModel'));
+}
+
+class TextEditor extends ProxyHolder {
+  TextEditor(JsObject object) : super(_cvt(object));
+
+  String getTitle() => invoke('getTitle');
+  String getLongTitle() => invoke('getLongTitle');
+  String getPath() => invoke('getPath');
+  bool isModified() => invoke('isModified');
+  bool isEmpty() => invoke('isEmpty');
+  bool isNotEmpty() => !isEmpty();
+
+  void insertNewline() => invoke('insertNewline');
+
+  /// Returns a [Range] when the text has been inserted. Returns a `bool`
+  /// (`false`) when the text has not been inserted.
+  ///
+  /// For [options]: `select` if true, selects the newly added text.
+  /// `autoIndent` if true, indents all inserted text appropriately.
+  /// `autoIndentNewline` if true, indent newline appropriately.
+  /// `autoDecreaseIndent` if true, decreases indent level appropriately (for
+  /// example, when a closing bracket is inserted). `normalizeLineEndings`
+  /// (optional) bool (default: true). `undo` if skip, skips the undo stack for
+  /// this operation.
+  dynamic insertText(String text, {Map options}) {
+    var result = invoke('insertText', text, options);
+    return result is bool ? result : new Range(result);
+  }
+
+  // TODO: For now, kept as an opaque JS type.
+  JsObject getRootScopeDescriptor() => invoke('getRootScopeDescriptor');
+
+  String getSelectedText() => invoke('getSelectedText');
+  String getTextInBufferRange(Range range) => invoke('getTextInBufferRange', range);
+  /// Get the [Range] of the most recently added selection in buffer coordinates.
+  Range getSelectedBufferRange() => new Range(invoke('getSelectedBufferRange'));
+  Range getCurrentParagraphBufferRange() =>
+      new Range(invoke('getCurrentParagraphBufferRange'));
+  Range setTextInBufferRange(Range range, String text) =>
+      new Range(invoke('setTextInBufferRange', range, text));
+
+  String lineTextForBufferRow(int bufferRow) =>
+      invoke('lineTextForBufferRow', bufferRow);
+
+  void undo() => invoke('undo');
+  void redo() => invoke('redo');
+
+  String toString() => getTitle();
+}
+
+/// Represents a region in a buffer in row / column coordinates.
+class Range extends ProxyHolder {
+  factory Range(JsObject object) => object == null ? null : new Range._(object);
+  Range._(JsObject object) : super(_cvt(object));
+
+  bool isEmpty() => invoke('isEmpty');
+  bool isNotEmpty() => !isEmpty();
+  bool isSingleLine() => invoke('isSingleLine');
+  int getRowCount() => invoke('getRowCount');
+
+  Point get start => new Point(obj['start']);
+  Point get end => new Point(obj['end']);
+
+  String toString() => invoke('toString');
+}
+
+/// Represents a point in a buffer in row / column coordinates.
+class Point extends ProxyHolder {
+  Point(JsObject object) : super(_cvt(object));
+
+  /// A zero-indexed Number representing the row of the Point.
+  int get row => obj['row'];
+  /// A zero-indexed Number representing the column of the Point.
+  int get column => obj['column'];
+
+  String toString() => invoke('toString');
+}
+
 class AtomEvent extends ProxyHolder {
-  AtomEvent(JsObject object) : super(object);
+  AtomEvent(JsObject object) : super(_cvt(object));
+
+  JsObject get currentTarget => obj['currentTarget'];
 
   void abortKeyBinding() => invoke('abortKeyBinding');
   void stopPropagation() => invoke('stopPropagation');

@@ -9,3 +9,6 @@
 
 'atom-workspace':
   'ctrl-alt-cmd-;': 'dart-lang:rebuild-restart'
+
+'atom-text-editor[data-grammar~="dart"]:not([mini])':
+  'enter': 'dart-lang:newline'
