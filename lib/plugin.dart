@@ -40,14 +40,8 @@ class AtomDartPackage extends AtomPackage {
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
 
     SdkManager sdkManager = new SdkManager();
-    sdkManager.onSdkChange.listen((Sdk sdk) {
-      print("sdk changed to ${sdk}");
-      if (sdk != null) {
-        sdk.getVersion().then((ver) => print("version is ${ver}"));
-      }
-    });
-    disposables.add(sdkManager);
     deps[SdkManager] = sdkManager;
+    disposables.add(sdkManager);
 
     // Register commands.
     CommandRegistry cmds = atom.commands;

@@ -24,6 +24,12 @@ class SdkManager implements Disposable {
     _locationObserve = atom.config.observe(_sdkPrefPath, null, (value) {
       _setTo(value == null ? null : new Directory.fromPath(value));
     });
+
+    // Initiate auto-discovery.
+    String sdkPrefValue = atom.config.get(_sdkPrefPath);
+    if (sdkPrefValue == null || sdkPrefValue.isEmpty) {
+      tryToAutoConfigure(complainOnFailure: false);
+    }
   }
 
   bool get hasSdk => _sdk != null;
@@ -35,6 +41,19 @@ class SdkManager implements Disposable {
         'No Dart SDK found.',
         detail: 'You can configure your SDK location in Settings > Packages > dart-lang > Settings.',
         dismissable: true);
+  }
+
+  void tryToAutoConfigure({bool complainOnFailure: true}) {
+    new SdkDiscovery().discoverSdk().then((String sdkPath) {
+      if (sdkPath != null) {
+        atom.notifications.addSuccess('Dart SDK found at ${sdkPath}.');
+        atom.config.set(_sdkPrefPath, sdkPath);
+      } else {
+        if (complainOnFailure) {
+          atom.notifications.addWarning('Unable to auto-locate a Dart SDK.');
+        }
+      }
+    });
   }
 
   // TODO: Also provide a debounced sdk change stream (observe sdk?).
@@ -65,14 +84,14 @@ class Sdk {
 
   Sdk(this.directory);
 
-  bool get isValidSdk => directory.getFile('version').existsSync();
+  bool get isValidSdk => directory.getSubdirectory('bin').existsSync();
 
-  Future<String> getVersion() {
-    File f = directory.getFile('version');
-    return f.read().then((data) => data.trim());
-  }
+  // Future<String> getVersion() {
+  //   File f = directory.getFile('version');
+  //   return f.read().then((data) => data.trim());
+  // }
 
-  // TODO: process finagling on the mac; exec in the bash shell
+  // TODO: Process finagling on the mac; exec in the bash shell.
 
   /// Execute the given SDK binary (a command in the `bin/` folder). [cwd] can
   /// be either a [String] or a [Directory].
@@ -83,4 +102,44 @@ class Sdk {
   }
 
   String toString() => directory.getPath();
+}
+
+class SdkDiscovery {
+  /// Try and auto-discover an SDK based on platform specific heuristics. This
+  /// will return `null` if no SDK is found.
+  Future<String> discoverSdk() {
+    if (isMac) {
+      // /bin/bash -c "which dart", /bin/bash -c "echo $PATH"
+      return exec('/bin/bash', ['-l', '-c', 'which dart']).then((result) {
+        return _resolveSdkFromVm(result);
+      }).catchError((e) {
+        return null;
+      });
+    } else if (isWindows) {
+      // TODO: Also use the PATH var?
+      return exec('where', ['dart.exe']).then((result) {
+        if (result != null && !result.isEmpty) {
+          if (result.contains('\n')) result = result.split('\n').first.trim();
+          return _resolveSdkFromVm(result);
+        }
+      }).catchError((e) {
+        return null;
+      });
+    } else {
+      return exec('which', ['dart']).then((String result) {
+        return _resolveSdkFromVm(result);
+      }).catchError((e) {
+        return null;
+      });
+    }
+  }
+
+  String _resolveSdkFromVm(String path) {
+    if (path == null) return path;
+    // TODO: resolve symlinks
+    //String resolvedPath = require('fs').callMethod('realpathSync', [path]);
+    File file = new File.fromPath(path);
+    Directory binDir = file.getParent();
+    return binDir.getParent().getPath();
+  }
 }

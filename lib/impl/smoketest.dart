@@ -9,6 +9,7 @@ import 'dart:async';
 import '../atom.dart';
 import '../jobs.dart';
 import '../process.dart';
+import '../sdk.dart';
 import '../state.dart';
 import '../utils.dart';
 
@@ -54,7 +55,12 @@ void smokeTest() {
   // sdk
   var sdk = sdkManager.sdk;
   print('dart sdk: ${sdk}');
-  sdk.getVersion().then((ver) => print('sdk version ${ver}'));
+  //sdk.getVersion().then((ver) => print('sdk version ${ver}'));
+
+  // sdk auto-discovery
+  new SdkDiscovery().discoverSdk().then((String foundSdk) {
+    print('discoverSdk: ${foundSdk}');
+  });
 
   // jobs
   new _TestJob("job 1", 1).schedule();

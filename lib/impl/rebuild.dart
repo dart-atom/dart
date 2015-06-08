@@ -29,6 +29,11 @@ class RebuildJob extends Job {
       return new Future.value();
     }
 
+    // Save any dirty editors.
+    atom.workspace.getTextEditors().forEach((editor) {
+      if (editor.isModified()) editor.save();
+    });
+
     // Run dart2js --csp -oweb/entry.dart.js web/entry.dart.
     Sdk sdk = sdkManager.sdk;
 
