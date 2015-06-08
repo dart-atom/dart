@@ -7,7 +7,10 @@ library atom.sdk;
 import 'dart:async';
 
 import 'atom.dart';
+import 'process.dart';
 import 'utils.dart';
+
+export 'process.dart' show ProcessResult;
 
 final String _sdkPrefPath = 'dart-lang.sdkLocation';
 
@@ -23,7 +26,16 @@ class SdkManager implements Disposable {
     });
   }
 
+  bool get hasSdk => _sdk != null;
+
   Sdk get sdk => _sdk;
+
+  void showNoSdkMessage() {
+    atom.notifications.addInfo(
+        'No Dart SDK found.',
+        detail: 'You can configure your SDK location in Settings > Packages > dart-lang > Settings.',
+        dismissable: true);
+  }
 
   // TODO: Also provide a debounced sdk change stream (observe sdk?).
 
@@ -57,9 +69,15 @@ class Sdk {
 
   Future<String> getVersion() {
     File f = directory.getFile('version');
-    return f.read().then((data) {
-      return data.trim();
-    });
+    return f.read().then((data) => data.trim());
+  }
+
+  // TODO: process finagling on the mac; exec in the bash shell
+
+  Future<ProcessResult> execBinSimple(String binName, List<String> args,
+      {Directory cwd}) {
+    String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
+    return new ProcessRunner(command, args: args, cwd: cwd.path).execSimple();
   }
 
   String toString() => directory.getPath();
