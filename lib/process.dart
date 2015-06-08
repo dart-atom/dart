@@ -6,31 +6,11 @@ library atom.process;
 
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import 'atom.dart';
-import 'js.dart';
 
-bool get isWindows => platform.startsWith('win');
-bool get isMac => platform == 'darwin';
-bool get isLinux => !isWindows && !isMac;
-
-String get separator => isWindows ? r'\' : '/';
-
-String _platform;
-
-/// 'darwin', 'freebsd', 'linux', 'sunos' or 'win32'
-String get platform {
-  if (_platform == null) _platform = require('process')['platform'];
-  return _platform;
-}
-
-String join(Directory dir, String arg1, [String arg2, String arg3]) {
-  String path = '${dir.path}${separator}${arg1}';
-  if (arg2 != null) {
-    path = '${path}${separator}${arg2}';
-    if (arg3 != null) path = '${path}${separator}${arg3}';
-  }
-  return path;
-}
+Logger _logger = new Logger("process");
 
 Future<String> exec(String cmd, [List<String> args]) {
   ProcessRunner runner = new ProcessRunner(cmd, args: args);
@@ -81,6 +61,9 @@ class ProcessRunner {
 
   Future<int> execStreaming() {
     if (_process != null) throw new StateError('exec can only be called once');
+
+    _logger.fine('exec: ${command} ${args == null ? "" : args.join(" ")}'
+        '${cwd == null ? "" : " (cwd=${cwd})"}');
 
     Completer<int> completer = new Completer();
 

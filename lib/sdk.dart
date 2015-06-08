@@ -74,10 +74,12 @@ class Sdk {
 
   // TODO: process finagling on the mac; exec in the bash shell
 
-  Future<ProcessResult> execBinSimple(String binName, List<String> args,
-      {Directory cwd}) {
+  /// Execute the given SDK binary (a command in the `bin/` folder). [cwd] can
+  /// be either a [String] or a [Directory].
+  Future<ProcessResult> execBinSimple(String binName, List<String> args, {cwd}) {
+    if (cwd is Directory) cwd = cwd.path;
     String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
-    return new ProcessRunner(command, args: args, cwd: cwd.path).execSimple();
+    return new ProcessRunner(command, args: args, cwd: cwd).execSimple();
   }
 
   String toString() => directory.getPath();

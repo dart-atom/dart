@@ -385,6 +385,14 @@ class AtomEvent extends ProxyHolder {
 
   JsObject get currentTarget => obj['currentTarget'];
 
+  /// Return the editor that is the target of this event. Note, this is _only_
+  /// available if an editor is the target of an event; calling this otherwise
+  /// will return an invalid [TextEditor].
+  TextEditor get editor {
+    TextEditorView view = new TextEditorView(currentTarget);
+    return view.getModel();
+  }
+
   void abortKeyBinding() => invoke('abortKeyBinding');
   void stopPropagation() => invoke('stopPropagation');
   void stopImmediatePropagation() => invoke('stopImmediatePropagation');
