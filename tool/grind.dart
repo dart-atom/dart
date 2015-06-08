@@ -52,8 +52,10 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
 """;
 
 String _patchJSFile(String input) {
-  input = input.replaceAll(
-      'if (document.currentScript) {',
-      'if (true) { // document.currentScript');
+  final String from = 'if (document.currentScript) {';
+  final String to = 'if (true) { // document.currentScript';
+
+  int index = input.lastIndexOf(from);
+  input = input.substring(0, index) + to + input.substring(index + from.length);
   return _jsPrefix + input;
 }

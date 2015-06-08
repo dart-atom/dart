@@ -101,6 +101,9 @@ class Atom extends ProxyHolder {
   Workspace get workspace => _workspace;
 
   void beep() => invoke('beep');
+
+  /// Reload the current window.
+  void reload() => invoke('reload');
 }
 
 /// Represents the state of the user interface for the entire window. Interact
@@ -150,25 +153,40 @@ class Config extends ProxyHolder {
 class NotificationManager extends ProxyHolder {
   NotificationManager(JsObject object) : super(object);
 
-  /// Add an success notification. [options] can contain a `detail` message.
-  void addSuccess(String message, {Map options}) =>
-      invoke('addSuccess', message, options);
+  /// Add an success notification. If [dismissable] is `true`, the notification
+  /// is rendered with a close button and does not auto-close.
+  void addSuccess(String message, {String detail, bool dismissable, String icon}) =>
+      invoke('addSuccess', message,
+          _options(detail: detail, dismissable: dismissable, icon: icon));
 
-  /// Add an informational notification. [options] can contain a `detail` message.
-  void addInfo(String message, {Map options}) =>
-      invoke('addInfo', message, options);
+  /// Add an informational notification.
+  void addInfo(String message, {String detail, bool dismissable, String icon}) =>
+      invoke('addInfo', message,
+          _options(detail: detail, dismissable: dismissable, icon: icon));
 
-  /// Add an warning notification. [options] can contain a `detail` message.
-  void addWarning(String message, {Map options}) =>
-      invoke('addWarning', message, options);
+  /// Add an warning notification.
+  void addWarning(String message, {String detail, bool dismissable, String icon}) =>
+      invoke('addWarning', message,
+          _options(detail: detail, dismissable: dismissable, icon: icon));
 
-  /// Add an error notification. [options] can contain a `detail` message.
-  void addError(String message, {Map options}) =>
-      invoke('addError', message, options);
+  /// Add an error notification.
+  void addError(String message, {String detail, bool dismissable, String icon}) =>
+      invoke('addError', message,
+          _options(detail: detail, dismissable: dismissable, icon: icon));
 
-  /// Add an fatal error notification. [options] can contain a `detail` message.
-  void addFatalError(String message, {Map options}) =>
-      invoke('addFatalError', message, options);
+  /// Add an fatal error notification.
+  void addFatalError(String message, {String detail, bool dismissable, String icon}) =>
+      invoke('addFatalError', message,
+          _options(detail: detail, dismissable: dismissable, icon: icon));
+
+  Map _options({String detail, bool dismissable, String icon}) {
+    if (detail == null && dismissable == null && icon == null) return null;
+    Map m = {};
+    if (detail != null) m['detail'] = detail;
+    if (dismissable != null) m['dismissable'] = dismissable;
+    if (icon != null) m['icon'] = icon;
+    return m;
+  }
 }
 
 /// Package manager for coordinating the lifecycle of Atom packages. Packages
@@ -377,17 +395,25 @@ class BufferedProcess extends ProxyHolder {
       List<String> args,
       void stdout(String str),
       void stderr(String str),
-      void exit(num code)
-  }) {
-    Map map = {'command': command};
+      void exit(num code),
+      String cwd,
+      Map<String, String> env}) {
+    Map options = {'command': command};
 
-    if (args != null) map['args'] = args;
-    if (stdout != null) map['stdout'] = stdout;
-    if (stderr != null) map['stderr'] = stderr;
-    if (exit != null) map['exit'] = exit;
+    if (args != null) options['args'] = args;
+    if (stdout != null) options['stdout'] = stdout;
+    if (stderr != null) options['stderr'] = stderr;
+    if (exit != null) options['exit'] = exit;
+
+    if (cwd != null || env != null) {
+      Map nodeOptions = {};
+      if (cwd != null) nodeOptions['cwd'] = cwd;
+      if (env != null) nodeOptions['env'] = jsify(env);
+      options['options'] = jsify(nodeOptions);
+    }
 
     JsObject ctor = require('atom')['BufferedProcess'];
-    return new BufferedProcess._(new JsObject(ctor, [jsify(map)]));
+    return new BufferedProcess._(new JsObject(ctor, [jsify(options)]));
   }
 
   BufferedProcess._(JsObject object) : super(object);

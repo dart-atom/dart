@@ -73,7 +73,7 @@ class JobManager {
     }).whenComplete(() {
       _complete(job);
     }).catchError((e) {
-      _toasts.addError('${job.name} failed.', options: {'detail': '${e}'});
+      _toasts.addError('${job.name} failed.', detail: '${e}', dismissable: true);
     });
   }
 

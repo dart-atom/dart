@@ -7,6 +7,8 @@ library atom.smoketest;
 import 'dart:async';
 
 import '../atom.dart';
+import '../jobs.dart';
+import '../process.dart';
 import '../state.dart';
 
 void smokeTest() {
@@ -21,7 +23,7 @@ void smokeTest() {
   File childFile = children.firstWhere((e) => e is File);
   _printFile(childFile);
   _printFile(dir.getFile(childFile.getBaseName()));
-  childFile.read().then((contents) => print('read file contents for ${childFile}'));
+  childFile.read().then((contents) => print('read ${childFile} contents'));
   Directory childDir = children.firstWhere((e) => e is Directory);
   _printDir(childDir);
   _printDir(dir.getSubdirectory(childDir.getBaseName()));
@@ -29,19 +31,26 @@ void smokeTest() {
   // futures
   new Future(() => print('futures work ctor'));
   new Future.microtask(() => print('futures work microtask'));
-  new Future.delayed(new Duration(seconds: 1), () => print('futures work delayed'));
+  new Future.delayed(new Duration(seconds: 1), () => print('futures delayed'));
 
   // notifications
   atom.notifications.addSuccess('Hello world from dart-lang!');
-  atom.notifications.addInfo(
-    'Hello world from dart-lang!', options: {'detail': 'Foo bar.'});
+  atom.notifications.addInfo('Hello world from dart-lang!', detail: 'Foo bar.');
   atom.notifications.addWarning('Hello world from dart-lang!');
 
   // processes
-  BufferedProcess.create('date',
+  BufferedProcess.create('ls',
+    args: ['-b'],
     stdout: (str) => print("stdout: ${str}"),
     stderr: (str) => print("stderr: ${str}"),
     exit: (code) => print('exit code = ${code}'));
+
+  // process.dart
+  print('platform: ${platform}');
+  print('isWindows: ${isWindows}');
+  print('isMac: ${isMac}');
+  print('isLinux: ${isLinux}');
+  exec('date').then((str) => print('exec date: ${str}'));
 
   // TODO:
   // events
@@ -49,9 +58,20 @@ void smokeTest() {
   //   print("dirs = ${e}");
   // });
 
-  // SdkManager
+  // sdk
   var sdk = sdkManager.sdk;
   print('dart sdk: ${sdk}');
+
+  // jobs
+  new _TestJob("job 1", 1).schedule();
+  new _TestJob("job 2", 2).schedule();
+  new _TestJob("job 3", 3).schedule();
+}
+
+class _TestJob extends Job {
+  final int seconds;
+  _TestJob(String title, this.seconds) : super(title);
+  Future run() => new Future.delayed(new Duration(seconds: seconds));
 }
 
 void _printEntry(Entry entry) {
