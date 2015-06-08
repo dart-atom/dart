@@ -113,8 +113,9 @@ class Atom extends ProxyHolder {
 class Workspace extends ProxyHolder {
   Workspace(JsObject object) : super(object);
 
-  // TODO:
-
+  /// Returns a list of [TextEditor]s.
+  List<TextEditor> getTextEditors() =>
+      invoke('getTextEditors').map((e) => new TextEditor(e)).toList();
 }
 
 class CommandRegistry extends ProxyHolder {
@@ -257,6 +258,7 @@ abstract class Entry extends ProxyHolder {
 
 class File extends Entry {
   File(JsObject object) : super(object);
+  File.fromPath(String path, [bool symlink]) : super(_create('File', path, symlink));
 
   /// Get the SHA-1 digest of this file.
   String getDigestSync() => invoke('getDigestSync');
@@ -349,6 +351,8 @@ class TextEditor extends ProxyHolder {
   void undo() => invoke('undo');
   void redo() => invoke('redo');
 
+  void save() => invoke('save');
+
   String toString() => getTitle();
 }
 
@@ -429,8 +433,12 @@ class BufferedProcess extends ProxyHolder {
   void kill() => invoke('kill');
 }
 
-JsObject _create(String className, dynamic arg) {
-  return new JsObject(require('atom')[className], [arg]);
+JsObject _create(String className, dynamic arg1, [dynamic arg2]) {
+  if (arg2 != null) {
+    return new JsObject(require('atom')[className], [arg1, arg2]);
+  } else {
+    return new JsObject(require('atom')[className], [arg1]);
+  }
 }
 
 JsObject _cvt(JsObject object) {
