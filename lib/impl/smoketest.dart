@@ -10,6 +10,7 @@ import '../atom.dart';
 import '../jobs.dart';
 import '../process.dart';
 import '../state.dart';
+import '../utils.dart';
 
 void smokeTest() {
   // files
@@ -39,21 +40,13 @@ void smokeTest() {
   atom.notifications.addWarning('Hello world from dart-lang!');
 
   // processes
-  BufferedProcess.create('ls',
-    args: ['-b'],
+  BufferedProcess.create('pwd',
     stdout: (str) => print("stdout: ${str}"),
     stderr: (str) => print("stderr: ${str}"),
-    exit: (code) => print('exit code = ${code}'));
-
-  // process.dart
-  print('platform: ${platform}');
-  print('isWindows: ${isWindows}');
-  print('isMac: ${isMac}');
-  print('isLinux: ${isLinux}');
+    exit: (code) => print('exit code: ${code}'));
   exec('date').then((str) => print('exec date: ${str}'));
 
-  // TODO:
-  // events
+  // TODO: events
   // atom.project.onDidChangePaths.listen((e) {
   //   print("dirs = ${e}");
   // });
@@ -61,11 +54,18 @@ void smokeTest() {
   // sdk
   var sdk = sdkManager.sdk;
   print('dart sdk: ${sdk}');
+  sdk.getVersion().then((ver) => print('sdk version ${ver}'));
 
   // jobs
   new _TestJob("job 1", 1).schedule();
   new _TestJob("job 2", 2).schedule();
   new _TestJob("job 3", 3).schedule();
+
+  // utils
+  print("platform: '${platform}'");
+  print('isWindows: ${isWindows}');
+  print('isMac: ${isMac}');
+  print('isLinux: ${isLinux}');
 }
 
 class _TestJob extends Job {

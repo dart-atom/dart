@@ -1,17 +1,20 @@
-# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more
-# details.
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus.
 
 'menu': [
   {
-    'label': 'Packages'
-    'submenu': [
-      'label': 'Dart'
-      'submenu': [
-        {
-          'label': 'Smoke Test'
-          'command': 'dart-lang:smoke-test'
-        }
+    label: 'Packages'
+    submenu: [
+      label: 'Dart'
+      submenu: [
+        {label: 'Smoke Test', command: 'dart-lang:smoke-test'}
       ]
     ]
   }
 ]
+
+'context-menu':
+  'atom-pane[data-active-item-path$="pubspec.yaml"] atom-text-editor[data-grammar~="yaml"]': [
+    {label: 'Pub Get', command: 'dart-lang:pub-get'}
+    {label: 'Pub Upgrade', command: 'dart-lang:pub-upgrade'}
+    {type: 'separator'}
+  ]

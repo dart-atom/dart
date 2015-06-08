@@ -24,6 +24,8 @@ abstract class Job {
 
   Job(this.name);
 
+  bool get pinResult => false;
+
   /// Schedule the [Job] for execution.
   void schedule() => jobs.schedule(this);
 
@@ -68,8 +70,10 @@ class JobManager {
     job._running = true;
     _controller.add(activeJob);
 
-    job.job.run().then((_) {
-      _toasts.addSuccess('${job.name} completed.');
+    job.job.run().then((result) {
+      _toasts.addSuccess('${job.name} completed.',
+          detail: result is String ? result : null,
+          dismissable: result != null && job.job.pinResult);
     }).whenComplete(() {
       _complete(job);
     }).catchError((e) {

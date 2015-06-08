@@ -10,15 +10,17 @@ import 'atom.dart';
 import 'atom_statusbar.dart';
 import 'dependencies.dart';
 import 'sdk.dart';
+import 'state.dart';
 import 'utils.dart';
 import 'impl/editing.dart';
+import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status.dart';
 
 export 'atom.dart' show registerPackage;
 
-Logger _logger = new Logger("atom-dart");
+final Logger _logger = new Logger("atom-dart");
 
 class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
@@ -54,6 +56,14 @@ class AtomDartPackage extends AtomPackage {
       new RebuildJob().schedule();
     });
     cmds.add('atom-text-editor', 'dart-lang:newline', handleEnterKey);
+    cmds.add('atom-text-editor', 'dart-lang:pub-get',
+        _sdkCommand((AtomEvent event) {
+      new PubJob.get(dirname(event.editor.getPath())).schedule();
+    }));
+    cmds.add('atom-text-editor', 'dart-lang:pub-upgrade',
+        _sdkCommand((AtomEvent event) {
+      new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
+    }));
   }
 
   void packageDeactivated() {
@@ -72,4 +82,13 @@ class AtomDartPackage extends AtomPackage {
       }
     };
   }
+
+  // Validate that an sdk is available before calling the target function.
+  Function _sdkCommand(Function f) => (arg) {
+    if (!sdkManager.hasSdk) {
+      sdkManager.showNoSdkMessage();
+    } else {
+      f(arg);
+    }
+  };
 }

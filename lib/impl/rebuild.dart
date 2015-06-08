@@ -34,7 +34,7 @@ class RebuildJob extends Job {
 
     Future f = sdk.execBinSimple(
         'dart2js',
-        ['--csp', '-oweb/entry.dart.js', 'web/entry.dart'],
+        ['--csp', '-oweb/entry.dart.js', '--show-package-warnings', 'web/entry.dart'],
         cwd: proj);
 
     return f.then((ProcessResult result) {
