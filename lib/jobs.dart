@@ -13,17 +13,27 @@ library atom.jobs;
 
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import 'atom.dart';
 import 'state.dart';
+
+final Logger _logger = new Logger('jobs');
 
 /**
  * An abstract representation of a long running task.
  */
 abstract class Job {
   final String name;
+  final Object schedulingRule;
 
-  Job(this.name);
+  Job(this.name, [this.schedulingRule]);
 
+  /// Don't show a notification on a successful completion.
+  bool get quiet => false;
+
+  /// Pin the notification after completion; the user will explicitly have to
+  /// clear it.
   bool get pinResult => false;
 
   /// Schedule the [Job] for execution.
@@ -59,32 +69,55 @@ class JobManager {
   Stream<Job> get onJobChanged => _controller.stream;
 
   void _enqueue(Job job) {
-    JobInstance instance = new JobInstance(this, job);
-    _jobs.add(instance);
-
-    // TODO: We need a more sophisticated job scheduling algorithim.
-    _exec(instance);
+    _logger.fine('scheduling job ${job.name}');
+    _jobs.add(new JobInstance(this, job));
+    _checkForRunnableJobs();
   }
 
-  void _exec(JobInstance job) {
-    job._running = true;
+  void _checkForRunnableJobs() {
+    Set rules = new Set();
+
+    // Look for a rule that has no scheduling rule or that has one that does not
+    // match any currently running rules.
+    for (JobInstance jobInstance in _jobs) {
+      if (jobInstance.isRunning) {
+        rules.add(jobInstance.job.schedulingRule);
+      } else {
+        Object rule = jobInstance.job.schedulingRule;
+        if (rule == null || !rules.contains(rule)) {
+          rules.add(rule);
+          _exec(jobInstance);
+        }
+      }
+    }
+  }
+
+  void _exec(JobInstance jobInstance) {
+    Job job = jobInstance.job;
+
+    _logger.fine('starting job ${job.name}');
+    jobInstance._running = true;
     _controller.add(activeJob);
 
-    job.job.run().then((result) {
-      _toasts.addSuccess('${job.name} completed.',
-          detail: result is String ? result : null,
-          dismissable: result != null && job.job.pinResult);
+    job.run().then((result) {
+      if (!job.quiet) {
+        _toasts.addSuccess('${jobInstance.name} completed.',
+            detail: result is String ? result : null,
+            dismissable: result != null && job.pinResult);
+      }
     }).whenComplete(() {
-      _complete(job);
+      _complete(jobInstance);
     }).catchError((e) {
       _toasts.addError('${job.name} failed.', detail: '${e}', dismissable: true);
     });
   }
 
   void _complete(JobInstance job) {
+    _logger.fine('finished job ${job.name}');
     job._running = false;
     _jobs.remove(job);
-    _controller.add(activeJob);
+    _checkForRunnableJobs();
+    if (activeJob == null) _controller.add(null);
   }
 }
 
