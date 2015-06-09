@@ -20,6 +20,8 @@ class PubJob extends Job {
 
   bool get pinResult => true;
 
+  Object get schedulingRule => path;
+
   Future run() {
     return sdkManager.sdk.execBinSimple('pub', [pubCommand], cwd: path).then(
         (ProcessResult result) {

@@ -11,7 +11,7 @@ import '../sdk.dart';
 import '../state.dart';
 
 class RebuildJob extends Job {
-  RebuildJob() : super("Rebuilding dart-lang");
+  RebuildJob() : super("Rebuilding dart-lang", RebuildJob);
 
   Future run() {
     // Validate that there's an sdk.

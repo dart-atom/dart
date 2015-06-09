@@ -1,6 +1,33 @@
 // The ui-variables file is provided by base themes provided by Atom.
-//
-// See https://github.com/atom/atom-dark-ui/blob/master/styles/ui-variables.less
-// for a full listing of what's available.
-
 @import "ui-variables";
+
+.job-status-bar {
+  display: none;
+}
+
+.job-status-bar.showing {
+  display: inline-block;
+}
+
+.job-status-bar {
+  overflow: hidden;
+
+  .text-label {
+    transition: 0.2s;
+    position: relative;
+    top: 20px;
+  }
+
+  .status-spinner {
+    opacity: 0;
+    transition: 0.4s;
+    fill: @text-color;
+    width: 20px;
+    height: 20px;
+  }
+
+  .showing {
+    top: 0;
+    opacity: 1;
+  }
+}

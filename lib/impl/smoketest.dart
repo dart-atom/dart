@@ -38,7 +38,7 @@ void smokeTest() {
   // notifications
   atom.notifications.addSuccess('Hello world from dart-lang!');
   atom.notifications.addInfo('Hello world from dart-lang!', detail: 'Foo bar.');
-  atom.notifications.addWarning('Hello world from dart-lang!');
+  atom.notifications.addWarning('Hello world from dart-lang!', detail: loremIpsum);
 
   // processes
   BufferedProcess.create('pwd',
@@ -63,9 +63,9 @@ void smokeTest() {
   });
 
   // jobs
-  new _TestJob("job 1", 1).schedule();
-  new _TestJob("job 2", 2).schedule();
-  new _TestJob("job 3", 3).schedule();
+  new _TestJob("Job 1", 1).schedule();
+  new _TestJob("Job 2", 2).schedule();
+  new _TestJob("Job 3", 3).schedule();
 
   // utils
   print("platform: '${platform}'");
@@ -76,7 +76,7 @@ void smokeTest() {
 
 class _TestJob extends Job {
   final int seconds;
-  _TestJob(String title, this.seconds) : super(title);
+  _TestJob(String title, this.seconds) : super(title, _TestJob);
   Future run() => new Future.delayed(new Duration(seconds: seconds));
 }
 
