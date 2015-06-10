@@ -5,28 +5,29 @@
 library atom.status;
 
 import 'dart:async';
-import 'dart:html' show DivElement, ImageElement;
+import 'dart:html' show DivElement, Element, ImageElement, SpanElement;
 
+import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../jobs.dart';
 import '../state.dart';
 import '../utils.dart';
 
-// TODO: On a click, open a progress view.
-
-// TODO: Tooltip on hover.
-
 const Duration _shortDuration = const Duration(milliseconds: 400);
 
 class StatusDisplay implements Disposable {
-  Tile _tile;
   StreamSubscription _subscription;
+  Tile _statusbarTile;
+  Panel _jobsPanel;
   Timer _timer;
+  Disposables _disposables = new Disposables();
+  DivElement _element;
 
   StatusDisplay(StatusBar statusBar) {
     DivElement element = new DivElement();
     element.classes.addAll(['inline-block', 'job-status-bar']);
-    _tile = statusBar.addRightTile(item: element, priority: 10000);
+    element.onClick.listen((_) => _showJobsDialog());
+    _statusbarTile = statusBar.addRightTile(item: element, priority: 10000);
 
     ImageElement spinner = new ImageElement();
     spinner.src = 'atom://dart-lang/images/gear.svg';
@@ -37,7 +38,10 @@ class StatusDisplay implements Disposable {
     textLabel.classes.addAll(['inline-block-tight', 'text-label', 'text-highlight']);
     element.children.add(textLabel);
 
-    _subscription = jobs.onJobChanged.listen((Job job) {
+    _createJobsPanel();
+
+    _subscription = jobs.onJobChanged.listen((_) {
+      Job job = jobs.activeJob;
       bool showing = job != null;
 
       if (_timer != null) {
@@ -57,11 +61,78 @@ class StatusDisplay implements Disposable {
 
       textLabel.classes.toggle('showing', showing);
       spinner.classes.toggle('showing', showing);
+
+      _updateJobsDialog();
     });
+
+    _disposables.add(atom.commands.add('atom-text-editor', 'core:cancel', (_) {
+      if (_jobsPanel != null) _jobsPanel.hide();
+    }));
+
+    _disposables.add(atom.commands.add(
+      'atom-workspace', 'dart-lang:show-jobs', (_) => _showJobsDialog()));
   }
 
   void dispose() {
     _subscription.cancel();
-    _tile.destroy();
+    _statusbarTile.destroy();
+    _disposables.dispose();
+    if (_jobsPanel != null) _jobsPanel.destroy();
+  }
+
+  void _createJobsPanel() {
+    _element = new DivElement();
+    _element.classes.add('jobs-dialog');
+
+    DivElement title = new DivElement()..classes.add('jobs-title');
+    _element.children.add(title);
+
+    DivElement div = new DivElement()..classes.add('select-list');
+    _element.children.add(div);
+    Element ol = new Element.ol()..classes.add('list-group');
+    div.children.add(ol);
+
+    _jobsPanel = atom.workspace.addModalPanel(item: _element, visible: false);
+    _jobsPanel.onDidDestroy.listen((_) {
+      _jobsPanel = null;
+    });
+  }
+
+  void _showJobsDialog() {
+    _jobsPanel.show();
+    _updateJobsDialog();
+  }
+
+  void _updateJobsDialog() {
+    if (_jobsPanel == null || _element == null) return;
+
+    Element title = _element.querySelector('div.jobs-title');
+    title.text = jobs.allJobs.isEmpty ? 'No running jobs.' : '';
+
+    Element ol = _element.querySelector('div ol');
+    ol.children.clear();
+
+    for (JobInstance jobInstance in jobs.allJobs) {
+      Job job = jobInstance.job;
+
+      Element item = new Element.li()
+          ..setAttribute('layout', '')..setAttribute('horizontal', '');
+      DivElement title = new DivElement()
+          ..classes.add('inline-block')..setAttribute('flex', '');
+      title.text = jobInstance.isRunning ? '${job.name}…' : job.name;
+      item.children.add(title);
+
+      if (jobInstance.isRunning) {
+        DivElement block = new DivElement()..classes.addAll(['inline-block', 'jobs-progress']);
+        item.children.add(block);
+
+        Element progress = new Element.tag('progress')..classes.add('inline-block');
+        block.children.add(progress);
+        SpanElement span = new SpanElement()..classes.add('inline-block');
+        block.children.add(span);
+      }
+
+      ol.children.add(item);
+    }
   }
 }

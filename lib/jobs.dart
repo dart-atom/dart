@@ -20,6 +20,8 @@ import 'state.dart';
 
 final Logger _logger = new Logger('jobs');
 
+// TODO: We're sending a few more events from here than we need to.
+
 /**
  * An abstract representation of a long running task.
  */
@@ -72,6 +74,7 @@ class JobManager {
     _logger.fine('scheduling job ${job.name}');
     _jobs.add(new JobInstance(this, job));
     _checkForRunnableJobs();
+    _controller.add(activeJob);
   }
 
   void _checkForRunnableJobs() {

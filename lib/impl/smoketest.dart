@@ -5,6 +5,7 @@
 library atom.smoketest;
 
 import 'dart:async';
+import 'dart:html' show DivElement;
 
 import '../atom.dart';
 import '../jobs.dart';
@@ -14,6 +15,11 @@ import '../state.dart';
 import '../utils.dart';
 
 void smokeTest() {
+  // panels
+  DivElement element = new DivElement()..text = "Hello world.";
+  Panel panel = atom.workspace.addTopPanel(item: element, visible: true);
+  panel.onDidDestroy.listen((p) => print('panel was destroyed'));
+
   // files
   List<Directory> dirs = atom.project.getDirectories();
   print("project directories = ${dirs}");
@@ -33,7 +39,10 @@ void smokeTest() {
   // futures
   new Future(() => print('futures work ctor'));
   new Future.microtask(() => print('futures work microtask'));
-  new Future.delayed(new Duration(seconds: 1), () => print('futures delayed'));
+  new Future.delayed(new Duration(seconds: 2), () {
+    print('futures delayed');
+    panel.destroy();
+  });
 
   // notifications
   atom.notifications.addSuccess('Hello world from dart-lang!');
@@ -63,9 +72,10 @@ void smokeTest() {
   });
 
   // jobs
-  new _TestJob("Job 1", 1).schedule();
-  new _TestJob("Job 2", 2).schedule();
-  new _TestJob("Job 3", 3).schedule();
+  new _TestJob("Job foo 1", 1).schedule();
+  new _TestJob("Job bar 2", 2).schedule();
+  new _TestJob("Job baz 3", 3).schedule();
+  new _TestJob("Job qux 4", 4).schedule();
 
   // utils
   print("platform: '${platform}'");
