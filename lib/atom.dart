@@ -323,6 +323,10 @@ class Directory extends Entry {
   Directory(JsObject object) : super(object);
   Directory.fromPath(String path) : super(_create('Directory', path));
 
+  /// Returns `true` if this [Directory] is the root directory of the
+  /// filesystem, or `false` if it isn't.
+  bool isRoot() => invoke('isRoot');
+
   // TODO: Should we move this _cvt guard into the File and Directory ctors?
   File getFile(filename) => new File(_cvt(invoke('getFile', filename)));
   Directory getSubdirectory(String dirname) =>

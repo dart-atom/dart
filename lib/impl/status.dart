@@ -20,7 +20,7 @@ class StatusDisplay implements Disposable {
   Tile _statusbarTile;
   Panel _jobsPanel;
   Timer _timer;
-  Disposable _cancelCommand;
+  Disposables _disposables = new Disposables();
   DivElement _element;
 
   StatusDisplay(StatusBar statusBar) {
@@ -38,7 +38,10 @@ class StatusDisplay implements Disposable {
     textLabel.classes.addAll(['inline-block-tight', 'text-label', 'text-highlight']);
     element.children.add(textLabel);
 
-    _subscription = jobs.onJobChanged.listen((Job job) {
+    _createJobsPanel();
+
+    _subscription = jobs.onJobChanged.listen((_) {
+      Job job = jobs.activeJob;
       bool showing = job != null;
 
       if (_timer != null) {
@@ -62,41 +65,42 @@ class StatusDisplay implements Disposable {
       _updateJobsDialog();
     });
 
-    _cancelCommand = atom.commands.add('atom-text-editor', 'core:cancel', (_) {
-      if (_jobsPanel != null) _jobsPanel.destroy();
-    });
+    _disposables.add(atom.commands.add('atom-text-editor', 'core:cancel', (_) {
+      if (_jobsPanel != null) _jobsPanel.hide();
+    }));
+
+    _disposables.add(atom.commands.add(
+      'atom-workspace', 'dart-lang:show-jobs', (_) => _showJobsDialog()));
   }
 
   void dispose() {
     _subscription.cancel();
     _statusbarTile.destroy();
-    _cancelCommand.dispose();
+    _disposables.dispose();
     if (_jobsPanel != null) _jobsPanel.destroy();
   }
 
+  void _createJobsPanel() {
+    _element = new DivElement();
+    _element.classes.add('jobs-dialog');
+
+    DivElement title = new DivElement()..classes.add('jobs-title');
+    _element.children.add(title);
+
+    DivElement div = new DivElement()..classes.add('select-list');
+    _element.children.add(div);
+    Element ol = new Element.ol()..classes.add('list-group');
+    div.children.add(ol);
+
+    _jobsPanel = atom.workspace.addModalPanel(item: _element, visible: false);
+    _jobsPanel.onDidDestroy.listen((_) {
+      _jobsPanel = null;
+    });
+  }
+
   void _showJobsDialog() {
-    if (_jobsPanel != null) {
-      _jobsPanel.show();
-      _updateJobsDialog();
-    } else {
-      _element = new DivElement();
-      _element.classes.add('jobs-dialog');
-
-      DivElement title = new DivElement()..classes.add('jobs-title');
-      _element.children.add(title);
-
-      DivElement div = new DivElement()..classes.add('select-list');
-      _element.children.add(div);
-      Element ol = new Element.ol()..classes.add('list-group');
-      div.children.add(ol);
-
-      _jobsPanel = atom.workspace.addModalPanel(item: _element, visible: true);
-      _jobsPanel.onDidDestroy.listen((_) {
-        _jobsPanel = null;
-      });
-
-      _updateJobsDialog();
-    }
+    _jobsPanel.show();
+    _updateJobsDialog();
   }
 
   void _updateJobsDialog() {
@@ -122,7 +126,7 @@ class StatusDisplay implements Disposable {
         DivElement block = new DivElement()..classes.addAll(['inline-block', 'jobs-progress']);
         item.children.add(block);
 
-        DivElement progress = new Element.tag('progress')..classes.add('inline-block');
+        Element progress = new Element.tag('progress')..classes.add('inline-block');
         block.children.add(progress);
         SpanElement span = new SpanElement()..classes.add('inline-block');
         block.children.add(span);
