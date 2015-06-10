@@ -108,21 +108,62 @@ class Atom extends ProxyHolder {
 
 /// Represents the state of the user interface for the entire window. Interact
 /// with this object to open files, be notified of current and future editors,
-/// and manipulate panes. To add panels, you'll need to use the [WorkspaceView]
-/// class for now until we establish APIs at the model layer.
+/// and manipulate panes.
 class Workspace extends ProxyHolder {
   Workspace(JsObject object) : super(object);
 
   /// Returns a list of [TextEditor]s.
   List<TextEditor> getTextEditors() =>
       invoke('getTextEditors').map((e) => new TextEditor(e)).toList();
+
+  /// Get the active item if it is a [TextEditor].
+  TextEditor getActiveTextEditor() {
+    var result = invoke('getActiveTextEditor');
+    return result == null ? null : new TextEditor(result);
+  }
+
+  Panel addModalPanel({dynamic item, bool visible, int priority}) =>
+      new Panel(invoke('addModalPanel', _panelOptions(item, visible, priority)));
+
+  Panel addTopPanel({dynamic item, bool visible, int priority}) =>
+      new Panel(invoke('addTopPanel', _panelOptions(item, visible, priority)));
+
+  Panel addBottomPanel({dynamic item, bool visible, int priority}) =>
+      new Panel(invoke('addBottomPanel', _panelOptions(item, visible, priority)));
+
+  Panel addLeftPanel({dynamic item, bool visible, int priority}) =>
+      new Panel(invoke('addLeftPanel', _panelOptions(item, visible, priority)));
+
+  Panel addRightPanel({dynamic item, bool visible, int priority}) =>
+      new Panel(invoke('addRightPanel', _panelOptions(item, visible, priority)));
+
+  Map _panelOptions(dynamic item, bool visible, int priority) {
+    Map options = {'item': item};
+    if (visible != null) options['visible'] = visible;
+    if (priority != null) options['priority'] = priority;
+    return options;
+  }
+}
+
+class Panel extends ProxyHolder {
+  Panel(JsObject object) : super(object);
+
+  Stream<bool> get onDidChangeVisible => eventStream('onDidChangeVisible');
+  Stream<Panel> get onDidDestroy =>
+      eventStream('onDidDestroy').map((obj) => new Panel(obj));
+
+  bool isVisible() => invoke('isVisible');
+  void show() => invoke('show');
+  void hide() => invoke('hide');
+  void destroy() => invoke('destroy');
 }
 
 class CommandRegistry extends ProxyHolder {
   CommandRegistry(JsObject object) : super(object);
 
-  void add(String target, String commandName, void callback(AtomEvent event)) {
-    invoke('add', target, commandName, (e) => callback(new AtomEvent(e)));
+  Disposable add(String target, String commandName, void callback(AtomEvent event)) {
+    return new JsDisposable(
+        invoke('add', target, commandName, (e) => callback(new AtomEvent(e))));
   }
 
   void dispatch(Element target, String commandName) =>
