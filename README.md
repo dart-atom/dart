@@ -21,6 +21,13 @@ To work on `atom-dartlang-experimental`:
 
 The plugin will be active in your copy of Atom. When making changes:
 
-- `type type type...`
+- `type type type...` 
+
+and either:
+
+- from atom, hit `ctrl-option-command-;`; this will re-build the dart code and re-start atom
+
+or:
+
 - run `grind build`
 - from atom, hit `ctrl-option-command-l`; this will re-start atom
