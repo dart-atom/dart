@@ -8,6 +8,7 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import 'analysis_server.dart';
 import 'atom.dart';
 import 'atom_linter.dart';
 import 'atom_statusbar.dart';
@@ -20,7 +21,7 @@ import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
-import 'impl/status.dart';
+import 'impl/status_display.dart';
 
 export 'atom.dart' show registerPackage;
 
@@ -47,13 +48,9 @@ class AtomDartPackage extends AtomPackage {
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
 
-    SdkManager sdkManager = new SdkManager();
-    deps[SdkManager] = sdkManager;
-    disposables.add(sdkManager);
-
-    ProjectManager projectManager = new ProjectManager();
-    deps[ProjectManager] = projectManager;
-    disposables.add(projectManager);
+    disposables.add(deps[SdkManager] = new SdkManager());
+    disposables.add(deps[ProjectManager] = new ProjectManager());
+    disposables.add(deps[AnalysisServer] = new AnalysisServer());
 
     // Register commands.
     _addCmd('atom-workspace', 'dart-lang:smoke-test', (_) => smokeTest());

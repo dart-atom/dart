@@ -7,11 +7,15 @@ library atom.projects;
 
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import 'atom.dart';
 import 'jobs.dart';
 import 'state.dart';
 import 'utils.dart';
 import 'impl/pub.dart' as pub;
+
+final Logger _logger = new Logger('projects');
 
 // TODO: Given a File or path, return the cooresponding Dart project.
 
@@ -49,6 +53,8 @@ class ProjectManager implements Disposable {
   Stream<List<DartProject>> get onChanged => _controller.stream;
 
   void dispose() {
+    _logger.fine('dispose()');
+
     _sub.cancel();
   }
 
@@ -73,7 +79,10 @@ class ProjectManager implements Disposable {
     if (newDirs.isNotEmpty) changed = true;
     projects.addAll(newDirs.map((dir) => new DartProject(dir)));
 
-    if (changed) _controller.add(projects);
+    if (changed) {
+      _logger.fine('${projects}');
+      _controller.add(projects);
+    }
   }
 
   void _checkForNewRemovedProjects() {
@@ -105,7 +114,10 @@ class ProjectManager implements Disposable {
       }
     });
 
-    if (removed) _controller.add(projects);
+    if (removed) {
+      _logger.fine('${projects}');
+      _controller.add(projects);
+    }
   }
 
   void _handleAddedDirs(List<Directory> dirs) {
@@ -117,7 +129,10 @@ class ProjectManager implements Disposable {
       });
     });
 
-    if (count != projects.length) _controller.add(projects);
+    if (count != projects.length) {
+      _logger.fine('${projects}');
+      _controller.add(projects);
+    }
   }
 
   List<Directory> _findDartProjects(Directory dir, int recurse) {

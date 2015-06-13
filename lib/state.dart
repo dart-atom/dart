@@ -4,10 +4,13 @@
 
 library atom.state;
 
+import 'analysis_server.dart';
 import 'dependencies.dart';
 import 'jobs.dart';
 import 'projects.dart';
 import 'sdk.dart';
+
+AnalysisServer get analysisServer => deps[AnalysisServer];
 
 final JobManager jobs = new JobManager();
 

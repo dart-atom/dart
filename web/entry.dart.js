@@ -593,7 +593,7 @@ var dart = [
     noSuchMethod$1: ["super$Interceptor$noSuchMethod$1", function(receiver, invocation) {
       throw H.wrapException(P.NoSuchMethodError$(receiver, invocation.get$memberName(), invocation.get$positionalArguments(), invocation.get$namedArguments(), null));
     }, null, "get$noSuchMethod", 2, 0, null, 0],
-    "%": "MediaError|MediaKeyError|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString"
+    "%": "MediaError|MediaKeyError|PositionError|SQLError|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString"
   },
   JSBool: {
     "^": "Interceptor;",
@@ -1665,7 +1665,7 @@ var dart = [
     }
   },
   _IsolateEvent: {
-    "^": "Object;isolate,fn,message>",
+    "^": "Object;isolate,fn,message",
     process$0: function() {
       var t1 = this.isolate;
       if (t1.get$isPaused()) {
@@ -3328,7 +3328,7 @@ var dart = [
       }}
   },
   RuntimeError: {
-    "^": "Error;message>",
+    "^": "Error;message",
     toString$0: function(_) {
       return "RuntimeError: " + this.message;
     },
@@ -4188,6 +4188,16 @@ var dart = [
       }}
   }
 }],
+["atom.analysis_server", "package:atom_dart/analysis_server.dart", , X, {
+  "^": "",
+  AnalysisServer: {
+    "^": "Object;",
+    dispose$0: [function() {
+      $.get$_logger0().fine$1("dispose()");
+    }, "call$0", "get$dispose", 0, 0, 1],
+    $isDisposable: 1
+  }
+}],
 ["atom.editing", "package:atom_dart/impl/editing.dart", , B, {
   "^": "",
   handleEnterKey: [function($event) {
@@ -4292,7 +4302,7 @@ var dart = [
   main_closure: {
     "^": "Closure:9;",
     call$1: [function(rec) {
-      P.print(rec.get$level().name + ": " + rec.get$time().toString$0(0) + ": " + H.S(J.get$message$x(rec)));
+      P.print(H.S(rec));
     }, null, null, 2, 0, null, 17, "call"]
   }
 },
@@ -4316,7 +4326,7 @@ var dart = [
     },
     _enqueue$1: function(job) {
       var t1, t2;
-      $.get$_logger1().fine$1("scheduling job " + job.name);
+      $.get$_logger3().fine$1("scheduling job " + job.name);
       this._jobs.push(new S.JobInstance(this, job, false));
       this._checkForRunnableJobs$0();
       t1 = this._controller;
@@ -4344,7 +4354,7 @@ var dart = [
     _exec$1: function(jobInstance) {
       var job, t1, t2;
       job = jobInstance.get$job();
-      $.get$_logger1().fine$1("starting job " + job.name);
+      $.get$_logger3().fine$1("starting job " + job.name);
       jobInstance.set$_running(true);
       t1 = this._controller;
       t2 = this.get$activeJob();
@@ -4385,7 +4395,7 @@ var dart = [
       var t1, t2;
       t1 = this._captured_this_3;
       t2 = this._captured_jobInstance_4;
-      $.get$_logger1().fine$1("finished job " + H.S(J.get$name$x(t2)));
+      $.get$_logger3().fine$1("finished job " + H.S(J.get$name$x(t2)));
       t2.set$_running(false);
       C.JSArray_methods.remove$1(t1._jobs, t2);
       t1._checkForRunnableJobs$0();
@@ -4585,17 +4595,24 @@ var dart = [
   AtomDartPackage: {
     "^": "AtomPackage;disposables,subscriptions,linterProvider,_registeredMethods",
     packageActivated$1: [function(state) {
-      var sdkManager, t1, projectManager, t2;
+      var t1, t2, t3;
       $.get$_logger().fine$1("packageActivated");
       if (X.Dependencies_instance() == null)
         $.Dependencies__global = new X.Dependencies(P.LinkedHashMap_LinkedHashMap$_empty(null, null));
-      sdkManager = V.SdkManager$();
-      X.Dependencies_instance()._instances.$indexSet(0, C.Type_KEX, sdkManager);
+      t1 = X.Dependencies_instance();
+      t2 = V.SdkManager$();
+      t1._instances.$indexSet(0, C.Type_KEX, t2);
       t1 = this.disposables._utils$_disposables;
-      t1.push(sdkManager);
-      projectManager = L.ProjectManager$();
-      X.Dependencies_instance()._instances.$indexSet(0, C.Type_61i, projectManager);
-      t1.push(projectManager);
+      t1.push(t2);
+      t2 = X.Dependencies_instance();
+      t3 = L.ProjectManager$();
+      t2._instances.$indexSet(0, C.Type_61i, t3);
+      t1.push(t3);
+      t3 = X.Dependencies_instance();
+      t2 = new X.AnalysisServer();
+      $.get$_logger0().fine$1("setup()");
+      t3._instances.$indexSet(0, C.Type_goj, t2);
+      t1.push(t2);
       t2 = $.get$atom0();
       t1.push(t2._commands.add$3(0, "atom-workspace", "dart-lang:smoke-test", new R.AtomDartPackage_packageActivated_closure()));
       t1.push(t2._commands.add$3(0, "atom-workspace", "dart-lang:rebuild-restart", new R.AtomDartPackage_packageActivated_closure0()));
@@ -4720,7 +4737,7 @@ var dart = [
       var t1, t2, t3, t4, t5, completer;
       if (this._process != null)
         throw H.wrapException(P.StateError$("exec can only be called once"));
-      t1 = $.get$_logger0();
+      t1 = $.get$_logger2();
       t2 = this.command;
       t3 = "exec: " + t2 + " ";
       t4 = this.args;
@@ -4798,6 +4815,7 @@ var dart = [
       return this._fullScanForProjects$0();
     }, "call$0", "get$rescanForProjects", 0, 0, 1],
     dispose$0: [function() {
+      $.get$_logger1().fine$1("dispose()");
       this._sub.cancel$0();
     }, "call$0", "get$dispose", 0, 0, 1],
     _fullScanForProjects$0: function() {
@@ -4819,6 +4837,7 @@ var dart = [
         changed = true;
       C.JSArray_methods.addAll$1(t1, H.setRuntimeTypeInfo(new H.EfficientLengthMappedIterable(newDirs, new L.ProjectManager__fullScanForProjects_closure1()), [H.getTypeArgumentByIndex(newDirs, 0), null]));
       if (changed) {
+        $.get$_logger1().fine$1(H.S(t1));
         t2 = this._projects$_controller;
         if (!t2.get$_mayAddEvent())
           H.throwExpression(t2._addEventError$0());
@@ -4837,14 +4856,17 @@ var dart = [
         this._handleAddedDirs$1(addedDirs.toList$0(0));
     },
     _handleRemovedDirs$1: function(dirs) {
-      var t1 = {};
+      var t1, t2;
+      t1 = {};
       t1._captured_removed_0 = false;
       C.JSArray_methods.forEach$1(dirs, new L.ProjectManager__handleRemovedDirs_closure(t1, this));
       if (t1._captured_removed_0) {
-        t1 = this._projects$_controller;
-        if (!t1.get$_mayAddEvent())
-          H.throwExpression(t1._addEventError$0());
-        t1._sendData$1(this.projects);
+        t1 = this.projects;
+        $.get$_logger1().fine$1(H.S(t1));
+        t2 = this._projects$_controller;
+        if (!t2.get$_mayAddEvent())
+          H.throwExpression(t2._addEventError$0());
+        t2._sendData$1(t1);
       }
     },
     _handleAddedDirs$1: function(dirs) {
@@ -4853,6 +4875,7 @@ var dart = [
       count = t1.length;
       C.JSArray_methods.forEach$1(dirs, new L.ProjectManager__handleAddedDirs_closure(this));
       if (count !== t1.length) {
+        $.get$_logger1().fine$1(H.S(t1));
         t2 = this._projects$_controller;
         if (!t2.get$_mayAddEvent())
           H.throwExpression(t2._addEventError$0());
@@ -5320,7 +5343,7 @@ var dart = [
     }
   }
 }],
-["atom.status", "package:atom_dart/impl/status.dart", , E, {
+["atom.status", "package:atom_dart/impl/status_display.dart", , E, {
   "^": "",
   StatusDisplay: {
     "^": "Object;_subscription,_disposables,_statusbarTile,_timer,_jobsPanel,_jobsPanelElement",
@@ -9094,7 +9117,7 @@ var dart = [
     }
   },
   ArgumentError: {
-    "^": "Error;_hasValue,invalidValue,name>,message>",
+    "^": "Error;_hasValue,invalidValue,name>,message",
     get$_errorName: function() {
       return "Invalid argument" + (!this._hasValue ? "(s)" : "");
     },
@@ -9200,7 +9223,7 @@ var dart = [
       }}
   },
   UnsupportedError: {
-    "^": "Error;message>",
+    "^": "Error;message",
     toString$0: function(_) {
       return "Unsupported operation: " + this.message;
     },
@@ -9209,7 +9232,7 @@ var dart = [
       }}
   },
   UnimplementedError: {
-    "^": "Error;message>",
+    "^": "Error;message",
     toString$0: function(_) {
       var t1 = this.message;
       return t1 != null ? "UnimplementedError: " + H.S(t1) : "UnimplementedError";
@@ -9219,7 +9242,7 @@ var dart = [
       }}
   },
   StateError: {
-    "^": "Error;message>",
+    "^": "Error;message",
     toString$0: function(_) {
       return "Bad state: " + this.message;
     },
@@ -9253,7 +9276,7 @@ var dart = [
     }
   },
   _ExceptionImplementation: {
-    "^": "Object;message>",
+    "^": "Object;message",
     toString$0: function(_) {
       var t1 = this.message;
       if (t1 == null)
@@ -9262,7 +9285,7 @@ var dart = [
     }
   },
   FormatException: {
-    "^": "Object;message>,source,offset",
+    "^": "Object;message,source,offset",
     toString$0: function(_) {
       var report, source;
       report = "" !== this.message ? "FormatException: " + this.message : "FormatException";
@@ -9420,7 +9443,7 @@ var dart = [
     $isElement: 1,
     $isNode: 1,
     $isObject: 1,
-    "%": "HTMLAppletElement|HTMLBRElement|HTMLBaseElement|HTMLCanvasElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDialogElement|HTMLDirectoryElement|HTMLFontElement|HTMLFrameElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLImageElement|HTMLLabelElement|HTMLLegendElement|HTMLLinkElement|HTMLMarqueeElement|HTMLMenuElement|HTMLMenuItemElement|HTMLModElement|HTMLOListElement|HTMLOptGroupElement|HTMLParagraphElement|HTMLPictureElement|HTMLPreElement|HTMLQuoteElement|HTMLScriptElement|HTMLShadowElement|HTMLSourceElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableElement|HTMLTableHeaderCellElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTemplateElement|HTMLTitleElement|HTMLTrackElement|HTMLUListElement|HTMLUnknownElement;HTMLElement"
+    "%": "HTMLAppletElement|HTMLBRElement|HTMLBaseElement|HTMLCanvasElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDialogElement|HTMLDirectoryElement|HTMLDivElement|HTMLFontElement|HTMLFrameElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLImageElement|HTMLLabelElement|HTMLLegendElement|HTMLLinkElement|HTMLMarqueeElement|HTMLMenuElement|HTMLMenuItemElement|HTMLModElement|HTMLOListElement|HTMLOptGroupElement|HTMLParagraphElement|HTMLPictureElement|HTMLPreElement|HTMLQuoteElement|HTMLScriptElement|HTMLShadowElement|HTMLSourceElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableElement|HTMLTableHeaderCellElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTemplateElement|HTMLTitleElement|HTMLTrackElement|HTMLUListElement|HTMLUnknownElement|PluginPlaceholderElement;HTMLElement"
   },
   AnchorElement: {
     "^": "HtmlElement;",
@@ -9429,10 +9452,6 @@ var dart = [
     },
     $isInterceptor: 1,
     "%": "HTMLAnchorElement"
-  },
-  ApplicationCacheErrorEvent: {
-    "^": "Event;message=",
-    "%": "ApplicationCacheErrorEvent"
   },
   AreaElement: {
     "^": "HtmlElement;",
@@ -9465,10 +9484,6 @@ var dart = [
     "^": "Event;value=",
     "%": "DeviceLightEvent"
   },
-  DivElement: {
-    "^": "HtmlElement;",
-    "%": ";HTMLDivElement"
-  },
   Document: {
     "^": "Node;",
     get$onClick: function(receiver) {
@@ -9487,11 +9502,11 @@ var dart = [
     "%": "DocumentFragment|ShadowRoot"
   },
   DomError: {
-    "^": "Interceptor;message=,name=",
+    "^": "Interceptor;name=",
     "%": "DOMError|FileError"
   },
   DomException: {
-    "^": "Interceptor;message=",
+    "^": "Interceptor;",
     get$name: function(receiver) {
       var errorName = receiver.name;
       if (P.Device_isWebKit() === true && errorName === "SECURITY_ERR")
@@ -9652,13 +9667,13 @@ var dart = [
     "%": "HTMLEmbedElement"
   },
   ErrorEvent: {
-    "^": "Event;error=,message=",
+    "^": "Event;error=",
     "%": "ErrorEvent"
   },
   Event: {
     "^": "Interceptor;path=",
     $isEvent: 1,
-    "%": "AnimationPlayerEvent|AudioProcessingEvent|AutocompleteErrorEvent|BeforeUnloadEvent|CloseEvent|CompositionEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|DragEvent|ExtendableEvent|FetchEvent|FocusEvent|FontFaceSetLoadEvent|GamepadEvent|HashChangeEvent|IDBVersionChangeEvent|InstallEvent|KeyboardEvent|MIDIConnectionEvent|MIDIMessageEvent|MSPointerEvent|MediaKeyNeededEvent|MediaQueryListEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MouseEvent|MouseScrollEvent|MouseWheelEvent|MutationEvent|OfflineAudioCompletionEvent|OverflowEvent|PageTransitionEvent|PointerEvent|PopStateEvent|ProgressEvent|PushEvent|RTCDTMFToneChangeEvent|RTCDataChannelEvent|RTCIceCandidateEvent|RTCPeerConnectionIceEvent|RelatedEvent|ResourceProgressEvent|SVGZoomEvent|SecurityPolicyViolationEvent|SpeechRecognitionEvent|StorageEvent|TextEvent|TouchEvent|TrackEvent|TransitionEvent|UIEvent|WebGLContextEvent|WebKitAnimationEvent|WebKitTransitionEvent|WheelEvent|XMLHttpRequestProgressEvent;ClipboardEvent|Event|InputEvent"
+    "%": "AnimationPlayerEvent|ApplicationCacheErrorEvent|AudioProcessingEvent|AutocompleteErrorEvent|BeforeUnloadEvent|CloseEvent|CompositionEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|DragEvent|ExtendableEvent|FetchEvent|FocusEvent|FontFaceSetLoadEvent|GamepadEvent|HashChangeEvent|IDBVersionChangeEvent|InstallEvent|KeyboardEvent|MIDIConnectionEvent|MIDIMessageEvent|MSPointerEvent|MediaKeyEvent|MediaKeyMessageEvent|MediaKeyNeededEvent|MediaQueryListEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MouseEvent|MouseScrollEvent|MouseWheelEvent|MutationEvent|OfflineAudioCompletionEvent|OverflowEvent|PageTransitionEvent|PointerEvent|PopStateEvent|ProgressEvent|PushEvent|RTCDTMFToneChangeEvent|RTCDataChannelEvent|RTCIceCandidateEvent|RTCPeerConnectionIceEvent|RelatedEvent|ResourceProgressEvent|SVGZoomEvent|SecurityPolicyViolationEvent|SpeechRecognitionEvent|StorageEvent|TextEvent|TouchEvent|TrackEvent|TransitionEvent|UIEvent|WebGLContextEvent|WebKitAnimationEvent|WebKitTransitionEvent|WheelEvent|XMLHttpRequestProgressEvent;ClipboardEvent|Event|InputEvent"
   },
   EventTarget: {
     "^": "Interceptor;",
@@ -9772,14 +9787,6 @@ var dart = [
     "^": "HtmlElement;error=",
     "%": "HTMLAudioElement|HTMLMediaElement|HTMLVideoElement"
   },
-  MediaKeyEvent: {
-    "^": "Event;message=",
-    "%": "MediaKeyEvent"
-  },
-  MediaKeyMessageEvent: {
-    "^": "Event;message=",
-    "%": "MediaKeyMessageEvent"
-  },
   MetaElement: {
     "^": "HtmlElement;name=",
     "%": "HTMLMetaElement"
@@ -9794,7 +9801,7 @@ var dart = [
     "%": "Navigator"
   },
   NavigatorUserMediaError: {
-    "^": "Interceptor;message=,name=",
+    "^": "Interceptor;name=",
     "%": "NavigatorUserMediaError"
   },
   _ChildNodeListLazy: {
@@ -9958,14 +9965,6 @@ var dart = [
     "^": "HtmlElement;name=,value=",
     "%": "HTMLParamElement"
   },
-  PluginPlaceholderElement: {
-    "^": "DivElement;message=",
-    "%": "PluginPlaceholderElement"
-  },
-  PositionError: {
-    "^": "Interceptor;message=",
-    "%": "PositionError"
-  },
   ProgressElement0: {
     "^": "HtmlElement;value=",
     "%": "HTMLProgressElement"
@@ -9975,7 +9974,7 @@ var dart = [
     "%": "HTMLSelectElement"
   },
   SpeechRecognitionError: {
-    "^": "Event;error=,message=",
+    "^": "Event;error=",
     "%": "SpeechRecognitionError"
   },
   SpeechSynthesisEvent: {
@@ -10584,11 +10583,7 @@ var dart = [
   "^": ""
 }],
 ["dart.dom.web_sql", "dart:web_sql", , P, {
-  "^": "",
-  SqlError: {
-    "^": "Interceptor;message=",
-    "%": "SQLError"
-  }
+  "^": ""
 }],
 ["dart.isolate", "dart:isolate", , P, {
   "^": "",
@@ -11538,7 +11533,7 @@ var dart = [
     }
   },
   LogRecord: {
-    "^": "Object;level<,message>,loggerName,time<,sequenceNumber,error>,stackTrace<,zone",
+    "^": "Object;level<,message,loggerName,time,sequenceNumber,error>,stackTrace<,zone",
     toString$0: function(_) {
       return "[" + this.level.name + "] " + this.loggerName + ": " + H.S(this.message);
     }
@@ -11873,9 +11868,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses._IsolateEvent[1];
   _IsolateEvent.prototype = $desc;
   _IsolateEvent.$__fields__ = ["isolate", "fn", "message"];
-  _IsolateEvent.prototype.get$message = function(receiver) {
-    return this.message;
-  };
   function _MainManagerStub() {
     this.$deferredAction();
   }
@@ -12258,9 +12250,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.RuntimeError[1];
   RuntimeError.prototype = $desc;
   RuntimeError.$__fields__ = ["message"];
-  RuntimeError.prototype.get$message = function(receiver) {
-    return this.message;
-  };
   function RuntimeType() {
     this.$deferredAction();
   }
@@ -12731,6 +12720,15 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.BufferedProcess[1];
   BufferedProcess.prototype = $desc;
   BufferedProcess.$__fields__ = ["obj"];
+  function AnalysisServer() {
+    this.$deferredAction();
+  }
+  AnalysisServer.builtin$cls = "AnalysisServer";
+  if (!"name" in AnalysisServer)
+    AnalysisServer.name = "AnalysisServer";
+  $desc = $collectedClasses.AnalysisServer[1];
+  AnalysisServer.prototype = $desc;
+  AnalysisServer.$__fields__ = [];
   function CoreElement(element) {
     this.element = element;
     this.$deferredAction();
@@ -15113,9 +15111,6 @@ init.precompiled = function($collectedClasses) {
   ArgumentError.prototype.get$name = function(receiver) {
     return this.name;
   };
-  ArgumentError.prototype.get$message = function(receiver) {
-    return this.message;
-  };
   function RangeError(start, end, _hasValue, invalidValue, name, message) {
     this.start = start;
     this.end = end;
@@ -15173,9 +15168,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.UnsupportedError[1];
   UnsupportedError.prototype = $desc;
   UnsupportedError.$__fields__ = ["message"];
-  UnsupportedError.prototype.get$message = function(receiver) {
-    return this.message;
-  };
   function UnimplementedError(message) {
     this.message = message;
     this.$deferredAction();
@@ -15186,9 +15178,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.UnimplementedError[1];
   UnimplementedError.prototype = $desc;
   UnimplementedError.$__fields__ = ["message"];
-  UnimplementedError.prototype.get$message = function(receiver) {
-    return this.message;
-  };
   function StateError(message) {
     this.message = message;
     this.$deferredAction();
@@ -15199,9 +15188,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.StateError[1];
   StateError.prototype = $desc;
   StateError.$__fields__ = ["message"];
-  StateError.prototype.get$message = function(receiver) {
-    return this.message;
-  };
   function ConcurrentModificationError(modifiedObject) {
     this.modifiedObject = modifiedObject;
     this.$deferredAction();
@@ -15241,9 +15227,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses._ExceptionImplementation[1];
   _ExceptionImplementation.prototype = $desc;
   _ExceptionImplementation.$__fields__ = ["message"];
-  _ExceptionImplementation.prototype.get$message = function(receiver) {
-    return this.message;
-  };
   function FormatException(message, source, offset) {
     this.message = message;
     this.source = source;
@@ -15256,9 +15239,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.FormatException[1];
   FormatException.prototype = $desc;
   FormatException.$__fields__ = ["message", "source", "offset"];
-  FormatException.prototype.get$message = function(receiver) {
-    return this.message;
-  };
   function Expando(name) {
     this.name = name;
     this.$deferredAction();
@@ -15405,18 +15385,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.AnchorElement[1];
   AnchorElement.prototype = $desc;
   AnchorElement.$__fields__ = [];
-  function ApplicationCacheErrorEvent() {
-    this.$deferredAction();
-  }
-  ApplicationCacheErrorEvent.builtin$cls = "ApplicationCacheErrorEvent";
-  if (!"name" in ApplicationCacheErrorEvent)
-    ApplicationCacheErrorEvent.name = "ApplicationCacheErrorEvent";
-  $desc = $collectedClasses.ApplicationCacheErrorEvent[1];
-  ApplicationCacheErrorEvent.prototype = $desc;
-  ApplicationCacheErrorEvent.$__fields__ = [];
-  ApplicationCacheErrorEvent.prototype.get$message = function(receiver) {
-    return receiver.message;
-  };
   function AreaElement() {
     this.$deferredAction();
   }
@@ -15483,15 +15451,6 @@ init.precompiled = function($collectedClasses) {
   DeviceLightEvent.prototype.get$value = function(receiver) {
     return receiver.value;
   };
-  function DivElement() {
-    this.$deferredAction();
-  }
-  DivElement.builtin$cls = "DivElement";
-  if (!"name" in DivElement)
-    DivElement.name = "DivElement";
-  $desc = $collectedClasses.DivElement[1];
-  DivElement.prototype = $desc;
-  DivElement.$__fields__ = [];
   function Document() {
     this.$deferredAction();
   }
@@ -15519,9 +15478,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.DomError[1];
   DomError.prototype = $desc;
   DomError.$__fields__ = [];
-  DomError.prototype.get$message = function(receiver) {
-    return receiver.message;
-  };
   DomError.prototype.get$name = function(receiver) {
     return receiver.name;
   };
@@ -15534,9 +15490,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.DomException[1];
   DomException.prototype = $desc;
   DomException.$__fields__ = [];
-  DomException.prototype.get$message = function(receiver) {
-    return receiver.message;
-  };
   function DomRectReadOnly() {
     this.$deferredAction();
   }
@@ -15631,9 +15584,6 @@ init.precompiled = function($collectedClasses) {
   ErrorEvent.$__fields__ = [];
   ErrorEvent.prototype.get$error = function(receiver) {
     return receiver.error;
-  };
-  ErrorEvent.prototype.get$message = function(receiver) {
-    return receiver.message;
   };
   function Event() {
     this.$deferredAction();
@@ -15809,30 +15759,6 @@ init.precompiled = function($collectedClasses) {
   MediaElement.prototype.get$error = function(receiver) {
     return receiver.error;
   };
-  function MediaKeyEvent() {
-    this.$deferredAction();
-  }
-  MediaKeyEvent.builtin$cls = "MediaKeyEvent";
-  if (!"name" in MediaKeyEvent)
-    MediaKeyEvent.name = "MediaKeyEvent";
-  $desc = $collectedClasses.MediaKeyEvent[1];
-  MediaKeyEvent.prototype = $desc;
-  MediaKeyEvent.$__fields__ = [];
-  MediaKeyEvent.prototype.get$message = function(receiver) {
-    return receiver.message;
-  };
-  function MediaKeyMessageEvent() {
-    this.$deferredAction();
-  }
-  MediaKeyMessageEvent.builtin$cls = "MediaKeyMessageEvent";
-  if (!"name" in MediaKeyMessageEvent)
-    MediaKeyMessageEvent.name = "MediaKeyMessageEvent";
-  $desc = $collectedClasses.MediaKeyMessageEvent[1];
-  MediaKeyMessageEvent.prototype = $desc;
-  MediaKeyMessageEvent.$__fields__ = [];
-  MediaKeyMessageEvent.prototype.get$message = function(receiver) {
-    return receiver.message;
-  };
   function MetaElement() {
     this.$deferredAction();
   }
@@ -15875,9 +15801,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.NavigatorUserMediaError[1];
   NavigatorUserMediaError.prototype = $desc;
   NavigatorUserMediaError.$__fields__ = [];
-  NavigatorUserMediaError.prototype.get$message = function(receiver) {
-    return receiver.message;
-  };
   NavigatorUserMediaError.prototype.get$name = function(receiver) {
     return receiver.name;
   };
@@ -15987,30 +15910,6 @@ init.precompiled = function($collectedClasses) {
   ParamElement.prototype.get$value = function(receiver) {
     return receiver.value;
   };
-  function PluginPlaceholderElement() {
-    this.$deferredAction();
-  }
-  PluginPlaceholderElement.builtin$cls = "PluginPlaceholderElement";
-  if (!"name" in PluginPlaceholderElement)
-    PluginPlaceholderElement.name = "PluginPlaceholderElement";
-  $desc = $collectedClasses.PluginPlaceholderElement[1];
-  PluginPlaceholderElement.prototype = $desc;
-  PluginPlaceholderElement.$__fields__ = [];
-  PluginPlaceholderElement.prototype.get$message = function(receiver) {
-    return receiver.message;
-  };
-  function PositionError() {
-    this.$deferredAction();
-  }
-  PositionError.builtin$cls = "PositionError";
-  if (!"name" in PositionError)
-    PositionError.name = "PositionError";
-  $desc = $collectedClasses.PositionError[1];
-  PositionError.prototype = $desc;
-  PositionError.$__fields__ = [];
-  PositionError.prototype.get$message = function(receiver) {
-    return receiver.message;
-  };
   function ProgressElement0() {
     this.$deferredAction();
   }
@@ -16052,9 +15951,6 @@ init.precompiled = function($collectedClasses) {
   SpeechRecognitionError.$__fields__ = [];
   SpeechRecognitionError.prototype.get$error = function(receiver) {
     return receiver.error;
-  };
-  SpeechRecognitionError.prototype.get$message = function(receiver) {
-    return receiver.message;
   };
   function SpeechSynthesisEvent() {
     this.$deferredAction();
@@ -16708,18 +16604,6 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses._SVGMPathElement[1];
   _SVGMPathElement.prototype = $desc;
   _SVGMPathElement.$__fields__ = [];
-  function SqlError() {
-    this.$deferredAction();
-  }
-  SqlError.builtin$cls = "SqlError";
-  if (!"name" in SqlError)
-    SqlError.name = "SqlError";
-  $desc = $collectedClasses.SqlError[1];
-  SqlError.prototype = $desc;
-  SqlError.$__fields__ = [];
-  SqlError.prototype.get$message = function(receiver) {
-    return receiver.message;
-  };
   function Capability() {
     this.$deferredAction();
   }
@@ -17117,12 +17001,6 @@ init.precompiled = function($collectedClasses) {
   LogRecord.prototype.get$level = function() {
     return this.level;
   };
-  LogRecord.prototype.get$message = function(receiver) {
-    return this.message;
-  };
-  LogRecord.prototype.get$time = function() {
-    return this.time;
-  };
   LogRecord.prototype.get$error = function(receiver) {
     return this.error;
   };
@@ -17197,7 +17075,7 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.RebuildJob_run__closure0[1];
   RebuildJob_run__closure0.prototype = $desc;
   RebuildJob_run__closure0.$__fields__ = [];
-  return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, CapabilityImpl, _Serializer, _Deserializer, JSInvocationMirror, ReflectionInfo, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, Workspace, Workspace_getTextEditors_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, NotificationManager, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextBuffer, Range, Point, AtomEvent, BufferedProcess, CoreElement, ProgressElement, main_closure, Job, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, LinterProvider, LinterProvider_registerLinterProvider_closure, LinterProvider__lint_closure, LinterProvider__lint__closure, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated_closure3, AtomDartPackage__addSdkCmd_closure, DartLinterProvider, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure0, ProcessRunner_execStreaming_closure, ProcessResult, ProjectManager, ProjectManager_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__checkForNewRemovedProjects_closure, ProjectManager__handleRemovedDirs_closure, ProjectManager__handleAddedDirs_closure, ProjectManager__handleAddedDirs__closure, DartProject, ProjectScanJob, PubJob, PubJob_run_closure, SdkManager, SdkManager_closure, SdkManager_tryToAutoConfigure_closure, Sdk, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure8, smokeTest_closure7, smokeTest_closure6, smokeTest_closure9, smokeTest_closure10, _TestJob, StatusDisplay, StatusDisplay_closure, StatusDisplay_closure0, StatusDisplay__closure, StatusDisplay_closure1, StatusDisplay_closure2, StatusDisplay__createJobsPanel_closure, StatusBar, Tile, Disposable, Disposables, StreamSubscriptions, Dependencies, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, FixedLengthListMixin, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _UncaughtAsyncError, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _AsyncBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, _Completer, _AsyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, StreamSubscription, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _MapStream, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _RootZone_bindUnaryCallback_closure0, _HashMap, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, NoSuchMethodError_toString_closure, bool, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, Expando, $int, Iterator, List, Map, Null, num, Object, Match, StackTrace, String, StringBuffer, Symbol, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, Blob, BodyElement, ButtonElement, CharacterData, DeviceLightEvent, DivElement, Document, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FormElement, HtmlCollection, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, IFrameElement, ImageData, InputElement, KeygenElement, LIElement, MapElement, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MetaElement, MeterElement, Navigator, NavigatorUserMediaError, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, ObjectElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, SelectElement, SpeechRecognitionError, SpeechSynthesisEvent, TextAreaElement, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, _AttributeMap, _ElementAttributeMap, _ElementCssClassSet, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, _DOMWindowCrossFrame, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FESpecularLightingElement, FETileElement, FETurbulenceElement, FilterElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, ScriptElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, CssClassSetImpl, CssClassSetImpl_add_closure, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, Logger, Logger_Logger_closure, Level, LogRecord, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RebuildJob_run__closure0];
+  return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, CapabilityImpl, _Serializer, _Deserializer, JSInvocationMirror, ReflectionInfo, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, Workspace, Workspace_getTextEditors_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, NotificationManager, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextBuffer, Range, Point, AtomEvent, BufferedProcess, AnalysisServer, CoreElement, ProgressElement, main_closure, Job, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, LinterProvider, LinterProvider_registerLinterProvider_closure, LinterProvider__lint_closure, LinterProvider__lint__closure, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated_closure3, AtomDartPackage__addSdkCmd_closure, DartLinterProvider, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure0, ProcessRunner_execStreaming_closure, ProcessResult, ProjectManager, ProjectManager_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__checkForNewRemovedProjects_closure, ProjectManager__handleRemovedDirs_closure, ProjectManager__handleAddedDirs_closure, ProjectManager__handleAddedDirs__closure, DartProject, ProjectScanJob, PubJob, PubJob_run_closure, SdkManager, SdkManager_closure, SdkManager_tryToAutoConfigure_closure, Sdk, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure8, smokeTest_closure7, smokeTest_closure6, smokeTest_closure9, smokeTest_closure10, _TestJob, StatusDisplay, StatusDisplay_closure, StatusDisplay_closure0, StatusDisplay__closure, StatusDisplay_closure1, StatusDisplay_closure2, StatusDisplay__createJobsPanel_closure, StatusBar, Tile, Disposable, Disposables, StreamSubscriptions, Dependencies, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, FixedLengthListMixin, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _UncaughtAsyncError, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _AsyncBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, _Completer, _AsyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, StreamSubscription, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _MapStream, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _RootZone_bindUnaryCallback_closure0, _HashMap, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, NoSuchMethodError_toString_closure, bool, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, Expando, $int, Iterator, List, Map, Null, num, Object, Match, StackTrace, String, StringBuffer, Symbol, HtmlElement, AnchorElement, AreaElement, Blob, BodyElement, ButtonElement, CharacterData, DeviceLightEvent, Document, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FormElement, HtmlCollection, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, IFrameElement, ImageData, InputElement, KeygenElement, LIElement, MapElement, MediaElement, MetaElement, MeterElement, Navigator, NavigatorUserMediaError, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, ObjectElement, OptionElement, OutputElement, ParamElement, ProgressElement0, SelectElement, SpeechRecognitionError, SpeechSynthesisEvent, TextAreaElement, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, _AttributeMap, _ElementAttributeMap, _ElementCssClassSet, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, _DOMWindowCrossFrame, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FESpecularLightingElement, FETileElement, FETurbulenceElement, FilterElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, ScriptElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, CssClassSetImpl, CssClassSetImpl_add_closure, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, Logger, Logger_Logger_closure, Level, LogRecord, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RebuildJob_run__closure0];
 };
 ;
 setupProgram(dart);
@@ -17369,9 +17247,6 @@ J.get$iterator$ax = function(receiver) {
 };
 J.get$length$asx = function(receiver) {
   return J.getInterceptor$asx(receiver).get$length(receiver);
-};
-J.get$message$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$message(receiver);
 };
 J.get$name$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$name(receiver);
@@ -17588,6 +17463,7 @@ C.Type_61i = H.createRuntimeType('ProjectManager');
 C.Type_KEX = H.createRuntimeType('SdkManager');
 C.Type_cWU = H.createRuntimeType('RebuildJob');
 C.Type_gT2 = H.createRuntimeType('_TestJob');
+C.Type_goj = H.createRuntimeType('AnalysisServer');
 {
   init.isHunkLoaded = function(hunkHash) {
     return !!$dart_deferred_initializers[hunkHash];
@@ -17701,12 +17577,16 @@ $.LogRecord__nextNumber = 0;
   return t1;
 }, "atom", "_ctx", "get$_ctx", function() {
   return J.$index$asx($.get$context(), "atom");
-}, "_ctx", "_logger1", "get$_logger1", function() {
+}, "_ctx", "_logger0", "get$_logger0", function() {
+  return N.Logger_Logger("analysis-server");
+}, "_logger", "_logger3", "get$_logger3", function() {
   return N.Logger_Logger("jobs");
 }, "_logger", "_logger", "get$_logger", function() {
   return N.Logger_Logger("atom-dart");
-}, "_logger", "_logger0", "get$_logger0", function() {
+}, "_logger", "_logger2", "get$_logger2", function() {
   return N.Logger_Logger("process");
+}, "_logger", "_logger1", "get$_logger1", function() {
+  return N.Logger_Logger("projects");
 }, "_logger", "jobs", "get$jobs", function() {
   var t1 = new S.JobManager(P.StreamController_StreamController$broadcast(null, null, false, null), [], null);
   t1.JobManager$0();
