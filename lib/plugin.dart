@@ -8,18 +8,20 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import 'analysis_server.dart';
 import 'atom.dart';
 import 'atom_linter.dart';
 import 'atom_statusbar.dart';
 import 'dependencies.dart';
+import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'impl/editing.dart';
+import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
-import 'impl/status.dart';
+import 'impl/status_display.dart';
 
 export 'atom.dart' show registerPackage;
 
@@ -46,31 +48,35 @@ class AtomDartPackage extends AtomPackage {
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
 
-    SdkManager sdkManager = new SdkManager();
-    deps[SdkManager] = sdkManager;
-    disposables.add(sdkManager);
+    disposables.add(deps[SdkManager] = new SdkManager());
+    disposables.add(deps[ProjectManager] = new ProjectManager());
+    disposables.add(deps[AnalysisServer] = new AnalysisServer());
 
     // Register commands.
-    CommandRegistry cmds = atom.commands;
-    cmds.add('atom-workspace', 'dart-lang:smoke-test', (_) => smokeTest());
-    cmds.add('atom-workspace', 'dart-lang:rebuild-restart', (_) {
+    _addCmd('atom-workspace', 'dart-lang:smoke-test', (_) => smokeTest());
+    _addCmd('atom-workspace', 'dart-lang:rebuild-restart', (_) {
       new RebuildJob().schedule();
     });
-    cmds.add('atom-workspace', 'dart-lang:auto-locate-sdk', (_) {
-      sdkManager.tryToAutoConfigure(complainOnFailure: true);
+    _addCmd('atom-workspace', 'dart-lang:auto-locate-sdk', (_) {
+      new SdkLocationJob(sdkManager).schedule();
+    });
+    _addCmd('atom-workspace', 'dart-lang:refresh-dart-projects', (_) {
+      new ProjectScanJob().schedule();
     });
 
-    cmds.add('atom-text-editor', 'dart-lang:newline', handleEnterKey);
-    cmds.add('atom-text-editor', 'dart-lang:pub-get',
-        _sdkCommand((AtomEvent event) {
+    // Text editor commands.
+    _addCmd('atom-text-editor', 'dart-lang:newline', editing.handleEnterKey);
+
+    // Register commands that require an SDK to be present.
+    _addSdkCmd('atom-text-editor', 'dart-lang:pub-get', (event) {
+      print('path = ${event.editor.getPath()}');
       // TODO: handle editors with no path
       // TODO: have a general find-me-the-dart-project utility
       new PubJob.get(dirname(event.editor.getPath())).schedule();
-    }));
-    cmds.add('atom-text-editor', 'dart-lang:pub-upgrade',
-        _sdkCommand((AtomEvent event) {
+    });
+    _addSdkCmd('atom-text-editor', 'dart-lang:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
-    }));
+    });
   }
 
   void packageDeactivated() {
@@ -90,14 +96,20 @@ class AtomDartPackage extends AtomPackage {
     };
   }
 
+  void _addCmd(String target, String command, void callback(AtomEvent e)) {
+    disposables.add(atom.commands.add(target, command, callback));
+  }
+
   // Validate that an sdk is available before calling the target function.
-  Function _sdkCommand(Function f) => (arg) {
-    if (!sdkManager.hasSdk) {
-      sdkManager.showNoSdkMessage();
-    } else {
-      f(arg);
-    }
-  };
+  void _addSdkCmd(String target, String command, void callback(AtomEvent e)) {
+    disposables.add(atom.commands.add(target, command, (event) {
+      if (!sdkManager.hasSdk) {
+        sdkManager.showNoSdkMessage();
+      } else {
+        callback(event);
+      }
+    }));
+  }
 }
 
 // TODO: move this class to a different file
@@ -108,8 +120,6 @@ class DartLinterProvider extends LinterProvider {
   void register() => LinterProvider.registerLinterProvider('provideLinter', this);
 
   Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer) {
-    //print('implement DartLinterProvider.lint()');
-
     // TODO: Lints are not currently displaying.
 
     return new Future.value([

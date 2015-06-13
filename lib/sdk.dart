@@ -7,6 +7,7 @@ library atom.sdk;
 import 'dart:async';
 
 import 'atom.dart';
+import 'jobs.dart';
 import 'process.dart';
 import 'utils.dart';
 
@@ -61,6 +62,11 @@ class SdkManager implements Disposable {
 
     if (!dir.existsSync()) dir = null;
 
+    if (dir != null) {
+      Sdk testSdk = new Sdk(dir);
+      if (!testSdk.isValidSdk) dir = null;
+    }
+
     if (dir == null) {
       if (_sdk != null) {
         _sdk = null;
@@ -70,7 +76,8 @@ class SdkManager implements Disposable {
           if (path == null || path.isEmpty) {
             atom.notifications.addInfo('No Dart SDK configured.');
           } else {
-            atom.notifications.addInfo('No Dart SDK configured.',
+            atom.notifications.addInfo(
+                'No Dart SDK configured.',
                 detail: 'SDK not found at ${path}.');
           }
         }
@@ -93,12 +100,18 @@ class Sdk {
 
   Sdk(this.directory);
 
-  bool get isValidSdk => directory.getSubdirectory('bin').existsSync();
+  bool get isValidSdk =>
+      directory.getFile('version').existsSync() &&
+      directory.getSubdirectory('bin').existsSync();
 
-  // Future<String> getVersion() {
-  //   File f = directory.getFile('version');
-  //   return f.read().then((data) => data.trim());
-  // }
+  Future<String> getVersion() {
+    File file = directory.getFile('version');
+    if (file.existsSync()) {
+      return file.read().then((data) => data.trim());
+    } else {
+      return new Future.value(null);
+    }
+  }
 
   // TODO: Process finagling on the mac; exec in the bash shell.
 
@@ -114,13 +127,27 @@ class Sdk {
 }
 
 class SdkDiscovery {
+  // TODO: fallback to $DART_SDK
+  // static Future<String> getDartSdkEnvVar() {
+  //
+  // }
+
   /// Try and auto-discover an SDK based on platform specific heuristics. This
   /// will return `null` if no SDK is found.
   Future<String> discoverSdk() {
     if (isMac) {
       // /bin/bash -c "which dart", /bin/bash -c "echo $PATH"
       return exec('/bin/bash', ['-l', '-c', 'which dart']).then((result) {
-        return _resolveSdkFromVm(result);
+        result = _resolveSdkFromVm(result);
+        if (result != null) {
+          // On mac, special case for homebrew. Replace the version specific
+          // path with the version independent one.
+          int index = result.indexOf('/Cellar/dart/');
+          if (index != -1 && result.endsWith('/libexec')) {
+            result = result.substring(0, index) + '/opt/dart/libexec';
+          }
+        }
+        return result;
       }).catchError((e) {
         return null;
       });
@@ -143,12 +170,26 @@ class SdkDiscovery {
     }
   }
 
-  String _resolveSdkFromVm(String path) {
-    if (path == null) return path;
-    // TODO: resolve symlinks
-    //String resolvedPath = require('fs').callMethod('realpathSync', [path]);
-    File file = new File.fromPath(path);
-    Directory binDir = file.getParent();
-    return binDir.getParent().getPath();
+  String _resolveSdkFromVm(String vmPath) {
+    if (vmPath == null) return null;
+    File vmFile = new File.fromPath(vmPath.trim());
+    // Resolve symlinks.
+    vmFile = new File.fromPath(vmFile.getRealPathSync());
+    return vmFile.getParent().getParent().path;
+  }
+
+  // Future<String> _readlink(String linkedFilePath) {
+  //   return exec('readlink', [linkedFilePath]);
+  // }
+}
+
+class SdkLocationJob extends Job {
+  final SdkManager sdkManager;
+
+  SdkLocationJob(this.sdkManager) : super('Auto locate SDK');
+
+  Future run() {
+    sdkManager.tryToAutoConfigure(complainOnFailure: true);
+    return new Future.delayed(new Duration(seconds: 1));
   }
 }

@@ -10,7 +10,8 @@ import 'package:logging/logging.dart';
 main() {
   Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen((LogRecord rec) {
-    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+    //print('${rec.level.name}: ${rec.time}: ${rec.message}');
+    print('${rec}');
   });
 
   registerPackage(new AtomDartPackage());

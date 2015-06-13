@@ -10,6 +10,7 @@ import 'dart:html' show DivElement;
 import '../atom.dart';
 import '../jobs.dart';
 import '../process.dart';
+import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -35,6 +36,15 @@ void smokeTest() {
   Directory childDir = children.firstWhere((e) => e is Directory);
   _printDir(childDir);
   _printDir(dir.getSubdirectory(childDir.getBaseName()));
+
+  // // resolve symlinks
+  // String path = '/Users/test/homebrew/bin/dart';
+  // File symDir = new File.fromPath(path);
+  // print('getPath()         = ${symDir.getPath()}');
+  // print('path              = ${symDir.path}');
+  // print('getRealPathSync() = ${symDir.getRealPathSync()}');
+  // print('realpathSync()    = ${realpathSync(path)}');
+  // print('existsSync()      = ${symDir.existsSync()}');
 
   // futures
   new Future(() => print('futures work ctor'));
@@ -64,18 +74,26 @@ void smokeTest() {
   // sdk
   var sdk = sdkManager.sdk;
   print('dart sdk: ${sdk}');
-  //sdk.getVersion().then((ver) => print('sdk version ${ver}'));
+  if (sdk != null) {
+    print('sdk isValidSdk() = ${sdk.isValidSdk}');
+    sdk.getVersion().then((ver) => print('sdk version ${ver}'));
+  }
 
   // sdk auto-discovery
   new SdkDiscovery().discoverSdk().then((String foundSdk) {
     print('discoverSdk: ${foundSdk}');
   });
 
+  // dart projects
+  List<DartProject> projects = projectManager.projects;
+  print('${projects.length} dart projects');
+  projects.forEach(print);
+
   // jobs
-  new _TestJob("Job foo 1", 1).schedule();
-  new _TestJob("Job bar 2", 2).schedule();
-  new _TestJob("Job baz 3", 3).schedule();
-  new _TestJob("Job qux 4", 4).schedule();
+  new _TestJob("Lorem ipsum dolor", 1).schedule();
+  new _TestJob("Sit amet consectetur", 2).schedule();
+  new _TestJob("Adipiscing elit sed", 3).schedule();
+  new _TestJob("Do eiusmod tempor", 4).schedule();
 
   // utils
   print("platform: '${platform}'");

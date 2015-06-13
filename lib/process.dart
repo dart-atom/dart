@@ -18,6 +18,8 @@ Future<String> exec(String cmd, [List<String> args]) {
     if (result.exit == 0) {
       return result.stdout;
     } else {
+      print(result.stdout);
+      print(result.stderr);
       throw result.exit;
     }
   });

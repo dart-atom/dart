@@ -9,8 +9,11 @@ import 'dart:async';
 import 'atom.dart';
 import 'js.dart';
 
+final JsObject _process = require('process');
+final JsObject _fs = require('fs');
+
 /// 'darwin', 'freebsd', 'linux', 'sunos' or 'win32'
-final String platform = require('process')['platform'];
+final String platform = _process['platform'];
 
 final bool isWindows = platform.startsWith('win');
 final bool isMac = platform == 'darwin';
@@ -41,6 +44,15 @@ String dirname(entry) {
   int index = entry.lastIndexOf(separator);
   return index == -1 ? null : entry.substring(0, index);
 }
+
+/// Relative path entries are removed and symlinks are resolved to their final
+/// destination.
+String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
+
+/// Get the value of an environment variable. This is often not accurate on the
+/// mac since mac apps are launched in a different shell then the terminal
+/// default.
+String env(String key) => _process['env'][key];
 
 abstract class Disposable {
   void dispose();
