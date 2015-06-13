@@ -4708,9 +4708,7 @@ var dart = [
   AtomDartPackage_packageActivated_closure3: {
     "^": "Closure:2;",
     call$1: function($event) {
-      var t1;
-      P.print("path = " + H.S($event.get$editor().invoke$1("getPath")));
-      t1 = new R.PubJob(G.dirname($event.get$editor().invoke$1("getPath")), "get", null, "Pub get", null);
+      var t1 = new R.PubJob(G.dirname($event.get$editor().invoke$1("getPath")), "get", null, "Pub get", null);
       t1._locatePubspecDir$0();
       $.get$jobs()._enqueue$1(t1);
     }
@@ -4751,11 +4749,8 @@ var dart = [
     call$1: [function(result) {
       if (J.$eq(result.get$exit(), 0))
         return result.get$stdout();
-      else {
-        P.print(result.get$stdout());
-        P.print(result.get$stderr());
+      else
         throw H.wrapException(result.get$exit());
-      }
     }, null, null, 2, 0, null, 18, "call"]
   },
   ProcessRunner: {
@@ -5331,8 +5326,10 @@ var dart = [
     Z.exec("date", null).then$1(new E.smokeTest_closure9());
     sdk = X.Dependencies_instance().getDependency$1(C.Type_KEX).get$sdk();
     P.print("dart sdk: " + H.S(sdk));
-    P.print("sdk isValidSdk() = " + sdk.get$isValidSdk());
-    sdk.getVersion$0().then$1(new E.smokeTest_closure10());
+    if (sdk != null) {
+      P.print("sdk isValidSdk() = " + sdk.get$isValidSdk());
+      sdk.getVersion$0().then$1(new E.smokeTest_closure10());
+    }
     new V.SdkDiscovery().discoverSdk$0().then$1(new E.smokeTest_closure11());
     projects = X.Dependencies_instance().getDependency$1(C.Type_61i).get$projects();
     P.print("" + projects.length + " dart projects");

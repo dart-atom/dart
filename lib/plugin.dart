@@ -69,7 +69,6 @@ class AtomDartPackage extends AtomPackage {
 
     // Register commands that require an SDK to be present.
     _addSdkCmd('atom-text-editor', 'dart-lang:pub-get', (event) {
-      print('path = ${event.editor.getPath()}');
       // TODO: handle editors with no path
       // TODO: have a general find-me-the-dart-project utility
       new PubJob.get(dirname(event.editor.getPath())).schedule();
