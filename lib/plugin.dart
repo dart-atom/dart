@@ -16,7 +16,7 @@ import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'impl/editing.dart';
+import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
@@ -56,23 +56,21 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(projectManager);
 
     // Register commands.
-    CommandRegistry cmds = atom.commands;
-    cmds.add('atom-workspace', 'dart-lang:smoke-test', (_) => smokeTest());
-    cmds.add('atom-workspace', 'dart-lang:rebuild-restart', (_) {
+    _addCmd('atom-workspace', 'dart-lang:smoke-test', (_) => smokeTest());
+    _addCmd('atom-workspace', 'dart-lang:rebuild-restart', (_) {
       new RebuildJob().schedule();
     });
-    cmds.add('atom-text-editor', 'dart-lang:newline', handleEnterKey);
-    cmds.add('atom-text-editor', 'dart-lang:pub-get',
-        _sdkCommand((AtomEvent event) {
-      new PubJob.get(dirname(event.editor.getPath())).schedule();
-    }));
-    cmds.add('atom-text-editor', 'dart-lang:pub-upgrade',
-        _sdkCommand((AtomEvent event) {
-      new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
-    }));
+    _addCmd('atom-workspace', 'dart-lang:rescan-dart-projects', (_) {
+      new ProjectScanJob().schedule();
+    });
+    _addCmd('atom-text-editor', 'dart-lang:newline', editing.handleEnterKey);
 
-    atom.project.onDidChangePaths.listen((paths) {
-      print(paths);
+    // Register commands that require an SDK to be present.
+    _addSdkCmd('atom-text-editor', 'dart-lang:pub-get', (event) {
+      new PubJob.get(dirname(event.editor.getPath())).schedule();
+    });
+    _addSdkCmd('atom-text-editor', 'dart-lang:pub-upgrade', (event) {
+      new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
     });
   }
 
@@ -93,14 +91,20 @@ class AtomDartPackage extends AtomPackage {
     };
   }
 
+  void _addCmd(String target, String command, void callback(AtomEvent e)) {
+    disposables.add(atom.commands.add(target, command, callback));
+  }
+
   // Validate that an sdk is available before calling the target function.
-  Function _sdkCommand(Function f) => (arg) {
-    if (!sdkManager.hasSdk) {
-      sdkManager.showNoSdkMessage();
-    } else {
-      f(arg);
-    }
-  };
+  void _addSdkCmd(String target, String command, void callback(AtomEvent e)) {
+    disposables.add(atom.commands.add(target, command, (event) {
+      if (!sdkManager.hasSdk) {
+        sdkManager.showNoSdkMessage();
+      } else {
+        callback(event);
+      }
+    }));
+  }
 }
 
 // TODO: move this class to a different file

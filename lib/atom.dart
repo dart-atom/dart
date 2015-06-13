@@ -343,6 +343,11 @@ class Directory extends Entry {
     }).toList();
   }
 
+  /// Returns whether the given path (real or symbolic) is inside this directory.
+  /// This method does not actually check if the path exists, it just checks if
+  /// the path is under this directory.
+  bool contains(String p) => invoke('contains', p);
+
   int get hashCode => path.hashCode;
 
   operator==(other) => other is Directory && path == other.path;
