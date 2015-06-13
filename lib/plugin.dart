@@ -4,9 +4,12 @@
 
 library atom.plugin;
 
+import 'dart:async';
+
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
+import 'atom_linter.dart';
 import 'atom_statusbar.dart';
 import 'dependencies.dart';
 import 'sdk.dart';
@@ -25,13 +28,17 @@ final Logger _logger = new Logger("atom-dart");
 class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
+  final DartLinterProvider linterProvider = new DartLinterProvider();
 
   AtomDartPackage() {
     // Register a method to consume the `status-bar` service API.
-    registerMethod('consumeStatusBar', (obj) {
+    registerServiceConsumer('consumeStatusBar', (obj) {
       // Create a new status bar display.
       return new StatusDisplay(new StatusBar(obj));
     });
+
+    // Register the linter provider.
+    linterProvider.register();
   }
 
   void packageActivated([Map state]) {
@@ -85,4 +92,27 @@ class AtomDartPackage extends AtomPackage {
       f(arg);
     }
   };
+}
+
+// TODO: move this class to a different file
+class DartLinterProvider extends LinterProvider {
+  // TODO: experiment with 'file', and lintOnFly: true
+  DartLinterProvider() : super(scopes: ['source.dart'], scope: 'file', lintOnFly: false);
+
+  void register() => LinterProvider.registerLinterProvider('provideLinter', this);
+
+  Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer) {
+    print('implement DartLinterProvider.lint()');
+
+    // TODO: Lints are not currently displaying.
+
+    return new Future.value([
+      // new LintMessage(
+      //   type: LintMessage.ERROR,
+      //   message: 'foo bar',
+      //   html: 'Foo bar baz',
+      //   file: editor.getPath(),
+      //   position: new Rn(new Pt(21, 1), new Pt(21, 10)))
+    ]);
+  }
 }

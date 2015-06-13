@@ -73,6 +73,7 @@ self.window = window;
 self.atom = atom;
 self.exports = exports;
 self.Object = Object;
+self.Promise = Promise;
 self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
 
 """;

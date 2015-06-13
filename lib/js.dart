@@ -63,7 +63,30 @@ class ProxyHolder {
 }
 
 class Promise<T> extends ProxyHolder {
+  static _jsObjectFromFuture(Future future) {
+    // var promise = new Promise(function(resolve, reject) {
+    //   // do a thing, possibly async, then…
+    //
+    //   if (/* everything turned out fine */) {
+    //     resolve("Stuff worked!");
+    //   } else {
+    //     reject(Error("It broke"));
+    //   }
+    // });
+
+    var callback = (resolve, reject) {
+      future.then((result) {
+        resolve.apply([result]);
+      }).catchError((e) {
+        reject.apply([e]);
+      });
+    };
+
+    return new JsObject(context['Promise'], [callback]);
+  }
+
   Promise(JsObject object) : super(object);
+  Promise.fromFuture(Future future) : super(_jsObjectFromFuture(future));
 
   void then(void thenCallback(T response), [void errorCallback(e)]) {
     invoke("then", thenCallback, errorCallback);
