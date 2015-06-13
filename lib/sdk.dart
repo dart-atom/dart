@@ -12,24 +12,23 @@ import 'utils.dart';
 
 export 'process.dart' show ProcessResult;
 
-final String _sdkPrefPath = 'dart-lang.sdkLocation';
+final String _prefPath = 'dart-lang.sdkLocation';
 
 class SdkManager implements Disposable {
   StreamController<Sdk> _controller = new StreamController.broadcast(sync: true);
 
   Sdk _sdk;
-  Disposable _locationObserve;
+  Disposable _prefObserve;
 
   SdkManager() {
-    _locationObserve = atom.config.observe(_sdkPrefPath, null, (value) {
-      _setTo(value == null ? null : new Directory.fromPath(value));
-    });
+    // Load the existing setting and initiate auto-discovery if necessary.
+    _setSdkPath(atom.config.get(_prefPath));
+    if (!hasSdk) tryToAutoConfigure(complainOnFailure: false);
 
-    // Initiate auto-discovery.
-    String sdkPrefValue = atom.config.get(_sdkPrefPath);
-    if (sdkPrefValue == null || sdkPrefValue.isEmpty) {
-      tryToAutoConfigure(complainOnFailure: false);
-    }
+    // TODO: Debounce these events.
+    _prefObserve = atom.config.observe(_prefPath, null, (value) {
+      _setSdkPath(value, verbose: true);
+    });
   }
 
   bool get hasSdk => _sdk != null;
@@ -46,8 +45,7 @@ class SdkManager implements Disposable {
   void tryToAutoConfigure({bool complainOnFailure: true}) {
     new SdkDiscovery().discoverSdk().then((String sdkPath) {
       if (sdkPath != null) {
-        atom.notifications.addSuccess('Dart SDK found at ${sdkPath}.');
-        atom.config.set(_sdkPrefPath, sdkPath);
+        atom.config.set(_prefPath, sdkPath);
       } else {
         if (complainOnFailure) {
           atom.notifications.addWarning('Unable to auto-locate a Dart SDK.');
@@ -56,27 +54,38 @@ class SdkManager implements Disposable {
     });
   }
 
-  // TODO: Also provide a debounced sdk change stream (observe sdk?).
-
   Stream<Sdk> get onSdkChange => _controller.stream;
 
-  void _setTo(Directory dir) {
+  void _setSdkPath(String path, {bool verbose: false}) {
+    Directory dir = (path == null || path.isEmpty) ? null : new Directory.fromPath(path);
+
     if (!dir.existsSync()) dir = null;
 
     if (dir == null) {
       if (_sdk != null) {
         _sdk = null;
         _controller.add(null);
+
+        if (verbose) {
+          if (path == null || path.isEmpty) {
+            atom.notifications.addInfo('No Dart SDK configured.');
+          } else {
+            atom.notifications.addInfo('No Dart SDK configured.',
+                detail: 'SDK not found at ${path}.');
+          }
+        }
       }
     } else if (_sdk == null || dir != _sdk.directory) {
       _sdk = new Sdk(dir);
       _controller.add(_sdk);
+
+      if (verbose) {
+        atom.notifications.addSuccess('Dart SDK found at ${path}.');
+      }
     }
   }
 
-  void dispose() {
-    _locationObserve.dispose();
-  }
+  void dispose() => _prefObserve.dispose();
 }
 
 class Sdk {

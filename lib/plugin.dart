@@ -56,9 +56,15 @@ class AtomDartPackage extends AtomPackage {
     cmds.add('atom-workspace', 'dart-lang:rebuild-restart', (_) {
       new RebuildJob().schedule();
     });
+    cmds.add('atom-workspace', 'dart-lang:auto-locate-sdk', (_) {
+      sdkManager.tryToAutoConfigure(complainOnFailure: true);
+    });
+
     cmds.add('atom-text-editor', 'dart-lang:newline', handleEnterKey);
     cmds.add('atom-text-editor', 'dart-lang:pub-get',
         _sdkCommand((AtomEvent event) {
+      // TODO: handle editors with no path
+      // TODO: have a general find-me-the-dart-project utility
       new PubJob.get(dirname(event.editor.getPath())).schedule();
     }));
     cmds.add('atom-text-editor', 'dart-lang:pub-upgrade',
@@ -77,7 +83,7 @@ class AtomDartPackage extends AtomPackage {
     return {
       'sdkLocation': {
         'title': 'Dart SDK Location',
-        'description': 'The location of the Dart SDK',
+        'description': 'The location of the Dart SDK.',
         'type': 'string',
         'default': ''
       }
@@ -102,7 +108,7 @@ class DartLinterProvider extends LinterProvider {
   void register() => LinterProvider.registerLinterProvider('provideLinter', this);
 
   Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer) {
-    print('implement DartLinterProvider.lint()');
+    //print('implement DartLinterProvider.lint()');
 
     // TODO: Lints are not currently displaying.
 
