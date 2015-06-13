@@ -9,6 +9,7 @@ import 'dart:html' show DivElement, Element, ImageElement, SpanElement;
 
 import '../atom.dart';
 import '../atom_statusbar.dart';
+import '../elements.dart';
 import '../jobs.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -17,26 +18,30 @@ const Duration _shortDuration = const Duration(milliseconds: 400);
 
 class StatusDisplay implements Disposable {
   StreamSubscription _subscription;
-  Tile _statusbarTile;
-  Panel _jobsPanel;
-  Timer _timer;
   Disposables _disposables = new Disposables();
-  DivElement _element;
+
+  Tile _statusbarTile;
+  Timer _timer;
+
+  Panel _jobsPanel;
+  DivElement _jobsPanelElement;
 
   StatusDisplay(StatusBar statusBar) {
-    DivElement element = new DivElement();
-    element.classes.addAll(['inline-block', 'job-status-bar']);
-    element.onClick.listen((_) => _showJobsDialog());
-    _statusbarTile = statusBar.addRightTile(item: element, priority: 10000);
+    CoreElement statusElement = new CoreElement.div()
+        ..inlineBlock()..clazz('job-status-bar');
+        statusElement.onClick.listen((_) => _showJobsDialog());
+    _statusbarTile = statusBar.addRightTile(
+        item: statusElement.element, priority: 10000);
 
-    ImageElement spinner = new ImageElement();
-    spinner.src = 'atom://dart-lang/images/gear.svg';
-    spinner.classes.addAll(['inline-block-tight', 'status-spinner']);
-    element.children.add(spinner);
+    CoreElement spinner = new CoreElement('img')
+        ..inlineBlockTight()
+        ..clazz('status-spinner')
+        ..setAttribute('src', 'atom://dart-lang/images/gear.svg');
+    statusElement.add(spinner);
 
-    DivElement textLabel = new DivElement();
-    textLabel.classes.addAll(['inline-block-tight', 'text-label', 'text-highlight']);
-    element.children.add(textLabel);
+    CoreElement textLabel = new CoreElement.div()..inlineBlockTight()
+        ..clazz('text-label')..clazz('text-highlight');
+    statusElement.add(textLabel);
 
     _createJobsPanel();
 
@@ -51,16 +56,16 @@ class StatusDisplay implements Disposable {
 
       if (job != null) {
         textLabel.text = '${job.name}…';
-        element.classes.toggle('showing', true);
+        statusElement.toggleClass('showing', true);
       } else {
         _timer = new Timer(_shortDuration, () {
           textLabel.text = '';
-          element.classes.toggle('showing', false);
+          statusElement.toggleClass('showing', false);
         });
       }
 
-      textLabel.classes.toggle('showing', showing);
-      spinner.classes.toggle('showing', showing);
+      textLabel.toggleClass('showing', showing);
+      spinner.toggleClass('showing', showing);
 
       _updateJobsDialog();
     });
@@ -81,18 +86,18 @@ class StatusDisplay implements Disposable {
   }
 
   void _createJobsPanel() {
-    _element = new DivElement();
-    _element.classes.add('jobs-dialog');
+    _jobsPanelElement = new DivElement();
+    _jobsPanelElement.classes.add('jobs-dialog');
 
     DivElement title = new DivElement()..classes.add('jobs-title');
-    _element.children.add(title);
+    _jobsPanelElement.children.add(title);
 
     DivElement div = new DivElement()..classes.add('select-list');
-    _element.children.add(div);
+    _jobsPanelElement.children.add(div);
     Element ol = new Element.ol()..classes.add('list-group');
     div.children.add(ol);
 
-    _jobsPanel = atom.workspace.addModalPanel(item: _element, visible: false);
+    _jobsPanel = atom.workspace.addModalPanel(item: _jobsPanelElement, visible: false);
     _jobsPanel.onDidDestroy.listen((_) {
       _jobsPanel = null;
     });
@@ -104,35 +109,28 @@ class StatusDisplay implements Disposable {
   }
 
   void _updateJobsDialog() {
-    if (_jobsPanel == null || _element == null) return;
+    if (_jobsPanel == null || _jobsPanelElement == null) return;
 
-    Element title = _element.querySelector('div.jobs-title');
+    Element title = _jobsPanelElement.querySelector('div.jobs-title');
     title.text = jobs.allJobs.isEmpty ? 'No running jobs.' : '';
 
-    Element ol = _element.querySelector('div ol');
+    Element ol = _jobsPanelElement.querySelector('div ol');
     ol.children.clear();
 
     for (JobInstance jobInstance in jobs.allJobs) {
       Job job = jobInstance.job;
 
-      Element item = new Element.li()
-          ..setAttribute('layout', '')..setAttribute('horizontal', '');
-      DivElement title = new DivElement()
-          ..classes.add('inline-block')..setAttribute('flex', '');
+      CoreElement item = new CoreElement.li()..layoutHorizontal();
+      CoreElement title = item.add(new CoreElement.div()..inlineBlock()..flex());
       title.text = jobInstance.isRunning ? '${job.name}…' : job.name;
-      item.children.add(title);
 
       if (jobInstance.isRunning) {
-        DivElement block = new DivElement()..classes.addAll(['inline-block', 'jobs-progress']);
-        item.children.add(block);
-
-        Element progress = new Element.tag('progress')..classes.add('inline-block');
-        block.children.add(progress);
-        SpanElement span = new SpanElement()..classes.add('inline-block');
-        block.children.add(span);
+        CoreElement block = item.add(
+            new CoreElement.div()..inlineBlock()..clazz('jobs-progress'));
+        block.add(new ProgressElement());
       }
 
-      ol.children.add(item);
+      ol.children.add(item.element);
     }
   }
 }

@@ -102,8 +102,6 @@ class DartLinterProvider extends LinterProvider {
   void register() => LinterProvider.registerLinterProvider('provideLinter', this);
 
   Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer) {
-    print('implement DartLinterProvider.lint()');
-
     // TODO: Lints are not currently displaying.
 
     return new Future.value([
