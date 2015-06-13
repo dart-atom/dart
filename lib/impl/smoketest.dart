@@ -37,6 +37,15 @@ void smokeTest() {
   _printDir(childDir);
   _printDir(dir.getSubdirectory(childDir.getBaseName()));
 
+  // // resolve symlinks
+  // String path = '/Users/test/homebrew/bin/dart';
+  // File symDir = new File.fromPath(path);
+  // print('getPath()         = ${symDir.getPath()}');
+  // print('path              = ${symDir.path}');
+  // print('getRealPathSync() = ${symDir.getRealPathSync()}');
+  // print('realpathSync()    = ${realpathSync(path)}');
+  // print('existsSync()      = ${symDir.existsSync()}');
+
   // futures
   new Future(() => print('futures work ctor'));
   new Future.microtask(() => print('futures work microtask'));
@@ -65,7 +74,10 @@ void smokeTest() {
   // sdk
   var sdk = sdkManager.sdk;
   print('dart sdk: ${sdk}');
-  //sdk.getVersion().then((ver) => print('sdk version ${ver}'));
+  if (sdk != null) {
+    print('sdk isValidSdk() = ${sdk.isValidSdk}');
+    sdk.getVersion().then((ver) => print('sdk version ${ver}'));
+  }
 
   // sdk auto-discovery
   new SdkDiscovery().discoverSdk().then((String foundSdk) {

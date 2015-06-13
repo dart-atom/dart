@@ -10,6 +10,8 @@ import 'dart:js';
 
 import 'utils.dart';
 
+export 'dart:js' show JsObject;
+
 JsObject jsify(obj) {
   if (obj == null) return null;
   if (obj is JsObject) return obj;

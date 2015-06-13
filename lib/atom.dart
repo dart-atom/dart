@@ -300,7 +300,8 @@ abstract class Entry extends ProxyHolder {
 
 class File extends Entry {
   File(JsObject object) : super(object);
-  File.fromPath(String path, [bool symlink]) : super(_create('File', path, symlink));
+  File.fromPath(String path, [bool symlink]) :
+      super(_create('File', path, symlink));
 
   Stream get onDidRename => eventStream('onDidRename');
   Stream get onDidDelete => eventStream('onDidDelete');
@@ -325,7 +326,8 @@ class File extends Entry {
 
 class Directory extends Entry {
   Directory(JsObject object) : super(object);
-  Directory.fromPath(String path) : super(_create('Directory', path));
+  Directory.fromPath(String path, [bool symlink]) :
+      super(_create('Directory', path, symlink));
 
   /// Returns `true` if this [Directory] is the root directory of the
   /// filesystem, or `false` if it isn't.

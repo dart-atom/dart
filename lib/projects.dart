@@ -17,7 +17,7 @@ import 'impl/pub.dart' as pub;
 
 final Logger _logger = new Logger('projects');
 
-// TODO: Given a File or path, return the cooresponding Dart project.
+// TODO: Given a File or path, return the corresponding Dart project.
 
 /// A class to locate Dart projects in Atom and listen for new or removed Dart
 /// projects.
@@ -152,6 +152,8 @@ class ProjectManager implements Disposable {
   }
 }
 
+/// A representation of a Dart project; a directory with a `pubspec.yaml` file
+/// or a `.packages` file.
 class DartProject {
   final Directory directory;
 
@@ -167,7 +169,7 @@ class DartProject {
 }
 
 class ProjectScanJob extends Job {
-  ProjectScanJob() : super('Scanning for new Dart Projects');
+  ProjectScanJob() : super('Refresh Dart project list');
 
   Future run() {
     projectManager.rescanForProjects();

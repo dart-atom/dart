@@ -57,13 +57,20 @@ class AtomDartPackage extends AtomPackage {
     _addCmd('atom-workspace', 'dart-lang:rebuild-restart', (_) {
       new RebuildJob().schedule();
     });
-    _addCmd('atom-workspace', 'dart-lang:rescan-dart-projects', (_) {
+    _addCmd('atom-workspace', 'dart-lang:auto-locate-sdk', (_) {
+      new SdkLocationJob(sdkManager).schedule();
+    });
+    _addCmd('atom-workspace', 'dart-lang:refresh-dart-projects', (_) {
       new ProjectScanJob().schedule();
     });
+
+    // Text editor commands.
     _addCmd('atom-text-editor', 'dart-lang:newline', editing.handleEnterKey);
 
     // Register commands that require an SDK to be present.
     _addSdkCmd('atom-text-editor', 'dart-lang:pub-get', (event) {
+      // TODO: handle editors with no path
+      // TODO: have a general find-me-the-dart-project utility
       new PubJob.get(dirname(event.editor.getPath())).schedule();
     });
     _addSdkCmd('atom-text-editor', 'dart-lang:pub-upgrade', (event) {
@@ -81,7 +88,7 @@ class AtomDartPackage extends AtomPackage {
     return {
       'sdkLocation': {
         'title': 'Dart SDK Location',
-        'description': 'The location of the Dart SDK',
+        'description': 'The location of the Dart SDK.',
         'type': 'string',
         'default': ''
       }
