@@ -32,8 +32,8 @@ abstract class AtomPackage {
   void packageDeactivated() { }
   Map serialize() => {};
 
-  /// Register a method for a service callback.
-  void registerMethod(String methodName, Disposable callback(JsObject obj)) {
+  /// Register a method for a service callback (`consumedServices`).
+  void registerServiceConsumer(String methodName, Disposable callback(JsObject obj)) {
     if (_registeredMethods == null) {
       throw new StateError('method must be registered in the package ctor');
     }
@@ -399,6 +399,12 @@ class TextEditor extends ProxyHolder {
   void save() => invoke('save');
 
   String toString() => getTitle();
+}
+
+class TextBuffer extends ProxyHolder {
+  TextBuffer(JsObject object) : super(_cvt(object));
+
+  String getPath() => invoke('getPath');
 }
 
 /// Represents a region in a buffer in row / column coordinates.
