@@ -280,7 +280,8 @@ class Project extends ProxyHolder {
 abstract class Entry extends ProxyHolder {
   Entry(JsObject object) : super(object);
 
-  // TODO: onDidChange(callback)
+  /// Fires an event when the file or directory's contents change.
+  Stream get onDidChange => eventStream('onDidChange');
 
   String get path => obj['path'];
 
@@ -294,12 +295,15 @@ abstract class Entry extends ProxyHolder {
 
   Directory getParent() => new Directory(invoke('getParent'));
 
-  String toString() => getPath();
+  String toString() => path;
 }
 
 class File extends Entry {
   File(JsObject object) : super(object);
   File.fromPath(String path, [bool symlink]) : super(_create('File', path, symlink));
+
+  Stream get onDidRename => eventStream('onDidRename');
+  Stream get onDidDelete => eventStream('onDidDelete');
 
   /// Get the SHA-1 digest of this file.
   String getDigestSync() => invoke('getDigestSync');
@@ -314,9 +318,9 @@ class File extends Entry {
   /// Overwrites the file with the given text.
   void writeSync(String text) => invoke('writeSync', text);
 
-  int get hashCode => getPath().hashCode;
+  int get hashCode => path.hashCode;
 
-  operator==(other) => other is File && getPath() == other.getPath();
+  operator==(other) => other is File && path == other.path;
 }
 
 class Directory extends Entry {
@@ -339,9 +343,9 @@ class Directory extends Entry {
     }).toList();
   }
 
-  int get hashCode => getPath().hashCode;
+  int get hashCode => path.hashCode;
 
-  operator==(other) => other is Directory && getPath() == other.getPath();
+  operator==(other) => other is Directory && path == other.path;
 }
 
 /// This cooresponds to an `atom-text-editor` custom element.

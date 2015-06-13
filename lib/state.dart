@@ -6,8 +6,11 @@ library atom.state;
 
 import 'dependencies.dart';
 import 'jobs.dart';
+import 'projects.dart';
 import 'sdk.dart';
 
 final JobManager jobs = new JobManager();
+
+ProjectManager get projectManager => deps[ProjectManager];
 
 SdkManager get sdkManager => deps[SdkManager];

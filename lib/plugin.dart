@@ -12,6 +12,7 @@ import 'atom.dart';
 import 'atom_linter.dart';
 import 'atom_statusbar.dart';
 import 'dependencies.dart';
+import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
@@ -50,6 +51,10 @@ class AtomDartPackage extends AtomPackage {
     deps[SdkManager] = sdkManager;
     disposables.add(sdkManager);
 
+    ProjectManager projectManager = new ProjectManager();
+    deps[ProjectManager] = projectManager;
+    disposables.add(projectManager);
+
     // Register commands.
     CommandRegistry cmds = atom.commands;
     cmds.add('atom-workspace', 'dart-lang:smoke-test', (_) => smokeTest());
@@ -65,6 +70,10 @@ class AtomDartPackage extends AtomPackage {
         _sdkCommand((AtomEvent event) {
       new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
     }));
+
+    atom.project.onDidChangePaths.listen((paths) {
+      print(paths);
+    });
   }
 
   void packageDeactivated() {
