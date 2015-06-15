@@ -41,6 +41,8 @@ class AtomDartPackage extends AtomPackage {
   }
 
   void packageActivated([Map state]) {
+    _setupLogging();
+
     _logger.fine("packageActivated");
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
@@ -110,6 +112,21 @@ class AtomDartPackage extends AtomPackage {
       } else {
         callback(event);
       }
+    }));
+  }
+
+  void _setupLogging() {
+    disposables.add(atom.config.observe('dart-lang.logging', null, (val) {
+      if (val == null) return;
+
+      for (Level level in Level.LEVELS) {
+        if (val.toUpperCase() == level.name) {
+          Logger.root.level = level;
+          break;
+        }
+      }
+
+      _logger.fine("logging level: ${Logger.root.level}");
     }));
   }
 }
