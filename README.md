@@ -14,6 +14,7 @@ To work on `atom-dartlang-experimental`:
 
 - install [Atom](https://atom.io/)
 - clone this repo
+- from the command line, run `pub get`
 - from the command line, run `grind build`; this will re-compile the javascript
 - from the repo directory, type `apm link` (you can install `apm` via the
   `Atom > Install Shell Commands` menu item)
