@@ -60,9 +60,9 @@ class SdkManager implements Disposable {
   void _setSdkPath(String path, {bool verbose: false}) {
     Directory dir = (path == null || path.isEmpty) ? null : new Directory.fromPath(path);
 
-    if (!dir.existsSync()) dir = null;
-
     if (dir != null) {
+      if (!dir.existsSync()) dir = null;
+
       Sdk testSdk = new Sdk(dir);
       if (!testSdk.isValidSdk) dir = null;
     }
