@@ -66,14 +66,19 @@ class AtomDartPackage extends AtomPackage {
     // Text editor commands.
     _addCmd('atom-text-editor', 'dart-lang:newline', editing.handleEnterKey);
 
+    // TODO: have a general find-me-the-dart-project utility
     // Register commands that require an SDK to be present.
     _addSdkCmd('atom-text-editor', 'dart-lang:pub-get', (event) {
-      // TODO: handle editors with no path
-      // TODO: have a general find-me-the-dart-project utility
       new PubJob.get(dirname(event.editor.getPath())).schedule();
     });
     _addSdkCmd('atom-text-editor', 'dart-lang:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
+    });
+    _addSdkCmd('.tree-view', 'dart-lang:pub-get', (AtomEvent event) {
+      new PubJob.get(dirname(event.selectedFilePath)).schedule();
+    });
+    _addSdkCmd('.tree-view', 'dart-lang:pub-upgrade', (event) {
+      new PubJob.upgrade(dirname(event.selectedFilePath)).schedule();
     });
 
     // Register the linter provider.

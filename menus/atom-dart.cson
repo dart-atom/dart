@@ -18,3 +18,8 @@
     {label: 'Pub Upgrade', command: 'dart-lang:pub-upgrade'}
     {type: 'separator'}
   ]
+  '.tree-view.full-menu li[is="tree-view-file"] span[data-name="pubspec.yaml"]': [
+    {'label': 'Pub Get', 'command': 'dart-lang:pub-get' }
+    {'label': 'Pub Upgrade', 'command': 'dart-lang:pub-upgrade' }
+    {'type': 'separator'}
+  ]

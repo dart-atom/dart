@@ -449,7 +449,7 @@ class Point extends ProxyHolder {
 class AtomEvent extends ProxyHolder {
   AtomEvent(JsObject object) : super(_cvt(object));
 
-  JsObject get currentTarget => obj['currentTarget'];
+  dynamic get currentTarget => obj['currentTarget'];
 
   /// Return the editor that is the target of this event. Note, this is _only_
   /// available if an editor is the target of an event; calling this otherwise
@@ -457,6 +457,20 @@ class AtomEvent extends ProxyHolder {
   TextEditor get editor {
     TextEditorView view = new TextEditorView(currentTarget);
     return view.getModel();
+  }
+
+  /// Return the currently selected file item. This call will only be meaningful
+  /// if the event target is the Tree View.
+  Element get selectedFileItem {
+    Element element = currentTarget;
+    return element.querySelector('li[is=tree-view-file].selected span.name');
+  }
+
+  /// Return the currently selected file path. This call will only be meaningful
+  /// if the event target is the Tree View.
+  String get selectedFilePath {
+    Element element = selectedFileItem;
+    return element == null ? null : element.getAttribute('data-path');
   }
 
   void abortKeyBinding() => invoke('abortKeyBinding');
