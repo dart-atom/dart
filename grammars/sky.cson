@@ -1,0 +1,310 @@
+'scopeName': 'text.sky'
+'name': 'Sky'
+'fileTypes': [
+  'sky'
+]
+'patterns': [
+  {
+    'begin': '(<\\?)\\s*([-_a-zA-Z0-9]+)'
+    'captures':
+      '1':
+        'name': 'punctuation.definition.tag.sky'
+      '2':
+        'name': 'entity.name.tag.sky'
+    'end': '(\\?>)'
+    'name': 'meta.tag.preprocessor.sky'
+    'patterns': [
+      {
+        'match': ' ([a-zA-Z-]+)'
+        'name': 'entity.other.attribute-name.sky'
+      }
+      {
+        'include': '#doublequotedString'
+      }
+      {
+        'include': '#singlequotedString'
+      }
+    ]
+  }
+  {
+    'match': '^(#!.*)$'
+    'name': 'meta.preprocessor.script.sky'
+  }
+  {
+    'begin': '(?:^\\s+)?(<)((?i:script))\\b(?![^>]*/>)'
+    'beginCaptures':
+      '1':
+        'name': 'punctuation.definition.tag.sky'
+      '2':
+        'name': 'entity.name.tag.script.sky'
+    'end': '(?<=</(script|SCRIPT))(>)(?:\\s*\\n)?'
+    'endCaptures':
+      '2':
+        'name': 'punctuation.definition.tag.sky'
+    'name': 'source.dart.embedded.sky'
+    'patterns': [
+      {
+        'include': '#tag-stuff'
+      }
+      {
+        'begin': '(?<!</(?:script|SCRIPT))(>)'
+        'captures':
+          '1':
+            'name': 'punctuation.definition.tag.sky'
+          '2':
+            'name': 'entity.name.tag.script.sky'
+        'end': '(</)((?i:script))'
+        'patterns': [
+          {
+            'include': 'source.dart'
+          }
+        ]
+      }
+    ]
+  }
+  {
+    'begin': '(?:^\\s+)?(<)((?i:style))\\b(?![^>]*/>)'
+    'captures':
+      '1':
+        'name': 'punctuation.definition.tag.sky'
+      '2':
+        'name': 'entity.name.tag.style.sky'
+      '3':
+        'name': 'punctuation.definition.tag.sky'
+    'end': '(</)((?i:style))(>)(?:\\s*\\n)?'
+    'name': 'source.css.embedded.sky'
+    'patterns': [
+      {
+        'include': '#tag-stuff'
+      }
+      {
+        'begin': '(>)'
+        'beginCaptures':
+          '1':
+            'name': 'punctuation.definition.tag.sky'
+        'end': '(?=</(?i:style))'
+        'patterns': [
+          {
+            'include': '#embedded-code'
+          }
+          {
+            'include': 'source.css'
+          }
+        ]
+      }
+    ]
+  }
+  {
+    'begin': '(<!)(DOCTYPE)\\s+([:a-zA-Z_][:a-zA-Z0-9_.-]*)'
+    'captures':
+      '1':
+        'name': 'punctuation.definition.tag.sky'
+      '2':
+        'name': 'keyword.other.doctype.sky'
+      '3':
+        'name': 'variable.language.documentroot.sky'
+    'end': '\\s*(>)'
+    'name': 'meta.tag.sgml.doctype.sky'
+    'patterns': [
+      {
+        'include': '#internalSubset'
+      }
+    ]
+  }
+  {
+    'begin': '<[!%]--'
+    'captures':
+      '0':
+        'name': 'punctuation.definition.comment.sky'
+    'end': '--%?>'
+    'name': 'comment.block.sky'
+  }
+  {
+    'begin': '(<)((?:([-_a-zA-Z0-9]+)((:)))?([-_a-zA-Z0-9:]+))(?=(\\s[^>]*)?></\\2>)'
+    'beginCaptures':
+      '1':
+        'name': 'punctuation.definition.tag.sky'
+      '3':
+        'name': 'entity.name.tag.namespace.sky'
+      '4':
+        'name': 'entity.name.tag.sky'
+      '5':
+        'name': 'punctuation.separator.namespace.sky'
+      '6':
+        'name': 'entity.name.tag.localname.sky'
+    'end': '(>(<))/(?:([-_a-zA-Z0-9]+)((:)))?([-_a-zA-Z0-9:]+)(>)'
+    'endCaptures':
+      '1':
+        'name': 'punctuation.definition.tag.sky'
+      '2':
+        'name': 'meta.scope.between-tag-pair.sky'
+      '3':
+        'name': 'entity.name.tag.namespace.sky'
+      '4':
+        'name': 'entity.name.tag.sky'
+      '5':
+        'name': 'punctuation.separator.namespace.sky'
+      '6':
+        'name': 'entity.name.tag.localname.sky'
+      '7':
+        'name': 'punctuation.definition.tag.sky'
+    'name': 'meta.tag.no-content.sky'
+    'patterns': [
+      {
+        'include': '#tagStuff'
+      }
+    ]
+  }
+  {
+    'begin': '(</?)(?:([-\\w\\.]+)((:)))?([-\\w\\.:]+)'
+    'captures':
+      '1':
+        'name': 'punctuation.definition.tag.sky'
+      '2':
+        'name': 'entity.name.tag.namespace.sky'
+      '3':
+        'name': 'entity.name.tag.sky'
+      '4':
+        'name': 'punctuation.separator.namespace.sky'
+      '5':
+        'name': 'entity.name.tag.localname.sky'
+    'end': '(/?>)'
+    'name': 'meta.tag.sky'
+    'patterns': [
+      {
+        'include': '#tagStuff'
+      }
+    ]
+  }
+  {
+    'include': '#entity'
+  }
+  {
+    'include': '#bare-ampersand'
+  }
+  {
+    'begin': '<!\\[CDATA\\['
+    'beginCaptures':
+      '0':
+        'name': 'punctuation.definition.string.begin.sky'
+    'end': ']]>'
+    'endCaptures':
+      '0':
+        'name': 'punctuation.definition.string.end.sky'
+    'name': 'string.unquoted.cdata.sky'
+  }
+]
+'repository':
+  'EntityDecl':
+    'begin': '(<!)(ENTITY)\\s+(%\\s+)?([:a-zA-Z_][:a-zA-Z0-9_.-]*)(\\s+(?:SYSTEM|PUBLIC)\\s+)?'
+    'captures':
+      '1':
+        'name': 'punctuation.definition.tag.sky'
+      '2':
+        'name': 'keyword.other.entity.sky'
+      '3':
+        'name': 'punctuation.definition.entity.sky'
+      '4':
+        'name': 'variable.language.entity.sky'
+      '5':
+        'name': 'keyword.other.entitytype.sky'
+    'end': '(>)'
+    'patterns': [
+      {
+        'include': '#doublequotedString'
+      }
+      {
+        'include': '#singlequotedString'
+      }
+    ]
+  'bare-ampersand':
+    'match': '&'
+    'name': 'invalid.illegal.bad-ampersand.sky'
+  'doublequotedString':
+    'begin': '"'
+    'beginCaptures':
+      '0':
+        'name': 'punctuation.definition.string.begin.sky'
+    'end': '"'
+    'endCaptures':
+      '0':
+        'name': 'punctuation.definition.string.end.sky'
+    'name': 'string.quoted.double.sky'
+    'patterns': [
+      {
+        'include': '#entity'
+      }
+      {
+        'include': '#bare-ampersand'
+      }
+    ]
+  'entity':
+    'captures':
+      '1':
+        'name': 'punctuation.definition.constant.sky'
+      '3':
+        'name': 'punctuation.definition.constant.sky'
+    'match': '(&)([:a-zA-Z_][:a-zA-Z0-9_.-]*|#[0-9]+|#x[0-9a-fA-F]+)(;)'
+    'name': 'constant.character.entity.sky'
+  'internalSubset':
+    'begin': '(\\[)'
+    'captures':
+      '1':
+        'name': 'punctuation.definition.constant.sky'
+    'end': '(\\])'
+    'name': 'meta.internalsubset.sky'
+    'patterns': [
+      {
+        'include': '#EntityDecl'
+      }
+      {
+        'include': '#parameterEntity'
+      }
+    ]
+  'parameterEntity':
+    'captures':
+      '1':
+        'name': 'punctuation.definition.constant.sky'
+      '3':
+        'name': 'punctuation.definition.constant.sky'
+    'match': '(%)([:a-zA-Z_][:a-zA-Z0-9_.-]*)(;)'
+    'name': 'constant.character.parameter-entity.sky'
+  'singlequotedString':
+    'begin': '\''
+    'beginCaptures':
+      '0':
+        'name': 'punctuation.definition.string.begin.sky'
+    'end': '\''
+    'endCaptures':
+      '0':
+        'name': 'punctuation.definition.string.end.sky'
+    'name': 'string.quoted.single.sky'
+    'patterns': [
+      {
+        'include': '#entity'
+      }
+      {
+        'include': '#bare-ampersand'
+      }
+    ]
+  'tagStuff':
+    'patterns': [
+      {
+        'captures':
+          '1':
+            'name': 'entity.other.attribute-name.namespace.sky'
+          '2':
+            'name': 'entity.other.attribute-name.sky'
+          '3':
+            'name': 'punctuation.separator.namespace.sky'
+          '4':
+            'name': 'entity.other.attribute-name.localname.sky'
+        'match': ' (?:([-_a-zA-Z0-9]+)((:)))?([-_a-zA-Z0-9]+)='
+      }
+      {
+        'include': '#doublequotedString'
+      }
+      {
+        'include': '#singlequotedString'
+      }
+    ]
