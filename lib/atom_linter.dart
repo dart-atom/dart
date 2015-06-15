@@ -45,10 +45,7 @@ abstract class LinterProvider {
     TextEditor editor = new TextEditor(jsEditor);
     TextBuffer buffer = new TextBuffer(jsBuffer);
     Future f = lint(editor, buffer).then((lints) {
-      return lints.map((lint) {
-        //print(lint._toMap());
-        return lint._toProxy();
-      }).toList();
+      return lints.map((lint) => lint._toProxy()).toList();
     });
     Promise promise = new Promise.fromFuture(f);
     return promise.obj;
