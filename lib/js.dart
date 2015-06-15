@@ -78,7 +78,7 @@ class Promise<T> extends ProxyHolder {
 
     var callback = (resolve, reject) {
       future.then((result) {
-        resolve.apply([result]);
+        resolve.apply([jsify(result)]);
       }).catchError((e) {
         reject.apply([e]);
       });

@@ -20,6 +20,11 @@
     }
   },
   "providedServices": {
+    "autocomplete.provider": {
+      "versions": {
+        "2.0.0": "provideAutocomplete"
+      }
+    },
     "linter-plus": {
       "versions": {
         "0.1.0": "provideLinter"

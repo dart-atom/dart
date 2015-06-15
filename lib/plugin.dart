@@ -10,6 +10,7 @@ import 'package:logging/logging.dart';
 
 import 'analysis_server.dart';
 import 'atom.dart';
+import 'atom_autocomplete.dart';
 import 'atom_linter.dart';
 import 'atom_statusbar.dart';
 import 'dependencies.dart';
@@ -30,7 +31,6 @@ final Logger _logger = new Logger("atom-dart");
 class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
-  final DartLinterProvider linterProvider = new DartLinterProvider();
 
   AtomDartPackage() {
     // Register a method to consume the `status-bar` service API.
@@ -38,9 +38,6 @@ class AtomDartPackage extends AtomPackage {
       // Create a new status bar display.
       return new StatusDisplay(new StatusBar(obj));
     });
-
-    // Register the linter provider.
-    linterProvider.register();
   }
 
   void packageActivated([Map state]) {
@@ -76,6 +73,12 @@ class AtomDartPackage extends AtomPackage {
     _addSdkCmd('atom-text-editor', 'dart-lang:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
     });
+
+    // Register the linter provider.
+    //new DartLinterProvider().register();
+
+    // Register the autocomplete provider.
+    //new DartAutocompleteProvider().register();
   }
 
   void packageDeactivated() {
@@ -111,23 +114,40 @@ class AtomDartPackage extends AtomPackage {
   }
 }
 
-// TODO: move this class to a different file
+// TODO: Move this class to a different file.
 class DartLinterProvider extends LinterProvider {
-  // TODO: experiment with 'file', and lintOnFly: true
-  DartLinterProvider() : super(scopes: ['source.dart'], scope: 'file', lintOnFly: false);
+  // TODO: Options are 'file' and 'project' scope, and lintOnFly true or false.
+  DartLinterProvider() : super(scopes: ['source.dart'], scope: 'file');
 
   void register() => LinterProvider.registerLinterProvider('provideLinter', this);
 
   Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer) {
-    // TODO: Lints are not currently displaying.
-
     return new Future.value([
-      // new LintMessage(
-      //   type: LintMessage.ERROR,
-      //   message: 'foo bar',
-      //   html: 'Foo bar baz',
-      //   file: editor.getPath(),
-      //   position: new Rn(new Pt(21, 1), new Pt(21, 10)))
+      new LintMessage(
+        type: LintMessage.ERROR,
+        message: 'foo bar',
+        html: 'Foo bar baz',
+        file: editor.getPath(),
+        position: new Rn(new Pt(21, 1), new Pt(21, 10)))
     ]);
+  }
+}
+
+// TODO: Move this class to a different file.
+class DartAutocompleteProvider extends AutocompleteProvider {
+  // inclusionPriority: 100, excludeLowerPriority: true, filterSuggestions: true
+  DartAutocompleteProvider() : super('.source.dart');
+
+  void register() => AutocompleteProvider.registerAutocompleteProvider(
+      'provideAutocomplete', this);
+
+  Future<List<Suggestion>> getSuggestions(AutocompleteOptions options) {
+    // TODO: autocomplete
+    List<Suggestion> suggestions = [
+      new Suggestion(text: 'lorem'),
+      new Suggestion(text: 'ipsum')
+    ];
+
+    return new Future.value(suggestions);
   }
 }

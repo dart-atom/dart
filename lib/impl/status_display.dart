@@ -16,6 +16,8 @@ import '../utils.dart';
 
 const Duration _shortDuration = const Duration(milliseconds: 400);
 
+// TODO: Add a close box on the jobs dialog.
+
 class StatusDisplay implements Disposable {
   StreamSubscription _subscription;
   Disposables _disposables = new Disposables();
