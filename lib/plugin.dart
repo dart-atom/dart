@@ -66,7 +66,6 @@ class AtomDartPackage extends AtomPackage {
     // Text editor commands.
     _addCmd('atom-text-editor', 'dart-lang:newline', editing.handleEnterKey);
 
-    // TODO: have a general find-me-the-dart-project utility
     // Register commands that require an SDK to be present.
     _addSdkCmd('atom-text-editor', 'dart-lang:pub-get', (event) {
       new PubJob.get(dirname(event.editor.getPath())).schedule();

@@ -43,6 +43,17 @@ class ProjectManager implements Disposable {
 
   bool get hasDartProjects => projects.isNotEmpty;
 
+  /// Return the dart project that contains the given path, or `null` if there
+  /// is no such project.
+  DartProject getProjectFor(String path) {
+    for (DartProject project in projects) {
+      Directory dir = project.directory;
+      if (dir.path == path || dir.contains(path)) return project;
+    }
+
+    return null;
+  }
+
   /// Do a full re-scan for Dart projects. This can find new projects if the
   /// file system has changed since Atom was opened.
   ///
@@ -162,6 +173,13 @@ class DartProject {
   String get path => directory.path;
 
   int get hashCode => directory.hashCode;
+
+  bool isDartFile(String path) {
+    if (path == null) return false;
+    return path.endsWith('.dart');
+  }
+
+  bool contains(String path) => directory.contains(path);
 
   operator==(other) => other is DartProject && directory == other.directory;
 

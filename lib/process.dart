@@ -78,6 +78,8 @@ class ProcessRunner {
     return completer.future;
   }
 
+  void write(String str) => _process.write(str);
+
   void kill() => _process.kill();
 }
 

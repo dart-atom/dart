@@ -61,10 +61,11 @@ class SdkManager implements Disposable {
     Directory dir = (path == null || path.isEmpty) ? null : new Directory.fromPath(path);
 
     if (dir != null) {
-      if (!dir.existsSync()) dir = null;
-
-      Sdk testSdk = new Sdk(dir);
-      if (!testSdk.isValidSdk) dir = null;
+      if (!dir.existsSync()) {
+        dir = null;
+      } else {
+        if (new Sdk(dir).isNotValidSdk) dir = null;
+      }
     }
 
     if (dir == null) {
@@ -104,12 +105,22 @@ class Sdk {
       directory.getFile('version').existsSync() &&
       directory.getSubdirectory('bin').existsSync();
 
+  bool get isNotValidSdk => !isValidSdk;
+
   Future<String> getVersion() {
     File file = directory.getFile('version');
     if (file.existsSync()) {
       return file.read().then((data) => data.trim());
     } else {
       return new Future.value(null);
+    }
+  }
+
+  File get dartVm {
+    if (isWindows) {
+      return new File.fromPath(join(directory, 'bin', 'dart.exe'));
+    } else {
+      return new File.fromPath(join(directory, 'bin', 'dart'));
     }
   }
 
