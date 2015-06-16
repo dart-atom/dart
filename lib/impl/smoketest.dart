@@ -65,6 +65,12 @@ void smokeTest() {
     stderr: (str) => print("stderr: ${str}"),
     exit: (code) => print('exit code: ${code}'));
   exec('date').then((str) => print('exec date: ${str}'));
+  // BufferedProcess p = BufferedProcess.create('dart', args: ['foo.dart'],
+  //   stdout: (str) => print("stdout: ${str}"),
+  //   stderr: (str) => print("stderr: ${str}"),
+  //   exit: (code) => print('exit code: ${code}'));
+  // p.write('lorem\n');
+  // p.write('ipsum\n');
 
   // TODO: events
   // atom.project.onDidChangePaths.listen((e) {
@@ -77,6 +83,8 @@ void smokeTest() {
   if (sdk != null) {
     print('sdk isValidSdk() = ${sdk.isValidSdk}');
     sdk.getVersion().then((ver) => print('sdk version ${ver}'));
+    File vm = sdk.dartVm;
+    print('vm is ${vm}, exists = ${vm.existsSync()}');
   }
 
   // sdk auto-discovery

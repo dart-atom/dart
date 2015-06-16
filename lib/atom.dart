@@ -122,6 +122,13 @@ class Workspace extends ProxyHolder {
     return result == null ? null : new TextEditor(result);
   }
 
+  /// Invoke the given callback with all current and future text editors in the
+  /// workspace.
+  Disposable observeTextEditors(void callback(TextEditor editor)) {
+    var disposable = invoke('observeTextEditors', (ed) => callback(new TextEditor(ed)));
+    return new JsDisposable(disposable);
+  }
+
   Panel addModalPanel({dynamic item, bool visible, int priority}) =>
       new Panel(invoke('addModalPanel', _panelOptions(item, visible, priority)));
 
@@ -392,6 +399,7 @@ class TextEditor extends ProxyHolder {
   // TODO: For now, kept as an opaque JS type.
   JsObject getRootScopeDescriptor() => invoke('getRootScopeDescriptor');
 
+  String getText() => invoke('getText');
   String getSelectedText() => invoke('getSelectedText');
   String getTextInBufferRange(Range range) => invoke('getTextInBufferRange', range);
   /// Get the [Range] of the most recently added selection in buffer coordinates.
@@ -408,6 +416,14 @@ class TextEditor extends ProxyHolder {
   void redo() => invoke('redo');
 
   void save() => invoke('save');
+
+  /// Fire an event when the buffer's contents change. It is emitted
+  /// asynchronously 300ms after the last buffer change. This is a good place to
+  /// handle changes to the buffer without compromising typing performance.
+  Stream get onDidStopChanging => eventStream('onDidStopChanging');
+
+  /// Invoke the given callback when the editor is destroyed.
+  Stream get onDidDestroy => eventStream('onDidDestroy');
 
   String toString() => getTitle();
 }
@@ -504,7 +520,16 @@ class BufferedProcess extends ProxyHolder {
     return new BufferedProcess._(new JsObject(ctor, [jsify(options)]));
   }
 
+  JsObject _stdin;
+
   BufferedProcess._(JsObject object) : super(object);
+
+  /// Write the given string as utf8 bytes to the process' stdin.
+  void write(String str) {
+    // node.js ChildProcess, Writeable stream
+    if (_stdin == null) _stdin = obj['process']['stdin'];
+    _stdin.callMethod('write', [str, 'utf8']);
+  }
 
   void kill() => invoke('kill');
 }
