@@ -10,7 +10,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:logging/logging.dart';
-import 'package:analysis_server/src/protocol.dart';
+import 'package:dart_analysis_server_api/protocol.dart';
 
 import 'atom.dart';
 import 'process.dart' as process;
@@ -29,6 +29,7 @@ Sdk _sdk;
 // TODO(lukechurch): Dehardcode this
 const _SERVER_PATH = '/Users/lukechurch/GitRepos/atom-dartlang-experimental/bin/_analysis_server_entry.dart';
 
+// TODO(lukechurch): Dummy targets, remove these
 const _MAIN_PATH = "/Users/lukechurch/scratch-temp/dart_target/main.dart";
 const _MAIN_DIR = "/Users/lukechurch/scratch-temp/dart_target";
 
@@ -60,15 +61,14 @@ class AnalysisServer implements Disposable {
     String sdkPath = _sdk.directory.path;
 
     // Init server and warmup
-    print ("SDKPath: $sdkPath");
+    _logger.finer ("SDKPath: $sdkPath");
 
     serverConnection = new _Server(sdkPath);
-    print('serverConnection ctor done');
+    _logger.finer('serverConnection ctor done');
 
     await serverConnection._setup();
 
-    print('_setup() done');
-
+    _logger.finer('_setup() done');
 
     // Setup watchdog
 
@@ -89,17 +89,17 @@ class AnalysisServer implements Disposable {
 
   /// Tell the analysis server a file has changed in memory.
   void notifyFileChanged(String path, String contents) {
-    print('notifyFileChanged(): ${path}');
+     _logger.finer('notifyFileChanged(): ${path}');
 
     if (isActive) {
-      // TODO:
+      // TODO (lukechurch): Send this as a sendAddOverlays command
 
     }
   }
 
   /// Tell the analysis server a file should be included in analysis.
   void watchRoots(List<String> paths) {
-    print('watchRoots(): ${paths}');
+     _logger.finer('watchRoots(): ${paths}');
 
     if (isActive) {
       // TODO:
@@ -109,7 +109,7 @@ class AnalysisServer implements Disposable {
 
   /// Tell the analysis server a file should not be included in analysis.
   void unwatchRoots(List<String> paths) {
-    print('unwatchRoots(): ${paths}');
+     _logger.finer('unwatchRoots(): ${paths}');
 
     if (isActive) {
       // TODO:
@@ -118,8 +118,12 @@ class AnalysisServer implements Disposable {
   }
 
   /// Force recycle of the analysis server.
+  // TODO: Call Reset on the wrapper
   void forceReset() => null;
 
+
+  // TOOD: Send shutdown
+  // Dispose wrapper
   void dispose() {
     _logger.fine('dispose()');
 
@@ -159,7 +163,7 @@ class AnalysisServer implements Disposable {
 
   void _handleSdkChange(Sdk newSdk) {
     // TODO:
-    print('_handleSdkChange(): ${newSdk}');
+     _logger.finer('_handleSdkChange(): ${newSdk}');
   }
 
   void _handleNewEditor(TextEditor editor) {
@@ -214,7 +218,7 @@ class _Server {
 
   /// Ensure that the server is ready for use.
   Future _ensureSetup() async {
-    print("ensureSetup: SETUP $isSetup IS_SETTING_UP $isSettingUp");
+     _logger.finer("ensureSetup: SETUP $isSetup IS_SETTING_UP $isSettingUp");
     if (!isSetup && !isSettingUp) {
       return _setup();
     }
@@ -222,19 +226,19 @@ class _Server {
   }
 
   Future _setup() async {
-    print("Setup starting");
+     _logger.finer("Setup starting");
     isSettingUp = true;
 
-    print("Server about to start");
+     _logger.finer("Server about to start");
 
     await start();
-    print("Server started");
+     _logger.finer("Server started");
 
     listenToOutput(dispatchNotification);
-    print("listenToOutput returend");
+     _logger.finer("listenToOutput returend");
     sendServerSetSubscriptions([ServerService.STATUS]);
 
-    print("Server Set Subscriptions completed");
+     _logger.finer("Server Set Subscriptions completed");
 
     print ("About to sendAddOverlays");
     await sendAddOverlays({_MAIN_PATH: _WARMUP_SRC});
@@ -248,7 +252,7 @@ class _Server {
     isSettingUp = false;
     isSetup = true;
 
-    print("Setup done");
+     _logger.finer("Setup done");
     return analysisComplete.first;
   }
 
@@ -329,7 +333,7 @@ class _Server {
           print ("listenToOutput-callback-0");
       String trimmedLine = line.trim();
 
-      print('RECV: $trimmedLine');
+       _logger.finer('RECV: $trimmedLine');
       var message;
       try {
         message = JSON.decoder.convert(trimmedLine);
@@ -342,7 +346,7 @@ class _Server {
         String id = message['id'];
         Completer completer = _pendingCommands[id];
         if (completer == null) {
-          print('Unexpected response from server: id=$id');
+           _logger.finer('Unexpected response from server: id=$id');
         } else {
           _pendingCommands.remove(id);
         }
@@ -400,7 +404,7 @@ class _Server {
    * error response, the future will be completed with an error.
    */
   Future send(String method, Map<String, dynamic> params) {
-    print("Server.send $method");
+     _logger.finer("Server.send $method");
 
     String id = '${_nextId++}';
     Map<String, dynamic> command = <String, dynamic>{
@@ -413,9 +417,9 @@ class _Server {
     Completer completer = new Completer();
     _pendingCommands[id] = completer;
     String line = JSON.encode(command);
-    print('SEND: $line');
+     _logger.finer('SEND: $line');
     _process.write("${line}\n");
-    print('SEND-complete');
+     _logger.finer('SEND-complete');
     // _process.stdin.add(UTF8.encoder.convert("${line}\n"));
     return completer.future;
   }
@@ -469,8 +473,8 @@ class _Server {
 
     print ("Arguments: $arguments");
 
-    print("Binary: $dartBinary");
-    print("Arguments: $arguments");
+     _logger.finer("Binary: $dartBinary");
+     _logger.finer("Arguments: $arguments");
 
     var procRunner = new process.ProcessRunner(dartBinary, args: arguments);
 
@@ -559,10 +563,10 @@ class _Server {
     var params = new AnalysisUpdateContentParams(updateMap).toJson();
     print ('sendAddOverlays-02');
 
-    print("About to send analysis.updateContent");
-    print("Paths to update: ${updateMap.keys}");
+     _logger.finer("About to send analysis.updateContent");
+     _logger.finer("Paths to update: ${updateMap.keys}");
     return send("analysis.updateContent", params).then((result) {
-      print("analysis.updateContent -> then");
+       _logger.finer("analysis.updateContent -> then");
 
       ResponseDecoder decoder = new ResponseDecoder(null);
       return new AnalysisUpdateContentResult.fromJson(
@@ -576,10 +580,10 @@ class _Server {
     paths.forEach((String path) => updateMap.putIfAbsent(path, () => overlay));
 
     var params = new AnalysisUpdateContentParams(updateMap).toJson();
-    print("About to send analysis.updateContent - remove overlay");
-    print("Paths to remove: ${updateMap.keys}");
+     _logger.finer("About to send analysis.updateContent - remove overlay");
+     _logger.finer("Paths to remove: ${updateMap.keys}");
     return send("analysis.updateContent", params).then((result) {
-      print("analysis.updateContent -> then");
+       _logger.finer("analysis.updateContent -> then");
 
       ResponseDecoder decoder = new ResponseDecoder(null);
       return new AnalysisUpdateContentResult.fromJson(
@@ -633,12 +637,12 @@ class _Server {
    * [dumpServerMessages] is true.
    */
   void _logStdio(String line) {
-    if (dumpServerMessages) print(line);
+    if (dumpServerMessages)  _logger.finer(line);
   }
 }
 
 
-// Interface API classes
+// Interface API classes strip these down as needs be
 
 // ==============
 
