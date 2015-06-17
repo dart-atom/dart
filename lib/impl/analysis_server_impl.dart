@@ -2,9 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// Wrapper over the analysis server providing a simplified API and automatic
-/// handling of reliability.
-library atom.analysisServer_impl;
+library atom.analysis_server_impl;
 
 import 'dart:async';
 import 'dart:convert';
@@ -12,17 +10,12 @@ import 'dart:convert';
 import 'package:dart_analysis_server_api/protocol.dart';
 import 'package:logging/logging.dart';
 
-import '../process.dart' as process;
+import '../process.dart';
 import '../sdk.dart';
 
 final Logger _logger = new Logger('analysis-server-impl');
 
 typedef Future NotificationProcessor(String event, params);
-
-// TODO(lukechurch): Dummy targets, remove these
-const _MAIN_PATH = "/Users/lukechurch/scratch-temp/dart_target/main.dart";
-const _MAIN_DIR = "/Users/lukechurch/scratch-temp/dart_target";
-const _WARMUP_SRC = "void main() { print('a'); }";
 
 const _dumpServerMessages = true;
 
@@ -55,7 +48,7 @@ class Server {
 
   // /// Ensure that the server is ready for use.
   // Future _ensureSetup() async {
-  //    _logger.finer("ensureSetup: SETUP $isSetup IS_SETTING_UP $isSettingUp");
+  //    _logger.fine("ensureSetup: SETUP $isSetup IS_SETTING_UP $isSettingUp");
   //   if (!isSetup && !isSettingUp) {
   //     return setup();
   //   }
@@ -63,32 +56,27 @@ class Server {
   // }
 
   Future setup() async {
-    _logger.finer("Setup starting");
+    _logger.fine("Setup starting");
     isSettingUp = true;
 
-    _logger.finer("Server about to start");
+    _logger.fine("Server about to start");
 
     await start();
-    _logger.finer("Server started");
+
+    _logger.fine("Server started");
 
     listenToOutput(dispatchNotification);
-    _logger.finer("listenToOutput returend");
+    _logger.fine("listenToOutput returend");
     sendServerSetSubscriptions([ServerService.STATUS]);
 
-    _logger.finer("Server Set Subscriptions completed");
+    _logger.fine("Server Set Subscriptions completed");
 
-    print("About to sendAddOverlays");
-    await sendAddOverlays({_MAIN_PATH: _WARMUP_SRC});
-    print("sendAddOverlays done");
-
-    print("About to sendAnalysisSetAnalysisRoots");
-    sendAnalysisSetAnalysisRoots([_MAIN_DIR], []);
-    print("sendSetAnalysisRoots done");
+    //sendAnalysisSetAnalysisRoots([_MAIN_DIR], []);
 
     isSettingUp = false;
     isSetup = true;
 
-    _logger.finer("Setup done");
+    _logger.fine("Setup done");
     return analysisComplete.first;
   }
 
@@ -104,7 +92,7 @@ class Server {
   /**
    * Server process object, or null if server hasn't been started yet.
    */
-  var _process;
+   ProcessRunner _process;
 
   /**
    * Commands that have been sent to the server but not yet acknowledged, and
@@ -119,36 +107,27 @@ class Server {
    */
   int _nextId = 0;
 
-  /**
-   * Future that completes when the server process exits.
-   */
-  Future<int> get exitCode => _process.exitCode;
-
-  /**
-   * Return a future that will complete when all commands that have been sent
-   * to the server so far have been flushed to the OS buffer.
-   */
-  Future flushCommands() {
-    return _process.stdin.flush();
-  }
+  // /**
+  //  * Future that completes when the server process exits.
+  //  */
+  // Future<int> get exitCode => _process.exitCode;
 
   /**
    * Stop the server.
    */
-  Future kill() {
-    _logger.severe("Analysis Server forcibly terminated");
-    Future<int> exitCode;
-    if (_process != null) {
-      _process.kill();
-      exitCode = _process.exitCode;
-      _process = null;
-    } else {
-      _logger.warning("Kill signal sent to already dead Analysis Server");
-      exitCode = new Future.value(1);
-    }
+  Future<int> kill() {
+    _logger.fine("Analysis Server forcibly terminated");
+
     isSetup = false;
 
-    return exitCode;
+    if (_process != null) {
+      Future f = _process.kill();
+      _process = null;
+      return f;
+    } else {
+      _logger.warning("Kill signal sent to already dead Analysis Server");
+      return new Future.value(1);
+    }
   }
 
   /**
@@ -156,16 +135,14 @@ class Server {
    * [notificationProcessor].
    */
   void listenToOutput(NotificationProcessor notificationProcessor) {
-    _process.onStdout
-        // .transform((new Utf8Codec()).decoder)
-        .transform(new LineSplitter()).listen((String line) {
+    _process.onStdout.transform(new LineSplitter()).listen((String line) {
       print("listenToOutput-callback-0");
-      String trimmedLine = line.trim();
+      line = line.trim();
+      _logger.fine('RECV: $line');
 
-      _logger.finer('RECV: $trimmedLine');
       var message;
       try {
-        message = JSON.decoder.convert(trimmedLine);
+        message = JSON.decoder.convert(line);
       } catch (exception) {
         _logger.severe("Bad data from server");
         return;
@@ -175,7 +152,7 @@ class Server {
         String id = message['id'];
         Completer completer = _pendingCommands[id];
         if (completer == null) {
-          _logger.finer('Unexpected response from server: id=$id');
+          _logger.fine('Unexpected response from server: id=$id');
         } else {
           _pendingCommands.remove(id);
         }
@@ -203,11 +180,8 @@ class Server {
 //        expect(message, isNotification);
       }
     });
-    _process.onStderr
-        .transform((new Utf8Codec()).decoder)
-        .transform(new LineSplitter())
-        .listen((String line) {
-      _logStdio('ERR:  ${line.trim()}');
+    _process.onStderr.listen((String str) {
+      _logStdio('ERR:  ${str.trim()}');
     });
   }
 
@@ -233,7 +207,7 @@ class Server {
    * error response, the future will be completed with an error.
    */
   Future send(String method, Map<String, dynamic> params) {
-    _logger.finer("Server.send $method");
+    _logger.fine("Server.send $method");
 
     String id = '${_nextId++}';
     Map<String, dynamic> command = <String, dynamic>{
@@ -246,9 +220,9 @@ class Server {
     Completer completer = new Completer();
     _pendingCommands[id] = completer;
     String line = JSON.encode(command);
-    _logger.finer('SEND: $line');
+    _logger.fine('SEND: $line');
     _process.write("${line}\n");
-    _logger.finer('SEND-complete');
+    _logger.fine('SEND-complete');
     // _process.stdin.add(UTF8.encoder.convert("${line}\n"));
     return completer.future;
   }
@@ -259,72 +233,24 @@ class Server {
    * `true`, the server will be started with "--observe" and
    * "--pause-isolates-on-exit", allowing the observatory to be used.
    */
-  Future start({bool debugServer: false, bool profileServer: false}) async {
+  Future start() {
     if (_process != null) throw new Exception('Process already started');
 
-    print("Server.start");
+    List<String> arguments = [
+      sdk.getSnapshotPath('analysis_server.dart.snapshot'),
+      '--sdk',
+      sdk.path
+    ];
 
-    String dartBinary =
-        sdk.dartVm.path; //   '/usr/local/bin/dart';// io.Platform.executable;
-    print("DartBinary: $dartBinary");
-    /*
-    String rootDir =
-        findRoot(io.Platform.script.toFilePath(windows: io.Platform.isWindows));
-    String serverPath = normalize(join(rootDir, 'bin', 'server.dart'));
-    String serverPath =
-        normalize(join(dirname(io.Platform.script.toFilePath()), 'analysisServerServer.dart'));
- */
+    _process = new ProcessRunner(sdk.dartVm.path, args: arguments);
 
-    List<String> arguments = [];
+    _process.execStreaming().then((int exitCode) {
+      // TODO: notify via an event
 
-    // if (debugServer) {
-    //   arguments.add('--debug');
-    // }
-    // if (profileServer) {
-    //   arguments.add('--observe');
-    //   arguments.add('--pause-isolates-on-exit');
-    // }
-
-    // if (io.Platform.packageRoot.isNotEmpty) {
-    //   arguments.add('--package-root=${io.Platform.packageRoot}');
-    // }
-
-    arguments.add(sdk.getSnapshotPath('analysisServer.dart.snapshot'));
-
-    arguments.add('--sdk');
-    arguments.add(sdk.path);
-
-    print("Arguments: $arguments");
-
-    _logger.finer("Binary: $dartBinary");
-    _logger.finer("Arguments: $arguments");
-
-    var procRunner = new process.ProcessRunner(dartBinary, args: arguments);
-
-    var exitCode = procRunner.execStreaming();
-
-    while (!procRunner.started) {
-      await new Future.delayed(new Duration(seconds: 0));
-    }
-    _process = procRunner;
-
-    print("procRunner.started: ${procRunner.started}");
-    print("${_process.onStdout == null}");
-
-    exitCode.then((int code) {
-      print("Analysis Server exitted wtih $code");
+      print("Analysis Server exited with ${exitCode}");
     });
 
-    print("procRunner component started");
-
-    // return io.Process.start(dartBinary, arguments).then((io.Process process) {
-    //   print("io.Process.then returned");
-
-    // _process = process;
-    // process.exitCode.then((int code) {
-    //   _logStdio('TERMINATED WITH EXIT CODE $code');
-    // });
-    // });
+    return new Future.value();
   }
 
   Future sendServerSetSubscriptions(List<ServerService> subscriptions) {
@@ -386,10 +312,10 @@ class Server {
     var params = new AnalysisUpdateContentParams(updateMap).toJson();
     print('sendAddOverlays-02');
 
-    _logger.finer("About to send analysis.updateContent");
-    _logger.finer("Paths to update: ${updateMap.keys}");
+    _logger.fine("About to send analysis.updateContent");
+    _logger.fine("Paths to update: ${updateMap.keys}");
     return send("analysis.updateContent", params).then((result) {
-      _logger.finer("analysis.updateContent -> then");
+      _logger.fine("analysis.updateContent -> then");
 
       ResponseDecoder decoder = new ResponseDecoder(null);
       return new AnalysisUpdateContentResult.fromJson(
@@ -403,10 +329,10 @@ class Server {
     paths.forEach((String path) => updateMap.putIfAbsent(path, () => overlay));
 
     var params = new AnalysisUpdateContentParams(updateMap).toJson();
-    _logger.finer("About to send analysis.updateContent - remove overlay");
-    _logger.finer("Paths to remove: ${updateMap.keys}");
+    _logger.fine("About to send analysis.updateContent - remove overlay");
+    _logger.fine("Paths to remove: ${updateMap.keys}");
     return send("analysis.updateContent", params).then((result) {
-      _logger.finer("analysis.updateContent -> then");
+      _logger.fine("analysis.updateContent -> then");
 
       ResponseDecoder decoder = new ResponseDecoder(null);
       return new AnalysisUpdateContentResult.fromJson(
@@ -438,7 +364,7 @@ class Server {
       await kill();
       _onCompletionResults.addError(null);
       _logger.severe("Analysis server has crashed. $event");
-      return;
+      return null;
     }
 
     if (event == "server.status" &&
@@ -459,7 +385,7 @@ class Server {
    * [_dumpServerMessages] is true.
    */
   void _logStdio(String line) {
-    if (_dumpServerMessages) _logger.finer(line);
+    if (_dumpServerMessages) _logger.fine(line);
   }
 }
 

@@ -85,6 +85,10 @@ class AtomDartPackage extends AtomPackage {
 
     // Register the autocomplete provider.
     //new DartAutocompleteProvider().register();
+
+    analysisServer.onActive.listen((val) {
+      _logger.info('analysis server active: ${val}');
+    });
   }
 
   void packageDeactivated() {

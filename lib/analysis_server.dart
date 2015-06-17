@@ -23,6 +23,8 @@ class AnalysisServer implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
 
+  StreamController<bool> _serverActiveController = new StreamController.broadcast();
+
   Server _server;
 
   List<DartProject> knownRoots = [];
@@ -31,7 +33,9 @@ class AnalysisServer implements Disposable {
     Timer.run(_setup);
   }
 
-  _setup() async {
+  Stream<bool> get onActive => _serverActiveController.stream;
+
+  void _setup() {
     _logger.fine('setup()');
 
     subs.add(projectManager.onChanged.listen(_reconcileRoots));
@@ -39,13 +43,9 @@ class AnalysisServer implements Disposable {
 
     disposables.add(atom.workspace.observeTextEditors(_handleNewEditor));
 
-    // Init server and warmup
-    _server = new Server(sdkManager.sdk);
-    _logger.finer('Server ctor done');
+    knownRoots = projectManager.projects.toList();
 
-    await _server.setup();
-
-    _logger.finer('setup() done');
+    _checkTrigger();
   }
 
   /// Returns whether the analysis server is active and running.
@@ -99,6 +99,8 @@ class AnalysisServer implements Disposable {
   void dispose() {
     _logger.fine('dispose()');
 
+    _checkTrigger(dispose: true);
+
     subs.cancel();
     disposables.dispose();
   }
@@ -129,11 +131,12 @@ class AnalysisServer implements Disposable {
     }
 
     knownRoots = currentProjects;
+
+    _checkTrigger();
   }
 
   void _handleSdkChange(Sdk newSdk) {
-    // TODO:
-    _logger.finer('_handleSdkChange(): ${newSdk}');
+    _checkTrigger();
   }
 
   void _handleNewEditor(TextEditor editor) {
@@ -152,5 +155,23 @@ class AnalysisServer implements Disposable {
         .listen((_) => notifyFileChanged(path, editor.getText()));
 
     editor.onDidDestroy.listen((_) => notifyFileChanged(path, null));
+  }
+
+  void _checkTrigger({bool dispose: false}) {
+    bool shouldBeRunning = knownRoots.isNotEmpty && sdkManager.hasSdk;
+
+    if (dispose || (!shouldBeRunning && _server != null)) {
+      // shutdown
+      _server.kill().whenComplete(() {
+        _serverActiveController.add(false);
+      });
+      _server = null;
+    } else if (shouldBeRunning && _server == null) {
+      // startup
+      _server = new Server(sdkManager.sdk);
+      _server.setup().then((_) {
+        _serverActiveController.add(true);
+      });
+    }
   }
 }
