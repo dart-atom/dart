@@ -9,8 +9,8 @@ library atom.analysis_server;
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:logging/logging.dart';
 import 'package:dart_analysis_server_api/protocol.dart';
+import 'package:logging/logging.dart';
 
 import 'atom.dart';
 import 'process.dart' as process;
@@ -19,28 +19,22 @@ import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
 
-
 final Logger _logger = new Logger('analysis-server');
 
-// TOOD(lukechurch): Change this to a managed dependency rather than a
-// TLV
-Sdk _sdk;
-
-// TODO(lukechurch): Dehardcode this
-const _SERVER_PATH = '/Users/lukechurch/dart-sdk/bin/snapshots/analysis_server.dart.snapshot';
+typedef Future NotificationProcessor(String event, params);
 
 // TODO(lukechurch): Dummy targets, remove these
 const _MAIN_PATH = "/Users/lukechurch/scratch-temp/dart_target/main.dart";
 const _MAIN_DIR = "/Users/lukechurch/scratch-temp/dart_target";
-
 const _WARMUP_SRC = "void main() { print('a'); }";
 
-const dumpServerMessages = true;
+const _dumpServerMessages = true;
 
 class AnalysisServer implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
-  _Server serverConnection;
+
+  _Server _server;
 
   List<DartProject> knownRoots = [];
 
@@ -48,7 +42,7 @@ class AnalysisServer implements Disposable {
     Timer.run(_setup);
   }
 
-  void _setup() async{
+  _setup() async {
     _logger.fine('setup()');
 
     subs.add(projectManager.onChanged.listen(_reconcileRoots));
@@ -56,27 +50,17 @@ class AnalysisServer implements Disposable {
 
     disposables.add(atom.workspace.observeTextEditors(_handleNewEditor));
 
-    _sdk = sdkManager.sdk;
-
-    String sdkPath = _sdk.directory.path;
-
     // Init server and warmup
-    _logger.finer ("SDKPath: $sdkPath");
+    _server = new _Server(sdkManager.sdk);
+    _logger.finer('_Server ctor done');
 
-    serverConnection = new _Server(sdkPath);
-    _logger.finer('serverConnection ctor done');
+    await _server._setup();
 
-    await serverConnection._setup();
-
-    _logger.finer('_setup() done');
-
-    // Setup watchdog
-
+    _logger.finer('setup() done');
   }
 
-  // TODO: implement
   /// Returns whether the analysis server is active and running.
-  bool get isActive => false;
+  bool get isActive => _server != null;
 
   /// Provides an instantaneous snapshot of the known issues and warnings.
   List<AnalysisIssue> get issues => null;
@@ -84,8 +68,8 @@ class AnalysisServer implements Disposable {
   /// Subscribe to this to get told when the issues list has changed.
   Stream get issuesUpdatedNotification => null;
 
-  /// Compute completions for a given location.
-  List<Completion> computeCompletions(String sourcePath, int offset) => null;
+  // /// Compute completions for a given location.
+  // List<Completion> computeCompletions(String sourcePath, int offset) => null;
 
   /// Tell the analysis server a file has changed in memory.
   void notifyFileChanged(String path, String contents) {
@@ -121,7 +105,6 @@ class AnalysisServer implements Disposable {
   // TODO: Call Reset on the wrapper
   void forceReset() => null;
 
-
   // TOOD: Send shutdown
   // Dispose wrapper
   void dispose() {
@@ -137,8 +120,6 @@ class AnalysisServer implements Disposable {
 
     Set addedProjects = currentSet.difference(oldSet);
     Set removedProjects = oldSet.difference(currentSet);
-
-    // TODO: Is this the most efficient way to drive the analysis server?
 
     if (removedProjects.isNotEmpty) {
       unwatchRoots(removedProjects.map((p) => p.path).toList());
@@ -187,14 +168,12 @@ class AnalysisServer implements Disposable {
 
 // Server implementation
 
-
-
 /**
  * Instances of the class [_Server] manage a connection to a server process, and
  * facilitate communication to and from the server.
  */
 class _Server {
-  final String _sdkPath;
+  final Sdk sdk;
 
   /// Control flags to handle the server state machine
   bool isSetup = false;
@@ -208,7 +187,7 @@ class _Server {
   Stream<Map> completionResults;
   StreamController<Map> _onCompletionResults;
 
-  _Server(this._sdkPath) {
+  _Server(this.sdk) {
     _onServerStatus = new StreamController<bool>(sync: true);
     analysisComplete = _onServerStatus.stream.asBroadcastStream();
 
@@ -216,14 +195,14 @@ class _Server {
     completionResults = _onCompletionResults.stream.asBroadcastStream();
   }
 
-  /// Ensure that the server is ready for use.
-  Future _ensureSetup() async {
-     _logger.finer("ensureSetup: SETUP $isSetup IS_SETTING_UP $isSettingUp");
-    if (!isSetup && !isSettingUp) {
-      return _setup();
-    }
-    return new Future.value();
-  }
+  // /// Ensure that the server is ready for use.
+  // Future _ensureSetup() async {
+  //    _logger.finer("ensureSetup: SETUP $isSetup IS_SETTING_UP $isSettingUp");
+  //   if (!isSetup && !isSettingUp) {
+  //     return _setup();
+  //   }
+  //   return new Future.value();
+  // }
 
   Future _setup() async {
      _logger.finer("Setup starting");
@@ -240,14 +219,13 @@ class _Server {
 
      _logger.finer("Server Set Subscriptions completed");
 
-    print ("About to sendAddOverlays");
+    print("About to sendAddOverlays");
     await sendAddOverlays({_MAIN_PATH: _WARMUP_SRC});
-    print ("sendAddOverlays done");
+    print("sendAddOverlays done");
 
-    print ("About to sendAnalysisSetAnalysisRoots");
+    print("About to sendAnalysisSetAnalysisRoots");
     sendAnalysisSetAnalysisRoots([_MAIN_DIR], []);
-    print ("sendSetAnalysisRoots done");
-
+    print("sendSetAnalysisRoots done");
 
     isSettingUp = false;
     isSetup = true;
@@ -275,18 +253,13 @@ class _Server {
    * the [Completer] objects which should be completed when acknowledgement is
    * received.
    */
-  final HashMap<String, Completer> _pendingCommands = <String, Completer>{};
+  final Map<String, Completer> _pendingCommands = <String, Completer>{};
 
   /**
    * Number which should be used to compute the 'id' to send in the next command
    * sent to the server.
    */
   int _nextId = 0;
-
-  /**
-   * Stopwatch that we use to generate timing information for debug output.
-   */
-  Stopwatch _time = new Stopwatch();
 
   /**
    * Future that completes when the server process exits.
@@ -330,7 +303,7 @@ class _Server {
         .transform(new LineSplitter())
         .listen((String line) {
 
-          print ("listenToOutput-callback-0");
+      print("listenToOutput-callback-0");
       String trimmedLine = line.trim();
 
        _logger.finer('RECV: $trimmedLine');
@@ -433,16 +406,10 @@ class _Server {
   Future start({bool debugServer: false, bool profileServer: false}) async {
     if (_process != null) throw new Exception('Process already started');
 
-    print ("_Server.start");
+    print("_Server.start");
 
-    print (_sdk);
-    print (_sdk.dartVm);
-    print (_sdk.dartVm.path);
-
-    print ('paths ok');
-
-    String dartBinary = _sdk.dartVm.path;//   '/usr/local/bin/dart';// io.Platform.executable;
-    print ("DartBinary: $dartBinary");
+    String dartBinary = sdk.dartVm.path;//   '/usr/local/bin/dart';// io.Platform.executable;
+    print("DartBinary: $dartBinary");
      /*
     String rootDir =
         findRoot(io.Platform.script.toFilePath(windows: io.Platform.isWindows));
@@ -466,15 +433,15 @@ class _Server {
     //   arguments.add('--package-root=${io.Platform.packageRoot}');
     // }
 
-    arguments.add(_SERVER_PATH);
+    arguments.add(sdk.getSnapshotPath('analysis_server.dart.snapshot'));
 
     arguments.add('--sdk');
-    arguments.add(_sdkPath);
+    arguments.add(sdk.path);
 
-    print ("Arguments: $arguments");
+    print("Arguments: $arguments");
 
-     _logger.finer("Binary: $dartBinary");
-     _logger.finer("Arguments: $arguments");
+    _logger.finer("Binary: $dartBinary");
+    _logger.finer("Arguments: $arguments");
 
     var procRunner = new process.ProcessRunner(dartBinary, args: arguments);
 
@@ -485,14 +452,14 @@ class _Server {
     }
     _process = procRunner;
 
-    print ("procRunner.started: ${procRunner.started}");
-    print ("${_process.onStdout == null}");
+    print("procRunner.started: ${procRunner.started}");
+    print("${_process.onStdout == null}");
 
     exitCode.then((int code) {
-      print ("Analysis Server exitted wtih $code");
-      });
+      print("Analysis Server exitted wtih $code");
+    });
 
-    print ("procRunner component started");
+    print("procRunner component started");
 
     // return io.Process.start(dartBinary, arguments).then((io.Process process) {
     //   print("io.Process.then returned");
@@ -506,7 +473,7 @@ class _Server {
 
   Future sendServerSetSubscriptions(List<ServerService> subscriptions) {
     var params = new ServerSetSubscriptionsParams(subscriptions).toJson();
-    print ("sendServerSetSubscriptions params: $params");
+    print("sendServerSetSubscriptions params: $params");
     return send("server.setSubscriptions", params);
   }
 
@@ -540,28 +507,28 @@ class _Server {
     });
   }
 
-  Future<EditFormatResult> sendFormat(int selectionOffset,
-      [int selectionLength = 0]) {
-    var params = new EditFormatParams(
-        mainPath, selectionOffset, selectionLength).toJson();
-
-    return send("edit.format", params).then((result) {
-      ResponseDecoder decoder = new ResponseDecoder(null);
-      return new EditFormatResult.fromJson(decoder, 'result', result);
-    });
-  }
+  // Future<EditFormatResult> sendFormat(int selectionOffset,
+  //     [int selectionLength = 0]) {
+  //   var params = new EditFormatParams(
+  //       mainPath, selectionOffset, selectionLength).toJson();
+  //
+  //   return send("edit.format", params).then((result) {
+  //     ResponseDecoder decoder = new ResponseDecoder(null);
+  //     return new EditFormatResult.fromJson(decoder, 'result', result);
+  //   });
+  // }
 
   Future<AnalysisUpdateContentResult> sendAddOverlays(
       Map<String, String> overlays) {
-        print ('sendAddOverlays-00');
+    print('sendAddOverlays-00');
     var updateMap = {};
     for (String path in overlays.keys) {
       updateMap.putIfAbsent(path, () => new AddContentOverlay(overlays[path]));
     }
-    print ('sendAddOverlays-01');
+    print('sendAddOverlays-01');
 
     var params = new AnalysisUpdateContentParams(updateMap).toJson();
-    print ('sendAddOverlays-02');
+    print('sendAddOverlays-02');
 
      _logger.finer("About to send analysis.updateContent");
      _logger.finer("Paths to update: ${updateMap.keys}");
@@ -634,13 +601,12 @@ class _Server {
 
   /**
    * Record a message that was exchanged with the server, and print it out if
-   * [dumpServerMessages] is true.
+   * [_dumpServerMessages] is true.
    */
   void _logStdio(String line) {
-    if (dumpServerMessages)  _logger.finer(line);
+    if (_dumpServerMessages)  _logger.finer(line);
   }
 }
-
 
 // Interface API classes strip these down as needs be
 
@@ -649,10 +615,10 @@ class _Server {
 class AnalysisResults {
   final List<AnalysisIssue> issues;
 
-  @ApiProperty(description: 'The package imports parsed from the source.')
+  //@ApiProperty(description: 'The package imports parsed from the source.')
   final List<String> packageImports;
 
-  @ApiProperty(description: 'The resolved imports - e.g. dart:async, dart:io, ...')
+  //@ApiProperty(description: 'The resolved imports - e.g. dart:async, dart:io, ...')
   final List<String> resolvedImports;
 
   AnalysisResults(this.issues, this.packageImports, this.resolvedImports);
@@ -901,5 +867,3 @@ class VersionResponse {
   VersionResponse({this.sdkVersion, this.runtimeVersion,
     this.appEngineVersion, this.servicesVersion});
 }
-
-// ====================================

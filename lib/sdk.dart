@@ -55,6 +55,7 @@ class SdkManager implements Disposable {
     });
   }
 
+  // TODO: Debounce this!
   Stream<Sdk> get onSdkChange => _controller.stream;
 
   void _setSdkPath(String path, {bool verbose: false}) {
@@ -107,6 +108,8 @@ class Sdk {
 
   bool get isNotValidSdk => !isValidSdk;
 
+  String get path => directory.path;
+
   Future<String> getVersion() {
     File file = directory.getFile('version');
     if (file.existsSync()) {
@@ -122,6 +125,12 @@ class Sdk {
     } else {
       return new File.fromPath(join(directory, 'bin', 'dart'));
     }
+  }
+
+  String getSnapshotPath(String snapshotName) {
+    File file = new File.fromPath(
+        join(directory, 'bin', 'snapshots', snapshotName));
+    return file.path;
   }
 
   // TODO: Process finagling on the mac; exec in the bash shell.
