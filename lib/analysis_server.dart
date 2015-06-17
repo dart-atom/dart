@@ -23,7 +23,8 @@ class AnalysisServer implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
 
-  StreamController<bool> _serverActiveController = new StreamController.broadcast();
+  StreamController<bool> _serverActiveController =
+      new StreamController.broadcast();
 
   Server _server;
 

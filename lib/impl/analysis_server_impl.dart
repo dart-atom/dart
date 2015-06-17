@@ -92,7 +92,7 @@ class Server {
   /**
    * Server process object, or null if server hasn't been started yet.
    */
-   ProcessRunner _process;
+  ProcessRunner _process;
 
   /**
    * Commands that have been sent to the server but not yet acknowledged, and
