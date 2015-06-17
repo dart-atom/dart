@@ -9,10 +9,9 @@ environment:
 
 dependencies:
   logging: ^0.11.0
-  analysis_server:
-    git:
-      url: git://github.com/lukechurch/dart-analysis-server-temp-working.git
-      ref: v1-11-0
+  dart_analysis_server_api:
+    git: git://github.com/lukechurch/dart_analysis_server_api.git
+
 dev_dependencies:
   grinder: ^0.7.0
   test: ^0.12.0
