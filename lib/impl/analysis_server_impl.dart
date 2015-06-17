@@ -77,7 +77,7 @@ class Server {
     isSetup = true;
 
     _logger.fine("Setup done");
-    return analysisComplete.first;
+    //return analysisComplete.first;
   }
 
   Future loadSources(Map<String, String> sources) async {
@@ -121,9 +121,9 @@ class Server {
     isSetup = false;
 
     if (_process != null) {
-      Future f = _process.kill();
+      /*Future f =*/ _process.kill();
       _process = null;
-      return f;
+      return new Future.value(0);
     } else {
       _logger.warning("Kill signal sent to already dead Analysis Server");
       return new Future.value(1);
