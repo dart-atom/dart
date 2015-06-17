@@ -4531,7 +4531,7 @@ var dart = [
               command.$indexSet(0, "params", params);
               $self._pendingCommands.$indexSet(0, id, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]));
               line = C.JsonCodec_null_null.encode$1(command);
-              t1.fine$1("SEND: " + line);
+              t1.fine$1("--> " + line);
               t2 = $self._process;
               t3 = line + "\n";
               t2 = t2._process$_process;
@@ -4543,7 +4543,6 @@ var dart = [
               } else
                 t2 = t4;
               t2.callMethod$2("write", [t3, "utf8"]);
-              t1.fine$1("SEND-complete");
               t1.fine$1("Server Set Subscriptions completed");
               $self.isSettingUp = false;
               $self.isSetup = true;
@@ -4662,10 +4661,9 @@ var dart = [
     "^": "Closure:6;_analysis_server_impl$_captured_this_0,_captured_notificationProcessor_1",
     call$1: [function(line) {
       var message, t1, exception, messageAsMap, id, t2, t3, completer;
-      P.print("listenToOutput-callback-0");
       line = J.trim$0$s(line);
       t1 = $.get$_logger1();
-      t1.fine$1("RECV: " + H.S(line));
+      t1.fine$1("<-- " + H.S(line));
       message = null;
       try {
         message = P._parseJson(line, C.JsonCodec_null_null.get$decoder()._reviver);

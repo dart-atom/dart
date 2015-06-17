@@ -136,9 +136,8 @@ class Server {
    */
   void listenToOutput(NotificationProcessor notificationProcessor) {
     _process.onStdout.transform(new LineSplitter()).listen((String line) {
-      print("listenToOutput-callback-0");
       line = line.trim();
-      _logger.fine('RECV: $line');
+      _logger.fine('<-- $line');
 
       var message;
       try {
@@ -219,10 +218,11 @@ class Server {
     }
     Completer completer = new Completer();
     _pendingCommands[id] = completer;
+
     String line = JSON.encode(command);
-    _logger.fine('SEND: $line');
+    _logger.fine('--> $line');
     _process.write("${line}\n");
-    _logger.fine('SEND-complete');
+
     // _process.stdin.add(UTF8.encoder.convert("${line}\n"));
     return completer.future;
   }
