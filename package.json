@@ -3,15 +3,13 @@
   "main": "./web/entry.dart.js",
   "version": "0.0.0",
   "description": "An experimental Dart plugin for Atom",
-  "keywords": [
-  ],
+  "keywords": [],
   "repository": "https://github.com/dart-lang/atom-dartlang-experimental",
   "license": "BSD",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "consumedServices": {
     "status-bar": {
       "versions": {

@@ -30,6 +30,7 @@ class ProcessRunner {
   final Map<String, String> env;
 
   BufferedProcess _process;
+  Completer<int> _exitCompleter = new Completer();
   int _exit;
 
   StreamController<String> _stdoutController = new StreamController.broadcast();
@@ -65,22 +66,23 @@ class ProcessRunner {
     _logger.fine('exec: ${command} ${args == null ? "" : args.join(" ")}'
         '${cwd == null ? "" : " (cwd=${cwd})"}');
 
-    Completer<int> completer = new Completer();
-
     _process = BufferedProcess.create(command, args: args, cwd: cwd, env: env,
         stdout: (s) => _stdoutController.add(s),
         stderr: (s) => _stderrController.add(s),
         exit: (code) {
           _exit = code;
-          completer.complete(code);
+          _exitCompleter.complete(code);
         });
 
-    return completer.future;
+    return _exitCompleter.future;
   }
 
   void write(String str) => _process.write(str);
 
-  void kill() => _process.kill();
+  Future<int> kill() {
+    _process.kill();
+    return _exitCompleter.future;
+  }
 }
 
 class ProcessResult {
