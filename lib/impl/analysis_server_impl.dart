@@ -63,19 +63,19 @@ class Server {
   // }
 
   Future setup() async {
-     _logger.finer("Setup starting");
+    _logger.finer("Setup starting");
     isSettingUp = true;
 
-     _logger.finer("Server about to start");
+    _logger.finer("Server about to start");
 
     await start();
-     _logger.finer("Server started");
+    _logger.finer("Server started");
 
     listenToOutput(dispatchNotification);
-     _logger.finer("listenToOutput returend");
+    _logger.finer("listenToOutput returend");
     sendServerSetSubscriptions([ServerService.STATUS]);
 
-     _logger.finer("Server Set Subscriptions completed");
+    _logger.finer("Server Set Subscriptions completed");
 
     print("About to sendAddOverlays");
     await sendAddOverlays({_MAIN_PATH: _WARMUP_SRC});
@@ -88,7 +88,7 @@ class Server {
     isSettingUp = false;
     isSetup = true;
 
-     _logger.finer("Setup done");
+    _logger.finer("Setup done");
     return analysisComplete.first;
   }
 
@@ -158,13 +158,11 @@ class Server {
   void listenToOutput(NotificationProcessor notificationProcessor) {
     _process.onStdout
         // .transform((new Utf8Codec()).decoder)
-        .transform(new LineSplitter())
-        .listen((String line) {
-
+        .transform(new LineSplitter()).listen((String line) {
       print("listenToOutput-callback-0");
       String trimmedLine = line.trim();
 
-       _logger.finer('RECV: $trimmedLine');
+      _logger.finer('RECV: $trimmedLine');
       var message;
       try {
         message = JSON.decoder.convert(trimmedLine);
@@ -177,7 +175,7 @@ class Server {
         String id = message['id'];
         Completer completer = _pendingCommands[id];
         if (completer == null) {
-           _logger.finer('Unexpected response from server: id=$id');
+          _logger.finer('Unexpected response from server: id=$id');
         } else {
           _pendingCommands.remove(id);
         }
@@ -235,7 +233,7 @@ class Server {
    * error response, the future will be completed with an error.
    */
   Future send(String method, Map<String, dynamic> params) {
-     _logger.finer("Server.send $method");
+    _logger.finer("Server.send $method");
 
     String id = '${_nextId++}';
     Map<String, dynamic> command = <String, dynamic>{
@@ -248,9 +246,9 @@ class Server {
     Completer completer = new Completer();
     _pendingCommands[id] = completer;
     String line = JSON.encode(command);
-     _logger.finer('SEND: $line');
+    _logger.finer('SEND: $line');
     _process.write("${line}\n");
-     _logger.finer('SEND-complete');
+    _logger.finer('SEND-complete');
     // _process.stdin.add(UTF8.encoder.convert("${line}\n"));
     return completer.future;
   }
@@ -266,9 +264,10 @@ class Server {
 
     print("Server.start");
 
-    String dartBinary = sdk.dartVm.path;//   '/usr/local/bin/dart';// io.Platform.executable;
+    String dartBinary =
+        sdk.dartVm.path; //   '/usr/local/bin/dart';// io.Platform.executable;
     print("DartBinary: $dartBinary");
-     /*
+    /*
     String rootDir =
         findRoot(io.Platform.script.toFilePath(windows: io.Platform.isWindows));
     String serverPath = normalize(join(rootDir, 'bin', 'server.dart'));
@@ -285,7 +284,6 @@ class Server {
     //   arguments.add('--observe');
     //   arguments.add('--pause-isolates-on-exit');
     // }
-
 
     // if (io.Platform.packageRoot.isNotEmpty) {
     //   arguments.add('--package-root=${io.Platform.packageRoot}');
@@ -322,10 +320,10 @@ class Server {
     // return io.Process.start(dartBinary, arguments).then((io.Process process) {
     //   print("io.Process.then returned");
 
-      // _process = process;
-      // process.exitCode.then((int code) {
-      //   _logStdio('TERMINATED WITH EXIT CODE $code');
-      // });
+    // _process = process;
+    // process.exitCode.then((int code) {
+    //   _logStdio('TERMINATED WITH EXIT CODE $code');
+    // });
     // });
   }
 
@@ -388,10 +386,10 @@ class Server {
     var params = new AnalysisUpdateContentParams(updateMap).toJson();
     print('sendAddOverlays-02');
 
-     _logger.finer("About to send analysis.updateContent");
-     _logger.finer("Paths to update: ${updateMap.keys}");
+    _logger.finer("About to send analysis.updateContent");
+    _logger.finer("Paths to update: ${updateMap.keys}");
     return send("analysis.updateContent", params).then((result) {
-       _logger.finer("analysis.updateContent -> then");
+      _logger.finer("analysis.updateContent -> then");
 
       ResponseDecoder decoder = new ResponseDecoder(null);
       return new AnalysisUpdateContentResult.fromJson(
@@ -405,10 +403,10 @@ class Server {
     paths.forEach((String path) => updateMap.putIfAbsent(path, () => overlay));
 
     var params = new AnalysisUpdateContentParams(updateMap).toJson();
-     _logger.finer("About to send analysis.updateContent - remove overlay");
-     _logger.finer("Paths to remove: ${updateMap.keys}");
+    _logger.finer("About to send analysis.updateContent - remove overlay");
+    _logger.finer("Paths to remove: ${updateMap.keys}");
     return send("analysis.updateContent", params).then((result) {
-       _logger.finer("analysis.updateContent -> then");
+      _logger.finer("analysis.updateContent -> then");
 
       ResponseDecoder decoder = new ResponseDecoder(null);
       return new AnalysisUpdateContentResult.fromJson(
@@ -426,7 +424,6 @@ class Server {
   Future sendAnalysisSetAnalysisRoots(
       List<String> included, List<String> excluded,
       {Map<String, String> packageRoots}) {
-
     var params = new AnalysisSetAnalysisRootsParams(included, excluded,
         packageRoots: packageRoots).toJson();
     return send("analysis.setAnalysisRoots", params);
@@ -462,7 +459,7 @@ class Server {
    * [_dumpServerMessages] is true.
    */
   void _logStdio(String line) {
-    if (_dumpServerMessages)  _logger.finer(line);
+    if (_dumpServerMessages) _logger.finer(line);
   }
 }
 
@@ -496,9 +493,8 @@ class AnalysisIssue implements Comparable {
   // location field.
   final String location;
 
-  AnalysisIssue.fromIssue(this.kind, this.line, this.message,
-      {this.charStart, this.charLength, this.location,
-      this.sourceName, this.hasFixes: false});
+  AnalysisIssue.fromIssue(this.kind, this.line, this.message, {this.charStart,
+      this.charLength, this.location, this.sourceName, this.hasFixes: false});
 
   Map toMap() {
     Map m = {'kind': kind, 'line': line, 'message': message};
@@ -571,8 +567,8 @@ class CompleteResponse {
   final List<Map<String, String>> completions;
 
   CompleteResponse(
-      this.replacementOffset, this.replacementLength, List<Map> completions) :
-    this.completions = _convert(completions);
+      this.replacementOffset, this.replacementLength, List<Map> completions)
+      : this.completions = _convert(completions);
 
   /**
    * Convert any non-string values from the contained maps.
@@ -596,8 +592,8 @@ class CompleteResponse {
 class FixesResponse {
   final List<ProblemAndFixes> fixes;
 
-  FixesResponse(List<AnalysisErrorFixes> analysisErrorFixes) :
-    this.fixes = _convert(analysisErrorFixes);
+  FixesResponse(List<AnalysisErrorFixes> analysisErrorFixes)
+      : this.fixes = _convert(analysisErrorFixes);
 
   /**
    * Convert between the Analysis Server type and the API protocol types.
@@ -608,7 +604,8 @@ class FixesResponse {
     return problemsAndFixes;
   }
 
-  static ProblemAndFixes _convertAnalysisErrorFix(AnalysisErrorFixes analysisFixes) {
+  static ProblemAndFixes _convertAnalysisErrorFix(
+      AnalysisErrorFixes analysisFixes) {
     String problemMessage = analysisFixes.error.message;
     int problemOffset = analysisFixes.error.location.offset;
     int problemLength = analysisFixes.error.location.length;
@@ -631,22 +628,17 @@ class FixesResponse {
 
         for (var sourceEdit in sourceFileEdit.edits) {
           edits.add(new SourceEdit.fromChanges(
-              sourceEdit.offset,
-              sourceEdit.length,
-              sourceEdit.replacement));
+              sourceEdit.offset, sourceEdit.length, sourceEdit.replacement));
         }
       }
       if (!invalidFix) {
-        CandidateFix possibleFix = new
-          CandidateFix.fromEdits(sourceChange.message, edits);
+        CandidateFix possibleFix =
+            new CandidateFix.fromEdits(sourceChange.message, edits);
         possibleFixes.add(possibleFix);
       }
     }
     return new ProblemAndFixes.fromList(
-        possibleFixes,
-        problemMessage,
-        problemOffset,
-        problemLength);
+        possibleFixes, problemMessage, problemOffset, problemLength);
   }
 }
 
@@ -722,6 +714,6 @@ class VersionResponse {
 
   final String servicesVersion;
 
-  VersionResponse({this.sdkVersion, this.runtimeVersion,
-    this.appEngineVersion, this.servicesVersion});
+  VersionResponse({this.sdkVersion, this.runtimeVersion, this.appEngineVersion,
+      this.servicesVersion});
 }

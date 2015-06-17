@@ -62,7 +62,7 @@ class AnalysisServer implements Disposable {
 
   /// Tell the analysis server a file has changed in memory.
   void notifyFileChanged(String path, String contents) {
-     _logger.finer('notifyFileChanged(): ${path}');
+    _logger.finer('notifyFileChanged(): ${path}');
 
     if (isActive) {
       // TODO (lukechurch): Send this as a sendAddOverlays command
@@ -72,7 +72,7 @@ class AnalysisServer implements Disposable {
 
   /// Tell the analysis server a file should be included in analysis.
   void watchRoots(List<String> paths) {
-     _logger.finer('watchRoots(): ${paths}');
+    _logger.finer('watchRoots(): ${paths}');
 
     if (isActive) {
       // TODO:
@@ -82,7 +82,7 @@ class AnalysisServer implements Disposable {
 
   /// Tell the analysis server a file should not be included in analysis.
   void unwatchRoots(List<String> paths) {
-     _logger.finer('unwatchRoots(): ${paths}');
+    _logger.finer('unwatchRoots(): ${paths}');
 
     if (isActive) {
       // TODO:
@@ -133,7 +133,7 @@ class AnalysisServer implements Disposable {
 
   void _handleSdkChange(Sdk newSdk) {
     // TODO:
-     _logger.finer('_handleSdkChange(): ${newSdk}');
+    _logger.finer('_handleSdkChange(): ${newSdk}');
   }
 
   void _handleNewEditor(TextEditor editor) {
@@ -148,8 +148,8 @@ class AnalysisServer implements Disposable {
 
     // TODO: `onDidStopChanging` will notify when the file has been opened, even
     // if it has not been modified.
-    editor.onDidStopChanging.listen(
-        (_) => notifyFileChanged(path, editor.getText()));
+    editor.onDidStopChanging
+        .listen((_) => notifyFileChanged(path, editor.getText()));
 
     editor.onDidDestroy.listen((_) => notifyFileChanged(path, null));
   }
