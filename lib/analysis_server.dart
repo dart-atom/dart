@@ -27,7 +27,7 @@ final Logger _logger = new Logger('analysis-server');
 Sdk _sdk;
 
 // TODO(lukechurch): Dehardcode this
-const _SERVER_PATH = '/Users/lukechurch/GitRepos/atom-dartlang-experimental/bin/_analysis_server_entry.dart';
+const _SERVER_PATH = '/Users/lukechurch/dart-sdk/bin/snapshots/analysis_server.dart.snapshot';
 
 // TODO(lukechurch): Dummy targets, remove these
 const _MAIN_PATH = "/Users/lukechurch/scratch-temp/dart_target/main.dart";
