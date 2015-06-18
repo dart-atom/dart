@@ -140,53 +140,64 @@ class Server {
    * [notificationProcessor].
    */
   void listenToOutput(NotificationProcessor notificationProcessor) {
-    _process.onStdout.transform(new LineSplitter()).listen((String line) {
-      line = line.trim();
-      _logger.finer('<-- $line');
+    _process.onStdout.listen((String str) {
+      List<String> lines = str.trim().split('\n');
 
-      var message;
-      try {
-        message = JSON.decoder.convert(line);
-      } catch (exception) {
-        _logger.severe("Bad data from server");
-        return;
-      }
-      Map messageAsMap = message;
-      if (messageAsMap.containsKey('id')) {
-        String id = message['id'];
-        Completer completer = _pendingCommands[id];
-        if (completer == null) {
-          _logger.fine('Unexpected response from server: id=$id');
-        } else {
-          _pendingCommands.remove(id);
+      for (String line in lines) {
+        line = line.trim();
+
+        _logger.finer('<-- ${line}');
+
+        Map message;
+
+        try {
+          message = JSON.decoder.convert(line);
+        } catch (exception) {
+          _logger.severe("Bad data from server");
+          continue;
         }
-        if (messageAsMap.containsKey('error')) {
-          // TODO(paulberry): propagate the error info to the completer.
-          kill();
-          completer.completeError(new UnimplementedError(
-              'Server responded with an error: ${JSON.encode(message)}'));
-        } else {
-          completer.complete(messageAsMap['result']);
-        }
-        // Check that the message is well-formed.  We do this after calling
-        // completer.complete() or completer.completeError() so that we don't
-        // stall the test in the event of an error.
-        // expect(message, isResponse);
-      } else {
-        // Message is a notification.  It should have an event and possibly
-        // params.
-//        expect(messageAsMap, contains('event'));
-//        expect(messageAsMap['event'], isString);
-        notificationProcessor(messageAsMap['event'], messageAsMap['params']);
-        // Check that the message is well-formed.  We do this after calling
-        // notificationController.add() so that we don't stall the test in the
-        // event of an error.
-//        expect(message, isNotification);
+
+        _processMessage(notificationProcessor, message);
       }
     });
+
     _process.onStderr.listen((String str) {
-      _logStdio('ERR:  ${str.trim()}');
+      _logStdio('ERR: ${str.trim()}');
     });
+  }
+
+  void _processMessage(NotificationProcessor notificationProcessor, Map message) {
+    if (message.containsKey('id')) {
+      String id = message['id'];
+      Completer completer = _pendingCommands[id];
+      if (completer == null) {
+        _logger.fine('Unexpected response from server: id=$id');
+      } else {
+        _pendingCommands.remove(id);
+      }
+      if (message.containsKey('error')) {
+        // TODO(paulberry): propagate the error info to the completer.
+        kill();
+        completer.completeError(new UnimplementedError(
+            'Server responded with an error: ${JSON.encode(message)}'));
+      } else {
+        completer.complete(message['result']);
+      }
+      // Check that the message is well-formed.  We do this after calling
+      // completer.complete() or completer.completeError() so that we don't
+      // stall the test in the event of an error.
+      // expect(message, isResponse);
+    } else {
+      // Message is a notification.  It should have an event and possibly
+      // params.
+//        expect(message, contains('event'));
+//        expect(message['event'], isString);
+      notificationProcessor(message['event'], message['params']);
+      // Check that the message is well-formed.  We do this after calling
+      // notificationController.add() so that we don't stall the test in the
+      // event of an error.
+//        expect(message, isNotification);
+    }
   }
 
   Future get analysisFinished {
