@@ -89,6 +89,10 @@ class AtomDartPackage extends AtomPackage {
     analysisServer.onActive.listen((val) {
       _logger.info('analysis server active: ${val}');
     });
+
+    analysisServer.onBusy.listen((val) {
+      _logger.info('analysis server busy: ${val}');
+    });
   }
 
   void packageDeactivated() {
