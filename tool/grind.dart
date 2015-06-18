@@ -25,11 +25,17 @@ build() {
   outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
 }
 
+@Task('Analyze the source code with the ddc compiler')
+ddc() {
+  PubApp ddc = new PubApp.global('dev_compiler');
+  ddc.run(['web/entry.dart'], script: 'devc');
+}
+
 @Task()
 test() => new PubApp.local('test').run(['-rexpanded']);
 
 @Task()
-@Depends(analyze, build, test)
+@Depends(analyze, build, ddc, test)
 bot() => null;
 
 @Task()
