@@ -15,6 +15,9 @@ export 'process.dart' show ProcessResult;
 
 final String _prefPath = 'dart-lang.sdkLocation';
 
+// TODO: We should not try and auto-locate the sdk when the value’s bad, only
+// when it’s empty.
+
 class SdkManager implements Disposable {
   StreamController<Sdk> _controller = new StreamController.broadcast(sync: true);
 
@@ -26,7 +29,6 @@ class SdkManager implements Disposable {
     _setSdkPath(atom.config.get(_prefPath));
     if (!hasSdk) tryToAutoConfigure(complainOnFailure: false);
 
-    // TODO: Debounce these events.
     _prefObserve = atom.config.observe(_prefPath, null, (value) {
       _setSdkPath(value, verbose: true);
     });
@@ -55,7 +57,6 @@ class SdkManager implements Disposable {
     });
   }
 
-  // TODO: Debounce this!
   Stream<Sdk> get onSdkChange => _controller.stream;
 
   void _setSdkPath(String path, {bool verbose: false}) {

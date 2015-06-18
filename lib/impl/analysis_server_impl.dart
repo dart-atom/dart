@@ -34,9 +34,30 @@ class Server {
   /// Streams used to handle syncing data with the server
   Stream<bool> analysisComplete;
   StreamController<bool> _onServerStatus;
+  StreamController<bool> _busyController = new StreamController.broadcast();
 
   Stream<Map> completionResults;
   StreamController<Map> _onCompletionResults;
+
+  /**
+   * Server process object, or null if server hasn't been started yet.
+   */
+  ProcessRunner _process;
+
+  Completer<int> _processCompleter = new Completer();
+
+  /**
+   * Commands that have been sent to the server but not yet acknowledged, and
+   * the [Completer] objects which should be completed when acknowledgement is
+   * received.
+   */
+  final Map<String, Completer> _pendingCommands = {};
+
+  /**
+   * Number which should be used to compute the 'id' to send in the next command
+   * sent to the server.
+   */
+  int _nextId = 0;
 
   Server(this.sdk) {
     _onServerStatus = new StreamController<bool>(sync: true);
@@ -45,6 +66,13 @@ class Server {
     _onCompletionResults = new StreamController(sync: true);
     completionResults = _onCompletionResults.stream.asBroadcastStream();
   }
+
+  /**
+   * Future that completes when the server process exits.
+   */
+  Future<int> get whenDisposed => _processCompleter.future;
+
+  Stream<bool> get onBusy => _busyController.stream;
 
   // /// Ensure that the server is ready for use.
   // Future _ensureSetup() async {
@@ -66,18 +94,17 @@ class Server {
     _logger.fine("Server started");
 
     listenToOutput(dispatchNotification);
+
     _logger.fine("listenToOutput returend");
+
     sendServerSetSubscriptions([ServerService.STATUS]);
 
-    _logger.fine("Server Set Subscriptions completed");
-
-    //sendAnalysisSetAnalysisRoots([_MAIN_DIR], []);
+    _logger.fine("set subscriptions completed");
 
     isSettingUp = false;
     isSetup = true;
 
     _logger.fine("Setup done");
-    //return analysisComplete.first;
   }
 
   Future loadSources(Map<String, String> sources) async {
@@ -90,42 +117,20 @@ class Server {
   }
 
   /**
-   * Server process object, or null if server hasn't been started yet.
-   */
-  ProcessRunner _process;
-
-  /**
-   * Commands that have been sent to the server but not yet acknowledged, and
-   * the [Completer] objects which should be completed when acknowledgement is
-   * received.
-   */
-  final Map<String, Completer> _pendingCommands = <String, Completer>{};
-
-  /**
-   * Number which should be used to compute the 'id' to send in the next command
-   * sent to the server.
-   */
-  int _nextId = 0;
-
-  // /**
-  //  * Future that completes when the server process exits.
-  //  */
-  // Future<int> get exitCode => _process.exitCode;
-
-  /**
    * Stop the server.
    */
   Future<int> kill() {
-    _logger.fine("Analysis Server forcibly terminated");
+    _logger.fine("server forcibly terminated");
 
     isSetup = false;
 
     if (_process != null) {
       /*Future f =*/ _process.kill();
       _process = null;
+      if (!_processCompleter.isCompleted) _processCompleter.complete(0);
       return new Future.value(0);
     } else {
-      _logger.warning("Kill signal sent to already dead Analysis Server");
+      _logger.warning("kill signal sent to dead analysis server");
       return new Future.value(1);
     }
   }
@@ -137,7 +142,7 @@ class Server {
   void listenToOutput(NotificationProcessor notificationProcessor) {
     _process.onStdout.transform(new LineSplitter()).listen((String line) {
       line = line.trim();
-      _logger.fine('<-- $line');
+      _logger.finer('<-- $line');
 
       var message;
       try {
@@ -198,16 +203,14 @@ class Server {
   }
 
   /**
-   * Send a command to the server.  An 'id' will be automatically assigned.
+   * Send a command to the server. An 'id' will be automatically assigned.
    * The returned [Future] will be completed when the server acknowledges the
-   * command with a response.  If the server acknowledges the command with a
+   * command with a response. If the server acknowledges the command with a
    * normal (non-error) response, the future will be completed with the 'result'
-   * field from the response.  If the server acknowledges the command with an
+   * field from the response. If the server acknowledges the command with an
    * error response, the future will be completed with an error.
    */
   Future send(String method, Map<String, dynamic> params) {
-    _logger.fine("Server.send $method");
-
     String id = '${_nextId++}';
     Map<String, dynamic> command = <String, dynamic>{
       'id': id,
@@ -220,18 +223,14 @@ class Server {
     _pendingCommands[id] = completer;
 
     String line = JSON.encode(command);
-    _logger.fine('--> $line');
+    _logger.finer('--> $line');
     _process.write("${line}\n");
 
-    // _process.stdin.add(UTF8.encoder.convert("${line}\n"));
     return completer.future;
   }
 
   /**
-   * Start the server.  If [debugServer] is `true`, the server will be started
-   * with "--debug", allowing a debugger to be attached. If [profileServer] is
-   * `true`, the server will be started with "--observe" and
-   * "--pause-isolates-on-exit", allowing the observatory to be used.
+   * Start the server.
    */
   Future start() {
     if (_process != null) throw new Exception('Process already started');
@@ -245,9 +244,8 @@ class Server {
     _process = new ProcessRunner(sdk.dartVm.path, args: arguments);
 
     _process.execStreaming().then((int exitCode) {
-      // TODO: notify via an event
-
-      print("Analysis Server exited with ${exitCode}");
+      _logger.fine("exited with code ${exitCode}");
+      if (!_processCompleter.isCompleted) _processCompleter.complete(exitCode);
     });
 
     return new Future.value();
@@ -255,7 +253,6 @@ class Server {
 
   Future sendServerSetSubscriptions(List<ServerService> subscriptions) {
     var params = new ServerSetSubscriptionsParams(subscriptions).toJson();
-    print("sendServerSetSubscriptions params: $params");
     return send("server.setSubscriptions", params);
   }
 
@@ -371,6 +368,10 @@ class Server {
         params.containsKey('analysis') &&
         !params['analysis']['isAnalyzing']) {
       _onServerStatus.add(true);
+    }
+
+    if (event == "server.status" && params.containsKey('analysis')) {
+      _busyController.add(params['analysis']['isAnalyzing']);
     }
 
     // Ignore all but the last completion result. This means that we get a

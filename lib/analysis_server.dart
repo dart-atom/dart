@@ -11,6 +11,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
+import 'jobs.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
@@ -25,8 +26,11 @@ class AnalysisServer implements Disposable {
 
   StreamController<bool> _serverActiveController =
       new StreamController.broadcast();
+  StreamController<bool> _serverBusyController =
+      new StreamController.broadcast();
 
   Server _server;
+  _AnalyzingJob _job;
 
   List<DartProject> knownRoots = [];
 
@@ -35,6 +39,8 @@ class AnalysisServer implements Disposable {
   }
 
   Stream<bool> get onActive => _serverActiveController.stream;
+
+  Stream<bool> get onBusy => _serverBusyController.stream;
 
   void _setup() {
     _logger.fine('setup()');
@@ -71,23 +77,10 @@ class AnalysisServer implements Disposable {
     }
   }
 
-  /// Tell the analysis server a file should be included in analysis.
-  void watchRoots(List<String> paths) {
-    _logger.finer('watchRoots(): ${paths}');
-
+  void _syncRoots() {
     if (isActive) {
-      // TODO:
-
-    }
-  }
-
-  /// Tell the analysis server a file should not be included in analysis.
-  void unwatchRoots(List<String> paths) {
-    _logger.finer('unwatchRoots(): ${paths}');
-
-    if (isActive) {
-      // TODO:
-
+      List<String> roots = knownRoots.map((dir) => dir.path).toList();
+      _server.sendAnalysisSetAnalysisRoots(roots, []);
     }
   }
 
@@ -95,8 +88,6 @@ class AnalysisServer implements Disposable {
   // TODO: Call Reset on the wrapper
   void forceReset() => null;
 
-  // TOOD: Send shutdown
-  // Dispose wrapper
   void dispose() {
     _logger.fine('dispose()');
 
@@ -113,13 +104,13 @@ class AnalysisServer implements Disposable {
     Set addedProjects = currentSet.difference(oldSet);
     Set removedProjects = oldSet.difference(currentSet);
 
-    if (removedProjects.isNotEmpty) {
-      unwatchRoots(removedProjects.map((p) => p.path).toList());
+    knownRoots = currentProjects;
+
+    if (removedProjects.isNotEmpty || addedProjects.isNotEmpty) {
+      _syncRoots();
     }
 
     if (addedProjects.isNotEmpty) {
-      watchRoots(addedProjects.map((p) => p.path).toList());
-
       List<TextEditor> editors = atom.workspace.getTextEditors().toList();
 
       for (DartProject addedProject in addedProjects) {
@@ -131,8 +122,6 @@ class AnalysisServer implements Disposable {
       }
     }
 
-    knownRoots = currentProjects;
-
     _checkTrigger();
   }
 
@@ -143,11 +132,11 @@ class AnalysisServer implements Disposable {
   void _handleNewEditor(TextEditor editor) {
     final String path = editor.getPath();
 
-    // is in a dart project
+    // If it's in a dart project.
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return;
 
-    // is a dart file
+    // And it's a dart file.
     if (!project.isDartFile(path)) return;
 
     // TODO: `onDidStopChanging` will notify when the file has been opened, even
@@ -163,16 +152,62 @@ class AnalysisServer implements Disposable {
 
     if (dispose || (!shouldBeRunning && _server != null)) {
       // shutdown
-      _server.kill().whenComplete(() {
-        _serverActiveController.add(false);
-      });
-      _server = null;
+      _server.kill();
     } else if (shouldBeRunning && _server == null) {
       // startup
-      _server = new Server(sdkManager.sdk);
-      _server.setup().then((_) {
-        _serverActiveController.add(true);
-      });
+      Server server = new Server(sdkManager.sdk);
+      _server = server;
+      _initNewServer(server);
     }
+  }
+
+  void _initNewServer(Server server) {
+    // _AnalyzingJob
+    server.onBusy.listen((value) => _serverBusyController.add(value));
+    server.whenDisposed.then((exitCode) => _handleServerDeath(server));
+    onBusy.listen((busy) {
+      if (!busy && _job != null) {
+        _job.finish();
+        _job = null;
+      } else if (busy && _job == null) {
+        _job = new _AnalyzingJob()..start();
+      }
+    });
+    server.setup().then((_) {
+      _serverActiveController.add(true);
+      _syncRoots();
+    });
+  }
+
+  void _handleServerDeath(Server server) {
+    if (_server == server) {
+      _server = null;
+
+      _serverActiveController.add(false);
+      _serverBusyController.add(false);
+    }
+  }
+}
+
+class _AnalyzingJob extends Job {
+  static const Duration _debounceDelay = const Duration(milliseconds: 150);
+
+  Completer completer = new Completer();
+
+  _AnalyzingJob() : super('Analyzing');
+
+  bool get quiet => true;
+
+  Future run() => completer.future;
+
+  void start() {
+    // Debounce the analysis busy event.
+    new Timer(_debounceDelay, () {
+      if (!completer.isCompleted) schedule();
+    });
+  }
+
+  void finish() {
+    if (!completer.isCompleted) completer.complete();
   }
 }
