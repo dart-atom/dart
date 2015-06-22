@@ -1,4 +1,4 @@
-# atom-dartlang-experimental
+# dart-lang-experimental
 
 An experimental Dart plugin for Atom.
 
@@ -6,11 +6,11 @@ An experimental Dart plugin for Atom.
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: https://github.com/dart-lang/atom-dartlang-experimental/issues
+[tracker]: https://github.com/dart-atom/dart-lang-experimental/issues
 
 ## Developing
 
-To work on `atom-dartlang-experimental`:
+To work on `dart-lang-experimental`:
 
 - install [Atom](https://atom.io/)
 - clone this repo
@@ -22,7 +22,7 @@ To work on `atom-dartlang-experimental`:
 
 The plugin will be active in your copy of Atom. When making changes:
 
-- `type type type...` 
+- `type type type...`
 
 and either:
 
