@@ -15,8 +15,6 @@ import '../sdk.dart';
 
 final Logger _logger = new Logger('analysis-server-impl');
 
-typedef Future NotificationProcessor(String event, params);
-
 const _dumpServerMessages = true;
 
 /**
@@ -100,9 +98,9 @@ class Server {
 
     _logger.fine("Server started");
 
-    listenToOutput(dispatchNotification);
+    listenToOutput();
 
-    _logger.fine("listenToOutput returend");
+    _logger.fine("listenToOutput returned");
 
     sendServerSetSubscriptions([ServerService.STATUS]);
 
@@ -123,9 +121,7 @@ class Server {
     await sendRemoveOverlays(paths);
   }
 
-  /**
-   * Stop the server.
-   */
+  /// Stop the server.
   Future<int> kill() {
     _logger.fine("server forcibly terminated");
 
@@ -146,7 +142,7 @@ class Server {
    * Start listening to output from the server, and deliver notifications to
    * [notificationProcessor].
    */
-  void listenToOutput(NotificationProcessor notificationProcessor) {
+  void listenToOutput() {
     _process.onStdout.listen((String str) {
       List<String> lines = str.trim().split('\n');
 
@@ -164,7 +160,7 @@ class Server {
           continue;
         }
 
-        _processMessage(notificationProcessor, message);
+        _processMessage(message);
       }
     });
 
@@ -173,32 +169,30 @@ class Server {
     });
   }
 
-  void _processMessage(NotificationProcessor notificationProcessor, Map message) {
+  Future<AnalysisErrorsResult> analysis_getErrors(String filePath) {
+    return send('analysis.getErrors', {'file': filePath}).then((Map result) {
+      return new AnalysisErrorsResult.from(result);
+    });
+  }
+
+  void _processMessage(Map message) {
     if (message.containsKey('id')) {
       String id = message['id'];
-      Completer completer = _pendingCommands[id];
+      Completer completer = _pendingCommands.remove(id);
+
       if (completer == null) {
-        _logger.fine('Unexpected response from server: id=$id');
-      } else {
-        _pendingCommands.remove(id);
+        _logger.severe('Unexpected response from server: id=$id');
+        return;
       }
+
       if (message.containsKey('error')) {
-        // TODO(paulberry): propagate the error info to the completer.
-        kill();
-        completer.completeError(new UnimplementedError(
-            'Server responded with an error: ${JSON.encode(message)}'));
+        completer.completeError(new RequestError.from(message['error']));
       } else {
         completer.complete(message['result']);
       }
-      // Check that the message is well-formed. We do this after calling
-      // completer.complete() or completer.completeError() so that we don't
-      // stall the test in the event of an error.
-      // expect(message, isResponse);
     } else {
       _allMessagesController.add(message);
-
-      // Message is a notification. It should have an event and possibly params.
-      notificationProcessor(message['event'], message['params']);
+      dispatchNotification(message['event'], message['params']);
     }
   }
 
@@ -365,16 +359,15 @@ class Server {
     return send("analysis.setAnalysisRoots", params);
   }
 
-  Future dispatchNotification(String event, params) async {
+  void dispatchNotification(String event, params) {
     if (event == "server.error") {
-      // Something has gone wrong with the analysis server. This request is going
-      // to fail, but we need to restart the server to be able to process
-      // another request
-
-      await kill();
-      _onCompletionResults.addError(null);
-      _logger.severe("Analysis server has crashed. $event");
-      return null;
+      // Something has gone wrong with the analysis server. This request is
+      // going to fail, but we need to restart the server to be able to process
+      // another request.
+      kill().then((_) {
+        _onCompletionResults.addError(null);
+        _logger.severe("Analysis server has crashed. $event");
+      });
     }
 
     if (event == "server.status" &&
@@ -410,11 +403,7 @@ class Server {
 
 class AnalysisResults {
   final List<AnalysisIssue> issues;
-
-  //@ApiProperty(description: 'The package imports parsed from the source.')
   final List<String> packageImports;
-
-  //@ApiProperty(description: 'The resolved imports - e.g. dart:async, dart:io, ...')
   final List<String> resolvedImports;
 
   AnalysisResults(this.issues, this.packageImports, this.resolvedImports);
@@ -455,17 +444,6 @@ class AnalysisIssue implements Comparable {
 class SourceRequest {
   String source;
 
-  int offset;
-}
-
-class SourcesRequest {
-  Map<String, String> sources;
-
-  Location location;
-}
-
-class Location {
-  String sourceName;
   int offset;
 }
 
@@ -645,16 +623,98 @@ class SourceEdit {
   }
 }
 
-/// The response from the `/version` service call.
-class VersionResponse {
-  final String sdkVersion;
+/// An indication of a problem with the execution of the server, typically in
+/// response to a request.
+class RequestError {
+  /// A code that uniquely identifies the error that occurred.
+  final String code;
 
-  final String runtimeVersion;
+  /// A short description of the error.
+  final String message;
 
-  final String appEngineVersion;
+  /// (optional) The stack trace associated with processing the request, used
+  /// for debugging the server.
+  final String stackTrace;
 
-  final String servicesVersion;
+  RequestError.from(Map m) :
+      code = m['code'], message = m['message'], stackTrace = m['stackTrace'];
 
-  VersionResponse({this.sdkVersion, this.runtimeVersion, this.appEngineVersion,
-      this.servicesVersion});
+  String toString() => '${code}: ${message}';
+}
+
+class AnalysisErrorsResult {
+  final List<AnalysisError> errors;
+
+  AnalysisErrorsResult.empty() : errors = [];
+
+  AnalysisErrorsResult.from(Map m) :
+      errors = m['errors'].map((obj) => new AnalysisError.from(obj)).toList()..sort();
+
+  String toString() => '${errors}';
+}
+
+class AnalysisError implements Comparable {
+  static int _sev(String sev) {
+    if (sev == 'ERROR') return 3;
+    if (sev == 'WARNING') return 2;
+    if (sev == 'INFO') return 1;
+    return 0;
+  }
+
+  final String severity;
+  final String type;
+  final String message;
+  final String correction;
+  final Location location;
+
+  AnalysisError.from(Map m) :
+      severity = m['severity'],
+      type = m['type'],
+      message = m['message'],
+      correction = m['correction'],
+      location = new Location.from(m['location']);
+
+  int compareTo(other) {
+    if (other is! AnalysisError) return 0;
+    if (severity != other.severity) return _sev(severity) - _sev(other.severity);
+    return location.compareTo(other.location);
+  }
+
+  String toString() => message;
+}
+
+class Location implements Comparable {
+  /// The file containing the range.
+  final String file;
+
+  /// The offset of the range.
+  final int offset;
+
+  /// The length of the range.
+  final int length;
+
+  /// The one-based index of the line containing the first character of the
+  /// range.
+  final int startLine;
+
+  /// The one-based index of the column containing the first character of the
+  /// range.
+  final int startColumn;
+
+  Location(Map m) :
+      file = m['file'], offset = m['offset'], length = m['length'],
+      startLine = m['startLine'], startColumn = m['startColumn'];
+
+  factory Location.from(Map m) {
+    if (m == null) return null;
+    return new Location(m);
+  }
+
+  int compareTo(other) {
+    if (other is! Location) return 0;
+    if (file != other.file) return file.compareTo(other.file);
+    return offset - other.offset;
+  }
+
+  String toString() => '${file},${startLine},${startColumn}';
 }

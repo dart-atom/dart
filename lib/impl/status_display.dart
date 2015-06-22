@@ -38,7 +38,7 @@ class StatusDisplay implements Disposable {
     CoreElement spinner = new CoreElement('img')
         ..inlineBlockTight()
         ..clazz('status-spinner')
-        ..setAttribute('src', 'atom://dart-lang/images/gear.svg');
+        ..setAttribute('src', 'atom://dart-lang-experimental/images/gear.svg');
     statusElement.add(spinner);
 
     CoreElement textLabel = new CoreElement.div()..inlineBlockTight()

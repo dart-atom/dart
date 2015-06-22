@@ -11,6 +11,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
+import 'atom_linter.dart';
 import 'dependencies.dart';
 import 'jobs.dart';
 import 'projects.dart';
@@ -19,6 +20,9 @@ import 'state.dart';
 import 'utils.dart';
 import 'impl/analysis_server_dialog.dart';
 import 'impl/analysis_server_impl.dart';
+
+export 'impl/analysis_server_impl.dart'
+    show AnalysisErrorsResult, AnalysisError, RequestError;
 
 final Logger _logger = new Logger('analysis-server');
 
@@ -36,6 +40,12 @@ class AnalysisServer implements Disposable {
   List<DartProject> knownRoots = [];
 
   AnalysisServer() {
+    // Register the linter provider.
+    new _DartLinterProvider().register();
+
+    // onActive.listen((val) => _logger.info('analysis server active: ${val}'));
+    // onBusy.listen((val) => _logger.info('analysis server busy: ${val}'));
+
     Timer.run(_setup);
   }
 
@@ -56,6 +66,9 @@ class AnalysisServer implements Disposable {
     knownRoots = projectManager.projects.toList();
 
     _checkTrigger();
+
+    // Create the analysis server diagnostics dialog.
+    disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
   }
 
   /// Returns whether the analysis server is active and running.
@@ -71,6 +84,14 @@ class AnalysisServer implements Disposable {
 
   // /// Compute completions for a given location.
   // List<Completion> computeCompletions(String sourcePath, int offset) => null;
+
+  Future<AnalysisErrorsResult> getErrors(String filePath) {
+    if (isActive) {
+      return _server.analysis_getErrors(filePath);
+    } else {
+      return new Future.value(new AnalysisErrorsResult.empty());
+    }
+  }
 
   /// Tell the analysis server a file has changed in memory.
   void notifyFileChanged(String path, String contents) {
@@ -240,5 +261,42 @@ class _AnalyzingJob extends Job {
 
   void finish() {
     if (!completer.isCompleted) completer.complete();
+  }
+}
+
+class _DartLinterProvider extends LinterProvider {
+  // TODO: Options are 'file' and 'project' scope, and lintOnFly true or false.
+  _DartLinterProvider() : super(scopes: ['source.dart'], scope: 'file');
+
+  void register() => LinterProvider.registerLinterProvider('provideLinter', this);
+
+  Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer) {
+    String filePath = editor.getPath();
+    return analysisServer.getErrors(filePath).then((AnalysisErrorsResult result){
+      return result.errors.map((e) => _cvtMessage(filePath, e)).toList();
+    }).catchError((e) {
+      print(e);
+      return [];
+    });
+  }
+
+  final Map<String, String> _severityMap = {
+    'INFO': LintMessage.INFO,
+    'WARNING': LintMessage.WARNING,
+    'ERROR': LintMessage.ERROR
+  };
+
+  LintMessage _cvtMessage(String filePath, AnalysisError error) {
+    return new LintMessage(
+      type: _severityMap[error.severity],
+      message: error.message,
+      file: filePath,
+      position: _cvtLocation(error.location));
+  }
+
+  Rn _cvtLocation(Location location) {
+    return new Rn(
+      new Pt(location.startLine, location.startColumn),
+      new Pt(location.startLine, location.startColumn + location.length));
   }
 }
