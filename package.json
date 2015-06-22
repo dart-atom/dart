@@ -1,10 +1,10 @@
 {
-  "name": "dart-lang",
+  "name": "dart-lang-experimental",
   "main": "./web/entry.dart.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "An experimental Dart plugin for Atom",
   "keywords": [],
-  "repository": "https://github.com/dart-lang/atom-dartlang-experimental",
+  "repository": "https://github.com/dart-atom/dart-lang-experimental",
   "license": "BSD",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
