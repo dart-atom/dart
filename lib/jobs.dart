@@ -38,6 +38,10 @@ abstract class Job {
   /// clear it.
   bool get pinResult => false;
 
+  /// An action that when called will provide some additional information about
+  /// the job.
+  Function get infoAction => null;
+
   /// Schedule the [Job] for execution.
   void schedule() => jobs.schedule(this);
 

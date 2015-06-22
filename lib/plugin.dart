@@ -18,6 +18,7 @@ import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
+import 'impl/analysis_server_dialog.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
@@ -86,13 +87,13 @@ class AtomDartPackage extends AtomPackage {
     // Register the autocomplete provider.
     //new DartAutocompleteProvider().register();
 
-    analysisServer.onActive.listen((val) {
-      _logger.info('analysis server active: ${val}');
-    });
+    // Create the analysis server diagnostics dialog.
+    disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
 
-    analysisServer.onBusy.listen((val) {
-      _logger.info('analysis server busy: ${val}');
-    });
+    analysisServer.onActive.listen(
+        (val) => _logger.info('analysis server active: ${val}'));
+    analysisServer.onBusy.listen(
+        (val) => _logger.info('analysis server busy: ${val}'));
   }
 
   void packageDeactivated() {
