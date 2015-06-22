@@ -19,8 +19,8 @@ const Duration _shortDuration = const Duration(milliseconds: 400);
 // TODO: Add a close box on the jobs dialog.
 
 class StatusDisplay implements Disposable {
+  final Disposables _disposables = new Disposables();
   StreamSubscription _subscription;
-  Disposables _disposables = new Disposables();
 
   Tile _statusbarTile;
   Timer _timer;
@@ -122,7 +122,7 @@ class StatusDisplay implements Disposable {
     for (JobInstance jobInstance in jobs.allJobs) {
       Job job = jobInstance.job;
 
-      CoreElement item = new CoreElement.li()..layoutHorizontal();
+      CoreElement item = new CoreElement.li()..layoutHorizontal()..clazz('job-container');
       CoreElement title = item.add(new CoreElement.div()..inlineBlock()..flex());
       title.text = jobInstance.isRunning ? '${job.name}…' : job.name;
 
@@ -130,6 +130,12 @@ class StatusDisplay implements Disposable {
         CoreElement block = item.add(
             new CoreElement.div()..inlineBlock()..clazz('jobs-progress'));
         block.add(new ProgressElement());
+      }
+
+      if (job.infoAction != null) {
+        CoreElement info = item.add(new CoreElement.div()
+            ..inlineBlock()..clazz('info')..clazz('icon')..clazz('icon-question'));
+        info.onClick.listen((_) => job.infoAction());
       }
 
       ol.children.add(item.element);

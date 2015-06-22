@@ -11,11 +11,13 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
+import 'dependencies.dart';
 import 'jobs.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
+import 'impl/analysis_server_dialog.dart';
 import 'impl/analysis_server_impl.dart';
 
 final Logger _logger = new Logger('analysis-server');
@@ -24,10 +26,9 @@ class AnalysisServer implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
 
-  StreamController<bool> _serverActiveController =
-      new StreamController.broadcast();
-  StreamController<bool> _serverBusyController =
-      new StreamController.broadcast();
+  StreamController<bool> _serverActiveController = new StreamController.broadcast();
+  StreamController<bool> _serverBusyController = new StreamController.broadcast();
+  StreamController<Map> _allMessagesController = new StreamController.broadcast();
 
   Server _server;
   _AnalyzingJob _job;
@@ -41,6 +42,8 @@ class AnalysisServer implements Disposable {
   Stream<bool> get onActive => _serverActiveController.stream;
 
   Stream<bool> get onBusy => _serverBusyController.stream;
+
+  Stream<Map> get onAllMessages => _allMessagesController.stream;
 
   void _setup() {
     _logger.fine('setup()');
@@ -57,6 +60,8 @@ class AnalysisServer implements Disposable {
 
   /// Returns whether the analysis server is active and running.
   bool get isActive => _server != null;
+
+  bool get isBusy => _server != null && _server.isBusy;
 
   /// Provides an instantaneous snapshot of the known issues and warnings.
   List<AnalysisIssue> get issues => null;
@@ -147,6 +152,23 @@ class AnalysisServer implements Disposable {
     editor.onDidDestroy.listen((_) => notifyFileChanged(path, null));
   }
 
+  /// Explictely and manually start the analysis server. This will not succeed
+  /// if there is no SDK.
+  void start() {
+    if (!sdkManager.hasSdk) return;
+
+    if (_server == null) {
+      Server server = new Server(sdkManager.sdk);
+      _server = server;
+      _initNewServer(server);
+    }
+  }
+
+  /// If an analysis server is running, terminate it.
+  void shutdown() {
+    if (_server != null) _server.kill();
+  }
+
   void _checkTrigger({bool dispose: false}) {
     bool shouldBeRunning = knownRoots.isNotEmpty && sdkManager.hasSdk;
 
@@ -162,9 +184,10 @@ class AnalysisServer implements Disposable {
   }
 
   void _initNewServer(Server server) {
-    // _AnalyzingJob
     server.onBusy.listen((value) => _serverBusyController.add(value));
     server.whenDisposed.then((exitCode) => _handleServerDeath(server));
+    server.onAllMessages.listen((message) => _allMessagesController.add(message));
+
     onBusy.listen((busy) {
       if (!busy && _job != null) {
         _job.finish();
@@ -173,6 +196,7 @@ class AnalysisServer implements Disposable {
         _job = new _AnalyzingJob()..start();
       }
     });
+
     server.setup().then((_) {
       _serverActiveController.add(true);
       _syncRoots();
@@ -193,10 +217,17 @@ class _AnalyzingJob extends Job {
   static const Duration _debounceDelay = const Duration(milliseconds: 150);
 
   Completer completer = new Completer();
+  Function _infoAction;
 
-  _AnalyzingJob() : super('Analyzing');
+  _AnalyzingJob() : super('Analyzing') {
+    _infoAction = () {
+      deps[AnalysisServerDialog].showDialog();
+    };
+  }
 
   bool get quiet => true;
+
+  Function get infoAction => _infoAction;
 
   Future run() => completer.future;
 

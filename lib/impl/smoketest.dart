@@ -100,7 +100,9 @@ void smokeTest() {
   // jobs
   new _TestJob("Lorem ipsum dolor", 1).schedule();
   new _TestJob("Sit amet consectetur", 2).schedule();
-  new _TestJob("Adipiscing elit sed", 3).schedule();
+  new _TestJob("Adipiscing elit sed", 3, () {
+    atom.notifications.addSuccess('Hello world from dart-lang!');
+  }).schedule();
   new _TestJob("Do eiusmod tempor", 4).schedule();
 
   // utils
@@ -112,7 +114,9 @@ void smokeTest() {
 
 class _TestJob extends Job {
   final int seconds;
-  _TestJob(String title, this.seconds) : super(title, _TestJob);
+  final Function _infoAction;
+  _TestJob(String title, this.seconds, [this._infoAction]) : super(title, _TestJob);
+  Function get infoAction => _infoAction;
   Future run() => new Future.delayed(new Duration(seconds: seconds));
 }
 

@@ -30,11 +30,14 @@ class Server {
   bool isSetup = false;
   bool isSettingUp = false;
 
+  bool _isBusy = false;
+
   // TODO(lukechurch): Replace this with a notice board + dispatcher pattern
   /// Streams used to handle syncing data with the server
   Stream<bool> analysisComplete;
   StreamController<bool> _onServerStatus;
   StreamController<bool> _busyController = new StreamController.broadcast();
+  StreamController<Map> _allMessagesController = new StreamController.broadcast();
 
   Stream<Map> completionResults;
   StreamController<Map> _onCompletionResults;
@@ -73,6 +76,10 @@ class Server {
   Future<int> get whenDisposed => _processCompleter.future;
 
   Stream<bool> get onBusy => _busyController.stream;
+
+  Stream<Map> get onAllMessages => _allMessagesController.stream;
+
+  bool get isBusy => _isBusy;
 
   // /// Ensure that the server is ready for use.
   // Future _ensureSetup() async {
@@ -183,20 +190,15 @@ class Server {
       } else {
         completer.complete(message['result']);
       }
-      // Check that the message is well-formed.  We do this after calling
+      // Check that the message is well-formed. We do this after calling
       // completer.complete() or completer.completeError() so that we don't
       // stall the test in the event of an error.
       // expect(message, isResponse);
     } else {
-      // Message is a notification.  It should have an event and possibly
-      // params.
-//        expect(message, contains('event'));
-//        expect(message['event'], isString);
+      _allMessagesController.add(message);
+
+      // Message is a notification. It should have an event and possibly params.
       notificationProcessor(message['event'], message['params']);
-      // Check that the message is well-formed.  We do this after calling
-      // notificationController.add() so that we don't stall the test in the
-      // event of an error.
-//        expect(message, isNotification);
     }
   }
 
@@ -382,7 +384,8 @@ class Server {
     }
 
     if (event == "server.status" && params.containsKey('analysis')) {
-      _busyController.add(params['analysis']['isAnalyzing']);
+      _isBusy = params['analysis']['isAnalyzing'];
+      _busyController.add(_isBusy);
     }
 
     // Ignore all but the last completion result. This means that we get a

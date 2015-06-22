@@ -34,11 +34,35 @@
 }
 
 .jobs-dialog {
-  .jobs-progress {
-    float: right;
+  li.job-container {
+    display: flex !important;
   }
 
   .inline-block .inline-block {
     vertical-align: middle;
+  }
+
+  .info {
+    cursor: pointer;
+  }
+}
+
+.analysis-dialog {
+  .title {
+    margin-bottom: 0.5em;
+  }
+
+  .last-message {
+    font-family: monospace;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: pre-line;
+    line-height: 1em;
+    min-height: 3em;
+    max-height: 8em;
+  }
+
+  button {
+    min-width: 75px;
   }
 }
