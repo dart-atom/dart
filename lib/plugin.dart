@@ -11,14 +11,12 @@ import 'package:logging/logging.dart';
 import 'analysis_server.dart';
 import 'atom.dart';
 import 'atom_autocomplete.dart';
-import 'atom_linter.dart';
 import 'atom_statusbar.dart';
 import 'dependencies.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'impl/analysis_server_dialog.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
@@ -81,19 +79,8 @@ class AtomDartPackage extends AtomPackage {
       new PubJob.upgrade(dirname(event.selectedFilePath)).schedule();
     });
 
-    // Register the linter provider.
-    //new DartLinterProvider().register();
-
     // Register the autocomplete provider.
     //new DartAutocompleteProvider().register();
-
-    // Create the analysis server diagnostics dialog.
-    disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
-
-    analysisServer.onActive.listen(
-        (val) => _logger.info('analysis server active: ${val}'));
-    analysisServer.onBusy.listen(
-        (val) => _logger.info('analysis server busy: ${val}'));
   }
 
   void packageDeactivated() {
@@ -141,25 +128,6 @@ class AtomDartPackage extends AtomPackage {
 
       _logger.fine("logging level: ${Logger.root.level}");
     }));
-  }
-}
-
-// TODO: Move this class to a different file.
-class DartLinterProvider extends LinterProvider {
-  // TODO: Options are 'file' and 'project' scope, and lintOnFly true or false.
-  DartLinterProvider() : super(scopes: ['source.dart'], scope: 'file');
-
-  void register() => LinterProvider.registerLinterProvider('provideLinter', this);
-
-  Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer) {
-    return new Future.value([
-      new LintMessage(
-        type: LintMessage.ERROR,
-        message: 'foo bar',
-        html: 'Foo bar baz',
-        file: editor.getPath(),
-        position: new Rn(new Pt(21, 1), new Pt(21, 10)))
-    ]);
   }
 }
 
