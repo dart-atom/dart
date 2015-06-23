@@ -45,6 +45,12 @@ clean() {
   delete(getFile('web/entry.dart.js.map'));
 }
 
+@Task('generate the analysis server API')
+analysisServerApi() {
+  // https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/tool/spec/spec_input.html
+  Dart.run('tool/generate_analysis_lib.dart');
+}
+
 final String _jsPrefix = """
 var self = Object.create(this);
 self.require = require;
