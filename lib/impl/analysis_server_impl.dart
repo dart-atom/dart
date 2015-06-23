@@ -36,7 +36,8 @@ class Server {
   Stream<bool> analysisComplete;
   StreamController<bool> _onServerStatus;
   StreamController<bool> _busyController = new StreamController.broadcast();
-  StreamController<String> _allMessagesController = new StreamController.broadcast();
+  StreamController<String> _allMessagesController =
+      new StreamController.broadcast();
 
   Stream<Map> completionResults;
   StreamController<Map> _onCompletionResults;
@@ -181,7 +182,8 @@ class Server {
   /// all of the hover information is not available at the time this request is
   /// processed the information will be omitted from the response.
   Future<HoverResult> analysis_getHover(String file, int offset) {
-    return send('analysis.getHover', {'file': file, 'offset': offset}).then((Map result) {
+    return send('analysis.getHover', {'file': file, 'offset': offset})
+        .then((Map result) {
       return new HoverResult.from(result);
     });
   }
@@ -372,8 +374,7 @@ class Server {
     });
   }
 
-  Future analysis_setAnalysisRoots(
-      List<String> included, List<String> excluded,
+  Future analysis_setAnalysisRoots(List<String> included, List<String> excluded,
       {Map<String, String> packageRoots}) {
     var params = new AnalysisSetAnalysisRootsParams(included, excluded,
         packageRoots: packageRoots).toJson();
@@ -456,12 +457,15 @@ class SourceEdit {
   /// The code that is to replace the specified region in the original code.
   final String replacement;
 
-  SourceEdit.from(Map m) :
-      offset = m['offset'], length = m['length'], replacement = m['replacement'];
+  SourceEdit.from(Map m)
+      : offset = m['offset'],
+        length = m['length'],
+        replacement = m['replacement'];
 
   String applyTo(String target) {
     if (offset >= replacement.length) throw "offset beyond end of string";
-    if (offset + length >= replacement.length) throw "change beyond end of string";
+    if (offset + length >=
+        replacement.length) throw "change beyond end of string";
 
     String pre = "${target.substring(0, offset)}";
     String post = "${target.substring(offset + length)}";
@@ -482,11 +486,14 @@ class RequestError {
   /// for debugging the server.
   final String stackTrace;
 
-  RequestError.from(Map m) :
-      code = m['code'], message = m['message'], stackTrace = m['stackTrace'];
+  RequestError.from(Map m)
+      : code = m['code'],
+        message = m['message'],
+        stackTrace = m['stackTrace'];
 
-  String toString() =>
-      stackTrace == null ? '${code}: ${message}' : '${code}: ${message}\n${stackTrace}';
+  String toString() => stackTrace == null
+      ? '${code}: ${message}'
+      : '${code}: ${message}\n${stackTrace}';
 }
 
 class AnalysisErrorsResult {
@@ -494,8 +501,9 @@ class AnalysisErrorsResult {
 
   AnalysisErrorsResult.empty() : errors = [];
 
-  AnalysisErrorsResult.from(Map m) :
-      errors = m['errors'].map((obj) => new AnalysisError.from(obj)).toList()..sort();
+  AnalysisErrorsResult.from(Map m) : errors = m['errors']
+          .map((obj) => new AnalysisError.from(obj))
+          .toList()..sort();
 
   String toString() => '${errors}';
 }
@@ -503,8 +511,9 @@ class AnalysisErrorsResult {
 class HoverResult {
   final List<HoverInformation> hovers;
 
-  HoverResult.from(Map m) :
-      hovers = m['hovers'].map((obj) => new HoverInformation.from(obj)).toList();
+  HoverResult.from(Map m) : hovers = m['hovers']
+          .map((obj) => new HoverInformation.from(obj))
+          .toList();
 
   String toString() => hovers.toString();
 }
@@ -523,18 +532,18 @@ class HoverInformation {
   final String propagatedType;
   final String staticType;
 
-  HoverInformation.from(Map m) :
-      offset = m['offset'],
-      length = m['length'],
-      containingLibraryPath = m['containingLibraryPath'],
-      containingLibraryName = m['containingLibraryName'],
-      containingClassDescription = m['containingClassDescription'],
-      dartdoc = m['dartdoc'],
-      elementDescription = m['elementDescription'],
-      elementKind = m['elementKind'],
-      parameter = m['parameter'],
-      propagatedType = m['propagatedType'],
-      staticType = m['staticType'];
+  HoverInformation.from(Map m)
+      : offset = m['offset'],
+        length = m['length'],
+        containingLibraryPath = m['containingLibraryPath'],
+        containingLibraryName = m['containingLibraryName'],
+        containingClassDescription = m['containingClassDescription'],
+        dartdoc = m['dartdoc'],
+        elementDescription = m['elementDescription'],
+        elementKind = m['elementKind'],
+        parameter = m['parameter'],
+        propagatedType = m['propagatedType'],
+        staticType = m['staticType'];
 
   String title() {
     if (elementDescription != null) return elementDescription;
@@ -545,9 +554,12 @@ class HoverInformation {
 
   String render() {
     StringBuffer buf = new StringBuffer();
-    if (containingLibraryName != null) buf.write('library: ${containingLibraryName}\n');
-    if (containingClassDescription != null) buf.write('class: ${containingClassDescription}\n');
-    if (propagatedType != null) buf.write('propagated type: ${propagatedType}\n');
+    if (containingLibraryName != null) buf
+        .write('library: ${containingLibraryName}\n');
+    if (containingClassDescription != null) buf
+        .write('class: ${containingClassDescription}\n');
+    if (propagatedType != null) buf
+        .write('propagated type: ${propagatedType}\n');
     // TODO: Translate markdown.
     if (dartdoc != null) buf.write('\n${_renderMarkdownToText(dartdoc)}\n');
     return buf.toString();
@@ -570,16 +582,17 @@ class AnalysisError implements Comparable {
   final String correction;
   final Location location;
 
-  AnalysisError.from(Map m) :
-      severity = m['severity'],
-      type = m['type'],
-      message = m['message'],
-      correction = m['correction'],
-      location = new Location.from(m['location']);
+  AnalysisError.from(Map m)
+      : severity = m['severity'],
+        type = m['type'],
+        message = m['message'],
+        correction = m['correction'],
+        location = new Location.from(m['location']);
 
   int compareTo(other) {
     if (other is! AnalysisError) return 0;
-    if (severity != other.severity) return _sev(other.severity) - _sev(severity);
+    if (severity != other.severity) return _sev(other.severity) -
+        _sev(severity);
     return location.compareTo(other.location);
   }
 
@@ -604,9 +617,12 @@ class Location implements Comparable {
   /// range.
   final int startColumn;
 
-  Location(Map m) :
-      file = m['file'], offset = m['offset'], length = m['length'],
-      startLine = m['startLine'], startColumn = m['startColumn'];
+  Location(Map m)
+      : file = m['file'],
+        offset = m['offset'],
+        length = m['length'],
+        startLine = m['startLine'],
+        startColumn = m['startColumn'];
 
   factory Location.from(Map m) {
     if (m == null) return null;
