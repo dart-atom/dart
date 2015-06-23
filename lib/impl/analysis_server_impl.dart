@@ -9,6 +9,7 @@ import 'dart:convert';
 
 import 'package:dart_analysis_server_api/protocol.dart';
 import 'package:logging/logging.dart';
+//import 'package:markdown/markdown.dart';
 
 import '../process.dart';
 import '../sdk.dart';
@@ -35,7 +36,8 @@ class Server {
   Stream<bool> analysisComplete;
   StreamController<bool> _onServerStatus;
   StreamController<bool> _busyController = new StreamController.broadcast();
-  StreamController<Map> _allMessagesController = new StreamController.broadcast();
+  StreamController<String> _allMessagesController =
+      new StreamController.broadcast();
 
   Stream<Map> completionResults;
   StreamController<Map> _onCompletionResults;
@@ -75,7 +77,7 @@ class Server {
 
   Stream<bool> get onBusy => _busyController.stream;
 
-  Stream<Map> get onAllMessages => _allMessagesController.stream;
+  Stream<String> get onAllMessages => _allMessagesController.stream;
 
   bool get isBusy => _isBusy;
 
@@ -102,7 +104,7 @@ class Server {
 
     _logger.fine("listenToOutput returned");
 
-    sendServerSetSubscriptions([ServerService.STATUS]);
+    server_setSubscriptions([ServerService.STATUS]);
 
     _logger.fine("set subscriptions completed");
 
@@ -148,6 +150,7 @@ class Server {
 
       for (String line in lines) {
         line = line.trim();
+        _allMessagesController.add(line);
 
         _logger.finer('<-- ${line}');
 
@@ -169,10 +172,30 @@ class Server {
     });
   }
 
-  Future<AnalysisErrorsResult> analysis_getErrors(String filePath) {
-    return send('analysis.getErrors', {'file': filePath}).then((Map result) {
+  Future<AnalysisErrorsResult> analysis_getErrors(String file) {
+    return send('analysis.getErrors', {'file': file}).then((Map result) {
       return new AnalysisErrorsResult.from(result);
     });
+  }
+
+  /// Return the hover information associate with the given location. If some or
+  /// all of the hover information is not available at the time this request is
+  /// processed the information will be omitted from the response.
+  Future<HoverResult> analysis_getHover(String file, int offset) {
+    return send('analysis.getHover', {'file': file, 'offset': offset})
+        .then((Map result) {
+      return new HoverResult.from(result);
+    });
+  }
+
+  /// Force the re-analysis of everything contained in the specified analysis
+  /// roots. This will cause all previously computed analysis results to be
+  /// discarded and recomputed, and will cause all subscribed notifications to
+  /// be re-sent.
+  Future analysis_reanalyze([List<String> roots]) {
+    Map args = {};
+    if (roots != null) args['root'] = roots;
+    return send('analysis.reanalyze', args);
   }
 
   void _processMessage(Map message) {
@@ -191,7 +214,6 @@ class Server {
         completer.complete(message['result']);
       }
     } else {
-      _allMessagesController.add(message);
       dispatchNotification(message['event'], message['params']);
     }
   }
@@ -231,6 +253,7 @@ class Server {
 
     String line = JSON.encode(command);
     _logger.finer('--> $line');
+    _allMessagesController.add(line);
     _process.write("${line}\n");
 
     return completer.future;
@@ -258,7 +281,7 @@ class Server {
     return new Future.value();
   }
 
-  Future sendServerSetSubscriptions(List<ServerService> subscriptions) {
+  Future server_setSubscriptions(List<ServerService> subscriptions) {
     var params = new ServerSetSubscriptionsParams(subscriptions).toJson();
     return send("server.setSubscriptions", params);
   }
@@ -351,8 +374,7 @@ class Server {
     });
   }
 
-  Future sendAnalysisSetAnalysisRoots(
-      List<String> included, List<String> excluded,
+  Future analysis_setAnalysisRoots(List<String> included, List<String> excluded,
       {Map<String, String> packageRoots}) {
     var params = new AnalysisSetAnalysisRootsParams(included, excluded,
         packageRoots: packageRoots).toJson();
@@ -397,170 +419,6 @@ class Server {
   }
 }
 
-// Interface API classes strip these down as needs be
-
-// ==============
-
-class AnalysisResults {
-  final List<AnalysisIssue> issues;
-  final List<String> packageImports;
-  final List<String> resolvedImports;
-
-  AnalysisResults(this.issues, this.packageImports, this.resolvedImports);
-}
-
-class AnalysisIssue implements Comparable {
-  final String kind;
-  final int line;
-  final String message;
-  final String sourceName;
-
-  final bool hasFixes;
-
-  final int charStart;
-  final int charLength;
-  // TODO: Once all clients have started using fullName, we should remove the
-  // location field.
-  final String location;
-
-  AnalysisIssue.fromIssue(this.kind, this.line, this.message, {this.charStart,
-      this.charLength, this.location, this.sourceName, this.hasFixes: false});
-
-  Map toMap() {
-    Map m = {'kind': kind, 'line': line, 'message': message};
-    if (charStart != null) m['charStart'] = charStart;
-    if (charLength != null) m['charLength'] = charLength;
-    if (hasFixes != null) m['hasFixes'] = hasFixes;
-    if (sourceName != null) m['sourceName'] = sourceName;
-
-    return m;
-  }
-
-  int compareTo(AnalysisIssue other) => line - other.line;
-
-  String toString() => '${kind}: ${message} [${line}]';
-}
-
-class SourceRequest {
-  String source;
-
-  int offset;
-}
-
-class CompileRequest {
-  String source;
-
-  bool useCheckedMode;
-
-  bool returnSourceMap;
-}
-
-class CompileResponse {
-  final String result;
-  final String sourceMap;
-
-  CompileResponse(this.result, [this.sourceMap]);
-}
-
-class CounterRequest {
-  String name;
-}
-
-class CounterResponse {
-  final int count;
-
-  CounterResponse(this.count);
-}
-
-class DocumentResponse {
-  final Map<String, String> info;
-
-  DocumentResponse(this.info);
-}
-
-class CompleteResponse {
-  final int replacementOffset;
-
-  final int replacementLength;
-
-  final List<Map<String, String>> completions;
-
-  CompleteResponse(
-      this.replacementOffset, this.replacementLength, List<Map> completions)
-      : this.completions = _convert(completions);
-
-  /**
-   * Convert any non-string values from the contained maps.
-   */
-  static List<Map<String, String>> _convert(List<Map> list) {
-    return list.map((m) {
-      Map newMap = {};
-      for (String key in m.keys) {
-        var data = m[key];
-        // TODO: Properly support Lists, Maps (this is a hack).
-        if (data is Map || data is List) {
-          data = JSON.encode(data);
-        }
-        newMap[key] = '${data}';
-      }
-      return newMap;
-    }).toList();
-  }
-}
-
-class FixesResponse {
-  final List<ProblemAndFixes> fixes;
-
-  FixesResponse(List<AnalysisErrorFixes> analysisErrorFixes)
-      : this.fixes = _convert(analysisErrorFixes);
-
-  /**
-   * Convert between the Analysis Server type and the API protocol types.
-   */
-  static List<ProblemAndFixes> _convert(List<AnalysisErrorFixes> list) {
-    var problemsAndFixes = new List<ProblemAndFixes>();
-    list.forEach((fix) => problemsAndFixes.add(_convertAnalysisErrorFix(fix)));
-    return problemsAndFixes;
-  }
-
-  static ProblemAndFixes _convertAnalysisErrorFix(
-      AnalysisErrorFixes analysisFixes) {
-    String problemMessage = analysisFixes.error.message;
-    int problemOffset = analysisFixes.error.location.offset;
-    int problemLength = analysisFixes.error.location.length;
-
-    List<CandidateFix> possibleFixes = new List<CandidateFix>();
-
-    for (var sourceChange in analysisFixes.fixes) {
-      List<SourceEdit> edits = new List<SourceEdit>();
-
-      // A fix that tries to modify other files is considered invalid.
-
-      bool invalidFix = false;
-      for (var sourceFileEdit in sourceChange.edits) {
-        // TODO(lukechurch): replace this with a more reliable test based on the
-        // psuedo file name in Analysis Server
-        if (!sourceFileEdit.file.endsWith("/main.dart")) {
-          invalidFix = true;
-          break;
-        }
-
-        for (var sourceEdit in sourceFileEdit.edits) {
-          edits.add(new SourceEdit.fromChanges(
-              sourceEdit.offset, sourceEdit.length, sourceEdit.replacement));
-        }
-      }
-      if (!invalidFix) {
-        CandidateFix possibleFix =
-            new CandidateFix.fromEdits(sourceChange.message, edits);
-        possibleFixes.add(possibleFix);
-      }
-    }
-    return new ProblemAndFixes.fromList(
-        possibleFixes, problemMessage, problemOffset, problemLength);
-  }
-}
-
 /**
  * Represents a problem detected during analysis, and a set of possible
  * ways of resolving the problem.
@@ -588,43 +446,35 @@ class CandidateFix {
   CandidateFix.fromEdits([this.message, this.edits]);
 }
 
-/**
- * Represents a reformatting of the code.
- */
-class FormatResponse {
-  final String newString;
-
-  final int offset;
-
-  FormatResponse(this.newString, [this.offset = 0]);
-}
-
-/**
- * Represents a single edit-point change to a source file.
- */
+/// A description of a single change to a single file.
 class SourceEdit {
+  /// The offset of the region to be modified.
   final int offset;
+
+  /// The length of the region to be modified.
   final int length;
+
+  /// The code that is to replace the specified region in the original code.
   final String replacement;
 
-  SourceEdit() : this.fromChanges();
-  SourceEdit.fromChanges([this.offset, this.length, this.replacement]);
+  SourceEdit.from(Map m)
+      : offset = m['offset'],
+        length = m['length'],
+        replacement = m['replacement'];
 
   String applyTo(String target) {
-    if (offset >= replacement.length) {
-      throw "Offset beyond end of string";
-    } else if (offset + length >= replacement.length) {
-      throw "Change beyond end of string";
-    }
+    if (offset >= replacement.length) throw "offset beyond end of string";
+    if (offset + length >=
+        replacement.length) throw "change beyond end of string";
 
     String pre = "${target.substring(0, offset)}";
-    String post = "${target.substring(offset+length)}";
+    String post = "${target.substring(offset + length)}";
     return "$pre$replacement$post";
   }
 }
 
-/// An indication of a problem with the execution of the server, typically in
-/// response to a request.
+/// An indication of a problem with the execution of the server, typically in response to a
+/// request.
 class RequestError {
   /// A code that uniquely identifies the error that occurred.
   final String code;
@@ -636,10 +486,14 @@ class RequestError {
   /// for debugging the server.
   final String stackTrace;
 
-  RequestError.from(Map m) :
-      code = m['code'], message = m['message'], stackTrace = m['stackTrace'];
+  RequestError.from(Map m)
+      : code = m['code'],
+        message = m['message'],
+        stackTrace = m['stackTrace'];
 
-  String toString() => '${code}: ${message}';
+  String toString() => stackTrace == null
+      ? '${code}: ${message}'
+      : '${code}: ${message}\n${stackTrace}';
 }
 
 class AnalysisErrorsResult {
@@ -647,10 +501,71 @@ class AnalysisErrorsResult {
 
   AnalysisErrorsResult.empty() : errors = [];
 
-  AnalysisErrorsResult.from(Map m) :
-      errors = m['errors'].map((obj) => new AnalysisError.from(obj)).toList()..sort();
+  AnalysisErrorsResult.from(Map m) : errors = m['errors']
+          .map((obj) => new AnalysisError.from(obj))
+          .toList()..sort();
 
   String toString() => '${errors}';
+}
+
+class HoverResult {
+  final List<HoverInformation> hovers;
+
+  HoverResult.from(Map m) : hovers = m['hovers']
+          .map((obj) => new HoverInformation.from(obj))
+          .toList();
+
+  String toString() => hovers.toString();
+}
+
+/// The hover information associated with a specific location.
+class HoverInformation {
+  final int offset;
+  final int length;
+  final String containingLibraryPath;
+  final String containingLibraryName;
+  final String containingClassDescription;
+  final String dartdoc;
+  final String elementDescription;
+  final String elementKind;
+  final String parameter;
+  final String propagatedType;
+  final String staticType;
+
+  HoverInformation.from(Map m)
+      : offset = m['offset'],
+        length = m['length'],
+        containingLibraryPath = m['containingLibraryPath'],
+        containingLibraryName = m['containingLibraryName'],
+        containingClassDescription = m['containingClassDescription'],
+        dartdoc = m['dartdoc'],
+        elementDescription = m['elementDescription'],
+        elementKind = m['elementKind'],
+        parameter = m['parameter'],
+        propagatedType = m['propagatedType'],
+        staticType = m['staticType'];
+
+  String title() {
+    if (elementDescription != null) return elementDescription;
+    if (staticType != null) return staticType;
+    if (propagatedType != null) return propagatedType;
+    return 'Dartdoc';
+  }
+
+  String render() {
+    StringBuffer buf = new StringBuffer();
+    if (containingLibraryName != null) buf
+        .write('library: ${containingLibraryName}\n');
+    if (containingClassDescription != null) buf
+        .write('class: ${containingClassDescription}\n');
+    if (propagatedType != null) buf
+        .write('propagated type: ${propagatedType}\n');
+    // TODO: Translate markdown.
+    if (dartdoc != null) buf.write('\n${_renderMarkdownToText(dartdoc)}\n');
+    return buf.toString();
+  }
+
+  String toString() => title();
 }
 
 class AnalysisError implements Comparable {
@@ -667,20 +582,21 @@ class AnalysisError implements Comparable {
   final String correction;
   final Location location;
 
-  AnalysisError.from(Map m) :
-      severity = m['severity'],
-      type = m['type'],
-      message = m['message'],
-      correction = m['correction'],
-      location = new Location.from(m['location']);
+  AnalysisError.from(Map m)
+      : severity = m['severity'],
+        type = m['type'],
+        message = m['message'],
+        correction = m['correction'],
+        location = new Location.from(m['location']);
 
   int compareTo(other) {
     if (other is! AnalysisError) return 0;
-    if (severity != other.severity) return _sev(severity) - _sev(other.severity);
+    if (severity != other.severity) return _sev(other.severity) -
+        _sev(severity);
     return location.compareTo(other.location);
   }
 
-  String toString() => message;
+  String toString() => '${severity}: ${message}';
 }
 
 class Location implements Comparable {
@@ -701,9 +617,12 @@ class Location implements Comparable {
   /// range.
   final int startColumn;
 
-  Location(Map m) :
-      file = m['file'], offset = m['offset'], length = m['length'],
-      startLine = m['startLine'], startColumn = m['startColumn'];
+  Location(Map m)
+      : file = m['file'],
+        offset = m['offset'],
+        length = m['length'],
+        startLine = m['startLine'],
+        startColumn = m['startColumn'];
 
   factory Location.from(Map m) {
     if (m == null) return null;
@@ -717,4 +636,22 @@ class Location implements Comparable {
   }
 
   String toString() => '${file},${startLine},${startColumn}';
+}
+
+String _renderMarkdownToText(String str) {
+  if (str == null) return null;
+
+  StringBuffer buf = new StringBuffer();
+
+  List<String> lines = str.replaceAll('\r\n', '\n').split('\n');
+
+  for (String line in lines) {
+    if (line.trim().isEmpty) {
+      buf.write('\n');
+    } else {
+      buf.write('${line.trimRight()} ');
+    }
+  }
+
+  return buf.toString();
 }

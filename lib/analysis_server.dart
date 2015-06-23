@@ -30,9 +30,12 @@ class AnalysisServer implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
 
-  StreamController<bool> _serverActiveController = new StreamController.broadcast();
-  StreamController<bool> _serverBusyController = new StreamController.broadcast();
-  StreamController<Map> _allMessagesController = new StreamController.broadcast();
+  StreamController<bool> _serverActiveController =
+      new StreamController.broadcast();
+  StreamController<bool> _serverBusyController =
+      new StreamController.broadcast();
+  StreamController<String> _allMessagesController =
+      new StreamController.broadcast();
 
   Server _server;
   _AnalyzingJob _job;
@@ -53,7 +56,7 @@ class AnalysisServer implements Disposable {
 
   Stream<bool> get onBusy => _serverBusyController.stream;
 
-  Stream<Map> get onAllMessages => _allMessagesController.stream;
+  Stream<String> get onAllMessages => _allMessagesController.stream;
 
   void _setup() {
     _logger.fine('setup()');
@@ -69,15 +72,35 @@ class AnalysisServer implements Disposable {
 
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
+
+    disposables.add(atom.commands.add('atom-text-editor', 'dart-lang:dartdoc',
+        (event) {
+      if (_server == null) return;
+
+      bool explicit = true;
+
+      TextEditor editor = event.editor;
+      Range range = editor.getSelectedBufferRange();
+      int offset = editor.getBuffer().characterIndexForPosition(range.start);
+      _server
+          .analysis_getHover(editor.getPath(), offset)
+          .then((HoverResult result) {
+        if (result.hovers.isEmpty) {
+          if (explicit) atom.beep();
+          return;
+        }
+
+        HoverInformation hover = result.hovers.first;
+        atom.notifications.addInfo(hover.title(),
+            dismissable: true, detail: hover.render());
+      });
+    }));
   }
 
   /// Returns whether the analysis server is active and running.
   bool get isActive => _server != null;
 
   bool get isBusy => _server != null && _server.isBusy;
-
-  /// Provides an instantaneous snapshot of the known issues and warnings.
-  List<AnalysisIssue> get issues => null;
 
   /// Subscribe to this to get told when the issues list has changed.
   Stream get issuesUpdatedNotification => null;
@@ -106,7 +129,7 @@ class AnalysisServer implements Disposable {
   void _syncRoots() {
     if (isActive) {
       List<String> roots = knownRoots.map((dir) => dir.path).toList();
-      _server.sendAnalysisSetAnalysisRoots(roots, []);
+      _server.analysis_setAnalysisRoots(roots, []);
     }
   }
 
@@ -207,7 +230,8 @@ class AnalysisServer implements Disposable {
   void _initNewServer(Server server) {
     server.onBusy.listen((value) => _serverBusyController.add(value));
     server.whenDisposed.then((exitCode) => _handleServerDeath(server));
-    server.onAllMessages.listen((message) => _allMessagesController.add(message));
+    server.onAllMessages
+        .listen((message) => _allMessagesController.add(message));
 
     onBusy.listen((busy) {
       if (!busy && _job != null) {
@@ -268,11 +292,14 @@ class _DartLinterProvider extends LinterProvider {
   // TODO: Options are 'file' and 'project' scope, and lintOnFly true or false.
   _DartLinterProvider() : super(scopes: ['source.dart'], scope: 'file');
 
-  void register() => LinterProvider.registerLinterProvider('provideLinter', this);
+  void register() =>
+      LinterProvider.registerLinterProvider('provideLinter', this);
 
   Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer) {
     String filePath = editor.getPath();
-    return analysisServer.getErrors(filePath).then((AnalysisErrorsResult result){
+    return analysisServer
+        .getErrors(filePath)
+        .then((AnalysisErrorsResult result) {
       return result.errors.map((e) => _cvtMessage(filePath, e)).toList();
     }).catchError((e) {
       print(e);
@@ -288,15 +315,14 @@ class _DartLinterProvider extends LinterProvider {
 
   LintMessage _cvtMessage(String filePath, AnalysisError error) {
     return new LintMessage(
-      type: _severityMap[error.severity],
-      message: error.message,
-      file: filePath,
-      position: _cvtLocation(error.location));
+        type: _severityMap[error.severity],
+        message: error.message,
+        file: filePath,
+        position: _cvtLocation(error.location));
   }
 
   Rn _cvtLocation(Location location) {
-    return new Rn(
-      new Pt(location.startLine, location.startColumn),
-      new Pt(location.startLine, location.startColumn + location.length));
+    return new Rn(new Pt(location.startLine, location.startColumn),
+        new Pt(location.startLine, location.startColumn + location.length));
   }
 }

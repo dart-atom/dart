@@ -21,8 +21,8 @@ class AnalysisServerDialog implements Disposable {
   Element _stopButton;
 
   AnalysisServerDialog() {
-    _disposables.add(atom.commands.add(
-        'atom-workspace', 'dart-lang:analysis-server-status', (_) => showDialog()));
+    _disposables.add(atom.commands.add('atom-workspace',
+        'dart-lang:analysis-server-status', (_) => showDialog()));
 
     _disposables.add(atom.commands.add('atom-text-editor', 'core:cancel', (_) {
       if (_panel != null) _panel.hide();
@@ -51,10 +51,10 @@ class AnalysisServerDialog implements Disposable {
     DivElement mainElement = new DivElement()..classes.add('analysis-dialog');
 
     Element title = new DivElement()
-        ..classes.add('message')
-        ..classes.add('title')
-        ..classes.add('text-highlight')
-        ..text = 'Analysis Server';
+      ..classes.add('message')
+      ..classes.add('title')
+      ..classes.add('text-highlight')
+      ..text = 'Analysis Server';
     mainElement.children.add(title);
 
     DivElement buttonGroup = new DivElement()..classes.add('block');
@@ -67,19 +67,21 @@ class AnalysisServerDialog implements Disposable {
     _statusElement.setAttribute('flex', '');
     buttonGroup.children.add(_statusElement);
 
-    _startButton = new Element.tag('button')..classes.addAll(['btn', 'btn-sm', 'inline-block-tight']);
+    _startButton = new Element.tag('button')
+      ..classes.addAll(['btn', 'btn-sm', 'inline-block-tight']);
     _startButton.text = 'Start';
     _startButton.onClick.listen((_) => _handleServerStart());
     buttonGroup.children.add(_startButton);
 
-    _stopButton = new Element.tag('button')..classes.addAll(['btn', 'btn-sm', 'inline-block-tight']);
+    _stopButton = new Element.tag('button')
+      ..classes.addAll(['btn', 'btn-sm', 'inline-block-tight']);
     _stopButton.text = 'Shutdown';
     _stopButton.onClick.listen((_) => _handleServerStop());
     buttonGroup.children.add(_stopButton);
 
     _messageElement = new DivElement()
-        ..classes.add('last-message')
-        ..classes.add('text-subtle');
+      ..classes.add('last-message')
+      ..classes.add('text-subtle');
     mainElement.children.add(_messageElement);
 
     _panel = atom.workspace.addModalPanel(item: mainElement);

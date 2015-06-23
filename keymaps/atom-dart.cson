@@ -12,3 +12,6 @@
 
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
   'enter': 'dart-lang:newline'
+
+'atom-text-editor[data-grammar~="dart"]:not([mini])':
+  'f1': 'dart-lang:dartdoc'
