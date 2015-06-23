@@ -290,17 +290,19 @@ class _AnalyzingJob extends Job {
 
 class _DartLinterProvider extends LinterProvider {
   // TODO: Options are 'file' and 'project' scope, and lintOnFly true or false.
-  _DartLinterProvider() : super(scopes: ['source.dart'], scope: 'file');
+  _DartLinterProvider() : super(grammarScopes: ['source.dart'], scope: 'file');
 
   void register() =>
       LinterProvider.registerLinterProvider('provideLinter', this);
 
-  Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer) {
+  Future<List<LintMessage>> lint(TextEditor editor) {
     String filePath = editor.getPath();
     return analysisServer
         .getErrors(filePath)
         .then((AnalysisErrorsResult result) {
-      return result.errors.map((e) => _cvtMessage(filePath, e)).toList();
+      return result.errors.where((AnalysisError error) {
+        return error.severity == 'WARNING' || error.severity == 'ERROR';
+      }).map((e) => _cvtMessage(filePath, e)).toList();
     }).catchError((e) {
       print(e);
       return [];
@@ -308,21 +310,21 @@ class _DartLinterProvider extends LinterProvider {
   }
 
   final Map<String, String> _severityMap = {
-    'INFO': LintMessage.INFO,
-    'WARNING': LintMessage.WARNING,
-    'ERROR': LintMessage.ERROR
+    'ERROR': LintMessage.ERROR,
+    'WARNING': LintMessage.WARNING
+    //'INFO': LintMessage.INFO
   };
 
   LintMessage _cvtMessage(String filePath, AnalysisError error) {
     return new LintMessage(
         type: _severityMap[error.severity],
-        message: error.message,
-        file: filePath,
-        position: _cvtLocation(error.location));
+        text: error.message,
+        filePath: filePath,
+        range: _cvtLocation(error.location));
   }
 
   Rn _cvtLocation(Location location) {
-    return new Rn(new Pt(location.startLine, location.startColumn),
-        new Pt(location.startLine, location.startColumn + location.length));
+    return new Rn(new Pt(location.startLine - 1, location.startColumn),
+        new Pt(location.startLine - 1, location.startColumn + location.length));
   }
 }
