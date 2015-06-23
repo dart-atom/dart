@@ -23,9 +23,9 @@
         "2.0.0": "provideAutocomplete"
       }
     },
-    "linter-plus": {
+    "linter": {
       "versions": {
-        "0.1.0": "provideLinter"
+        "1.0.0": "provideLinter"
       }
     }
   }

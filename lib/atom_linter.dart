@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// See the `linter-plus` API [here](https://github.com/AtomLinter/linter-plus).
+/// See the `linter` API [here](https://github.com/AtomLinter/linter).
 library atom.linter;
 
 import 'dart:async';
@@ -11,10 +11,8 @@ import 'dart:js';
 import 'atom.dart';
 import 'js.dart';
 
-// Note: `linter-plus` will soon be renamed to `linter`.
-
 abstract class LinterProvider {
-  final List<String> scopes;
+  final List<String> grammarScopes;
   final String scope;
   final bool lintOnFly;
 
@@ -23,16 +21,16 @@ abstract class LinterProvider {
     exports[methodName] = () => provider.toProxy();
   }
 
-  /// [scopes] is a list of scopes, e.g. `['source.js', 'source.php']`. [scope]
-  /// is one of either `file` or `project`. [lintOnFly] must be false for the
-  /// scope `project`.
-  LinterProvider({this.scopes, this.scope, this.lintOnFly: false});
+  /// [grammarScopes] is a list of scopes, e.g. `['source.js', 'source.php']`.
+  /// [scope] is one of either `file` or `project`. [lintOnFly] must be false
+  /// for the scope `project`.
+  LinterProvider({this.grammarScopes, this.scope, this.lintOnFly: false});
 
-  Future<List<LintMessage>> lint(TextEditor editor, TextBuffer buffer);
+  Future<List<LintMessage>> lint(TextEditor editor);
 
   JsObject toProxy() {
     Map map = {
-      'scopes': scopes,
+      'grammarScopes': grammarScopes,
       'scope': scope,
       'lintOnFly': lintOnFly,
       'lint': _lint
@@ -41,10 +39,9 @@ abstract class LinterProvider {
     return jsify(map);
   }
 
-  JsObject _lint(jsEditor, jsBuffer) {
-    TextEditor editor = new TextEditor(jsEditor);
-    TextBuffer buffer = new TextBuffer(jsBuffer);
-    Future f = lint(editor, buffer).then((lints) {
+  JsObject _lint(jsEditor) {
+    TextEditor textEditor = new TextEditor(jsEditor);
+    Future f = lint(textEditor).then((lints) {
       return lints.map((lint) => lint._toProxy()).toList();
     });
     Promise promise = new Promise.fromFuture(f);
@@ -55,23 +52,25 @@ abstract class LinterProvider {
 class LintMessage {
   static const String ERROR = 'Error';
   static const String WARNING = 'Warning';
-  static const String INFO = 'Trace';
+  // TODO: We need support for infos.
+  //static const String INFO = 'Trace';
 
   final String type;
-  final String message;
+  final String text;
   final String html;
-  final String file;
-  final Rn position;
+  final String filePath;
+  final Rn range;
+  // TODO: trace: ?array<Trace>
 
-  LintMessage({this.type, this.message, this.html, this.file, this.position});
+  LintMessage({this.type, this.text, this.html, this.filePath, this.range});
 
   Map _toMap() {
     Map m = {};
     if (type != null) m['type'] = type;
-    if (message != null) m['message'] = message;
+    if (text != null) m['text'] = text;
     if (html != null) m['html'] = html;
-    if (file != null) m['file'] = file;
-    if (position != null) m['position'] = position.toArray();
+    if (filePath != null) m['filePath'] = filePath;
+    if (range != null) m['range'] = range.toArray();
     return m;
   }
 

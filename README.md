@@ -8,6 +8,11 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 
 [tracker]: https://github.com/dart-atom/dart-lang-experimental/issues
 
+## Plugins we depend on
+
+You'll need to install the `linter` plugin in order to have analysis errors and
+warnings show up.
+
 ## Developing
 
 To work on `dart-lang-experimental`:
