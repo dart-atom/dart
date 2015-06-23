@@ -4,7 +4,7 @@
 
 library atom.dependencies_test;
 
-import 'package:atom_dart/dependencies.dart';
+import 'package:atom_dart_lang_experimental/dependencies.dart';
 import 'package:test/test.dart';
 
 main() => defineTests();

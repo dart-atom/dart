@@ -32,7 +32,7 @@ class AnalysisServer implements Disposable {
 
   StreamController<bool> _serverActiveController = new StreamController.broadcast();
   StreamController<bool> _serverBusyController = new StreamController.broadcast();
-  StreamController<Map> _allMessagesController = new StreamController.broadcast();
+  StreamController<String> _allMessagesController = new StreamController.broadcast();
 
   Server _server;
   _AnalyzingJob _job;
@@ -53,7 +53,7 @@ class AnalysisServer implements Disposable {
 
   Stream<bool> get onBusy => _serverBusyController.stream;
 
-  Stream<Map> get onAllMessages => _allMessagesController.stream;
+  Stream<String> get onAllMessages => _allMessagesController.stream;
 
   void _setup() {
     _logger.fine('setup()');
@@ -69,15 +69,32 @@ class AnalysisServer implements Disposable {
 
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
+
+    disposables.add(atom.commands.add('atom-text-editor', 'dart-lang:dartdoc', (event) {
+      if (_server == null) return;
+
+      bool explicit = true;
+
+      TextEditor editor = event.editor;
+      Range range = editor.getSelectedBufferRange();
+      int offset = editor.getBuffer().characterIndexForPosition(range.start);
+      _server.analysis_getHover(editor.getPath(), offset).then((HoverResult result) {
+        if (result.hovers.isEmpty) {
+          if (explicit) atom.beep();
+          return;
+        }
+
+        HoverInformation hover = result.hovers.first;
+        atom.notifications.addInfo(
+            hover.title(), dismissable: true, detail: hover.render());
+      });
+    }));
   }
 
   /// Returns whether the analysis server is active and running.
   bool get isActive => _server != null;
 
   bool get isBusy => _server != null && _server.isBusy;
-
-  /// Provides an instantaneous snapshot of the known issues and warnings.
-  List<AnalysisIssue> get issues => null;
 
   /// Subscribe to this to get told when the issues list has changed.
   Stream get issuesUpdatedNotification => null;
@@ -106,7 +123,7 @@ class AnalysisServer implements Disposable {
   void _syncRoots() {
     if (isActive) {
       List<String> roots = knownRoots.map((dir) => dir.path).toList();
-      _server.sendAnalysisSetAnalysisRoots(roots, []);
+      _server.analysis_setAnalysisRoots(roots, []);
     }
   }
 

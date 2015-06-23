@@ -372,6 +372,8 @@ class TextEditorView extends ProxyHolder {
 class TextEditor extends ProxyHolder {
   TextEditor(JsObject object) : super(_cvt(object));
 
+  TextBuffer getBuffer() => new TextBuffer(invoke('getBuffer'));
+
   String getTitle() => invoke('getTitle');
   String getLongTitle() => invoke('getLongTitle');
   String getPath() => invoke('getPath');
@@ -432,6 +434,11 @@ class TextBuffer extends ProxyHolder {
   TextBuffer(JsObject object) : super(_cvt(object));
 
   String getPath() => invoke('getPath');
+
+  int characterIndexForPosition(Point position) =>
+     invoke('characterIndexForPosition', position);
+  Point positionForCharacterIndex(int offset) =>
+      new Point(invoke('positionForCharacterIndex', offset));
 }
 
 /// Represents a region in a buffer in row / column coordinates.
