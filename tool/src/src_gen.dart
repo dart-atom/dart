@@ -49,7 +49,7 @@ class DartGenerator {
 
   /**
    * Write out the given Dart statement and terminate it with an eol. If the
-   * statement will overflow the column boundary, attemp to wrap it at
+   * statement will overflow the column boundary, attempt to wrap it at
    * reasonable places.
    */
   void writeStatement(String str) {
@@ -73,20 +73,7 @@ class DartGenerator {
 
   void write(String str) => _write(str);
 
-  /**
-   * This very specialized method will replace all instances of the string
-   * [oldName] with [newName]. This is useful for class rename operations.
-   */
-  void renameSymbol(String oldName, String newName) {
-    String str = _buf.toString();
-
-    // This regex matches 1 non-word, 'oldName', 1 non-word
-    RegExp regex = new RegExp('(\\W)(${oldName})(\\W)');
-    str = str.replaceAllMapped(regex, (m) => m.group(1) + newName + m.group(3));
-
-    _buf.clear();
-    _buf.write(str);
-  }
+  void out(String str) => _buf.write(str);
 
   void _writeln([String str = "", bool ignoreCurlies = false]) =>
       _write("${str}\n", ignoreCurlies);
@@ -117,8 +104,6 @@ class DartGenerator {
 /// Wrap a string on column boundaries.
 String wrap(String str, [int col = 80]) {
   // The given string could contain newlines.
-  // TODO: this needs to do a better job of not line wrapping things like:
-  // [foo bar](index.html).
   List lines = str.split('\n');
   return lines.map((l) => _simpleWrap(l, col)).join('\n');
 }
@@ -150,9 +135,7 @@ String _simpleWrap(String str, [int col = 80]) {
     }
   }
 
-  if (str.length > 0) {
-    lines.add(str);
-  }
+  if (str.length > 0) lines.add(str);
 
   return lines.join('\n');
 }

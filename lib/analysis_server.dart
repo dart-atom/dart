@@ -324,7 +324,7 @@ class _DartLinterProvider extends LinterProvider {
   }
 
   Rn _cvtLocation(Location location) {
-    return new Rn(new Pt(location.startLine - 1, location.startColumn),
-        new Pt(location.startLine - 1, location.startColumn + location.length));
+    return new Rn(new Pt(location.startLine - 1, location.startColumn - 1),
+        new Pt(location.startLine - 1, location.startColumn - 1 + location.length));
   }
 }

@@ -7899,11 +7899,6 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
             return;
         return new H.StringMatch(start, string, receiver);
       },
-      $add: function(receiver, other) {
-        if (typeof other !== "string")
-          throw H.wrapException(P.ArgumentError$(other));
-        return receiver + other;
-      },
       endsWith$1: function(receiver, other) {
         var otherLength, t1;
         H.checkString(other);
@@ -11744,7 +11739,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t2 = J.getInterceptor$x(e);
         t3 = t2.get$message(e);
         t2 = t2.get$location(e);
-        return new E.LintMessage(t1, t3, null, this._captured_filePath_3, new E.Rn(new E.Pt(J.$sub$n(t2.get$startLine(), 1), t2.get$startColumn()), new E.Pt(J.$sub$n(t2.get$startLine(), 1), J.$add$ns(t2.get$startColumn(), J.get$length$asx(t2)))));
+        return new E.LintMessage(t1, t3, null, this._captured_filePath_3, new E.Rn(new E.Pt(J.$sub$n(t2.get$startLine(), 1), J.$sub$n(t2.get$startColumn(), 1)), new E.Pt(J.$sub$n(t2.get$startLine(), 1), J.$add$ns(J.$sub$n(t2.get$startColumn(), 1), J.get$length$asx(t2)))));
       }, null, null, 2, 0, null, 3, "call"]
     },
     _DartLinterProvider_lint_closure0: {
