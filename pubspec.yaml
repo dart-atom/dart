@@ -8,8 +8,6 @@ environment:
 
 dependencies:
   logging: ^0.11.0
-  dart_analysis_server_api:
-    git: git://github.com/lukechurch/dart_analysis_server_api.git
   markdown: ^0.7.0
 
 dev_dependencies:
