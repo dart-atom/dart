@@ -9,20 +9,19 @@ library atom.analysis_server;
 import 'dart:async';
 
 import 'package:logging/logging.dart';
+//import 'package:markdown/markdown.dart';
 
 import 'atom.dart';
 import 'atom_linter.dart';
 import 'dependencies.dart';
 import 'jobs.dart';
 import 'projects.dart';
+import 'process.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
 import 'impl/analysis_server_dialog.dart';
-import 'impl/analysis_server_impl.dart';
-
-export 'impl/analysis_server_impl.dart'
-    show AnalysisErrorsResult, AnalysisError, RequestError;
+import 'impl/analysis_server_gen.dart';
 
 final Logger _logger = new Logger('analysis-server');
 
@@ -37,7 +36,7 @@ class AnalysisServer implements Disposable {
   StreamController<String> _allMessagesController =
       new StreamController.broadcast();
 
-  Server _server;
+  _AnalysisServerWrapper _server;
   _AnalyzingJob _job;
 
   List<DartProject> knownRoots = [];
@@ -73,34 +72,15 @@ class AnalysisServer implements Disposable {
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
 
-    disposables.add(atom.commands.add('atom-text-editor', 'dart-lang:dartdoc',
-        (event) {
-      if (_server == null) return;
-
-      bool explicit = true;
-
-      TextEditor editor = event.editor;
-      Range range = editor.getSelectedBufferRange();
-      int offset = editor.getBuffer().characterIndexForPosition(range.start);
-      _server
-          .analysis_getHover(editor.getPath(), offset)
-          .then((HoverResult result) {
-        if (result.hovers.isEmpty) {
-          if (explicit) atom.beep();
-          return;
-        }
-
-        HoverInformation hover = result.hovers.first;
-        atom.notifications.addInfo(hover.title(),
-            dismissable: true, detail: hover.render());
-      });
+    disposables.add(atom.commands.add('atom-text-editor', 'dart-lang:dartdoc', (event) {
+      DartdocHelper.handleDartdoc(_server, event);
     }));
   }
 
   /// Returns whether the analysis server is active and running.
   bool get isActive => _server != null;
 
-  bool get isBusy => _server != null && _server.isBusy;
+  bool get isBusy => _server != null && _server.analyzing;
 
   /// Subscribe to this to get told when the issues list has changed.
   Stream get issuesUpdatedNotification => null;
@@ -108,11 +88,11 @@ class AnalysisServer implements Disposable {
   // /// Compute completions for a given location.
   // List<Completion> computeCompletions(String sourcePath, int offset) => null;
 
-  Future<AnalysisErrorsResult> getErrors(String filePath) {
+  Future<ErrorsResult> getErrors(String filePath) {
     if (isActive) {
-      return _server.analysis_getErrors(filePath);
+      return _server.analysis.getErrors(filePath);
     } else {
-      return new Future.value(new AnalysisErrorsResult.empty());
+      return new Future.value(new ErrorsResult([]));
     }
   }
 
@@ -129,7 +109,7 @@ class AnalysisServer implements Disposable {
   void _syncRoots() {
     if (isActive) {
       List<String> roots = knownRoots.map((dir) => dir.path).toList();
-      _server.analysis_setAnalysisRoots(roots, []);
+      _server.analysis.setAnalysisRoots(roots, []);
     }
   }
 
@@ -202,7 +182,7 @@ class AnalysisServer implements Disposable {
     if (!sdkManager.hasSdk) return;
 
     if (_server == null) {
-      Server server = new Server(sdkManager.sdk);
+      _AnalysisServerWrapper server = _AnalysisServerWrapper.create(sdkManager.sdk);
       _server = server;
       _initNewServer(server);
     }
@@ -221,17 +201,16 @@ class AnalysisServer implements Disposable {
       _server.kill();
     } else if (shouldBeRunning && _server == null) {
       // startup
-      Server server = new Server(sdkManager.sdk);
+      _AnalysisServerWrapper server = _AnalysisServerWrapper.create(sdkManager.sdk);
       _server = server;
       _initNewServer(server);
     }
   }
 
-  void _initNewServer(Server server) {
-    server.onBusy.listen((value) => _serverBusyController.add(value));
+  void _initNewServer(_AnalysisServerWrapper server) {
+    server.onAnalyzing.listen((value) => _serverBusyController.add(value));
     server.whenDisposed.then((exitCode) => _handleServerDeath(server));
-    server.onAllMessages
-        .listen((message) => _allMessagesController.add(message));
+    server.onAllMessages.listen((message) => _allMessagesController.add(message));
 
     onBusy.listen((busy) {
       if (!busy && _job != null) {
@@ -242,10 +221,8 @@ class AnalysisServer implements Disposable {
       }
     });
 
-    server.setup().then((_) {
-      _serverActiveController.add(true);
-      _syncRoots();
-    });
+    _serverActiveController.add(true);
+    _syncRoots();
   }
 
   void _handleServerDeath(Server server) {
@@ -258,8 +235,69 @@ class AnalysisServer implements Disposable {
   }
 }
 
+class DartdocHelper {
+
+  static void handleDartdoc(Server server, AtomEvent event) {
+    if (server == null) return;
+
+    bool explicit = true;
+
+    TextEditor editor = event.editor;
+    Range range = editor.getSelectedBufferRange();
+    int offset = editor.getBuffer().characterIndexForPosition(range.start);
+    server.analysis.getHover(editor.getPath(), offset).then((HoverResult result) {
+      if (result.hovers.isEmpty) {
+        if (explicit) atom.beep();
+        return;
+      }
+
+      HoverInformation hover = result.hovers.first;
+      atom.notifications.addInfo(_title(hover),
+          dismissable: true, detail: _render(hover));
+    });
+  }
+
+  static String _title(HoverInformation hover) {
+    if (hover.elementDescription != null) return hover.elementDescription;
+    if (hover.staticType != null) return hover.staticType;
+    if (hover.propagatedType != null) return hover.propagatedType;
+    return 'Dartdoc';
+  }
+
+  static String _render(HoverInformation hover) {
+    StringBuffer buf = new StringBuffer();
+    if (hover.containingLibraryName != null) buf
+        .write('library: ${hover.containingLibraryName}\n');
+    if (hover.containingClassDescription != null) buf
+        .write('class: ${hover.containingClassDescription}\n');
+    if (hover.propagatedType != null) buf
+        .write('propagated type: ${hover.propagatedType}\n');
+    // TODO: Translate markdown.
+    if (hover.dartdoc != null) buf.write('\n${_renderMarkdownToText(hover.dartdoc)}\n');
+    return buf.toString();
+  }
+
+  static String _renderMarkdownToText(String str) {
+    if (str == null) return null;
+
+    StringBuffer buf = new StringBuffer();
+
+    List<String> lines = str.replaceAll('\r\n', '\n').split('\n');
+
+    for (String line in lines) {
+      if (line.trim().isEmpty) {
+        buf.write('\n');
+      } else {
+        buf.write('${line.trimRight()} ');
+      }
+    }
+
+    return buf.toString();
+  }
+}
+
 class _AnalyzingJob extends Job {
-  static const Duration _debounceDelay = const Duration(milliseconds: 150);
+  static const Duration _debounceDelay = const Duration(milliseconds: 400);
 
   Completer completer = new Completer();
   Function _infoAction;
@@ -297,16 +335,30 @@ class _DartLinterProvider extends LinterProvider {
 
   Future<List<LintMessage>> lint(TextEditor editor) {
     String filePath = editor.getPath();
-    return analysisServer
-        .getErrors(filePath)
-        .then((AnalysisErrorsResult result) {
-      return result.errors.where((AnalysisError error) {
+    return analysisServer.getErrors(filePath).then((ErrorsResult result) {
+      List<AnalysisError> issues = result.errors..sort(_errorComparer);
+      return issues.where((AnalysisError error) {
         return error.severity == 'WARNING' || error.severity == 'ERROR';
       }).map((e) => _cvtMessage(filePath, e)).toList();
     }).catchError((e) {
       print(e);
       return [];
     });
+  }
+
+  static int _errorComparer(AnalysisError a, AnalysisError b) {
+    if (a.severity != b.severity) return _sev(b.severity) - _sev(a.severity);
+    Location aloc = a.location;
+    Location bloc = b.location;
+    if (aloc.file != bloc.file) return aloc.file.compareTo(bloc.file);
+    return aloc.offset - bloc.offset;
+  }
+
+  static int _sev(String sev) {
+    if (sev == 'ERROR') return 3;
+    if (sev == 'WARNING') return 2;
+    if (sev == 'INFO') return 1;
+    return 0;
   }
 
   final Map<String, String> _severityMap = {
@@ -324,7 +376,79 @@ class _DartLinterProvider extends LinterProvider {
   }
 
   Rn _cvtLocation(Location location) {
-    return new Rn(new Pt(location.startLine - 1, location.startColumn),
-        new Pt(location.startLine - 1, location.startColumn + location.length));
+    return new Rn(new Pt(location.startLine - 1, location.startColumn - 1),
+        new Pt(location.startLine - 1, location.startColumn - 1 + location.length));
+  }
+}
+
+class _AnalysisServerWrapper extends Server {
+  static _AnalysisServerWrapper create(Sdk sdk) {
+    //if (process != null) throw new Exception('Process already started');
+
+    List<String> arguments = [
+      sdk.getSnapshotPath('analysis_server.dart.snapshot'),
+      '--sdk',
+      sdk.path
+    ];
+
+    ProcessRunner process = new ProcessRunner(sdk.dartVm.path, args: arguments);
+    Completer completer = new Completer();
+
+    process.onStderr.listen((String str) => _logger.severe(str.trim()));
+
+    StreamController controller = new StreamController();
+    process.onStdout.listen((String str) {
+      List<String> lines = str.trim().split('\n');
+      for (String line in lines) {
+        controller.add(line.trim());
+      }
+    });
+
+    process.execStreaming().then((int exitCode) {
+      _logger.fine("exited with code ${exitCode}");
+      if (!completer.isCompleted) completer.complete(exitCode);
+    });
+
+    var writeMessage = (String message) {
+      _logger.finer('--> ${message}');
+      //_allMessagesController.add(message);
+      process.write("${message}\n");
+    };
+
+    return new _AnalysisServerWrapper(process, completer, controller.stream, writeMessage);
+  }
+
+  ProcessRunner process;
+  final Completer<int> _processCompleter;
+  bool analyzing = false;
+  StreamController _analyzingController = new StreamController.broadcast();
+
+  _AnalysisServerWrapper(this.process, this._processCompleter,
+      Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage) {
+    server.setSubscriptions(['STATUS']);
+    server.onStatus.listen((ServerStatus status) {
+      if (status.analysis != null) {
+        analyzing = status.analysis.isAnalyzing;
+        _analyzingController.add(analyzing);
+      }
+    });
+  }
+
+  Stream<bool> get onAnalyzing => _analyzingController.stream;
+
+  Future<int> get whenDisposed => _processCompleter.future;
+
+  Future<int> kill() {
+    _logger.fine("server forcibly terminated");
+
+    if (process != null) {
+      /*Future f =*/ process.kill();
+      process = null;
+      if (!_processCompleter.isCompleted) _processCompleter.complete(0);
+      return new Future.value(0);
+    } else {
+      _logger.warning("kill signal sent to dead analysis server");
+      return new Future.value(1);
+    }
   }
 }
