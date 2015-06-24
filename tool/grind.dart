@@ -49,6 +49,7 @@ clean() {
 analysisServerApi() {
   // https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/tool/spec/spec_input.html
   Dart.run('tool/generate_analysis_lib.dart');
+  DartFmt.format('lib/impl/analysis_server_gen.dart');
 }
 
 final String _jsPrefix = """

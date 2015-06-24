@@ -1,4 +1,3 @@
-
 import 'dart:collection' show LinkedHashMap;
 import 'dart:io';
 
@@ -7,7 +6,7 @@ import 'package:html/dom.dart';
 
 import 'src/src_gen.dart';
 
-// TODO: Consolidate args owners.
+// TODO: Consolidate args owners; create a common to / from from class.
 
 Api api;
 
@@ -17,7 +16,8 @@ main(List<String> args) {
   Document document = parse(file.readAsStringSync());
   print('Parsed ${file.path}.');
   List<Element> domains = document.body.getElementsByTagName('domain');
-  List<Element> typedefs = document.body.getElementsByTagName('types').first.getElementsByTagName('type');
+  List<Element> typedefs = document.body.getElementsByTagName('types').first
+      .getElementsByTagName('type');
   api = new Api();
   api.parse(domains, typedefs);
 
@@ -40,8 +40,9 @@ class Api {
     domains = domainElements.map((element) => new Domain(element)).toList();
 
     findRef('SourceEdit').setCallParam();
-    typedefs.where((def) => def.name.endsWith('ContentOverlay')).forEach(
-        (def) => def.setCallParam());
+    typedefs
+        .where((def) => def.name.endsWith('ContentOverlay'))
+        .forEach((def) => def.setCallParam());
   }
 
   TypeDef findRef(String name) =>
@@ -54,19 +55,24 @@ class Api {
     gen.writeStatement('Function _writeMessage;');
     gen.writeStatement('int _id = 0;');
     gen.writeStatement('Map<String, Completer> _completers = {};');
-    gen.writeln('JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);');
+    gen.writeln(
+        'JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);');
     gen.writeStatement('Map<String, Domain> _domains = {};');
     gen.writeln();
-    domains.forEach((Domain domain) => gen.writeln('${domain.className} _${domain.name};'));
+    domains.forEach(
+        (Domain domain) => gen.writeln('${domain.className} _${domain.name};'));
     gen.writeln();
-    gen.writeStatement('ServerClient(Stream<String> inStream, void writeMessage(String message)) {');
+    gen.writeStatement(
+        'ServerClient(Stream<String> inStream, void writeMessage(String message)) {');
     gen.writeStatement('_writeMessage = writeMessage;');
     gen.writeStatement('_streamSub = inStream.listen(_processMessage);');
     gen.writeln();
-    domains.forEach((Domain domain) => gen.writeln('_${domain.name} = new ${domain.className}(this);'));
+    domains.forEach((Domain domain) =>
+        gen.writeln('_${domain.name} = new ${domain.className}(this);'));
     gen.writeln('}');
     gen.writeln();
-    domains.forEach((Domain domain) => gen.writeln('${domain.className} get ${domain.name} => _${domain.name};'));
+    domains.forEach((Domain domain) => gen
+        .writeln('${domain.className} get ${domain.name} => _${domain.name};'));
     gen.writeln();
     gen.out(_serverCode);
     gen.writeln('}');
@@ -79,7 +85,11 @@ class Api {
     domains.forEach((Domain domain) => domain.generate(gen));
 
     // Object definitions.
-    typedefs.where((t) => t.isObject).forEach((TypeDef def) => def.generate(gen));
+    gen.writeln('// type definitions');
+    gen.writeln();
+    typedefs
+        .where((t) => t.isObject)
+        .forEach((TypeDef def) => def.generate(gen));
   }
 
   String toString() => domains.toString();
@@ -94,10 +104,14 @@ class Domain {
 
   Domain(Element element) {
     name = element.attributes['name'];
-    requests = element.getElementsByTagName('request').map(
-        (element) => new Request(this, element)).toList();
-    notifications = element.getElementsByTagName('notification').map(
-        (element) => new Notification(this, element)).toList();
+    requests = element
+        .getElementsByTagName('request')
+        .map((element) => new Request(this, element))
+        .toList();
+    notifications = element
+        .getElementsByTagName('notification')
+        .map((element) => new Notification(this, element))
+        .toList();
   }
 
   String get className => '${titleCase(name)}Domain';
@@ -105,16 +119,21 @@ class Domain {
   void generate(DartGenerator gen) {
     resultClasses.clear();
     gen.writeln();
+    gen.writeln('// ${name} domain');
+    gen.writeln();
     gen.writeStatement('class ${className} extends Domain {');
-    gen.writeStatement("${className}(ServerClient client) : super(client, '${name}');");
+    gen.writeStatement(
+        "${className}(ServerClient client) : super(client, '${name}');");
     if (notifications.isNotEmpty) {
       gen.writeln();
-      notifications.forEach((Notification notification) => notification.generate(gen));
+      notifications
+          .forEach((Notification notification) => notification.generate(gen));
     }
     requests.forEach((Request request) => request.generate(gen));
     gen.writeln('}');
 
-    notifications.forEach((Notification notification) => notification.generateClass(gen));
+    notifications.forEach(
+        (Notification notification) => notification.generateClass(gen));
 
     for (String name in resultClasses.keys) {
       List<Field> fields = resultClasses[name];
@@ -141,9 +160,11 @@ class Domain {
       gen.write('${name}(');
       gen.write(fields.map((field) {
         StringBuffer buf = new StringBuffer();
-        if (field.optional && fields.firstWhere((a) => a.optional) == field) buf.write('{');
+        if (field.optional && fields.firstWhere((a) => a.optional) == field) buf
+            .write('{');
         buf.write('this.${field.name}');
-        if (field.optional && fields.lastWhere((a) => a.optional) == field) buf.write('}');
+        if (field.optional && fields.lastWhere((a) => a.optional) == field) buf
+            .write('}');
         return buf.toString();
       }).join(', '));
       gen.writeln(');');
@@ -165,14 +186,18 @@ class Request {
 
     List paramsList = element.getElementsByTagName('params');
     if (paramsList.isNotEmpty) {
-      args = paramsList.first.getElementsByTagName('field').map(
-          (field) => new Field(field)).toList();
+      args = paramsList.first
+          .getElementsByTagName('field')
+          .map((field) => new Field(field))
+          .toList();
     }
 
     List resultsList = element.getElementsByTagName('result');
     if (resultsList.isNotEmpty) {
-      results = resultsList.first.getElementsByTagName('field').map(
-          (field) => new Field(field)).toList();
+      results = resultsList.first
+          .getElementsByTagName('field')
+          .map((field) => new Field(field))
+          .toList();
     }
   }
 
@@ -193,13 +218,15 @@ class Request {
       if (args.length == 1 && !args.first.optional) {
         Field arg = args.first;
         gen.write("Future ${method}(${arg.type} ${arg.name}) => ");
-        gen.writeln("_call('${domain.name}.${method}', {'${arg.name}': ${arg.name}});");
+        gen.writeln(
+            "_call('${domain.name}.${method}', {'${arg.name}': ${arg.name}});");
         return;
       }
     }
 
     if (args.isEmpty) {
-      gen.writeln("Future<${resultName}> ${method}() => _call('${domain.name}.${method}').then(${resultName}.parse);");
+      gen.writeln(
+          "Future<${resultName}> ${method}() => _call('${domain.name}.${method}').then(${resultName}.parse);");
       return;
     }
 
@@ -210,9 +237,11 @@ class Request {
     }
     gen.write(args.map((arg) {
       StringBuffer buf = new StringBuffer();
-      if (arg.optional && args.firstWhere((a) => a.optional) == arg) buf.write('{');
+      if (arg.optional && args.firstWhere((a) => a.optional) == arg) buf
+          .write('{');
       buf.write('${arg.type} ${arg.name}');
-      if (arg.optional && args.lastWhere((a) => a.optional) == arg) buf.write('}');
+      if (arg.optional && args.lastWhere((a) => a.optional) == arg) buf
+          .write('}');
       return buf.toString();
     }).join(', '));
     gen.writeStatement(') {');
@@ -221,10 +250,14 @@ class Request {
       if (results.isNotEmpty) gen.write(".then(${resultName}.parse)");
       gen.writeln(';');
     } else {
-      String mapStr = args.where((arg) => !arg.optional).map((arg) => "'${arg.name}': ${arg.name}").join(', ');
+      String mapStr = args
+          .where((arg) => !arg.optional)
+          .map((arg) => "'${arg.name}': ${arg.name}")
+          .join(', ');
       gen.writeStatement('Map m = {${mapStr}};');
       for (Field arg in args.where((arg) => arg.optional)) {
-        gen.writeStatement("if (${arg.name} != null) m['${arg.name}'] = ${arg.name};");
+        gen.writeStatement(
+            "if (${arg.name} != null) m['${arg.name}'] = ${arg.name};");
       }
       gen.write("return _call('${domain.name}.${method}', m)");
       if (results.isNotEmpty) gen.write(".then(${resultName}.parse)");
@@ -249,7 +282,10 @@ class Notification {
 
   Notification(this.domain, Element element) {
     event = element.attributes['event'];
-    fields = element.getElementsByTagName('field').map((field) => new Field(field)).toList();
+    fields = element
+        .getElementsByTagName('field')
+        .map((field) => new Field(field))
+        .toList();
   }
 
   String get title => '${domain.name}.${event}';
@@ -259,7 +295,8 @@ class Notification {
   String get className => '${titleCase(domain.name)}${titleCase(event)}';
 
   void generate(DartGenerator gen) {
-    gen.writeln("Stream get ${onName} => _listen('${title}', ${className}.parse);");
+    gen.writeln(
+        "Stream<${className}> get ${onName} => _listen('${title}', ${className}.parse);");
   }
 
   void generateClass(DartGenerator gen) {
@@ -287,9 +324,11 @@ class Notification {
     gen.write('${className}(');
     gen.write(fields.map((field) {
       StringBuffer buf = new StringBuffer();
-      if (field.optional && fields.firstWhere((a) => a.optional) == field) buf.write('{');
+      if (field.optional && fields.firstWhere((a) => a.optional) == field) buf
+          .write('{');
       buf.write('this.${field.name}');
-      if (field.optional && fields.lastWhere((a) => a.optional) == field) buf.write('}');
+      if (field.optional && fields.lastWhere((a) => a.optional) == field) buf
+          .write('}');
       return buf.toString();
     }).join(', '));
     gen.writeln(');');
@@ -327,7 +366,10 @@ class TypeDef {
 
     if (tags.contains('object')) {
       Element object = element.getElementsByTagName('object').first;
-      fields = object.getElementsByTagName('field').map((f) => new Field(f)).toList();
+      fields = object
+          .getElementsByTagName('field')
+          .map((f) => new Field(f))
+          .toList();
       fields.sort((a, b) {
         if (a.optional && !b.optional) return 1;
         if (!a.optional && b.optional) return -1;
@@ -359,8 +401,9 @@ class TypeDef {
   void generate(DartGenerator gen) {
     gen.writeln();
     gen.writeln('class ${name} ${callParam ? "implements Jsonable " : ""}{');
-    gen.write('static ${name} parse(Map m) => ');
-    gen.write('new ${name}(');
+    gen.writeln('static ${name} parse(Map m) {');
+    gen.writeln('if (m == null) return null;');
+    gen.write('return new ${name}(');
     gen.write(fields.map((Field field) {
       String val = "m['${field.name}']";
       if (field.optional) {
@@ -370,6 +413,7 @@ class TypeDef {
       }
     }).join(', '));
     gen.writeln(');');
+    gen.writeln('}');
     if (fields.isNotEmpty) {
       gen.writeln();
       fields.forEach((field) {
@@ -386,9 +430,11 @@ class TypeDef {
     gen.write('${name}(');
     gen.write(fields.map((field) {
       StringBuffer buf = new StringBuffer();
-      if (field.optional && fields.firstWhere((a) => a.optional) == field) buf.write('{');
+      if (field.optional && fields.firstWhere((a) => a.optional) == field) buf
+          .write('{');
       buf.write('this.${field.name}');
-      if (field.optional && fields.lastWhere((a) => a.optional) == field) buf.write('}');
+      if (field.optional && fields.lastWhere((a) => a.optional) == field) buf
+          .write('}');
       return buf.toString();
     }).join(', '));
     gen.writeln(');');
@@ -405,7 +451,10 @@ abstract class Type {
     // <ref>String</ref>, or list, or map
     if (element.localName == 'ref') {
       String text = element.text;
-      if (text == 'int' || text == 'bool' || text == 'String' || text == 'long') {
+      if (text == 'int' ||
+          text == 'bool' ||
+          text == 'String' ||
+          text == 'long') {
         return new PrimitiveType(text);
       } else {
         return new RefType(text);
@@ -413,8 +462,8 @@ abstract class Type {
     } else if (element.localName == 'list') {
       return new ListType(element.children.first);
     } else if (element.localName == 'map') {
-      return new MapType(
-           element.children[0].children.first, element.children[1].children.first);
+      return new MapType(element.children[0].children.first,
+          element.children[1].children.first);
     } else if (element.localName == 'union') {
       return new PrimitiveType('dynamic');
     } else {
@@ -439,7 +488,7 @@ class ListType extends Type {
   String jsonConvert(String ref) {
     if (subType is PrimitiveType) return ref;
     if (subType is RefType && (subType as RefType).isString) return ref;
-    return "${ref}.map((obj) => ${subType.jsonConvert('obj')}).toList()";
+    return "${ref} == null ? null : ${ref}.map((obj) => ${subType.jsonConvert('obj')}).toList()";
   }
 
   void setCallParam() => subType.setCallParam();
@@ -509,7 +558,7 @@ class PrimitiveType extends Type {
 
   String jsonConvert(String ref) => ref;
 
-  void setCallParam() { }
+  void setCallParam() {}
 }
 
 final String _headerCode = r'''
