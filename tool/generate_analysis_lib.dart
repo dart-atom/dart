@@ -50,7 +50,7 @@ class Api {
 
   void generate(DartGenerator gen) {
     gen.out(_headerCode);
-    gen.writeStatement('class ServerClient {');
+    gen.writeStatement('class Server {');
     gen.writeStatement('StreamSubscription _streamSub;');
     gen.writeStatement('Function _writeMessage;');
     gen.writeStatement('int _id = 0;');
@@ -58,12 +58,13 @@ class Api {
     gen.writeln(
         'JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);');
     gen.writeStatement('Map<String, Domain> _domains = {};');
+    gen.writeln("StreamController _onAllMessages = new StreamController.broadcast();");
     gen.writeln();
     domains.forEach(
         (Domain domain) => gen.writeln('${domain.className} _${domain.name};'));
     gen.writeln();
     gen.writeStatement(
-        'ServerClient(Stream<String> inStream, void writeMessage(String message)) {');
+        'Server(Stream<String> inStream, void writeMessage(String message)) {');
     gen.writeStatement('_writeMessage = writeMessage;');
     gen.writeStatement('_streamSub = inStream.listen(_processMessage);');
     gen.writeln();
@@ -123,7 +124,7 @@ class Domain {
     gen.writeln();
     gen.writeStatement('class ${className} extends Domain {');
     gen.writeStatement(
-        "${className}(ServerClient client) : super(client, '${name}');");
+        "${className}(Server server) : super(server, '${name}');");
     if (notifications.isNotEmpty) {
       gen.writeln();
       notifications
@@ -578,6 +579,8 @@ const optional = 'optional';
 ''';
 
 final String _serverCode = r'''
+  Stream<String> get onAllMessages => _onAllMessages.stream;
+
   void dispose() {
     _streamSub.cancel();
     _completers.values.forEach((c) => c.completeError('disposed'));
@@ -585,6 +588,8 @@ final String _serverCode = r'''
 
   void _processMessage(String message) {
     try {
+      _onAllMessages.add(message);
+
       var json = JSON.decode(message);
 
       if (json['id'] == null) {
@@ -617,7 +622,9 @@ final String _serverCode = r'''
     _completers[id] = new Completer();
     Map m = {'id': id, 'method': method};
     if (args != null) m['params'] = args;
-    _writeMessage(_jsonEncoder.encode(m));
+    String message = _jsonEncoder.encode(m);
+    _onAllMessages.add(message);
+    _writeMessage(message);
     return _completers[id].future;
   }
 
@@ -626,17 +633,17 @@ final String _serverCode = r'''
 
 final String _domainCode = r'''
 abstract class Domain {
-  final ServerClient client;
+  final Server server;
   final String name;
 
   Map<String, StreamController> _controllers = {};
   Map<String, Stream> _streams = {};
 
-  Domain(this.client, this.name) {
-    client._domains[name] = this;
+  Domain(this.server, this.name) {
+    server._domains[name] = this;
   }
 
-  Future _call(String method, [Map args]) => client._call(method, args);
+  Future _call(String method, [Map args]) => server._call(method, args);
 
   Stream<dynamic> _listen(String name, Function cvt) {
     if (_streams[name] == null) {
@@ -650,8 +657,6 @@ abstract class Domain {
   void _handleEvent(String name, dynamic event) {
     if (_controllers[name] != null) {
       _controllers[name].add(event);
-    } else {
-      _logger.info('no handler for event ${name}');
     }
   }
 

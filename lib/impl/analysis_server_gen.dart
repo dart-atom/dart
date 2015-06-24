@@ -11,13 +11,14 @@ final Logger _logger = new Logger('analysis-server-gen');
 
 const optional = 'optional';
 
-class ServerClient {
+class Server {
   StreamSubscription _streamSub;
   Function _writeMessage;
   int _id = 0;
   Map<String, Completer> _completers = {};
   JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);
   Map<String, Domain> _domains = {};
+  StreamController _onAllMessages = new StreamController.broadcast();
 
   ServerDomain _server;
   AnalysisDomain _analysis;
@@ -26,7 +27,7 @@ class ServerClient {
   EditDomain _edit;
   ExecutionDomain _execution;
 
-  ServerClient(Stream<String> inStream, void writeMessage(String message)) {
+  Server(Stream<String> inStream, void writeMessage(String message)) {
     _writeMessage = writeMessage;
     _streamSub = inStream.listen(_processMessage);
 
@@ -45,6 +46,8 @@ class ServerClient {
   EditDomain get edit => _edit;
   ExecutionDomain get execution => _execution;
 
+  Stream<String> get onAllMessages => _onAllMessages.stream;
+
   void dispose() {
     _streamSub.cancel();
     _completers.values.forEach((c) => c.completeError('disposed'));
@@ -52,6 +55,8 @@ class ServerClient {
 
   void _processMessage(String message) {
     try {
+      _onAllMessages.add(message);
+
       var json = JSON.decode(message);
 
       if (json['id'] == null) {
@@ -84,7 +89,9 @@ class ServerClient {
     _completers[id] = new Completer();
     Map m = {'id': id, 'method': method};
     if (args != null) m['params'] = args;
-    _writeMessage(_jsonEncoder.encode(m));
+    String message = _jsonEncoder.encode(m);
+    _onAllMessages.add(message);
+    _writeMessage(message);
     return _completers[id].future;
   }
 
@@ -92,17 +99,17 @@ class ServerClient {
 }
 
 abstract class Domain {
-  final ServerClient client;
+  final Server server;
   final String name;
 
   Map<String, StreamController> _controllers = {};
   Map<String, Stream> _streams = {};
 
-  Domain(this.client, this.name) {
-    client._domains[name] = this;
+  Domain(this.server, this.name) {
+    server._domains[name] = this;
   }
 
-  Future _call(String method, [Map args]) => client._call(method, args);
+  Future _call(String method, [Map args]) => server._call(method, args);
 
   Stream<dynamic> _listen(String name, Function cvt) {
     if (_streams[name] == null) {
@@ -116,8 +123,6 @@ abstract class Domain {
   void _handleEvent(String name, dynamic event) {
     if (_controllers[name] != null) {
       _controllers[name].add(event);
-    } else {
-      _logger.info('no handler for event ${name}');
     }
   }
 
@@ -131,7 +136,7 @@ abstract class Jsonable {
 // server domain
 
 class ServerDomain extends Domain {
-  ServerDomain(ServerClient client) : super(client, 'server');
+  ServerDomain(Server server) : super(server, 'server');
 
   Stream<ServerConnected> get onConnected =>
       _listen('server.connected', ServerConnected.parse);
@@ -189,7 +194,7 @@ class VersionResult {
 // analysis domain
 
 class AnalysisDomain extends Domain {
-  AnalysisDomain(ServerClient client) : super(client, 'analysis');
+  AnalysisDomain(Server server) : super(server, 'analysis');
 
   Stream<AnalysisErrors> get onErrors =>
       _listen('analysis.errors', AnalysisErrors.parse);
@@ -413,7 +418,7 @@ class NavigationResult {
 // completion domain
 
 class CompletionDomain extends Domain {
-  CompletionDomain(ServerClient client) : super(client, 'completion');
+  CompletionDomain(Server server) : super(server, 'completion');
 
   Stream<CompletionResults> get onResults =>
       _listen('completion.results', CompletionResults.parse);
@@ -452,7 +457,7 @@ class SuggestionsResult {
 // search domain
 
 class SearchDomain extends Domain {
-  SearchDomain(ServerClient client) : super(client, 'search');
+  SearchDomain(Server server) : super(server, 'search');
 
   Stream<SearchResults> get onResults =>
       _listen('search.results', SearchResults.parse);
@@ -561,7 +566,7 @@ class TypeHierarchyResult {
 // edit domain
 
 class EditDomain extends Domain {
-  EditDomain(ServerClient client) : super(client, 'edit');
+  EditDomain(Server server) : super(server, 'edit');
 
   Future<FormatResult> format(
       String file, int selectionOffset, int selectionLength, {int lineLength}) {
@@ -696,7 +701,7 @@ class SortMembersResult {
 // execution domain
 
 class ExecutionDomain extends Domain {
-  ExecutionDomain(ServerClient client) : super(client, 'execution');
+  ExecutionDomain(Server server) : super(server, 'execution');
 
   Stream<ExecutionLaunchData> get onLaunchData =>
       _listen('execution.launchData', ExecutionLaunchData.parse);

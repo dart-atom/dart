@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:atom_dart_lang_experimental/impl/analysis_server_gen.dart';
 import 'package:logging/logging.dart';
 
-ServerClient client;
+Server client;
 
 void main(List<String> args) {
   if (args.length != 1) {
@@ -28,7 +28,7 @@ void main(List<String> args) {
 
     Stream inStream = process.stdout.transform(UTF8.decoder).transform(const LineSplitter());
 
-    client = new ServerClient(inStream, (String message) {
+    client = new Server(inStream, (String message) {
       print('[--> ${message}]');
       process.stdin.writeln(message);
     });
