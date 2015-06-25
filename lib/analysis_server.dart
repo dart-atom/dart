@@ -216,8 +216,8 @@ class AnalysisServer implements Disposable {
     server.onAnalyzing.listen((value) => _serverBusyController.add(value));
     server.whenDisposed.then((exitCode) => _handleServerDeath(server));
 
-    _onSendController.addStream(server.onSend);
-    _onReceiveController.addStream(server.onReceive);
+    server.onSend.listen((message) => _onSendController.add(message));
+    server.onReceive.listen((message) => _onReceiveController.add(message));
 
     server.analysis.onNavigation.listen((AnalysisNavigation e) {
       DeclarationHelper.setLastNavInfo(e);
