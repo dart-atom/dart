@@ -29,12 +29,10 @@ class AnalysisServer implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
 
-  StreamController<bool> _serverActiveController =
-      new StreamController.broadcast();
-  StreamController<bool> _serverBusyController =
-      new StreamController.broadcast();
-  StreamController<String> _allMessagesController =
-      new StreamController.broadcast();
+  StreamController<bool> _serverActiveController = new StreamController.broadcast();
+  StreamController<bool> _serverBusyController = new StreamController.broadcast();
+  StreamController<String> _onSendController = new StreamController.broadcast();
+  StreamController<String> _onReceiveController = new StreamController.broadcast();
 
   _AnalysisServerWrapper _server;
   _AnalyzingJob _job;
@@ -45,9 +43,6 @@ class AnalysisServer implements Disposable {
     // Register the linter provider.
     new _DartLinterProvider().register();
 
-    // onActive.listen((val) => _logger.info('analysis server active: ${val}'));
-    // onBusy.listen((val) => _logger.info('analysis server busy: ${val}'));
-
     Timer.run(_setup);
   }
 
@@ -55,15 +50,16 @@ class AnalysisServer implements Disposable {
 
   Stream<bool> get onBusy => _serverBusyController.stream;
 
-  Stream<String> get onAllMessages => _allMessagesController.stream;
+  Stream<String> get onSend => _onSendController.stream;
+  Stream<String> get onReceive => _onReceiveController.stream;
 
   void _setup() {
-    _logger.fine('setup()');
-
     subs.add(projectManager.onChanged.listen(_reconcileRoots));
     subs.add(sdkManager.onSdkChange.listen(_handleSdkChange));
 
     disposables.add(atom.workspace.observeTextEditors(_handleNewEditor));
+
+    editorManager.onDartFileChanged.listen(_focusedDartFileChanged);
 
     knownRoots = projectManager.projects.toList();
 
@@ -72,9 +68,16 @@ class AnalysisServer implements Disposable {
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
 
-    disposables.add(atom.commands.add('atom-text-editor', 'dart-lang:dartdoc', (event) {
+    disposables.add(atom.commands.add('atom-text-editor', 'dart-lang-experimental:show-dartdoc', (event) {
       DartdocHelper.handleDartdoc(_server, event);
     }));
+
+    disposables.add(atom.commands.add('atom-text-editor', 'dart-lang-experimental:jump-to-declaration', (event) {
+      DeclarationHelper.handleNavigate(_server, event);
+    }));
+
+    onSend.listen((String message)    => _logger.finer('--> ${message}'));
+    onReceive.listen((String message) => _logger.finer('<-- ${message}'));
   }
 
   /// Returns whether the analysis server is active and running.
@@ -112,10 +115,6 @@ class AnalysisServer implements Disposable {
       _server.analysis.setAnalysisRoots(roots, []);
     }
   }
-
-  /// Force recycle of the analysis server.
-  // TODO: Call Reset on the wrapper
-  void forceReset() => null;
 
   void dispose() {
     _logger.fine('dispose()');
@@ -170,10 +169,16 @@ class AnalysisServer implements Disposable {
 
     // TODO: `onDidStopChanging` will notify when the file has been opened, even
     // if it has not been modified.
-    editor.onDidStopChanging
-        .listen((_) => notifyFileChanged(path, editor.getText()));
+    editor.onDidStopChanging.listen((_) => notifyFileChanged(path, editor.getText()));
 
     editor.onDidDestroy.listen((_) => notifyFileChanged(path, null));
+  }
+
+  void _focusedDartFileChanged(File file) {
+    if (file != null && _server != null) {
+      // TODO: What a truly interesting API.
+      _server.analysis.setSubscriptions({'NAVIGATION': [file.getPath()]});
+    }
   }
 
   /// Explictely and manually start the analysis server. This will not succeed
@@ -210,7 +215,15 @@ class AnalysisServer implements Disposable {
   void _initNewServer(_AnalysisServerWrapper server) {
     server.onAnalyzing.listen((value) => _serverBusyController.add(value));
     server.whenDisposed.then((exitCode) => _handleServerDeath(server));
-    server.onAllMessages.listen((message) => _allMessagesController.add(message));
+
+    _onSendController.addStream(server.onSend);
+    _onReceiveController.addStream(server.onReceive);
+
+    server.analysis.onNavigation.listen((AnalysisNavigation e) {
+      DeclarationHelper.setLastNavInfo(e);
+    });
+
+    server.setup();
 
     onBusy.listen((busy) {
       if (!busy && _job != null) {
@@ -223,6 +236,8 @@ class AnalysisServer implements Disposable {
 
     _serverActiveController.add(true);
     _syncRoots();
+
+    _focusedDartFileChanged(editorManager.activeDartFile);
   }
 
   void _handleServerDeath(Server server) {
@@ -236,7 +251,6 @@ class AnalysisServer implements Disposable {
 }
 
 class DartdocHelper {
-
   static void handleDartdoc(Server server, AtomEvent event) {
     if (server == null) return;
 
@@ -293,6 +307,62 @@ class DartdocHelper {
     }
 
     return buf.toString();
+  }
+}
+
+class DeclarationHelper {
+  static AnalysisNavigation _lastNavInfo;
+
+  static void setLastNavInfo(AnalysisNavigation info) {
+    _lastNavInfo = info;
+  }
+
+  static void handleNavigate(Server server, AtomEvent event) {
+    if (server == null) return;
+
+    // TODO: We should wait for a period of time before failing.
+    if (_lastNavInfo == null) {
+      atom.beep();
+      return;
+    }
+
+    TextEditor editor = event.editor;
+    String path = editor.getPath();
+
+    if (path != _lastNavInfo.file) {
+      atom.beep();
+      return;
+    }
+
+    Range range = editor.getSelectedBufferRange();
+    int offset = editor.getBuffer().characterIndexForPosition(range.start);
+
+    List<String> files = _lastNavInfo.files;
+    List<NavigationTarget> targets = _lastNavInfo.targets;
+    List<NavigationRegion> regions = _lastNavInfo.regions;
+
+    for (NavigationRegion region in regions) {
+      if (region.offset <= offset && (region.offset + region.length > offset)) {
+        NavigationTarget target = targets[region.targets.first];
+        String file = files[target.fileIndex];
+
+        Map options = {
+          'initialLine': target.startLine - 1,
+          'initialColumn': target.startColumn - 1,
+          'searchAllPanes': true
+        };
+        atom.workspace.open(file, options).then((TextEditor editor) {
+          editor.selectRight(target.length);
+        }).catchError((e) {
+          _logger.warning('${e}');
+          atom.beep();
+        });
+
+        return;
+      }
+    }
+
+    atom.beep();
   }
 }
 
@@ -410,8 +480,6 @@ class _AnalysisServerWrapper extends Server {
     });
 
     var writeMessage = (String message) {
-      _logger.finer('--> ${message}');
-      //_allMessagesController.add(message);
       process.write("${message}\n");
     };
 
@@ -425,13 +493,16 @@ class _AnalysisServerWrapper extends Server {
 
   _AnalysisServerWrapper(this.process, this._processCompleter,
       Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage) {
-    server.setSubscriptions(['STATUS']);
     server.onStatus.listen((ServerStatus status) {
       if (status.analysis != null) {
         analyzing = status.analysis.isAnalyzing;
         _analyzingController.add(analyzing);
       }
     });
+  }
+
+  void setup() {
+    server.setSubscriptions(['STATUS']);
   }
 
   Stream<bool> get onAnalyzing => _analyzingController.stream;

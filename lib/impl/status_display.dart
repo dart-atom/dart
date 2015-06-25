@@ -77,7 +77,7 @@ class StatusDisplay implements Disposable {
     }));
 
     _disposables.add(atom.commands.add(
-      'atom-workspace', 'dart-lang:show-jobs', (_) => _showJobsDialog()));
+      'atom-workspace', 'dart-lang-experimental:show-jobs', (_) => _showJobsDialog()));
   }
 
   void dispose() {
