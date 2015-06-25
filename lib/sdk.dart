@@ -9,11 +9,12 @@ import 'dart:async';
 import 'atom.dart';
 import 'jobs.dart';
 import 'process.dart';
+import 'state.dart';
 import 'utils.dart';
 
 export 'process.dart' show ProcessResult;
 
-final String _prefPath = 'dart-lang.sdkLocation';
+final String _prefPath = '${pluginId}.sdkLocation';
 
 // TODO: We should not try and auto-locate the sdk when the value’s bad, only
 // when it’s empty.

@@ -22,7 +22,7 @@ class AnalysisServerDialog implements Disposable {
 
   AnalysisServerDialog() {
     _disposables.add(atom.commands.add('atom-workspace',
-        'dart-lang:analysis-server-status', (_) => showDialog()));
+        'dart-lang-experimental:analysis-server-status', (_) => showDialog()));
 
     _disposables.add(atom.commands.add('atom-text-editor', 'core:cancel', (_) {
       if (_panel != null) _panel.hide();
@@ -30,11 +30,8 @@ class AnalysisServerDialog implements Disposable {
 
     analysisServer.onActive.listen((val) => _updateStatus());
     analysisServer.onBusy.listen((val) => _updateStatus());
-    analysisServer.onAllMessages.listen((message) {
-      if (_messageElement != null && _panel != null) {
-        _messageElement.text = '${message}';
-      }
-    });
+    analysisServer.onSend.listen(_logTraffic);
+    analysisServer.onReceive.listen(_logTraffic);
   }
 
   void dispose() {
@@ -90,6 +87,12 @@ class AnalysisServerDialog implements Disposable {
     });
 
     _updateStatus();
+  }
+
+  void _logTraffic(String message) {
+    if (_messageElement != null && _panel != null) {
+      _messageElement.text = '${message}';
+    }
   }
 
   void _updateStatus() {

@@ -129,6 +129,12 @@ class Workspace extends ProxyHolder {
     return new JsDisposable(disposable);
   }
 
+  Disposable observeActivePaneItem(void callback(dynamic item)) {
+    // TODO: What type is the item?
+    var disposable = invoke('observeActivePaneItem', (item) => callback(item));
+    return new JsDisposable(disposable);
+  }
+
   Panel addModalPanel({dynamic item, bool visible, int priority}) =>
       new Panel(invoke('addModalPanel', _panelOptions(item, visible, priority)));
 
@@ -143,6 +149,23 @@ class Workspace extends ProxyHolder {
 
   Panel addRightPanel({dynamic item, bool visible, int priority}) =>
       new Panel(invoke('addRightPanel', _panelOptions(item, visible, priority)));
+
+  /// Opens the given URI in Atom asynchronously. If the URI is already open,
+  /// the existing item for that URI will be activated. If no URI is given, or
+  /// no registered opener can open the URI, a new empty TextEditor will be
+  /// created.
+  ///
+  /// [options] can include initialLine, initialColumn, split, activePane, and
+  /// searchAllPanes.
+  Future<TextEditor> open(String url, [Map options]) {
+    Future future = promiseToFuture(invoke('open', url, options));
+    return future.then((result) {
+      if (result == null) throw 'unable to open ${url}';
+      TextEditor editor = new TextEditor(result);
+      if (editor.isValid()) return editor;
+      throw 'result is not a text editor';
+    });
+  }
 
   Map _panelOptions(dynamic item, bool visible, int priority) {
     Map options = {'item': item};
@@ -180,8 +203,7 @@ class CommandRegistry extends ProxyHolder {
 class Config extends ProxyHolder {
   Config(JsObject object) : super(object);
 
-  /// [keyPath] should be in the form `pluginid.keyid` - e.g.
-  /// `dart-lang.sdkLocation`.
+  /// [keyPath] should be in the form `pluginid.keyid` - e.g. `${pluginId}.sdkLocation`.
   dynamic get(String keyPath, {scope}) {
     Map options;
     if (scope != null) options = {'scope': scope};
@@ -372,6 +394,19 @@ class TextEditorView extends ProxyHolder {
 class TextEditor extends ProxyHolder {
   TextEditor(JsObject object) : super(_cvt(object));
 
+  /// Return whether this editor is a valid object. We sometimes create them
+  /// from JS objects w/o knowning if they are editors for certain.
+  bool isValid() {
+    try {
+      getTitle();
+      getLongTitle();
+      getPath();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   TextBuffer getBuffer() => new TextBuffer(invoke('getBuffer'));
 
   String getTitle() => invoke('getTitle');
@@ -410,6 +445,11 @@ class TextEditor extends ProxyHolder {
       new Range(invoke('getCurrentParagraphBufferRange'));
   Range setTextInBufferRange(Range range, String text) =>
       new Range(invoke('setTextInBufferRange', range, text));
+
+  /// Move the cursor to the given position in buffer coordinates.
+  void setCursorBufferPosition(Point point) =>
+      invoke('setCursorBufferPosition', point);
+  void selectRight(columnCount) => invoke('selectRight', columnCount);
 
   String lineTextForBufferRow(int bufferRow) =>
       invoke('lineTextForBufferRow', bufferRow);

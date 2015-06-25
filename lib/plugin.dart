@@ -13,6 +13,7 @@ import 'atom.dart';
 import 'atom_autocomplete.dart';
 import 'atom_statusbar.dart';
 import 'dependencies.dart';
+import 'editors.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
@@ -49,33 +50,34 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[SdkManager] = new SdkManager());
     disposables.add(deps[ProjectManager] = new ProjectManager());
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
+    disposables.add(deps[EditorManager] = new EditorManager());
 
     // Register commands.
-    _addCmd('atom-workspace', 'dart-lang:smoke-test', (_) => smokeTest());
-    _addCmd('atom-workspace', 'dart-lang:rebuild-restart', (_) {
+    _addCmd('atom-workspace', 'dart-lang-experimental:smoke-test', (_) => smokeTest());
+    _addCmd('atom-workspace', 'dart-lang-experimental:rebuild-restart', (_) {
       new RebuildJob().schedule();
     });
-    _addCmd('atom-workspace', 'dart-lang:auto-locate-sdk', (_) {
+    _addCmd('atom-workspace', 'dart-lang-experimental:auto-locate-sdk', (_) {
       new SdkLocationJob(sdkManager).schedule();
     });
-    _addCmd('atom-workspace', 'dart-lang:refresh-dart-projects', (_) {
+    _addCmd('atom-workspace', 'dart-lang-experimental:refresh-dart-projects', (_) {
       new ProjectScanJob().schedule();
     });
 
     // Text editor commands.
-    _addCmd('atom-text-editor', 'dart-lang:newline', editing.handleEnterKey);
+    _addCmd('atom-text-editor', 'dart-lang-experimental:newline', editing.handleEnterKey);
 
     // Register commands that require an SDK to be present.
-    _addSdkCmd('atom-text-editor', 'dart-lang:pub-get', (event) {
+    _addSdkCmd('atom-text-editor', 'dart-lang-experimental:pub-get', (event) {
       new PubJob.get(dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('atom-text-editor', 'dart-lang:pub-upgrade', (event) {
+    _addSdkCmd('atom-text-editor', 'dart-lang-experimental:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('.tree-view', 'dart-lang:pub-get', (AtomEvent event) {
+    _addSdkCmd('.tree-view', 'dart-lang-experimental:pub-get', (AtomEvent event) {
       new PubJob.get(dirname(event.selectedFilePath)).schedule();
     });
-    _addSdkCmd('.tree-view', 'dart-lang:pub-upgrade', (event) {
+    _addSdkCmd('.tree-view', 'dart-lang-experimental:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.selectedFilePath)).schedule();
     });
 
@@ -116,7 +118,7 @@ class AtomDartPackage extends AtomPackage {
   }
 
   void _setupLogging() {
-    disposables.add(atom.config.observe('dart-lang.logging', null, (val) {
+    disposables.add(atom.config.observe('${pluginId}.logging', null, (val) {
       if (val == null) return;
 
       for (Level level in Level.LEVELS) {

@@ -4,7 +4,11 @@
 
 library atom.editing;
 
+import 'package:logging/logging.dart';
+
 import '../atom.dart';
+
+final Logger _logger = new Logger('editing');
 
 // TODO: If we're in a line comment, and the line is longer than the max line
 // length, extend the comment.
@@ -18,6 +22,14 @@ import '../atom.dart';
 /// Handle special behavior for the enter key in Dart files. In particular, this
 /// method extends dartdoc comments and block comments to the next line.
 void handleEnterKey(AtomEvent event) {
+  try {
+    _handleEnterKey(event);
+  } catch (e) {
+    _logger.severe('exception during enter key handling: ${e}');
+  }
+}
+
+void _handleEnterKey(AtomEvent event) {
   TextEditorView view = new TextEditorView(event.currentTarget);
   TextEditor editor = view.getModel();
 
