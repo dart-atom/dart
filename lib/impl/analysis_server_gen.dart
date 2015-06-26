@@ -1032,6 +1032,9 @@ class LinkedEditGroup {
   final List<LinkedEditSuggestion> suggestions;
 
   LinkedEditGroup(this.positions, this.length, this.suggestions);
+
+  String toString() =>
+      '[LinkedEditGroup positions: ${positions}, length: ${length}, suggestions: ${suggestions}]';
 }
 
 class LinkedEditSuggestion {
@@ -1177,6 +1180,8 @@ class Position {
   final int offset;
 
   Position(this.file, this.offset);
+
+  String toString() => '[Position file: ${file}, offset: ${offset}]';
 }
 
 class PubStatus {

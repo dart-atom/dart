@@ -14,3 +14,4 @@
   'enter': 'dart-lang-experimental:newline'
   'f1': 'dart-lang-experimental:show-dartdoc'
   'f3': 'dart-lang-experimental:jump-to-declaration'
+  'cmd-1': 'dart-lang-experimental:quick-fix'

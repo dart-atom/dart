@@ -446,6 +446,11 @@ class TextEditor extends ProxyHolder {
   /// selections, they are reduced to a single selection with the given range.
   void setSelectedBufferRange(Range bufferRange) =>
       invoke('setSelectedBufferRange', bufferRange);
+  /// Set the selected ranges in buffer coordinates. If there are multiple
+  /// selections, they are replaced by new selections with the given ranges.
+  void setSelectedBufferRanges(List<Range> ranges) =>
+      invoke('setSelectedBufferRanges', ranges.map((Range r) => r.obj).toList());
+
   Range getCurrentParagraphBufferRange() =>
       new Range(invoke('getCurrentParagraphBufferRange'));
   Range setTextInBufferRange(Range range, String text) =>
@@ -484,6 +489,25 @@ class TextBuffer extends ProxyHolder {
       invoke('characterIndexForPosition', position);
   Point positionForCharacterIndex(int offset) =>
       new Point(invoke('positionForCharacterIndex', offset));
+
+  /// Set the text in the given range. Returns the Range of the inserted text.
+  Range setTextInRange(Range range, String text) =>
+      new Range(invoke('setTextInRange', range, text));
+
+  /// Create a pointer to the current state of the buffer for use with
+  void createCheckpoint() => invoke('createCheckpoint');
+  /// Group all changes since the given checkpoint into a single transaction for
+  /// purposes of undo/redo. If the given checkpoint is no longer present in the
+  /// undo history, no grouping will be performed and this method will return
+  /// false.
+  bool groupChangesSinceCheckpoint() => invoke('groupChangesSinceCheckpoint');
+  /// Revert the buffer to the state it was in when the given checkpoint was
+  /// created. The redo stack will be empty following this operation, so changes
+  /// since the checkpoint will be lost. If the given checkpoint is no longer
+  /// present in the undo history, no changes will be made to the buffer and
+  /// this method will return false.
+  bool revertToCheckpoint() => invoke('revertToCheckpoint');
+
 }
 
 /// Represents a region in a buffer in row / column coordinates.
