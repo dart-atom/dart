@@ -14,6 +14,7 @@ import 'package:logging/logging.dart';
 import 'atom.dart';
 import 'atom_linter.dart';
 import 'dependencies.dart';
+import 'editors.dart';
 import 'jobs.dart';
 import 'projects.dart';
 import 'process.dart';
@@ -345,17 +346,23 @@ class DeclarationHelper {
       if (region.offset <= offset && (region.offset + region.length > offset)) {
         NavigationTarget target = targets[region.targets.first];
         String file = files[target.fileIndex];
+        TextBuffer buffer = editor.getBuffer();
+        Range sourceRange = new Range.fromPoints(
+          buffer.positionForCharacterIndex(region.offset),
+          buffer.positionForCharacterIndex(region.offset + region.length));
 
-        Map options = {
-          'initialLine': target.startLine - 1,
-          'initialColumn': target.startColumn - 1,
-          'searchAllPanes': true
-        };
-        atom.workspace.open(file, options).then((TextEditor editor) {
-          editor.selectRight(target.length);
-        }).catchError((e) {
-          _logger.warning('${e}');
-          atom.beep();
+        EditorManager.flashSelection(editor, sourceRange).then((_) {
+          Map options = {
+            'initialLine': target.startLine - 1,
+            'initialColumn': target.startColumn - 1,
+            'searchAllPanes': true
+          };
+          atom.workspace.open(file, options).then((TextEditor editor) {
+            editor.selectRight(target.length);
+          }).catchError((e) {
+            _logger.warning('${e}');
+            atom.beep();
+          });
         });
 
         return;

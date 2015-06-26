@@ -441,6 +441,11 @@ class TextEditor extends ProxyHolder {
   String getTextInBufferRange(Range range) => invoke('getTextInBufferRange', range);
   /// Get the [Range] of the most recently added selection in buffer coordinates.
   Range getSelectedBufferRange() => new Range(invoke('getSelectedBufferRange'));
+
+  /// Set the selected range in buffer coordinates. If there are multiple
+  /// selections, they are reduced to a single selection with the given range.
+  void setSelectedBufferRange(Range bufferRange) =>
+      invoke('setSelectedBufferRange', bufferRange);
   Range getCurrentParagraphBufferRange() =>
       new Range(invoke('getCurrentParagraphBufferRange'));
   Range setTextInBufferRange(Range range, String text) =>
@@ -476,7 +481,7 @@ class TextBuffer extends ProxyHolder {
   String getPath() => invoke('getPath');
 
   int characterIndexForPosition(Point position) =>
-     invoke('characterIndexForPosition', position);
+      invoke('characterIndexForPosition', position);
   Point positionForCharacterIndex(int offset) =>
       new Point(invoke('positionForCharacterIndex', offset));
 }
@@ -484,6 +489,7 @@ class TextBuffer extends ProxyHolder {
 /// Represents a region in a buffer in row / column coordinates.
 class Range extends ProxyHolder {
   factory Range(JsObject object) => object == null ? null : new Range._(object);
+  Range.fromPoints(Point start, Point end) : super(_create('Range', start.obj, end.obj));
   Range._(JsObject object) : super(_cvt(object));
 
   bool isEmpty() => invoke('isEmpty');
