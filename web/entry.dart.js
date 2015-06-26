@@ -2071,26 +2071,6 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     $desc = $collectedClasses$.AnalysisServerDialog_showDialog_closure[1];
     AnalysisServerDialog_showDialog_closure.prototype = $desc;
     AnalysisServerDialog_showDialog_closure.$__fields__ = ["_analysis_server_dialog$_captured_this_0"];
-    function AnalysisServerDialog_showDialog_closure0(_analysis_server_dialog$_captured_this_1) {
-      this._analysis_server_dialog$_captured_this_1 = _analysis_server_dialog$_captured_this_1;
-      this.$deferredAction();
-    }
-    AnalysisServerDialog_showDialog_closure0.builtin$cls = "AnalysisServerDialog_showDialog_closure0";
-    if (!"name" in AnalysisServerDialog_showDialog_closure0)
-      AnalysisServerDialog_showDialog_closure0.name = "AnalysisServerDialog_showDialog_closure0";
-    $desc = $collectedClasses$.AnalysisServerDialog_showDialog_closure0[1];
-    AnalysisServerDialog_showDialog_closure0.prototype = $desc;
-    AnalysisServerDialog_showDialog_closure0.$__fields__ = ["_analysis_server_dialog$_captured_this_1"];
-    function AnalysisServerDialog_showDialog_closure1(_analysis_server_dialog$_captured_this_2) {
-      this._analysis_server_dialog$_captured_this_2 = _analysis_server_dialog$_captured_this_2;
-      this.$deferredAction();
-    }
-    AnalysisServerDialog_showDialog_closure1.builtin$cls = "AnalysisServerDialog_showDialog_closure1";
-    if (!"name" in AnalysisServerDialog_showDialog_closure1)
-      AnalysisServerDialog_showDialog_closure1.name = "AnalysisServerDialog_showDialog_closure1";
-    $desc = $collectedClasses$.AnalysisServerDialog_showDialog_closure1[1];
-    AnalysisServerDialog_showDialog_closure1.prototype = $desc;
-    AnalysisServerDialog_showDialog_closure1.$__fields__ = ["_analysis_server_dialog$_captured_this_2"];
     function EditorManager(_editorController, _fileController, _observe) {
       this._editorController = _editorController;
       this._fileController = _fileController;
@@ -2113,6 +2093,26 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     $desc = $collectedClasses$.CoreElement[1];
     CoreElement.prototype = $desc;
     CoreElement.$__fields__ = ["element"];
+    function CoreElement_add_closure(_elements$_captured_this_0) {
+      this._elements$_captured_this_0 = _elements$_captured_this_0;
+      this.$deferredAction();
+    }
+    CoreElement_add_closure.builtin$cls = "CoreElement_add_closure";
+    if (!"name" in CoreElement_add_closure)
+      CoreElement_add_closure.name = "CoreElement_add_closure";
+    $desc = $collectedClasses$.CoreElement_add_closure[1];
+    CoreElement_add_closure.prototype = $desc;
+    CoreElement_add_closure.$__fields__ = ["_elements$_captured_this_0"];
+    function CoreElement_click_closure(_captured_handle_0) {
+      this._captured_handle_0 = _captured_handle_0;
+      this.$deferredAction();
+    }
+    CoreElement_click_closure.builtin$cls = "CoreElement_click_closure";
+    if (!"name" in CoreElement_click_closure)
+      CoreElement_click_closure.name = "CoreElement_click_closure";
+    $desc = $collectedClasses$.CoreElement_click_closure[1];
+    CoreElement_click_closure.prototype = $desc;
+    CoreElement_click_closure.$__fields__ = ["_captured_handle_0"];
     function ProgressElement(_progress, element) {
       this._progress = _progress;
       this.element = element;
@@ -3041,13 +3041,14 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     $desc = $collectedClasses$._TestJob[1];
     _TestJob.prototype = $desc;
     _TestJob.$__fields__ = ["seconds", "_smoketest$_infoAction", "name", "schedulingRule"];
-    function StatusDisplay(_status$_disposables, _status$_subscription, _statusbarTile, _timer, _jobsPanel, _jobsPanelElement) {
+    function StatusDisplay(_status$_disposables, _status$_subscription, _statusbarTile, _timer, _jobsPanel, _titleElement, _listGroup) {
       this._status$_disposables = _status$_disposables;
       this._status$_subscription = _status$_subscription;
       this._statusbarTile = _statusbarTile;
       this._timer = _timer;
       this._jobsPanel = _jobsPanel;
-      this._jobsPanelElement = _jobsPanelElement;
+      this._titleElement = _titleElement;
+      this._listGroup = _listGroup;
       this.$deferredAction();
     }
     StatusDisplay.builtin$cls = "StatusDisplay";
@@ -3055,9 +3056,11 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       StatusDisplay.name = "StatusDisplay";
     $desc = $collectedClasses$.StatusDisplay[1];
     StatusDisplay.prototype = $desc;
-    StatusDisplay.$__fields__ = ["_status$_disposables", "_status$_subscription", "_statusbarTile", "_timer", "_jobsPanel", "_jobsPanelElement"];
-    function StatusDisplay_closure(_status$_captured_this_0) {
-      this._status$_captured_this_0 = _status$_captured_this_0;
+    StatusDisplay.$__fields__ = ["_status$_disposables", "_status$_subscription", "_statusbarTile", "_timer", "_jobsPanel", "_titleElement", "_listGroup"];
+    function StatusDisplay_closure(_status$_box_0, _status$_captured_this_1, _captured_statusElement_2) {
+      this._status$_box_0 = _status$_box_0;
+      this._status$_captured_this_1 = _status$_captured_this_1;
+      this._captured_statusElement_2 = _captured_statusElement_2;
       this.$deferredAction();
     }
     StatusDisplay_closure.builtin$cls = "StatusDisplay_closure";
@@ -3065,23 +3068,10 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       StatusDisplay_closure.name = "StatusDisplay_closure";
     $desc = $collectedClasses$.StatusDisplay_closure[1];
     StatusDisplay_closure.prototype = $desc;
-    StatusDisplay_closure.$__fields__ = ["_status$_captured_this_0"];
-    function StatusDisplay_closure0(_status$_captured_this_1, _captured_statusElement_2, _captured_spinner_3, _captured_textLabel_4) {
-      this._status$_captured_this_1 = _status$_captured_this_1;
-      this._captured_statusElement_2 = _captured_statusElement_2;
-      this._captured_spinner_3 = _captured_spinner_3;
-      this._captured_textLabel_4 = _captured_textLabel_4;
-      this.$deferredAction();
-    }
-    StatusDisplay_closure0.builtin$cls = "StatusDisplay_closure0";
-    if (!"name" in StatusDisplay_closure0)
-      StatusDisplay_closure0.name = "StatusDisplay_closure0";
-    $desc = $collectedClasses$.StatusDisplay_closure0[1];
-    StatusDisplay_closure0.prototype = $desc;
-    StatusDisplay_closure0.$__fields__ = ["_status$_captured_this_1", "_captured_statusElement_2", "_captured_spinner_3", "_captured_textLabel_4"];
-    function StatusDisplay__closure(_captured_statusElement_5, _captured_textLabel_6) {
-      this._captured_statusElement_5 = _captured_statusElement_5;
-      this._captured_textLabel_6 = _captured_textLabel_6;
+    StatusDisplay_closure.$__fields__ = ["_status$_box_0", "_status$_captured_this_1", "_captured_statusElement_2"];
+    function StatusDisplay__closure(_status$_box_0, _captured_statusElement_3) {
+      this._status$_box_0 = _status$_box_0;
+      this._captured_statusElement_3 = _captured_statusElement_3;
       this.$deferredAction();
     }
     StatusDisplay__closure.builtin$cls = "StatusDisplay__closure";
@@ -3089,9 +3079,19 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       StatusDisplay__closure.name = "StatusDisplay__closure";
     $desc = $collectedClasses$.StatusDisplay__closure[1];
     StatusDisplay__closure.prototype = $desc;
-    StatusDisplay__closure.$__fields__ = ["_captured_statusElement_5", "_captured_textLabel_6"];
-    function StatusDisplay_closure1(_captured_this_7) {
-      this._captured_this_7 = _captured_this_7;
+    StatusDisplay__closure.$__fields__ = ["_status$_box_0", "_captured_statusElement_3"];
+    function StatusDisplay_closure0(_status$_captured_this_4) {
+      this._status$_captured_this_4 = _status$_captured_this_4;
+      this.$deferredAction();
+    }
+    StatusDisplay_closure0.builtin$cls = "StatusDisplay_closure0";
+    if (!"name" in StatusDisplay_closure0)
+      StatusDisplay_closure0.name = "StatusDisplay_closure0";
+    $desc = $collectedClasses$.StatusDisplay_closure0[1];
+    StatusDisplay_closure0.prototype = $desc;
+    StatusDisplay_closure0.$__fields__ = ["_status$_captured_this_4"];
+    function StatusDisplay_closure1(_status$_captured_this_5) {
+      this._status$_captured_this_5 = _status$_captured_this_5;
       this.$deferredAction();
     }
     StatusDisplay_closure1.builtin$cls = "StatusDisplay_closure1";
@@ -3099,17 +3099,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       StatusDisplay_closure1.name = "StatusDisplay_closure1";
     $desc = $collectedClasses$.StatusDisplay_closure1[1];
     StatusDisplay_closure1.prototype = $desc;
-    StatusDisplay_closure1.$__fields__ = ["_captured_this_7"];
-    function StatusDisplay_closure2(_captured_this_8) {
-      this._captured_this_8 = _captured_this_8;
-      this.$deferredAction();
-    }
-    StatusDisplay_closure2.builtin$cls = "StatusDisplay_closure2";
-    if (!"name" in StatusDisplay_closure2)
-      StatusDisplay_closure2.name = "StatusDisplay_closure2";
-    $desc = $collectedClasses$.StatusDisplay_closure2[1];
-    StatusDisplay_closure2.prototype = $desc;
-    StatusDisplay_closure2.$__fields__ = ["_captured_this_8"];
+    StatusDisplay_closure1.$__fields__ = ["_status$_captured_this_5"];
     function StatusDisplay__createJobsPanel_closure(_status$_captured_this_0) {
       this._status$_captured_this_0 = _status$_captured_this_0;
       this.$deferredAction();
@@ -3120,16 +3110,6 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     $desc = $collectedClasses$.StatusDisplay__createJobsPanel_closure[1];
     StatusDisplay__createJobsPanel_closure.prototype = $desc;
     StatusDisplay__createJobsPanel_closure.$__fields__ = ["_status$_captured_this_0"];
-    function StatusDisplay__updateJobsDialog_closure(_captured_job_0) {
-      this._captured_job_0 = _captured_job_0;
-      this.$deferredAction();
-    }
-    StatusDisplay__updateJobsDialog_closure.builtin$cls = "StatusDisplay__updateJobsDialog_closure";
-    if (!"name" in StatusDisplay__updateJobsDialog_closure)
-      StatusDisplay__updateJobsDialog_closure.name = "StatusDisplay__updateJobsDialog_closure";
-    $desc = $collectedClasses$.StatusDisplay__updateJobsDialog_closure[1];
-    StatusDisplay__updateJobsDialog_closure.prototype = $desc;
-    StatusDisplay__updateJobsDialog_closure.$__fields__ = ["_captured_job_0"];
     function StatusBar(obj) {
       this.obj = obj;
       this.$deferredAction();
@@ -7420,7 +7400,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     $desc = $collectedClasses$.RebuildJob_run__closure0[1];
     RebuildJob_run__closure0.prototype = $desc;
     RebuildJob_run__closure0.$__fields__ = [];
-    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, CapabilityImpl, _Serializer, _Deserializer, JSInvocationMirror, ReflectionInfo, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, ExceptionAndStackTrace, asyncHelper_closure, _wrapJsFunctionForAsync_closure, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, Server, Domain, ServerDomain, ServerStatus, AnalysisDomain, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, ErrorsResult, ErrorsResult_parse_closure, HoverResult, HoverResult_parse_closure, CompletionDomain, SearchDomain, EditDomain, ExecutionDomain, AnalysisError, AnalysisStatus, HoverInformation, Location, NavigationRegion, NavigationTarget, PubStatus, RequestError, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, NotificationManager, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextBuffer, Range, Point, AtomEvent, BufferedProcess, AnalysisServer, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__setup_closure1, AnalysisServer__setup_closure2, AnalysisServer__syncRoots_closure, AnalysisServer__handleNewEditor_closure, AnalysisServer__handleNewEditor_closure0, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, DartdocHelper_handleDartdoc_closure, DeclarationHelper_handleNavigate_closure, DeclarationHelper_handleNavigate__closure, DeclarationHelper_handleNavigate__closure0, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _DartLinterProvider, _DartLinterProvider_lint_closure, _DartLinterProvider_lint__closure, _DartLinterProvider_lint__closure0, _DartLinterProvider_lint_closure0, _AnalysisServerWrapper, _AnalysisServerWrapper_create_closure, _AnalysisServerWrapper_create_closure0, _AnalysisServerWrapper_create_closure1, _AnalysisServerWrapper_create_closure2, _AnalysisServerWrapper_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_closure2, AnalysisServerDialog_showDialog_closure, AnalysisServerDialog_showDialog_closure0, AnalysisServerDialog_showDialog_closure1, EditorManager, CoreElement, ProgressElement, main_closure, Job, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, LinterProvider, LinterProvider_registerLinterProvider_closure, LinterProvider__lint_closure, LinterProvider__lint__closure, LintMessage, Rn, Pt, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated_closure3, AtomDartPackage_packageActivated_closure4, AtomDartPackage_packageActivated_closure5, AtomDartPackage_packageActivated_closure6, AtomDartPackage__addSdkCmd_closure, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure0, ProcessRunner_execStreaming_closure, ProcessResult, ProjectManager, ProjectManager_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__checkForNewRemovedProjects_closure, ProjectManager__handleRemovedDirs_closure, ProjectManager__handleAddedDirs_closure, ProjectManager__handleAddedDirs__closure, DartProject, ProjectScanJob, PubJob, PubJob_run_closure, SdkManager, SdkManager_closure, SdkManager_tryToAutoConfigure_closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure8, smokeTest_closure7, smokeTest_closure6, smokeTest_closure9, smokeTest_closure10, smokeTest_closure11, smokeTest_closure12, _TestJob, StatusDisplay, StatusDisplay_closure, StatusDisplay_closure0, StatusDisplay__closure, StatusDisplay_closure1, StatusDisplay_closure2, StatusDisplay__createJobsPanel_closure, StatusDisplay__updateJobsDialog_closure, StatusBar, Tile, Disposable, Disposables, StreamSubscriptions, Dependencies, ListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, FixedLengthListMixin, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _UncaughtAsyncError, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _AsyncBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, _Completer, _AsyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, StreamSubscription, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _StreamController__AsyncStreamControllerDispatch, _SyncStreamController, _StreamController__SyncStreamControllerDispatch, _NoCallbacks, _NoCallbackAsyncStreamController, _StreamController__AsyncStreamControllerDispatch0, _NoCallbackSyncStreamController, _StreamController__SyncStreamControllerDispatch0, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _MapStream, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _RootZone_bindUnaryCallback_closure0, _HashMap, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMapKeyIterable, Codec, Converter, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, Expando, $int, Iterable, Iterator, List, Map, Null, num, Object, Match, StackTrace, String, StringBuffer, Symbol, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, Blob, BodyElement, ButtonElement, CharacterData, DeviceLightEvent, DivElement, Document, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, Location0, MapElement, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MetaElement, MeterElement, MouseEvent, Navigator, NavigatorUserMediaError, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, SelectElement, SpeechRecognitionError, SpeechSynthesisEvent, TextAreaElement, UIEvent, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _AttributeMap, _ElementAttributeMap, _ElementCssClassSet, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, Point0, _RectangleBase, Rectangle, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, Logger, Logger_Logger_closure, Level, LogRecord, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RebuildJob_run__closure0];
+    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, CapabilityImpl, _Serializer, _Deserializer, JSInvocationMirror, ReflectionInfo, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, ExceptionAndStackTrace, asyncHelper_closure, _wrapJsFunctionForAsync_closure, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, Server, Domain, ServerDomain, ServerStatus, AnalysisDomain, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, ErrorsResult, ErrorsResult_parse_closure, HoverResult, HoverResult_parse_closure, CompletionDomain, SearchDomain, EditDomain, ExecutionDomain, AnalysisError, AnalysisStatus, HoverInformation, Location, NavigationRegion, NavigationTarget, PubStatus, RequestError, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, NotificationManager, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextBuffer, Range, Point, AtomEvent, BufferedProcess, AnalysisServer, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__setup_closure1, AnalysisServer__setup_closure2, AnalysisServer__syncRoots_closure, AnalysisServer__handleNewEditor_closure, AnalysisServer__handleNewEditor_closure0, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, DartdocHelper_handleDartdoc_closure, DeclarationHelper_handleNavigate_closure, DeclarationHelper_handleNavigate__closure, DeclarationHelper_handleNavigate__closure0, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _DartLinterProvider, _DartLinterProvider_lint_closure, _DartLinterProvider_lint__closure, _DartLinterProvider_lint__closure0, _DartLinterProvider_lint_closure0, _AnalysisServerWrapper, _AnalysisServerWrapper_create_closure, _AnalysisServerWrapper_create_closure0, _AnalysisServerWrapper_create_closure1, _AnalysisServerWrapper_create_closure2, _AnalysisServerWrapper_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_closure2, AnalysisServerDialog_showDialog_closure, EditorManager, CoreElement, CoreElement_add_closure, CoreElement_click_closure, ProgressElement, main_closure, Job, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, LinterProvider, LinterProvider_registerLinterProvider_closure, LinterProvider__lint_closure, LinterProvider__lint__closure, LintMessage, Rn, Pt, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated_closure3, AtomDartPackage_packageActivated_closure4, AtomDartPackage_packageActivated_closure5, AtomDartPackage_packageActivated_closure6, AtomDartPackage__addSdkCmd_closure, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure0, ProcessRunner_execStreaming_closure, ProcessResult, ProjectManager, ProjectManager_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__checkForNewRemovedProjects_closure, ProjectManager__handleRemovedDirs_closure, ProjectManager__handleAddedDirs_closure, ProjectManager__handleAddedDirs__closure, DartProject, ProjectScanJob, PubJob, PubJob_run_closure, SdkManager, SdkManager_closure, SdkManager_tryToAutoConfigure_closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure8, smokeTest_closure7, smokeTest_closure6, smokeTest_closure9, smokeTest_closure10, smokeTest_closure11, smokeTest_closure12, _TestJob, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay_closure0, StatusDisplay_closure1, StatusDisplay__createJobsPanel_closure, StatusBar, Tile, Disposable, Disposables, StreamSubscriptions, Dependencies, ListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, FixedLengthListMixin, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _UncaughtAsyncError, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _AsyncBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, _Completer, _AsyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, StreamSubscription, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _StreamController__AsyncStreamControllerDispatch, _SyncStreamController, _StreamController__SyncStreamControllerDispatch, _NoCallbacks, _NoCallbackAsyncStreamController, _StreamController__AsyncStreamControllerDispatch0, _NoCallbackSyncStreamController, _StreamController__SyncStreamControllerDispatch0, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _MapStream, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _RootZone_bindUnaryCallback_closure0, _HashMap, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMapKeyIterable, Codec, Converter, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, Expando, $int, Iterable, Iterator, List, Map, Null, num, Object, Match, StackTrace, String, StringBuffer, Symbol, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, Blob, BodyElement, ButtonElement, CharacterData, DeviceLightEvent, DivElement, Document, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, Location0, MapElement, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MetaElement, MeterElement, MouseEvent, Navigator, NavigatorUserMediaError, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, SelectElement, SpeechRecognitionError, SpeechSynthesisEvent, TextAreaElement, UIEvent, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _AttributeMap, _ElementAttributeMap, _ElementCssClassSet, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, Point0, _RectangleBase, Rectangle, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, Logger, Logger_Logger_closure, Level, LogRecord, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RebuildJob_run__closure0];
   };
   function setupProgram(programData, typesOffset) {
     "use strict";
@@ -8039,6 +8019,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this.checkGrowable$1(receiver, "addAll");
         for (t1 = J.get$iterator$ax(collection); t1.moveNext$0();)
           receiver.push(t1.get$current());
+      },
+      clear$0: function(receiver) {
+        this.set$length(receiver, 0);
       },
       forEach$1: function(receiver, f) {
         var end, i;
@@ -12687,9 +12670,6 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       _AnalyzingJob$0: function() {
         this._infoAction = new X._AnalyzingJob_closure();
       },
-      infoAction$0: function() {
-        return this.get$infoAction().call$0();
-      },
       static: {_AnalyzingJob$: function() {
           var t1 = new X._AnalyzingJob(H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]), null, "Analyzing", null);
           t1._AnalyzingJob$0();
@@ -12698,9 +12678,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     },
     _AnalyzingJob_closure: {
       "^": "Closure:0;",
-      call$0: [function() {
+      call$0: function() {
         X.Dependencies_instance().getDependency$1(C.Type_tsp).showDialog$0();
-      }, null, null, 0, 0, null, "call"]
+      }
     },
     _AnalyzingJob_start_closure: {
       "^": "Closure:0;_analysis_server$_captured_this_0",
@@ -12900,89 +12880,79 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t1.invoke$1("destroy");
       }, "call$0", "get$dispose", 0, 0, 1],
       showDialog$0: function() {
-        var t1, mainElement, title, t2, buttonGroup, t3;
+        var t1, main, t2, t3, t4, t5;
         t1 = this._panel;
         if (t1 != null) {
           t1.invoke$1("show");
           return;
         }
-        mainElement = document.createElement("div", null);
-        t1 = J.getInterceptor$x(mainElement);
-        t1.get$classes(mainElement).add$1(0, "analysis-dialog");
-        title = document.createElement("div", null);
-        t2 = J.getInterceptor$x(title);
-        t2.get$classes(title).add$1(0, "message");
-        t2.get$classes(title).add$1(0, "title");
-        t2.get$classes(title).add$1(0, "text-highlight");
-        title.textContent = "Analysis Server";
-        t1.get$children(mainElement).add$1(0, title);
-        buttonGroup = document.createElement("div", null);
-        t2 = J.getInterceptor$x(buttonGroup);
-        t2.get$classes(buttonGroup).add$1(0, "block");
-        buttonGroup.setAttribute("layout", "");
-        buttonGroup.setAttribute("horizontal", "");
-        t1.get$children(mainElement).add$1(0, buttonGroup);
-        t3 = document.createElement("div", null);
-        t3.textContent = "Status:";
+        main = K.CoreElement$("div", null, "analysis-dialog", null);
+        t1 = K.CoreElement$("div", null, "message title text-highlight", "Analysis Server");
+        t2 = K.CoreElement$("div", null, "block", null);
+        t3 = t2.element;
+        t4 = J.getInterceptor$x(t3);
+        t4.setAttribute$2(t3, "layout", "");
+        t4.setAttribute$2(t3, "horizontal", "");
+        t3 = K.CoreElement$("div", null, null, "Status:");
+        t3.flex$0();
+        t3.clazz$1("inline-block-tight");
         this._statusElement = t3;
-        J.get$classes$x(t3).add$1(0, "inline-block-tight");
-        this._statusElement.setAttribute("flex", "");
-        t2.get$children(buttonGroup).add$1(0, this._statusElement);
-        t3 = W._ElementFactoryProvider_createElement_tag("button", null);
-        J.get$classes$x(t3).addAll$1(0, ["btn", "btn-sm", "inline-block-tight"]);
-        this._startButton = t3;
-        J.set$text$x(t3, "Start");
-        t3 = J.get$onClick$x(this._startButton);
-        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t3._html$_target, t3._eventType, W._wrapZone(new S.AnalysisServerDialog_showDialog_closure(this)), t3._useCapture), [H.getTypeArgumentByIndex(t3, 0)])._tryResume$0();
-        t2.get$children(buttonGroup).add$1(0, this._startButton);
-        t3 = W._ElementFactoryProvider_createElement_tag("button", null);
-        J.get$classes$x(t3).addAll$1(0, ["btn", "btn-sm", "inline-block-tight"]);
-        this._stopButton = t3;
-        J.set$text$x(t3, "Shutdown");
-        t3 = J.get$onClick$x(this._stopButton);
-        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t3._html$_target, t3._eventType, W._wrapZone(new S.AnalysisServerDialog_showDialog_closure0(this)), t3._useCapture), [H.getTypeArgumentByIndex(t3, 0)])._tryResume$0();
-        t2.get$children(buttonGroup).add$1(0, this._stopButton);
-        t2 = document.createElement("div", null);
-        t3 = J.getInterceptor$x(t2);
-        t3.get$classes(t2).add$1(0, "last-message");
-        t3.get$classes(t2).add$1(0, "text-subtle");
-        this._messageElement = t2;
-        t1.get$children(mainElement).add$1(0, this._messageElement);
-        t1 = $.get$atom0()._workspace;
-        t1 = new E.Panel(t1.invoke$2("addModalPanel", t1._panelOptions$3(mainElement, null, null)));
-        this._panel = t1;
-        t1.get$onDidDestroy()._createSubscription$4(new S.AnalysisServerDialog_showDialog_closure1(this), null, null, false);
+        t4 = K.CoreElement$("button", null, "btn btn-sm", "Start");
+        t4.clazz$1("inline-block-tight");
+        t4.click$1(0, this.get$_handleServerStart());
+        this._startButton = t4;
+        t5 = K.CoreElement$("button", null, "btn btn-sm", "Shutdown");
+        t5.clazz$1("inline-block-tight");
+        t5.click$1(0, this.get$_handleServerStop());
+        this._stopButton = t5;
+        t2.add$1(0, [t3, t4, t5]);
+        t5 = K.CoreElement$("div", null, "last-message text-subtle", null);
+        this._messageElement = t5;
+        main.add$1(0, [t1, t2, t5]);
+        t5 = $.get$atom0()._workspace;
+        t5 = new E.Panel(t5.invoke$2("addModalPanel", t5._panelOptions$3(main.element, null, null)));
+        this._panel = t5;
+        t5.get$onDidDestroy()._createSubscription$4(new S.AnalysisServerDialog_showDialog_closure(this), null, null, false);
         this._updateStatus$0();
       },
       _logTraffic$1: [function(message) {
-        var t1 = this._messageElement;
-        if (t1 != null && this._panel != null)
-          t1.textContent = H.S(message);
+        var t1, t2;
+        t1 = this._messageElement;
+        if (t1 != null && this._panel != null) {
+          t2 = H.S(message);
+          J.set$text$x(t1.element, t2);
+        }
       }, "call$1", "get$_logTraffic", 2, 0, 7, 18],
       _updateStatus$0: function() {
         var t1, t2;
         if (this._statusElement == null)
           return;
         if (X.Dependencies_instance().getDependency$1(C.Type_goj).get$isBusy())
-          this._statusElement.textContent = "Status: analyzing\u2026";
+          J.set$text$x(this._statusElement.element, "Status: analyzing\u2026");
         else {
           t1 = X.Dependencies_instance().getDependency$1(C.Type_goj).get$isActive();
           t2 = this._statusElement;
           if (t1)
-            t2.textContent = "Status: idle";
+            J.set$text$x(t2.element, "Status: idle");
           else
-            t2.textContent = "Status: process not running";
+            J.set$text$x(t2.element, "Status: process not running");
         }
         t1 = X.Dependencies_instance().getDependency$1(C.Type_goj).get$isActive();
         t2 = this._startButton;
         if (t1) {
-          J.setAttribute$2$x(t2, "disabled", "");
-          J.get$attributes$x(this._stopButton).remove$1(0, "disabled");
+          J.setAttribute$2$x(t2.element, "disabled", "");
+          J.get$attributes$x(this._stopButton.element).remove$1(0, "disabled");
         } else {
-          J.get$attributes$x(t2).remove$1(0, "disabled");
-          J.setAttribute$2$x(this._stopButton, "disabled", "");
+          J.get$attributes$x(t2.element).remove$1(0, "disabled");
+          J.setAttribute$2$x(this._stopButton.element, "disabled", "");
         }
       },
+      _handleServerStart$0: [function() {
+        J.start$0$x(X.Dependencies_instance().getDependency$1(C.Type_goj));
+      }, "call$0", "get$_handleServerStart", 0, 0, 1],
+      _handleServerStop$0: [function() {
+        X.Dependencies_instance().getDependency$1(C.Type_goj).shutdown$0();
+      }, "call$0", "get$_handleServerStop", 0, 0, 1],
       AnalysisServerDialog$0: function() {
         var t1, t2;
         t1 = $.get$atom0();
@@ -13030,21 +13000,8 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     AnalysisServerDialog_showDialog_closure: {
       "^": "Closure:2;_analysis_server_dialog$_captured_this_0",
       call$1: [function(_) {
-        J.start$0$x(X.Dependencies_instance().getDependency$1(C.Type_goj));
+        this._analysis_server_dialog$_captured_this_0._panel = null;
         return;
-      }, null, null, 2, 0, null, 27, "call"]
-    },
-    AnalysisServerDialog_showDialog_closure0: {
-      "^": "Closure:2;_analysis_server_dialog$_captured_this_1",
-      call$1: [function(_) {
-        X.Dependencies_instance().getDependency$1(C.Type_goj).shutdown$0();
-        return;
-      }, null, null, 2, 0, null, 27, "call"]
-    },
-    AnalysisServerDialog_showDialog_closure1: {
-      "^": "Closure:2;_analysis_server_dialog$_captured_this_2",
-      call$1: [function(_) {
-        this._analysis_server_dialog$_captured_this_2._panel = null;
       }, null, null, 2, 0, null, 27, "call"]
     }
   }], ["atom.editing", "package:atom_dart_lang_experimental/impl/editing.dart",, B, {
@@ -13176,12 +13133,15 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     "^": "",
     CoreElement: {
       "^": "Object;element",
-      toggleAttribute$2: function($name, value) {
+      attribute$2: function($name, value) {
         var t1 = this.element;
         if (value)
           J.setAttribute$2$x(t1, $name, "");
         else
           J.get$attributes$x(t1).remove$1(0, $name);
+      },
+      get$attributes: function(_) {
+        return J.get$attributes$x(this.element);
       },
       setAttribute$2: function(_, $name, value) {
         return J.setAttribute$2$x(this.element, $name, value);
@@ -13195,22 +13155,58 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         J.set$text$x(this.element, value);
       },
       add$1: function(_, child) {
-        J.add$1$ax(J.get$children$x(this.element), child.element);
+        var t1 = J.getInterceptor(child);
+        if (!!t1.$isList)
+          return t1.map$1(child, new K.CoreElement_add_closure(this)).toList$0(0);
+        else if (!!t1.$isCoreElement)
+          J.add$1$ax(J.get$children$x(this.element), child.element);
+        else if (!!t1.$isElement)
+          J.add$1$ax(J.get$children$x(this.element), child);
+        else
+          throw H.wrapException(P.ArgumentError$("argument type not supported"));
         return child;
+      },
+      flex$1: function(flexAmount) {
+        this.attribute$2("flex", true);
+      },
+      flex$0: function() {
+        return this.flex$1(null);
       },
       get$onClick: function(_) {
         return J.get$onClick$x(this.element);
       },
+      click$1: function(_, handle) {
+        var t1 = J.get$onClick$x(this.element);
+        t1 = H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._html$_target, t1._eventType, W._wrapZone(new K.CoreElement_click_closure(handle)), t1._useCapture), [H.getTypeArgumentByIndex(t1, 0)]);
+        t1._tryResume$0();
+        return t1;
+      },
       toString$0: function(_) {
         return J.toString$0(this.element);
       },
-      CoreElement$2$text: function(tag, text) {
+      CoreElement$4$attributes$classes$text: function(tag, attributes, classes, text) {
+        if (text != null)
+          J.set$text$x(this.element, text);
+        if (classes != null)
+          J.get$classes$x(this.element).addAll$1(0, classes.split(" "));
       },
-      static: {CoreElement$: function(tag, text) {
+      static: {CoreElement$: function(tag, attributes, classes, text) {
           var t1 = new K.CoreElement(W._ElementFactoryProvider_createElement_tag(tag, null));
-          t1.CoreElement$2$text(tag, text);
+          t1.CoreElement$4$attributes$classes$text(tag, attributes, classes, text);
           return t1;
         }}
+    },
+    CoreElement_add_closure: {
+      "^": "Closure:2;_elements$_captured_this_0",
+      call$1: [function(c) {
+        return this._elements$_captured_this_0.add$1(0, c);
+      }, null, null, 2, 0, null, 35, "call"]
+    },
+    CoreElement_click_closure: {
+      "^": "Closure:2;_captured_handle_0",
+      call$1: [function(_) {
+        return this._captured_handle_0.call$0();
+      }, null, null, 2, 0, null, 27, "call"]
     },
     ProgressElement: {
       "^": "CoreElement;_progress,element"
@@ -13226,7 +13222,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:23;",
       call$1: [function(rec) {
         P.print(H.S(rec));
-      }, null, null, 2, 0, null, 35, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     }
   }, 1], ["atom.jobs", "package:atom_dart_lang_experimental/jobs.dart",, S, {
     "^": "",
@@ -13243,9 +13239,6 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       },
       toString$0: function(_) {
         return this.name;
-      },
-      infoAction$0: function() {
-        return this.get$infoAction().call$0();
       }
     },
     JobManager: {
@@ -13452,7 +13445,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(evt);
         return;
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     Promise: {
       "^": "ProxyHolder;obj",
@@ -13464,7 +13457,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       },
       error$1: [function(_, errorCallback) {
         return this.invoke$2("catch", errorCallback);
-      }, "call$1", "get$error", 2, 0, 24, 37],
+      }, "call$1", "get$error", 2, 0, 24, 38],
       static: {Promise__jsObjectFromFuture: function(future) {
           return P.JsObject_JsObject(J.$index$asx($.get$context(), "Promise"), [new K.Promise__jsObjectFromFuture_closure(future)]);
         }}
@@ -13473,7 +13466,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:9;_js0$_captured_future_0",
       call$2: [function(resolve, reject) {
         this._js0$_captured_future_0.then$1(new K.Promise__jsObjectFromFuture__closure(resolve)).catchError$1(new K.Promise__jsObjectFromFuture__closure0(reject));
-      }, null, null, 4, 0, null, 38, 39, "call"]
+      }, null, null, 4, 0, null, 39, 40, "call"]
     },
     Promise__jsObjectFromFuture__closure: {
       "^": "Closure:2;_captured_resolve_1",
@@ -13503,7 +13496,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Object;",
       _lint$1: [function(jsEditor) {
         return K.Promise__jsObjectFromFuture(this.lint$1(new E.TextEditor(E._cvt(jsEditor))).then$1(new E.LinterProvider__lint_closure()));
-      }, "call$1", "get$_lint", 2, 0, 25, 40]
+      }, "call$1", "get$_lint", 2, 0, 25, 41]
     },
     LinterProvider_registerLinterProvider_closure: {
       "^": "Closure:0;_captured_provider_0",
@@ -13516,13 +13509,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(lints) {
         return J.map$1$ax(lints, new E.LinterProvider__lint__closure()).toList$0(0);
-      }, null, null, 2, 0, null, 41, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     LinterProvider__lint__closure: {
       "^": "Closure:2;",
       call$1: [function(lint) {
         return lint._toProxy$0();
-      }, null, null, 2, 0, null, 42, "call"]
+      }, null, null, 2, 0, null, 43, "call"]
     },
     LintMessage: {
       "^": "Object;type,text,html,filePath,range",
@@ -13596,7 +13589,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this._addSdkCmd$3(".tree-view", "dart-lang-experimental:pub-upgrade", new R.AtomDartPackage_packageActivated_closure6());
       }, function() {
         return this.packageActivated$1(null);
-      }, "packageActivated$0", "call$1", "call$0", "get$packageActivated", 0, 2, 26, 43, 44],
+      }, "packageActivated$0", "call$1", "call$0", "get$packageActivated", 0, 2, 26, 44, 45],
       packageDeactivated$0: [function() {
         $.get$_logger().fine$1("packageDeactivated");
         this.disposables.dispose$0();
@@ -13776,7 +13769,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = t1.charCodeAt(0) == 0 ? t1 : t1;
         t2 = this._captured_stderr_3._contents;
         return new Z.ProcessResult(code, t1, t2.charCodeAt(0) == 0 ? t2 : t2);
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     ProcessRunner_execStreaming_closure1: {
       "^": "Closure:2;_process$_captured_this_0",
@@ -13786,7 +13779,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(s);
         return;
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 47, "call"]
     },
     ProcessRunner_execStreaming_closure0: {
       "^": "Closure:2;_captured_this_1",
@@ -13796,7 +13789,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(s);
         return;
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 47, "call"]
     },
     ProcessRunner_execStreaming_closure: {
       "^": "Closure:2;_process$_captured_this_2",
@@ -13804,7 +13797,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         var t1 = this._process$_captured_this_2;
         t1._exit = code;
         t1._exitCompleter.complete$1(0, code);
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     ProcessResult: {
       "^": "Object;exit<,stdout<,stderr<",
@@ -13944,7 +13937,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(p) {
         return J.get$directory$x(p);
-      }, null, null, 2, 0, null, 47, "call"]
+      }, null, null, 2, 0, null, 48, "call"]
     },
     ProjectManager__fullScanForProjects_closure0: {
       "^": "Closure:2;_captured_dir_0",
@@ -13962,7 +13955,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(p) {
         return J.get$directory$x(p);
-      }, null, null, 2, 0, null, 47, "call"]
+      }, null, null, 2, 0, null, 48, "call"]
     },
     ProjectManager__handleRemovedDirs_closure: {
       "^": "Closure:29;_projects$_box_0,_projects$_captured_this_1",
@@ -14170,7 +14163,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t1 = $.get$atom0()._notifications;
           t1.invoke$3("addWarning", "Unable to auto-locate a Dart SDK.", t1._options$3$detail$dismissable$icon(null, null, null));
         }
-      }, null, null, 2, 0, null, 48, "call"]
+      }, null, null, 2, 0, null, 49, "call"]
     },
     Sdk: {
       "^": "Object;directory>",
@@ -14214,7 +14207,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(data) {
         return J.trim$0$s(data);
-      }, null, null, 2, 0, null, 49, "call"]
+      }, null, null, 2, 0, null, 50, "call"]
     },
     SdkDiscovery: {
       "^": "Object;",
@@ -14365,7 +14358,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(p) {
         return P.print("panel was destroyed");
-      }, null, null, 2, 0, null, 47, "call"]
+      }, null, null, 2, 0, null, 48, "call"]
     },
     smokeTest_closure0: {
       "^": "Closure:2;",
@@ -14377,7 +14370,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_captured_childFile_0",
       call$1: [function(contents) {
         return P.print("read " + H.S(this._captured_childFile_0) + " contents");
-      }, null, null, 2, 0, null, 50, "call"]
+      }, null, null, 2, 0, null, 51, "call"]
     },
     smokeTest_closure2: {
       "^": "Closure:2;",
@@ -14420,7 +14413,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(code) {
         return P.print("exit code: " + H.S(code));
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     smokeTest_closure9: {
       "^": "Closure:2;",
@@ -14432,20 +14425,20 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(ver) {
         return P.print("sdk version " + H.S(ver));
-      }, null, null, 2, 0, null, 51, "call"]
+      }, null, null, 2, 0, null, 52, "call"]
     },
     smokeTest_closure11: {
       "^": "Closure:6;",
       call$1: [function(foundSdk) {
         P.print("discoverSdk: " + H.S(foundSdk));
-      }, null, null, 2, 0, null, 52, "call"]
+      }, null, null, 2, 0, null, 53, "call"]
     },
     smokeTest_closure12: {
       "^": "Closure:0;",
-      call$0: [function() {
+      call$0: function() {
         var t1 = $.get$atom0()._notifications;
         t1.invoke$3("addSuccess", "Hello world from dart-lang!", t1._options$3$detail$dismissable$icon(null, null, null));
-      }, null, null, 0, 0, null, "call"]
+      }
     },
     _TestJob: {
       "^": "Job;seconds,_smoketest$_infoAction,name,schedulingRule",
@@ -14454,15 +14447,12 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       },
       run$0: function() {
         return P.Future_Future$delayed(P.Duration$(0, 0, 0, 0, 0, this.seconds), null, null);
-      },
-      infoAction$0: function() {
-        return this.get$infoAction().call$0();
       }
     }
   }], ["atom.state", "package:atom_dart_lang_experimental/state.dart",, K, {}], ["atom.status", "package:atom_dart_lang_experimental/impl/status_display.dart",, E, {
     "^": "",
     StatusDisplay: {
-      "^": "Object;_status$_disposables,_status$_subscription,_statusbarTile,_timer,_jobsPanel,_jobsPanelElement",
+      "^": "Object;_status$_disposables,_status$_subscription,_statusbarTile,_timer,_jobsPanel,_titleElement,_listGroup",
       dispose$0: [function() {
         this._status$_subscription.cancel$0();
         this._statusbarTile.invoke$1("destroy");
@@ -14472,165 +14462,125 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t1.invoke$1("destroy");
       }, "call$0", "get$dispose", 0, 0, 1],
       _createJobsPanel$0: function() {
-        var t1, title, div, ol;
-        t1 = document.createElement("div", null);
-        this._jobsPanelElement = t1;
-        J.get$classes$x(t1).add$1(0, "jobs-dialog");
-        title = document.createElement("div", null);
-        J.get$classes$x(title).add$1(0, "jobs-title");
-        J.get$children$x(this._jobsPanelElement).add$1(0, title);
-        div = document.createElement("div", null);
-        t1 = J.getInterceptor$x(div);
-        t1.get$classes(div).add$1(0, "select-list");
-        J.get$children$x(this._jobsPanelElement).add$1(0, div);
-        ol = W._ElementFactoryProvider_createElement_tag("ol", null);
-        J.get$classes$x(ol).add$1(0, "list-group");
-        t1.get$children(div).add$1(0, ol);
-        t1 = $.get$atom0()._workspace;
-        t1 = new E.Panel(t1.invoke$2("addModalPanel", t1._panelOptions$3(this._jobsPanelElement, false, null)));
-        this._jobsPanel = t1;
-        t1.get$onDidDestroy()._createSubscription$4(new E.StatusDisplay__createJobsPanel_closure(this), null, null, false);
+        var panelElement, t1, t2, t3;
+        panelElement = K.CoreElement$("div", null, "jobs-dialog", null);
+        t1 = K.CoreElement$("div", null, "jobs-title", null);
+        this._titleElement = t1;
+        t2 = K.CoreElement$("div", null, "select-list", null);
+        t3 = K.CoreElement$("ol", null, "list-group", null);
+        this._listGroup = t3;
+        t2.add$1(0, [t3]);
+        panelElement.add$1(0, [t1, t2]);
+        t2 = $.get$atom0()._workspace;
+        t2 = new E.Panel(t2.invoke$2("addModalPanel", t2._panelOptions$3(panelElement.element, false, null)));
+        this._jobsPanel = t2;
+        t2.get$onDidDestroy()._createSubscription$4(new E.StatusDisplay__createJobsPanel_closure(this), null, null, false);
       },
+      _showJobsDialog$0: [function() {
+        this._jobsPanel.invoke$1("show");
+        this._updateJobsDialog$0();
+      }, "call$0", "get$_showJobsDialog", 0, 0, 1],
       _updateJobsDialog$0: function() {
-        var title, t1, ol, t2, t3, _i, jobInstance, job, t4, item, t5, t6, block, t7, t8, t9;
-        if (this._jobsPanel == null || this._jobsPanelElement == null)
+        var t1, t2, t3, _i, jobInstance, job, item, t4, t5, t6;
+        if (this._jobsPanel == null)
           return;
-        title = this._jobsPanelElement.querySelector("div.jobs-title");
-        t1 = $.get$jobs()._jobs;
-        title.textContent = H.setRuntimeTypeInfo(t1.slice(), [H.getTypeArgumentByIndex(t1, 0)]).length === 0 ? "No running jobs." : "";
-        ol = this._jobsPanelElement.querySelector("div ol");
-        t2 = J.getInterceptor$x(ol);
-        t2.get$children(ol).clear$0(0);
-        t1 = H.setRuntimeTypeInfo(t1.slice(), [H.getTypeArgumentByIndex(t1, 0)]);
-        t3 = t1.length;
+        t1 = this._titleElement;
+        t2 = $.get$jobs()._jobs;
+        t3 = H.setRuntimeTypeInfo(t2.slice(), [H.getTypeArgumentByIndex(t2, 0)]).length === 0 ? "No running jobs." : "";
+        J.set$text$x(t1.element, t3);
+        J.clear$0$ax(J.get$children$x(this._listGroup.element));
+        t1 = H.setRuntimeTypeInfo(t2.slice(), [H.getTypeArgumentByIndex(t2, 0)]);
+        t2 = t1.length;
         _i = 0;
-        for (; _i < t1.length; t1.length === t3 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
+        for (; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
           jobInstance = t1[_i];
           job = jobInstance.get$job();
-          t4 = W._ElementFactoryProvider_createElement_tag("li", null);
-          item = new K.CoreElement(t4);
-          t5 = J.getInterceptor$x(t4);
-          t5.setAttribute$2(t4, "layout", "");
-          t5.setAttribute$2(t4, "horizontal", "");
-          if (C.JSString_methods.contains$1("job-container", " "))
-            H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-          t5.get$classes(t4).add$1(0, "job-container");
-          t5 = W._ElementFactoryProvider_createElement_tag("div", null);
-          t6 = new K.CoreElement(t5);
+          item = K.CoreElement$("li", null, "job-container", null);
+          t3 = item.element;
+          t4 = J.getInterceptor$x(t3);
+          t4.setAttribute$2(t3, "layout", "");
+          t4.setAttribute$2(t3, "horizontal", "");
+          t3 = K.CoreElement$("div", null, null, null);
           if (C.JSString_methods.contains$1("inline-block", " "))
             H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-          J.get$classes$x(t5).add$1(0, "inline-block");
-          t6.toggleAttribute$2("flex", true);
-          title = item.add$1(0, t6);
-          t5 = job.name;
-          if (jobInstance.get$isRunning())
-            t5 += "\u2026";
-          J.set$text$x(title.element, t5);
-          if (jobInstance.get$isRunning()) {
-            t5 = W._ElementFactoryProvider_createElement_tag("div", null);
+          t4 = t3.element;
+          t5 = J.getInterceptor$x(t4);
+          t5.get$classes(t4).add$1(0, "inline-block");
+          t3.flex$0();
+          t6 = job.name;
+          t5.set$text(t4, jobInstance.get$isRunning() ? t6 + "\u2026" : t6);
+          item.add$1(0, [t3]);
+          if (job.get$infoAction() != null) {
+            t3 = K.CoreElement$("div", null, "info", null);
             if (C.JSString_methods.contains$1("inline-block", " "))
               H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-            t6 = J.getInterceptor$x(t5);
-            t6.get$classes(t5).add$1(0, "inline-block");
-            if (C.JSString_methods.contains$1("jobs-progress", " "))
+            t4 = t3.element;
+            t5 = J.getInterceptor$x(t4);
+            t5.get$classes(t4).add$1(0, "inline-block");
+            t5.get$classes(t4).addAll$1(0, ["icon", "icon-question"]);
+            t3.click$1(0, job.get$infoAction());
+            item.add$1(0, [t3]);
+          }
+          if (jobInstance.get$isRunning()) {
+            t3 = K.CoreElement$("div", null, "jobs-progress", null);
+            if (C.JSString_methods.contains$1("inline-block", " "))
               H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-            t6.get$classes(t5).add$1(0, "jobs-progress");
-            block = item.add$1(0, new K.CoreElement(t5));
-            t5 = W._ElementFactoryProvider_createElement_tag("div", null);
-            t6 = new K.ProgressElement(null, t5);
+            J.get$classes$x(t3.element).add$1(0, "inline-block");
+            t4 = W._ElementFactoryProvider_createElement_tag("div", null);
+            t5 = new K.ProgressElement(null, t4);
+            t5.CoreElement$4$attributes$classes$text("div", null, null, null);
             if (C.JSString_methods.contains$1("block", " "))
               H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-            J.get$classes$x(t5).add$1(0, "block");
-            t5 = W._ElementFactoryProvider_createElement_tag("progress", null);
+            J.get$classes$x(t4).add$1(0, "block");
+            t4 = K.CoreElement$("progress", null, null, null);
             if (C.JSString_methods.contains$1("inline-block", " "))
               H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-            J.get$classes$x(t5).add$1(0, "inline-block");
-            t6._progress = t6.add$1(0, new K.CoreElement(t5));
-            block.add$1(0, t6);
+            J.get$classes$x(t4.element).add$1(0, "inline-block");
+            t5._progress = t5.add$1(0, t4);
+            t3.add$1(0, [t5]);
+            item.add$1(0, [t3]);
           }
-          if (job.get$infoAction() != null) {
-            t5 = W._ElementFactoryProvider_createElement_tag("div", null);
-            if (C.JSString_methods.contains$1("inline-block", " "))
-              H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-            t6 = J.getInterceptor$x(t5);
-            t6.get$classes(t5).add$1(0, "inline-block");
-            if (C.JSString_methods.contains$1("info", " "))
-              H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-            t6.get$classes(t5).add$1(0, "info");
-            if (C.JSString_methods.contains$1("icon", " "))
-              H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-            t6.get$classes(t5).add$1(0, "icon");
-            if (C.JSString_methods.contains$1("icon-question", " "))
-              H.throwExpression(P.ArgumentError$("spaces not allowed in class names"));
-            t6.get$classes(t5).add$1(0, "icon-question");
-            t5 = J.get$onClick$x(item.add$1(0, new K.CoreElement(t5)).element);
-            t6 = t5._eventType;
-            t7 = t5._useCapture;
-            t8 = new W._EventStreamSubscription(0, t5._html$_target, t6, W._wrapZone(new E.StatusDisplay__updateJobsDialog_closure(job)), t7);
-            t8.$builtinTypeInfo = [H.getTypeArgumentByIndex(t5, 0)];
-            t5 = t8._html$_onData;
-            t9 = t5 != null;
-            if (t9 && t8._pauseCount <= 0) {
-              t8 = t8._html$_target;
-              t8.toString;
-              if (t9)
-                J._addEventListener$3$x(t8, t6, t5, t7);
-            }
-          }
-          t2.get$children(ol).add$1(0, t4);
+          this._listGroup.add$1(0, item);
         }
       },
-      StatusDisplay$1: function(statusBar) {
-        var t1, statusElement, t2, m, spinner, textLabel;
-        t1 = W._ElementFactoryProvider_createElement_tag("div", null);
-        statusElement = new K.CoreElement(t1);
-        statusElement.CoreElement$2$text("div", null);
+      StatusDisplay$1: function(statusBar, _box_0) {
+        var statusElement, spinner, textLabel, m, t1, t2;
+        _box_0._captured_spinner_0 = null;
+        _box_0._captured_textLabel_1 = null;
+        statusElement = K.CoreElement$("div", null, "job-status-bar", null);
         statusElement.clazz$1("inline-block");
-        statusElement.clazz$1("job-status-bar");
-        t2 = J.get$onClick$x(t1);
-        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t2._html$_target, t2._eventType, W._wrapZone(new E.StatusDisplay_closure(this)), t2._useCapture), [H.getTypeArgumentByIndex(t2, 0)])._tryResume$0();
-        m = P.LinkedHashMap__makeLiteral(["item", t1]);
-        m.$indexSet(0, "priority", 10000);
-        this._statusbarTile = new T.Tile(statusBar.invoke$2("addRightTile", m));
-        spinner = K.CoreElement$("img", null);
+        statusElement.click$1(0, this.get$_showJobsDialog());
+        spinner = K.CoreElement$("img", null, null, null);
         spinner.clazz$1("inline-block-tight");
         spinner.clazz$1("status-spinner");
         J.setAttribute$2$x(spinner.element, "src", "atom://dart-lang-experimental/images/gear.svg");
-        statusElement.add$1(0, spinner);
-        textLabel = new K.CoreElement(W._ElementFactoryProvider_createElement_tag("div", null));
-        textLabel.CoreElement$2$text("div", null);
+        _box_0._captured_spinner_0 = spinner;
+        textLabel = K.CoreElement$("div", null, "text-label text-highlight", null);
         textLabel.clazz$1("inline-block-tight");
-        textLabel.clazz$1("text-label");
-        textLabel.clazz$1("text-highlight");
-        statusElement.add$1(0, textLabel);
+        _box_0._captured_textLabel_1 = textLabel;
+        statusElement.add$1(0, [spinner, textLabel]);
+        m = P.LinkedHashMap__makeLiteral(["item", statusElement.element]);
+        m.$indexSet(0, "priority", 1000);
+        this._statusbarTile = new T.Tile(statusBar.invoke$2("addRightTile", m));
         this._createJobsPanel$0();
         t1 = $.get$jobs()._jobs0$_controller;
-        this._status$_subscription = H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new E.StatusDisplay_closure0(this, statusElement, spinner, textLabel));
+        this._status$_subscription = H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new E.StatusDisplay_closure(_box_0, this, statusElement));
         t1 = $.get$atom0();
         t2 = this._status$_disposables._disposables;
-        t2.push(t1._commands.add$3(0, "atom-text-editor", "core:cancel", new E.StatusDisplay_closure1(this)));
-        t2.push(t1._commands.add$3(0, "atom-workspace", "dart-lang-experimental:show-jobs", new E.StatusDisplay_closure2(this)));
+        t2.push(t1._commands.add$3(0, "atom-text-editor", "core:cancel", new E.StatusDisplay_closure0(this)));
+        t2.push(t1._commands.add$3(0, "atom-workspace", "dart-lang-experimental:show-jobs", new E.StatusDisplay_closure1(this)));
       },
       $isDisposable: 1,
       static: {StatusDisplay$: function(statusBar) {
-          var t1 = new E.StatusDisplay(new G.Disposables([]), null, null, null, null, null);
-          t1.StatusDisplay$1(statusBar);
+          var t1 = new E.StatusDisplay(new G.Disposables([]), null, null, null, null, null, null);
+          t1.StatusDisplay$1(statusBar, {});
           return t1;
         }}
     },
     StatusDisplay_closure: {
-      "^": "Closure:2;_status$_captured_this_0",
+      "^": "Closure:2;_status$_box_0,_status$_captured_this_1,_captured_statusElement_2",
       call$1: [function(_) {
-        var t1 = this._status$_captured_this_0;
-        t1._jobsPanel.invoke$1("show");
-        t1._updateJobsDialog$0();
-        return;
-      }, null, null, 2, 0, null, 27, "call"]
-    },
-    StatusDisplay_closure0: {
-      "^": "Closure:2;_status$_captured_this_1,_captured_statusElement_2,_captured_spinner_3,_captured_textLabel_4",
-      call$1: [function(_) {
-        var job, showing, t1, t2, t3;
+        var job, showing, t1, t2, t3, t4, t5;
         job = $.get$jobs().get$activeJob();
         showing = job != null;
         t1 = this._status$_captured_this_1;
@@ -14639,37 +14589,39 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t2.cancel$0();
           t1._timer = null;
         }
-        t2 = this._captured_textLabel_4;
+        t2 = this._status$_box_0;
         t3 = this._captured_statusElement_2;
         if (showing) {
-          J.set$text$x(t2.element, job.name + "\u2026");
+          t4 = t2._captured_textLabel_1;
+          t5 = job.name + "\u2026";
+          J.set$text$x(t4.element, t5);
           J.get$classes$x(t3.element).toggle$2(0, "showing", true);
         } else
-          t1._timer = P.Timer_Timer(C.Duration_400000, new E.StatusDisplay__closure(t3, t2));
-        J.get$classes$x(t2.element).toggle$2(0, "showing", showing);
-        J.get$classes$x(this._captured_spinner_3.element).toggle$2(0, "showing", showing);
+          t1._timer = P.Timer_Timer(C.Duration_400000, new E.StatusDisplay__closure(t2, t3));
+        J.get$classes$x(t2._captured_textLabel_1.element).toggle$2(0, "showing", showing);
+        J.get$classes$x(t2._captured_spinner_0.element).toggle$2(0, "showing", showing);
         t1._updateJobsDialog$0();
       }, null, null, 2, 0, null, 27, "call"]
     },
     StatusDisplay__closure: {
-      "^": "Closure:0;_captured_statusElement_5,_captured_textLabel_6",
+      "^": "Closure:0;_status$_box_0,_captured_statusElement_3",
       call$0: function() {
-        J.set$text$x(this._captured_textLabel_6.element, "");
-        J.get$classes$x(this._captured_statusElement_5.element).toggle$2(0, "showing", false);
+        J.set$text$x(this._status$_box_0._captured_textLabel_1.element, "");
+        J.get$classes$x(this._captured_statusElement_3.element).toggle$2(0, "showing", false);
       }
     },
-    StatusDisplay_closure1: {
-      "^": "Closure:2;_captured_this_7",
+    StatusDisplay_closure0: {
+      "^": "Closure:2;_status$_captured_this_4",
       call$1: function(_) {
-        var t1 = this._captured_this_7._jobsPanel;
+        var t1 = this._status$_captured_this_4._jobsPanel;
         if (t1 != null)
           t1.invoke$1("hide");
       }
     },
-    StatusDisplay_closure2: {
-      "^": "Closure:2;_captured_this_8",
+    StatusDisplay_closure1: {
+      "^": "Closure:2;_status$_captured_this_5",
       call$1: function(_) {
-        var t1 = this._captured_this_8;
+        var t1 = this._status$_captured_this_5;
         t1._jobsPanel.invoke$1("show");
         t1._updateJobsDialog$0();
         return;
@@ -14679,12 +14631,6 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_status$_captured_this_0",
       call$1: [function(_) {
         this._status$_captured_this_0._jobsPanel = null;
-      }, null, null, 2, 0, null, 27, "call"]
-    },
-    StatusDisplay__updateJobsDialog_closure: {
-      "^": "Closure:2;_captured_job_0",
-      call$1: [function(_) {
-        return this._captured_job_0.infoAction$0();
       }, null, null, 2, 0, null, 27, "call"]
     }
   }], ["atom.statusbar", "package:atom_dart_lang_experimental/atom_statusbar.dart",, T, {
@@ -15172,6 +15118,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       },
       add$1: function(receiver, value) {
         throw H.wrapException(new P.UnsupportedError("Cannot add to a fixed-length list"));
+      },
+      clear$0: function(receiver) {
+        throw H.wrapException(new P.UnsupportedError("Cannot clear a fixed-length list"));
       }
     },
     Symbol0: {
@@ -15358,7 +15307,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       P._rootHandleUncaughtError(null, null, t1, error, stackTrace);
     }, function(error) {
       return P._nullErrorHandler(error, null);
-    }, "call$2", "call$1", "_nullErrorHandler$closure", 2, 2, 31, 43, 12, 13],
+    }, "call$2", "call$1", "_nullErrorHandler$closure", 2, 2, 31, 44, 12, 13],
     _nullDoneHandler: [function() {
     }, "call$0", "_nullDoneHandler$closure", 0, 0, 1],
     _runUserCode: function(userCode, onSuccess, onError) {
@@ -15946,7 +15895,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         P._Future__propagateToListeners(this, listeners);
       }, function(error) {
         return this._completeError$2(error, null);
-      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 31, 43, 12, 13],
+      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 31, 44, 12, 13],
       _asyncComplete$1: function(value) {
         var t1;
         if (value == null)
@@ -16120,7 +16069,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this._captured_target_1._completeError$2(error, stackTrace);
       }, function(error) {
         return this.call$2(error, null);
-      }, "call$1", null, null, null, 2, 2, null, 43, 12, 13, "call"]
+      }, "call$1", null, null, null, 2, 2, null, 44, 12, 13, "call"]
     },
     _Future__chainForeignFuture_closure1: {
       "^": "Closure:0;_captured_target_2,_captured_e_3,_captured_s_4",
@@ -16259,7 +16208,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_box_2,_captured_result_11",
       call$1: [function(ignored) {
         P._Future__propagateToListeners(this._box_2._captured_source_4, new P._FutureListener(null, this._captured_result_11, 0, null, null));
-      }, null, null, 2, 0, null, 53, "call"]
+      }, null, null, 2, 0, null, 54, "call"]
     },
     _Future__propagateToListeners_handleWhenCompleteCallback_closure0: {
       "^": "Closure:32;_async$_box_0,_captured_result_12",
@@ -16274,7 +16223,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         P._Future__propagateToListeners(t1._captured_completeResult_0, new P._FutureListener(null, this._captured_result_12, 0, null, null));
       }, function(error) {
         return this.call$2(error, null);
-      }, "call$1", null, null, null, 2, 2, null, 43, 12, 13, "call"]
+      }, "call$1", null, null, null, 2, 2, null, 44, 12, 13, "call"]
     },
     _AsyncCallbackEntry: {
       "^": "Object;callback,zone<,next<",
@@ -16342,7 +16291,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = this._async$_box_0;
         t2 = this._captured_future_3;
         P._runUserCode(new P.Stream_contains__closure(this._captured_needle_2, element), new P.Stream_contains__closure0(t1, t2), P._cancelAndErrorClosure(t1._captured_subscription_0, t2));
-      }, null, null, 2, 0, null, 54, "call"],
+      }, null, null, 2, 0, null, 55, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -16372,7 +16321,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure;_async$_box_0,_async$_captured_this_1,_captured_action_2,_captured_future_3",
       call$1: [function(element) {
         P._runUserCode(new P.Stream_forEach__closure(this._captured_action_2, element), new P.Stream_forEach__closure0(), P._cancelAndErrorClosure(this._async$_box_0._captured_subscription_0, this._captured_future_3));
-      }, null, null, 2, 0, null, 54, "call"],
+      }, null, null, 2, 0, null, 55, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -16424,7 +16373,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure;_async$_captured_this_0,_async$_captured_result_1",
       call$1: [function(data) {
         this._async$_captured_result_1.push(data);
-      }, null, null, 2, 0, null, 49, "call"],
+      }, null, null, 2, 0, null, 50, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -17099,7 +17048,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return H.computeSignature(function(T) {
           return {func: 1, void: true, args: [T]};
         }, this.$receiver, "_StreamIteratorImpl");
-      }, 49],
+      }, 50],
       _onError$2: [function(error, stackTrace) {
         var hasNext;
         if (this._state === 2) {
@@ -17113,7 +17062,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this._state = 4;
       }, function(error) {
         return this._onError$2(error, null);
-      }, "_onError$1", "call$2", "call$1", "get$_onError", 2, 2, 34, 43, 12, 13],
+      }, "_onError$1", "call$2", "call$1", "get$_onError", 2, 2, 34, 44, 12, 13],
       _onDone$0: [function() {
         if (this._state === 2) {
           var hasNext = this._futureOrPrefetch;
@@ -17203,7 +17152,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return H.computeSignature(function(S, T) {
           return {func: 1, void: true, args: [S]};
         }, this.$receiver, "_ForwardingStreamSubscription");
-      }, 49],
+      }, 50],
       _handleError$2: [function(error, stackTrace) {
         this._addError$2(error, stackTrace);
       }, "call$2", "get$_handleError", 4, 0, 35, 12, 13],
@@ -17400,7 +17349,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     }, "call$2", "_defaultEquals$closure", 4, 0, 45],
     _defaultHashCode: [function(a) {
       return J.get$hashCode$(a);
-    }, "call$1", "_defaultHashCode$closure", 2, 0, 46, 55],
+    }, "call$1", "_defaultHashCode$closure", 2, 0, 46, 56],
     IterableBase_iterableToShortString: function(iterable, leftDelimiter, rightDelimiter) {
       var parts, t1;
       if (P._isToStringVisiting(iterable)) {
@@ -18177,6 +18126,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this.set$length(receiver, t1 + 1);
         this.$indexSet(receiver, t1, element);
       },
+      clear$0: function(receiver) {
+        this.set$length(receiver, 0);
+      },
       indexOf$2: function(receiver, element, startIndex) {
         var i;
         if (startIndex >= this.get$length(receiver))
@@ -18212,6 +18164,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     _UnmodifiableMapMixin: {
       "^": "Object;",
       $indexSet: function(_, key, value) {
+        throw H.wrapException(new P.UnsupportedError("Cannot modify unmodifiable map"));
+      },
+      clear$0: function(_) {
         throw H.wrapException(new P.UnsupportedError("Cannot modify unmodifiable map"));
       },
       $isMap: 1
@@ -20108,6 +20063,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       add$1: function(_, value) {
         this._this.appendChild(value);
       },
+      clear$0: function(_) {
+        J._clearChildren$0$x(this._this);
+      },
       $indexSet: function(_, index, value) {
         var t1, t2;
         t1 = this._this;
@@ -20562,9 +20520,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
             return false;
           }
         }, _ElementCssClassSet__addAll: function(_element, iterable) {
-          var list, _i;
+          var list, t1, _i;
           list = _element.classList;
-          for (_i = 0; _i < 3; ++_i)
+          for (t1 = iterable.length, _i = 0; _i < iterable.length; iterable.length === t1 || (0, H.throwConcurrentModificationError)(iterable), ++_i)
             list.add(iterable[_i]);
         }}
     },
@@ -20970,7 +20928,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       }
       dartArgs = P.List_List$from(J.map$1$ax($arguments, P._convertToDart$closure()), true, null);
       return P._convertToJS(H.Primitives_applyFunctionWithPositionalArguments(callback, dartArgs));
-    }, null, null, 8, 0, null, 56, 57, 58, 59],
+    }, null, null, 8, 0, null, 57, 58, 59, 60],
     _defineProperty: function(o, $name, value) {
       var exception;
       if (Object.isExtensible(o) && !Object.prototype.hasOwnProperty.call(o, $name))
@@ -21001,7 +20959,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       if (!!t1.$isFunction)
         return P._getJsProxy(o, "$dart_jsFunction", new P._convertToJS_closure());
       return P._getJsProxy(o, "_$dart_jsObject", new P._convertToJS_closure0($.get$_dartProxyCtor()));
-    }, "call$1", "_convertToJS$closure", 2, 0, 2, 60],
+    }, "call$1", "_convertToJS$closure", 2, 0, 2, 61],
     _getJsProxy: function(o, propertyName, createProxy) {
       var jsProxy = P._getOwnProperty(o, propertyName);
       if (jsProxy == null) {
@@ -21029,7 +20987,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         else
           return P._wrapToDart(o);
       }
-    }, "call$1", "_convertToDart$closure", 2, 0, 47, 60],
+    }, "call$1", "_convertToDart$closure", 2, 0, 47, 61],
     _wrapToDart: function(o) {
       if (typeof o == "function")
         return P._getDartProxy(o, $.get$_DART_CLOSURE_PROPERTY_NAME(), new P._wrapToDart_closure());
@@ -21132,7 +21090,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           return convertedList;
         } else
           return P._convertToJS(o);
-      }, null, null, 2, 0, null, 60, "call"]
+      }, null, null, 2, 0, null, 61, "call"]
     },
     JsFunction: {
       "^": "JsObject;_jsObject",
@@ -22088,7 +22046,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = J.getInterceptor$asx(contents);
         index = t1.lastIndexOf$1(contents, "if (document.currentScript) {");
         this._captured_file_2.invoke$2("writeSync", "var self = Object.create(this);\nself.require = require;\nself.module = module;\nself.window = window;\nself.atom = atom;\nself.exports = exports;\nself.Object = Object;\nself.Promise = Promise;\nself.setTimeout = function(f, millis) { window.setTimeout(f, millis); };\n\n" + (t1.substring$2(contents, 0, index) + "if (true) { // document.currentScript" + t1.substring$1(contents, index + 29)));
-      }, null, null, 2, 0, null, 50, "call"]
+      }, null, null, 2, 0, null, 51, "call"]
     },
     RebuildJob_run__closure0: {
       "^": "Closure:2;",
@@ -22251,6 +22209,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
   };
   J.add$1$ax = function(receiver, a0) {
     return J.getInterceptor$ax(receiver).add$1(receiver, a0);
+  };
+  J.clear$0$ax = function(receiver) {
+    return J.getInterceptor$ax(receiver).clear$0(receiver);
   };
   J.compareTo$1$ns = function(receiver, a0) {
     return J.getInterceptor$ns(receiver).compareTo$1(receiver, a0);
@@ -22737,7 +22698,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
   }, "_loggers"]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
-  init.metadata = ["invocation", "object", "sender", "e", "x", "closure", "isolate", "numberOfArguments", "arg1", "arg2", "arg3", "arg4", "error", "stackTrace", "result", "each", "obj", "m", "message", "arg", "ed", "item", "dir", "entry", "currentProjects", "newSdk", "file", "_", "value", "exitCode", "busy", "editor", "str", "status", "val", "rec", "evt", "errorCallback", "resolve", "reject", "jsEditor", "lints", "lint", null, "state", "code", "s", "p", "sdkPath", "data", "contents", "ver", "foundSdk", "ignored", "element", "a", "callback", "captureThis", "self", "arguments", "o"];
+  init.metadata = ["invocation", "object", "sender", "e", "x", "closure", "isolate", "numberOfArguments", "arg1", "arg2", "arg3", "arg4", "error", "stackTrace", "result", "each", "obj", "m", "message", "arg", "ed", "item", "dir", "entry", "currentProjects", "newSdk", "file", "_", "value", "exitCode", "busy", "editor", "str", "status", "val", "c", "rec", "evt", "errorCallback", "resolve", "reject", "jsEditor", "lints", "lint", null, "state", "code", "s", "p", "sdkPath", "data", "contents", "ver", "foundSdk", "ignored", "element", "a", "callback", "captureThis", "self", "arguments", "o"];
   init.types = [{func: 1}, {func: 1, void: true}, {func: 1, args: [,]}, {func: 1, args: [P.String,,]}, {func: 1, args: [, P.StackTrace]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, void: true, args: [P.String]}, {func: 1, ret: P.Map}, {func: 1, args: [,,]}, {func: 1, ret: P.bool}, {func: 1, void: true, args: [[P.List, L.DartProject]]}, {func: 1, void: true, args: [V.Sdk]}, {func: 1, void: true, args: [E.TextEditor]}, {func: 1, void: true, args: [E.File]}, {func: 1, args: [N.AnalysisNavigation]}, {func: 1, args: [N.HoverResult]}, {func: 1, args: [E.TextEditor]}, {func: 1, args: [N.ErrorsResult]}, {func: 1, args: [N.AnalysisError]}, {func: 1, args: [P.$int]}, {func: 1, args: [N.ServerStatus]}, {func: 1, void: true, args: [,]}, {func: 1, args: [N.LogRecord]}, {func: 1, void: true, args: [{func: 1, void: true, args: [,]}]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, void: true, opt: [P.Map]}, {func: 1, args: [E.AtomEvent]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, args: [E.Directory]}, {func: 1, args: [{func: 1, void: true}]}, {func: 1, void: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [,], opt: [,]}, {func: 1, args: [P.bool]}, {func: 1, void: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, void: true, args: [, P.StackTrace]}, {func: 1, args: [P.Symbol,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, ret: N.ServerStatus, args: [P.Map]}, {func: 1, ret: N.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: N.ErrorsResult, args: [P.Map]}, {func: 1, ret: N.HoverResult, args: [P.Map]}, {func: 1, ret: P.$int, args: [N.AnalysisError, N.AnalysisError]}, {func: 1, void: true, args: [{func: 1, void: true}]}, {func: 1, ret: P.bool, args: [,,]}, {func: 1, ret: P.$int, args: [,]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.bool, args: [P.Object, P.Object]}, {func: 1, ret: P.$int, args: [P.Object]}, {func: 1, void: true, args: [P.Object]}, {func: 1, void: true, args: [E.AtomEvent]}];
   function convertToFastObject(properties) {
     function MyClass() {
