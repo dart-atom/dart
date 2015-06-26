@@ -69,12 +69,19 @@ class AnalysisServer implements Disposable {
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
 
-    disposables.add(atom.commands.add('atom-text-editor', 'dart-lang-experimental:show-dartdoc', (event) {
+    disposables.add(atom.commands.add('atom-text-editor',
+        'dart-lang-experimental:show-dartdoc', (event) {
       DartdocHelper.handleDartdoc(_server, event);
     }));
 
-    disposables.add(atom.commands.add('atom-text-editor', 'dart-lang-experimental:jump-to-declaration', (event) {
+    disposables.add(atom.commands.add('atom-text-editor',
+        'dart-lang-experimental:jump-to-declaration', (event) {
       DeclarationHelper.handleNavigate(_server, event);
+    }));
+
+    disposables.add(atom.commands.add('atom-text-editor',
+        'dart-lang-experimental:quick-fix', (event) {
+      QuickFixHelper.handleQuickFix(_server, event);
     }));
 
     onSend.listen((String message)    => _logger.finer('--> ${message}'));
@@ -373,6 +380,60 @@ class DeclarationHelper {
   }
 }
 
+class QuickFixHelper {
+  static void handleQuickFix(Server server, AtomEvent event) {
+    if (server == null) return;
+
+    TextEditor editor = event.editor;
+    String path = editor.getPath();
+    Range range = editor.getSelectedBufferRange();
+    int offset = editor.getBuffer().characterIndexForPosition(range.start);
+
+    server.edit.getFixes(path, offset).then((FixesResult result) {
+      List<AnalysisErrorFixes> fixes = result.fixes;
+
+      if (fixes.isEmpty) {
+        atom.beep();
+        return;
+      }
+
+      List<SourceChange> changes = fixes
+        .expand((fix) => fix.fixes)
+        .where((SourceChange change) =>
+            change.edits.every((SourceFileEdit edit) => edit.file == path))
+        .toList();
+
+      if (changes.isEmpty) {
+        atom.beep();
+        return;
+      }
+
+      if (changes.length == 1) {
+        // Apply the fix.
+        _applyChange(editor, changes.first);
+      } else {
+        // TODO: Show a selection dialog.
+        _logger.info('multiple fixes returned (${changes.length})');
+        atom.beep();
+      }
+    }).catchError((e) {
+      _logger.warning('${e}');
+      atom.beep();
+    });
+  }
+
+  static void _applyChange(TextEditor editor, SourceChange change) {
+    List<SourceFileEdit> sourceFileEdits = change.edits;
+    List<LinkedEditGroup> linkedEditGroups = change.linkedEditGroups;
+
+    List<SourceEdit> edits = sourceFileEdits.expand((e) => e.edits).toList();
+    EditorManager.applyEdits(editor, edits);
+    EditorManager.selectEditGroups(editor, linkedEditGroups);
+
+    atom.notifications.addSuccess(change.message);
+  }
+}
+
 class _AnalyzingJob extends Job {
   static const Duration _debounceDelay = const Duration(milliseconds: 400);
 
@@ -404,24 +465,15 @@ class _AnalyzingJob extends Job {
 }
 
 class _DartLinterProvider extends LinterProvider {
-  // TODO: Options are 'file' and 'project' scope, and lintOnFly true or false.
-  _DartLinterProvider() : super(grammarScopes: ['source.dart'], scope: 'file');
+  static final Map<String, String> _severityMap = {
+    'ERROR': LintMessage.ERROR,
+    'WARNING': LintMessage.WARNING,
+    'INFO': LintMessage.INFO
+  };
 
-  void register() =>
-      LinterProvider.registerLinterProvider('provideLinter', this);
+  static final String _infosPrefPath = '${pluginId}.showInfos';
 
-  Future<List<LintMessage>> lint(TextEditor editor) {
-    String filePath = editor.getPath();
-    return analysisServer.getErrors(filePath).then((ErrorsResult result) {
-      List<AnalysisError> issues = result.errors..sort(_errorComparer);
-      return issues.where((AnalysisError error) {
-        return error.severity == 'WARNING' || error.severity == 'ERROR';
-      }).map((e) => _cvtMessage(filePath, e)).toList();
-    }).catchError((e) {
-      print(e);
-      return [];
-    });
-  }
+  static bool _shouldShowInfos() => atom.config.get(_infosPrefPath);
 
   static int _errorComparer(AnalysisError a, AnalysisError b) {
     if (a.severity != b.severity) return _sev(b.severity) - _sev(a.severity);
@@ -438,13 +490,7 @@ class _DartLinterProvider extends LinterProvider {
     return 0;
   }
 
-  final Map<String, String> _severityMap = {
-    'ERROR': LintMessage.ERROR,
-    'WARNING': LintMessage.WARNING
-    //'INFO': LintMessage.INFO
-  };
-
-  LintMessage _cvtMessage(String filePath, AnalysisError error) {
+  static LintMessage _cvtMessage(String filePath, AnalysisError error) {
     return new LintMessage(
         type: _severityMap[error.severity],
         text: error.message,
@@ -452,9 +498,30 @@ class _DartLinterProvider extends LinterProvider {
         range: _cvtLocation(error.location));
   }
 
-  Rn _cvtLocation(Location location) {
+  static Rn _cvtLocation(Location location) {
     return new Rn(new Pt(location.startLine - 1, location.startColumn - 1),
         new Pt(location.startLine - 1, location.startColumn - 1 + location.length));
+  }
+
+  // TODO: Options are 'file' and 'project' scope, and lintOnFly true or false.
+  _DartLinterProvider() : super(grammarScopes: ['source.dart'], scope: 'file');
+
+  void register() =>
+      LinterProvider.registerLinterProvider('provideLinter', this);
+
+  Future<List<LintMessage>> lint(TextEditor editor) {
+    String filePath = editor.getPath();
+    return analysisServer.getErrors(filePath).then((ErrorsResult result) {
+      List<AnalysisError> issues = result.errors..sort(_errorComparer);
+      if (!_shouldShowInfos()) {
+        issues = issues.where((AnalysisError error) =>
+            error.severity == 'WARNING' || error.severity == 'ERROR');
+      }
+      return issues.map((e) => _cvtMessage(filePath, e)).toList();
+    }).catchError((e) {
+      print(e);
+      return [];
+    });
   }
 }
 

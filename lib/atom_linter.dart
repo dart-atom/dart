@@ -52,8 +52,7 @@ abstract class LinterProvider {
 class LintMessage {
   static const String ERROR = 'Error';
   static const String WARNING = 'Warning';
-  // TODO: We need support for infos.
-  //static const String INFO = 'Trace';
+  static const String INFO = 'Info';
 
   final String type;
   final String text;

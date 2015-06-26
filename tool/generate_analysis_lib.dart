@@ -365,6 +365,8 @@ class TypeDef {
     'AnalysisError',
     'SourceChange',
     'SourceFileEdit',
+    'LinkedEditGroup',
+    'Position',
     'NavigationRegion',
     'NavigationTarget'
   ]);

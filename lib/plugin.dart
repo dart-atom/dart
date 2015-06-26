@@ -98,6 +98,12 @@ class AtomDartPackage extends AtomPackage {
         'description': 'The location of the Dart SDK.',
         'type': 'string',
         'default': ''
+      },
+      'showInfos': {
+        'title': 'Show infos',
+        'description': 'Show informational level analysis issues.',
+        'type': 'boolean',
+        'default': true
       }
     };
   }

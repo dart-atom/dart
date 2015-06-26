@@ -6,10 +6,15 @@ library atom.editors;
 
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import 'atom.dart';
 import 'projects.dart';
 import 'state.dart';
 import 'utils.dart';
+import 'impl/analysis_server_gen.dart' show LinkedEditGroup, Position, SourceEdit;
+
+final Logger _logger = new Logger('editors');
 
 class EditorManager implements Disposable {
   static Duration _flashDuration = new Duration(milliseconds: 100);
@@ -20,6 +25,59 @@ class EditorManager implements Disposable {
     await new Future.delayed(_flashDuration);
     editor.setSelectedBufferRange(original);
     return new Future.delayed(_flashDuration);
+  }
+
+  /// Apply the given [SourceEdit]s in one atomic change.
+  static void applyEdits(TextEditor editor, List<SourceEdit> edits) {
+    sortEdits(edits);
+
+    TextBuffer buffer = editor.getBuffer();
+    buffer.createCheckpoint();
+
+    try {
+      edits.forEach((SourceEdit edit) {
+        Range range = new Range.fromPoints(
+          buffer.positionForCharacterIndex(edit.offset),
+          buffer.positionForCharacterIndex(edit.offset + edit.length)
+        );
+        buffer.setTextInRange(range, edit.replacement);
+      });
+
+      buffer.groupChangesSinceCheckpoint();
+    } catch (e) {
+      buffer.revertToCheckpoint();
+      _logger.warning('error applying source edits: ${e}');
+    }
+  }
+
+  /// Select the given edit groups in the text editor.
+  static void selectEditGroups(TextEditor editor, List<LinkedEditGroup> groups) {
+    if (groups.isEmpty) return;
+
+    // First, choose the bext group.
+    LinkedEditGroup group = groups.first;
+    int bestLength = group.positions.length;
+
+    for (LinkedEditGroup g in groups) {
+      if (g.positions.length > bestLength) {
+        group = g;
+        bestLength = group.positions.length;
+      }
+    }
+
+    // Select group.
+    TextBuffer buffer = editor.getBuffer();
+    List<Range> ranges = group.positions.map((Position position) {
+      return new Range.fromPoints(
+        buffer.positionForCharacterIndex(position.offset),
+        buffer.positionForCharacterIndex(position.offset + group.length));
+    }).toList();
+    editor.setSelectedBufferRanges(ranges);
+  }
+
+  /// Sort [SourceEdit]s last-to-first.
+  static void sortEdits(List<SourceEdit> edits) {
+    edits.sort((SourceEdit a, SourceEdit b) => b.offset - a.offset);
   }
 
   final StreamController<TextEditor> _editorController = new StreamController.broadcast();
