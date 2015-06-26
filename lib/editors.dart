@@ -12,6 +12,16 @@ import 'state.dart';
 import 'utils.dart';
 
 class EditorManager implements Disposable {
+  static Duration _flashDuration = new Duration(milliseconds: 100);
+
+  static Future flashSelection(TextEditor editor, Range range) async {
+    Range original = editor.getSelectedBufferRange();
+    editor.setSelectedBufferRange(range);
+    await new Future.delayed(_flashDuration);
+    editor.setSelectedBufferRange(original);
+    return new Future.delayed(_flashDuration);
+  }
+
   final StreamController<TextEditor> _editorController = new StreamController.broadcast();
   final StreamController<File> _fileController = new StreamController.broadcast();
 
