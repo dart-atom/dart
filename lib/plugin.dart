@@ -148,7 +148,6 @@ class DartAutocompleteProvider extends AutocompleteProvider {
       'provideAutocomplete', this);
 
   Future<List<Suggestion>> getSuggestions(AutocompleteOptions options) {
-    // TODO: autocomplete
     List<Suggestion> suggestions = [
       new Suggestion(text: 'lorem'),
       new Suggestion(text: 'ipsum')

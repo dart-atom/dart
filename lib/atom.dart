@@ -100,7 +100,19 @@ class Atom extends ProxyHolder {
   Project get project => _project;
   Workspace get workspace => _workspace;
 
+  String getVersion() => invoke('getVersion');
+
   void beep() => invoke('beep');
+
+  /// A flexible way to open a dialog akin to an alert dialog.
+  ///
+  /// Returns the chosen button index Number if the buttons option was an array.
+  int confirm(String message, {String detailedMessage, List<String> buttons}) {
+    Map m = {'message': message};
+    if (detailedMessage != null) m['detailedMessage'] = detailedMessage;
+    if (buttons != null) m['buttons'] = buttons;
+    return invoke('confirm', m);
+  }
 
   /// Reload the current window.
   void reload() => invoke('reload');

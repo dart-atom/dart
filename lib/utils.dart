@@ -54,6 +54,12 @@ String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
 /// default.
 String env(String key) => _process['env'][key];
 
+/// Ensure the first letter is lower-case.
+String toStartingLowerCase(String str) {
+  if (str == null || str.isEmpty) return null;
+  return str.substring(0, 1).toLowerCase() + str.substring(1);
+}
+
 abstract class Disposable {
   void dispose();
 }
