@@ -430,7 +430,8 @@ class QuickFixHelper {
     EditorManager.applyEdits(editor, edits);
     EditorManager.selectEditGroups(editor, linkedEditGroups);
 
-    atom.notifications.addSuccess(change.message);
+    atom.notifications.addSuccess(
+        'Executed quick fix: ${toStartingLowerCase(change.message)}');
   }
 }
 
