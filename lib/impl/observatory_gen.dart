@@ -80,21 +80,128 @@ class Observatory {
 
 // enums
 
+enum CodeKind { Dart, Native, Stub, Tag, Collected }
+
+enum ErrorKind {
+  /// The isolate has encountered an unhandled Dart exception.
+  UnhandledException,
+  /// The isolate has encountered a Dart language error in the program.
+  LanguageError,
+  /// The isolate has encounted an internal error. These errors should be
+  /// reported as bugs.
+  InternalError,
+  /// The isolate has been terminated by an external source.
+  TerminationError
+}
+
 /// Adding new values to [EventKind] is considered a backwards compatible
 /// change. Clients should ignore unrecognized events.
-enum EventKind { foo }
+enum EventKind {
+  /// Notification that a new isolate has started.
+  IsolateStart,
+  /// Notification that an isolate has exited.
+  IsolateExit,
+  /// Notification that isolate identifying information has changed. Currently
+  /// used to notify of changes to the isolate debugging name via setName.
+  IsolateUpdate,
+  /// An isolate has paused at start, before executing code.
+  PauseStart,
+  /// An isolate has paused at exit, before terminating.
+  PauseExit,
+  /// An isolate has paused at a breakpoint or due to stepping.
+  PauseBreakpoint,
+  /// An isolate has paused due to interruption via pause.
+  PauseInterrupted,
+  /// An isolate has paused due to an exception.
+  PauseException,
+  /// An isolate has started or resumed execution.
+  Resume,
+  /// A breakpoint has been added for an isolate.
+  BreakpointAdded,
+  /// An unresolved breakpoint has been resolved for an isolate.
+  BreakpointResolved,
+  /// A breakpoint has been removed.
+  BreakpointRemoved,
+  /// A garbage collection event.
+  GC
+}
 
 /// Adding new values to [InstanceKind] is considered a backwards compatible
 /// change. Clients should treat unrecognized instance kinds as [PlainInstance].
-enum InstanceKind { foo }
+enum InstanceKind {
+  /// A general instance of the Dart class Object.
+  PlainInstance,
+  /// null instance.
+  Null,
+  /// true or false.
+  Bool,
+  /// An instance of the Dart class double.
+  Double,
+  /// An instance of the Dart class int.
+  Int,
+  /// An instance of the Dart class String.
+  String,
+  /// An instance of the built-in VM List implementation. User-defined Lists
+  /// will be PlainInstance.
+  List,
+  /// An instance of the built-in VM Map implementation. User-defined Maps will
+  /// be PlainInstance.
+  Map,
+  /// An instance of the built-in VM TypedData implementations. User-defined
+  /// TypedDatas will be PlainInstance.
+  Uint8ClampedList,
+  Uint8List,
+  Uint16List,
+  Uint32List,
+  Uint64List,
+  Int8List,
+  Int16List,
+  Int32List,
+  Int64List,
+  Float32List,
+  Float64List,
+  Int32x4List,
+  Float32x4List,
+  Float64x2List,
+  /// An instance of the built-in VM Closure implementation. User-defined
+  /// Closures will be PlainInstance.
+  Closure,
+  /// An instance of the Dart class MirrorReference.
+  MirrorReference,
+  /// An instance of the Dart class RegExp.
+  RegExp,
+  /// An instance of the Dart class WeakProperty.
+  WeakProperty,
+  /// An instance of the Dart class Type
+  Type,
+  /// An instance of the Dart class TypeParamer
+  TypeParameter,
+  /// An instance of the Dart class TypeRef
+  TypeRef,
+  /// An instance of the Dart class BoundedType
+  BoundedType
+}
 
 /// A [SentinelKind] is used to distinguish different kinds of [Sentinel]
 /// objects.
-enum SentinelKind { foo }
+enum SentinelKind {
+  /// Indicates that the object referred to has been collected by the GC.
+  Collected,
+  /// Indicates that an object id has expired.
+  Expired,
+  /// Indicates that a variable or field has not been initialized.
+  NotInitialized,
+  /// Indicates that a variable or field is in the process of being initialized.
+  BeingInitialized,
+  /// Indicates that a variable has been eliminated by the optimizing compiler.
+  OptimizedOut,
+  /// Reserved for future use.
+  Free
+}
 
 /// A [StepOption] indicates which form of stepping is requested in a resume
 /// RPC.
-enum StepOption { foo }
+enum StepOption { Into, Over, Out }
 
 // types
 

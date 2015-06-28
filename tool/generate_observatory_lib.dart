@@ -14,8 +14,6 @@ bool _isHeader(Node node) => node is Element && node.tag.startsWith('h');
 String _textForElement(Node node) => (((node as Element).children.first) as Text).text;
 String _textForCode(Node node) => _textForElement((node as Element).children.first);
 
-// TODO: write a tokenizer
-
 main(List<String> args) {
   // Parse service.md into a model.
   File file = new File('tool/service.md');
@@ -33,7 +31,13 @@ main(List<String> args) {
   print('Wrote ${outputFile.path}.');
 }
 
-class Api {
+abstract class Member {
+  String get name;
+  String get docs;
+  void generate(DartGenerator gen);
+}
+
+class Api extends Member {
   List<Method> methods = [];
   List<Enum> enums = [];
   List<Type> types = [];
@@ -66,6 +70,9 @@ class Api {
       }
     }
   }
+
+  String get name => 'api';
+  String get docs => null;
 
   void _parse(String name, String definition, [String docs]) {
     name = name.trim();
@@ -109,7 +116,7 @@ class Api {
   }
 }
 
-class Method {
+class Method extends Member {
   final String name;
   final String docs;
 
@@ -128,7 +135,7 @@ class Method {
   }
 }
 
-class Type {
+class Type extends Member {
   String name;
   final String docs;
 
@@ -156,22 +163,43 @@ class Type {
   }
 }
 
-class Enum {
+class Enum extends Member {
   final String name;
   final String docs;
 
-  Enum(this.name, String definition, [this.docs]) {
+  List<EnumValue> enums = [];
 
+  Enum(this.name, String definition, [this.docs]) {
+    _parse(new Tokenizer(definition).tokenize());
   }
 
   void generate(DartGenerator gen) {
     gen.writeln();
-    if (docs != null) {
-      gen.writeDocs(docs);
-      gen.writeStatement('enum ${name} {');
-      gen.writeln('foo');
-      gen.writeStatement('}');
-    }
+    if (docs != null) gen.writeDocs(docs);
+    gen.writeStatement('enum ${name} {');
+    enums.forEach((EnumValue val) => val.generate(gen));
+    gen.writeStatement('}');
+  }
+
+  void _parse(Token token) {
+    new EnumParser(token).parseInto(this);
+  }
+}
+
+class EnumValue extends Member {
+  final Enum parent;
+  final String name;
+  final String docs;
+
+  EnumValue(this.parent, this.name, [this.docs]);
+
+  bool get isLast => parent.enums.last == this;
+
+  void generate(DartGenerator gen) {
+    if (docs != null) gen.writeDocs(docs);
+    gen.write('${name}');
+    if (!isLast) gen.write(',');
+    gen.writeln();
   }
 }
 
@@ -243,4 +271,179 @@ class TextOutputVisitor implements NodeVisitor {
   }
 
   String toString() => buf.toString().trim();
+}
+
+class Token {
+  static final RegExp _alpha = new RegExp(r'^[0-9a-zA-Z_\-@]+$');
+
+  final String text;
+  Token next;
+
+  Token(this.text);
+
+  bool get eof => text == null;
+
+  bool get isName {
+    if (text == null || text.isEmpty) return false;
+    return _alpha.hasMatch(text);
+  }
+
+  bool get isComment => text != null && text.startsWith('//');
+
+  String toString() => text == null ? 'EOF' : text;
+}
+
+class Tokenizer {
+  static final alphaNum =
+      '@abcdefghijklmnopqrstuvwxyz-_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  static final whitespace = ' \n\t\r';
+
+  String text;
+  Token _head;
+  Token _last;
+
+  Tokenizer(this.text);
+
+  Token tokenize() {
+    _emit(null);
+
+    for (int i = 0; i < text.length; i++) {
+      String c = text[i];
+
+      if (whitespace.contains(c)) {
+        // skip
+      } else if (c == '/' && _peek(i) == '/') {
+        int index = text.indexOf('\n', i);
+        if (index == -1) index = text.length;
+        _emit(text.substring(i, index));
+        i = index;
+      } else if (alphaNum.contains(c)) {
+        int start = i;
+
+        while (alphaNum.contains(_peek(i))) {
+          i++;
+        }
+
+        _emit(text.substring(start, i + 1));
+      } else {
+        _emit(c);
+      }
+    }
+
+    _emit(null);
+
+    _head = _head.next;
+
+    return _head;
+  }
+
+  void _emit(String value) {
+    Token token = new Token(value);
+    if (_head == null) _head = token;
+    if (_last != null) _last.next = token;
+    _last = token;
+  }
+
+  String _peek(int i) {
+    i += 1;
+    return i < text.length ? text[i] :new String.fromCharCodes([0]);
+  }
+
+  String toString() {
+    StringBuffer buf = new StringBuffer();
+
+    Token t = _head;
+
+    buf.write('[${t}]\n');
+
+    while (!t.eof) {
+      t = t.next;
+      buf.write('[${t}]\n');
+    }
+
+    return buf.toString().trim();
+  }
+}
+
+abstract class Parser {
+  final Token startToken;
+
+  Token current;
+
+  Parser(this.startToken);
+
+  Token expect(String text) {
+    Token t = advance();
+    if (text != t.text) fail('expected ${text}, got ${t}');
+    return t;
+  }
+
+  bool consume(String text) {
+    if (peek().text == text) {
+      advance();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Token peek() => current.eof ? current : current.next;
+
+  Token expectName() {
+    Token t = advance();
+    if (!t.isName) fail('expected name token');
+    return t;
+  }
+
+  Token advance() {
+    if (current == null) {
+      current = startToken;
+    } else if (!current.eof) {
+      current = current.next;
+    }
+
+    return current;
+  }
+
+  String collectComments() {
+    StringBuffer buf = new StringBuffer();
+
+    while (peek().isComment) {
+      Token t = advance();
+      String str = t.text.substring(2);
+      buf.write(' ${str}');
+    }
+
+    if (buf.isEmpty) return null;
+    return collapseWhitespace(buf.toString()).trim();
+  }
+
+  void validate(bool result, String message) {
+    if (!result) throw 'expected ${message}';
+  }
+
+  void fail(String message) => throw message;
+}
+
+class EnumParser extends Parser {
+  EnumParser(Token startToken) : super(startToken);
+
+  void parseInto(Enum e) {
+    // enum ErrorKind { UnhandledException, Foo, Bar }
+    // enum name { (comment* name ,)+ }
+    expect('enum');
+
+    Token t = expectName();
+    validate(t.text == e.name, 'enum name ${e.name} equals ${t.text}');
+    expect('{');
+
+    while (!t.eof) {
+      if (consume('}')) break;
+      String docs = collectComments();
+      t = expectName();
+      consume(',');
+
+      e.enums.add(new EnumValue(e, t.text, docs));
+    }
+  }
 }
