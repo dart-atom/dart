@@ -29,22 +29,22 @@ class DartGenerator {
    * along the column boundary. If [preferSingle] is true, and the docs would
    * fit on a single line, use `///` dartdoc style.
    */
-  void writeDocs(String docs, {bool preferSingle: false}) {
-    if (docs == null) {
-      return;
-    }
+  void writeDocs(String docs) {
+    if (docs == null) return;
 
-    docs = wrap(docs.trim(), colBoundary - _indent.length - 3);
-    docs = docs.replaceAll('*/', '/');
-    docs = docs.replaceAll('/*', r'/\*');
+    docs = wrap(docs.trim(), colBoundary - _indent.length - 4);
+    // docs = docs.replaceAll('*/', '/');
+    // docs = docs.replaceAll('/*', r'/\*');
 
-    if (!docs.contains('\n') && preferSingle) {
-      _writeln("/// ${docs}", true);
-    } else {
-      _writeln("/**", true);
-      _writeln(" * ${docs.replaceAll("\n", "\n * ")}", true);
-      _writeln(" */", true);
-    }
+    docs.split('\n').forEach((line) => _writeln('/// ${line}'));
+
+    // if (!docs.contains('\n') && preferSingle) {
+    //   _writeln("/// ${docs}", true);
+    // } else {
+    //   _writeln("/**", true);
+    //   _writeln(" * ${docs.replaceAll("\n", "\n * ")}", true);
+    //   _writeln(" */", true);
+    // }
   }
 
   /**

@@ -52,6 +52,13 @@ analysisServerApi() {
   DartFmt.format('lib/impl/analysis_server_gen.dart');
 }
 
+@Task('generate the observatory API')
+observatoryApi() {
+  // https://github.com/dart-lang/sdk/blob/master/runtime/vm/service/service.md
+  Dart.run('tool/generate_observatory_lib.dart');
+  DartFmt.format('lib/impl/observatory_gen.dart');
+}
+
 final String _jsPrefix = """
 var self = Object.create(this);
 self.require = require;
