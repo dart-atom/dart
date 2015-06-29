@@ -1,4 +1,3 @@
-import 'dart:collection' show LinkedHashMap;
 import 'dart:io';
 
 import 'package:markdown/markdown.dart';
