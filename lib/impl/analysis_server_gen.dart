@@ -29,8 +29,8 @@ class Server {
   ExecutionDomain _execution;
 
   Server(Stream<String> inStream, void writeMessage(String message)) {
-    _writeMessage = writeMessage;
     _streamSub = inStream.listen(_processMessage);
+    _writeMessage = writeMessage;
 
     _server = new ServerDomain(this);
     _analysis = new AnalysisDomain(this);

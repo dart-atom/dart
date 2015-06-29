@@ -146,7 +146,7 @@
         'name': 'constant.numeric.dart'
       }
       {
-        'match': '\\b[A-Z][a-zA-Z]+\\b'
+        'match': '\\b[A-Z][a-zA-Z0-9_]+\\b'
         'name': 'support.class.dart'
       }
       {

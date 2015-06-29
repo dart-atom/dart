@@ -7,6 +7,32 @@ const int RUNE_EOL = 10;
 const int RUNE_LEFT_CURLY = 123;
 const int RUNE_RIGHT_CURLY = 125;
 
+final RegExp _wsRegexp = new RegExp(r'\s+');
+
+String collapseWhitespace(String str) => str.replaceAll(_wsRegexp, ' ');
+
+/// foo ==> Foo
+String titleCase(String str) =>
+    str.substring(0, 1).toUpperCase() + str.substring(1);
+
+String joinLast(Iterable<String> strs, String join, [String last]) {
+  if (strs.isEmpty) return '';
+  List list = strs.toList();
+  if (list.length == 1) return list.first;
+  StringBuffer buf = new StringBuffer();
+  for (int i = 0; i < list.length; i++) {
+    if (i > 0) {
+      if (i + 1 == list.length && last != null) {
+        buf.write(last);
+      } else {
+        buf.write(join);
+      }
+    }
+    buf.write(list[i]);
+  }
+  return buf.toString();
+}
+
 /**
  * A class used to generate Dart source code. This class facilitates writing out
  * dartdoc comments, automatically manages indent by counting curly braces, and
@@ -29,22 +55,22 @@ class DartGenerator {
    * along the column boundary. If [preferSingle] is true, and the docs would
    * fit on a single line, use `///` dartdoc style.
    */
-  void writeDocs(String docs, {bool preferSingle: false}) {
-    if (docs == null) {
-      return;
-    }
+  void writeDocs(String docs) {
+    if (docs == null) return;
 
-    docs = wrap(docs.trim(), colBoundary - _indent.length - 3);
-    docs = docs.replaceAll('*/', '/');
-    docs = docs.replaceAll('/*', r'/\*');
+    docs = wrap(docs.trim(), colBoundary - _indent.length - 4);
+    // docs = docs.replaceAll('*/', '/');
+    // docs = docs.replaceAll('/*', r'/\*');
 
-    if (!docs.contains('\n') && preferSingle) {
-      _writeln("/// ${docs}", true);
-    } else {
-      _writeln("/**", true);
-      _writeln(" * ${docs.replaceAll("\n", "\n * ")}", true);
-      _writeln(" */", true);
-    }
+    docs.split('\n').forEach((line) => _writeln('/// ${line}'));
+
+    // if (!docs.contains('\n') && preferSingle) {
+    //   _writeln("/// ${docs}", true);
+    // } else {
+    //   _writeln("/**", true);
+    //   _writeln(" * ${docs.replaceAll("\n", "\n * ")}", true);
+    //   _writeln(" */", true);
+    // }
   }
 
   /**
@@ -139,7 +165,3 @@ String _simpleWrap(String str, [int col = 80]) {
 
   return lines.join('\n');
 }
-
-/// foo ==> Foo
-String titleCase(String str) =>
-    str.substring(0, 1).toUpperCase() + str.substring(1);

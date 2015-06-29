@@ -66,8 +66,8 @@ class Api {
     gen.writeln();
     gen.writeStatement(
         'Server(Stream<String> inStream, void writeMessage(String message)) {');
-    gen.writeStatement('_writeMessage = writeMessage;');
     gen.writeStatement('_streamSub = inStream.listen(_processMessage);');
+    gen.writeStatement('_writeMessage = writeMessage;');
     gen.writeln();
     domains.forEach((Domain domain) =>
         gen.writeln('_${domain.name} = new ${domain.className}(this);'));
