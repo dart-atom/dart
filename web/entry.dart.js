@@ -12780,8 +12780,8 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       },
       Server$2: function(inStream, writeMessage) {
         var t1, t2;
-        this._writeMessage = writeMessage;
         this._streamSub = inStream.listen$1(this.get$_processMessage());
+        this._writeMessage = writeMessage;
         t1 = new N.ServerDomain(this, "server", P.LinkedHashMap__makeEmpty(), P.LinkedHashMap__makeEmpty());
         t2 = this._domains;
         t2.$indexSet(0, "server", t1);
