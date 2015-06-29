@@ -29,8 +29,7 @@ class Server {
   ExecutionDomain _execution;
 
   Server(Stream<String> inStream, void writeMessage(String message)) {
-    _streamSub = inStream.listen(_processMessage);
-    _writeMessage = writeMessage;
+    configure(inStream, writeMessage);
 
     _server = new ServerDomain(this);
     _analysis = new AnalysisDomain(this);
@@ -50,8 +49,14 @@ class Server {
   Stream<String> get onSend => _onSend.stream;
   Stream<String> get onReceive => _onReceive.stream;
 
+  void configure(Stream<String> inStream, void writeMessage(String message)) {
+    dispose();
+    _writeMessage = writeMessage;
+    _streamSub = inStream.listen(_processMessage);
+  }
+
   void dispose() {
-    _streamSub.cancel();
+    if (_streamSub != null) _streamSub.cancel();
     _completers.values.forEach((c) => c.completeError('disposed'));
   }
 

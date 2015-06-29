@@ -94,9 +94,9 @@ class AnalysisServer implements Disposable {
   }
 
   /// Returns whether the analysis server is active and running.
-  bool get isActive => _server != null;
+  bool get isActive => _server.isRunning;
 
-  bool get isBusy => _server != null && _server.analyzing;
+  bool get isBusy => _server.analyzing;
 
   /// Subscribe to this to get told when the issues list has changed.
   Stream get issuesUpdatedNotification => null;
@@ -203,6 +203,9 @@ class AnalysisServer implements Disposable {
       _AnalysisServerWrapper server = _AnalysisServerWrapper.create(sdkManager.sdk);
       _server = server;
       _initNewServer(server);
+    } else if (!_server.isRunning) {
+      _server.restart(sdkManager.sdk);
+      _initExistingServer(_server);
     }
   }
 
@@ -217,11 +220,16 @@ class AnalysisServer implements Disposable {
     if (dispose || (!shouldBeRunning && _server != null)) {
       // shutdown
       _server.kill();
-    } else if (shouldBeRunning && _server == null) {
+    } else if (shouldBeRunning) {
       // startup
-      _AnalysisServerWrapper server = _AnalysisServerWrapper.create(sdkManager.sdk);
-      _server = server;
-      _initNewServer(server);
+      if (_server == null) {
+        _AnalysisServerWrapper server = _AnalysisServerWrapper.create(sdkManager.sdk);
+        _server = server;
+        _initNewServer(server);
+      } else if (!_server.isRunning) {
+        _server.restart(sdkManager.sdk);
+        _initExistingServer(_server);
+      }
     }
   }
 
@@ -236,8 +244,6 @@ class AnalysisServer implements Disposable {
       DeclarationHelper.setLastNavInfo(e);
     });
 
-    server.setup();
-
     onBusy.listen((busy) {
       if (!busy && _job != null) {
         _job.finish();
@@ -247,16 +253,17 @@ class AnalysisServer implements Disposable {
       }
     });
 
+    _initExistingServer(server);
+  }
+
+  void _initExistingServer(Server server) {
     _serverActiveController.add(true);
     _syncRoots();
-
     _focusedDartFileChanged(editorManager.activeDartFile);
   }
 
   void _handleServerDeath(Server server) {
     if (_server == server) {
-      _server = null;
-
       _serverActiveController.add(false);
       _serverBusyController.add(false);
     }
@@ -470,43 +477,18 @@ class _AnalyzingJob extends Job {
   }
 }
 
+typedef void _AnalysisServerWriter(String);
 class _AnalysisServerWrapper extends Server {
   static _AnalysisServerWrapper create(Sdk sdk) {
-    //if (process != null) throw new Exception('Process already started');
-
-    List<String> arguments = [
-      sdk.getSnapshotPath('analysis_server.dart.snapshot'),
-      '--sdk',
-      sdk.path
-    ];
-
-    ProcessRunner process = new ProcessRunner(sdk.dartVm.path, args: arguments);
-    Completer completer = new Completer();
-
-    process.onStderr.listen((String str) => _logger.severe(str.trim()));
-
     StreamController controller = new StreamController();
-    process.onStdout.listen((String str) {
-      List<String> lines = str.trim().split('\n');
-      for (String line in lines) {
-        controller.add(line.trim());
-      }
-    });
+    ProcessRunner process = _createProcess(sdk);
+    Completer completer = _startProcess(process, controller);
 
-    process.execStreaming().then((int exitCode) {
-      _logger.fine("exited with code ${exitCode}");
-      if (!completer.isCompleted) completer.complete(exitCode);
-    });
-
-    var writeMessage = (String message) {
-      process.write("${message}\n");
-    };
-
-    return new _AnalysisServerWrapper(process, completer, controller.stream, writeMessage);
+    return new _AnalysisServerWrapper(process, completer, controller.stream, _messageWriter(process));
   }
 
   ProcessRunner process;
-  final Completer<int> _processCompleter;
+  Completer<int> _processCompleter;
   bool analyzing = false;
   StreamController _analyzingController = new StreamController.broadcast();
 
@@ -524,9 +506,29 @@ class _AnalysisServerWrapper extends Server {
     server.setSubscriptions(['STATUS']);
   }
 
+  bool get isRunning => process != null;
+
   Stream<bool> get onAnalyzing => _analyzingController.stream;
 
   Future<int> get whenDisposed => _processCompleter.future;
+
+  /// Restarts, or starts, the analysis server process.
+  ProcessRunner restart(sdk) {
+    var startServer = () {
+      var controller = new StreamController();
+      process = _createProcess(sdk);
+      _processCompleter = _startProcess(process, controller);
+
+      configure(controller.stream, _messageWriter(process));
+      setup();
+    };
+
+    if (isRunning) {
+      process.kill().then((_) => startServer());
+    } else {
+      startServer();
+    }
+  }
 
   Future<int> kill() {
     _logger.fine("server forcibly terminated");
@@ -540,5 +542,42 @@ class _AnalysisServerWrapper extends Server {
       _logger.warning("kill signal sent to dead analysis server");
       return new Future.value(1);
     }
+  }
+
+  /// Creates a process.
+  static ProcessRunner _createProcess(Sdk sdk) {
+    List<String> arguments = [
+      sdk.getSnapshotPath('analysis_server.dart.snapshot'),
+      '--sdk',
+      sdk.path
+    ];
+
+    return new ProcessRunner(sdk.dartVm.path, args: arguments);
+  }
+
+  /// Starts a process, and returns a [Completer] that completes when the
+  /// process is no longer running.
+  static Completer<int> _startProcess(ProcessRunner process, StreamController sc) {
+    Completer completer = new Completer();
+    process.onStderr.listen((String str) => _logger.severe(str.trim()));
+
+    process.onStdout.listen((String str) {
+      List<String> lines = str.trim().split('\n');
+      for (String line in lines) {
+        sc.add(line.trim());
+      }
+    });
+
+    process.execStreaming().then((int exitCode) {
+      _logger.fine("exited with code ${exitCode}");
+      if (!completer.isCompleted) completer.complete(exitCode);
+    });
+
+    return completer;
+  }
+
+  /// Returns a function that writes to a process stream.
+  static _AnalysisServerWriter _messageWriter(ProcessRunner process) {
+    return (String message) => process.write("${message}\n");
   }
 }
