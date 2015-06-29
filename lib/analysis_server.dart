@@ -41,6 +41,8 @@ class AnalysisServer implements Disposable {
 
   List<DartProject> knownRoots = [];
 
+  Property<bool> isActiveProperty;
+
   AnalysisServer() {
     // onActive.listen((val) => _logger.info('analysis server active: ${val}'));
     // onBusy.listen((val) => _logger.info('analysis server busy: ${val}'));
@@ -54,7 +56,7 @@ class AnalysisServer implements Disposable {
   Stream<String> get onSend => _onSendController.stream;
   Stream<String> get onReceive => _onReceiveController.stream;
 
-  Property<bool> isActiveProperty;
+
 
 
   // TODO: is it better to just expose _server?
