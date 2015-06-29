@@ -23,6 +23,9 @@ import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
+import 'linter.dart' show DartLinterConsumer;
+import 'atom_linter.dart' show LinterService;
+import 'error_repository.dart';
 
 export 'atom.dart' show registerPackage;
 
@@ -37,6 +40,25 @@ class AtomDartPackage extends AtomPackage {
     registerServiceConsumer('consumeStatusBar', (obj) {
       // Create a new status bar display.
       return new StatusDisplay(new StatusBar(obj));
+    });
+
+    // Register a method to consume the `linter-plus-self` service API
+    registerServiceConsumer('consumeLinter', (obj) {
+      // This hoopla allows us to construct an object with Disposable
+      // and return it without having to create a new class that
+      // just does the same thing, but in another file.
+      var sc = new StreamController.broadcast();
+      var errorStream = sc.stream;
+      var consumer = new DartLinterConsumer(new ErrorRepository(errorStream));
+      consumer.consume(new LinterService(obj));
+
+      // Proxy error messages from analysis server to ErrorRepository when
+      // the analysis server becomes active.
+      analysisServer.isActiveProperty.where((active) => active).listen((_) {
+        analysisServer.onAnalysisErrors.listen(sc.add);
+      });
+
+      return consumer;
     });
   }
 

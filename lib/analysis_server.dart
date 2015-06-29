@@ -9,6 +9,7 @@ library atom.analysis_server;
 import 'dart:async';
 
 import 'package:logging/logging.dart';
+import 'package:frappe/frappe.dart';
 //import 'package:markdown/markdown.dart';
 
 import 'atom.dart';
@@ -40,19 +41,27 @@ class AnalysisServer implements Disposable {
 
   List<DartProject> knownRoots = [];
 
-  AnalysisServer() {
-    // Register the linter provider.
-    new _DartLinterProvider().register();
+  Property<bool> isActiveProperty;
 
+  AnalysisServer() {
+    // onActive.listen((val) => _logger.info('analysis server active: ${val}'));
+    // onBusy.listen((val) => _logger.info('analysis server busy: ${val}'));
+    isActiveProperty = new Property.fromStreamWithInitialValue(false, onActive);
     Timer.run(_setup);
   }
 
   Stream<bool> get onActive => _serverActiveController.stream;
-
   Stream<bool> get onBusy => _serverBusyController.stream;
 
   Stream<String> get onSend => _onSendController.stream;
   Stream<String> get onReceive => _onReceiveController.stream;
+
+
+
+
+  // TODO: is it better to just expose _server?
+  Stream<AnalysisErrors> get onAnalysisErrors =>
+      analysisServer._server.analysis.onErrors;
 
   void _setup() {
     subs.add(projectManager.onChanged.listen(_reconcileRoots));
@@ -462,67 +471,6 @@ class _AnalyzingJob extends Job {
 
   void finish() {
     if (!completer.isCompleted) completer.complete();
-  }
-}
-
-class _DartLinterProvider extends LinterProvider {
-  static final Map<String, String> _severityMap = {
-    'ERROR': LintMessage.ERROR,
-    'WARNING': LintMessage.WARNING,
-    'INFO': LintMessage.INFO
-  };
-
-  static final String _infosPrefPath = '${pluginId}.showInfos';
-
-  static bool _shouldShowInfos() => atom.config.get(_infosPrefPath);
-
-  static int _errorComparer(AnalysisError a, AnalysisError b) {
-    if (a.severity != b.severity) return _sev(b.severity) - _sev(a.severity);
-    Location aloc = a.location;
-    Location bloc = b.location;
-    if (aloc.file != bloc.file) return aloc.file.compareTo(bloc.file);
-    return aloc.offset - bloc.offset;
-  }
-
-  static int _sev(String sev) {
-    if (sev == 'ERROR') return 3;
-    if (sev == 'WARNING') return 2;
-    if (sev == 'INFO') return 1;
-    return 0;
-  }
-
-  static LintMessage _cvtMessage(String filePath, AnalysisError error) {
-    return new LintMessage(
-        type: _severityMap[error.severity],
-        text: error.message,
-        filePath: filePath,
-        range: _cvtLocation(error.location));
-  }
-
-  static Rn _cvtLocation(Location location) {
-    return new Rn(new Pt(location.startLine - 1, location.startColumn - 1),
-        new Pt(location.startLine - 1, location.startColumn - 1 + location.length));
-  }
-
-  // TODO: Options are 'file' and 'project' scope, and lintOnFly true or false.
-  _DartLinterProvider() : super(grammarScopes: ['source.dart'], scope: 'file');
-
-  void register() =>
-      LinterProvider.registerLinterProvider('provideLinter', this);
-
-  Future<List<LintMessage>> lint(TextEditor editor) {
-    String filePath = editor.getPath();
-    return analysisServer.getErrors(filePath).then((ErrorsResult result) {
-      List<AnalysisError> issues = result.errors..sort(_errorComparer);
-      if (!_shouldShowInfos()) {
-        issues = issues.where((AnalysisError error) =>
-            error.severity == 'WARNING' || error.severity == 'ERROR');
-      }
-      return issues.map((e) => _cvtMessage(filePath, e)).toList();
-    }).catchError((e) {
-      print(e);
-      return [];
-    });
   }
 }
 
