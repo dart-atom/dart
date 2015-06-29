@@ -13,34 +13,44 @@ Element queryId(String id) => querySelector('#${id}');
 /// Finds the first descendant element of this document with the given id.
 Element $(String id) => querySelector('#${id}');
 
-// TODO: We should convert this library to something closer to a DSL for html.
+CoreElement button({String text, String c, String a}) =>
+    new CoreElement('button', text: text, classes: c, attributes: a);
+
+CoreElement div({String text, String c, String a}) =>
+    new CoreElement('div', text: text, classes: c, attributes: a);
+
+CoreElement img({String text, String c, String a}) =>
+    new CoreElement('img', text: text, classes: c, attributes: a);
+
+CoreElement ol({String text, String c, String a}) =>
+    new CoreElement('ol', text: text, classes: c, attributes: a);
+
+CoreElement li({String text, String c, String a}) =>
+    new CoreElement('li', text: text, classes: c, attributes: a);
 
 class CoreElement {
   final Element element;
 
-  // JsObject _proxy;
-  // Map<String, Stream> _eventStreams = {};
-
   CoreElement.from(this.element);
 
-  CoreElement(String tag, {String text}) : element = new Element.tag(tag) {
+  CoreElement(String tag, {String text, String classes, String attributes}) :
+      element = new Element.tag(tag) {
     if (text != null) element.text = text;
+    if (classes != null) element.classes.addAll(classes.split(' '));
+    if (attributes != null) attributes.split(' ').forEach(attribute);
   }
-
-  CoreElement.div([String text]) : this('div', text:text);
-  CoreElement.li() : this('li');
-  CoreElement.p([String text]) : this('p', text: text);
-  CoreElement.section() : this('section');
-  CoreElement.span([String text]) : this('span', text: text);
 
   String get tag => element.tagName;
 
-  String get id => attribute('id');
+  String get id => attributes['id'];
   set id(String value) => setAttribute('id', value);
+
+  String get src => attributes['src'];
+  set src(String value) => setAttribute('src', value);
 
   bool hasAttribute(String name) => element.attributes.containsKey(name);
 
-  void toggleAttribute(String name, [bool value]) {
+  void attribute(String name, [bool value]) {
     if (value == null) value = !element.attributes.containsKey(name);
 
     if (value) {
@@ -50,12 +60,17 @@ class CoreElement {
     }
   }
 
-  String attribute(String name) => element.getAttribute(name);
+  void toggleAttribute(String name, [bool value]) => attribute(name, value);
+
+  Map<String, String> get attributes => element.attributes;
 
   void setAttribute(String name, [String value = '']) =>
       element.setAttribute(name, value);
 
   String clearAttribute(String name) => element.attributes.remove(name);
+
+  void icon(String iconName) =>
+      element.classes.addAll(['icon', 'icon-${iconName}']);
 
   void clazz(String _class) {
     if (_class.contains(' ')) {
@@ -80,31 +95,30 @@ class CoreElement {
   /// Add the given child to this element's list of children. [child] must be
   /// either a `CoreElement` or an `Element`.
   dynamic add(dynamic child) {
-    if (child is CoreElement) {
+    if (child is List) {
+      return child.map((c) => add(c)).toList();
+    } else if (child is CoreElement) {
       element.children.add(child.element);
     } else if (child is Element) {
       element.children.add(child);
     } else {
-      throw new ArgumentError('child must be a CoreElement or an Element');
+      throw new ArgumentError('argument type not supported');
     }
     return child;
   }
 
-  void hidden([bool value]) => toggleAttribute('hidden', value);
+  void hidden([bool value]) => attribute('hidden', value);
 
-  String get icon => attribute('icon');
-  set icon(String value) => setAttribute('icon', value);
-
-  String get label => attribute('label');
+  String get label => attributes['label'];
   set label(String value) => setAttribute('label', value);
 
   bool get disabled => hasAttribute('disabled');
-  set disabled(bool value) => toggleAttribute('disabled', value);
+  set disabled(bool value) => attribute('disabled', value);
 
   // Layout types.
-  void layout() => toggleAttribute('layout');
-  void horizontal() => toggleAttribute('horizontal');
-  void vertical() => toggleAttribute('vertical');
+  void layout() => attribute('layout');
+  void horizontal() => attribute('horizontal');
+  void vertical() => attribute('vertical');
 
   void layoutHorizontal() {
     setAttribute('layout');
@@ -117,42 +131,23 @@ class CoreElement {
   }
 
   // Layout params.
-  void fit() => toggleAttribute('fit');
+  void fit() => attribute('fit');
   void flex([int flexAmount]) {
-    toggleAttribute('flex', true);
+    attribute('flex', true);
 
     if (flexAmount != null) {
-      if (flexAmount == 1) toggleAttribute('one', true);
-      else if (flexAmount == 2) toggleAttribute('two', true);
-      else if (flexAmount == 3) toggleAttribute('three', true);
-      else if (flexAmount == 4) toggleAttribute('four', true);
-      else if (flexAmount == 5) toggleAttribute('five', true);
+      if (flexAmount == 1) attribute('one', true);
+      else if (flexAmount == 2) attribute('two', true);
+      else if (flexAmount == 3) attribute('three', true);
+      else if (flexAmount == 4) attribute('four', true);
+      else if (flexAmount == 5) attribute('five', true);
     }
   }
 
   Stream<Event> get onClick => element.onClick;
 
-  // dynamic call(String methodName, [List args]) {
-  //   if (_proxy == null) _proxy = new JsObject.fromBrowserObject(element);
-  //   return _proxy.callMethod(methodName, args);
-  // }
-
-  // dynamic property(String name) {
-  //   if (_proxy == null) _proxy = new JsObject.fromBrowserObject(element);
-  //   return _proxy[name];
-  // }
-
-  // Stream listen(String eventName, {Function converter, bool sync: false}) {
-  //   if (!_eventStreams.containsKey(eventName)) {
-  //     StreamController controller = new StreamController.broadcast(sync: sync);
-  //     _eventStreams[eventName] = controller.stream;
-  //     element.on[eventName].listen((e) {
-  //       controller.add(converter == null ? e : converter(e));
-  //     });
-  //   }
-  //
-  //   return _eventStreams[eventName];
-  // }
+  /// Subscribe to the [onClick] event stream with a no-arg handler.
+  StreamSubscription<Event> click(void handle()) => onClick.listen((_) => handle());
 
   void dispose() {
     if (element.parent == null) return;
@@ -168,14 +163,10 @@ class CoreElement {
   String toString() => element.toString();
 }
 
-// <div class='block'>
-//   <progress class='inline-block' />
-//   <span class='inline-block'>Indeterminate</span>
-// </div>
 class ProgressElement extends CoreElement {
   CoreElement _progress;
 
-  ProgressElement() : super.div() {
+  ProgressElement() : super('div') {
     block();
     _progress = add(new CoreElement('progress')..inlineBlock());
   }

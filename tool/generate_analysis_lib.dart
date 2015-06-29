@@ -58,7 +58,8 @@ class Api {
     gen.writeln(
         'JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);');
     gen.writeStatement('Map<String, Domain> _domains = {};');
-    gen.writeln("StreamController _onAllMessages = new StreamController.broadcast();");
+    gen.writeln("StreamController _onSend = new StreamController.broadcast();");
+    gen.writeln("StreamController _onReceive = new StreamController.broadcast();");
     gen.writeln();
     domains.forEach(
         (Domain domain) => gen.writeln('${domain.className} _${domain.name};'));
@@ -86,6 +87,7 @@ class Api {
     domains.forEach((Domain domain) => domain.generate(gen));
 
     // Object definitions.
+    gen.writeln();
     gen.writeln('// type definitions');
     gen.writeln();
     typedefs
@@ -354,6 +356,21 @@ class Field {
 }
 
 class TypeDef {
+  static final Set<String> _shouldHaveToString = new Set.from([
+    'RequestError',
+    'SourceEdit',
+    'PubStatus',
+    'Location',
+    'AnslysisStatus',
+    'AnalysisError',
+    'SourceChange',
+    'SourceFileEdit',
+    'LinkedEditGroup',
+    'Position',
+    'NavigationRegion',
+    'NavigationTarget'
+  ]);
+
   String name;
   bool isString = false;
   List<Field> fields;
@@ -439,8 +456,17 @@ class TypeDef {
       return buf.toString();
     }).join(', '));
     gen.writeln(');');
+
+    if (hasToString) {
+      gen.writeln();
+      String str = fields.map((f) => "${f.name}: \${${f.name}}").join(', ');
+      gen.writeln("String toString() => '[${name} ${str}]';");
+    }
+
     gen.writeln('}');
   }
+
+  bool get hasToString => _shouldHaveToString.contains(name);
 
   String toString() => 'TypeDef ${name}';
 }
@@ -579,7 +605,8 @@ const optional = 'optional';
 ''';
 
 final String _serverCode = r'''
-  Stream<String> get onAllMessages => _onAllMessages.stream;
+  Stream<String> get onSend => _onSend.stream;
+  Stream<String> get onReceive => _onReceive.stream;
 
   void dispose() {
     _streamSub.cancel();
@@ -588,7 +615,7 @@ final String _serverCode = r'''
 
   void _processMessage(String message) {
     try {
-      _onAllMessages.add(message);
+      _onReceive.add(message);
 
       var json = JSON.decode(message);
 
@@ -623,7 +650,7 @@ final String _serverCode = r'''
     Map m = {'id': id, 'method': method};
     if (args != null) m['params'] = args;
     String message = _jsonEncoder.encode(m);
-    _onAllMessages.add(message);
+    _onSend.add(message);
     _writeMessage(message);
     return _completers[id].future;
   }

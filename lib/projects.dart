@@ -17,8 +17,6 @@ import 'impl/pub.dart' as pub;
 
 final Logger _logger = new Logger('projects');
 
-// TODO: Given a File or path, return the corresponding Dart project.
-
 /// A class to locate Dart projects in Atom and listen for new or removed Dart
 /// projects.
 class ProjectManager implements Disposable {
@@ -34,11 +32,16 @@ class ProjectManager implements Disposable {
   StreamController<List<DartProject>> _controller = new StreamController.broadcast();
   StreamSubscription _sub;
 
+  final Map<String, StreamSubscription> _directoryListeners = {};
+
   final List<DartProject> projects = [];
 
   ProjectManager() {
-    _sub = atom.project.onDidChangePaths.listen((_) => _checkForNewRemovedProjects());
-    Timer.run(rescanForProjects);
+    _sub = atom.project.onDidChangePaths.listen(_handleProjectPathsChanged);
+    Timer.run(() {
+      rescanForProjects();
+      _updateChangeListeners(atom.project.getPaths());
+    });
   }
 
   bool get hasDartProjects => projects.isNotEmpty;
@@ -67,6 +70,7 @@ class ProjectManager implements Disposable {
     _logger.fine('dispose()');
 
     _sub.cancel();
+    _directoryListeners.values.forEach((StreamSubscription sub) => sub.cancel());
   }
 
   void _fullScanForProjects() {
@@ -96,55 +100,89 @@ class ProjectManager implements Disposable {
     }
   }
 
+  void _handleProjectPathsChanged(List<String> allPaths) {
+    _updateChangeListeners(allPaths);
+    _checkForNewRemovedProjects();
+  }
+
+  _updateChangeListeners(List<String> allPaths) {
+    Set<String> previousPaths = new Set.from(_directoryListeners.keys);
+    Set<String> currentPaths = new Set.from(allPaths);
+
+    Set<String> removedPaths = previousPaths.difference(currentPaths);
+    Set<String> addedPaths = currentPaths.difference(previousPaths);
+
+    for (String removedPath in removedPaths) {
+      StreamSubscription sub = _directoryListeners.remove(removedPath);
+      sub.cancel();
+    }
+
+    for (String addedPath in addedPaths) {
+      Directory dir = new Directory.fromPath(addedPath);
+      _directoryListeners[addedPath] = dir.onDidChange.listen(
+          (_) => _handleDirectoryChanged(dir));
+    }
+  }
+
+  void _handleDirectoryChanged(Directory dir) {
+    bool currentProjectDir = projects.any(
+        (DartProject project) => project.directory == dir);
+    if (currentProjectDir != isDartProject(dir)) {
+      _fullScanForProjects();
+    }
+  }
+
   void _checkForNewRemovedProjects() {
-    Set<Directory> previousDirs = new Set.from(projects.map((p) => p.directory));
-    Set<Directory> currentDirs = new Set.from(atom.project.getDirectories());
-
-    Set<Directory> removedDirs = previousDirs.difference(currentDirs);
-    Set<Directory> addedDirs = currentDirs.difference(previousDirs);
-
-    if (removedDirs.isNotEmpty) {
-      _handleRemovedDirs(removedDirs.toList());
-    }
-
-    if (addedDirs.isNotEmpty) {
-      _handleAddedDirs(addedDirs.toList());
-    }
+    _fullScanForProjects();
+    // // FIXME: p.directory isn't the same as project.getDirectories().
+    // Set<Directory> previousDirs = new Set.from(projects.map((p) => p.directory));
+    // Set<Directory> currentDirs = new Set.from(atom.project.getDirectories());
+    //
+    // Set<Directory> removedDirs = previousDirs.difference(currentDirs);
+    // Set<Directory> addedDirs = currentDirs.difference(previousDirs);
+    //
+    // if (removedDirs.isNotEmpty) {
+    //   _handleRemovedDirs(removedDirs.toList());
+    // }
+    //
+    // if (addedDirs.isNotEmpty) {
+    //   _handleAddedDirs(addedDirs.toList());
+    // }
   }
 
-  void _handleRemovedDirs(List<Directory> dirs) {
-    bool removed = false;
+  // void _handleRemovedDirs(List<Directory> dirs) {
+  //   bool removed = false;
+  //
+  //   dirs.forEach((Directory dir) {
+  //     for (DartProject project in projects) {
+  //       if (dir == project.directory || dir.contains(project.directory.path)) {
+  //         projects.remove(project);
+  //         removed = true;
+  //         break;
+  //       }
+  //     }
+  //   });
+  //
+  //   if (removed) {
+  //     _logger.fine('${projects}');
+  //     _controller.add(projects);
+  //   }
+  // }
 
-    dirs.forEach((Directory dir) {
-      for (DartProject project in projects) {
-        if (dir == project.directory || dir.contains(project.directory.path)) {
-          projects.remove(project);
-          removed = true;
-          break;
-        }
-      }
-    });
-
-    if (removed) {
-      _logger.fine('${projects}');
-      _controller.add(projects);
-    }
-  }
-
-  void _handleAddedDirs(List<Directory> dirs) {
-    int count = projects.length;
-
-    dirs.forEach((Directory dir) {
-      _findDartProjects(dir, _recurse_depth).forEach((dir) {
-        projects.add(new DartProject(dir));
-      });
-    });
-
-    if (count != projects.length) {
-      _logger.fine('${projects}');
-      _controller.add(projects);
-    }
-  }
+  // void _handleAddedDirs(List<Directory> dirs) {
+  //   int count = projects.length;
+  //
+  //   dirs.forEach((Directory dir) {
+  //     _findDartProjects(dir, _recurse_depth).forEach((dir) {
+  //       projects.add(new DartProject(dir));
+  //     });
+  //   });
+  //
+  //   if (count != projects.length) {
+  //     _logger.fine('${projects}');
+  //     _controller.add(projects);
+  //   }
+  // }
 
   List<Directory> _findDartProjects(Directory dir, int recurse) {
     if (isDartProject(dir)) {

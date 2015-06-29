@@ -8,10 +8,10 @@
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth.
 
 'atom-workspace':
-  'ctrl-alt-cmd-;': 'dart-lang:rebuild-restart'
+  'ctrl-alt-cmd-;': 'dart-lang-experimental:rebuild-restart'
 
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'enter': 'dart-lang:newline'
-
-'atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'f1': 'dart-lang:dartdoc'
+  'enter': 'dart-lang-experimental:newline'
+  'f1': 'dart-lang-experimental:show-dartdoc'
+  'f3': 'dart-lang-experimental:jump-to-declaration'
+  'cmd-1': 'dart-lang-experimental:quick-fix'

@@ -18,7 +18,8 @@ class Server {
   Map<String, Completer> _completers = {};
   JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);
   Map<String, Domain> _domains = {};
-  StreamController _onAllMessages = new StreamController.broadcast();
+  StreamController _onSend = new StreamController.broadcast();
+  StreamController _onReceive = new StreamController.broadcast();
 
   ServerDomain _server;
   AnalysisDomain _analysis;
@@ -46,7 +47,8 @@ class Server {
   EditDomain get edit => _edit;
   ExecutionDomain get execution => _execution;
 
-  Stream<String> get onAllMessages => _onAllMessages.stream;
+  Stream<String> get onSend => _onSend.stream;
+  Stream<String> get onReceive => _onReceive.stream;
 
   void dispose() {
     _streamSub.cancel();
@@ -55,7 +57,7 @@ class Server {
 
   void _processMessage(String message) {
     try {
-      _onAllMessages.add(message);
+      _onReceive.add(message);
 
       var json = JSON.decode(message);
 
@@ -90,7 +92,7 @@ class Server {
     Map m = {'id': id, 'method': method};
     if (args != null) m['params'] = args;
     String message = _jsonEncoder.encode(m);
-    _onAllMessages.add(message);
+    _onSend.add(message);
     _writeMessage(message);
     return _completers[id].future;
   }
@@ -753,6 +755,7 @@ class MapUriResult {
 
   MapUriResult({this.file, this.uri});
 }
+
 // type definitions
 
 class AddContentOverlay implements Jsonable {
@@ -785,6 +788,9 @@ class AnalysisError {
 
   AnalysisError(this.severity, this.type, this.location, this.message,
       {this.correction});
+
+  String toString() =>
+      '[AnalysisError severity: ${severity}, type: ${type}, location: ${location}, message: ${message}, correction: ${correction}]';
 }
 
 class AnalysisErrorFixes {
@@ -1026,6 +1032,9 @@ class LinkedEditGroup {
   final List<LinkedEditSuggestion> suggestions;
 
   LinkedEditGroup(this.positions, this.length, this.suggestions);
+
+  String toString() =>
+      '[LinkedEditGroup positions: ${positions}, length: ${length}, suggestions: ${suggestions}]';
 }
 
 class LinkedEditSuggestion {
@@ -1055,6 +1064,9 @@ class Location {
 
   Location(
       this.file, this.offset, this.length, this.startLine, this.startColumn);
+
+  String toString() =>
+      '[Location file: ${file}, offset: ${offset}, length: ${length}, startLine: ${startLine}, startColumn: ${startColumn}]';
 }
 
 class NavigationRegion {
@@ -1068,6 +1080,9 @@ class NavigationRegion {
   final List<int> targets;
 
   NavigationRegion(this.offset, this.length, this.targets);
+
+  String toString() =>
+      '[NavigationRegion offset: ${offset}, length: ${length}, targets: ${targets}]';
 }
 
 class NavigationTarget {
@@ -1086,6 +1101,9 @@ class NavigationTarget {
 
   NavigationTarget(this.kind, this.fileIndex, this.offset, this.length,
       this.startLine, this.startColumn);
+
+  String toString() =>
+      '[NavigationTarget kind: ${kind}, fileIndex: ${fileIndex}, offset: ${offset}, length: ${length}, startLine: ${startLine}, startColumn: ${startColumn}]';
 }
 
 class Occurrences {
@@ -1162,6 +1180,8 @@ class Position {
   final int offset;
 
   Position(this.file, this.offset);
+
+  String toString() => '[Position file: ${file}, offset: ${offset}]';
 }
 
 class PubStatus {
@@ -1173,6 +1193,9 @@ class PubStatus {
   final bool isListingPackageDirs;
 
   PubStatus(this.isListingPackageDirs);
+
+  String toString() =>
+      '[PubStatus isListingPackageDirs: ${isListingPackageDirs}]';
 }
 
 class RefactoringMethodParameter {
@@ -1251,6 +1274,9 @@ class RequestError {
   @optional final String stackTrace;
 
   RequestError(this.code, this.message, {this.stackTrace});
+
+  String toString() =>
+      '[RequestError code: ${code}, message: ${message}, stackTrace: ${stackTrace}]';
 }
 
 class SearchResult {
@@ -1290,6 +1316,9 @@ class SourceChange {
 
   SourceChange(this.message, this.edits, this.linkedEditGroups,
       {this.selection});
+
+  String toString() =>
+      '[SourceChange message: ${message}, edits: ${edits}, linkedEditGroups: ${linkedEditGroups}, selection: ${selection}]';
 }
 
 class SourceEdit implements Jsonable {
@@ -1312,6 +1341,9 @@ class SourceEdit implements Jsonable {
   };
 
   SourceEdit(this.offset, this.length, this.replacement, {this.id});
+
+  String toString() =>
+      '[SourceEdit offset: ${offset}, length: ${length}, replacement: ${replacement}, id: ${id}]';
 }
 
 class SourceFileEdit {
@@ -1327,6 +1359,9 @@ class SourceFileEdit {
   final List<SourceEdit> edits;
 
   SourceFileEdit(this.file, this.fileStamp, this.edits);
+
+  String toString() =>
+      '[SourceFileEdit file: ${file}, fileStamp: ${fileStamp}, edits: ${edits}]';
 }
 
 class TypeHierarchyItem {

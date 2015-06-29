@@ -100,7 +100,19 @@ class Atom extends ProxyHolder {
   Project get project => _project;
   Workspace get workspace => _workspace;
 
+  String getVersion() => invoke('getVersion');
+
   void beep() => invoke('beep');
+
+  /// A flexible way to open a dialog akin to an alert dialog.
+  ///
+  /// Returns the chosen button index Number if the buttons option was an array.
+  int confirm(String message, {String detailedMessage, List<String> buttons}) {
+    Map m = {'message': message};
+    if (detailedMessage != null) m['detailedMessage'] = detailedMessage;
+    if (buttons != null) m['buttons'] = buttons;
+    return invoke('confirm', m);
+  }
 
   /// Reload the current window.
   void reload() => invoke('reload');
@@ -129,6 +141,12 @@ class Workspace extends ProxyHolder {
     return new JsDisposable(disposable);
   }
 
+  Disposable observeActivePaneItem(void callback(dynamic item)) {
+    // TODO: What type is the item?
+    var disposable = invoke('observeActivePaneItem', (item) => callback(item));
+    return new JsDisposable(disposable);
+  }
+
   Panel addModalPanel({dynamic item, bool visible, int priority}) =>
       new Panel(invoke('addModalPanel', _panelOptions(item, visible, priority)));
 
@@ -143,6 +161,23 @@ class Workspace extends ProxyHolder {
 
   Panel addRightPanel({dynamic item, bool visible, int priority}) =>
       new Panel(invoke('addRightPanel', _panelOptions(item, visible, priority)));
+
+  /// Opens the given URI in Atom asynchronously. If the URI is already open,
+  /// the existing item for that URI will be activated. If no URI is given, or
+  /// no registered opener can open the URI, a new empty TextEditor will be
+  /// created.
+  ///
+  /// [options] can include initialLine, initialColumn, split, activePane, and
+  /// searchAllPanes.
+  Future<TextEditor> open(String url, [Map options]) {
+    Future future = promiseToFuture(invoke('open', url, options));
+    return future.then((result) {
+      if (result == null) throw 'unable to open ${url}';
+      TextEditor editor = new TextEditor(result);
+      if (editor.isValid()) return editor;
+      throw 'result is not a text editor';
+    });
+  }
 
   Map _panelOptions(dynamic item, bool visible, int priority) {
     Map options = {'item': item};
@@ -180,8 +215,7 @@ class CommandRegistry extends ProxyHolder {
 class Config extends ProxyHolder {
   Config(JsObject object) : super(object);
 
-  /// [keyPath] should be in the form `pluginid.keyid` - e.g.
-  /// `dart-lang.sdkLocation`.
+  /// [keyPath] should be in the form `pluginid.keyid` - e.g. `${pluginId}.sdkLocation`.
   dynamic get(String keyPath, {scope}) {
     Map options;
     if (scope != null) options = {'scope': scope};
@@ -372,6 +406,19 @@ class TextEditorView extends ProxyHolder {
 class TextEditor extends ProxyHolder {
   TextEditor(JsObject object) : super(_cvt(object));
 
+  /// Return whether this editor is a valid object. We sometimes create them
+  /// from JS objects w/o knowning if they are editors for certain.
+  bool isValid() {
+    try {
+      getTitle();
+      getLongTitle();
+      getPath();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   TextBuffer getBuffer() => new TextBuffer(invoke('getBuffer'));
 
   String getTitle() => invoke('getTitle');
@@ -406,10 +453,25 @@ class TextEditor extends ProxyHolder {
   String getTextInBufferRange(Range range) => invoke('getTextInBufferRange', range);
   /// Get the [Range] of the most recently added selection in buffer coordinates.
   Range getSelectedBufferRange() => new Range(invoke('getSelectedBufferRange'));
+
+  /// Set the selected range in buffer coordinates. If there are multiple
+  /// selections, they are reduced to a single selection with the given range.
+  void setSelectedBufferRange(Range bufferRange) =>
+      invoke('setSelectedBufferRange', bufferRange);
+  /// Set the selected ranges in buffer coordinates. If there are multiple
+  /// selections, they are replaced by new selections with the given ranges.
+  void setSelectedBufferRanges(List<Range> ranges) =>
+      invoke('setSelectedBufferRanges', ranges.map((Range r) => r.obj).toList());
+
   Range getCurrentParagraphBufferRange() =>
       new Range(invoke('getCurrentParagraphBufferRange'));
   Range setTextInBufferRange(Range range, String text) =>
       new Range(invoke('setTextInBufferRange', range, text));
+
+  /// Move the cursor to the given position in buffer coordinates.
+  void setCursorBufferPosition(Point point) =>
+      invoke('setCursorBufferPosition', point);
+  void selectRight(columnCount) => invoke('selectRight', columnCount);
 
   String lineTextForBufferRow(int bufferRow) =>
       invoke('lineTextForBufferRow', bufferRow);
@@ -436,14 +498,34 @@ class TextBuffer extends ProxyHolder {
   String getPath() => invoke('getPath');
 
   int characterIndexForPosition(Point position) =>
-     invoke('characterIndexForPosition', position);
+      invoke('characterIndexForPosition', position);
   Point positionForCharacterIndex(int offset) =>
       new Point(invoke('positionForCharacterIndex', offset));
+
+  /// Set the text in the given range. Returns the Range of the inserted text.
+  Range setTextInRange(Range range, String text) =>
+      new Range(invoke('setTextInRange', range, text));
+
+  /// Create a pointer to the current state of the buffer for use with
+  void createCheckpoint() => invoke('createCheckpoint');
+  /// Group all changes since the given checkpoint into a single transaction for
+  /// purposes of undo/redo. If the given checkpoint is no longer present in the
+  /// undo history, no grouping will be performed and this method will return
+  /// false.
+  bool groupChangesSinceCheckpoint() => invoke('groupChangesSinceCheckpoint');
+  /// Revert the buffer to the state it was in when the given checkpoint was
+  /// created. The redo stack will be empty following this operation, so changes
+  /// since the checkpoint will be lost. If the given checkpoint is no longer
+  /// present in the undo history, no changes will be made to the buffer and
+  /// this method will return false.
+  bool revertToCheckpoint() => invoke('revertToCheckpoint');
+
 }
 
 /// Represents a region in a buffer in row / column coordinates.
 class Range extends ProxyHolder {
   factory Range(JsObject object) => object == null ? null : new Range._(object);
+  Range.fromPoints(Point start, Point end) : super(_create('Range', start.obj, end.obj));
   Range._(JsObject object) : super(_cvt(object));
 
   bool isEmpty() => invoke('isEmpty');
