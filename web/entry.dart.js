@@ -4774,6 +4774,12 @@ var dart = [
   },
   Config: {
     "^": "ProxyHolder;obj",
+    $get$2$scope: function(keyPath, scope) {
+      return this.invoke$3("get", keyPath, null);
+    },
+    $get$1: function(keyPath) {
+      return this.$get$2$scope(keyPath, null);
+    },
     observe$3: function(keyPath, options, callback) {
       return new K.JsDisposable(this.invoke$4("observe", keyPath, P.LinkedHashMap_LinkedHashMap$_empty(null, null), callback));
     }
@@ -7096,10 +7102,8 @@ var dart = [
       return this._prefObserve.invoke$1("dispose");
     }, "call$0", "get$dispose", 0, 0, 1],
     SdkManager$0: function() {
-      var t1, t2;
-      t1 = $.get$atom0();
-      t2 = t1._config;
-      this._setSdkPath$1(t2.invoke$3("get", "dart-lang-experimental.sdkLocation", null));
+      var t1 = $.get$atom0();
+      this._setSdkPath$1(t1._config.$get$1("dart-lang-experimental.sdkLocation"));
       if (this._sdk == null)
         this.tryToAutoConfigure$1$complainOnFailure(false);
       this._prefObserve = t1._config.observe$3("dart-lang-experimental.sdkLocation", null, new V.SdkManager_closure(this));
@@ -16182,13 +16186,16 @@ var dart = [
   DartLinterConsumer_consume_closure: {
     "^": "Closure:2;_linter$_captured_this_0,_captured_service_1,_captured_provider_2",
     call$1: [function(_) {
-      var t1, sortedErrors, formattedErrors, t2;
+      var acceptableErrorTypes, t1, sortedErrors, formattedErrors, t2;
+      acceptableErrorTypes = ["ERROR", "WARNING"];
+      if ($.get$atom0()._config.$get$1($._infosPrefPath) === true)
+        acceptableErrorTypes.push("INFO");
       t1 = this._linter$_captured_this_0._errorRepository.knownErrors;
       t1 = t1.get$values(t1);
       t1 = H.setRuntimeTypeInfo(new H.ExpandIterable(t1, new T.DartLinterConsumer_consume__closure()), [H.getRuntimeTypeArgument(t1, "IterableBase", 0), null]);
       sortedErrors = P.List_List$from(P.List_List$from(t1, true, H.getRuntimeTypeArgument(t1, "IterableBase", 0)), true, N.AnalysisError);
       C.JSArray_methods.sort$1(sortedErrors, T._errorComparer$closure());
-      t1 = H.setRuntimeTypeInfo(new H.WhereIterable(sortedErrors, new T.DartLinterConsumer_consume__closure0()), [H.getTypeArgumentByIndex(sortedErrors, 0)]);
+      t1 = H.setRuntimeTypeInfo(new H.WhereIterable(sortedErrors, new T.DartLinterConsumer_consume__closure0(acceptableErrorTypes)), [H.getTypeArgumentByIndex(sortedErrors, 0)]);
       t1 = H.MappedIterable_MappedIterable(t1, new T.DartLinterConsumer_consume__closure1(), H.getRuntimeTypeArgument(t1, "IterableBase", 0), null);
       formattedErrors = P.List_List$from(t1, true, H.getRuntimeTypeArgument(t1, "IterableBase", 0));
       t1 = this._captured_service_1;
@@ -16204,9 +16211,9 @@ var dart = [
     }
   },
   DartLinterConsumer_consume__closure0: {
-    "^": "Closure:2;",
+    "^": "Closure:2;_captured_acceptableErrorTypes_3",
     call$1: function(e) {
-      return C.JSArray_methods.contains$1($.get$DartLinterConsumer_acceptableErrorTypes(), e.get$severity());
+      return C.JSArray_methods.contains$1(this._captured_acceptableErrorTypes_3, e.get$severity());
     }
   },
   DartLinterConsumer_consume__closure1: {
@@ -24703,7 +24710,8 @@ init.precompiled = function($collectedClasses) {
   $desc = $collectedClasses.DartLinterConsumer_consume__closure[1];
   DartLinterConsumer_consume__closure.prototype = $desc;
   DartLinterConsumer_consume__closure.$__fields__ = [];
-  function DartLinterConsumer_consume__closure0() {
+  function DartLinterConsumer_consume__closure0(_captured_acceptableErrorTypes_3) {
+    this._captured_acceptableErrorTypes_3 = _captured_acceptableErrorTypes_3;
     this.$deferredAction();
   }
   DartLinterConsumer_consume__closure0.builtin$cls = "DartLinterConsumer_consume__closure0";
@@ -24711,7 +24719,7 @@ init.precompiled = function($collectedClasses) {
     DartLinterConsumer_consume__closure0.name = "DartLinterConsumer_consume__closure0";
   $desc = $collectedClasses.DartLinterConsumer_consume__closure0[1];
   DartLinterConsumer_consume__closure0.prototype = $desc;
-  DartLinterConsumer_consume__closure0.$__fields__ = [];
+  DartLinterConsumer_consume__closure0.$__fields__ = ["_captured_acceptableErrorTypes_3"];
   function DartLinterConsumer_consume__closure1() {
     this.$deferredAction();
   }
@@ -25755,6 +25763,7 @@ $.Zone__current = C.C__RootZone;
 $.Expando__keyCount = 0;
 $.Device__isOpera = null;
 $.Device__isWebKit = null;
+$._infosPrefPath = "dart-lang-experimental.showInfos";
 $.hierarchicalLoggingEnabled = false;
 $.recordStackTraceAtLevel = C.Level_OFF_2000;
 $._rootLevel = C.Level_INFO_800;
@@ -25881,10 +25890,8 @@ $.LogRecord__nextNumber = 0;
 }, "_dartProxyCtor", "CssClassSetImpl__validTokenRE", "get$CssClassSetImpl__validTokenRE", function() {
   return P.RegExp_RegExp("^\\S+$", true, false);
 }, "_validTokenRE", "_severityMap", "get$_severityMap", function() {
-  return P.LinkedHashMap_LinkedHashMap$_literal(["ERROR", "Error", "WARNING", "Warning"], null, null);
-}, "_severityMap", "DartLinterConsumer_acceptableErrorTypes", "get$DartLinterConsumer_acceptableErrorTypes", function() {
-  return ["ERROR", "WARNING"];
-}, "acceptableErrorTypes", "Logger__loggers", "get$Logger__loggers", function() {
+  return P.LinkedHashMap_LinkedHashMap$_literal(["ERROR", "Error", "WARNING", "Warning", "INFO", "Info"], null, null);
+}, "_severityMap", "Logger__loggers", "get$Logger__loggers", function() {
   return P.LinkedHashMap_LinkedHashMap$_empty(P.String, N.Logger);
 }, "_loggers"]);
 ;

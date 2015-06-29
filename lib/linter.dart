@@ -6,6 +6,7 @@ import 'atom.dart';
 import 'atom_linter.dart';
 import 'error_repository.dart';
 import 'impl/analysis_server_gen.dart' show AnalysisError, Location;
+import 'state.dart' show pluginId;
 import 'utils.dart';
 
 part 'linter/dart_linter_consumer.dart';
@@ -42,6 +43,9 @@ int _sev(String sev) {
 
 final Map<String, String> _severityMap = {
   'ERROR': LintMessage.ERROR,
-  'WARNING': LintMessage.WARNING
-  //'INFO': LintMessage.INFO
+  'WARNING': LintMessage.WARNING,
+  'INFO': LintMessage.INFO
 };
+
+String _infosPrefPath = '${pluginId}.showInfos';
+bool _shouldShowInfoMessages() => atom.config.get(_infosPrefPath);

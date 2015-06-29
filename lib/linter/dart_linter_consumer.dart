@@ -2,7 +2,6 @@ part of linter;
 
 /// Consumes the atomlinter/linter self-service API.
 class DartLinterConsumer extends LinterConsumer with Disposables {
-  static final List<String> acceptableErrorTypes = ['ERROR', 'WARNING'];
   ErrorRepository _errorRepository;
   DartLinterConsumer(this._errorRepository);
 
@@ -10,6 +9,10 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
     var provider = new DartLinterProvider();
 
     _errorRepository.onChange.listen((_) {
+      final acceptableErrorTypes = ['ERROR', 'WARNING'];
+      if(_shouldShowInfoMessages()) {
+        acceptableErrorTypes.add('INFO');
+      }
       var allErrors =
           _errorRepository.knownErrors.values.expand((l) => l).toList();
       var sortedErrors = new List<AnalysisError>.from(allErrors)
