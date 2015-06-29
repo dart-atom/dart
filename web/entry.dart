@@ -13,6 +13,6 @@ main() {
     //print('${rec.level.name}: ${rec.time}: ${rec.message}');
     print('${rec}');
   });
-
+  
   registerPackage(new AtomDartPackage());
 }

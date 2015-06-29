@@ -15,17 +15,17 @@
       "versions": {
         "^1.0.0": "consumeStatusBar"
       }
+    },
+    "linter-plus-self": {
+      "versions": {
+        "0.1.0": "consumeLinter"
+      }
     }
   },
   "providedServices": {
     "autocomplete.provider": {
       "versions": {
         "2.0.0": "provideAutocomplete"
-      }
-    },
-    "linter": {
-      "versions": {
-        "1.0.0": "provideLinter"
       }
     }
   }

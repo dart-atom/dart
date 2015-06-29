@@ -16,7 +16,8 @@ abstract class LinterProvider {
   final String scope;
   final bool lintOnFly;
 
-  static void registerLinterProvider(String methodName, LinterProvider provider) {
+  static void registerLinterProvider(
+      String methodName, LinterProvider provider) {
     final JsObject exports = context['module']['exports'];
     exports[methodName] = () => provider.toProxy();
   }
@@ -39,13 +40,25 @@ abstract class LinterProvider {
     return jsify(map);
   }
 
-  JsObject _lint(jsEditor) {
-    TextEditor textEditor = new TextEditor(jsEditor);
-    Future f = lint(textEditor).then((lints) {
-      return lints.map((lint) => lint._toProxy()).toList();
-    });
-    Promise promise = new Promise.fromFuture(f);
-    return promise.obj;
+  JsObject _lint(jsEditor) => jsify([]);
+}
+
+abstract class LinterConsumer {
+  consume(LinterService linterService);
+}
+
+class LinterService extends ProxyHolder {
+  LinterService(obj) : super(obj);
+
+  deleteProjectMessages(LinterProvider provider) {
+    invoke('deleteProjectMessages', provider);
+  }
+
+  setProjectMessages(LinterProvider provider, List<LintMessage> messages) {
+    // jsify(messages, deep: true) ?
+    // jsifyIterable(messages) ?
+    var list = messages.map((m) => m.toMap()).toList();
+    invoke('setProjectMessages', provider, list);
   }
 }
 
@@ -64,7 +77,7 @@ class LintMessage {
 
   LintMessage({this.type, this.text, this.html, this.filePath, this.range});
 
-  Map _toMap() {
+  Map toMap() {
     Map m = {};
     if (type != null) m['type'] = type;
     if (text != null) m['text'] = text;
@@ -73,8 +86,6 @@ class LintMessage {
     if (range != null) m['range'] = range.toArray();
     return m;
   }
-
-  JsObject _toProxy() => jsify(_toMap());
 }
 
 class Rn {
