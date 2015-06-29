@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:markdown/markdown.dart';
 
+import 'src/parser.dart';
 import 'src/src_gen.dart';
 
 Api api;
@@ -13,6 +14,18 @@ bool _isH3(Node node) => node is Element && node.tag == 'h3';
 bool _isHeader(Node node) => node is Element && node.tag.startsWith('h');
 String _textForElement(Node node) => (((node as Element).children.first) as Text).text;
 String _textForCode(Node node) => _textForElement((node as Element).children.first);
+
+String _coerceRefType(String typeName) {
+  if (typeName == 'Object') typeName = 'Obj';
+  if (typeName == '@Object') typeName = 'ObjRef';
+  if (typeName == 'Function') typeName = 'Func';
+  if (typeName == '@Function') typeName = 'FuncRef';
+  if (typeName.startsWith('@')) typeName = typeName.substring(1) + 'Ref';
+  if (typeName == 'string') typeName = 'String';
+  return typeName;
+}
+
+// TODO: expose events
 
 main(List<String> args) {
   // Parse service.md into a model.
@@ -31,10 +44,127 @@ main(List<String> args) {
   print('Wrote ${outputFile.path}.');
 }
 
+final String _headerCode = r'''
+// This is a generated file.
+
+library observatory_gen;
+
+import 'dart:async';
+import 'dart:convert' show JSON, JsonCodec;
+
+import 'package:logging/logging.dart';
+
+final Logger _logger = new Logger('observatory_gen');
+
+const optional = 'optional';
+
+// TODO: Is this a doc error in `service.md`?
+class TypeRef extends ObjRef { }
+
+''';
+
+final String _implCode = r'''
+
+  Stream<String> get onSend => _onSend.stream;
+  Stream<String> get onReceive => _onReceive.stream;
+
+  void dispose() {
+    _streamSub.cancel();
+    _completers.values.forEach((c) => c.completeError('disposed'));
+  }
+
+  Future<Response> _call(String method, [Map args]) {
+    String id = '${++_id}';
+    _completers[id] = new Completer();
+    Map m = {'id': id, 'method': method};
+    if (args != null) m['params'] = args;
+    String message = JSON.encode(m);
+    _onSend.add(message);
+    _writeMessage(message);
+    return _completers[id].future;
+  }
+
+  void _processMessage(String message) {
+    try {
+      _onReceive.add(message);
+
+      var json = JSON.decode(message);
+
+      if (json['id'] == null) {
+      //   // Handle a notification.
+      //   String event = json['event'];
+      //   String prefix = event.substring(0, event.indexOf('.'));
+      //   if (_domains[prefix] == null) {
+      //     _logger.severe('no domain for notification: ${message}');
+      //   } else {
+      //     _domains[prefix]._handleEvent(event, json['params']);
+      //   }
+      } else {
+        Completer completer = _completers.remove(json['id']);
+
+        if (completer == null) {
+          _logger.severe('unmatched request response: ${message}');
+        } else if (json['error'] != null) {
+          completer.completeError(RPCError.parse(json['error']));
+        } else {
+          var result = json['result'];
+          String type = json['type'];
+          if (_typeFactories[type] == null) {
+            completer.completeError(new RPCError(0, 'unknown response type ${type}'));
+          } else {
+            completer.complete(createObject(result));
+          }
+        }
+      }
+    } catch (e) {
+      _logger.severe('unable to decode message: ${message}, ${e}');
+    }
+  }
+''';
+
+final String _rpcError = r'''
+Object createObject(dynamic json) {
+  if (json == null) return null;
+
+  if (json is List) {
+    return (json as List).map((e) => createObject(e)).toList();
+  } else if (json is Map) {
+    String type = json['type'];
+    if (_typeFactories[type] == null) {
+      _logger.severe("no factory for type '${type}'");
+      return null;
+    } else {
+      return _typeFactories[type](json);
+    }
+  } else {
+    // Handle simple types.
+    return json;
+  }
+}
+
+class RPCError {
+  static RPCError parse(dynamic json) {
+    return new RPCError(json['code'], json['message'], json['data']);
+  }
+
+  final int code;
+  final String message;
+  final Map data;
+
+  RPCError(this.code, this.message, [this.data]);
+
+  String toString() => '${code}: ${message}';
+}
+''';
+
 abstract class Member {
   String get name;
-  String get docs;
+  String get docs => null;
   void generate(DartGenerator gen);
+
+  bool get hasDocs => docs != null;
+
+  String toString() => name;
 }
 
 class Api extends Member {
@@ -59,7 +189,6 @@ class Api extends Member {
         if (i + 1 < nodes.length && _isPara(nodes[i + 1])) {
           Element p = nodes[++i];
           docs = collapseWhitespace(TextOutputVisitor.printText(p));
-          //docs = collapseWhitespace(renderToHtml([p]));
         }
 
         _parse(h3Name, definition, docs);
@@ -82,7 +211,7 @@ class Api extends Member {
     if (name.substring(0, 1).toLowerCase() == name.substring(0, 1)) {
       methods.add(new Method(name, definition, docs));
     } else if (definition.startsWith('class ')) {
-      types.add(new Type(name, definition, docs));
+      types.add(new Type(this, name, definition, docs));
     } else if (definition.startsWith('enum ')) {
       enums.add(new Enum(name, definition, docs));
     } else {
@@ -103,63 +232,251 @@ class Api extends Member {
 
   void generate(DartGenerator gen) {
     gen.out(_headerCode);
-    gen.writeStatement('class Observatory {');
+    gen.write('Map<String, Function> _typeFactories = {');
+    types.forEach((Type type) {
+      //if (type.isResponse)
+      gen.write("'${type.rawName}': ${type.name}.parse");
+      gen.writeln(type == types.last ? '' : ',');
+    });
+    gen.writeln('};');
     gen.writeln();
+    gen.writeStatement('class Observatory {');
+    gen.writeStatement('StreamSubscription _streamSub;');
+    gen.writeStatement('Function _writeMessage;');
+    gen.writeStatement('int _id = 0;');
+    gen.writeStatement('Map<String, Completer> _completers = {};');
+    gen.writeln("StreamController _onSend = new StreamController.broadcast();");
+    gen.writeln("StreamController _onReceive = new StreamController.broadcast();");
+    gen.writeln();
+    gen.writeStatement(
+        'Observatory(Stream<String> inStream, void writeMessage(String message)) {');
+    gen.writeStatement('_streamSub = inStream.listen(_processMessage);');
+    gen.writeStatement('_writeMessage = writeMessage;');
+    gen.writeln('}');
     methods.forEach((m) => m.generate(gen));
+    gen.out(_implCode);
     gen.writeStatement('}');
     gen.writeln();
+    gen.writeln(_rpcError);
     gen.writeln('// enums');
     enums.forEach((e) => e.generate(gen));
     gen.writeln();
     gen.writeln('// types');
     types.forEach((t) => t.generate(gen));
   }
+
+  Type getType(String name) =>
+      types.firstWhere((t) => t.name == name, orElse: () => null);
 }
 
 class Method extends Member {
   final String name;
   final String docs;
 
-  Method(this.name, String definition, [this.docs]) {
+  MemberType returnType = new MemberType();
+  List<MethodArg> args = [];
 
+  Method(this.name, String definition, [this.docs]) {
+    _parse(new Tokenizer(definition).tokenize());
   }
+
+  bool get hasArgs => args.isNotEmpty;
+
+  bool get hasOptionalArgs => args.any((MethodArg arg) => arg.optional);
 
   void generate(DartGenerator gen) {
     gen.writeln();
     if (docs != null) {
-      gen.writeDocs(docs);
-      gen.writeStatement('Future ${name}() {');
-      gen.writeln();
-      gen.writeStatement('}');
+      String _docs = docs == null ? '' : docs;
+      if (returnType.isMultipleReturns) {
+        _docs += '\n\nThe return value can be one of '
+            '${joinLast(returnType.types.map((t) => '[${t}]'), ', ', ' or ')}.';
+        _docs = _docs.trim();
+      }
+      if (_docs.isNotEmpty) gen.writeDocs(_docs);
+      gen.write('Future<${returnType.name}> ${name}(');
+      gen.write(args.map((MethodArg arg) {
+        if (arg.optional) {
+          return '[${arg.type} ${arg.name}]';
+        } else {
+          return '${arg.type} ${arg.name}';
+        }
+      }).join(', '));
+      gen.write(') ');
+      if (!hasArgs) {
+        gen.writeStatement("=> _call('${name}');");
+      } else if (hasOptionalArgs) {
+        gen.writeStatement('{');
+        gen.write('Map m = {');
+        gen.write(args.where((MethodArg a) => !a.optional).map(
+            (arg) => "'${arg.name}': ${arg.name}").join(', '));
+        gen.writeln('};');
+        args.where((MethodArg a) => a.optional).forEach((arg) {
+          gen.writeln("if (${arg.name} != null) m['${arg.name}'] = ${arg.name};");
+        });
+        gen.writeStatement("return _call('${name}', m);");
+        gen.writeStatement('}');
+      } else {
+        gen.writeStatement('{');
+        gen.write("return _call('${name}', {");
+        gen.write(args.map((arg) => "'${arg.name}': ${arg.name}").join(', '));
+        gen.writeStatement('});');
+        gen.writeStatement('}');
+      }
     }
+  }
+
+  void _parse(Token token) {
+    new MethodParser(token).parseInto(this);
   }
 }
 
-class Type extends Member {
-  String name;
-  final String docs;
+class MemberType extends Member {
+  List<TypeRef> types = [];
 
-  Type(String categoryName, String definition, [this.docs]) {
-    // TODO: parse the name
-    // TODO: temp!
-    this.name = categoryName;
-    if (definition.startsWith('class @')) {
-      this.name += 'Ref';
+  MemberType();
+
+  void parse(Parser parser) {
+    // foo|bar[]|baz
+    bool loop = true;
+    while (loop) {
+      Token t = parser.expectName();
+      TypeRef ref = new TypeRef(_coerceRefType(t.text));
+      while (parser.consume('[')) {
+        parser.expect(']');
+        ref.arrayDepth++;
+      }
+      types.add(ref);
+      loop = parser.consume('|');
     }
-    // TODO: temp!
   }
 
-  // TODO:
-  bool get isRef => false;
+  String get name {
+    if (types.isEmpty) return '';
+    if (types.length == 1) return types.first.ref;
+    return 'dynamic';
+  }
+
+  bool get isMultipleReturns => types.length > 1;
+
+  bool get isSimple => types.length == 1 && types.first.isSimple;
+
+  void generate(DartGenerator gen) => gen.write(name);
+}
+
+class TypeRef {
+  String name;
+  int arrayDepth = 0;
+
+  TypeRef(this.name);
+
+  String get ref => arrayDepth == 2
+      ? 'List<List<${name}>>' : arrayDepth == 1 ? 'List<${name}>' : name;
+
+  bool get isArray => arrayDepth > 0;
+
+  bool get isSimple => name == 'int' || name == 'String' || name == 'bool';
+
+  String toString() => ref;
+}
+
+class MethodArg extends Member {
+  final Method parent;
+  String type;
+  String name;
+  bool optional = false;
+
+  MethodArg(this.parent, this.type, this.name);
+
+  void generate(DartGenerator gen) => gen.write('${type} ${name}');
+}
+
+class Type extends Member {
+  final Api parent;
+  String rawName;
+  String name;
+  String superName;
+  final String docs;
+  List<TypeField> fields = [];
+
+  Type(this.parent, String categoryName, String definition, [this.docs]) {
+    _parse(new Tokenizer(definition).tokenize());
+  }
+
+  bool get isResponse {
+    if (superName == null) return false;
+    if (name == 'Response' || superName == 'Response') return true;
+    return parent.getType(superName).isResponse;
+  }
+
+  bool get isRef => name.endsWith('Ref');
 
   void generate(DartGenerator gen) {
     gen.writeln();
-    if (docs != null) {
-      gen.writeDocs(docs);
-      gen.writeStatement('class ${name} {');
-      gen.writeln();
-      gen.writeStatement('}');
+    if (docs != null) gen.writeDocs(docs);
+    gen.write('class ${name} ');
+    if (superName != null) gen.write('extends ${superName} ');
+    gen.writeln('{');
+    gen.writeln('static ${name} parse(Map json) => new ${name}.fromJson(json);');
+    gen.writeln();
+    gen.writeln('${name}();');
+    String superCall = superName == null ? '' : ": super.fromJson(json) ";
+    gen.writeln('${name}.fromJson(Map json) ${superCall}{');
+    fields.forEach((TypeField field) {
+      if (field.type.isSimple) {
+        gen.writeln("${field.generatableName} = json['${field.name}'];");
+      } else {
+        gen.writeln("${field.generatableName} = createObject(json['${field.name}']);");
+      }
+    });
+    gen.writeln('}');
+    gen.writeln();
+    fields.forEach((TypeField field) => field.generate(gen));
+    gen.writeln('}');
+  }
+
+  void _parse(Token token) {
+    new TypeParser(token).parseInto(this);
+  }
+}
+
+class TypeField extends Member {
+  static final Map<String, String> _nameRemap = {
+    'const': 'isConst',
+    'final': 'isFinal',
+    'static': 'isStatic',
+    'abstract': 'isAbstract',
+    'super': 'superClass',
+    'class': 'classRef'
+  };
+
+  final Type parent;
+  final String _docs;
+  MemberType type = new MemberType();
+  String name;
+  bool optional = false;
+
+  TypeField(this.parent, this._docs);
+
+  String get docs {
+    String str = _docs == null ? '' : _docs;
+    if (type.isMultipleReturns) {
+      str += '\n\n[${generatableName}] can be one of '
+          '${joinLast(type.types.map((t) => '[${t}]'), ', ', ' or ')}.';
+      str = str.trim();
     }
+    return str;
+  }
+
+  String get generatableName {
+    return _nameRemap[name] != null ? _nameRemap[name] : name;
+  }
+
+  void generate(DartGenerator gen) {
+    if (docs.isNotEmpty) gen.writeDocs(docs);
+    if (optional) gen.write('@optional ');
+    gen.writeStatement('${type.name} ${generatableName};');
+    if (parent.fields.any((field) => field.hasDocs)) gen.writeln();
   }
 }
 
@@ -203,26 +520,6 @@ class EnumValue extends Member {
   }
 }
 
-final String _headerCode = r'''
-// This is a generated file.
-
-library observatory_gen;
-
-import 'dart:async';
-import 'dart:convert' show JSON, JsonCodec;
-
-import 'package:logging/logging.dart';
-
-final Logger _logger = new Logger('observatory_gen');
-
-const optional = 'optional';
-
-''';
-
-final RegExp _wsRegexp = new RegExp(r'\s+');
-
-String collapseWhitespace(String str) => str.replaceAll(_wsRegexp, ' ');
-
 class TextOutputVisitor implements NodeVisitor {
   static String printText(Node node) {
     TextOutputVisitor visitor = new TextOutputVisitor();
@@ -237,11 +534,7 @@ class TextOutputVisitor implements NodeVisitor {
 
   void visitText(Text text) {
     String t = text.text;
-
-    if (_inRef && t.startsWith('@')) {
-      t = t.substring(1) + 'Ref';
-    }
-
+    if (_inRef) t = _coerceRefType(t);
     buf.write(t);
   }
 
@@ -273,156 +566,76 @@ class TextOutputVisitor implements NodeVisitor {
   String toString() => buf.toString().trim();
 }
 
-class Token {
-  static final RegExp _alpha = new RegExp(r'^[0-9a-zA-Z_\-@]+$');
+// @Instance|@Error|Sentinel evaluate(
+//     string isolateId,
+//     string targetId [optional],
+//     string expression)
+class MethodParser extends Parser {
+  MethodParser(Token startToken) : super(startToken);
 
-  final String text;
-  Token next;
+  void parseInto(Method method) {
+    // method is return type, name, (, args )
+    // args is type name, [optional], comma
 
-  Token(this.text);
+    method.returnType.parse(this);
 
-  bool get eof => text == null;
+    Token t = expectName();
+    validate(t.text == method.name, 'method name ${method.name} equals ${t.text}');
 
-  bool get isName {
-    if (text == null || text.isEmpty) return false;
-    return _alpha.hasMatch(text);
-  }
+    expect('(');
 
-  bool get isComment => text != null && text.startsWith('//');
-
-  String toString() => text == null ? 'EOF' : text;
-}
-
-class Tokenizer {
-  static final alphaNum =
-      '@abcdefghijklmnopqrstuvwxyz-_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  static final whitespace = ' \n\t\r';
-
-  String text;
-  Token _head;
-  Token _last;
-
-  Tokenizer(this.text);
-
-  Token tokenize() {
-    _emit(null);
-
-    for (int i = 0; i < text.length; i++) {
-      String c = text[i];
-
-      if (whitespace.contains(c)) {
-        // skip
-      } else if (c == '/' && _peek(i) == '/') {
-        int index = text.indexOf('\n', i);
-        if (index == -1) index = text.length;
-        _emit(text.substring(i, index));
-        i = index;
-      } else if (alphaNum.contains(c)) {
-        int start = i;
-
-        while (alphaNum.contains(_peek(i))) {
-          i++;
-        }
-
-        _emit(text.substring(start, i + 1));
-      } else {
-        _emit(c);
+    while (peek().text != ')') {
+      Token type = expectName();
+      Token name = expectName();
+      MethodArg arg = new MethodArg(method, _coerceRefType(type.text), name.text);
+      if (consume('[')) {
+        expect('optional');
+        expect(']');
+        arg.optional = true;
       }
+      method.args.add(arg);
+      consume(',');
     }
 
-    _emit(null);
-
-    _head = _head.next;
-
-    return _head;
-  }
-
-  void _emit(String value) {
-    Token token = new Token(value);
-    if (_head == null) _head = token;
-    if (_last != null) _last.next = token;
-    _last = token;
-  }
-
-  String _peek(int i) {
-    i += 1;
-    return i < text.length ? text[i] :new String.fromCharCodes([0]);
-  }
-
-  String toString() {
-    StringBuffer buf = new StringBuffer();
-
-    Token t = _head;
-
-    buf.write('[${t}]\n');
-
-    while (!t.eof) {
-      t = t.next;
-      buf.write('[${t}]\n');
-    }
-
-    return buf.toString().trim();
+    expect(')');
   }
 }
 
-abstract class Parser {
-  final Token startToken;
+class TypeParser extends Parser {
+  TypeParser(Token startToken) : super(startToken);
 
-  Token current;
+  void parseInto(Type type) {
+    // class ClassList extends Response {
+    //   // Docs here.
+    //   @Class[] classes [optional];
+    // }
+    expect('class');
 
-  Parser(this.startToken);
-
-  Token expect(String text) {
-    Token t = advance();
-    if (text != t.text) fail('expected ${text}, got ${t}');
-    return t;
-  }
-
-  bool consume(String text) {
-    if (peek().text == text) {
-      advance();
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  Token peek() => current.eof ? current : current.next;
-
-  Token expectName() {
-    Token t = advance();
-    if (!t.isName) fail('expected name token');
-    return t;
-  }
-
-  Token advance() {
-    if (current == null) {
-      current = startToken;
-    } else if (!current.eof) {
-      current = current.next;
+    Token t = expectName();
+    type.rawName = t.text;
+    type.name = _coerceRefType(type.rawName);
+    if (consume('extends')) {
+      t = expectName();
+      type.superName = _coerceRefType(t.text);
     }
 
-    return current;
-  }
+    expect('{');
 
-  String collectComments() {
-    StringBuffer buf = new StringBuffer();
-
-    while (peek().isComment) {
-      Token t = advance();
-      String str = t.text.substring(2);
-      buf.write(' ${str}');
+    while (peek().text != '}') {
+      TypeField field = new TypeField(type, collectComments());
+      field.type.parse(this);
+      field.name = expectName().text;
+      if (consume('[')) {
+        expect('optional');
+        expect(']');
+        field.optional = true;
+      }
+      type.fields.add(field);
+      expect(';');
     }
 
-    if (buf.isEmpty) return null;
-    return collapseWhitespace(buf.toString()).trim();
+    expect('}');
   }
-
-  void validate(bool result, String message) {
-    if (!result) throw 'expected ${message}';
-  }
-
-  void fail(String message) => throw message;
 }
 
 class EnumParser extends Parser {
