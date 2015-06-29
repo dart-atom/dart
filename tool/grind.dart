@@ -34,8 +34,9 @@ ddc() {
 @Task()
 test() => new PubApp.local('test').run(['-rexpanded']);
 
+// TODO: remove the `ddc` task for now - stream transformers make it unhappy.
 @Task()
-@Depends(analyze, build, ddc, test)
+@Depends(analyze, build, test)
 bot() => null;
 
 @Task()

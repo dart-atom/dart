@@ -1,7 +1,7 @@
 part of linter;
 
 /// This only class exists to provide linting information to atomlinter/linter.
-class DartLinterProvider extends LinterProvider {  
+class DartLinterProvider extends LinterProvider {
   DartLinterProvider()
       : super(grammarScopes: ['source.dart'], scope: 'project');
 

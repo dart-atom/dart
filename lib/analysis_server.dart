@@ -13,7 +13,6 @@ import 'package:frappe/frappe.dart';
 //import 'package:markdown/markdown.dart';
 
 import 'atom.dart';
-import 'atom_linter.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'jobs.dart';
@@ -55,9 +54,6 @@ class AnalysisServer implements Disposable {
 
   Stream<String> get onSend => _onSendController.stream;
   Stream<String> get onReceive => _onReceiveController.stream;
-
-
-
 
   // TODO: is it better to just expose _server?
   Stream<AnalysisErrors> get onAnalysisErrors =>
