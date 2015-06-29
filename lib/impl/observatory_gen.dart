@@ -67,13 +67,26 @@ class Observatory {
   Function _writeMessage;
   int _id = 0;
   Map<String, Completer> _completers = {};
+
   StreamController _onSend = new StreamController.broadcast();
   StreamController _onReceive = new StreamController.broadcast();
+
+  StreamController<Event> _isolateEventController =
+      new StreamController.broadcast();
+  StreamController<Event> _debugEventController =
+      new StreamController.broadcast();
+  StreamController<Event> _gcEventController = new StreamController.broadcast();
 
   Observatory(Stream<String> inStream, void writeMessage(String message)) {
     _streamSub = inStream.listen(_processMessage);
     _writeMessage = writeMessage;
   }
+
+  Stream<Event> get onIsolateEvent => _isolateEventController.stream;
+
+  Stream<Event> get onDebugEvent => _debugEventController.stream;
+
+  Stream<Event> get onGcEvent => _gcEventController.stream;
 
   /// The [addBreakpoint] RPC is used to add a breakpoint at a specific line of
   /// some script.
@@ -170,7 +183,7 @@ class Observatory {
   /// The [resume] RPC is used to resume execution of a paused isolate.
   Future<Success> resume(String isolateId, [StepOption step]) {
     Map m = {'isolateId': isolateId};
-    if (step != null) m['step'] = step;
+    if (step != null) m['step'] = step.toString();
     return _call('resume', m);
   }
 
@@ -202,6 +215,7 @@ class Observatory {
   }
 
   Stream<String> get onSend => _onSend.stream;
+
   Stream<String> get onReceive => _onReceive.stream;
 
   void dispose() {
@@ -209,10 +223,11 @@ class Observatory {
     _completers.values.forEach((c) => c.completeError('disposed'));
   }
 
-  Future<Response> _call(String method, [Map args]) {
+  Future<Response> _call(String method, [Map args = const {}]) {
     String id = '${++_id}';
     _completers[id] = new Completer();
-    Map m = {'id': id, 'method': method};
+    // TODO: The observatory needs 'params' to be there...
+    Map m = {'id': id, 'method': method, 'params': args};
     if (args != null) m['params'] = args;
     String message = JSON.encode(m);
     _onSend.add(message);
@@ -226,16 +241,21 @@ class Observatory {
 
       var json = JSON.decode(message);
 
-      if (json['id'] == null) {
-        //   // Handle a notification.
-        //   String event = json['event'];
-        //   String prefix = event.substring(0, event.indexOf('.'));
-        //   if (_domains[prefix] == null) {
-        //     _logger.severe('no domain for notification: ${message}');
-        //   } else {
-        //     _domains[prefix]._handleEvent(event, json['params']);
-        //   }
-      } else {
+      if (json['event'] != null) {
+        String streamId = json['streamId'];
+
+        // TODO: These could be generated from a list.
+
+        if (streamId == 'Isolate') {
+          _isolateEventController.add(createObject(json['event']));
+        } else if (streamId == 'Debug') {
+          _debugEventController.add(createObject(json['event']));
+        } else if (streamId == 'GC') {
+          _gcEventController.add(createObject(json['event']));
+        } else {
+          _logger.warning('unknown streamId: ${streamId}');
+        }
+      } else if (json['id'] != null) {
         Completer completer = _completers.remove(json['id']);
 
         if (completer == null) {
@@ -244,7 +264,7 @@ class Observatory {
           completer.completeError(RPCError.parse(json['error']));
         } else {
           var result = json['result'];
-          String type = json['type'];
+          String type = result['type'];
           if (_typeFactories[type] == null) {
             completer.completeError(
                 new RPCError(0, 'unknown response type ${type}'));
@@ -252,6 +272,8 @@ class Observatory {
             completer.complete(createObject(result));
           }
         }
+      } else {
+        _logger.severe('unknown message type: ${message}');
       }
     } catch (e) {
       _logger.severe('unable to decode message: ${message}, ${e}');
@@ -276,6 +298,11 @@ Object createObject(dynamic json) {
     // Handle simple types.
     return json;
   }
+}
+
+Object _parseEnum(Iterable itor, String valueName) {
+  if (valueName == null) return null;
+  return itor.firstWhere((i) => i.toString() == valueName, orElse: () => null);
 }
 
 class RPCError {
@@ -434,6 +461,8 @@ class BoundField {
 
   /// [value] can be one of [InstanceRef] or [Sentinel].
   dynamic value;
+
+  String toString() => '[BoundField decl: ${decl}, value: ${value}]';
 }
 
 /// A [BoundVariable] represents a local variable bound to a particular value in
@@ -451,6 +480,8 @@ class BoundVariable {
 
   /// [value] can be one of [InstanceRef] or [Sentinel].
   dynamic value;
+
+  String toString() => '[BoundVariable name: ${name}, value: ${value}]';
 }
 
 /// A [Breakpoint] describes a debugger breakpoint.
@@ -469,6 +500,9 @@ class Breakpoint extends Response {
   bool resolved;
 
   SourceLocation location;
+
+  String toString() => '[Breakpoint ' //
+      'type: ${type}, breakpointNumber: ${breakpointNumber}, resolved: ${resolved}, location: ${location}]';
 }
 
 /// [ClassRef] is a reference to a [Class].
@@ -482,6 +516,8 @@ class ClassRef extends ObjRef {
 
   /// The name of this class.
   String name;
+
+  String toString() => '[ClassRef type: ${type}, id: ${id}, name: ${name}]';
 }
 
 /// A [Class] provides information about a Dart language class.
@@ -548,6 +584,8 @@ class Class extends Obj {
 
   /// A list of subclasses of this class.
   List<ClassRef> subclasses;
+
+  String toString() => '[Class]';
 }
 
 class ClassList extends Response {
@@ -559,6 +597,8 @@ class ClassList extends Response {
   }
 
   List<ClassRef> classes;
+
+  String toString() => '[ClassList type: ${type}, classes: ${classes}]';
 }
 
 /// [CodeRef] is a reference to a [Code] object.
@@ -568,7 +608,7 @@ class CodeRef extends ObjRef {
   CodeRef();
   CodeRef.fromJson(Map json) : super.fromJson(json) {
     name = json['name'];
-    kind = createObject(json['kind']);
+    kind = _parseEnum(CodeKind.values, json['kind']);
   }
 
   /// A name for this code object.
@@ -576,6 +616,9 @@ class CodeRef extends ObjRef {
 
   /// What kind of code object is this?
   CodeKind kind;
+
+  String toString() =>
+      '[CodeRef type: ${type}, id: ${id}, name: ${name}, kind: ${kind}]';
 }
 
 /// A [Code] object represents compiled code in the Dart VM.
@@ -585,7 +628,7 @@ class Code extends ObjRef {
   Code();
   Code.fromJson(Map json) : super.fromJson(json) {
     name = json['name'];
-    kind = createObject(json['kind']);
+    kind = _parseEnum(CodeKind.values, json['kind']);
   }
 
   /// A name for this code object.
@@ -593,6 +636,9 @@ class Code extends ObjRef {
 
   /// What kind of code object is this?
   CodeKind kind;
+
+  String toString() =>
+      '[Code type: ${type}, id: ${id}, name: ${name}, kind: ${kind}]';
 }
 
 class ContextRef {
@@ -605,6 +651,8 @@ class ContextRef {
 
   /// The number of variables in this context.
   int length;
+
+  String toString() => '[ContextRef length: ${length}]';
 }
 
 class Context {
@@ -625,6 +673,9 @@ class Context {
 
   /// The variables in this context object.
   List<ContextElement> variables;
+
+  String toString() =>
+      '[Context length: ${length}, parent: ${parent}, variables: ${variables}]';
 }
 
 class ContextElement {
@@ -637,6 +688,8 @@ class ContextElement {
 
   /// [value] can be one of [InstanceRef] or [Sentinel].
   dynamic value;
+
+  String toString() => '[ContextElement value: ${value}]';
 }
 
 /// [ErrorRef] is a reference to an [Error].
@@ -645,7 +698,7 @@ class ErrorRef extends ObjRef {
 
   ErrorRef();
   ErrorRef.fromJson(Map json) : super.fromJson(json) {
-    kind = createObject(json['kind']);
+    kind = _parseEnum(ErrorKind.values, json['kind']);
     message = json['message'];
   }
 
@@ -654,6 +707,9 @@ class ErrorRef extends ObjRef {
 
   /// A description of the error.
   String message;
+
+  String toString() =>
+      '[ErrorRef type: ${type}, id: ${id}, kind: ${kind}, message: ${message}]';
 }
 
 /// An [Error] represents a Dart language level error. This is distinct from an
@@ -663,7 +719,7 @@ class Error extends Obj {
 
   Error();
   Error.fromJson(Map json) : super.fromJson(json) {
-    kind = createObject(json['kind']);
+    kind = _parseEnum(ErrorKind.values, json['kind']);
     message = json['message'];
     exception = createObject(json['exception']);
     stacktrace = createObject(json['stacktrace']);
@@ -682,6 +738,8 @@ class Error extends Obj {
   /// If this error is due to an unhandled exception, this is the stacktrace
   /// object.
   @optional InstanceRef stacktrace;
+
+  String toString() => '[Error]';
 }
 
 /// An [Event] is an asynchronous notification from the VM. It is delivered only
@@ -692,7 +750,7 @@ class Event extends Response {
 
   Event();
   Event.fromJson(Map json) : super.fromJson(json) {
-    kind = createObject(json['kind']);
+    kind = _parseEnum(EventKind.values, json['kind']);
     isolate = createObject(json['isolate']);
     breakpoint = createObject(json['breakpoint']);
     pauseBreakpoints = createObject(json['pauseBreakpoints']);
@@ -729,6 +787,9 @@ class Event extends Response {
   /// The exception associated with this event, if this is a PauseException
   /// event.
   @optional InstanceRef exception;
+
+  String toString() => '[Event ' //
+      'type: ${type}, kind: ${kind}, isolate: ${isolate}, breakpoint: ${breakpoint}, pauseBreakpoints: ${pauseBreakpoints}, topFrame: ${topFrame}, exception: ${exception}]';
 }
 
 /// An [FieldRef] is a reference to a [Field].
@@ -762,6 +823,8 @@ class FieldRef extends ObjRef {
 
   /// Is this field static?
   bool isStatic;
+
+  String toString() => '[FieldRef]';
 }
 
 /// A [Field] provides information about a Dart language field or variable.
@@ -803,6 +866,8 @@ class Field extends Obj {
 
   /// The location of this field in the source code.
   @optional SourceLocation location;
+
+  String toString() => '[Field]';
 }
 
 /// A [Flag] represents a single VM command line flag.
@@ -829,6 +894,9 @@ class Flag {
   /// The value of this flag as a string. If this property is absent, then the
   /// value of the flag was NULL.
   @optional String valueAsString;
+
+  String toString() => '[Flag ' //
+      'name: ${name}, comment: ${comment}, modified: ${modified}, valueAsString: ${valueAsString}]';
 }
 
 /// A [FlagList] represents the complete set of VM command line flags.
@@ -846,6 +914,9 @@ class FlagList extends Response {
 
   /// A list of all flags which have been modified by the user.
   List<Flag> modifiedFlags;
+
+  String toString() => '[FlagList ' //
+      'type: ${type}, unmodifiedFlags: ${unmodifiedFlags}, modifiedFlags: ${modifiedFlags}]';
 }
 
 class Frame extends Response {
@@ -872,6 +943,9 @@ class Frame extends Response {
   int tokenPos;
 
   List<BoundVariable> vars;
+
+  String toString() => '[Frame ' //
+      'type: ${type}, index: ${index}, function: ${function}, code: ${code}, script: ${script}, tokenPos: ${tokenPos}, vars: ${vars}]';
 }
 
 /// An [FuncRef] is a reference to a [Func].
@@ -899,6 +973,9 @@ class FuncRef extends ObjRef {
 
   /// Is this function const?
   bool isConst;
+
+  String toString() => '[FuncRef ' //
+      'type: ${type}, id: ${id}, name: ${name}, owner: ${owner}, isStatic: ${isStatic}, isConst: ${isConst}]';
 }
 
 /// A [Func] represents a Dart language function.
@@ -926,6 +1003,8 @@ class Func extends Obj {
 
   /// The compiled code associated with this function.
   @optional CodeRef code;
+
+  String toString() => '[Func]';
 }
 
 /// [InstanceRef] is a reference to an [Instance].
@@ -934,7 +1013,7 @@ class InstanceRef extends ObjRef {
 
   InstanceRef();
   InstanceRef.fromJson(Map json) : super.fromJson(json) {
-    kind = createObject(json['kind']);
+    kind = _parseEnum(InstanceKind.values, json['kind']);
     classRef = createObject(json['class']);
     valueAsString = json['valueAsString'];
     valueAsStringIsTruncated = json['valueAsStringIsTruncated'];
@@ -980,6 +1059,8 @@ class InstanceRef extends ObjRef {
 
   /// The pattern of a RegExp instance. Provided for instance kinds: RegExp
   @optional String pattern;
+
+  String toString() => '[InstanceRef]';
 }
 
 /// An [Instance] represents an instance of the Dart language class [Obj].
@@ -988,7 +1069,7 @@ class Instance extends Obj {
 
   Instance();
   Instance.fromJson(Map json) : super.fromJson(json) {
-    kind = createObject(json['kind']);
+    kind = _parseEnum(InstanceKind.values, json['kind']);
     classRef = createObject(json['class']);
     valueAsString = json['valueAsString'];
     valueAsStringIsTruncated = json['valueAsStringIsTruncated'];
@@ -1101,6 +1182,8 @@ class Instance extends Obj {
   /// of: Type, TypeRef, TypeParameter, BoundedType. Provided for instance
   /// kinds: BoundedType TypeParameter
   @optional InstanceRef bound;
+
+  String toString() => '[Instance]';
 }
 
 /// [IsolateRef] is a reference to an [Isolate] object.
@@ -1122,6 +1205,9 @@ class IsolateRef extends Response {
 
   /// A name identifying this isolate. Not guaranteed to be unique.
   String name;
+
+  String toString() =>
+      '[IsolateRef type: ${type}, id: ${id}, number: ${number}, name: ${name}]';
 }
 
 /// An [Isolate] object provides information about one isolate in the VM.
@@ -1181,6 +1267,8 @@ class Isolate extends Response {
 
   /// A list of all breakpoints for this isolate.
   List<Breakpoint> breakpoints;
+
+  String toString() => '[Isolate]';
 }
 
 /// [LibraryRef] is a reference to a [Library].
@@ -1198,6 +1286,9 @@ class LibraryRef extends ObjRef {
 
   /// The uri of this library.
   String uri;
+
+  String toString() =>
+      '[LibraryRef type: ${type}, id: ${id}, name: ${name}, uri: ${uri}]';
 }
 
 /// A [Library] provides information about a Dart language library.
@@ -1239,6 +1330,8 @@ class Library extends Obj {
 
   /// A list of all classes in this library.
   List<ClassRef> classes;
+
+  String toString() => '[Library]';
 }
 
 /// A [LibraryDependency] provides information about an import or export.
@@ -1265,6 +1358,9 @@ class LibraryDependency {
 
   /// The library being imported or exported.
   LibraryRef target;
+
+  String toString() => '[LibraryDependency ' //
+      'isImport: ${isImport}, isDeferred: ${isDeferred}, prefix: ${prefix}, target: ${target}]';
 }
 
 class MapAssociation {
@@ -1281,6 +1377,8 @@ class MapAssociation {
 
   /// [value] can be one of [InstanceRef] or [Sentinel].
   dynamic value;
+
+  String toString() => '[MapAssociation key: ${key}, value: ${value}]';
 }
 
 class Message extends Response {
@@ -1307,6 +1405,9 @@ class Message extends Response {
   @optional FuncRef handler;
 
   @optional SourceLocation location;
+
+  String toString() => '[Message ' //
+      'type: ${type}, index: ${index}, name: ${name}, messageObjectId: ${messageObjectId}, size: ${size}, handler: ${handler}, location: ${location}]';
 }
 
 /// [NullRef] is a reference to an a [Null].
@@ -1320,6 +1421,8 @@ class NullRef extends InstanceRef {
 
   /// Always 'null'.
   String valueAsString;
+
+  String toString() => '[NullRef]';
 }
 
 /// A [Null] object represents the Dart language value null.
@@ -1333,6 +1436,8 @@ class Null extends Instance {
 
   /// Always 'null'.
   String valueAsString;
+
+  String toString() => '[Null]';
 }
 
 /// [ObjRef] is a reference to a [Obj].
@@ -1347,6 +1452,8 @@ class ObjRef extends Response {
   /// A unique identifier for an Object. Passed to the getObject RPC to load
   /// this Object.
   String id;
+
+  String toString() => '[ObjRef type: ${type}, id: ${id}]';
 }
 
 /// An [Obj] is a persistent object that is owned by some isolate.
@@ -1375,6 +1482,9 @@ class Obj extends Response {
   /// objects. In the current VM implementation, this occurs for small integers,
   /// which are stored entirely within their object pointers.
   @optional int size;
+
+  String toString() =>
+      '[Obj type: ${type}, id: ${id}, classRef: ${classRef}, size: ${size}]';
 }
 
 /// A [Sentinel] is used to indicate that the normal response is not available.
@@ -1383,7 +1493,7 @@ class Sentinel extends Response {
 
   Sentinel();
   Sentinel.fromJson(Map json) : super.fromJson(json) {
-    kind = createObject(json['kind']);
+    kind = _parseEnum(SentinelKind.values, json['kind']);
     valueAsString = json['valueAsString'];
   }
 
@@ -1392,6 +1502,9 @@ class Sentinel extends Response {
 
   /// A reasonable string representation of this sentinel.
   String valueAsString;
+
+  String toString() =>
+      '[Sentinel type: ${type}, kind: ${kind}, valueAsString: ${valueAsString}]';
 }
 
 /// [ScriptRef] is a reference to a [Script].
@@ -1405,6 +1518,8 @@ class ScriptRef extends ObjRef {
 
   /// The uri from which this script was loaded.
   String uri;
+
+  String toString() => '[ScriptRef type: ${type}, id: ${id}, uri: ${uri}]';
 }
 
 /// A [Script] provides information about a Dart language script.
@@ -1431,6 +1546,8 @@ class Script extends Obj {
 
   /// A table encoding a mapping from token position to line and column.
   List<List<int>> tokenPosTable;
+
+  String toString() => '[Script]';
 }
 
 /// The [SourceLocation] class is used to designate a position or range in some
@@ -1453,6 +1570,9 @@ class SourceLocation extends Response {
 
   /// The last token of the location if this is a range.
   @optional int endTokenPos;
+
+  String toString() => '[SourceLocation ' //
+      'type: ${type}, script: ${script}, tokenPos: ${tokenPos}, endTokenPos: ${endTokenPos}]';
 }
 
 class Stack extends Response {
@@ -1467,6 +1587,9 @@ class Stack extends Response {
   List<Frame> frames;
 
   List<Message> messages;
+
+  String toString() =>
+      '[Stack type: ${type}, frames: ${frames}, messages: ${messages}]';
 }
 
 /// The [Success] type is used to indicate that an operation completed
@@ -1476,6 +1599,8 @@ class Success extends Response {
 
   Success();
   Success.fromJson(Map json) : super.fromJson(json) {}
+
+  String toString() => '[Success type: ${type}]';
 }
 
 /// [TypeArgumentsRef] is a reference to a [TypeArguments] object.
@@ -1490,6 +1615,9 @@ class TypeArgumentsRef extends ObjRef {
 
   /// A name for this type argument list.
   String name;
+
+  String toString() =>
+      '[TypeArgumentsRef type: ${type}, id: ${id}, name: ${name}]';
 }
 
 /// A [TypeArguments] object represents the type argument vector for some
@@ -1508,6 +1636,9 @@ class TypeArguments extends Obj {
 
   /// A list of types.
   List<TypeRef> types;
+
+  String toString() => '[TypeArguments ' //
+      'type: ${type}, id: ${id}, classRef: ${classRef}, size: ${size}, name: ${name}, types: ${types}]';
 }
 
 /// Every non-error response returned by the Service Protocol extends
@@ -1524,6 +1655,8 @@ class Response {
   /// Every response returned by the VM Service has the type property. This
   /// allows the client distinguish between different kinds of responses.
   String type;
+
+  String toString() => '[Response type: ${type}]';
 }
 
 /// See Versioning.
@@ -1543,6 +1676,9 @@ class Version extends Response {
   /// The minor version number is incremented when the protocol is changed in a
   /// backwards compatible way.
   int minor;
+
+  String toString() =>
+      '[Version type: ${type}, major: ${major}, minor: ${minor}]';
 }
 
 class VM extends Response {
@@ -1580,4 +1716,6 @@ class VM extends Response {
 
   /// A list of isolates running in the VM.
   List<IsolateRef> isolates;
+
+  String toString() => '[VM]';
 }

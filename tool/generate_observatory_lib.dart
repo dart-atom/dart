@@ -25,8 +25,6 @@ String _coerceRefType(String typeName) {
   return typeName;
 }
 
-// TODO: expose events
-
 main(List<String> args) {
   // Parse service.md into a model.
   File file = new File('tool/service.md');
@@ -66,6 +64,7 @@ class TypeRef extends ObjRef { }
 final String _implCode = r'''
 
   Stream<String> get onSend => _onSend.stream;
+
   Stream<String> get onReceive => _onReceive.stream;
 
   void dispose() {
@@ -73,10 +72,11 @@ final String _implCode = r'''
     _completers.values.forEach((c) => c.completeError('disposed'));
   }
 
-  Future<Response> _call(String method, [Map args]) {
+  Future<Response> _call(String method, [Map args = const {}]) {
     String id = '${++_id}';
     _completers[id] = new Completer();
-    Map m = {'id': id, 'method': method};
+    // TODO: The observatory needs 'params' to be there...
+    Map m = {'id': id, 'method': method, 'params': args};
     if (args != null) m['params'] = args;
     String message = JSON.encode(m);
     _onSend.add(message);
@@ -90,16 +90,21 @@ final String _implCode = r'''
 
       var json = JSON.decode(message);
 
-      if (json['id'] == null) {
-      //   // Handle a notification.
-      //   String event = json['event'];
-      //   String prefix = event.substring(0, event.indexOf('.'));
-      //   if (_domains[prefix] == null) {
-      //     _logger.severe('no domain for notification: ${message}');
-      //   } else {
-      //     _domains[prefix]._handleEvent(event, json['params']);
-      //   }
-      } else {
+      if (json['event'] != null) {
+        String streamId = json['streamId'];
+
+        // TODO: These could be generated from a list.
+
+        if (streamId == 'Isolate') {
+          _isolateEventController.add(createObject(json['event']));
+        } else if (streamId == 'Debug') {
+          _debugEventController.add(createObject(json['event']));
+        } else if (streamId == 'GC') {
+          _gcEventController.add(createObject(json['event']));
+        } else {
+          _logger.warning('unknown streamId: ${streamId}');
+        }
+      } else if (json['id'] != null) {
         Completer completer = _completers.remove(json['id']);
 
         if (completer == null) {
@@ -108,13 +113,15 @@ final String _implCode = r'''
           completer.completeError(RPCError.parse(json['error']));
         } else {
           var result = json['result'];
-          String type = json['type'];
+          String type = result['type'];
           if (_typeFactories[type] == null) {
             completer.completeError(new RPCError(0, 'unknown response type ${type}'));
           } else {
             completer.complete(createObject(result));
           }
         }
+      } else {
+        _logger.severe('unknown message type: ${message}');
       }
     } catch (e) {
       _logger.severe('unable to decode message: ${message}, ${e}');
@@ -140,6 +147,11 @@ Object createObject(dynamic json) {
     // Handle simple types.
     return json;
   }
+}
+
+Object _parseEnum(Iterable itor, String valueName) {
+  if (valueName == null) return null;
+  return itor.firstWhere((i) => i.toString() == valueName, orElse: () => null);
 }
 
 class RPCError {
@@ -245,14 +257,25 @@ class Api extends Member {
     gen.writeStatement('Function _writeMessage;');
     gen.writeStatement('int _id = 0;');
     gen.writeStatement('Map<String, Completer> _completers = {};');
+    gen.writeln();
     gen.writeln("StreamController _onSend = new StreamController.broadcast();");
     gen.writeln("StreamController _onReceive = new StreamController.broadcast();");
+    gen.writeln();
+    gen.writeln("StreamController<Event> _isolateEventController = new StreamController.broadcast();");
+    gen.writeln("StreamController<Event> _debugEventController = new StreamController.broadcast();");
+    gen.writeln("StreamController<Event> _gcEventController = new StreamController.broadcast();");
     gen.writeln();
     gen.writeStatement(
         'Observatory(Stream<String> inStream, void writeMessage(String message)) {');
     gen.writeStatement('_streamSub = inStream.listen(_processMessage);');
     gen.writeStatement('_writeMessage = writeMessage;');
     gen.writeln('}');
+    gen.writeln();
+    gen.writeln("Stream<Event> get onIsolateEvent => _isolateEventController.stream;");
+    gen.writeln();
+    gen.writeln("Stream<Event> get onDebugEvent => _debugEventController.stream;");
+    gen.writeln();
+    gen.writeln("Stream<Event> get onGcEvent => _gcEventController.stream;");
     methods.forEach((m) => m.generate(gen));
     gen.out(_implCode);
     gen.writeStatement('}');
@@ -264,6 +287,8 @@ class Api extends Member {
     gen.writeln('// types');
     types.forEach((t) => t.generate(gen));
   }
+
+  bool isEnumName(String typeName) => enums.any((Enum e) => e.name == typeName);
 
   Type getType(String name) =>
       types.firstWhere((t) => t.name == name, orElse: () => null);
@@ -311,8 +336,12 @@ class Method extends Member {
         gen.write(args.where((MethodArg a) => !a.optional).map(
             (arg) => "'${arg.name}': ${arg.name}").join(', '));
         gen.writeln('};');
-        args.where((MethodArg a) => a.optional).forEach((arg) {
-          gen.writeln("if (${arg.name} != null) m['${arg.name}'] = ${arg.name};");
+        args.where((MethodArg a) => a.optional).forEach((MethodArg arg) {
+          String valueRef = arg.name;
+          if (api.isEnumName(arg.type)) {
+            valueRef = '${arg.name}.toString()';
+          }
+          gen.writeln("if (${arg.name} != null) m['${arg.name}'] = ${valueRef};");
         });
         gen.writeStatement("return _call('${name}', m);");
         gen.writeStatement('}');
@@ -360,6 +389,8 @@ class MemberType extends Member {
   bool get isMultipleReturns => types.length > 1;
 
   bool get isSimple => types.length == 1 && types.first.isSimple;
+
+  bool get isEnum => types.length == 1 && api.isEnumName(types.first.name);
 
   void generate(DartGenerator gen) => gen.write(name);
 }
@@ -411,6 +442,23 @@ class Type extends Member {
 
   bool get isRef => name.endsWith('Ref');
 
+  Type getSuper() => superName == null ? null : api.getType(superName);
+
+  List<TypeField> getAllFields() {
+    if (superName == null) return fields;
+
+    List<TypeField> all = [];
+    all.insertAll(0, fields);
+
+    Type s = getSuper();
+    while (s != null) {
+      all.insertAll(0, s.fields);
+      s = s.getSuper();
+    }
+
+    return all;
+  }
+
   void generate(DartGenerator gen) {
     gen.writeln();
     if (docs != null) gen.writeDocs(docs);
@@ -425,6 +473,11 @@ class Type extends Member {
     fields.forEach((TypeField field) {
       if (field.type.isSimple) {
         gen.writeln("${field.generatableName} = json['${field.name}'];");
+      } else if (field.type.isEnum) {
+        // Parse the enum.
+        String enumTypeName = field.type.types.first.name;
+        gen.writeln(
+          "${field.generatableName} = _parseEnum(${enumTypeName}.values, json['${field.name}']);");
       } else {
         gen.writeln("${field.generatableName} = createObject(json['${field.name}']);");
       }
@@ -432,6 +485,20 @@ class Type extends Member {
     gen.writeln('}');
     gen.writeln();
     fields.forEach((TypeField field) => field.generate(gen));
+
+    List<TypeField> allFields = getAllFields();
+    if (allFields.length <= 7) {
+      String properties = allFields.map(
+        (TypeField f) => "${f.generatableName}: \${${f.generatableName}}").join(', ');
+      if (properties.length > 70) {
+        gen.writeln("String toString() => '[${name} ' //\n'${properties}]';");
+      } else {
+        gen.writeln("String toString() => '[${name} ${properties}]';");
+      }
+    } else {
+      gen.writeln("String toString() => '[${name}]';");
+    }
+
     gen.writeln('}');
   }
 
