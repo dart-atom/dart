@@ -59,6 +59,8 @@ class AnalysisServer implements Disposable {
   Stream<AnalysisErrors> get onAnalysisErrors =>
       analysisServer._server.analysis.onErrors;
 
+  Server get server => _server;
+
   void _setup() {
     subs.add(projectManager.onChanged.listen(_reconcileRoots));
     subs.add(sdkManager.onSdkChange.listen(_handleSdkChange));

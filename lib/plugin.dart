@@ -5,10 +5,11 @@
 library atom.plugin;
 
 import 'dart:async';
-
+import 'dart:js';
 import 'package:logging/logging.dart';
 
 import 'analysis_server.dart';
+import 'autocomplete.dart';
 import 'atom.dart';
 import 'atom_autocomplete.dart';
 import 'atom_statusbar.dart';
@@ -60,6 +61,12 @@ class AtomDartPackage extends AtomPackage {
 
       return consumer;
     });
+    var provider = new DartAutocompleteProvider();
+    // TODO: why isn't this working?
+    // registerServiceProvider('provideAutocomplete',
+    //   () => provider.toProxy());
+    final JsObject exports = context['module']['exports'];
+    exports['provideAutocomplete'] = () => provider.toProxy();
   }
 
   void packageActivated([Map state]) {
@@ -158,23 +165,5 @@ class AtomDartPackage extends AtomPackage {
 
       _logger.fine("logging level: ${Logger.root.level}");
     }));
-  }
-}
-
-// TODO: Move this class to a different file.
-class DartAutocompleteProvider extends AutocompleteProvider {
-  // inclusionPriority: 100, excludeLowerPriority: true, filterSuggestions: true
-  DartAutocompleteProvider() : super('.source.dart');
-
-  void register() => AutocompleteProvider.registerAutocompleteProvider(
-      'provideAutocomplete', this);
-
-  Future<List<Suggestion>> getSuggestions(AutocompleteOptions options) {
-    List<Suggestion> suggestions = [
-      new Suggestion(text: 'lorem'),
-      new Suggestion(text: 'ipsum')
-    ];
-
-    return new Future.value(suggestions);
   }
 }

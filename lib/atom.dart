@@ -40,6 +40,14 @@ abstract class AtomPackage {
     _registeredMethods[methodName] = callback;
     return null;
   }
+
+  void registerServiceProvider(String methodName, JsObject callback()) {
+    if (_registeredMethods == null) {
+      throw new StateError('method must be registered in the package ctor');
+    }
+    _registeredMethods[methodName] = callback;
+    return null;
+  }
 }
 
 /**
@@ -68,6 +76,10 @@ void registerPackage(AtomPackage package) {
         // Convert the returned Disposable to a JS object.
         Map m = {'dispose': result.dispose};
         return jsify(m);
+      } else if (result is List || result is Map) {
+        return jsify(result);
+      } else if (result is JsObject) {
+        return result;
       } else {
         return null;
       }
