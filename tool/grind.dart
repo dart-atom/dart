@@ -34,7 +34,7 @@ ddc() {
 @Task()
 test() => new PubApp.local('test').run(['-rexpanded']);
 
-// TODO: remove the `ddc` task for now - stream transformers make it unhappy.
+// TODO: remove the `ddc` dep task for now - stream transformers make it unhappy.
 @Task()
 @Depends(analyze, build, test)
 bot() => null;
@@ -49,16 +49,20 @@ clean() {
 @Task('generate the analysis server API')
 analysisApi() {
   // https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/tool/spec/spec_input.html
-  Dart.run('tool/generate_analysis_lib.dart');
+  Dart.run('tool/analysis/generate_analysis_lib.dart', packageRoot: 'packages');
   DartFmt.format('lib/impl/analysis_server_gen.dart');
 }
 
 @Task('generate the observatory API')
 observatoryApi() {
   // https://github.com/dart-lang/sdk/blob/master/runtime/vm/service/service.md
-  Dart.run('tool/generate_observatory_lib.dart');
+  Dart.run('tool/observatory/generate_observatory_lib.dart', packageRoot: 'packages');
   DartFmt.format('lib/impl/observatory_gen.dart');
 }
+
+@Task('generate both the observatory and analysis APIs')
+@Depends(analysisApi, observatoryApi)
+generate() => null;
 
 final String _jsPrefix = """
 var self = Object.create(this);

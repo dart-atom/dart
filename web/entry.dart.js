@@ -14284,7 +14284,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return this.completer.future;
       },
       start$0: [function(_) {
-        P.Timer_Timer(C.Duration_400000, new X._AnalyzingJob_start_closure(this));
+        P.Timer_Timer(C.Duration_250000, new X._AnalyzingJob_start_closure(this));
       }, null, "get$start", 0, 0, null],
       _AnalyzingJob$0: function() {
         this._infoAction = new X._AnalyzingJob_closure();
@@ -25599,6 +25599,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
   C.C__DelayedDone = new P._DelayedDone();
   C.C__RootZone = new P._RootZone();
   C.Duration_0 = new P.Duration(0);
+  C.Duration_250000 = new P.Duration(250000);
   C.Duration_400000 = new P.Duration(400000);
   C.JS_CONST_0 = function(hooks) {
   if (typeof dartExperimentalFixupGetTag != "function") return hooks;

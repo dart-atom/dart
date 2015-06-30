@@ -453,7 +453,7 @@ class QuickFixHelper {
 }
 
 class _AnalyzingJob extends Job {
-  static const Duration _debounceDelay = const Duration(milliseconds: 400);
+  static const Duration _debounceDelay = const Duration(milliseconds: 250);
 
   Completer completer = new Completer();
   Function _infoAction;

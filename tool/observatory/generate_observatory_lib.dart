@@ -1,9 +1,12 @@
+
+library generate_observatory_lib;
+
 import 'dart:io';
 
 import 'package:markdown/markdown.dart';
 
-import 'src/parser.dart';
-import 'src/src_gen.dart';
+import '../src/parser.dart';
+import '../src/src_gen.dart';
 
 Api api;
 
@@ -26,7 +29,7 @@ String _coerceRefType(String typeName) {
 
 main(List<String> args) {
   // Parse service.md into a model.
-  File file = new File('tool/service.md');
+  File file = new File('tool/observatory/service.md');
   Document document = new Document();
   List<Node> nodes = document.parseLines(file.readAsStringSync().split('\n'));
   print('Parsed ${file.path}.');
