@@ -48,14 +48,20 @@ class AtomDartPackage extends AtomPackage {
       // and return it without having to create a new class that
       // just does the same thing, but in another file.
       var sc = new StreamController.broadcast();
+      var sc2 = new StreamController.broadcast();
       var errorStream = sc.stream;
-      var consumer = new DartLinterConsumer(new ErrorRepository(errorStream));
+      var flushStream = sc2.stream;
+      // TODO: errorRepository should be a static item somewhere
+      // TODO: expose analysis domain streams to avoid indirections
+      var errorRepository = new ErrorRepository(errorStream, flushStream);
+      var consumer = new DartLinterConsumer(errorRepository);
       consumer.consume(new LinterService(obj));
 
       // Proxy error messages from analysis server to ErrorRepository when
       // the analysis server becomes active.
       analysisServer.isActiveProperty.where((active) => active).listen((_) {
         analysisServer.onAnalysisErrors.listen(sc.add);
+        analysisServer.onAnalysisFlushResults.listen(sc2.add);
       });
 
       return consumer;

@@ -58,6 +58,8 @@ class AnalysisServer implements Disposable {
   // TODO: is it better to just expose _server?
   Stream<AnalysisErrors> get onAnalysisErrors =>
       analysisServer._server.analysis.onErrors;
+  Stream<AnalysisFlushResults> get onAnalysisFlushResults =>
+    analysisServer._server.analysis.onFlushResults;
 
   void _setup() {
     subs.add(projectManager.onChanged.listen(_reconcileRoots));
