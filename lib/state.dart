@@ -7,6 +7,7 @@ library atom.state;
 import 'analysis_server.dart';
 import 'dependencies.dart';
 import 'editors.dart';
+import 'error_repository.dart';
 import 'jobs.dart';
 import 'projects.dart';
 import 'sdk.dart';
@@ -16,6 +17,8 @@ final String pluginId = 'dart-lang-experimental';
 AnalysisServer get analysisServer => deps[AnalysisServer];
 
 EditorManager get editorManager => deps[EditorManager];
+
+ErrorRepository get errorRepository => deps[ErrorRepository];
 
 final JobManager jobs = new JobManager();
 

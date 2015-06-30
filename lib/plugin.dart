@@ -12,24 +12,23 @@ import 'analysis_server.dart';
 import 'autocomplete.dart';
 import 'atom.dart';
 import 'atom_autocomplete.dart';
+import 'atom_linter.dart' show LinterService;
 import 'atom_statusbar.dart';
 import 'buffer/buffer_updater.dart';
 import 'dependencies.dart';
 import 'editors.dart';
+import 'error_repository.dart';
+import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
+export 'atom.dart' show registerPackage;
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
-import 'linter.dart' show DartLinterConsumer;
-import 'atom_linter.dart' show LinterService;
-import 'error_repository.dart';
-
-export 'atom.dart' show registerPackage;
 
 final Logger _logger = new Logger("atom-dart");
 
@@ -50,14 +49,19 @@ class AtomDartPackage extends AtomPackage {
       // and return it without having to create a new class that
       // just does the same thing, but in another file.
       var sc = new StreamController.broadcast();
+      var sc2 = new StreamController.broadcast();
       var errorStream = sc.stream;
-      var consumer = new DartLinterConsumer(new ErrorRepository(errorStream));
+      var flushStream = sc2.stream;
+      // TODO: expose analysis domain streams to avoid indirections
+      errorRepository.initStreams(errorStream, flushStream);
+      var consumer = new DartLinterConsumer(errorRepository);
       consumer.consume(new LinterService(obj));
 
       // Proxy error messages from analysis server to ErrorRepository when
       // the analysis server becomes active.
       analysisServer.isActiveProperty.where((active) => active).listen((_) {
         analysisServer.onAnalysisErrors.listen(sc.add);
+        analysisServer.onAnalysisFlushResults.listen(sc2.add);
       });
 
       return consumer;
@@ -81,6 +85,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[ProjectManager] = new ProjectManager());
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
+    disposables.add(deps[ErrorRepository] = new ErrorRepository());
 
     // Register commands.
     _addCmd('atom-workspace', 'dart-lang-experimental:smoke-test', (_) => smokeTest());
