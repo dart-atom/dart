@@ -2,6 +2,8 @@ library linter;
 
 import 'dart:async';
 
+import 'package:frappe/frappe.dart';
+
 import 'atom.dart';
 import 'atom_linter.dart';
 import 'error_repository.dart';
