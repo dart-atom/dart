@@ -483,13 +483,17 @@ class _AnalyzingJob extends Job {
 }
 
 typedef void _AnalysisServerWriter(String);
+
 class _AnalysisServerWrapper extends Server {
   static _AnalysisServerWrapper create(Sdk sdk) {
     StreamController controller = new StreamController();
     ProcessRunner process = _createProcess(sdk);
     Completer completer = _startProcess(process, controller);
 
-    return new _AnalysisServerWrapper(process, completer, controller.stream, _messageWriter(process));
+    _AnalysisServerWrapper wrapper = new _AnalysisServerWrapper(
+        process, completer, controller.stream, _messageWriter(process));
+    wrapper.setup();
+    return wrapper;
   }
 
   ProcessRunner process;
@@ -498,17 +502,16 @@ class _AnalysisServerWrapper extends Server {
   StreamController _analyzingController = new StreamController.broadcast();
 
   _AnalysisServerWrapper(this.process, this._processCompleter,
-      Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage) {
+      Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage);
+
+  void setup() {
+    server.setSubscriptions(['STATUS']);
     server.onStatus.listen((ServerStatus status) {
       if (status.analysis != null) {
         analyzing = status.analysis.isAnalyzing;
         _analyzingController.add(analyzing);
       }
     });
-  }
-
-  void setup() {
-    server.setSubscriptions(['STATUS']);
   }
 
   bool get isRunning => process != null;
@@ -523,7 +526,6 @@ class _AnalysisServerWrapper extends Server {
       var controller = new StreamController();
       process = _createProcess(sdk);
       _processCompleter = _startProcess(process, controller);
-
       configure(controller.stream, _messageWriter(process));
       setup();
     };
