@@ -20,11 +20,7 @@ import 'state.dart';
 
 final Logger _logger = new Logger('jobs');
 
-// TODO: We're sending a few more events from here than we need to.
-
-/**
- * An abstract representation of a long running task.
- */
+/// An abstract representation of a long running task.
 abstract class Job {
   final String name;
   final Object schedulingRule;
@@ -54,6 +50,7 @@ class JobManager {
   StreamController<Job> _controller = new StreamController.broadcast();
   List<JobInstance> _jobs = [];
   NotificationManager _toasts;
+  Job _lastNotifiedJob = null;
 
   JobManager() {
     _toasts = atom.notifications;
@@ -70,15 +67,15 @@ class JobManager {
 
   List<JobInstance> get allJobs => _jobs.toList();
 
-  void schedule(Job job) => _enqueue(job);
-
   Stream<Job> get onJobChanged => _controller.stream;
+
+  void schedule(Job job) => _enqueue(job);
 
   void _enqueue(Job job) {
     _logger.fine('scheduling job ${job.name}');
     _jobs.add(new JobInstance(this, job));
     _checkForRunnableJobs();
-    _controller.add(activeJob);
+    _checkNotifyJobChanged();
   }
 
   void _checkForRunnableJobs() {
@@ -104,7 +101,7 @@ class JobManager {
 
     _logger.fine('starting job ${job.name}');
     jobInstance._running = true;
-    _controller.add(activeJob);
+    _checkNotifyJobChanged();
 
     job.run().then((result) {
       if (!job.quiet) {
@@ -124,7 +121,15 @@ class JobManager {
     job._running = false;
     _jobs.remove(job);
     _checkForRunnableJobs();
-    if (activeJob == null) _controller.add(null);
+    _checkNotifyJobChanged();
+  }
+
+  void _checkNotifyJobChanged() {
+    Job current = activeJob;
+    if (_lastNotifiedJob != current) {
+      _controller.add(current);
+      _lastNotifiedJob = current;
+    }
   }
 }
 

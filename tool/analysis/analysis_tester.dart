@@ -13,7 +13,7 @@ Server client;
 
 void main(List<String> args) {
   if (args.length != 1) {
-    print('usage: dart tool/src/analysis_tester.dart <sdk location>');
+    print('usage: dart tool/analysis/analysis_tester.dart <sdk location>');
     exit(1);
   }
 

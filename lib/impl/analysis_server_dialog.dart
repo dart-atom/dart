@@ -17,6 +17,7 @@ class AnalysisServerDialog implements Disposable {
   CoreElement _messageElement;
   CoreElement _statusElement;
   CoreElement _startButton;
+  CoreElement _reanalyzeButton;
   CoreElement _stopButton;
 
   AnalysisServerDialog() {
@@ -50,6 +51,8 @@ class AnalysisServerDialog implements Disposable {
         _statusElement = div(text: 'Status:')..flex()..inlineBlockTight(),
         _startButton = button(text: 'Start', c: 'btn btn-sm')..inlineBlockTight()
             ..click(_handleServerStart),
+        _reanalyzeButton = button(text: 'Reanalyze', c: 'btn btn-sm')
+            ..inlineBlockTight()..click(_handleReanalyze),
         _stopButton = button(text: 'Shutdown', c: 'btn btn-sm')..inlineBlockTight()
             ..click(_handleServerStop)
       ]),
@@ -79,17 +82,17 @@ class AnalysisServerDialog implements Disposable {
       _statusElement.text = 'Status: process not running';
     }
 
-    if (analysisServer.isActive) {
-      _startButton.setAttribute('disabled', '');
-      _stopButton.attributes.remove('disabled');
-    } else {
-      _startButton.attributes.remove('disabled');
-      _stopButton.setAttribute('disabled', '');
-    }
+    _startButton.toggleAttribute('disabled', analysisServer.isActive);
+    _reanalyzeButton.toggleAttribute('disabled', !analysisServer.isActive);
+    _stopButton.toggleAttribute('disabled', !analysisServer.isActive);
   }
 
   void _handleServerStart() {
     analysisServer.start();
+  }
+
+  void _handleReanalyze() {
+    analysisServer.reanalyzeSources();
   }
 
   void _handleServerStop() {

@@ -1,10 +1,13 @@
+
+library generate_analysis_lib;
+
 import 'dart:collection' show LinkedHashMap;
 import 'dart:io';
 
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
 
-import 'src/src_gen.dart';
+import '../src/src_gen.dart';
 
 // TODO: Consolidate args owners; create a common to / from from class.
 
@@ -12,7 +15,7 @@ Api api;
 
 main(List<String> args) {
   // Parse spec_input.html into a model.
-  File file = new File('tool/spec_input.html');
+  File file = new File('tool/analysis/spec_input.html');
   Document document = parse(file.readAsStringSync());
   print('Parsed ${file.path}.');
   List<Element> domains = document.body.getElementsByTagName('domain');
@@ -66,8 +69,7 @@ class Api {
     gen.writeln();
     gen.writeStatement(
         'Server(Stream<String> inStream, void writeMessage(String message)) {');
-    gen.writeStatement('_streamSub = inStream.listen(_processMessage);');
-    gen.writeStatement('_writeMessage = writeMessage;');
+    gen.writeStatement('configure(inStream, writeMessage);');
     gen.writeln();
     domains.forEach((Domain domain) =>
         gen.writeln('_${domain.name} = new ${domain.className}(this);'));
@@ -608,8 +610,14 @@ final String _serverCode = r'''
   Stream<String> get onSend => _onSend.stream;
   Stream<String> get onReceive => _onReceive.stream;
 
+  void configure(Stream<String> inStream, void writeMessage(String message)) {
+    dispose();
+    _writeMessage = writeMessage;
+    _streamSub = inStream.listen(_processMessage);
+  }
+
   void dispose() {
-    _streamSub.cancel();
+    if (_streamSub != null) _streamSub.cancel();
     _completers.values.forEach((c) => c.completeError('disposed'));
   }
 
