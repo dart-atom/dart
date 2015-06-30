@@ -2291,12 +2291,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     $desc = $collectedClasses$._AnalysisServerWrapper__messageWriter_closure[1];
     _AnalysisServerWrapper__messageWriter_closure.prototype = $desc;
     _AnalysisServerWrapper__messageWriter_closure.$__fields__ = ["_captured_process_0"];
-    function AnalysisServerDialog(_disposables, _panel, _messageElement, _statusElement, _startButton, _stopButton) {
+    function AnalysisServerDialog(_disposables, _panel, _messageElement, _statusElement, _startButton, _reanalyzeButton, _stopButton) {
       this._disposables = _disposables;
       this._panel = _panel;
       this._messageElement = _messageElement;
       this._statusElement = _statusElement;
       this._startButton = _startButton;
+      this._reanalyzeButton = _reanalyzeButton;
       this._stopButton = _stopButton;
       this.$deferredAction();
     }
@@ -2305,7 +2306,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       AnalysisServerDialog.name = "AnalysisServerDialog";
     $desc = $collectedClasses$.AnalysisServerDialog[1];
     AnalysisServerDialog.prototype = $desc;
-    AnalysisServerDialog.$__fields__ = ["_disposables", "_panel", "_messageElement", "_statusElement", "_startButton", "_stopButton"];
+    AnalysisServerDialog.$__fields__ = ["_disposables", "_panel", "_messageElement", "_statusElement", "_startButton", "_reanalyzeButton", "_stopButton"];
     function AnalysisServerDialog_closure(_analysis_server_dialog$_captured_this_0) {
       this._analysis_server_dialog$_captured_this_0 = _analysis_server_dialog$_captured_this_0;
       this.$deferredAction();
@@ -2465,10 +2466,11 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     Job.prototype.get$schedulingRule = function() {
       return this.schedulingRule;
     };
-    function JobManager(_jobs0$_controller, _jobs, _toasts) {
+    function JobManager(_jobs0$_controller, _jobs, _toasts, _lastNotifiedJob) {
       this._jobs0$_controller = _jobs0$_controller;
       this._jobs = _jobs;
       this._toasts = _toasts;
+      this._lastNotifiedJob = _lastNotifiedJob;
       this.$deferredAction();
     }
     JobManager.builtin$cls = "JobManager";
@@ -2476,7 +2478,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       JobManager.name = "JobManager";
     $desc = $collectedClasses$.JobManager[1];
     JobManager.prototype = $desc;
-    JobManager.$__fields__ = ["_jobs0$_controller", "_jobs", "_toasts"];
+    JobManager.$__fields__ = ["_jobs0$_controller", "_jobs", "_toasts", "_lastNotifiedJob"];
     function JobManager_activeJob_closure() {
       this.$deferredAction();
     }
@@ -13978,6 +13980,16 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           this._focusedDartFileChanged$1(X.Dependencies_instance().getDependency$1(C.Type_pbf).get$activeDartFile());
         }
       }, null, "get$start", 0, 0, null],
+      reanalyzeSources$0: function() {
+        var t1, m;
+        t1 = this._server;
+        if (t1 != null) {
+          t1 = t1._analysis;
+          t1.toString;
+          m = P.LinkedHashMap__makeEmpty();
+          t1.server._call$2("analysis.reanalyze", m);
+        }
+      },
       shutdown$0: function() {
         var t1 = this._server;
         if (t1 != null)
@@ -14272,7 +14284,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return this.completer.future;
       },
       start$0: [function(_) {
-        P.Timer_Timer(C.Duration_400000, new X._AnalyzingJob_start_closure(this));
+        P.Timer_Timer(C.Duration_250000, new X._AnalyzingJob_start_closure(this));
       }, null, "get$start", 0, 0, null],
       _AnalyzingJob$0: function() {
         this._infoAction = new X._AnalyzingJob_closure();
@@ -14466,7 +14478,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
   }], ["atom.analysis_server_dialog", "package:atom_dart_lang_experimental/impl/analysis_server_dialog.dart",, S, {
     "^": "",
     AnalysisServerDialog: {
-      "^": "Object;_disposables,_panel,_messageElement,_statusElement,_startButton,_stopButton",
+      "^": "Object;_disposables,_panel,_messageElement,_statusElement,_startButton,_reanalyzeButton,_stopButton",
       dispose$0: [function() {
         this._disposables.dispose$0();
         var t1 = this._panel;
@@ -14474,7 +14486,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t1.invoke$1("destroy");
       }, "call$0", "get$dispose", 0, 0, 1],
       showDialog$0: function() {
-        var t1, main, t2, t3, t4, t5;
+        var t1, main, t2, t3, t4, t5, t6;
         t1 = this._panel;
         if (t1 != null) {
           t1.invoke$1("show");
@@ -14495,18 +14507,22 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t4.clazz$1("inline-block-tight");
         t4.click$1(0, this.get$_handleServerStart());
         this._startButton = t4;
-        t5 = K.CoreElement$("button", null, "btn btn-sm", "Shutdown");
+        t5 = K.CoreElement$("button", null, "btn btn-sm", "Reanalyze");
         t5.clazz$1("inline-block-tight");
-        t5.click$1(0, this.get$_handleServerStop());
-        this._stopButton = t5;
-        t2.add$1(0, [t3, t4, t5]);
-        t5 = K.CoreElement$("div", null, "last-message text-subtle", null);
-        this._messageElement = t5;
-        main.add$1(0, [t1, t2, t5]);
-        t5 = $.get$atom0()._workspace;
-        t5 = new E.Panel(t5.invoke$2("addModalPanel", t5._panelOptions$3(main.element, null, null)));
-        this._panel = t5;
-        t5.get$onDidDestroy()._createSubscription$4(new S.AnalysisServerDialog_showDialog_closure(this), null, null, false);
+        t5.click$1(0, this.get$_handleReanalyze());
+        this._reanalyzeButton = t5;
+        t6 = K.CoreElement$("button", null, "btn btn-sm", "Shutdown");
+        t6.clazz$1("inline-block-tight");
+        t6.click$1(0, this.get$_handleServerStop());
+        this._stopButton = t6;
+        t2.add$1(0, [t3, t4, t5, t6]);
+        t6 = K.CoreElement$("div", null, "last-message text-subtle", null);
+        this._messageElement = t6;
+        main.add$1(0, [t1, t2, t6]);
+        t6 = $.get$atom0()._workspace;
+        t6 = new E.Panel(t6.invoke$2("addModalPanel", t6._panelOptions$3(main.element, null, null)));
+        this._panel = t6;
+        t6.get$onDidDestroy()._createSubscription$4(new S.AnalysisServerDialog_showDialog_closure(this), null, null, false);
         this._updateStatus$0();
       },
       _logTraffic$1: [function(message) {
@@ -14531,19 +14547,16 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           else
             J.set$text$x(t2.element, "Status: process not running");
         }
-        t1 = X.Dependencies_instance().getDependency$1(C.Type_goj).get$isActive();
-        t2 = this._startButton;
-        if (t1) {
-          J.setAttribute$2$x(t2.element, "disabled", "");
-          J.get$attributes$x(this._stopButton.element).remove$1(0, "disabled");
-        } else {
-          J.get$attributes$x(t2.element).remove$1(0, "disabled");
-          J.setAttribute$2$x(this._stopButton.element, "disabled", "");
-        }
+        this._startButton.attribute$2("disabled", X.Dependencies_instance().getDependency$1(C.Type_goj).get$isActive());
+        this._reanalyzeButton.attribute$2("disabled", !X.Dependencies_instance().getDependency$1(C.Type_goj).get$isActive());
+        this._stopButton.attribute$2("disabled", !X.Dependencies_instance().getDependency$1(C.Type_goj).get$isActive());
       },
       _handleServerStart$0: [function() {
         J.start$0$x(X.Dependencies_instance().getDependency$1(C.Type_goj));
       }, "call$0", "get$_handleServerStart", 0, 0, 1],
+      _handleReanalyze$0: [function() {
+        X.Dependencies_instance().getDependency$1(C.Type_goj).reanalyzeSources$0();
+      }, "call$0", "get$_handleReanalyze", 0, 0, 1],
       _handleServerStop$0: [function() {
         X.Dependencies_instance().getDependency$1(C.Type_goj).shutdown$0();
       }, "call$0", "get$_handleServerStop", 0, 0, 1],
@@ -14560,7 +14573,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       },
       $isDisposable: 1,
       static: {AnalysisServerDialog$: function() {
-          var t1 = new S.AnalysisServerDialog(new G.Disposables([]), null, null, null, null, null);
+          var t1 = new S.AnalysisServerDialog(new G.Disposables([]), null, null, null, null, null, null);
           t1.AnalysisServerDialog$0();
           return t1;
         }}
@@ -14898,7 +14911,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       }
     },
     JobManager: {
-      "^": "Object;_jobs0$_controller,_jobs,_toasts",
+      "^": "Object;_jobs0$_controller,_jobs,_toasts,_lastNotifiedJob",
       get$activeJob: function() {
         var instance = C.JSArray_methods.firstWhere$2$orElse(this._jobs, new S.JobManager_activeJob_closure(), new S.JobManager_activeJob_closure0());
         return instance == null ? null : instance.get$job();
@@ -14907,15 +14920,10 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return this._enqueue$1(job);
       },
       _enqueue$1: function(job) {
-        var t1, t2;
         $.get$_logger0().fine$1("scheduling job " + job.get$name(job));
         this._jobs.push(new S.JobInstance(this, job, false));
         this._checkForRunnableJobs$0();
-        t1 = this._jobs0$_controller;
-        t2 = this.get$activeJob();
-        if (!t1.get$_mayAddEvent())
-          H.throwExpression(t1._addEventError$0());
-        t1._sendData$1(t2);
+        this._checkNotifyJobChanged$0();
       },
       _checkForRunnableJobs$0: function() {
         var rules, t1, t2, _i, jobInstance, t3, rule;
@@ -14935,16 +14943,32 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         }
       },
       _exec$1: function(jobInstance) {
-        var job, t1, t2;
+        var job, current, t1;
         job = jobInstance.get$job();
         $.get$_logger0().fine$1("starting job " + job.get$name(job));
         jobInstance.set$_running(true);
-        t1 = this._jobs0$_controller;
-        t2 = this.get$activeJob();
-        if (!t1.get$_mayAddEvent())
-          H.throwExpression(t1._addEventError$0());
-        t1._sendData$1(t2);
+        current = this.get$activeJob();
+        t1 = this._lastNotifiedJob;
+        if (t1 == null ? current != null : t1 !== current) {
+          t1 = this._jobs0$_controller;
+          if (!t1.get$_mayAddEvent())
+            H.throwExpression(t1._addEventError$0());
+          t1._sendData$1(current);
+          this._lastNotifiedJob = current;
+        }
         job.run$0().then$1(new S.JobManager__exec_closure(this, jobInstance, job)).whenComplete$1(new S.JobManager__exec_closure0(this, jobInstance)).catchError$1(new S.JobManager__exec_closure1(this, job));
+      },
+      _checkNotifyJobChanged$0: function() {
+        var current, t1;
+        current = this.get$activeJob();
+        t1 = this._lastNotifiedJob;
+        if (t1 == null ? current != null : t1 !== current) {
+          t1 = this._jobs0$_controller;
+          if (!t1.get$_mayAddEvent())
+            H.throwExpression(t1._addEventError$0());
+          t1._sendData$1(current);
+          this._lastNotifiedJob = current;
+        }
       },
       JobManager$0: function() {
         this._toasts = $.get$atom0()._notifications;
@@ -14985,12 +15009,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t2.set$_running(false);
         C.JSArray_methods.remove$1(t1._jobs, t2);
         t1._checkForRunnableJobs$0();
-        if (t1.get$activeJob() == null) {
-          t1 = t1._jobs0$_controller;
-          if (!t1.get$_mayAddEvent())
-            H.throwExpression(t1._addEventError$0());
-          t1._sendData$1(null);
-        }
+        t1._checkNotifyJobChanged$0();
       }, null, null, 0, 0, null, "call"]
     },
     JobManager__exec_closure1: {
@@ -25580,6 +25599,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
   C.C__DelayedDone = new P._DelayedDone();
   C.C__RootZone = new P._RootZone();
   C.Duration_0 = new P.Duration(0);
+  C.Duration_250000 = new P.Duration(250000);
   C.Duration_400000 = new P.Duration(400000);
   C.JS_CONST_0 = function(hooks) {
   if (typeof dartExperimentalFixupGetTag != "function") return hooks;
@@ -25868,7 +25888,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
   }, "_logger", "_logger2", "get$_logger2", function() {
     return N.Logger_Logger("projects");
   }, "_logger", "jobs", "get$jobs", function() {
-    var t1 = new S.JobManager(P.StreamController_StreamController$broadcast(null, null, false, null), [], null);
+    var t1 = new S.JobManager(P.StreamController_StreamController$broadcast(null, null, false, null), [], null, null);
     t1.JobManager$0();
     return t1;
   }, "jobs", "_process", "get$_process", function() {

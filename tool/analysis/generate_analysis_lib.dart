@@ -1,10 +1,13 @@
+
+library generate_analysis_lib;
+
 import 'dart:collection' show LinkedHashMap;
 import 'dart:io';
 
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
 
-import 'src/src_gen.dart';
+import '../src/src_gen.dart';
 
 // TODO: Consolidate args owners; create a common to / from from class.
 
@@ -12,7 +15,7 @@ Api api;
 
 main(List<String> args) {
   // Parse spec_input.html into a model.
-  File file = new File('tool/spec_input.html');
+  File file = new File('tool/analysis/spec_input.html');
   Document document = parse(file.readAsStringSync());
   print('Parsed ${file.path}.');
   List<Element> domains = document.body.getElementsByTagName('domain');

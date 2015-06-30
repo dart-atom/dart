@@ -209,6 +209,11 @@ class AnalysisServer implements Disposable {
     }
   }
 
+  /// Reanalyze the world.
+  void reanalyzeSources() {
+    if (_server != null) _server.analysis.reanalyze();
+  }
+
   /// If an analysis server is running, terminate it.
   void shutdown() {
     if (_server != null) _server.kill();
@@ -448,7 +453,7 @@ class QuickFixHelper {
 }
 
 class _AnalyzingJob extends Job {
-  static const Duration _debounceDelay = const Duration(milliseconds: 400);
+  static const Duration _debounceDelay = const Duration(milliseconds: 250);
 
   Completer completer = new Completer();
   Function _infoAction;

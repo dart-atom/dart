@@ -22,7 +22,7 @@ final int port = 7575;
 
 main(List<String> args) async {
   if (args.length != 1) {
-    print('usage: dart tool/src/observatory_tester.dart <sdk location>');
+    print('usage: dart tool/observatory/observatory_tester.dart <sdk location>');
     exit(1);
   }
 
@@ -37,7 +37,7 @@ main(List<String> args) async {
   Process process = await Process.start('${sdk}/bin/dart', [
       '--pause_isolates_on_start',
       '--enable-vm-service=${port}',
-      'tool/src/sample_main.dart'
+      'tool/observatory/sample_main.dart'
   ]);
 
   print('dart process started');
