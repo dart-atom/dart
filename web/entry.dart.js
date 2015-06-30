@@ -12560,14 +12560,18 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this.$indexSet(0, key, value);
         return value;
       },
-      remove$1: function(_, key) {
+      remove$1: [function(_, key) {
         if (typeof key === "string")
           return this._removeHashTableEntry$2(this._strings, key);
         else if (typeof key === "number" && (key & 0x3ffffff) === key)
           return this._removeHashTableEntry$2(this._nums, key);
         else
           return this.internalRemove$1(key);
-      },
+      }, "call$1", "get$remove", 2, 0, function() {
+        return H.computeSignature(function(K, V) {
+          return {func: 1, ret: V, args: [P.Object]};
+        }, this.$receiver, "JsLinkedHashMap");
+      }, 15],
       internalRemove$1: function(key) {
         var rest, bucket, index, cell;
         rest = this._rest;
@@ -12693,7 +12697,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;__js_helper$_captured_this_0",
       call$1: [function(each) {
         return this.__js_helper$_captured_this_0.$index(0, each);
-      }, null, null, 2, 0, null, 15, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     LinkedHashMapCell: {
       "^": "Object;hashMapCellKey<,hashMapCellValue@,_next<,_previous<"
@@ -12951,28 +12955,32 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return this.subs.cancel$0();
       }, "call$0", "get$dispose", 0, 0, 1],
       _handleAddErrors$1: [function(analysisErrors) {
-        var t1;
-        this.knownErrors.$indexSet(0, analysisErrors.get$file(), analysisErrors.get$errors());
-        t1 = this._errors$_controller;
-        if (!t1.get$_mayAddEvent())
-          H.throwExpression(t1._addEventError$0());
-        t1._sendData$1(null);
-      }, "call$1", "get$_handleAddErrors", 2, 0, 7, 16],
+        var path, t1;
+        path = analysisErrors.get$file();
+        if (new E.File(E._create("File", path, null)).invoke$1("existsSync") === true) {
+          this.knownErrors.$indexSet(0, path, analysisErrors.get$errors());
+          t1 = this._errors$_controller;
+          if (!t1.get$_mayAddEvent())
+            H.throwExpression(t1._addEventError$0());
+          t1._sendData$1(null);
+        } else
+          $.get$_logger7().info$1("received an error event for a non-existent file: " + H.S(path));
+      }, "call$1", "get$_handleAddErrors", 2, 0, 7, 17],
       _handleFlushErrors$1: [function(analysisFlushResults) {
-        var t1;
-        this.knownErrors.clear$0(0);
+        var t1 = this.knownErrors;
+        J.forEach$1$ax(J.get$files$x(analysisFlushResults), t1.get$remove(t1));
         t1 = this._errors$_controller;
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(null);
-      }, "call$1", "get$_handleFlushErrors", 2, 0, 8, 17],
+      }, "call$1", "get$_handleFlushErrors", 2, 0, 8, 18],
       $isDisposable: 1
     }
   }], ["analysis_server_gen", "package:atom_dart_lang_experimental/impl/analysis_server_gen.dart",, N, {
     "^": "",
     Server__toEncodable: [function(obj) {
       return !!J.getInterceptor(obj).$isJsonable ? obj.toMap$0() : obj;
-    }, "call$1", "Server__toEncodable$closure", 2, 0, 2, 18],
+    }, "call$1", "Server__toEncodable$closure", 2, 0, 2, 19],
     Server: {
       "^": "Object;",
       get$analysis: function() {
@@ -13033,7 +13041,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           e = t1;
           $.get$_logger6().severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e));
         }
-      }, "call$1", "get$_processMessage", 2, 0, 9, 20],
+      }, "call$1", "get$_processMessage", 2, 0, 9, 21],
       _call$2: function(method, args) {
         var id, t1, m, message, t2;
         id = "" + ++this._id;
@@ -13115,7 +13123,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       static: {ServerStatus_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new N.ServerStatus(N.AnalysisStatus_parse(t1.$index(m, "analysis")), N.PubStatus_parse(t1.$index(m, "pub")));
-        }, "call$1", "ServerStatus_parse$closure", 2, 0, 52, 19]}
+        }, "call$1", "ServerStatus_parse$closure", 2, 0, 52, 20]}
     },
     AnalysisDomain: {
       "^": "Domain;server,name,_controllers,_streams"
@@ -13127,19 +13135,19 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t1 = J.getInterceptor$asx(m);
           t2 = t1.$index(m, "file");
           return new N.AnalysisErrors(t2, t1.$index(m, "errors") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "errors"), new N.AnalysisErrors_parse_closure())));
-        }, "call$1", "AnalysisErrors_parse$closure", 2, 0, 53, 19]}
+        }, "call$1", "AnalysisErrors_parse$closure", 2, 0, 53, 20]}
     },
     AnalysisErrors_parse_closure: {
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.AnalysisError_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     AnalysisFlushResults: {
       "^": "Object;files>",
       static: {AnalysisFlushResults_parse: [function(m) {
           return new N.AnalysisFlushResults(J.$index$asx(m, "files"));
-        }, "call$1", "AnalysisFlushResults_parse$closure", 2, 0, 54, 19]}
+        }, "call$1", "AnalysisFlushResults_parse$closure", 2, 0, 54, 20]}
     },
     AnalysisNavigation: {
       "^": "Object;file<,regions<,targets<,files>",
@@ -13150,32 +13158,32 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t3 = t1.$index(m, "regions") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "regions"), new N.AnalysisNavigation_parse_closure()));
           t4 = t1.$index(m, "targets") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "targets"), new N.AnalysisNavigation_parse_closure0()));
           return new N.AnalysisNavigation(t2, t3, t4, t1.$index(m, "files"));
-        }, "call$1", "AnalysisNavigation_parse$closure", 2, 0, 55, 19]}
+        }, "call$1", "AnalysisNavigation_parse$closure", 2, 0, 55, 20]}
     },
     AnalysisNavigation_parse_closure: {
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.NavigationRegion_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     AnalysisNavigation_parse_closure0: {
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.NavigationTarget_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     HoverResult: {
       "^": "Object;hovers<",
       static: {HoverResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new N.HoverResult(t1.$index(m, "hovers") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "hovers"), new N.HoverResult_parse_closure())));
-        }, "call$1", "HoverResult_parse$closure", 2, 0, 56, 19]}
+        }, "call$1", "HoverResult_parse$closure", 2, 0, 56, 20]}
     },
     HoverResult_parse_closure: {
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.HoverInformation_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     CompletionDomain: {
       "^": "Domain;server,name,_controllers,_streams"
@@ -13191,13 +13199,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       static: {FixesResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new N.FixesResult(t1.$index(m, "fixes") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "fixes"), new N.FixesResult_parse_closure())));
-        }, "call$1", "FixesResult_parse$closure", 2, 0, 57, 19]}
+        }, "call$1", "FixesResult_parse$closure", 2, 0, 57, 20]}
     },
     FixesResult_parse_closure: {
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.AnalysisErrorFixes_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     ExecutionDomain: {
       "^": "Domain;server,name,_controllers,_streams"
@@ -13230,7 +13238,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.SourceChange_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     AnalysisStatus: {
       "^": "Object;isAnalyzing<,analysisTarget",
@@ -13271,13 +13279,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.Position_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     LinkedEditGroup_parse_closure0: {
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.LinkedEditSuggestion_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     LinkedEditSuggestion: {
       "^": "Object;value>,kind",
@@ -13385,13 +13393,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.SourceFileEdit_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     SourceChange_parse_closure0: {
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.LinkedEditGroup_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     SourceEdit: {
       "^": "Object;offset>,length>,replacement<,id",
@@ -13429,7 +13437,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(obj) {
         return N.SourceEdit_parse(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     }
   }], ["atom", "package:atom_dart_lang_experimental/atom.dart",, E, {
     "^": "",
@@ -13488,7 +13496,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           return K.jsify(P.LinkedHashMap__makeLiteral(["dispose", result.get$dispose()]));
         else
           return;
-      }, null, null, 2, 0, null, 21, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     },
     Atom: {
       "^": "ProxyHolder;_commands,_config,_notifications,_packages,_project,_workspace,obj",
@@ -13535,13 +13543,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_captured_callback_0",
       call$1: [function(ed) {
         return this._captured_callback_0.call$1(new E.TextEditor(E._cvt(ed)));
-      }, null, null, 2, 0, null, 22, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     Workspace_observeActivePaneItem_closure: {
       "^": "Closure:2;_captured_callback_0",
       call$1: [function(item) {
         return this._captured_callback_0.call$1(item);
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 24, "call"]
     },
     Workspace_open_closure: {
       "^": "Closure:2;_captured_url_0",
@@ -13566,7 +13574,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(obj) {
         return new E.Panel(obj);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     CommandRegistry: {
       "^": "ProxyHolder;obj",
@@ -13625,7 +13633,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(dir) {
         return new E.Directory(dir);
-      }, null, null, 2, 0, null, 24, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     Entry: {
       "^": "ProxyHolder;",
@@ -13708,7 +13716,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       call$1: [function(entry) {
         entry = E._cvt(entry);
         return entry.callMethod$1("isFile") === true ? new E.File(entry) : new E.Directory(entry);
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 26, "call"]
     },
     TextEditorView: {
       "^": "ProxyHolder;obj"
@@ -13777,7 +13785,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:13;",
       call$1: [function(r) {
         return r.get$obj();
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     TextBuffer: {
       "^": "ProxyHolder;obj",
@@ -14028,10 +14036,10 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           }
         }
         this._checkTrigger$0();
-      }, "call$1", "get$_reconcileRoots", 2, 0, 14, 27],
+      }, "call$1", "get$_reconcileRoots", 2, 0, 14, 28],
       _handleSdkChange$1: [function(newSdk) {
         this._checkTrigger$0();
-      }, "call$1", "get$_handleSdkChange", 2, 0, 15, 28],
+      }, "call$1", "get$_handleSdkChange", 2, 0, 15, 29],
       _handleNewEditor$1: [function(editor) {
         var path, project;
         path = editor.getPath$0();
@@ -14053,7 +14061,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t2 = P.LinkedHashMap__makeLiteral(["subscriptions", t2]);
           t1.server._call$2("analysis.setSubscriptions", t2);
         }
-      }, "call$1", "get$_focusedDartFileChanged", 2, 0, 17, 29],
+      }, "call$1", "get$_focusedDartFileChanged", 2, 0, 17, 30],
       start$0: [function(_) {
         var t1, server;
         if (!X.Dependencies_instance().getDependency$1(C.Type_KEX).get$hasSdk())
@@ -14159,19 +14167,19 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:6;",
       call$1: [function(message) {
         return $.get$_logger4().finer$1("--> " + H.S(message));
-      }, null, null, 2, 0, null, 20, "call"]
+      }, null, null, 2, 0, null, 21, "call"]
     },
     AnalysisServer__setup_closure3: {
       "^": "Closure:6;",
       call$1: [function(message) {
         return $.get$_logger4().finer$1("<-- " + H.S(message));
-      }, null, null, 2, 0, null, 20, "call"]
+      }, null, null, 2, 0, null, 21, "call"]
     },
     AnalysisServer__syncRoots_closure: {
       "^": "Closure:2;",
       call$1: [function(dir) {
         return J.get$path$x(dir);
-      }, null, null, 2, 0, null, 24, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     AnalysisServer__handleNewEditor_closure: {
       "^": "Closure:2;_analysis_server$_captured_this_0,_captured_editor_1,_captured_path_2",
@@ -14181,7 +14189,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         if (this._analysis_server$_captured_this_0._server.process != null)
           ;
         return;
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     AnalysisServer__handleNewEditor_closure0: {
       "^": "Closure:2;_analysis_server$_captured_this_3,_captured_path_4",
@@ -14190,7 +14198,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         if (this._analysis_server$_captured_this_3._server.process != null)
           ;
         return;
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     AnalysisServer__initNewServer_closure: {
       "^": "Closure:2;_analysis_server$_captured_this_0",
@@ -14200,7 +14208,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(value);
         return;
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     AnalysisServer__initNewServer_closure0: {
       "^": "Closure:2;_analysis_server$_captured_this_1,_captured_server_2",
@@ -14218,7 +14226,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t1._sendData$1(false);
         }
         return;
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     AnalysisServer__initNewServer_closure1: {
       "^": "Closure:2;_analysis_server$_captured_this_3",
@@ -14228,7 +14236,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(message);
         return;
-      }, null, null, 2, 0, null, 20, "call"]
+      }, null, null, 2, 0, null, 21, "call"]
     },
     AnalysisServer__initNewServer_closure2: {
       "^": "Closure:2;_captured_this_4",
@@ -14238,7 +14246,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(message);
         return;
-      }, null, null, 2, 0, null, 20, "call"]
+      }, null, null, 2, 0, null, 21, "call"]
     },
     AnalysisServer__initNewServer_closure3: {
       "^": "Closure:18;",
@@ -14262,7 +14270,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t1.start$0(0);
           this._analysis_server$_captured_this_5._job = t1;
         }
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 34, "call"]
     },
     DartdocHelper_handleDartdoc_closure: {
       "^": "Closure:19;_captured_explicit_0",
@@ -14293,13 +14301,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = this._analysis_server$_captured_target_0;
         options = P.LinkedHashMap__makeLiteral(["initialLine", J.$sub$n(t1.get$startLine(), 1), "initialColumn", J.$sub$n(t1.get$startColumn(), 1), "searchAllPanes", true]);
         $.get$atom0()._workspace.open$2(0, this._captured_file_1, options).then$1(new X.DeclarationHelper_handleNavigate__closure(t1)).catchError$1(new X.DeclarationHelper_handleNavigate__closure0());
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     DeclarationHelper_handleNavigate__closure: {
       "^": "Closure:20;_analysis_server$_captured_target_2",
       call$1: [function(editor) {
         editor.selectRight$1(J.get$length$asx(this._analysis_server$_captured_target_2));
-      }, null, null, 2, 0, null, 34, "call"]
+      }, null, null, 2, 0, null, 35, "call"]
     },
     DeclarationHelper_handleNavigate__closure0: {
       "^": "Closure:2;",
@@ -14493,7 +14501,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
             H.throwExpression(t1._addEventError$0());
           t1._sendData$1(t2);
         }
-      }, null, null, 2, 0, null, 35, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     },
     _AnalysisServerWrapper_restart_closure: {
       "^": "Closure:0;_analysis_server$_captured_this_0,_captured_sdk_1",
@@ -14516,13 +14524,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_captured_startServer_2",
       call$1: [function(_) {
         return this._captured_startServer_2.call$0();
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     _AnalysisServerWrapper__startProcess_closure: {
       "^": "Closure:6;",
       call$1: [function(str) {
         return $.get$_logger4().severe$1(J.trim$0$s(str));
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     _AnalysisServerWrapper__startProcess_closure0: {
       "^": "Closure:6;_captured_sc_0",
@@ -14539,7 +14547,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           else if ((t4 & 3) === 0)
             t2._ensurePendingEvents$0().add$1(0, new P._DelayedData(t3, null));
         }
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     _AnalysisServerWrapper__startProcess_closure1: {
       "^": "Closure:25;_analysis_server$_captured_completer_1",
@@ -14549,7 +14557,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = this._analysis_server$_captured_completer_1;
         if (t1.future._state === 0)
           t1.complete$1(0, exitCode);
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     _AnalysisServerWrapper__messageWriter_closure: {
       "^": "Closure:6;_captured_process_0",
@@ -14625,7 +14633,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t2 = H.S(message);
           J.set$text$x(t1.element, t2);
         }
-      }, "call$1", "get$_logTraffic", 2, 0, 9, 20],
+      }, "call$1", "get$_logTraffic", 2, 0, 9, 21],
       _updateStatus$0: function() {
         var t1, t2;
         if (this._statusElement == null)
@@ -14689,20 +14697,20 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_analysis_server_dialog$_captured_this_2",
       call$1: [function(val) {
         return this._analysis_server_dialog$_captured_this_2._updateStatus$0();
-      }, null, null, 2, 0, null, 37, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     },
     AnalysisServerDialog_closure2: {
       "^": "Closure:2;_analysis_server_dialog$_captured_this_3",
       call$1: [function(val) {
         return this._analysis_server_dialog$_captured_this_3._updateStatus$0();
-      }, null, null, 2, 0, null, 37, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     },
     AnalysisServerDialog_showDialog_closure: {
       "^": "Closure:2;_analysis_server_dialog$_captured_this_0",
       call$1: [function(_) {
         this._analysis_server_dialog$_captured_this_0._panel = null;
         return;
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     }
   }], ["atom.editing", "package:atom_dart_lang_experimental/impl/editing.dart",, B, {
     "^": "",
@@ -14883,7 +14891,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = this._captured_buffer_1;
         t2 = J.getInterceptor$x(position);
         return new E.Range(E._create("Range", E._cvt(t1.invoke$2("positionForCharacterIndex", t2.get$offset(position))), E._cvt(t1.invoke$2("positionForCharacterIndex", J.$add$ns(t2.get$offset(position), J.get$length$asx(this._editors$_box_0._captured_group_0))))));
-      }, null, null, 2, 0, null, 38, "call"]
+      }, null, null, 2, 0, null, 39, "call"]
     },
     EditorManager_sortEdits_closure: {
       "^": "Closure:29;",
@@ -14975,13 +14983,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_elements$_captured_this_0",
       call$1: [function(c) {
         return this._elements$_captured_this_0.add$1(0, c);
-      }, null, null, 2, 0, null, 39, "call"]
+      }, null, null, 2, 0, null, 40, "call"]
     },
     CoreElement_click_closure: {
       "^": "Closure:2;_captured_handle_0",
       call$1: [function(_) {
         return this._captured_handle_0.call$0();
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     ProgressElement: {
       "^": "CoreElement;_progress,element"
@@ -14997,7 +15005,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:30;",
       call$1: [function(rec) {
         P.print(H.S(rec));
-      }, null, null, 2, 0, null, 40, "call"]
+      }, null, null, 2, 0, null, 41, "call"]
     }
   }, 1], ["atom.jobs", "package:atom_dart_lang_experimental/jobs.dart",, S, {
     "^": "",
@@ -15232,7 +15240,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(evt);
         return;
-      }, null, null, 2, 0, null, 41, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     Promise: {
       "^": "ProxyHolder;obj",
@@ -15244,7 +15252,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       },
       error$1: [function(_, errorCallback) {
         return this.invoke$2("catch", errorCallback);
-      }, "call$1", "get$error", 2, 0, 31, 42]
+      }, "call$1", "get$error", 2, 0, 31, 43]
     },
     JsDisposable: {
       "^": "ProxyHolder;obj",
@@ -15271,7 +15279,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(m) {
         return m.toMap$0();
-      }, null, null, 2, 0, null, 19, "call"]
+      }, null, null, 2, 0, null, 20, "call"]
     },
     LintMessage: {
       "^": "Object;type>,text,html,filePath,range",
@@ -15355,7 +15363,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this._addSdkCmd$3(".tree-view", "dart-lang-experimental:pub-upgrade", new R.AtomDartPackage_packageActivated_closure6());
       }, function() {
         return this.packageActivated$1(null);
-      }, "packageActivated$0", "call$1", "call$0", "get$packageActivated", 0, 2, 32, 43, 44],
+      }, "packageActivated$0", "call$1", "call$0", "get$packageActivated", 0, 2, 32, 44, 45],
       packageDeactivated$0: [function() {
         $.get$_logger().fine$1("packageDeactivated");
         this.disposables.dispose$0();
@@ -15381,7 +15389,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(obj) {
         return E.StatusDisplay$(new T.StatusBar(obj));
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     AtomDartPackage_closure0: {
       "^": "Closure:2;",
@@ -15402,7 +15410,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
         t2.listen$1(new R.AtomDartPackage__closure0(sc, sc2));
         return consumer;
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     AtomDartPackage__closure: {
       "^": "Closure:2;",
@@ -15417,7 +15425,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         X.Dependencies_instance().getDependency$1(C.Type_goj).get$onAnalysisErrors()._createSubscription$4(t1.get$add(t1), null, null, false);
         t1 = this._captured_sc2_1;
         X.Dependencies_instance().getDependency$1(C.Type_goj).get$onAnalysisFlushResults()._createSubscription$4(t1.get$add(t1), null, null, false);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     AtomDartPackage_packageActivated_closure: {
       "^": "Closure:2;",
@@ -15499,7 +15507,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           }
         }
         $.get$_logger().fine$1("logging level: " + H.S(N.Logger_Logger("").get$level()));
-      }, null, null, 2, 0, null, 37, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     }
   }], ["atom.process", "package:atom_dart_lang_experimental/process.dart",, Z, {
     "^": "",
@@ -15552,14 +15560,14 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       call$1: [function(str) {
         this._captured_stdout_0._contents += H.S(str);
         return;
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     ProcessRunner_execSimple_closure0: {
       "^": "Closure:2;_captured_stderr_1",
       call$1: [function(str) {
         this._captured_stderr_1._contents += H.S(str);
         return;
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     ProcessRunner_execSimple_closure1: {
       "^": "Closure:2;_captured_stdout_2,_captured_stderr_3",
@@ -15569,7 +15577,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = t1.charCodeAt(0) == 0 ? t1 : t1;
         t2 = this._captured_stderr_3._contents;
         return new Z.ProcessResult(code, t1, t2.charCodeAt(0) == 0 ? t2 : t2);
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     ProcessRunner_execStreaming_closure1: {
       "^": "Closure:2;_process$_captured_this_0",
@@ -15579,7 +15587,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(s);
         return;
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 47, "call"]
     },
     ProcessRunner_execStreaming_closure0: {
       "^": "Closure:2;_process$_captured_this_1",
@@ -15589,7 +15597,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(s);
         return;
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 47, "call"]
     },
     ProcessRunner_execStreaming_closure: {
       "^": "Closure:2;_process$_captured_this_2",
@@ -15597,7 +15605,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         var t1 = this._process$_captured_this_2;
         t1._exit = code;
         t1._exitCompleter.complete$1(0, code);
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     ProcessResult: {
       "^": "Object;exit<,stdout<,stderr<",
@@ -15662,7 +15670,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       _handleProjectPathsChanged$1: [function(allPaths) {
         this._updateChangeListeners$1(allPaths);
         this._fullScanForProjects$0();
-      }, "call$1", "get$_handleProjectPathsChanged", 2, 0, 35, 47],
+      }, "call$1", "get$_handleProjectPathsChanged", 2, 0, 35, 48],
       _updateChangeListeners$1: function(allPaths) {
         var t1, previousPaths, currentPaths, removedPaths, addedPaths, t2, addedPath, dir;
         t1 = this._directoryListeners;
@@ -15732,7 +15740,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(p) {
         return J.get$directory$x(p);
-      }, null, null, 2, 0, null, 48, "call"]
+      }, null, null, 2, 0, null, 49, "call"]
     },
     ProjectManager__fullScanForProjects_closure0: {
       "^": "Closure:2;_captured_dir_0",
@@ -15744,13 +15752,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(dir) {
         return new L.DartProject(dir);
-      }, null, null, 2, 0, null, 24, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     ProjectManager__updateChangeListeners_closure: {
       "^": "Closure:2;_projects$_captured_this_0,_captured_dir_1",
       call$1: [function(_) {
         return this._projects$_captured_this_0._handleDirectoryChanged$1(this._captured_dir_1);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     ProjectManager__handleDirectoryChanged_closure: {
       "^": "Closure:37;_captured_dir_0",
@@ -15922,7 +15930,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_sdk$_captured_this_0",
       call$1: [function(value) {
         this._sdk$_captured_this_0._setSdkPath$2$verbose(value, true);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     SdkManager_tryToAutoConfigure_closure: {
       "^": "Closure:6;_captured_complainOnFailure_0",
@@ -15934,7 +15942,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           t1 = $.get$atom0()._notifications;
           t1.invoke$3("addWarning", "Unable to auto-locate a Dart SDK.", t1._options$3$detail$dismissable$icon(null, null, null));
         }
-      }, null, null, 2, 0, null, 49, "call"]
+      }, null, null, 2, 0, null, 50, "call"]
     },
     Sdk: {
       "^": "Object;directory>",
@@ -15978,7 +15986,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(data) {
         return J.trim$0$s(data);
-      }, null, null, 2, 0, null, 50, "call"]
+      }, null, null, 2, 0, null, 51, "call"]
     },
     SdkDiscovery: {
       "^": "Object;",
@@ -16129,7 +16137,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(p) {
         return P.print("panel was destroyed");
-      }, null, null, 2, 0, null, 48, "call"]
+      }, null, null, 2, 0, null, 49, "call"]
     },
     smokeTest_closure0: {
       "^": "Closure:2;",
@@ -16141,7 +16149,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_captured_childFile_0",
       call$1: [function(contents) {
         return P.print("read " + H.S(this._captured_childFile_0) + " contents");
-      }, null, null, 2, 0, null, 51, "call"]
+      }, null, null, 2, 0, null, 52, "call"]
     },
     smokeTest_closure2: {
       "^": "Closure:2;",
@@ -16172,37 +16180,37 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(str) {
         return P.print("stdout: " + H.S(str));
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     smokeTest_closure7: {
       "^": "Closure:2;",
       call$1: [function(str) {
         return P.print("stderr: " + H.S(str));
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     smokeTest_closure6: {
       "^": "Closure:2;",
       call$1: [function(code) {
         return P.print("exit code: " + H.S(code));
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     smokeTest_closure9: {
       "^": "Closure:2;",
       call$1: [function(str) {
         return P.print("exec date: " + H.S(str));
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     smokeTest_closure10: {
       "^": "Closure:2;",
       call$1: [function(ver) {
         return P.print("sdk version " + H.S(ver));
-      }, null, null, 2, 0, null, 52, "call"]
+      }, null, null, 2, 0, null, 53, "call"]
     },
     smokeTest_closure11: {
       "^": "Closure:6;",
       call$1: [function(foundSdk) {
         P.print("discoverSdk: " + H.S(foundSdk));
-      }, null, null, 2, 0, null, 53, "call"]
+      }, null, null, 2, 0, null, 54, "call"]
     },
     smokeTest_closure12: {
       "^": "Closure:0;",
@@ -16371,7 +16379,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         J.get$classes$x(t2._captured_textLabel_1.element).toggle$2(0, "showing", showing);
         J.get$classes$x(t2._captured_spinner_0.element).toggle$2(0, "showing", showing);
         t1._updateJobsDialog$0();
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     StatusDisplay__closure: {
       "^": "Closure:0;_status$_box_0,_captured_statusElement_3",
@@ -16401,7 +16409,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_status$_captured_this_0",
       call$1: [function(_) {
         this._status$_captured_this_0._jobsPanel = null;
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     }
   }], ["atom.statusbar", "package:atom_dart_lang_experimental/atom_statusbar.dart",, T, {
     "^": "",
@@ -17307,14 +17315,14 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       return new P._AddStreamState_makeErrorHandler_closure(controller);
     },
     _nullDataHandler: [function(value) {
-    }, "call$1", "_nullDataHandler$closure", 2, 0, 26, 31],
+    }, "call$1", "_nullDataHandler$closure", 2, 0, 26, 32],
     _nullErrorHandler: [function(error, stackTrace) {
       var t1 = $.Zone__current;
       t1.toString;
       P._rootHandleUncaughtError(null, null, t1, error, stackTrace);
     }, function(error) {
       return P._nullErrorHandler(error, null);
-    }, "call$2", "call$1", "_nullErrorHandler$closure", 2, 2, 43, 43, 12, 13],
+    }, "call$2", "call$1", "_nullErrorHandler$closure", 2, 2, 43, 44, 12, 13],
     _nullDoneHandler: [function() {
     }, "call$0", "_nullDoneHandler$closure", 0, 0, 1],
     _runUserCode: function(userCode, onSuccess, onError) {
@@ -17450,7 +17458,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         f = t1._captured_storedCallback_0;
         t1._captured_storedCallback_0 = null;
         f.call$0();
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     _AsyncRun__initializeScheduleImmediate_closure: {
       "^": "Closure:38;_async$_box_0,_captured_div_1,_captured_span_2",
@@ -17625,7 +17633,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return H.computeSignature(function(T) {
           return {func: 1, void: true, args: [T]};
         }, this.$receiver, "_BroadcastStreamController");
-      }, 50],
+      }, 51],
       addError$2: [function(error, stackTrace) {
         error = error != null ? error : new P.NullThrownError();
         if (!this.get$_mayAddEvent())
@@ -17634,7 +17642,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this._sendError$2(error, stackTrace);
       }, function(error) {
         return this.addError$2(error, null);
-      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 39, 43, 12, 13],
+      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 39, 44, 12, 13],
       close$0: ["super$_BroadcastStreamController$close$0", function(_) {
         var doneFuture;
         if ((this._state & 4) !== 0)
@@ -17651,7 +17659,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       },
       _add$1: [function(data) {
         this._sendData$1(data);
-      }, null, "get$_add", 2, 0, null, 50],
+      }, null, "get$_add", 2, 0, null, 51],
       _addError$2: [function(error, stackTrace) {
         this._sendError$2(error, stackTrace);
       }, null, "get$_addError", 4, 0, null, 12, 13],
@@ -17816,7 +17824,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return H.computeSignature(function(T) {
           return {func: 1, void: true, args: [T]};
         }, this.$receiver, "_AsBroadcastStreamController");
-      }, 50],
+      }, 51],
       addError$2: [function(error, stackTrace) {
         var t1 = this._state;
         if ((t1 & 4) === 0 && (t1 & 2) !== 0) {
@@ -17834,7 +17842,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         }
       }, function(error) {
         return this.addError$2(error, null);
-      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 39, 43, 12, 13],
+      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 39, 44, 12, 13],
       close$0: [function(_) {
         var t1 = this._state;
         if ((t1 & 4) === 0 && (t1 & 2) !== 0) {
@@ -17916,7 +17924,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           }
         } else if (t2 === 0 && !this._captured_eagerError_1)
           this._captured_result_3._completeError$2(t1._captured_error_2, t1._captured_stackTrace_3);
-      }, null, null, 4, 0, null, 54, 55, "call"]
+      }, null, null, 4, 0, null, 55, 56, "call"]
     },
     Future_wait_closure: {
       "^": "Closure:42;_async$_box_0,_captured_eagerError_6,_captured_cleanUp_7,_captured_result_8,_captured_pos_9",
@@ -17934,7 +17942,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
             this._captured_result_8._completeWithValue$1(t3);
         } else if (t1._captured_remaining_1 === 0 && !this._captured_eagerError_6)
           this._captured_result_8._completeError$2(t1._captured_error_2, t1._captured_stackTrace_3);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     _Completer: {
       "^": "Object;future<",
@@ -18110,7 +18118,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         P._Future__propagateToListeners(this, listeners);
       }, function(error) {
         return this._completeError$2(error, null);
-      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 43, 43, 12, 13],
+      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 43, 44, 12, 13],
       _asyncComplete$1: function(value) {
         var t1;
         if (value == null)
@@ -18276,7 +18284,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_captured_target_0",
       call$1: [function(value) {
         this._captured_target_0._completeWithValue$1(value);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     _Future__chainForeignFuture_closure0: {
       "^": "Closure:44;_captured_target_1",
@@ -18284,7 +18292,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this._captured_target_1._completeError$2(error, stackTrace);
       }, function(error) {
         return this.call$2(error, null);
-      }, "call$1", null, null, null, 2, 2, null, 43, 12, 13, "call"]
+      }, "call$1", null, null, null, 2, 2, null, 44, 12, 13, "call"]
     },
     _Future__chainForeignFuture_closure1: {
       "^": "Closure:0;_captured_target_2,_captured_e_3,_captured_s_4",
@@ -18423,7 +18431,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_box_2,_captured_result_11",
       call$1: [function(ignored) {
         P._Future__propagateToListeners(this._box_2._captured_source_4, new P._FutureListener(null, this._captured_result_11, 0, null, null));
-      }, null, null, 2, 0, null, 56, "call"]
+      }, null, null, 2, 0, null, 57, "call"]
     },
     _Future__propagateToListeners_handleWhenCompleteCallback_closure0: {
       "^": "Closure:44;_async$_box_0,_captured_result_12",
@@ -18438,7 +18446,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         P._Future__propagateToListeners(t1._captured_completeResult_0, new P._FutureListener(null, this._captured_result_12, 0, null, null));
       }, function(error) {
         return this.call$2(error, null);
-      }, "call$1", null, null, null, 2, 2, null, 43, 12, 13, "call"]
+      }, "call$1", null, null, null, 2, 2, null, 44, 12, 13, "call"]
     },
     _AsyncCallbackEntry: {
       "^": "Object;callback,zone<,next@",
@@ -18464,7 +18472,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return t2;
       }, function(onCancel) {
         return this.asBroadcastStream$2$onCancel$onListen(onCancel, null);
-      }, "asBroadcastStream$1$onCancel", null, null, "get$asBroadcastStream", 0, 5, null, 43, 43],
+      }, "asBroadcastStream$1$onCancel", null, null, "get$asBroadcastStream", 0, 5, null, 44, 44],
       where$1: ["super$Stream$where$1", function(_, test) {
         return H.setRuntimeTypeInfo(new P._WhereStream(test, this), [H.getRuntimeTypeArgument(this, "Stream", 0)]);
       }],
@@ -18545,7 +18553,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = this._async$_box_0;
         t2 = this._captured_future_3;
         P._runUserCode(new P.Stream_contains__closure(this._captured_needle_2, element), new P.Stream_contains__closure0(t1, t2), P._cancelAndErrorClosure(t1._captured_subscription_0, t2));
-      }, null, null, 2, 0, null, 57, "call"],
+      }, null, null, 2, 0, null, 58, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -18575,7 +18583,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure;_async$_box_0,_async$_captured_this_1,_captured_action_2,_captured_future_3",
       call$1: [function(element) {
         P._runUserCode(new P.Stream_forEach__closure(this._captured_action_2, element), new P.Stream_forEach__closure0(), P._cancelAndErrorClosure(this._async$_box_0._captured_subscription_0, this._captured_future_3));
-      }, null, null, 2, 0, null, 57, "call"],
+      }, null, null, 2, 0, null, 58, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -18603,7 +18611,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_async$_box_0",
       call$1: [function(_) {
         ++this._async$_box_0._captured_count_0;
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     Stream_length_closure0: {
       "^": "Closure:0;_async$_box_0,_captured_future_1",
@@ -18615,7 +18623,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_async$_box_0,_captured_future_1",
       call$1: [function(_) {
         P._cancelAndValue(this._async$_box_0._captured_subscription_0, this._captured_future_1, false);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     Stream_isEmpty_closure0: {
       "^": "Closure:0;_captured_future_2",
@@ -18627,7 +18635,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure;_async$_captured_this_0,_async$_captured_result_1",
       call$1: [function(data) {
         this._async$_captured_result_1.push(data);
-      }, null, null, 2, 0, null, 50, "call"],
+      }, null, null, 2, 0, null, 51, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -18644,7 +18652,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure;_async$_box_0,_async$_captured_this_1,_captured_future_2",
       call$1: [function(value) {
         P._cancelAndValue(this._async$_box_0._captured_subscription_0, this._captured_future_2, value);
-      }, null, null, 2, 0, null, 31, "call"],
+      }, null, null, 2, 0, null, 32, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -18672,7 +18680,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         var t1 = this._async$_box_0;
         t1._captured_foundResult_1 = true;
         t1._captured_result_0 = value;
-      }, null, null, 2, 0, null, 31, "call"],
+      }, null, null, 2, 0, null, 32, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -18790,7 +18798,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this._addError$2(error, stackTrace);
       }, function(error) {
         return this.addError$2(error, null);
-      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 39, 43, 12, 13],
+      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 39, 44, 12, 13],
       close$0: [function(_) {
         var t1 = this._state;
         if ((t1 & 4) !== 0)
@@ -18815,7 +18823,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return H.computeSignature(function(T) {
           return {func: 1, void: true, args: [T]};
         }, this.$receiver, "_StreamController");
-      }, 31],
+      }, 32],
       _addError$2: [function(error, stackTrace) {
         var t1 = this._state;
         if ((t1 & 1) !== 0)
@@ -19031,7 +19039,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         var t1 = this._async$_captured_controller_0;
         t1._addError$2(e, s);
         t1._close$0();
-      }, null, null, 4, 0, null, 3, 46, "call"]
+      }, null, null, 4, 0, null, 3, 47, "call"]
     },
     _AddStreamState_cancel_closure: {
       "^": "Closure:0;_async$_captured_this_0",
@@ -19619,7 +19627,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return H.computeSignature(function(T) {
           return {func: 1, void: true, args: [T]};
         }, this.$receiver, "_StreamIteratorImpl");
-      }, 50],
+      }, 51],
       _onError$2: [function(error, stackTrace) {
         var hasNext;
         if (this._state === 2) {
@@ -19633,7 +19641,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this._state = 4;
       }, function(error) {
         return this._onError$2(error, null);
-      }, "_onError$1", "call$2", "call$1", "get$_onError", 2, 2, 39, 43, 12, 13],
+      }, "_onError$1", "call$2", "call$1", "get$_onError", 2, 2, 39, 44, 12, 13],
       _onDone$0: [function() {
         if (this._state === 2) {
           var hasNext = this._futureOrPrefetch;
@@ -19729,7 +19737,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return H.computeSignature(function(S, T) {
           return {func: 1, void: true, args: [S]};
         }, this.$receiver, "_ForwardingStreamSubscription");
-      }, 50],
+      }, 51],
       _handleError$2: [function(error, stackTrace) {
         this._addError$2(error, stackTrace);
       }, "call$2", "get$_handleError", 4, 0, 47, 12, 13],
@@ -19918,13 +19926,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_async$_captured_this_0,_async$_captured_f_1",
       call$1: [function(arg) {
         return this._async$_captured_this_0.runUnaryGuarded$2(this._async$_captured_f_1, arg);
-      }, null, null, 2, 0, null, 21, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     },
     _RootZone_bindUnaryCallback_closure0: {
       "^": "Closure:2;_async$_captured_this_2,_captured_f_3",
       call$1: [function(arg) {
         return this._async$_captured_this_2.runUnary$2(this._captured_f_3, arg);
-      }, null, null, 2, 0, null, 21, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     }
   }], ["dart.collection", "dart:collection",, P, {
     "^": "",
@@ -19954,7 +19962,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     }, "call$2", "_defaultEquals$closure", 4, 0, 59],
     _defaultHashCode: [function(a) {
       return J.get$hashCode$(a);
-    }, "call$1", "_defaultHashCode$closure", 2, 0, 60, 58],
+    }, "call$1", "_defaultHashCode$closure", 2, 0, 60, 59],
     IterableBase_iterableToShortString: function(iterable, leftDelimiter, rightDelimiter) {
       var parts, t1;
       if (P._isToStringVisiting(iterable)) {
@@ -20676,7 +20684,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:11;_captured_result_0",
       call$2: [function(k, v) {
         this._captured_result_0.$indexSet(0, k, v);
-      }, null, null, 4, 0, null, 59, 60, "call"]
+      }, null, null, 4, 0, null, 60, 61, "call"]
     },
     ListBase: {
       "^": "Object_ListMixin;"
@@ -21290,11 +21298,11 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         this.$indexSet(0, key, value);
         return value;
       },
-      remove$1: function(_, key) {
+      remove$1: [function(_, key) {
         if (this._processed != null && !this.containsKey$1(key))
           return;
         return this._upgrade$0().remove$1(0, key);
-      },
+      }, "call$1", "get$remove", 2, 0, 42, 15],
       clear$0: function(_) {
         var t1;
         if (this._processed == null)
@@ -21369,7 +21377,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_convert$_captured_this_0",
       call$1: [function(each) {
         return this._convert$_captured_this_0.$index(0, each);
-      }, null, null, 2, 0, null, 15, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     _JsonMapKeyIterable: {
       "^": "ListIterable;_parent",
@@ -23879,7 +23887,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       }
       dartArgs = P.List_List$from(J.map$1$ax($arguments, P._convertToDart$closure()), true, null);
       return P._convertToJS(H.Primitives_applyFunctionWithPositionalArguments(callback, dartArgs));
-    }, null, null, 8, 0, null, 61, 62, 63, 64],
+    }, null, null, 8, 0, null, 62, 63, 64, 65],
     _defineProperty: function(o, $name, value) {
       var exception;
       if (Object.isExtensible(o) && !Object.prototype.hasOwnProperty.call(o, $name))
@@ -23910,7 +23918,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       if (!!t1.$isFunction)
         return P._getJsProxy(o, "$dart_jsFunction", new P._convertToJS_closure());
       return P._getJsProxy(o, "_$dart_jsObject", new P._convertToJS_closure0($.get$_dartProxyCtor()));
-    }, "call$1", "_convertToJS$closure", 2, 0, 2, 65],
+    }, "call$1", "_convertToJS$closure", 2, 0, 2, 66],
     _getJsProxy: function(o, propertyName, createProxy) {
       var jsProxy = P._getOwnProperty(o, propertyName);
       if (jsProxy == null) {
@@ -23938,7 +23946,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         else
           return P._wrapToDart(o);
       }
-    }, "call$1", "_convertToDart$closure", 2, 0, 61, 65],
+    }, "call$1", "_convertToDart$closure", 2, 0, 61, 66],
     _wrapToDart: function(o) {
       if (typeof o == "function")
         return P._getDartProxy(o, $.get$_DART_CLOSURE_PROPERTY_NAME(), new P._wrapToDart_closure());
@@ -24041,7 +24049,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           return convertedList;
         } else
           return P._convertToJS(o);
-      }, null, null, 2, 0, null, 65, "call"]
+      }, null, null, 2, 0, null, 66, "call"]
     },
     JsFunction: {
       "^": "JsObject;_jsObject"
@@ -24768,7 +24776,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(subscription) {
         return subscription.cancel$0();
-      }, null, null, 2, 0, null, 66, "call"]
+      }, null, null, 2, 0, null, 67, "call"]
     },
     Property__createControllerForStream_onListen: {
       "^": "Closure:1;_frappe$_box_0,_frappe$_captured_this_1,_captured_input_2",
@@ -24791,7 +24799,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(value);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     Property__createControllerForStream_onListen_closure0: {
       "^": "Closure:0;_frappe$_captured_this_4",
@@ -24811,49 +24819,49 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_captured_controller_0",
       call$1: [function(_) {
         return this._captured_controller_0.close$0(0);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     Property_operator$gt_closure: {
       "^": "Closure:11;",
       call$2: [function(a, b) {
         return J.$gt$n(a, b);
-      }, null, null, 4, 0, null, 58, 67, "call"]
+      }, null, null, 4, 0, null, 59, 68, "call"]
     },
     Property_operator$ge_closure: {
       "^": "Closure:11;",
       call$2: [function(a, b) {
         return J.$ge$n(a, b);
-      }, null, null, 4, 0, null, 58, 67, "call"]
+      }, null, null, 4, 0, null, 59, 68, "call"]
     },
     Property_operator$lt_closure: {
       "^": "Closure:11;",
       call$2: [function(a, b) {
         return J.$lt$n(a, b);
-      }, null, null, 4, 0, null, 58, 67, "call"]
+      }, null, null, 4, 0, null, 59, 68, "call"]
     },
     Property_operator$le_closure: {
       "^": "Closure:11;",
       call$2: [function(a, b) {
         return J.$le$n(a, b);
-      }, null, null, 4, 0, null, 58, 67, "call"]
+      }, null, null, 4, 0, null, 59, 68, "call"]
     },
     Property_operator$add_closure: {
       "^": "Closure:11;",
       call$2: [function(a, b) {
         return J.$add$ns(a, b);
-      }, null, null, 4, 0, null, 58, 67, "call"]
+      }, null, null, 4, 0, null, 59, 68, "call"]
     },
     Property_operator$sub_closure: {
       "^": "Closure:11;",
       call$2: [function(a, b) {
         return J.$sub$n(a, b);
-      }, null, null, 4, 0, null, 58, 67, "call"]
+      }, null, null, 4, 0, null, 59, 68, "call"]
     },
     Property_operator$mul_closure: {
       "^": "Closure:11;",
       call$2: [function(a, b) {
         return J.$mul$ns(a, b);
-      }, null, null, 4, 0, null, 58, 67, "call"]
+      }, null, null, 4, 0, null, 59, 68, "call"]
     },
     Reactable: {
       "^": "Stream;"
@@ -24879,7 +24887,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         if ($.get$CssClassSetImpl__validTokenRE()._nativeRegExp.test(H.checkString(value)))
           return value;
         throw H.wrapException(P.ArgumentError$value(value, "value", "Not a valid class token"));
-      }, "call$1", "get$_validateToken", 2, 0, 50, 31],
+      }, "call$1", "get$_validateToken", 2, 0, 50, 32],
       toString$0: function(_) {
         return this.readClasses$0().join$1(0, " ");
       },
@@ -25120,7 +25128,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t2 = this._captured_provider_2;
         t1.invoke$2("deleteProjectMessages", t2);
         t1.setProjectMessages$2(t2, formattedErrors);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     DartLinterConsumer_consume__closure: {
       "^": "Closure:2;",
@@ -25427,13 +25435,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = J.getInterceptor$asx(contents);
         index = t1.lastIndexOf$1(contents, "if (document.currentScript) {");
         this._captured_file_2.invoke$2("writeSync", "var self = Object.create(this);\nself.require = require;\nself.module = module;\nself.window = window;\nself.atom = atom;\nself.exports = exports;\nself.Object = Object;\nself.Promise = Promise;\nself.setTimeout = function(f, millis) { window.setTimeout(f, millis); };\n\n" + (t1.substring$2(contents, 0, index) + "if (true) { // document.currentScript" + t1.substring$1(contents, index + 29)));
-      }, null, null, 2, 0, null, 51, "call"]
+      }, null, null, 2, 0, null, 52, "call"]
     },
     RebuildJob_run__closure0: {
       "^": "Closure:2;",
       call$1: [function(_) {
         $.get$atom0().invoke$1("reload");
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     }
   }], ["stream_transformers", "package:stream_transformers/stream_transformers.dart",, K, {
     "^": "",
@@ -25478,13 +25486,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(stream) {
         return J.map$1$ax(stream, new K.Combine_all___closure0(stream));
-      }, null, null, 2, 0, null, 68, "call"]
+      }, null, null, 2, 0, null, 69, "call"]
     },
     Combine_all___closure0: {
       "^": "Closure:2;_captured_stream_1",
       call$1: [function($event) {
         return [this._captured_stream_1, $event];
-      }, null, null, 2, 0, null, 69, "call"]
+      }, null, null, 2, 0, null, 70, "call"]
     },
     Combine_all__closure0: {
       "^": "Closure:11;",
@@ -25494,7 +25502,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1 = J.getInterceptor$ax(current);
         values.$indexSet(0, t1.get$first(current), t1.get$last(current));
         return values;
-      }, null, null, 4, 0, null, 70, 71, "call"]
+      }, null, null, 4, 0, null, 71, 72, "call"]
     },
     Combine_all__closure1: {
       "^": "Closure:2;_captured_streams_2",
@@ -25506,19 +25514,19 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;_captured_streams_3",
       call$1: [function(values) {
         return H.setRuntimeTypeInfo(new H.MappedListIterable(this._captured_streams_3, new K.Combine_all___closure(values)), [null, null]).toList$1$growable(0, false);
-      }, null, null, 2, 0, null, 72, "call"]
+      }, null, null, 2, 0, null, 73, "call"]
     },
     Combine_all___closure: {
       "^": "Closure:2;_captured_values_4",
       call$1: [function(stream) {
         return J.$index$asx(this._captured_values_4, stream);
-      }, null, null, 2, 0, null, 68, "call"]
+      }, null, null, 2, 0, null, 69, "call"]
     },
     Combine_all__closure3: {
       "^": "Closure:2;_captured_sink_5",
       call$1: [function(combined) {
         return this._captured_sink_5.add$1(0, combined);
-      }, null, null, 2, 0, null, 73, "call"]
+      }, null, null, 2, 0, null, 74, "call"]
     },
     Combine_bind_closure: {
       "^": "Closure;_stream_transformers$_captured_this_0,_captured_stream_1",
@@ -25540,7 +25548,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       call$1: [function(values) {
         var t1 = J.getInterceptor$ax(values);
         return this._captured_sink_3.add$1(0, this._stream_transformers$_captured_this_2._combiner$2(t1.get$first(values), t1.get$last(values)));
-      }, null, null, 2, 0, null, 72, "call"]
+      }, null, null, 2, 0, null, 73, "call"]
     },
     FlatMap: {
       "^": "Object;_convert",
@@ -25584,13 +25592,13 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t1.push(mappedStream);
         t2 = this._captured_sink_8;
         this._captured_subscriptions_7._collection$_add$1(mappedStream.listen$3$onDone$onError(new K.FlatMap_bind_onListen_onData_closure(t2), new K.FlatMap_bind_onListen_onData_closure0(t1, this._captured_closeSinkIfDone_10, mappedStream), t2.get$addError()));
-      }, null, null, 2, 0, null, 50, "call"]
+      }, null, null, 2, 0, null, 51, "call"]
     },
     FlatMap_bind_onListen_onData_closure: {
       "^": "Closure:2;_captured_sink_11",
       call$1: [function($event) {
         return this._captured_sink_11.add$1(0, $event);
-      }, null, null, 2, 0, null, 69, "call"]
+      }, null, null, 2, 0, null, 70, "call"]
     },
     FlatMap_bind_onListen_onData_closure0: {
       "^": "Closure:0;_captured_openStreams_12,_captured_closeSinkIfDone_13,_captured_mappedStream_14",
@@ -25629,7 +25637,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function(stream) {
         return stream;
-      }, null, null, 2, 0, null, 68, "call"]
+      }, null, null, 2, 0, null, 69, "call"]
     },
     Scan: {
       "^": "Object;_initialValue,_combine",
@@ -25666,7 +25674,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         value = this._stream_transformers$_captured_this_3._combine$2(t1._captured_value_0, data);
         t1._captured_value_0 = value;
         this._captured_sink_4.add$1(0, value);
-      }, null, null, 2, 0, null, 50, "call"],
+      }, null, null, 2, 0, null, 51, "call"],
       $signature: function() {
         return H.computeSignature(function(A, R) {
           return {func: 1, void: true, args: [A]};
@@ -25714,7 +25722,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       "^": "Closure:2;",
       call$1: [function($function) {
         return $function.call$0();
-      }, null, null, 2, 0, null, 74, "call"]
+      }, null, null, 2, 0, null, 75, "call"]
     },
     _bindStream__closure1: {
       "^": "Closure:2;",
@@ -26342,7 +26350,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         return e.message;
       }
     }());
-  }, "undefinedLiteralPropertyPattern", "_logger6", "get$_logger6", function() {
+  }, "undefinedLiteralPropertyPattern", "_logger7", "get$_logger7", function() {
+    return N.Logger_Logger("error_repository");
+  }, "_logger", "_logger6", "get$_logger6", function() {
     return N.Logger_Logger("analysis-server-gen");
   }, "_logger", "atom0", "get$atom0", function() {
     var t1 = new E.Atom(null, null, null, null, null, null, $.get$_ctx());
@@ -26407,7 +26417,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
   }, "_loggers"]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
-  init.metadata = ["invocation", "object", "sender", "e", "x", "closure", "isolate", "numberOfArguments", "arg1", "arg2", "arg3", "arg4", "error", "stackTrace", "result", "each", "analysisErrors", "analysisFlushResults", "obj", "m", "message", "arg", "ed", "item", "dir", "entry", "r", "currentProjects", "newSdk", "file", "_", "value", "exitCode", "busy", "editor", "status", "str", "val", "position", "c", "rec", "evt", "errorCallback", null, "state", "code", "s", "allPaths", "p", "sdkPath", "data", "contents", "ver", "foundSdk", "theError", "theStackTrace", "ignored", "element", "a", "k", "v", "callback", "captureThis", "self", "arguments", "o", "subscription", "b", "stream", "event", "previous", "current", "values", "combined", "function"];
+  init.metadata = ["invocation", "object", "sender", "e", "x", "closure", "isolate", "numberOfArguments", "arg1", "arg2", "arg3", "arg4", "error", "stackTrace", "result", "key", "each", "analysisErrors", "analysisFlushResults", "obj", "m", "message", "arg", "ed", "item", "dir", "entry", "r", "currentProjects", "newSdk", "file", "_", "value", "exitCode", "busy", "editor", "status", "str", "val", "position", "c", "rec", "evt", "errorCallback", null, "state", "code", "s", "allPaths", "p", "sdkPath", "data", "contents", "ver", "foundSdk", "theError", "theStackTrace", "ignored", "element", "a", "k", "v", "callback", "captureThis", "self", "arguments", "o", "subscription", "b", "stream", "event", "previous", "current", "values", "combined", "function"];
   init.types = [{func: 1}, {func: 1, void: true}, {func: 1, args: [,]}, {func: 1, args: [P.String,,]}, {func: 1, args: [, P.StackTrace]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, void: true, args: [N.AnalysisErrors]}, {func: 1, void: true, args: [N.AnalysisFlushResults]}, {func: 1, void: true, args: [P.String]}, {func: 1, ret: P.Map}, {func: 1, args: [,,]}, {func: 1, ret: P.bool}, {func: 1, args: [E.Range]}, {func: 1, void: true, args: [[P.List, L.DartProject]]}, {func: 1, void: true, args: [V.Sdk]}, {func: 1, void: true, args: [E.TextEditor]}, {func: 1, void: true, args: [E.File]}, {func: 1, args: [N.AnalysisNavigation]}, {func: 1, args: [N.HoverResult]}, {func: 1, args: [E.TextEditor]}, {func: 1, args: [N.FixesResult]}, {func: 1, args: [N.SourceChange]}, {func: 1, args: [N.SourceFileEdit]}, {func: 1, args: [N.ServerStatus]}, {func: 1, args: [P.$int]}, {func: 1, void: true, args: [,]}, {func: 1, args: [N.SourceEdit]}, {func: 1, args: [N.Position]}, {func: 1, args: [N.SourceEdit, N.SourceEdit]}, {func: 1, args: [N.LogRecord]}, {func: 1, void: true, args: [{func: 1, void: true, args: [,]}]}, {func: 1, void: true, opt: [P.Map]}, {func: 1, args: [E.AtomEvent]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, void: true, args: [[P.List, P.String]]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [{func: 1, void: true}]}, {func: 1, void: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, ret: P.Future}, {func: 1, void: true, args: [,,]}, {func: 1, args: [P.Object]}, {func: 1, void: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [,], opt: [,]}, {func: 1, args: [P.bool]}, {func: 1, void: true, args: [P.Object, P.StackTrace]}, {func: 1, void: true, args: [, P.StackTrace]}, {func: 1, args: [P.Symbol,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, args: [[P.EventSink, P.List]]}, {func: 1, ret: N.ServerStatus, args: [P.Map]}, {func: 1, ret: N.AnalysisErrors, args: [P.Map]}, {func: 1, ret: N.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: N.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: N.HoverResult, args: [P.Map]}, {func: 1, ret: N.FixesResult, args: [P.Map]}, {func: 1, void: true, args: [{func: 1, void: true}]}, {func: 1, ret: P.bool, args: [,,]}, {func: 1, ret: P.$int, args: [,]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.bool, args: [P.Object, P.Object]}, {func: 1, ret: P.$int, args: [P.Object]}, {func: 1, void: true, args: [P.Object]}, {func: 1, ret: P.$int, args: [N.AnalysisError, N.AnalysisError]}, {func: 1, void: true, args: [E.AtomEvent]}];
   function convertToFastObject(properties) {
     function MyClass() {
