@@ -27,6 +27,11 @@ _acceptableGrammar(editor) {
 
 /// Observe a TextEditor and notifies the analysis_server of any content changes
 /// it should care about.
+///
+/// Although this class should use the "ChangeContentOverlay" route,
+/// Atom doesn't provide us with diffs, so it is more expensive to calculate
+/// the diffs than just remove the existing overlay and add a new one with
+/// the changed content.
 class BufferUpdater extends Disposables {
   final TextEditor _editor;
   final StreamSubscriptions _subs = new StreamSubscriptions();
@@ -72,6 +77,6 @@ class BufferUpdater extends Disposables {
 
   dispose() {
     super.dispose();
-    _subs.cancel();    
+    _subs.cancel();
   }
 }
