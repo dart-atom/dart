@@ -126,6 +126,12 @@ class AtomDartPackage extends AtomPackage {
         'description': 'Show informational level analysis issues.',
         'type': 'boolean',
         'default': true
+      },
+      'showTodos': {
+        'title': 'Show todos',
+        'description': 'When showing infos, also show TODO items.',
+        'type': 'boolean',
+        'default': false
       }
     };
   }
