@@ -11,9 +11,6 @@ final Logger _logger = new Logger('observatory_gen');
 
 const optional = 'optional';
 
-// TODO: Is this a doc error in `service.md`?
-class TypeRef extends ObjRef {}
-
 Map<String, Function> _typeFactories = {
   'BoundField': BoundField.parse,
   'BoundVariable': BoundVariable.parse,
@@ -572,8 +569,9 @@ class Class extends Obj {
   /// The superclass of this class, if any.
   @optional ClassRef superClass;
 
-  /// A list of interface types for this class.
-  List<TypeRef> interfaces;
+  /// A list of interface types for this class. The value will be of the kind:
+  /// Type.
+  List<InstanceRef> interfaces;
 
   /// A list of fields in this class. Does not include fields from superclasses.
   List<FieldRef> fields;
@@ -812,8 +810,9 @@ class FieldRef extends ObjRef {
   /// The owner of this field, which can be either a Library or a Class.
   ObjRef owner;
 
-  /// The declared type of this field.
-  TypeRef declaredType;
+  /// The declared type of this field. The value will always be of one of the
+  /// kinds: Type, TypeRef, TypeParameter, BoundedType.
+  InstanceRef declaredType;
 
   /// Is this field const?
   bool isConst;
@@ -849,8 +848,9 @@ class Field extends Obj {
   /// The owner of this field, which can be either a Library or a Class.
   ObjRef owner;
 
-  /// The declared type of this field.
-  TypeRef declaredType;
+  /// The declared type of this field. The value will always be of one of the
+  /// kinds: Type, TypeRef, TypeParameter, BoundedType.
+  InstanceRef declaredType;
 
   /// Is this field const?
   bool isConst;
@@ -1173,14 +1173,14 @@ class Instance extends Obj {
   @optional int parameterIndex;
 
   /// The type bounded by a BoundedType instance - or - the referent of a
-  /// TypeRef instance. The value will always be one of: Type, TypeRef,
-  /// TypeParameter, BoundedType. Provided for instance kinds: BoundedType
-  /// TypeRef
+  /// TypeRef instance. The value will always be of one of the kinds: Type,
+  /// TypeRef, TypeParameter, BoundedType. Provided for instance kinds:
+  /// BoundedType TypeRef
   @optional InstanceRef targetType;
 
-  /// The bound of a TypeParameter or BoundedType. The value will always be one
-  /// of: Type, TypeRef, TypeParameter, BoundedType. Provided for instance
-  /// kinds: BoundedType TypeParameter
+  /// The bound of a TypeParameter or BoundedType. The value will always be of
+  /// one of the kinds: Type, TypeRef, TypeParameter, BoundedType. Provided for
+  /// instance kinds: BoundedType TypeParameter
   @optional InstanceRef bound;
 
   String toString() => '[Instance]';
@@ -1634,8 +1634,9 @@ class TypeArguments extends Obj {
   /// A name for this type argument list.
   String name;
 
-  /// A list of types.
-  List<TypeRef> types;
+  /// A list of types. The value will always be one of the kinds: Type, TypeRef,
+  /// TypeParameter, BoundedType.
+  List<InstanceRef> types;
 
   String toString() => '[TypeArguments ' //
       'type: ${type}, id: ${id}, classRef: ${classRef}, size: ${size}, name: ${name}, types: ${types}]';
