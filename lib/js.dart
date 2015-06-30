@@ -6,6 +6,7 @@
 library atom.js;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:js';
 
 import 'utils.dart';
@@ -21,6 +22,19 @@ JsObject jsify(obj) {
 }
 
 JsObject require(String input) => context.callMethod('require', [input]);
+
+/// Good news, everyone! Now you too can interoperate with JavaScript primitives
+/// in a ridiculously convulted way and expensive way!
+evilWizardy(JsObject obj) {
+  if(obj == null) throw 'The Wizard says: "Null?! You shall not pass!"';
+
+  var window = context['window'];
+  var browserWindow = new JsObject.fromBrowserObject(window);
+  var browserJson = browserWindow['JSON'];
+
+  return JSON.decode(browserJson.callMethod('stringify', [obj]));
+}
+
 
 Future promiseToFuture(promise) {
   if (promise is JsObject) promise = new Promise(promise);

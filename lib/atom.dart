@@ -457,8 +457,12 @@ class TextEditor extends ProxyHolder {
     return result is bool ? result : new Range(result);
   }
 
-  // TODO: For now, kept as an opaque JS type.
-  JsObject getRootScopeDescriptor() => invoke('getRootScopeDescriptor');
+  /// An ambiguous type:
+  /// {
+  ///   'scopes': ['source.dart']
+  /// }
+  Map getRootScopeDescriptor()
+    => evilWizardy(invoke('getRootScopeDescriptor'));
 
   String getText() => invoke('getText');
   String getSelectedText() => invoke('getSelectedText');
@@ -493,6 +497,21 @@ class TextEditor extends ProxyHolder {
 
   void save() => invoke('save');
 
+  /// Calls your callback when the grammar that interprets and colorizes the
+  /// text has been changed.
+  /// Immediately calls your callback with the current grammar.
+  Disposable observeGrammar(void callback(Grammar grammar)) {
+    var disposable = invoke('observeGrammar', (g) => callback(new Grammar(g)));
+    return new JsDisposable(disposable);
+  }
+
+  /// Invoke the given callback synchronously when the content of the buffer changes.
+  /// Because observers are invoked synchronously, it's important not to perform
+  /// any expensive operations via this method.
+  /// Consider ::onDidStopChanging to delay expensive operations until
+  /// after changes stop occurring.
+  Stream get onDidChange => eventStream('onDidChange');
+
   /// Fire an event when the buffer's contents change. It is emitted
   /// asynchronously 300ms after the last buffer change. This is a good place to
   /// handle changes to the buffer without compromising typing performance.
@@ -500,6 +519,9 @@ class TextEditor extends ProxyHolder {
 
   /// Invoke the given callback when the editor is destroyed.
   Stream get onDidDestroy => eventStream('onDidDestroy');
+
+  /// Invoke the given callback after the buffer is saved to disk.
+  Stream get onDidSave => eventStream('onDidSave');
 
   String toString() => getTitle();
 }
@@ -532,6 +554,10 @@ class TextBuffer extends ProxyHolder {
   /// this method will return false.
   bool revertToCheckpoint() => invoke('revertToCheckpoint');
 
+}
+
+class Grammar extends ProxyHolder {
+  Grammar(JsObject object) : super(_cvt(object));
 }
 
 /// Represents a region in a buffer in row / column coordinates.

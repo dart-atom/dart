@@ -13,6 +13,7 @@ import 'autocomplete.dart';
 import 'atom.dart';
 import 'atom_autocomplete.dart';
 import 'atom_statusbar.dart';
+import 'buffer/buffer_updater.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'projects.dart';
@@ -110,8 +111,8 @@ class AtomDartPackage extends AtomPackage {
       new PubJob.upgrade(dirname(event.selectedFilePath)).schedule();
     });
 
-    // Register the autocomplete provider.
-    //new DartAutocompleteProvider().register();
+    // Observe all buffers and send updates to analysis server
+    disposables.add(observeBuffersForAnalysisServer());
   }
 
   void packageDeactivated() {
