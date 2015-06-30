@@ -2,6 +2,7 @@ library analysis.errors;
 
 import 'dart:async';
 
+import 'utils.dart';
 import 'impl/analysis_server_gen.dart' show AnalysisErrors, AnalysisError,
   AnalysisFlushResults;
 
@@ -9,22 +10,34 @@ import 'impl/analysis_server_gen.dart' show AnalysisErrors, AnalysisError,
 ///
 /// One-stop shop for getting the status of errors the analyzer has reported.
 /// Source agonostic.
-class ErrorRepository {
+class ErrorRepository implements Disposable {
   /// A collection of all known errors that the analysis_server has provided us,
   /// organized by filename.
   final Map<String, List<AnalysisError>> knownErrors = {};
-  // TODO: stream a delta object like dart-tools ErrorRepository does.
-  Stream onChange;
+
+  final StreamSubscriptions subs = new StreamSubscriptions();
 
   StreamController _controller = new StreamController.broadcast();
   Stream<AnalysisErrors> _errorStream;
   Stream<AnalysisFlushResults> _flushStream;
 
-  ErrorRepository(this._errorStream, this._flushStream) {
-    _errorStream.listen(_handleAddErrors);
-    _flushStream.listen(_handleFlushErrors);
-    onChange = _controller.stream;
+  ErrorRepository();
+
+  // TODO: stream a delta object like dart-tools ErrorRepository does.
+  Stream get onChange => _controller.stream;
+
+  void initStreams(Stream<AnalysisErrors> errorStream,
+      Stream<AnalysisFlushResults> flushStream) {
+    this._errorStream = errorStream;
+    this._flushStream = flushStream;
+
+    subs.cancel();
+
+    subs.add(_errorStream.listen(_handleAddErrors));
+    subs.add(_flushStream.listen(_handleFlushErrors));
   }
+
+  void dispose() => subs.cancel();
 
   void _handleAddErrors(AnalysisErrors analysisErrors) {
     knownErrors[analysisErrors.file] = analysisErrors.errors;
@@ -32,6 +45,10 @@ class ErrorRepository {
   }
 
   void _handleFlushErrors(AnalysisFlushResults analysisFlushResults) {
-    analysisFlushResults.files.forEach(knownErrors.remove);
+    // TODO: Flush them all? We have some errors in the cache that don't have
+    // associated file paths.
+    knownErrors.clear();
+    //analysisFlushResults.files.forEach(knownErrors.remove);
+    _controller.add(null);
   }
 }
