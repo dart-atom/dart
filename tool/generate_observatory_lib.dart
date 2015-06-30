@@ -55,9 +55,6 @@ final Logger _logger = new Logger('observatory_gen');
 
 const optional = 'optional';
 
-// TODO: Is this a doc error in `service.md`?
-class TypeRef extends ObjRef { }
-
 ''';
 
 final String _implCode = r'''
