@@ -209,6 +209,11 @@ class AnalysisServer implements Disposable {
     }
   }
 
+  /// Reanalyze the world.
+  void reanalyzeSources() {
+    if (_server != null) _server.analysis.reanalyze();
+  }
+
   /// If an analysis server is running, terminate it.
   void shutdown() {
     if (_server != null) _server.kill();
@@ -513,7 +518,7 @@ class _AnalysisServerWrapper extends Server {
   Future<int> get whenDisposed => _processCompleter.future;
 
   /// Restarts, or starts, the analysis server process.
-  ProcessRunner restart(sdk) {
+  void restart(sdk) {
     var startServer = () {
       var controller = new StreamController();
       process = _createProcess(sdk);
