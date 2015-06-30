@@ -478,6 +478,7 @@ class _AnalyzingJob extends Job {
 }
 
 typedef void _AnalysisServerWriter(String);
+
 class _AnalysisServerWrapper extends Server {
   static _AnalysisServerWrapper create(Sdk sdk) {
     StreamController controller = new StreamController();
@@ -495,6 +496,7 @@ class _AnalysisServerWrapper extends Server {
   _AnalysisServerWrapper(this.process, this._processCompleter,
       Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage) {
     server.onStatus.listen((ServerStatus status) {
+      // TODO: We're no longer receiving these messages...
       if (status.analysis != null) {
         analyzing = status.analysis.isAnalyzing;
         _analyzingController.add(analyzing);
@@ -513,7 +515,7 @@ class _AnalysisServerWrapper extends Server {
   Future<int> get whenDisposed => _processCompleter.future;
 
   /// Restarts, or starts, the analysis server process.
-  ProcessRunner restart(sdk) {
+  void restart(sdk) {
     var startServer = () {
       var controller = new StreamController();
       process = _createProcess(sdk);

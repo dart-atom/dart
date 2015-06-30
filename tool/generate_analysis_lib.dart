@@ -66,8 +66,7 @@ class Api {
     gen.writeln();
     gen.writeStatement(
         'Server(Stream<String> inStream, void writeMessage(String message)) {');
-    gen.writeStatement('_streamSub = inStream.listen(_processMessage);');
-    gen.writeStatement('_writeMessage = writeMessage;');
+    gen.writeStatement('configure(inStream, writeMessage);');
     gen.writeln();
     domains.forEach((Domain domain) =>
         gen.writeln('_${domain.name} = new ${domain.className}(this);'));
@@ -608,8 +607,14 @@ final String _serverCode = r'''
   Stream<String> get onSend => _onSend.stream;
   Stream<String> get onReceive => _onReceive.stream;
 
+  void configure(Stream<String> inStream, void writeMessage(String message)) {
+    dispose();
+    _writeMessage = writeMessage;
+    _streamSub = inStream.listen(_processMessage);
+  }
+
   void dispose() {
-    _streamSub.cancel();
+    if (_streamSub != null) _streamSub.cancel();
     _completers.values.forEach((c) => c.completeError('disposed'));
   }
 

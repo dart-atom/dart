@@ -10,13 +10,15 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
 
     _errorRepository.onChange.listen((_) {
       final acceptableErrorTypes = ['ERROR', 'WARNING'];
-      if(_shouldShowInfoMessages()) {
-        acceptableErrorTypes.add('INFO');
-      }
+      if (_shouldShowInfoMessages()) acceptableErrorTypes.add('INFO');
+
       var allErrors =
           _errorRepository.knownErrors.values.expand((l) => l).toList();
       var sortedErrors = new List<AnalysisError>.from(allErrors)
         ..sort(_errorComparer);
+      if (!_shouldShowTodosMessages()) {
+        sortedErrors = sortedErrors.where((issue) => issue.type != 'TODO');
+      }
       var formattedErrors = sortedErrors
           .where((e) => acceptableErrorTypes.contains(e.severity))
           .map((e) => _errorToLintMessage(e.location.file, e))
