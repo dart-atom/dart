@@ -39,12 +39,6 @@ abstract class AutocompleteProvider implements Disposable {
   /// Tell autocomplete to fuzzy filter the results of getSuggestions().
   final bool filterSuggestions;
 
-  static void registerAutocompleteProvider(String methodName,
-      AutocompleteProvider provider) {
-    final JsObject exports = context['module']['exports'];
-    exports[methodName] = () => provider.toProxy();
-  }
-
   AutocompleteProvider(this.selector, {this.disableForSelector,
       this.inclusionPriority, this.excludeLowerPriority, this.filterSuggestions});
 
@@ -70,7 +64,7 @@ abstract class AutocompleteProvider implements Disposable {
     return jsify(map);
   }
 
-  JsObject _getSuggestions(options) {
+  JsObject _getSuggestions(options) {    
     AutocompleteOptions opts = new AutocompleteOptions(options);
 
     Future f = getSuggestions(opts).then((suggestions) {

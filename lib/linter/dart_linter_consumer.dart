@@ -3,12 +3,14 @@ part of linter;
 /// Consumes the atomlinter/linter self-service API.
 class DartLinterConsumer extends LinterConsumer with Disposables {
   ErrorRepository _errorRepository;
+  Duration _reportingDelay = new Duration(seconds: 1);
   DartLinterConsumer(this._errorRepository);
 
   consume(LinterService service) {
     var provider = new DartLinterProvider();
+    var errorStream = new EventStream(_errorRepository.onChange).delay(_reportingDelay);
 
-    _errorRepository.onChange.listen((_) {
+    errorStream.listen((_) {
       final acceptableErrorTypes = ['ERROR', 'WARNING'];
       if (_shouldShowInfoMessages()) acceptableErrorTypes.add('INFO');
 

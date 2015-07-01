@@ -80,7 +80,7 @@ class Disposables implements Disposable {
   }
 }
 
-class StreamSubscriptions {
+class StreamSubscriptions implements Disposable {
   List<StreamSubscription> _subscriptions = [];
 
   void add(StreamSubscription subscription) {
@@ -94,4 +94,6 @@ class StreamSubscriptions {
 
     _subscriptions.clear();
   }
+
+  void dispose() => cancel();
 }
