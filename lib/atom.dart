@@ -462,7 +462,7 @@ class TextEditor extends ProxyHolder {
   ///   'scopes': ['source.dart']
   /// }
   Map getRootScopeDescriptor()
-    => evilWizardy(invoke('getRootScopeDescriptor'));
+    => toDartObjectViaWizardy(invoke('getRootScopeDescriptor'));
 
   String getText() => invoke('getText');
   String getSelectedText() => invoke('getSelectedText');
