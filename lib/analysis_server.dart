@@ -43,8 +43,6 @@ class AnalysisServer implements Disposable {
   Property<bool> isActiveProperty;
 
   AnalysisServer() {
-    // onActive.listen((val) => _logger.info('analysis server active: ${val}'));
-    // onBusy.listen((val) => _logger.info('analysis server busy: ${val}'));
     isActiveProperty = new Property.fromStreamWithInitialValue(false, onActive);
     Timer.run(_setup);
   }
@@ -69,7 +67,8 @@ class AnalysisServer implements Disposable {
 
     editorManager.onDartFileChanged.listen(_focusedDartFileChanged);
 
-    knownRoots = projectManager.projects.toList();
+    knownRoots.clear();
+    knownRoots.addAll(projectManager.projects);
 
     _checkTrigger();
 
@@ -127,6 +126,7 @@ class AnalysisServer implements Disposable {
   void _syncRoots() {
     if (isActive) {
       List<String> roots = knownRoots.map((dir) => dir.path).toList();
+      _logger.fine("setAnalysisRoots(${roots})");
       _server.analysis.setAnalysisRoots(roots, []);
     }
   }
@@ -147,7 +147,17 @@ class AnalysisServer implements Disposable {
     Set addedProjects = currentSet.difference(oldSet);
     Set removedProjects = oldSet.difference(currentSet);
 
-    knownRoots = currentProjects;
+    // Create a copy of the list.
+    knownRoots.clear();
+    knownRoots.addAll(currentProjects);
+
+    if (removedProjects.isNotEmpty){
+      _logger.fine("removed: ${removedProjects}");
+      removedProjects.forEach(
+        (project) => errorRepository.clearForDirectory(project.directory));
+    }
+
+    if (addedProjects.isNotEmpty) _logger.fine("added: ${addedProjects}");
 
     if (removedProjects.isNotEmpty || addedProjects.isNotEmpty) {
       _syncRoots();
@@ -273,6 +283,7 @@ class AnalysisServer implements Disposable {
     if (_server == server) {
       _serverActiveController.add(false);
       _serverBusyController.add(false);
+      errorRepository.clearAll();
     }
   }
 }

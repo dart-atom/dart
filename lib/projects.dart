@@ -87,11 +87,15 @@ class ProjectManager implements Disposable {
       if (!allDirs.contains(dir)) {
         changed = true;
         projects.removeWhere((p) => p.directory == dir);
+        _logger.info('removed project ${dir}');
       }
     }
 
     Set<Directory> newDirs = allDirs.difference(previousDirs);
-    if (newDirs.isNotEmpty) changed = true;
+    if (newDirs.isNotEmpty) {
+      changed = true;
+      newDirs.forEach((dir) => _logger.info('added project ${dir}'));
+    }
     projects.addAll(newDirs.map((dir) => new DartProject(dir)));
 
     if (changed) {
