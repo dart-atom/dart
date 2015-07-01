@@ -15,13 +15,8 @@ import 'sdk.dart';
 final String pluginId = 'dart-lang-experimental';
 
 AnalysisServer get analysisServer => deps[AnalysisServer];
-
 EditorManager get editorManager => deps[EditorManager];
-
 ErrorRepository get errorRepository => deps[ErrorRepository];
-
 final JobManager jobs = new JobManager();
-
 ProjectManager get projectManager => deps[ProjectManager];
-
 SdkManager get sdkManager => deps[SdkManager];

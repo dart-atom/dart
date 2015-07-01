@@ -39,7 +39,7 @@ abstract class Job {
   Function get infoAction => null;
 
   /// Schedule the [Job] for execution.
-  void schedule() => jobs.schedule(this);
+  Future schedule() => jobs.schedule(this);
 
   Future run();
 
@@ -69,13 +69,15 @@ class JobManager {
 
   Stream<Job> get onJobChanged => _controller.stream;
 
-  void schedule(Job job) => _enqueue(job);
+  Future schedule(Job job) => _enqueue(job);
 
-  void _enqueue(Job job) {
+  Future _enqueue(Job job) {
     _logger.fine('scheduling job ${job.name}');
-    _jobs.add(new JobInstance(this, job));
+    JobInstance instance = new JobInstance(this, job);
+    _jobs.add(instance);
     _checkForRunnableJobs();
     _checkNotifyJobChanged();
+    return instance.whenComplete;
   }
 
   void _checkForRunnableJobs() {
@@ -109,9 +111,11 @@ class JobManager {
             detail: result is String ? result : null,
             dismissable: result != null && job.pinResult);
       }
+      jobInstance._completer.complete(result);
     }).whenComplete(() {
       _complete(jobInstance);
     }).catchError((e) {
+      jobInstance._completer.completeError(e);
       _toasts.addError('${job.name} failed.', detail: '${e}', dismissable: true);
     });
   }
@@ -136,10 +140,14 @@ class JobManager {
 class JobInstance {
   final JobManager jobs;
   final Job job;
+
+  Completer _completer = new Completer();
   bool _running = false;
 
   JobInstance(this.jobs, this.job);
 
   String get name => job.name;
   bool get isRunning => _running;
+
+  Future get whenComplete => _completer.future;
 }

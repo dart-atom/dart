@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import 'atom.dart' show File;
+import 'atom.dart' show Directory, File;
 import 'utils.dart';
 import 'impl/analysis_server_gen.dart' show AnalysisErrors, AnalysisError,
   AnalysisFlushResults;
@@ -40,6 +40,21 @@ class ErrorRepository implements Disposable {
 
     subs.add(_errorStream.listen(_handleAddErrors));
     subs.add(_flushStream.listen(_handleFlushErrors));
+  }
+
+  /// Clear all known errors. This is useful for situations like when the
+  /// analysis server goes down.
+  void clearAll() {
+    knownErrors.clear();
+    _controller.add(null);
+  }
+
+  /// Clear all errors for files contained within the given directory.
+  void clearForDirectory(Directory dir) {
+    List<String> paths = knownErrors.keys.toList();
+    for (String path in paths) {
+      if (dir.contains(path)) knownErrors.remove(path);
+    }
   }
 
   void dispose() => subs.cancel();

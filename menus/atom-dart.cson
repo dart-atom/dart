@@ -6,7 +6,7 @@
     submenu: [
       label: 'Dart'
       submenu: [
-        {label: 'Smoke Test', command: 'dart-lang-experimental:smoke-test'}
+        {label: 'Smoke Test', command: 'dart-lang-experimental:smoke-test-dev'}
       ]
     ]
   }

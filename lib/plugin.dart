@@ -6,12 +6,12 @@ library atom.plugin;
 
 import 'dart:async';
 import 'dart:js';
+
 import 'package:logging/logging.dart';
 
 import 'analysis_server.dart';
 import 'autocomplete.dart';
 import 'atom.dart';
-import 'atom_autocomplete.dart';
 import 'atom_linter.dart' show LinterService;
 import 'atom_statusbar.dart';
 import 'buffer/buffer_updater.dart';
@@ -43,25 +43,23 @@ class AtomDartPackage extends AtomPackage {
       return new StatusDisplay(new StatusBar(obj));
     });
 
-    // Register a method to consume the `linter-plus-self` service API
+    // Register a method to consume the `linter-plus-self` service API.
     registerServiceConsumer('consumeLinter', (obj) {
       // This hoopla allows us to construct an object with Disposable
       // and return it without having to create a new class that
       // just does the same thing, but in another file.
-      var sc = new StreamController.broadcast();
-      var sc2 = new StreamController.broadcast();
-      var errorStream = sc.stream;
-      var flushStream = sc2.stream;
+      var errorController = new StreamController.broadcast();
+      var flushController = new StreamController.broadcast();
       // TODO: expose analysis domain streams to avoid indirections
-      errorRepository.initStreams(errorStream, flushStream);
+      errorRepository.initStreams(errorController.stream, flushController.stream);
       var consumer = new DartLinterConsumer(errorRepository);
       consumer.consume(new LinterService(obj));
 
-      // Proxy error messages from analysis server to ErrorRepository when
-      // the analysis server becomes active.
+      // Proxy error messages from analysis server to ErrorRepository when the
+      // analysis server becomes active.
       analysisServer.isActiveProperty.where((active) => active).listen((_) {
-        analysisServer.onAnalysisErrors.listen(sc.add);
-        analysisServer.onAnalysisFlushResults.listen(sc2.add);
+        analysisServer.onAnalysisErrors.listen(errorController.add);
+        analysisServer.onAnalysisFlushResults.listen(flushController.add);
       });
 
       return consumer;
@@ -88,15 +86,17 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
 
     // Register commands.
-    _addCmd('atom-workspace', 'dart-lang-experimental:smoke-test', (_) => smokeTest());
-    _addCmd('atom-workspace', 'dart-lang-experimental:rebuild-restart', (_) {
+    _addCmd('atom-workspace', 'dart-lang-experimental:smoke-test-dev', (_) => smokeTest());
+    _addCmd('atom-workspace', 'dart-lang-experimental:rebuild-restart-dev', (_) {
       new RebuildJob().schedule();
     });
     _addCmd('atom-workspace', 'dart-lang-experimental:auto-locate-sdk', (_) {
       new SdkLocationJob(sdkManager).schedule();
     });
-    _addCmd('atom-workspace', 'dart-lang-experimental:refresh-dart-projects', (_) {
-      new ProjectScanJob().schedule();
+    _addCmd('atom-workspace', 'dart-lang-experimental:reanalyze-sources', (_) {
+      new ProjectScanJob().schedule().then((_) {
+        return new Future.delayed((new Duration(milliseconds: 100)));
+      }).then((_) => analysisServer.reanalyzeSources());
     });
 
     // Text editor commands.
