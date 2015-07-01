@@ -7,7 +7,7 @@ import 'package:logging/logging.dart';
 import 'atom.dart' show Directory, File;
 import 'utils.dart';
 import 'impl/analysis_server_gen.dart' show AnalysisErrors, AnalysisError,
-  AnalysisFlushResults;
+  AnalysisFlushResults, Location;
 
 final Logger _logger = new Logger('error_repository');
 
@@ -16,6 +16,8 @@ final Logger _logger = new Logger('error_repository');
 /// One-stop shop for getting the status of errors the analyzer has reported.
 /// Source agonostic.
 class ErrorRepository implements Disposable {
+  static const _empty = const [];
+
   /// A collection of all known errors that the analysis_server has provided us,
   /// organized by filename.
   final Map<String, List<AnalysisError>> knownErrors = {};
@@ -60,11 +62,23 @@ class ErrorRepository implements Disposable {
   void dispose() => subs.cancel();
 
   void _handleAddErrors(AnalysisErrors analysisErrors) {
+    // TODO: Consider consolidating all error events for a Dart project and
+    // firing once analysis is complete.
+
     String path = analysisErrors.file;
     File file = new File.fromPath(path);
     if (file.existsSync()) {
+      var oldErrors = knownErrors[path];
+      var newErrors = analysisErrors.errors;
+
+      if (oldErrors == null) oldErrors = _empty;
+      if (newErrors == null) newErrors = _empty;
+
       knownErrors[path] = analysisErrors.errors;
-      _controller.add(null);
+
+      if (!_identical(oldErrors, newErrors)) {
+        _controller.add(null);
+      }
     } else {
       _logger.info('received an error event for a non-existent file: ${path}');
     }
@@ -73,5 +87,30 @@ class ErrorRepository implements Disposable {
   void _handleFlushErrors(AnalysisFlushResults analysisFlushResults) {
     analysisFlushResults.files.forEach(knownErrors.remove);
     _controller.add(null);
+  }
+
+  static bool _identical(List<AnalysisError> a, List<AnalysisError> b) {
+    if (a.length != b.length) return false;
+
+    for (int i = 0; i < a.length; i++) {
+      if (!_identicalErrors(a[i], b[i])) return false;
+    }
+
+    return true;
+  }
+
+  // TODO: Generate == operators for a whitelisted set of AS classes.
+
+  static bool _identicalErrors(AnalysisError a, AnalysisError b) {
+    if (a.severity != b.severity) return false;
+    if (a.type != b.type) return false;
+    if (a.message != b.message) return false;
+    return _identicalLocation(a.location, b.location);
+  }
+
+  static bool _identicalLocation(Location a, Location b) {
+    if (a.offset != b.offset) return false;
+    if (a.length != b.length) return false;
+    return a.file == b.file;
   }
 }
