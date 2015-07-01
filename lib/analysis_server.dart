@@ -61,6 +61,8 @@ class AnalysisServer implements Disposable {
   Stream<AnalysisFlushResults> get onAnalysisFlushResults =>
     analysisServer._server.analysis.onFlushResults;
 
+  Server get server => _server;
+
   void _setup() {
     subs.add(projectManager.onChanged.listen(_reconcileRoots));
     subs.add(sdkManager.onSdkChange.listen(_handleSdkChange));
