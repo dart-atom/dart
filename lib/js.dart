@@ -23,9 +23,12 @@ JsObject jsify(obj) {
 
 JsObject require(String input) => context.callMethod('require', [input]);
 
+/// Attempts to convert a JsObject to a List or Map based on `JSON.stringify`
+/// and dart:convert's `JSON.decode`.
+///
 /// Good news, everyone! Now you too can interoperate with JavaScript primitives
 /// in a ridiculously convulted way and expensive way!
-evilWizardy(JsObject obj) {
+toDartObjectViaWizardy(JsObject obj) {
   if(obj == null) throw 'The Wizard says: "Null?! You shall not pass!"';
 
   var window = context['window'];
