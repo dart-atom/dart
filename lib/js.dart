@@ -13,6 +13,9 @@ import 'utils.dart';
 
 export 'dart:js' show JsObject;
 
+final JsObject _browserWindow = new JsObject.fromBrowserObject(context['window']);
+final JsObject _browserJson = _browserWindow['JSON'];
+
 JsObject jsify(obj) {
   if (obj == null) return null;
   if (obj is JsObject) return obj;
@@ -29,15 +32,9 @@ JsObject require(String input) => context.callMethod('require', [input]);
 /// Good news, everyone! Now you too can interoperate with JavaScript primitives
 /// in a ridiculously convulted way and expensive way!
 toDartObjectViaWizardy(JsObject obj) {
-  if(obj == null) throw 'The Wizard says: "Null?! You shall not pass!"';
-
-  var window = context['window'];
-  var browserWindow = new JsObject.fromBrowserObject(window);
-  var browserJson = browserWindow['JSON'];
-
-  return JSON.decode(browserJson.callMethod('stringify', [obj]));
+  if (obj == null) throw 'The Wizard says: "Null?! You shall not pass!"';
+  return JSON.decode(_browserJson.callMethod('stringify', [obj]));
 }
-
 
 Future promiseToFuture(promise) {
   if (promise is JsObject) promise = new Promise(promise);
