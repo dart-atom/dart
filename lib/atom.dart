@@ -94,6 +94,7 @@ class Atom extends ProxyHolder {
   NotificationManager _notifications;
   PackageManager _packages;
   Project _project;
+  ViewRegistry _views;
   Workspace _workspace;
 
   Atom() : super(_ctx) {
@@ -102,6 +103,7 @@ class Atom extends ProxyHolder {
     _notifications = new NotificationManager(obj['notifications']);
     _packages = new PackageManager(obj['packages']);
     _project = new Project(obj['project']);
+    _views = new ViewRegistry(obj['views']);
     _workspace = new Workspace(obj['workspace']);
   }
 
@@ -110,6 +112,7 @@ class Atom extends ProxyHolder {
   NotificationManager get notifications => _notifications;
   PackageManager get packages => _packages;
   Project get project => _project;
+  ViewRegistry get views => _views;
   Workspace get workspace => _workspace;
 
   String getVersion() => invoke('getVersion');
@@ -128,6 +131,20 @@ class Atom extends ProxyHolder {
 
   /// Reload the current window.
   void reload() => invoke('reload');
+}
+
+/// ViewRegistry handles the association between model and view types in Atom.
+/// We call this association a View Provider. As in, for a given model, this
+/// class can provide a view via [getView], as long as the model/view
+/// association was registered via [addViewProvider].
+class ViewRegistry extends ProxyHolder {
+    ViewRegistry(JsObject object) : super(object);
+
+  // TODO: expose addViewProvider(providerSpec)
+
+  /// Get the view associated with an object in the workspace. The result is
+  /// likely an html Element.
+  dynamic getView(object) => invoke('getView', object);
 }
 
 /// Represents the state of the user interface for the entire window. Interact
@@ -220,8 +237,8 @@ class CommandRegistry extends ProxyHolder {
         invoke('add', target, commandName, (e) => callback(new AtomEvent(e))));
   }
 
-  void dispatch(Element target, String commandName) =>
-      invoke('dispatch', target, commandName);
+  void dispatch(Element target, String commandName, {Map options}) =>
+      invoke('dispatch', target, commandName, options);
 }
 
 class Config extends ProxyHolder {

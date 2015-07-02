@@ -370,7 +370,8 @@ class TypeDef {
     'LinkedEditGroup',
     'Position',
     'NavigationRegion',
-    'NavigationTarget'
+    'NavigationTarget',
+    'CompletionSuggestion'
   ]);
 
   String name;
@@ -461,7 +462,8 @@ class TypeDef {
 
     if (hasToString) {
       gen.writeln();
-      String str = fields.map((f) => "${f.name}: \${${f.name}}").join(', ');
+      String str = fields.where((f) => !f.optional).map(
+          (f) => "${f.name}: \${${f.name}}").join(', ');
       gen.writeln("String toString() => '[${name} ${str}]';");
     }
 

@@ -795,7 +795,7 @@ class AnalysisError {
       {this.correction});
 
   String toString() =>
-      '[AnalysisError severity: ${severity}, type: ${type}, location: ${location}, message: ${message}, correction: ${correction}]';
+      '[AnalysisError severity: ${severity}, type: ${type}, location: ${location}, message: ${message}]';
 }
 
 class AnalysisErrorFixes {
@@ -924,6 +924,9 @@ class CompletionSuggestion {
       this.element, this.returnType, this.parameterNames, this.parameterTypes,
       this.requiredParameterCount, this.hasNamedParameters, this.parameterName,
       this.parameterType, this.importUri});
+
+  String toString() =>
+      '[CompletionSuggestion kind: ${kind}, relevance: ${relevance}, completion: ${completion}, selectionOffset: ${selectionOffset}, selectionLength: ${selectionLength}, isDeprecated: ${isDeprecated}, isPotential: ${isPotential}]';
 }
 
 class Element {
@@ -1280,8 +1283,7 @@ class RequestError {
 
   RequestError(this.code, this.message, {this.stackTrace});
 
-  String toString() =>
-      '[RequestError code: ${code}, message: ${message}, stackTrace: ${stackTrace}]';
+  String toString() => '[RequestError code: ${code}, message: ${message}]';
 }
 
 class SearchResult {
@@ -1323,7 +1325,7 @@ class SourceChange {
       {this.selection});
 
   String toString() =>
-      '[SourceChange message: ${message}, edits: ${edits}, linkedEditGroups: ${linkedEditGroups}, selection: ${selection}]';
+      '[SourceChange message: ${message}, edits: ${edits}, linkedEditGroups: ${linkedEditGroups}]';
 }
 
 class SourceEdit implements Jsonable {
@@ -1348,7 +1350,7 @@ class SourceEdit implements Jsonable {
   SourceEdit(this.offset, this.length, this.replacement, {this.id});
 
   String toString() =>
-      '[SourceEdit offset: ${offset}, length: ${length}, replacement: ${replacement}, id: ${id}]';
+      '[SourceEdit offset: ${offset}, length: ${length}, replacement: ${replacement}]';
 }
 
 class SourceFileEdit {

@@ -13,9 +13,12 @@ import 'atom.dart';
 import 'js.dart';
 import 'utils.dart';
 
-// TODO: Expose:
-// triggerAutocomplete: (editor) ->
-//    atom.commands.dispatch(atom.views.getView(editor), 'autocomplete-plus:activate', activatedManually: false)
+void triggerAutocomplete(TextEditor editor) {
+  atom.commands.dispatch(
+    atom.views.getView(editor),
+    'autocomplete-plus:activate',
+    options: {'activatedManually': false});
+}
 
 abstract class AutocompleteProvider implements Disposable {
   /// Defines the scope selector(s) (can be comma-separated) for which your
@@ -44,9 +47,8 @@ abstract class AutocompleteProvider implements Disposable {
 
   Future<List<Suggestion>> getSuggestions(AutocompleteOptions options);
 
-  // void onDidInsertSuggestion([editor, triggerPosition, suggestion]) {
-  //
-  // }
+  void onDidInsertSuggestion(TextEditor editor, Point triggerPosition,
+    Map suggestion) { }
 
   void dispose() { }
 
@@ -54,7 +56,7 @@ abstract class AutocompleteProvider implements Disposable {
     Map map = {
         'selector': selector,
         'getSuggestions': _getSuggestions,
-        //'onDidInsertSuggestion': _onDidInsertSuggestion,
+        'onDidInsertSuggestion': _onDidInsertSuggestion,
         'dispose': dispose
     };
     if (disableForSelector != null) map['disableForSelector'] = disableForSelector;
@@ -64,9 +66,8 @@ abstract class AutocompleteProvider implements Disposable {
     return jsify(map);
   }
 
-  JsObject _getSuggestions(options) {    
+  JsObject _getSuggestions(options) {
     AutocompleteOptions opts = new AutocompleteOptions(options);
-
     Future f = getSuggestions(opts).then((suggestions) {
       return suggestions.map((suggestion) => suggestion._toProxy()).toList();
     });
@@ -74,9 +75,12 @@ abstract class AutocompleteProvider implements Disposable {
     return promise.obj;
   }
 
-  // void _onDidInsertSuggestion([editor, triggerPosition, suggestion]) {
-  //   // TODO: Expose if necessary.
-  // }
+  void _onDidInsertSuggestion(options) {
+    onDidInsertSuggestion(
+      new TextEditor(options['editor']),
+      new Point(options['triggerPosition']),
+      toDartObjectViaWizardy(options['suggestion']));
+  }
 }
 
 class AutocompleteOptions {
@@ -161,13 +165,16 @@ class Suggestion {
   final String description;
 
   /// (optional): A url to the documentation or more information about this
-  /// suggestion. When specified, a `More..` link will be displayed in the
+  /// suggestion. When specified, a `More...` link will be displayed in the
   /// description area.
   final String descriptionMoreURL;
 
+  final String requiredImport;
+
   Suggestion({this.text, this.snippet, this.displayText, this.replacementPrefix,
     this.type, this.leftLabel, this.leftLabelHTML, this.rightLabel, this.rightLabelHTML,
-    this.className, this.iconHTML, this.description, this.descriptionMoreURL});
+    this.className, this.iconHTML, this.description, this.descriptionMoreURL,
+    this.requiredImport});
 
   Map _toMap() {
     Map m = {};
@@ -184,6 +191,7 @@ class Suggestion {
     if (iconHTML != null) m['iconHTML'] = iconHTML;
     if (description != null) m['description'] = description;
     if (descriptionMoreURL != null) m['descriptionMoreURL'] = descriptionMoreURL;
+    if (requiredImport != null) m['requiredImport'] = requiredImport;
     return m;
   }
 
