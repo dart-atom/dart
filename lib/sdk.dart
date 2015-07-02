@@ -7,6 +7,7 @@ library atom.sdk;
 import 'dart:async';
 
 import 'atom.dart';
+import 'atom_utils.dart';
 import 'jobs.dart';
 import 'process.dart';
 import 'state.dart';

@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:html' show DivElement;
 
 import '../atom.dart';
+import '../atom_utils.dart';
 import '../jobs.dart';
 import '../process.dart';
 import '../projects.dart';

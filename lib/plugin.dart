@@ -14,6 +14,7 @@ import 'autocomplete.dart';
 import 'atom.dart';
 import 'atom_linter.dart' show LinterService;
 import 'atom_statusbar.dart';
+import 'atom_utils.dart';
 //import 'buffer/buffer_updater.dart';
 import 'dependencies.dart';
 import 'editors.dart';

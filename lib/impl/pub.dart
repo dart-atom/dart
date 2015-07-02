@@ -7,10 +7,10 @@ library atom.pub;
 import 'dart:async';
 
 import '../atom.dart';
+import '../atom_utils.dart';
 import '../jobs.dart';
 import '../sdk.dart';
 import '../state.dart';
-import '../utils.dart';
 
 const String pubspecFileName = 'pubspec.yaml';
 

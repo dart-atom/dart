@@ -640,33 +640,8 @@ class _AnalysisServerWrapper extends Server {
 }
 
 List<SourceEdit> _simpleDiff(String oldText, String newText) {
-  // int oldLen = oldText.length;
-  // int newLen = newText.length;
-  //
-  // int maxLen = math.min(oldLen, newLen);
-  // int prefixLen = 0;
-  //
-  // while (prefixLen < maxLen) {
-  //   if (oldText[prefixLen] == newText[prefixLen]) {
-  //     prefixLen++;
-  //   } else {
-  //     break;
-  //   }
-  // }
-  //
-  // int suffixLen = 0;
-  //
-  // while ((suffixLen + prefixLen) < maxLen) {
-  //   if (oldText[oldLen - suffixLen - 1] == newText[newLen - suffixLen - 1]) {
-  //     suffixLen++;
-  //   } else {
-  //     break;
-  //   }
-  // }
-  //
-  // print('maxlen=${maxLen}, prefixlen=${prefixLen}, suffixlen=${suffixLen}');
-
-  // TODO: optimize this.
-  // TODO: The analysis server complains if we don't pass in the optional id.
-  return [new SourceEdit(0, oldText.length, newText, id: '1')];
+  List<Edit> edits = simpleDiff(oldText, newText);
+  int count = 1;
+  return edits.map((edit) => new SourceEdit(
+      edit.offset, edit.length, edit.replacement, id: '${count++}')).toList();
 }
