@@ -7,6 +7,7 @@
 library atom.analysis_server;
 
 import 'dart:async';
+//import 'dart:math' as math;
 
 import 'package:logging/logging.dart';
 import 'package:frappe/frappe.dart';
@@ -26,6 +27,9 @@ import 'impl/analysis_server_gen.dart';
 
 final Logger _logger = new Logger('analysis-server');
 
+// TODO: When trying to kill the AS process, we should just assume that a kill
+// call succeeds.
+
 class AnalysisServer implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
@@ -39,6 +43,7 @@ class AnalysisServer implements Disposable {
   _AnalyzingJob _job;
 
   List<DartProject> knownRoots = [];
+  Map<String, String> _overlays = {};
 
   Property<bool> isActiveProperty;
 
@@ -104,9 +109,6 @@ class AnalysisServer implements Disposable {
   /// Subscribe to this to get told when the issues list has changed.
   Stream get issuesUpdatedNotification => null;
 
-  // /// Compute completions for a given location.
-  // List<Completion> computeCompletions(String sourcePath, int offset) => null;
-
   Future<ErrorsResult> getErrors(String filePath) {
     if (isActive) {
       return _server.analysis.getErrors(filePath);
@@ -120,8 +122,30 @@ class AnalysisServer implements Disposable {
     _logger.finer('notifyFileChanged(): ${path}');
 
     if (isActive) {
-      // TODO (lukechurch): Send this as a sendAddOverlays command
+      String lastContent = _overlays[path];
 
+      bool added = lastContent == null;
+      bool removed = contents == null;
+
+      if (added) {
+        var overlay = new AddContentOverlay('add', contents);
+        server.analysis.updateContent({ path: overlay });
+      } else if (removed) {
+        var overlay = new RemoveContentOverlay('remove');
+        server.analysis.updateContent({ path: overlay });
+      } else {
+        List<SourceEdit> diffs = _simpleDiff(lastContent, contents);
+        var overlay = new ChangeContentOverlay('change', diffs);
+        server.analysis.updateContent({ path: overlay });
+      }
+
+      if (added || removed) _updatePriorityFiles();
+    }
+
+    if (contents == null) {
+      _overlays.remove(path);
+    } else {
+      _overlays[path] = contents;
     }
   }
 
@@ -131,6 +155,18 @@ class AnalysisServer implements Disposable {
       _logger.fine("setAnalysisRoots(${roots})");
       _server.analysis.setAnalysisRoots(roots, []);
     }
+  }
+
+  void _sendExistingOverlays() {
+    Map update = {};
+    _overlays.forEach((path, contents) {
+      update[path] = new AddContentOverlay('add', contents);
+    });
+    server.analysis.updateContent(update);
+  }
+
+  void _updatePriorityFiles() {
+    server.analysis.setPriorityFiles(_overlays.keys.toList());
   }
 
   void dispose() {
@@ -194,10 +230,7 @@ class AnalysisServer implements Disposable {
     // And it's a dart file.
     if (!project.isDartFile(path)) return;
 
-    // TODO: `onDidStopChanging` will notify when the file has been opened, even
-    // if it has not been modified.
     editor.onDidStopChanging.listen((_) => notifyFileChanged(path, editor.getText()));
-
     editor.onDidDestroy.listen((_) => notifyFileChanged(path, null));
   }
 
@@ -278,6 +311,8 @@ class AnalysisServer implements Disposable {
   void _initExistingServer(Server server) {
     _serverActiveController.add(true);
     _syncRoots();
+    _sendExistingOverlays();
+    _updatePriorityFiles();
     _focusedDartFileChanged(editorManager.activeDartFile);
   }
 
@@ -602,4 +637,36 @@ class _AnalysisServerWrapper extends Server {
   static _AnalysisServerWriter _messageWriter(ProcessRunner process) {
     return (String message) => process.write("${message}\n");
   }
+}
+
+List<SourceEdit> _simpleDiff(String oldText, String newText) {
+  // int oldLen = oldText.length;
+  // int newLen = newText.length;
+  //
+  // int maxLen = math.min(oldLen, newLen);
+  // int prefixLen = 0;
+  //
+  // while (prefixLen < maxLen) {
+  //   if (oldText[prefixLen] == newText[prefixLen]) {
+  //     prefixLen++;
+  //   } else {
+  //     break;
+  //   }
+  // }
+  //
+  // int suffixLen = 0;
+  //
+  // while ((suffixLen + prefixLen) < maxLen) {
+  //   if (oldText[oldLen - suffixLen - 1] == newText[newLen - suffixLen - 1]) {
+  //     suffixLen++;
+  //   } else {
+  //     break;
+  //   }
+  // }
+  //
+  // print('maxlen=${maxLen}, prefixlen=${prefixLen}, suffixlen=${suffixLen}');
+
+  // TODO: optimize this.
+  // TODO: The analysis server complains if we don't pass in the optional id.
+  return [new SourceEdit(0, oldText.length, newText, id: '1')];
 }

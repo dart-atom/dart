@@ -14,7 +14,7 @@ import 'autocomplete.dart';
 import 'atom.dart';
 import 'atom_linter.dart' show LinterService;
 import 'atom_statusbar.dart';
-import 'buffer/buffer_updater.dart';
+//import 'buffer/buffer_updater.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
@@ -23,12 +23,13 @@ import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
-export 'atom.dart' show registerPackage;
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
+
+export 'atom.dart' show registerPackage;
 
 final Logger _logger = new Logger("atom-dart");
 
@@ -117,7 +118,7 @@ class AtomDartPackage extends AtomPackage {
     });
 
     // Observe all buffers and send updates to analysis server
-    disposables.add(observeBuffersForAnalysisServer());
+    //disposables.add(observeBuffersForAnalysisServer());
   }
 
   void packageDeactivated() {

@@ -111,7 +111,7 @@ class Suggestion {
   /// editor, in place of the prefix.
   final String text;
 
-  /// (required; or text): A snippet string. This will allow users to tab
+  /// (required; or [text]): A snippet string. This will allow users to tab
   /// through function arguments or other options. e.g.
   /// `myFunction(${1:arg1}, ${2:arg2})`. See the snippets package for more
   /// information.

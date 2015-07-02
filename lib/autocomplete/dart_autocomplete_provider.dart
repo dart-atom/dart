@@ -10,8 +10,6 @@ part of autocomplete;
 // TODO: The code completion popup can be very sticky - perhaps due to the
 // latency involved in using the analysis server?
 
-// TODO: Completions don't work until you've made a modification in the file.
-
 class DartAutocompleteProvider extends AutocompleteProvider {
   static final _suggestionKindMap = {
     'IMPORT': 'import',
@@ -54,17 +52,10 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     var editor = options.editor;
     var path = editor.getPath();
     var offset = editor.getBuffer().characterIndexForPosition(options.bufferPosition);
-    return server.completion.getSuggestions(path, offset).then((SuggestionsResult result) {
-      Completer<List<Suggestion>> completer = new Completer();
-      StreamSubscription sub;
-      sub = server.completion.onResults.listen((CompletionResults cr) {
-        if (cr.id == result.id && cr.isLast) {
-          // Unsubscribe from the completions stream.
-          sub.cancel();
-          completer.complete(_handleCompletionResults(cr));
-        }
-      });
-      return completer.future;
+    return server.completion.getSuggestions(path, offset).then((result) {
+      return server.completion.onResults
+          .where((cr) => cr.id == result.id)
+          .where((cr) => cr.isLast).first.then(_handleCompletionResults);
     });
   }
 
@@ -73,7 +64,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     String requiredImport = suggestion['requiredImport'];
     if (requiredImport != null) {
       // TODO: insert it...
-      print('todo: add an import for ${requiredImport}');
+      print('TODO: add an import for ${requiredImport}');
     }
   }
 
@@ -100,12 +91,15 @@ class DartAutocompleteProvider extends AutocompleteProvider {
           String names = cs.parameterNames.take(cs.requiredParameterCount).map(
               (name) => '\${${++count}:${name}}').join(', ');
 
+          //bool hasOptional = cs.requiredParameterCount != cs.parameterNames.length;
+
           text = null;
+          //snippet = '${cs.completion}(${names}, \${${count + 1}:…})\$${count + 2}';
           snippet = '${cs.completion}(${names})\$${++count}';
         } else {
           // Else, leave the cursor within the parans.
           text = null;
-          snippet = '${text}(\$1)\$2';
+          snippet = '${cs.completion}(\$1)\$2';
         }
       }
 
