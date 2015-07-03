@@ -73,6 +73,8 @@ class Edit {
         replacement == other.replacement;
   }
 
+  int get hashCode => offset ^ length ^ replacement.hashCode;
+
   String toString() => '[Edit offset: ${offset}, length: ${length}]';
 }
 

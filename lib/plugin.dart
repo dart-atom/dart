@@ -24,6 +24,7 @@ import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
+import 'analysis/navigation.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
@@ -86,6 +87,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
+    disposables.add(new NavigationHelper());
 
     // Register commands.
     _addCmd('atom-workspace', 'dart-lang-experimental:smoke-test-dev', (_) => smokeTest());

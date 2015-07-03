@@ -7,7 +7,7 @@ import 'package:frappe/frappe.dart';
 import 'atom.dart';
 import 'atom_linter.dart';
 import 'error_repository.dart';
-import 'impl/analysis_server_gen.dart' show AnalysisError, Location;
+import 'analysis/analysis_server_gen.dart' show AnalysisError, Location;
 import 'state.dart' show pluginId;
 import 'utils.dart';
 

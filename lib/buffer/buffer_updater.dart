@@ -1,7 +1,7 @@
 library buffer.updater;
 
 import '../atom.dart';
-import '../impl/analysis_server_gen.dart';
+import '../analysis/analysis_server_gen.dart';
 import '../state.dart';
 import '../utils.dart';
 

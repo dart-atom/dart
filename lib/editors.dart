@@ -12,7 +12,7 @@ import 'atom.dart';
 import 'projects.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'impl/analysis_server_gen.dart' show LinkedEditGroup, Position, SourceEdit;
+import 'analysis/analysis_server_gen.dart' show LinkedEditGroup, Position, SourceEdit;
 
 final Logger _logger = new Logger('editors');
 
@@ -80,40 +80,74 @@ class EditorManager implements Disposable {
     edits.sort((SourceEdit a, SourceEdit b) => b.offset - a.offset);
   }
 
-  final StreamController<TextEditor> _editorController = new StreamController.broadcast();
-  final StreamController<File> _fileController = new StreamController.broadcast();
-
   Disposable _observe;
+
+  String _dartFile;
+  final StreamController<String> _dartFileController
+      = new StreamController.broadcast();
+
+  TextEditor _activeEditor;
+  final StreamController<TextEditor> _editorActivateController
+      = new StreamController.broadcast();
+  final StreamController<TextEditor> _editorDeactivateController
+      = new StreamController.broadcast();
 
   EditorManager() {
     _observe = atom.workspace.observeActivePaneItem(_itemChanged);
+    Timer.run(_itemChanged);
   }
 
-  TextEditor get activeEditor => atom.workspace.getActiveTextEditor();
+  /// Return the file for the current editor, if it is a dart file in a dart
+  /// project.
+  String get activeDartFile => _dartFile;
 
-  Stream<TextEditor> get onActiveEditorChanged => _editorController.stream;
+  /// Listen for changes to the active editor, if it is editing a dart file in a
+  /// dart project.
+  Stream<String> get onDartFileChanged => _dartFileController.stream;
 
-  File get activeDartFile => _dartFileFrom(atom.workspace.getActiveTextEditor());
+  /// Return the current editor, if it is editing a `.dart` file. The file may or
+  /// may not be in a dart project.
+  TextEditor get currentDartEditor => _activeEditor;
 
-  Stream<File> get onDartFileChanged => _fileController.stream;
+  /// Listen for changes to the active editor, if it is editing a `.dart` file.
+  /// The file may or may not be in a dart project.
+  Stream<TextEditor> get onDartEditorActivated => _editorActivateController.stream;
+
+  /// Listen for changes to the active editor, if it is editing a `.dart` file.
+  /// The file may or may not be in a dart project.
+  Stream<TextEditor> get onDartEditorDeactivated => _editorDeactivateController.stream;
 
   void dispose() => _observe.dispose();
 
-  void _itemChanged(item) {
-    TextEditor editor = new TextEditor(item);
-    if (editor.isValid()) {
-      _editorController.add(editor);
-      File file = _dartFileFrom(editor);
-      if (file != null) _fileController.add(file);
+  void _itemChanged([_]) {
+    TextEditor editor = atom.workspace.getActiveTextEditor();
+
+    if (editor == null) {
+      _setCurrentItem(null);
+      _setDartFile(null);
+    } else {
+      String path = editor.getPath();
+      if (!isDartFile(path)) {
+        _setCurrentItem(null);
+        _setDartFile(null);
+      } else {
+        _setCurrentItem(editor);
+        DartProject project = projectManager.getProjectFor(path);
+        _setDartFile(project == null ? null : path);
+      }
     }
   }
 
-  File _dartFileFrom(TextEditor editor) {
-    if (editor == null) return null;
-    String path = editor.getPath();
-    DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return null;
-    if (!project.isDartFile(path)) return null;
-    return new File.fromPath(path);
+  void _setCurrentItem(TextEditor editor) {
+    if (_activeEditor != null) _editorDeactivateController.add(_activeEditor);
+    _activeEditor = editor;
+    if (editor != null) _editorActivateController.add(editor);
+  }
+
+  void _setDartFile(String path) {
+    if (_dartFile != path) {
+      _dartFile = path;
+      _dartFileController.add(path);
+    }
   }
 }

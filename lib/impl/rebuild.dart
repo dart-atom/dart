@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// A library used for rebuilding the `atom-dartlang-experimental` project.
+library atom.rebuild;
+
 import 'dart:async';
 
 import '../atom.dart';

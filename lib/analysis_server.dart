@@ -22,8 +22,8 @@ import 'process.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'impl/analysis_server_dialog.dart';
-import 'impl/analysis_server_gen.dart';
+import 'analysis/analysis_server_dialog.dart';
+import 'analysis/analysis_server_gen.dart';
 
 final Logger _logger = new Logger('analysis-server');
 
@@ -38,6 +38,7 @@ class AnalysisServer implements Disposable {
   StreamController<bool> _serverBusyController = new StreamController.broadcast();
   StreamController<String> _onSendController = new StreamController.broadcast();
   StreamController<String> _onReceiveController = new StreamController.broadcast();
+  StreamController<AnalysisNavigation> _onNavigatonController = new StreamController.broadcast();
 
   _AnalysisServerWrapper _server;
   _AnalyzingJob _job;
@@ -57,6 +58,8 @@ class AnalysisServer implements Disposable {
 
   Stream<String> get onSend => _onSendController.stream;
   Stream<String> get onReceive => _onReceiveController.stream;
+
+  Stream<AnalysisNavigation> get onNavigaton => _onNavigatonController.stream;
 
   // TODO: is it better to just expose _server?
   Stream<AnalysisErrors> get onAnalysisErrors =>
@@ -85,11 +88,6 @@ class AnalysisServer implements Disposable {
     disposables.add(atom.commands.add('atom-text-editor',
         'dart-lang-experimental:show-dartdoc', (event) {
       DartdocHelper.handleDartdoc(_server, event);
-    }));
-
-    disposables.add(atom.commands.add('atom-text-editor',
-        'dart-lang-experimental:jump-to-declaration', (event) {
-      DeclarationHelper.handleNavigate(_server, event);
     }));
 
     disposables.add(atom.commands.add('atom-text-editor',
@@ -228,16 +226,16 @@ class AnalysisServer implements Disposable {
     if (project == null) return;
 
     // And it's a dart file.
-    if (!project.isDartFile(path)) return;
+    if (!isDartFile(path)) return;
 
     editor.onDidStopChanging.listen((_) => notifyFileChanged(path, editor.getText()));
     editor.onDidDestroy.listen((_) => notifyFileChanged(path, null));
   }
 
-  void _focusedDartFileChanged(File file) {
-    if (file != null && _server != null) {
+  void _focusedDartFileChanged(String path) {
+    if (path != null && _server != null) {
       // TODO: What a truly interesting API.
-      _server.analysis.setSubscriptions({'NAVIGATION': [file.getPath()]});
+      _server.analysis.setSubscriptions({'NAVIGATION': [path]});
     }
   }
 
@@ -292,9 +290,7 @@ class AnalysisServer implements Disposable {
     server.onSend.listen((message) => _onSendController.add(message));
     server.onReceive.listen((message) => _onReceiveController.add(message));
 
-    server.analysis.onNavigation.listen((AnalysisNavigation e) {
-      DeclarationHelper.setLastNavInfo(e);
-    });
+    server.analysis.onNavigation.listen((e) => _onNavigatonController.add(e));
 
     onBusy.listen((busy) {
       if (!busy && _job != null) {
@@ -382,68 +378,6 @@ class DartdocHelper {
     }
 
     return buf.toString();
-  }
-}
-
-class DeclarationHelper {
-  static AnalysisNavigation _lastNavInfo;
-
-  static void setLastNavInfo(AnalysisNavigation info) {
-    _lastNavInfo = info;
-  }
-
-  static void handleNavigate(Server server, AtomEvent event) {
-    if (server == null) return;
-
-    // TODO: We should wait for a period of time before failing.
-    if (_lastNavInfo == null) {
-      atom.beep();
-      return;
-    }
-
-    TextEditor editor = event.editor;
-    String path = editor.getPath();
-
-    if (path != _lastNavInfo.file) {
-      atom.beep();
-      return;
-    }
-
-    Range range = editor.getSelectedBufferRange();
-    int offset = editor.getBuffer().characterIndexForPosition(range.start);
-
-    List<String> files = _lastNavInfo.files;
-    List<NavigationTarget> targets = _lastNavInfo.targets;
-    List<NavigationRegion> regions = _lastNavInfo.regions;
-
-    for (NavigationRegion region in regions) {
-      if (region.offset <= offset && (region.offset + region.length > offset)) {
-        NavigationTarget target = targets[region.targets.first];
-        String file = files[target.fileIndex];
-        TextBuffer buffer = editor.getBuffer();
-        Range sourceRange = new Range.fromPoints(
-          buffer.positionForCharacterIndex(region.offset),
-          buffer.positionForCharacterIndex(region.offset + region.length));
-
-        EditorManager.flashSelection(editor, sourceRange).then((_) {
-          Map options = {
-            'initialLine': target.startLine - 1,
-            'initialColumn': target.startColumn - 1,
-            'searchAllPanes': true
-          };
-          atom.workspace.open(file, options).then((TextEditor editor) {
-            editor.selectRight(target.length);
-          }).catchError((e) {
-            _logger.warning('${e}');
-            atom.beep();
-          });
-        });
-
-        return;
-      }
-    }
-
-    atom.beep();
   }
 }
 

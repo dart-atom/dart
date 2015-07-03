@@ -34,7 +34,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     'TOP_LEVEL_VARIABLE': 'variable'
   };
 
-  static Map _rightLabelMap = {null: null};
+  static Map _rightLabelMap = {null: null, 'FUNCTION_TYPE_ALIAS': 'function type'};
 
   static int _compareSuggestions(CompletionSuggestion a, CompletionSuggestion b) {
     return b.relevance - a.relevance;
@@ -70,6 +70,9 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
   List<Suggestion> _handleCompletionResults(CompletionResults cr) {
     List<CompletionSuggestion> results = cr.results;
+
+    // Apply filtering from `dart-tools`.
+    results = results.where((result) => result.relevance > 500).toList();
 
     // TODO: Do we want to trust the AS's priority?
     results.sort(_compareSuggestions);
