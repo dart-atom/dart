@@ -10,6 +10,8 @@ part of autocomplete;
 // TODO: The code completion popup can be very sticky - perhaps due to the
 // latency involved in using the analysis server?
 
+const bool _filterLowRelevance = true;
+
 class DartAutocompleteProvider extends AutocompleteProvider {
   static final _suggestionKindMap = {
     'IMPORT': 'import',
@@ -71,8 +73,10 @@ class DartAutocompleteProvider extends AutocompleteProvider {
   List<Suggestion> _handleCompletionResults(CompletionResults cr) {
     List<CompletionSuggestion> results = cr.results;
 
-    // Apply filtering from `dart-tools`.
-    results = results.where((result) => result.relevance > 500).toList();
+    if (_filterLowRelevance) {
+      // Apply filtering from `dart-tools`.
+      results = results.where((result) => result.relevance > 500).toList();
+    }
 
     // TODO: Do we want to trust the AS's priority?
     results.sort(_compareSuggestions);

@@ -16044,10 +16044,10 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         var t1 = this._dartFileController;
         return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
       },
-      get$currentDartEditor: function() {
+      get$currentEditor: function() {
         return this._activeEditor;
       },
-      get$onDartEditorActivated: function() {
+      get$onEditorActivated: function() {
         var t1 = this._editorActivateController;
         return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
       },
@@ -16835,8 +16835,8 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         t4 = new Y.NavigationHelper(null, null, P.LinkedHashMap__makeEmpty(), P.LinkedHashSet_LinkedHashSet(null, null, null, null));
         t4._commandDisposable = t5._commands.add$3(0, "atom-text-editor", "dart-lang-experimental:jump-to-declaration", t4.get$_handleNavigate());
         X.Dependencies_instance().getDependency$1(C.Type_goj).get$onNavigaton().listen$1(t4.get$_navigationEvent());
-        X.Dependencies_instance().getDependency$1(C.Type_pbf).get$onDartEditorActivated().listen$1(t4.get$_activate());
-        t4._activate$1(X.Dependencies_instance().getDependency$1(C.Type_pbf).get$currentDartEditor());
+        X.Dependencies_instance().getDependency$1(C.Type_pbf).get$onEditorActivated().listen$1(t4.get$_activate());
+        t4._activate$1(X.Dependencies_instance().getDependency$1(C.Type_pbf).get$currentEditor());
         t1.push(t4);
         t1.push(t5._commands.add$3(0, "atom-workspace", "dart-lang-experimental:smoke-test-dev", new R.AtomDartPackage_packageActivated_closure()));
         t1.push(t5._commands.add$3(0, "atom-workspace", "dart-lang-experimental:rebuild-restart-dev", new R.AtomDartPackage_packageActivated_closure0()));
@@ -18026,7 +18026,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     Disposables: {
       "^": "Object;Disposables__disposables",
       add$1: function(_, disposable) {
-        this.Disposables__disposables.push(disposable);
+        return this.Disposables__disposables.push(disposable);
       },
       dispose$0: [function() {
         var t1, t2, _i;
@@ -18092,11 +18092,12 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
           P.print("TODO: add an import for " + H.S(requiredImport));
       },
       _handleCompletionResults$1: [function(cr) {
-        var t1, results;
-        t1 = J.where$1$ax(J.get$results$x(cr), new D.DartAutocompleteProvider__handleCompletionResults_closure());
+        var results, t1;
+        results = J.get$results$x(cr);
+        t1 = J.where$1$ax(results, new D.DartAutocompleteProvider__handleCompletionResults_closure());
         results = P.List_List$from(t1, true, H.getRuntimeTypeArgument(t1, "Iterable", 0));
         C.JSArray_methods.sort$1(results, D.DartAutocompleteProvider__compareSuggestions$closure());
-        return H.setRuntimeTypeInfo(new H.MappedListIterable(results, new D.DartAutocompleteProvider__handleCompletionResults_closure0(this)), [null, null]).toList$0(0);
+        return C.JSArray_methods.map$1(results, new D.DartAutocompleteProvider__handleCompletionResults_closure0(this)).toList$0(0);
       }, "call$1", "get$_handleCompletionResults", 2, 0, 41, 62],
       _sanitizeReturnType$1: function(cs) {
         if (cs.get$element() != null && J.$eq(J.get$kind$x(cs.get$element()), "CONSTRUCTOR"))

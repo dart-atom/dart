@@ -107,15 +107,15 @@ class EditorManager implements Disposable {
 
   /// Return the current editor, if it is editing a `.dart` file. The file may or
   /// may not be in a dart project.
-  TextEditor get currentDartEditor => _activeEditor;
+  TextEditor get currentEditor => _activeEditor;
 
   /// Listen for changes to the active editor, if it is editing a `.dart` file.
   /// The file may or may not be in a dart project.
-  Stream<TextEditor> get onDartEditorActivated => _editorActivateController.stream;
+  Stream<TextEditor> get onEditorActivated => _editorActivateController.stream;
 
   /// Listen for changes to the active editor, if it is editing a `.dart` file.
   /// The file may or may not be in a dart project.
-  Stream<TextEditor> get onDartEditorDeactivated => _editorDeactivateController.stream;
+  Stream<TextEditor> get onEditorDeactivated => _editorDeactivateController.stream;
 
   void dispose() => _observe.dispose();
 

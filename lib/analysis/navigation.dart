@@ -30,9 +30,9 @@ class NavigationHelper implements Disposable {
         'dart-lang-experimental:jump-to-declaration', _handleNavigate);
     analysisServer.onNavigaton.listen(_navigationEvent);
 
-    editorManager.onDartEditorActivated.listen(_activate);
+    editorManager.onEditorActivated.listen(_activate);
 
-    _activate(editorManager.currentDartEditor);
+    _activate(editorManager.currentEditor);
   }
 
   void dispose() => _commandDisposable.dispose();

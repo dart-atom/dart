@@ -28,9 +28,9 @@ abstract class Disposable {
 class Disposables implements Disposable {
   List<Disposable> _disposables = [];
 
-  void add(Disposable disposable) {
-    _disposables.add(disposable);
-  }
+  void add(Disposable disposable) => _disposables.add(disposable);
+
+  bool remove(Disposable disposable) => _disposables.remove(disposable);
 
   void dispose() {
     for (Disposable disposable in _disposables) {
