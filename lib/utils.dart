@@ -6,21 +6,6 @@ library atom.utils;
 
 import 'dart:async';
 
-import 'atom.dart';
-import 'js.dart';
-
-final JsObject _process = require('process');
-final JsObject _fs = require('fs');
-
-/// 'darwin', 'freebsd', 'linux', 'sunos' or 'win32'
-final String platform = _process['platform'];
-
-final bool isWindows = platform.startsWith('win');
-final bool isMac = platform == 'darwin';
-final bool isLinux = !isWindows && !isMac;
-
-final String separator = isWindows ? '\\' : '/';
-
 final String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing "
     "elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
     "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi "
@@ -29,34 +14,10 @@ final String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing "
     " sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt "
     "mollit anim id est laborum.";
 
-String join(dir, String arg1, [String arg2, String arg3]) {
-  if (dir is Directory) dir = dir.path;
-  String path = '${dir}${separator}${arg1}';
-  if (arg2 != null) {
-    path = '${path}${separator}${arg2}';
-    if (arg3 != null) path = '${path}${separator}${arg3}';
-  }
-  return path;
-}
-
-String dirname(entry) {
-  if (entry is Entry) return entry.getParent().path;
-  int index = entry.lastIndexOf(separator);
-  return index == -1 ? null : entry.substring(0, index);
-}
-
-/// Relative path entries are removed and symlinks are resolved to their final
-/// destination.
-String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
-
-/// Get the value of an environment variable. This is often not accurate on the
-/// mac since mac apps are launched in a different shell then the terminal
-/// default.
-String env(String key) => _process['env'][key];
-
 /// Ensure the first letter is lower-case.
 String toStartingLowerCase(String str) {
-  if (str == null || str.isEmpty) return null;
+  if (str == null) return null;
+  if (str.isEmpty) return str;
   return str.substring(0, 1).toLowerCase() + str.substring(1);
 }
 
@@ -67,9 +28,9 @@ abstract class Disposable {
 class Disposables implements Disposable {
   List<Disposable> _disposables = [];
 
-  void add(Disposable disposable) {
-    _disposables.add(disposable);
-  }
+  void add(Disposable disposable) => _disposables.add(disposable);
+
+  bool remove(Disposable disposable) => _disposables.remove(disposable);
 
   void dispose() {
     for (Disposable disposable in _disposables) {
@@ -83,9 +44,10 @@ class Disposables implements Disposable {
 class StreamSubscriptions implements Disposable {
   List<StreamSubscription> _subscriptions = [];
 
-  void add(StreamSubscription subscription) {
-    _subscriptions.add(subscription);
-  }
+  void add(StreamSubscription subscription) => _subscriptions.add(subscription);
+
+  bool remove(StreamSubscription subscription) =>
+      _subscriptions.remove(subscription);
 
   void cancel() {
     for (StreamSubscription subscription in _subscriptions) {
@@ -96,4 +58,58 @@ class StreamSubscriptions implements Disposable {
   }
 
   void dispose() => cancel();
+}
+
+class Edit {
+  final int offset;
+  final int length;
+  final String replacement;
+
+  Edit(this.offset, this.length, this.replacement);
+
+  bool operator==(obj) {
+    if (obj is! Edit) return false;
+    Edit other = obj;
+    return offset == other.offset && length == other.length &&
+        replacement == other.replacement;
+  }
+
+  int get hashCode => offset ^ length ^ replacement.hashCode;
+
+  String toString() => '[Edit offset: ${offset}, length: ${length}]';
+}
+
+/// Diff the two strings and return the list of edits to convert [oldText] to
+/// [newText].
+List<Edit> simpleDiff(String oldText, String newText) {
+  // TODO: Optimize this. Look for a single deletion, addition, or replacement
+  // edit that will convert oldtext to newText, or do a wholesale replacement.
+
+  // int oldLen = oldText.length;
+  // int newLen = newText.length;
+  //
+  // int maxLen = math.min(oldLen, newLen);
+  // int prefixLen = 0;
+  //
+  // while (prefixLen < maxLen) {
+  //   if (oldText[prefixLen] == newText[prefixLen]) {
+  //     prefixLen++;
+  //   } else {
+  //     break;
+  //   }
+  // }
+  //
+  // int suffixLen = 0;
+  //
+  // while ((suffixLen + prefixLen) < maxLen) {
+  //   if (oldText[oldLen - suffixLen - 1] == newText[newLen - suffixLen - 1]) {
+  //     suffixLen++;
+  //   } else {
+  //     break;
+  //   }
+  // }
+  //
+  // print('maxlen=${maxLen}, prefixlen=${prefixLen}, suffixlen=${suffixLen}');
+
+  return [new Edit(0, oldText.length, newText)];
 }

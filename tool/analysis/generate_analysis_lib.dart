@@ -25,7 +25,7 @@ main(List<String> args) {
   api.parse(domains, typedefs);
 
   // Generate code from the model.
-  File outputFile = new File('lib/impl/analysis_server_gen.dart');
+  File outputFile = new File('lib/analysis/analysis_server_gen.dart');
   DartGenerator generator = new DartGenerator();
   api.generate(generator);
   outputFile.writeAsStringSync(generator.toString());

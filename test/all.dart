@@ -5,7 +5,9 @@
 library atom.all_test;
 
 import 'dependencies_test.dart' as dependencies_test;
+import 'utils_test.dart' as utils_test;
 
 main() {
   dependencies_test.defineTests();
+  utils_test.defineTests();
 }

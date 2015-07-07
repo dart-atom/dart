@@ -21,10 +21,13 @@ import 'process.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'impl/analysis_server_dialog.dart';
-import 'impl/analysis_server_gen.dart';
+import 'analysis/analysis_server_dialog.dart';
+import 'analysis/analysis_server_gen.dart';
 
 final Logger _logger = new Logger('analysis-server');
+
+// TODO: When trying to kill the AS process, we should just assume that a kill
+// call succeeds.
 
 class AnalysisServer implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
@@ -34,11 +37,13 @@ class AnalysisServer implements Disposable {
   StreamController<bool> _serverBusyController = new StreamController.broadcast();
   StreamController<String> _onSendController = new StreamController.broadcast();
   StreamController<String> _onReceiveController = new StreamController.broadcast();
+  StreamController<AnalysisNavigation> _onNavigatonController = new StreamController.broadcast();
 
   _AnalysisServerWrapper _server;
   _AnalyzingJob _job;
 
   List<DartProject> knownRoots = [];
+  Map<String, String> _overlays = {};
 
   Property<bool> isActiveProperty;
 
@@ -53,6 +58,8 @@ class AnalysisServer implements Disposable {
   Stream<String> get onSend => _onSendController.stream;
   Stream<String> get onReceive => _onReceiveController.stream;
 
+  Stream<AnalysisNavigation> get onNavigaton => _onNavigatonController.stream;
+
   // TODO: is it better to just expose _server?
   Stream<AnalysisErrors> get onAnalysisErrors =>
       analysisServer._server.analysis.onErrors;
@@ -65,9 +72,7 @@ class AnalysisServer implements Disposable {
     subs.add(projectManager.onChanged.listen(_reconcileRoots));
     subs.add(sdkManager.onSdkChange.listen(_handleSdkChange));
 
-    disposables.add(atom.workspace.observeTextEditors(_handleNewEditor));
-
-    editorManager.onDartFileChanged.listen(_focusedDartFileChanged);
+    editorManager.dartProjectEditors.onActiveEditorChanged.listen(_focusedEditorChanged);
 
     knownRoots.clear();
     knownRoots.addAll(projectManager.projects);
@@ -83,11 +88,6 @@ class AnalysisServer implements Disposable {
     }));
 
     disposables.add(atom.commands.add('atom-text-editor',
-        'dart-lang-experimental:jump-to-declaration', (event) {
-      DeclarationHelper.handleNavigate(_server, event);
-    }));
-
-    disposables.add(atom.commands.add('atom-text-editor',
         'dart-lang-experimental:quick-fix', (event) {
       QuickFixHelper.handleQuickFix(_server, event);
     }));
@@ -97,15 +97,12 @@ class AnalysisServer implements Disposable {
   }
 
   /// Returns whether the analysis server is active and running.
-  bool get isActive => _server.isRunning;
+  bool get isActive => _server != null && _server.isRunning;
 
   bool get isBusy => _server.analyzing;
 
   /// Subscribe to this to get told when the issues list has changed.
   Stream get issuesUpdatedNotification => null;
-
-  // /// Compute completions for a given location.
-  // List<Completion> computeCompletions(String sourcePath, int offset) => null;
 
   Future<ErrorsResult> getErrors(String filePath) {
     if (isActive) {
@@ -115,22 +112,24 @@ class AnalysisServer implements Disposable {
     }
   }
 
-  /// Tell the analysis server a file has changed in memory.
-  void notifyFileChanged(String path, String contents) {
-    _logger.finer('notifyFileChanged(): ${path}');
-
-    if (isActive) {
-      // TODO (lukechurch): Send this as a sendAddOverlays command
-
-    }
-  }
-
   void _syncRoots() {
     if (isActive) {
       List<String> roots = knownRoots.map((dir) => dir.path).toList();
       _logger.fine("setAnalysisRoots(${roots})");
       _server.analysis.setAnalysisRoots(roots, []);
     }
+  }
+
+  void _sendExistingOverlays() {
+    Map update = {};
+    _overlays.forEach((path, contents) {
+      update[path] = new AddContentOverlay('add', contents);
+    });
+    server.analysis.updateContent(update);
+  }
+
+  void _updatePriorityFiles() {
+    server.analysis.setPriorityFiles(_overlays.keys.toList());
   }
 
   void dispose() {
@@ -153,7 +152,7 @@ class AnalysisServer implements Disposable {
     knownRoots.clear();
     knownRoots.addAll(currentProjects);
 
-    if (removedProjects.isNotEmpty){
+    if (removedProjects.isNotEmpty) {
       _logger.fine("removed: ${removedProjects}");
       removedProjects.forEach(
         (project) => errorRepository.clearForDirectory(project.directory));
@@ -165,18 +164,6 @@ class AnalysisServer implements Disposable {
       _syncRoots();
     }
 
-    if (addedProjects.isNotEmpty) {
-      List<TextEditor> editors = atom.workspace.getTextEditors().toList();
-
-      for (DartProject addedProject in addedProjects) {
-        for (TextEditor editor in editors) {
-          if (addedProject.contains(editor.getPath())) {
-            _handleNewEditor(editor);
-          }
-        }
-      }
-    }
-
     _checkTrigger();
   }
 
@@ -184,27 +171,15 @@ class AnalysisServer implements Disposable {
     _checkTrigger();
   }
 
-  void _handleNewEditor(TextEditor editor) {
-    final String path = editor.getPath();
+  void _focusedEditorChanged(TextEditor editor) {
+    if (_server == null || editor == null) return;
 
-    // If it's in a dart project.
-    DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return;
-
-    // And it's a dart file.
-    if (!project.isDartFile(path)) return;
-
-    // TODO: `onDidStopChanging` will notify when the file has been opened, even
-    // if it has not been modified.
-    editor.onDidStopChanging.listen((_) => notifyFileChanged(path, editor.getText()));
-
-    editor.onDidDestroy.listen((_) => notifyFileChanged(path, null));
-  }
-
-  void _focusedDartFileChanged(File file) {
-    if (file != null && _server != null) {
+    String path = editor.getPath();
+    if (path != null) {
       // TODO: What a truly interesting API.
-      _server.analysis.setSubscriptions({'NAVIGATION': [file.getPath()]});
+      _server.analysis.setSubscriptions({'NAVIGATION': [path]});
+
+      server.analysis.setPriorityFiles([path]);
     }
   }
 
@@ -259,9 +234,7 @@ class AnalysisServer implements Disposable {
     server.onSend.listen((message) => _onSendController.add(message));
     server.onReceive.listen((message) => _onReceiveController.add(message));
 
-    server.analysis.onNavigation.listen((AnalysisNavigation e) {
-      DeclarationHelper.setLastNavInfo(e);
-    });
+    server.analysis.onNavigation.listen((e) => _onNavigatonController.add(e));
 
     onBusy.listen((busy) {
       if (!busy && _job != null) {
@@ -278,7 +251,9 @@ class AnalysisServer implements Disposable {
   void _initExistingServer(Server server) {
     _serverActiveController.add(true);
     _syncRoots();
-    _focusedDartFileChanged(editorManager.activeDartFile);
+    _sendExistingOverlays();
+    _updatePriorityFiles();
+    _focusedEditorChanged(editorManager.dartProjectEditors.activeEditor);
   }
 
   void _handleServerDeath(Server server) {
@@ -350,68 +325,6 @@ class DartdocHelper {
   }
 }
 
-class DeclarationHelper {
-  static AnalysisNavigation _lastNavInfo;
-
-  static void setLastNavInfo(AnalysisNavigation info) {
-    _lastNavInfo = info;
-  }
-
-  static void handleNavigate(Server server, AtomEvent event) {
-    if (server == null) return;
-
-    // TODO: We should wait for a period of time before failing.
-    if (_lastNavInfo == null) {
-      atom.beep();
-      return;
-    }
-
-    TextEditor editor = event.editor;
-    String path = editor.getPath();
-
-    if (path != _lastNavInfo.file) {
-      atom.beep();
-      return;
-    }
-
-    Range range = editor.getSelectedBufferRange();
-    int offset = editor.getBuffer().characterIndexForPosition(range.start);
-
-    List<String> files = _lastNavInfo.files;
-    List<NavigationTarget> targets = _lastNavInfo.targets;
-    List<NavigationRegion> regions = _lastNavInfo.regions;
-
-    for (NavigationRegion region in regions) {
-      if (region.offset <= offset && (region.offset + region.length > offset)) {
-        NavigationTarget target = targets[region.targets.first];
-        String file = files[target.fileIndex];
-        TextBuffer buffer = editor.getBuffer();
-        Range sourceRange = new Range.fromPoints(
-          buffer.positionForCharacterIndex(region.offset),
-          buffer.positionForCharacterIndex(region.offset + region.length));
-
-        EditorManager.flashSelection(editor, sourceRange).then((_) {
-          Map options = {
-            'initialLine': target.startLine - 1,
-            'initialColumn': target.startColumn - 1,
-            'searchAllPanes': true
-          };
-          atom.workspace.open(file, options).then((TextEditor editor) {
-            editor.selectRight(target.length);
-          }).catchError((e) {
-            _logger.warning('${e}');
-            atom.beep();
-          });
-        });
-
-        return;
-      }
-    }
-
-    atom.beep();
-  }
-}
-
 class QuickFixHelper {
   static void handleQuickFix(Server server, AtomEvent event) {
     if (server == null) return;
@@ -459,8 +372,8 @@ class QuickFixHelper {
     List<LinkedEditGroup> linkedEditGroups = change.linkedEditGroups;
 
     List<SourceEdit> edits = sourceFileEdits.expand((e) => e.edits).toList();
-    EditorManager.applyEdits(editor, edits);
-    EditorManager.selectEditGroups(editor, linkedEditGroups);
+    applyEdits(editor, edits);
+    selectEditGroups(editor, linkedEditGroups);
 
     atom.notifications.addSuccess(
         'Executed quick fix: ${toStartingLowerCase(change.message)}');

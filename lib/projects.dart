@@ -17,6 +17,10 @@ import 'impl/pub.dart' as pub;
 
 final Logger _logger = new Logger('projects');
 
+bool isDartFile(String path) {
+  return path == null ? false : path.endsWith('.dart');
+}
+
 /// A class to locate Dart projects in Atom and listen for new or removed Dart
 /// projects.
 class ProjectManager implements Disposable {
@@ -215,11 +219,6 @@ class DartProject {
   String get path => directory.path;
 
   int get hashCode => directory.hashCode;
-
-  bool isDartFile(String path) {
-    if (path == null) return false;
-    return path.endsWith('.dart');
-  }
 
   bool contains(String path) => directory.contains(path);
 

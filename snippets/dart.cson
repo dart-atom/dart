@@ -1,0 +1,19 @@
+'.source.dart':
+  'main':
+    'prefix': 'main'
+    'body': """
+      main(List<String> args) {
+        $1
+      }
+
+      """
+  'try':
+    'prefix': 'try'
+    'body': """
+      try {
+        $2
+      } catch (${1:e}) {
+        
+      }
+
+      """

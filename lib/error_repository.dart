@@ -6,7 +6,7 @@ import 'package:logging/logging.dart';
 
 import 'atom.dart' show Directory, File;
 import 'utils.dart';
-import 'impl/analysis_server_gen.dart' show AnalysisErrors, AnalysisError,
+import 'analysis/analysis_server_gen.dart' show AnalysisErrors, AnalysisError,
   AnalysisFlushResults, Location;
 
 final Logger _logger = new Logger('error_repository');
