@@ -399,27 +399,27 @@
         <result>
           <field name="libraries">
             <list><ref>FilePath</ref></list>
-            <p>
-              A list of the paths of library elements referenced by
-              files in existing analysis roots.
-            </p>
-          </field>
-          <field name="packageMap">
-            <map>
-              <key><ref>String</ref></key>
-              <value>
-                <map>
-                  <key><ref>String</ref></key>
-                  <value><list><ref>FilePath</ref></list></value>
-                </map>
-              </value>
-            </map>
-            <p>
-              A mapping from context source roots to package maps which map
-              package names to source directories for use in client-side
-              package URI resolution.
-            </p>
-          </field>
+              <p>
+                A list of the paths of library elements referenced by
+                files in existing analysis roots.
+              </p>
+            </field>
+            <field name="packageMap">
+              <map>
+                <key><ref>String</ref></key>
+                <value>
+                  <map>
+                    <key><ref>String</ref></key>
+                    <value><list><ref>FilePath</ref></list></value>
+                  </map>
+                </value>
+              </map>
+              <p>
+                A mapping from context source roots to package maps which map
+                package names to source directories for use in client-side
+                package URI resolution.
+              </p>
+            </field>
         </result>
       </request>
       <request method="getNavigation">
