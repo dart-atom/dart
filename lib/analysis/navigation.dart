@@ -29,10 +29,8 @@ class NavigationHelper implements Disposable {
     _commandDisposable = atom.commands.add('atom-text-editor',
         'dart-lang-experimental:jump-to-declaration', _handleNavigate);
     analysisServer.onNavigaton.listen(_navigationEvent);
-
-    editorManager.onEditorActivated.listen(_activate);
-
-    _activate(editorManager.currentEditor);
+    editorManager.dartProjectEditors.onActiveEditorChanged.listen(_activate);
+    _activate(editorManager.dartProjectEditors.activeEditor);
   }
 
   void dispose() => _commandDisposable.dispose();
@@ -117,7 +115,7 @@ class NavigationHelper implements Disposable {
         Range sourceRange = new Range.fromPoints(
             buffer.positionForCharacterIndex(region.offset),
             buffer.positionForCharacterIndex(region.offset + region.length));
-        return EditorManager.flashSelection(editor, sourceRange).then((_) {
+        return flashSelection(editor, sourceRange).then((_) {
           Map options = {
             'initialLine': target.startLine - 1,
             'initialColumn': target.startColumn - 1,

@@ -7,7 +7,6 @@
 library atom.analysis_server;
 
 import 'dart:async';
-//import 'dart:math' as math;
 
 import 'package:logging/logging.dart';
 import 'package:frappe/frappe.dart';
@@ -73,9 +72,7 @@ class AnalysisServer implements Disposable {
     subs.add(projectManager.onChanged.listen(_reconcileRoots));
     subs.add(sdkManager.onSdkChange.listen(_handleSdkChange));
 
-    disposables.add(atom.workspace.observeTextEditors(_handleNewEditor));
-
-    editorManager.onDartFileChanged.listen(_focusedDartFileChanged);
+    editorManager.dartProjectEditors.onActiveEditorChanged.listen(_focusedEditorChanged);
 
     knownRoots.clear();
     knownRoots.addAll(projectManager.projects);
@@ -100,7 +97,7 @@ class AnalysisServer implements Disposable {
   }
 
   /// Returns whether the analysis server is active and running.
-  bool get isActive => _server.isRunning;
+  bool get isActive => _server != null && _server.isRunning;
 
   bool get isBusy => _server.analyzing;
 
@@ -112,38 +109,6 @@ class AnalysisServer implements Disposable {
       return _server.analysis.getErrors(filePath);
     } else {
       return new Future.value(new ErrorsResult([]));
-    }
-  }
-
-  /// Tell the analysis server a file has changed in memory.
-  void notifyFileChanged(String path, String contents) {
-    _logger.finer('notifyFileChanged(): ${path}');
-
-    if (isActive) {
-      String lastContent = _overlays[path];
-
-      bool added = lastContent == null;
-      bool removed = contents == null;
-
-      if (added) {
-        var overlay = new AddContentOverlay('add', contents);
-        server.analysis.updateContent({ path: overlay });
-      } else if (removed) {
-        var overlay = new RemoveContentOverlay('remove');
-        server.analysis.updateContent({ path: overlay });
-      } else {
-        List<SourceEdit> diffs = _simpleDiff(lastContent, contents);
-        var overlay = new ChangeContentOverlay('change', diffs);
-        server.analysis.updateContent({ path: overlay });
-      }
-
-      if (added || removed) _updatePriorityFiles();
-    }
-
-    if (contents == null) {
-      _overlays.remove(path);
-    } else {
-      _overlays[path] = contents;
     }
   }
 
@@ -187,7 +152,7 @@ class AnalysisServer implements Disposable {
     knownRoots.clear();
     knownRoots.addAll(currentProjects);
 
-    if (removedProjects.isNotEmpty){
+    if (removedProjects.isNotEmpty) {
       _logger.fine("removed: ${removedProjects}");
       removedProjects.forEach(
         (project) => errorRepository.clearForDirectory(project.directory));
@@ -199,18 +164,6 @@ class AnalysisServer implements Disposable {
       _syncRoots();
     }
 
-    if (addedProjects.isNotEmpty) {
-      List<TextEditor> editors = atom.workspace.getTextEditors().toList();
-
-      for (DartProject addedProject in addedProjects) {
-        for (TextEditor editor in editors) {
-          if (addedProject.contains(editor.getPath())) {
-            _handleNewEditor(editor);
-          }
-        }
-      }
-    }
-
     _checkTrigger();
   }
 
@@ -218,24 +171,15 @@ class AnalysisServer implements Disposable {
     _checkTrigger();
   }
 
-  void _handleNewEditor(TextEditor editor) {
-    final String path = editor.getPath();
+  void _focusedEditorChanged(TextEditor editor) {
+    if (_server == null || editor == null) return;
 
-    // If it's in a dart project.
-    DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return;
-
-    // And it's a dart file.
-    if (!isDartFile(path)) return;
-
-    editor.onDidStopChanging.listen((_) => notifyFileChanged(path, editor.getText()));
-    editor.onDidDestroy.listen((_) => notifyFileChanged(path, null));
-  }
-
-  void _focusedDartFileChanged(String path) {
-    if (path != null && _server != null) {
+    String path = editor.getPath();
+    if (path != null) {
       // TODO: What a truly interesting API.
       _server.analysis.setSubscriptions({'NAVIGATION': [path]});
+
+      server.analysis.setPriorityFiles([path]);
     }
   }
 
@@ -309,7 +253,7 @@ class AnalysisServer implements Disposable {
     _syncRoots();
     _sendExistingOverlays();
     _updatePriorityFiles();
-    _focusedDartFileChanged(editorManager.activeDartFile);
+    _focusedEditorChanged(editorManager.dartProjectEditors.activeEditor);
   }
 
   void _handleServerDeath(Server server) {
@@ -428,8 +372,8 @@ class QuickFixHelper {
     List<LinkedEditGroup> linkedEditGroups = change.linkedEditGroups;
 
     List<SourceEdit> edits = sourceFileEdits.expand((e) => e.edits).toList();
-    EditorManager.applyEdits(editor, edits);
-    EditorManager.selectEditGroups(editor, linkedEditGroups);
+    applyEdits(editor, edits);
+    selectEditGroups(editor, linkedEditGroups);
 
     atom.notifications.addSuccess(
         'Executed quick fix: ${toStartingLowerCase(change.message)}');
@@ -571,11 +515,4 @@ class _AnalysisServerWrapper extends Server {
   static _AnalysisServerWriter _messageWriter(ProcessRunner process) {
     return (String message) => process.write("${message}\n");
   }
-}
-
-List<SourceEdit> _simpleDiff(String oldText, String newText) {
-  List<Edit> edits = simpleDiff(oldText, newText);
-  int count = 1;
-  return edits.map((edit) => new SourceEdit(
-      edit.offset, edit.length, edit.replacement, id: '${count++}')).toList();
 }

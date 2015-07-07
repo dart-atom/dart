@@ -44,9 +44,10 @@ class Disposables implements Disposable {
 class StreamSubscriptions implements Disposable {
   List<StreamSubscription> _subscriptions = [];
 
-  void add(StreamSubscription subscription) {
-    _subscriptions.add(subscription);
-  }
+  void add(StreamSubscription subscription) => _subscriptions.add(subscription);
+
+  bool remove(StreamSubscription subscription) =>
+      _subscriptions.remove(subscription);
 
   void cancel() {
     for (StreamSubscription subscription in _subscriptions) {

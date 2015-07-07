@@ -15,7 +15,7 @@ import 'atom.dart';
 import 'atom_linter.dart' show LinterService;
 import 'atom_statusbar.dart';
 import 'atom_utils.dart';
-//import 'buffer/buffer_updater.dart';
+import 'buffer/buffer_updater.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
@@ -121,7 +121,7 @@ class AtomDartPackage extends AtomPackage {
     });
 
     // Observe all buffers and send updates to analysis server
-    //disposables.add(observeBuffersForAnalysisServer());
+    disposables.add(new BufferUpdaterManager());
   }
 
   void packageDeactivated() {

@@ -16,138 +16,173 @@ import 'analysis/analysis_server_gen.dart' show LinkedEditGroup, Position, Sourc
 
 final Logger _logger = new Logger('editors');
 
+final Duration _flashDuration = new Duration(milliseconds: 100);
+
+Future flashSelection(TextEditor editor, Range range) async {
+  Range original = editor.getSelectedBufferRange();
+  editor.setSelectedBufferRange(range);
+  await new Future.delayed(_flashDuration);
+  editor.setSelectedBufferRange(original);
+  return new Future.delayed(_flashDuration);
+}
+
+/// Apply the given [SourceEdit]s in one atomic change.
+void applyEdits(TextEditor editor, List<SourceEdit> edits) {
+  _sortEdits(edits);
+
+  TextBuffer buffer = editor.getBuffer();
+  buffer.createCheckpoint();
+
+  try {
+    edits.forEach((SourceEdit edit) {
+      Range range = new Range.fromPoints(
+        buffer.positionForCharacterIndex(edit.offset),
+        buffer.positionForCharacterIndex(edit.offset + edit.length)
+      );
+      buffer.setTextInRange(range, edit.replacement);
+    });
+
+    buffer.groupChangesSinceCheckpoint();
+  } catch (e) {
+    buffer.revertToCheckpoint();
+    _logger.warning('error applying source edits: ${e}');
+  }
+}
+
+/// Select the given edit groups in the text editor.
+void selectEditGroups(TextEditor editor, List<LinkedEditGroup> groups) {
+  if (groups.isEmpty) return;
+
+  // First, choose the bext group.
+  LinkedEditGroup group = groups.first;
+  int bestLength = group.positions.length;
+
+  for (LinkedEditGroup g in groups) {
+    if (g.positions.length > bestLength) {
+      group = g;
+      bestLength = group.positions.length;
+    }
+  }
+
+  // Select group.
+  TextBuffer buffer = editor.getBuffer();
+  List<Range> ranges = group.positions.map((Position position) {
+    return new Range.fromPoints(
+      buffer.positionForCharacterIndex(position.offset),
+      buffer.positionForCharacterIndex(position.offset + group.length));
+  }).toList();
+  editor.setSelectedBufferRanges(ranges);
+}
+
+/// Sort [SourceEdit]s last-to-first.
+void _sortEdits(List<SourceEdit> edits) {
+  edits.sort((SourceEdit a, SourceEdit b) => b.offset - a.offset);
+}
+
 class EditorManager implements Disposable {
-  static Duration _flashDuration = new Duration(milliseconds: 100);
+  final Editors dartEditors = new Editors._allDartEditors();
+  final Editors dartProjectEditors = new Editors._allDartEditors();
 
-  static Future flashSelection(TextEditor editor, Range range) async {
-    Range original = editor.getSelectedBufferRange();
-    editor.setSelectedBufferRange(range);
-    await new Future.delayed(_flashDuration);
-    editor.setSelectedBufferRange(original);
-    return new Future.delayed(_flashDuration);
+  EditorManager();
+
+  void dispose() {
+    dartEditors.dispose();
+    dartProjectEditors.dispose();
+  }
+}
+
+class Editors implements Disposable {
+  static bool _isDartTypeEditor(TextEditor editor) {
+    if (editor == null) return false;
+    var grammar = editor.getRootScopeDescriptor();
+    var scopes  = grammar == null ? null : grammar['scopes'];
+    return scopes == null ? false: scopes.contains('source.dart');
   }
 
-  /// Apply the given [SourceEdit]s in one atomic change.
-  static void applyEdits(TextEditor editor, List<SourceEdit> edits) {
-    sortEdits(edits);
-
-    TextBuffer buffer = editor.getBuffer();
-    buffer.createCheckpoint();
-
-    try {
-      edits.forEach((SourceEdit edit) {
-        Range range = new Range.fromPoints(
-          buffer.positionForCharacterIndex(edit.offset),
-          buffer.positionForCharacterIndex(edit.offset + edit.length)
-        );
-        buffer.setTextInRange(range, edit.replacement);
-      });
-
-      buffer.groupChangesSinceCheckpoint();
-    } catch (e) {
-      buffer.revertToCheckpoint();
-      _logger.warning('error applying source edits: ${e}');
-    }
+  static bool _isDartProjectEditor(TextEditor editor) {
+    String path = editor.getPath();
+    if (!isDartFile(path)) return false;
+    DartProject project = projectManager.getProjectFor(path);
+    return project != null;
   }
 
-  /// Select the given edit groups in the text editor.
-  static void selectEditGroups(TextEditor editor, List<LinkedEditGroup> groups) {
-    if (groups.isEmpty) return;
+  Function _matches;
+  Disposable _editorObserve;
+  Disposable _itemObserve;
 
-    // First, choose the bext group.
-    LinkedEditGroup group = groups.first;
-    int bestLength = group.positions.length;
+  StreamSubscriptions _subs = new StreamSubscriptions();
 
-    for (LinkedEditGroup g in groups) {
-      if (g.positions.length > bestLength) {
-        group = g;
-        bestLength = group.positions.length;
-      }
-    }
-
-    // Select group.
-    TextBuffer buffer = editor.getBuffer();
-    List<Range> ranges = group.positions.map((Position position) {
-      return new Range.fromPoints(
-        buffer.positionForCharacterIndex(position.offset),
-        buffer.positionForCharacterIndex(position.offset + group.length));
-    }).toList();
-    editor.setSelectedBufferRanges(ranges);
-  }
-
-  /// Sort [SourceEdit]s last-to-first.
-  static void sortEdits(List<SourceEdit> edits) {
-    edits.sort((SourceEdit a, SourceEdit b) => b.offset - a.offset);
-  }
-
-  Disposable _observe;
-
-  String _dartFile;
-  final StreamController<String> _dartFileController
-      = new StreamController.broadcast();
+  final StreamController<TextEditor> _editorOpenedController = new StreamController.broadcast();
+  final StreamController<TextEditor> _activeEditorController = new StreamController.broadcast();
+  final StreamController<TextEditor> _editorClosedController = new StreamController.broadcast();
 
   TextEditor _activeEditor;
-  final StreamController<TextEditor> _editorActivateController
-      = new StreamController.broadcast();
-  final StreamController<TextEditor> _editorDeactivateController
-      = new StreamController.broadcast();
+  List<TextEditor> _openEditors = [];
 
-  EditorManager() {
-    _observe = atom.workspace.observeActivePaneItem(_itemChanged);
-    Timer.run(_itemChanged);
+  Editors._allDartEditors() {
+    _matches = _isDartTypeEditor;
+    _editorObserve = atom.workspace.observeTextEditors(_observeTextEditors);
+    _itemObserve = atom.workspace.observeActivePaneItem(_observeActivePaneItem);
   }
 
-  /// Return the file for the current editor, if it is a dart file in a dart
-  /// project.
-  String get activeDartFile => _dartFile;
+  Editors._dartProjectEditors() {
+    _matches = _isDartProjectEditor;
+    _editorObserve = atom.workspace.observeTextEditors(_observeTextEditors);
+    _itemObserve = atom.workspace.observeActivePaneItem(_observeActivePaneItem);
 
-  /// Listen for changes to the active editor, if it is editing a dart file in a
-  /// dart project.
-  Stream<String> get onDartFileChanged => _dartFileController.stream;
+    // TODO: Listen for project additions and deletions.
 
-  /// Return the current editor, if it is editing a `.dart` file. The file may or
-  /// may not be in a dart project.
-  TextEditor get currentEditor => _activeEditor;
+    // if (addedProjects.isNotEmpty) {
+    //   List<TextEditor> editors = atom.workspace.getTextEditors().toList();
+    //
+    //   for (DartProject addedProject in addedProjects) {
+    //     for (TextEditor editor in editors) {
+    //       if (addedProject.contains(editor.getPath())) {
+    //         _handleNewEditor(editor);
+    //       }
+    //     }
+    //   }
+    // }
+  }
 
-  /// Listen for changes to the active editor, if it is editing a `.dart` file.
-  /// The file may or may not be in a dart project.
-  Stream<TextEditor> get onEditorActivated => _editorActivateController.stream;
+  TextEditor get activeEditor => _activeEditor;
 
-  /// Listen for changes to the active editor, if it is editing a `.dart` file.
-  /// The file may or may not be in a dart project.
-  Stream<TextEditor> get onEditorDeactivated => _editorDeactivateController.stream;
+  List<TextEditor> get openEditors => _openEditors;
 
-  void dispose() => _observe.dispose();
+  TextEditor getEditorForPath(String path) {
+    return _openEditors.firstWhere(
+        (editor) => editor.getPath() == path, orElse: () => null);
+  }
 
-  void _itemChanged([_]) {
+  Stream<TextEditor> get onEditorOpened => _editorOpenedController.stream;
+
+  Stream<TextEditor> get onActiveEditorChanged => _activeEditorController.stream;
+
+  Stream<TextEditor> get onEditorClosed => _editorClosedController.stream;
+
+  void dispose() {
+    _editorObserve.dispose();
+    _itemObserve.dispose();
+    _subs.cancel();
+  }
+
+  void _observeTextEditors(TextEditor editor) {
+    if (_matches(editor)) {
+      _openEditors.add(editor);
+      _editorOpenedController.add(editor);
+      StreamSubscription sub;
+      sub = editor.onDidDestroy.listen((_) {
+        _subs.remove(sub);
+        _editorClosedController.add(editor);
+      });
+      _subs.add(sub);
+    }
+  }
+
+  void _observeActivePaneItem([_]) {
     TextEditor editor = atom.workspace.getActiveTextEditor();
-
-    if (editor == null) {
-      _setCurrentItem(null);
-      _setDartFile(null);
-    } else {
-      String path = editor.getPath();
-      if (!isDartFile(path)) {
-        _setCurrentItem(null);
-        _setDartFile(null);
-      } else {
-        _setCurrentItem(editor);
-        DartProject project = projectManager.getProjectFor(path);
-        _setDartFile(project == null ? null : path);
-      }
-    }
-  }
-
-  void _setCurrentItem(TextEditor editor) {
-    if (_activeEditor != null) _editorDeactivateController.add(_activeEditor);
+    if (!_matches(editor)) editor = null;
     _activeEditor = editor;
-    if (editor != null) _editorActivateController.add(editor);
-  }
-
-  void _setDartFile(String path) {
-    if (_dartFile != path) {
-      _dartFile = path;
-      _dartFileController.add(path);
-    }
+    _activeEditorController.add(_activeEditor);
   }
 }

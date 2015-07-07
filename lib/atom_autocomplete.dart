@@ -9,9 +9,13 @@ library atom.autocomplete;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:logging/logging.dart';
+
 import 'atom.dart';
 import 'js.dart';
 import 'utils.dart';
+
+final Logger _logger = new Logger('atom.autocomplete');
 
 void triggerAutocomplete(TextEditor editor) {
   atom.commands.dispatch(
@@ -68,7 +72,9 @@ abstract class AutocompleteProvider implements Disposable {
 
   JsObject _getSuggestions(options) {
     AutocompleteOptions opts = new AutocompleteOptions(options);
+    Stopwatch timer = new Stopwatch()..start();
     Future f = getSuggestions(opts).then((suggestions) {
+      _logger.fine('code completion in ${timer.elapsedMilliseconds}ms, ${suggestions.length} results');
       return suggestions.map((suggestion) => suggestion._toProxy()).toList();
     });
     Promise promise = new Promise.fromFuture(f);

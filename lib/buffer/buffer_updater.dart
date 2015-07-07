@@ -5,24 +5,27 @@ import '../analysis/analysis_server_gen.dart';
 import '../state.dart';
 import '../utils.dart';
 
-Disposable observeBuffersForAnalysisServer() {
-  Disposables disposables = new Disposables();
-  disposables.add(atom.workspace.observeTextEditors((editor) {
-    disposables.add(editor.observeGrammar((_) {
-      if (!_acceptableGrammar(editor)) return;
-      if (editor.getPath() == null) return;
+class BufferUpdaterManager implements Disposable {
+  List<BufferUpdater> updaters = [];
 
-      var bufferUpdater = new BufferUpdater(editor);
-      bufferUpdater.observe();
-    }));
-  }));
-  return disposables;
-}
+  BufferUpdaterManager() {
+    analysisServer.isActiveProperty.listen((active) {
+      updaters.forEach((BufferUpdater updater) => updater.serverActive(active));
+    });
+    editorManager.dartProjectEditors.openEditors.forEach(_newEditor);
+    editorManager.dartProjectEditors.onEditorOpened.listen(_newEditor);
+  }
 
-_acceptableGrammar(editor) {
-  var grammar = editor.getRootScopeDescriptor();
-  var scopes  = grammar['scopes'];
-  return scopes.contains('source.dart');
+  void _newEditor(TextEditor editor) {
+    updaters.add(new BufferUpdater(this, editor));
+  }
+
+  void dispose() {
+    updaters.toList().forEach((BufferUpdater updater) => updater.dispose());
+    updaters.clear();
+  }
+
+  remove(BufferUpdater updater) => updaters.remove(updater);
 }
 
 /// Observe a TextEditor and notifies the analysis_server of any content changes
@@ -33,50 +36,79 @@ _acceptableGrammar(editor) {
 /// the diffs than just remove the existing overlay and add a new one with
 /// the changed content.
 class BufferUpdater extends Disposables {
-  final TextEditor _editor;
+  final BufferUpdaterManager manager;
+  final TextEditor editor;
+
   final StreamSubscriptions _subs = new StreamSubscriptions();
 
-  BufferUpdater(this._editor);
+  String lastSent;
+
+  BufferUpdater(this.manager, this.editor) {
+    _subs.add(editor.onDidStopChanging.listen(_didStopChanging));
+    _subs.add(editor.onDidDestroy.listen(_didDestroy));
+    addOverlay();
+  }
 
   Server get server => analysisServer.server;
 
-  observe() {
-    _subs.add(_editor.onDidSave.listen((_) {
-      // https://github.com/dart-lang/sdk/issues/23579
-      if (_acceptableGrammar(_editor)) {
-        removeOverlay(_editor);
-      }
-    }));
-
-    _subs.add(_editor.onDidChange.listen((_) {
-      if (_acceptableGrammar(_editor) && _editor.isModified()) {
-        // https://github.com/dart-lang/sdk/issues/23577
-        removeOverlay(_editor);
-        addOverlay(_editor);
-      }
-    }));
-
-    _subs.add(_editor.onDidDestroy.listen((_) => this.dispose()));
+  void serverActive(bool active) {
+    if (active) {
+      addOverlay();
+    } else {
+      lastSent = null;
+    }
   }
 
-  addOverlay(TextEditor editor) {
-    // ...?!
-    var addOverlay = new AddContentOverlay('add', editor.getText());
-    server.analysis.updateContent({
-      editor.getPath(): addOverlay
-    });
+  void _didStopChanging([_]) {
+    changedOverlay();
   }
 
-  removeOverlay(TextEditor editor) {
-    // ...?!
-    var removeOverlay = new RemoveContentOverlay('remove');
-    server.analysis.updateContent({
-      editor.getPath(): removeOverlay
-    });
+  void _didDestroy([_]) {
+    dispose();
+  }
+
+  addOverlay() {
+    if (analysisServer.isActive) {
+      lastSent = editor.getText();
+      var addOverlay = new AddContentOverlay('add', lastSent);
+      server.analysis.updateContent({
+        editor.getPath(): addOverlay
+      });
+    }
+  }
+
+  changedOverlay() {
+    if (analysisServer.isActive) {
+      if (lastSent == null) {
+        addOverlay();
+      } else {
+        String contents = editor.getText();
+        List<Edit> edits = simpleDiff(lastSent, contents);
+        int count = 1;
+        List<SourceEdit> diffs = edits.map((edit) => new SourceEdit(
+            edit.offset, edit.length, edit.replacement, id: '${count++}')).toList();
+        var overlay = new ChangeContentOverlay('change', diffs);
+        server.analysis.updateContent({ editor.getPath(): overlay });
+        lastSent = contents;
+      }
+    }
+  }
+
+  removeOverlay() {
+    if (analysisServer.isActive) {
+      var removeOverlay = new RemoveContentOverlay('remove');
+      server.analysis.updateContent({
+        editor.getPath(): removeOverlay
+      });
+    }
+
+    lastSent = null;
   }
 
   dispose() {
+    removeOverlay();
     super.dispose();
     _subs.cancel();
+    manager.remove(this);
   }
 }
