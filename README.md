@@ -29,8 +29,8 @@ manually in the plugin configuration page (Preferences > Packages >
 dart-lang-experimental).
 
 You'll get errors and warnings on file save. You can see dartdoc documentation
-for an element by hitting `F1`. To jump to an element's declaration, hit `F3`.
-The UI for the dartdoc help is _very_ provisional.
+for an element by hitting `F1`. To jump to an element's declaration, hit `F3` or
+option-click on a symbol name. The UI for the dartdoc help is _very_ provisional.
 
 The pub commands (get and update) are available via context menus.
 
