@@ -149,6 +149,12 @@ class AtomDartPackage extends AtomPackage {
         'description': 'When showing infos, also show TODO items.',
         'type': 'boolean',
         'default': false
+      },
+      'filterUnnamedLibraryWarning': {
+        'title': 'Filter unnamed library warning',
+        'description': 'Filter all unnamed library warnings.',
+        'type': 'boolean',
+        'default': true
       }
     };
   }
