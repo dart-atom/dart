@@ -12,7 +12,7 @@ import 'jobs.dart';
 import 'projects.dart';
 import 'sdk.dart';
 
-final String pluginId = 'dart-lang-experimental';
+final String pluginId = 'atom_dartlang';
 
 AnalysisServer get analysisServer => deps[AnalysisServer];
 EditorManager get editorManager => deps[EditorManager];

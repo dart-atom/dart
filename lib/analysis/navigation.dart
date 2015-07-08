@@ -27,7 +27,7 @@ class NavigationHelper implements Disposable {
 
   NavigationHelper() {
     _commandDisposable = atom.commands.add('atom-text-editor',
-        'dart-lang-experimental:jump-to-declaration', _handleNavigate);
+        'dartlang:jump-to-declaration', _handleNavigate);
     analysisServer.onNavigaton.listen(_navigationEvent);
     editorManager.dartProjectEditors.onActiveEditorChanged.listen(_activate);
     _activate(editorManager.dartProjectEditors.activeEditor);

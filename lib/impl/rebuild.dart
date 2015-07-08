@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// A library used for rebuilding the `atom-dartlang-experimental` project.
+/// A library used for rebuilding the `dartlang` project.
 library atom.rebuild;
 
 import 'dart:async';
@@ -22,10 +22,10 @@ class RebuildJob extends Job {
       return new Future.value();
     }
 
-    // Find the `atom-dartlang-experimental` project.
-    final String projName = 'atom-dartlang-experimental';
+    // Find the `dartlang` project.
+    final String projName = 'dartlang';
     Directory proj = atom.project.getDirectories().firstWhere(
-        (d) => d.getBaseName() == projName, orElse: () => null);
+        (d) => d.getBaseName().endsWith(projName), orElse: () => null);
     if (proj == null) {
       atom.notifications.addWarning("Unable to find project '${projName}'.");
       return new Future.value();

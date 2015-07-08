@@ -37,7 +37,7 @@ class StatusDisplay implements Disposable {
     CoreElement statusElement = div(c: 'job-status-bar')
         ..inlineBlock()..click(_showJobsDialog)..add([
       spinner = img()..inlineBlockTight()..clazz('status-spinner')
-          ..src = 'atom://dart-lang-experimental/images/gear.svg',
+          ..src = 'atom://dartlang/images/gear.svg',
       textLabel = div(c: 'text-label text-highlight')..inlineBlockTight()
     ]);
 
@@ -74,7 +74,7 @@ class StatusDisplay implements Disposable {
     }));
 
     _disposables.add(atom.commands.add(
-      'atom-workspace', 'dart-lang-experimental:show-jobs', (_) => _showJobsDialog()));
+      'atom-workspace', 'dartlang:show-jobs', (_) => _showJobsDialog()));
   }
 
   void dispose() {
