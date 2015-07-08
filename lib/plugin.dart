@@ -90,33 +90,33 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new NavigationHelper());
 
     // Register commands.
-    _addCmd('atom-workspace', 'dart-lang-experimental:smoke-test-dev', (_) => smokeTest());
-    _addCmd('atom-workspace', 'dart-lang-experimental:rebuild-restart-dev', (_) {
+    _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
+    _addCmd('atom-workspace', 'dartlang:rebuild-restart-dev', (_) {
       new RebuildJob().schedule();
     });
-    _addCmd('atom-workspace', 'dart-lang-experimental:auto-locate-sdk', (_) {
+    _addCmd('atom-workspace', 'dartlang:auto-locate-sdk', (_) {
       new SdkLocationJob(sdkManager).schedule();
     });
-    _addCmd('atom-workspace', 'dart-lang-experimental:reanalyze-sources', (_) {
+    _addCmd('atom-workspace', 'dartlang:reanalyze-sources', (_) {
       new ProjectScanJob().schedule().then((_) {
         return new Future.delayed((new Duration(milliseconds: 100)));
       }).then((_) => analysisServer.reanalyzeSources());
     });
 
     // Text editor commands.
-    _addCmd('atom-text-editor', 'dart-lang-experimental:newline', editing.handleEnterKey);
+    _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
 
     // Register commands that require an SDK to be present.
-    _addSdkCmd('atom-text-editor', 'dart-lang-experimental:pub-get', (event) {
+    _addSdkCmd('atom-text-editor', 'dartlang:pub-get', (event) {
       new PubJob.get(dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('atom-text-editor', 'dart-lang-experimental:pub-upgrade', (event) {
+    _addSdkCmd('atom-text-editor', 'dartlang:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('.tree-view', 'dart-lang-experimental:pub-get', (AtomEvent event) {
+    _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
       new PubJob.get(dirname(event.selectedFilePath)).schedule();
     });
-    _addSdkCmd('.tree-view', 'dart-lang-experimental:pub-upgrade', (event) {
+    _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.selectedFilePath)).schedule();
     });
 
@@ -185,7 +185,7 @@ class AtomDartPackage extends AtomPackage {
         }
       }
 
-      _logger.fine("logging level: ${Logger.root.level}");
+      _logger.info("logging level: ${Logger.root.level}");
     }));
   }
 }

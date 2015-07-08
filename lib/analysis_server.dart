@@ -83,12 +83,12 @@ class AnalysisServer implements Disposable {
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
 
     disposables.add(atom.commands.add('atom-text-editor',
-        'dart-lang-experimental:show-dartdoc', (event) {
+        'dartlang:show-dartdoc', (event) {
       DartdocHelper.handleDartdoc(_server, event);
     }));
 
     disposables.add(atom.commands.add('atom-text-editor',
-        'dart-lang-experimental:quick-fix', (event) {
+        'dartlang:quick-fix', (event) {
       QuickFixHelper.handleQuickFix(_server, event);
     }));
 

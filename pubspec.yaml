@@ -1,7 +1,7 @@
-name: atom_dart_lang_experimental
+name: atom_dartlang
 version: 0.0.1
 description: An experimental Dart plugin for Atom.
-homepage: https://github.com/dart-atom/dart-lang-experimental
+homepage: https://github.com/dart-atom/dartlang
 environment:
   sdk: '>=1.0.0 <2.0.0'
 dependencies:

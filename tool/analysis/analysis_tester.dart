@@ -6,7 +6,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:atom_dart_lang_experimental/analysis/analysis_server_gen.dart';
+import 'package:atom_dartlang/analysis/analysis_server_gen.dart';
 import 'package:logging/logging.dart';
 
 Server client;

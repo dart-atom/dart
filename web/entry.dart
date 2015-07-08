@@ -4,7 +4,7 @@
 
 library atom.entry;
 
-import 'package:atom_dart_lang_experimental/plugin.dart';
+import 'package:atom_dartlang/plugin.dart';
 import 'package:logging/logging.dart';
 
 main() {

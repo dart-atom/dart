@@ -4,7 +4,7 @@
 
 library atom.utils_test;
 
-import 'package:atom_dart_lang_experimental/utils.dart';
+import 'package:atom_dartlang/utils.dart';
 import 'package:test/test.dart';
 
 main() => defineTests();
