@@ -43,7 +43,6 @@ class AnalysisServer implements Disposable {
   _AnalyzingJob _job;
 
   List<DartProject> knownRoots = [];
-  Map<String, String> _overlays = {};
 
   Property<bool> isActiveProperty;
 
@@ -120,18 +119,6 @@ class AnalysisServer implements Disposable {
     }
   }
 
-  void _sendExistingOverlays() {
-    Map update = {};
-    _overlays.forEach((path, contents) {
-      update[path] = new AddContentOverlay('add', contents);
-    });
-    server.analysis.updateContent(update);
-  }
-
-  void _updatePriorityFiles() {
-    server.analysis.setPriorityFiles(_overlays.keys.toList());
-  }
-
   void dispose() {
     _logger.fine('dispose()');
 
@@ -175,11 +162,15 @@ class AnalysisServer implements Disposable {
     if (_server == null || editor == null) return;
 
     String path = editor.getPath();
+
     if (path != null) {
       // TODO: What a truly interesting API.
       _server.analysis.setSubscriptions({'NAVIGATION': [path]});
 
-      server.analysis.setPriorityFiles([path]);
+      if (projectManager.getProjectFor(path) != null) {
+        // Ensure that the path is in a dart project.
+        server.analysis.setPriorityFiles([path]);
+      }
     }
   }
 
@@ -251,8 +242,6 @@ class AnalysisServer implements Disposable {
   void _initExistingServer(Server server) {
     _serverActiveController.add(true);
     _syncRoots();
-    _sendExistingOverlays();
-    _updatePriorityFiles();
     _focusedEditorChanged(editorManager.dartProjectEditors.activeEditor);
   }
 
