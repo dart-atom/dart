@@ -1,15 +1,13 @@
-# dart-lang-experimental
+# Dart plugin for Atom
 
-An experimental Dart plugin for Atom.
+An experimental [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
+This plugin is written in Dart.
 
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: https://github.com/dart-lang/atom-dartlang-experimental/issues
-
-Note: we expect this repo to move into the [dart-atom](https://github.com/dart-atom)
-github org soon.
+[tracker]: https://github.com/atom-dart/dartlang/issues
 
 ## Plugins we depend on
 
@@ -48,7 +46,7 @@ There are a lot of cool plugins written for Atom; it's worth poking around the
 
 ## Developing the plugin
 
-To work on `dart-lang-experimental`:
+To work on `dartlang` plugin:
 
 - install [Atom](https://atom.io/)
 - clone this repo
@@ -74,7 +72,7 @@ or:
 ## Logging
 
 You can change the logging level for the plugin in the config file. Go to
-`Atom > Open Your Config` and find the `dart-lang-experimental` section. Add a
+`Atom > Open Your Config` and find the `dartlang` section. Add a
 line for `logging`, and set it to a value like `info`, `fine`, `all`, or `none`.
 All the values from the `logging` pub package are legal. The log messages will
 show up in the devtools console for Atom (`View > Developer > Toggle Developer Tools`).
