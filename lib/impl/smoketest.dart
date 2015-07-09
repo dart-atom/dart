@@ -111,6 +111,13 @@ void smokeTest() {
   print('isWindows: ${isWindows}');
   print('isMac: ${isMac}');
   print('isLinux: ${isLinux}');
+
+  // Timer.periodic
+  int timerCount = 0;
+  new Timer.periodic(new Duration(seconds: 1), (Timer timer) {
+    print('timer ${timerCount++}');
+    if (timerCount >= 3) timer.cancel();
+  });
 }
 
 class _TestJob extends Job {

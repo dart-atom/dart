@@ -73,7 +73,10 @@ self.atom = atom;
 self.exports = exports;
 self.Object = Object;
 self.Promise = Promise;
-self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
+self.setTimeout = function(f, millis) { return window.setTimeout(f, millis); };
+self.clearTimeout = function(id) { window.clearTimeout(id); };
+self.setInterval = function(f, millis) { return window.setInterval(f, millis); };
+self.clearInterval = function(id) { window.clearInterval(id); };
 
 """;
 
