@@ -59,3 +59,7 @@ All the values from the `logging` pub package are legal. The log messages will
 show up in the devtools console for Atom (`View > Developer > Toggle Developer Tools`).
 
 [develop]: https://github.com/dart-atom/dartlang/wiki/Developing
+
+## License
+
+See the [LICENSE](https://github.com/dart-atom/dartlang/blob/master/LICENSE) file.
