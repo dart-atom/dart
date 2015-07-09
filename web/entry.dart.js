@@ -14660,6 +14660,9 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
     },
     Entry: {
       "^": "ProxyHolder;",
+      get$onDidChange: function() {
+        return this.eventStream$1("onDidChange");
+      },
       get$path: function(_) {
         return J.$index$asx(this.obj, "path");
       },
@@ -14801,8 +14804,8 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
       save$0: function() {
         return this.invoke$1("save");
       },
-      get$onDidStopChanging: function() {
-        return this.eventStream$1("onDidStopChanging");
+      get$onDidChange: function() {
+        return this.eventStream$1("onDidChange");
       },
       get$onDidDestroy: function() {
         return this.eventStream$1("onDidDestroy");
@@ -18055,7 +18058,7 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         var t1, t2;
         t1 = [];
         t2 = new V.BufferUpdater(this, editor, new G.StreamSubscriptions(t1), null, []);
-        t1.push(editor.get$onDidStopChanging().listen$1(t2.get$_didStopChanging()));
+        t1.push(editor.get$onDidChange().listen$1(t2.get$_didChange()));
         t1.push(editor.get$onDidDestroy().listen$1(t2.get$_didDestroy()));
         t2.addOverlay$0();
         this.updaters.push(t2);
@@ -18109,11 +18112,11 @@ self.setTimeout = function(f, millis) { window.setTimeout(f, millis); };
         else
           this.lastSent = null;
       },
-      _didStopChanging$1: [function(_) {
+      _didChange$1: [function(_) {
         this.changedOverlay$0();
       }, function() {
-        return this._didStopChanging$1(null);
-      }, "_didStopChanging$0", "call$1", "call$0", "get$_didStopChanging", 0, 2, 28, 42, 35],
+        return this._didChange$1(null);
+      }, "_didChange$0", "call$1", "call$0", "get$_didChange", 0, 2, 28, 42, 35],
       _didDestroy$1: [function(_) {
         this.dispose$0();
       }, function() {

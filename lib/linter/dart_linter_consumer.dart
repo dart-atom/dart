@@ -1,5 +1,9 @@
 part of linter;
 
+// TODO: We need to introduce a delay in the reporting so that the user doesn't
+// get interupped in the middle of typing. I.e., if they introduce an error
+// and fix it quickly, they shouldn't see the error flash in and out again.
+
 /// Consumes the atomlinter/linter self-service API.
 class DartLinterConsumer extends LinterConsumer with Disposables {
   ErrorRepository _errorRepository;

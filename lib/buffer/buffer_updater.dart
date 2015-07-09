@@ -44,7 +44,7 @@ class BufferUpdater extends Disposables {
   String lastSent;
 
   BufferUpdater(this.manager, this.editor) {
-    _subs.add(editor.onDidStopChanging.listen(_didStopChanging));
+    _subs.add(editor.onDidChange.listen(_didChange));
     _subs.add(editor.onDidDestroy.listen(_didDestroy));
     addOverlay();
   }
@@ -59,7 +59,7 @@ class BufferUpdater extends Disposables {
     }
   }
 
-  void _didStopChanging([_]) {
+  void _didChange([_]) {
     changedOverlay();
   }
 
