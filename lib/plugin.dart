@@ -150,7 +150,7 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': false
       },
-      'filterUnnamedLibraryWarning': {
+      'showUnnamedLibraryWarning': {
         'title': 'Filter unnamed library warnings',
         'description': 'Filter all unnamed library warnings.',
         'type': 'boolean',

@@ -70,8 +70,9 @@ class ProcessRunner {
         stdout: (s) => _stdoutController.add(s),
         stderr: (s) => _stderrController.add(s),
         exit: (code) {
+          _logger.fine('exit code: ${code} (${command})');
           _exit = code;
-          _exitCompleter.complete(code);
+          if (!_exitCompleter.isCompleted) _exitCompleter.complete(code);
         });
 
     return _exitCompleter.future;
@@ -80,7 +81,11 @@ class ProcessRunner {
   void write(String str) => _process.write(str);
 
   Future<int> kill() {
+    _logger.fine('kill: ${command} ');
     _process.kill();
+    new Future.delayed(new Duration(milliseconds: 50), () {
+      if (!_exitCompleter.isCompleted) _exitCompleter.complete(0);
+    });
     return _exitCompleter.future;
   }
 }
