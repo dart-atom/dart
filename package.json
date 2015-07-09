@@ -2,7 +2,7 @@
   "name": "dartlang",
   "main": "./web/entry.dart.js",
   "version": "0.1.0",
-  "description": "A Dart plugin for Atom",
+  "description": "A Dart plugin for Atom.",
   "keywords": [],
   "repository": "https://github.com/dart-atom/dartlang",
   "license": "BSD",
