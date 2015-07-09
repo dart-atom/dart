@@ -34,11 +34,6 @@ the available commands by hitting `shift-command-p`.
 To view detailed info about what the analysis server is doing, run the
 `analysis server status` command.
 
-## Known issues
-
-We sometimes don't properly recognize newly created projects as Dart projects.
-You can either run the `refresh dart projects` command, or restart Atom.
-
 ## Sending feedback
 
 Please file feature requests and bugs at the [issue tracker][tracker].
