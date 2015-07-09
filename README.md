@@ -3,6 +3,8 @@
 An experimental [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 This plugin is written in Dart.
 
+[![Build Status](https://travis-ci.org/dart-atom/dartlang.svg)](https://travis-ci.org/dart-atom/dartlang)
+
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker][tracker].
