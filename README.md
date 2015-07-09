@@ -20,6 +20,7 @@ dartlang).
 
 ## Features
 
+- auto-discovery of Dart SDK location
 - syntax highlighting
 - as-you-type errors and warnings
 - code completion
