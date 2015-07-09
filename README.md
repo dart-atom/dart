@@ -5,12 +5,6 @@ This plugin is written in Dart.
 
 [![Build Status](https://travis-ci.org/dart-atom/dartlang.svg)](https://travis-ci.org/dart-atom/dartlang)
 
-## Features and bugs
-
-Please file feature requests and bugs at the [issue tracker][tracker].
-
-[tracker]: https://github.com/atom-dart/dartlang/issues
-
 ## Plugins we depend on
 
 You'll need to install the `linter` plugin in order to have analysis errors and
@@ -45,6 +39,12 @@ To view detailed info about what the analysis server is doing, run the
 
 There are a lot of cool plugins written for Atom; it's worth poking around the
 [packages page](https://atom.io/packages) to see what's out there.
+
+## Sending feedback
+
+Please file feature requests and bugs at the [issue tracker][tracker].
+
+[tracker]: https://github.com/atom-dart/dartlang/issues
 
 ## Developing the plugin
 
