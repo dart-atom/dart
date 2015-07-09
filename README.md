@@ -48,28 +48,7 @@ There are a lot of cool plugins written for Atom; it's worth poking around the
 
 ## Developing the plugin
 
-To work on `dartlang` plugin:
-
-- install [Atom](https://atom.io/)
-- clone this repo
-- from the command line, run `pub get`
-- from the command line, run `grind build`; this will re-compile the javascript
-- from the repo directory, type `apm link` (you can install `apm` via the
-  `Atom > Install Shell Commands` menu item)
-- re-start Atom
-
-The plugin will be active in your copy of Atom. When making changes:
-
-- `type type type...`
-
-and either:
-
-- from atom, hit `ctrl-option-command-;`; this will re-build the dart code and re-start atom
-
-or:
-
-- run `grind build`
-- from atom, hit `ctrl-option-command-l`; this will re-start atom
+Check out [how to develop][develop].
 
 ## Logging
 
@@ -78,3 +57,5 @@ You can change the logging level for the plugin in the config file. Go to
 line for `logging`, and set it to a value like `info`, `fine`, `all`, or `none`.
 All the values from the `logging` pub package are legal. The log messages will
 show up in the devtools console for Atom (`View > Developer > Toggle Developer Tools`).
+
+[develop]: https://github.com/dart-atom/dartlang/wiki/Developing
