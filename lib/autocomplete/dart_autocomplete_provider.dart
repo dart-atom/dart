@@ -50,6 +50,8 @@ class DartAutocompleteProvider extends AutocompleteProvider {
       excludeLowerPriority: true);
 
   Future<List<Suggestion>> getSuggestions(AutocompleteOptions options) {
+    if (!analysisServer.isActive) return new Future.value([]);
+
     var server = analysisServer.server;
     var editor = options.editor;
     var path = editor.getPath();

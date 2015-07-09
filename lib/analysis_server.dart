@@ -159,7 +159,7 @@ class AnalysisServer implements Disposable {
   }
 
   void _focusedEditorChanged(TextEditor editor) {
-    if (_server == null || editor == null) return;
+    if (!isActive || editor == null) return;
 
     String path = editor.getPath();
 
@@ -458,6 +458,9 @@ class _AnalysisServerWrapper extends Server {
     _logger.fine("server forcibly terminated");
 
     if (process != null) {
+      try {
+        server.shutdown().catchError((e) => null);
+      } catch (e) { }
       /*Future f =*/ process.kill();
       process = null;
       if (!_processCompleter.isCompleted) _processCompleter.complete(0);
@@ -502,6 +505,8 @@ class _AnalysisServerWrapper extends Server {
 
   /// Returns a function that writes to a process stream.
   static _AnalysisServerWriter _messageWriter(ProcessRunner process) {
-    return (String message) => process.write("${message}\n");
+    return (String message) {
+      if (process != null) process.write("${message}\n");
+    };
   }
 }
