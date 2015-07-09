@@ -5,6 +5,8 @@ This plugin is written in Dart.
 
 [![Build Status](https://travis-ci.org/dart-atom/dartlang.svg)](https://travis-ci.org/dart-atom/dartlang)
 
+![Screenshot of Dart plugin in Atom](screenshot.png?raw=true)
+
 ## Installing
 
 - install [Atom](https://atom.io/)
