@@ -31,8 +31,8 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
           .map((e) => _errorToLintMessage(e.location.file, e))
           .toList();
 
-      service.deleteProjectMessages(provider);
-      service.setProjectMessages(provider, formattedErrors);
+      service.deleteMessages(provider);
+      service.setMessages(provider, formattedErrors);
     });
   }
 }

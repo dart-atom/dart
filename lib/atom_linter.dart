@@ -27,6 +27,10 @@ abstract class LinterProvider {
   /// for the scope `project`.
   LinterProvider({this.grammarScopes, this.scope, this.lintOnFly: false});
 
+  // A unique identifier for the provider; JS will store this in a hashmap as a
+  // map key;
+  Object get _key => null;
+
   Future<List<LintMessage>> lint(TextEditor editor);
 
   JsObject toProxy() {
@@ -50,17 +54,15 @@ abstract class LinterConsumer {
 class LinterService extends ProxyHolder {
   LinterService(obj) : super(obj);
 
-  deleteProjectMessages(LinterProvider provider) {
-    // TODO: emergency fix for the `linter` 1.2 release - will address shortly
-    //invoke('deleteProjectMessages', provider);
+  deleteMessages(LinterProvider provider) {
+    invoke('deleteMessages', provider._key);
   }
 
-  setProjectMessages(LinterProvider provider, List<LintMessage> messages) {
+  setMessages(LinterProvider provider, List<LintMessage> messages) {
     // jsify(messages, deep: true) ?
     // jsifyIterable(messages) ?
-    //var list = messages.map((m) => m.toMap()).toList();
-    // TODO: emergency fix for the `linter` 1.2 release - will address shortly
-    //invoke('setProjectMessages', provider, list);
+    var list = messages.map((m) => m.toMap()).toList();
+    invoke('setMessages', provider._key, list);
   }
 }
 
