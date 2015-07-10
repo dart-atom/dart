@@ -3,6 +3,7 @@
 ## 0.2.3
 - fixes for jump to declaration
 - fixes for the offset location of some errors and warnings
+- added a `Send Feedback` menu item
 
 ## 0.2.0
 - first published version

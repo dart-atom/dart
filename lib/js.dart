@@ -9,12 +9,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:js';
 
+import 'package:logging/logging.dart';
+
 import 'utils.dart';
 
 export 'dart:js' show JsObject;
 
 final JsObject _browserWindow = new JsObject.fromBrowserObject(context['window']);
 final JsObject _browserJson = _browserWindow['JSON'];
+
+Logger _logger = new Logger("js");
 
 JsObject jsify(obj) {
   if (obj == null) return null;
@@ -72,8 +76,14 @@ class ProxyHolder {
     Disposable disposable;
     StreamController<List<String>> controller = new StreamController.broadcast(
         onCancel: () => disposable.dispose());
-    disposable = new JsDisposable(
+
+    try {
+      disposable = new JsDisposable(
         invoke(eventName, (evt) => controller.add(evt)));
+    } catch (e, st) {
+      _logger.warning('${e} listening to ${eventName}\n${st}');
+    }
+
     return controller.stream;
   }
 }
