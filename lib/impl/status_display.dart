@@ -69,7 +69,7 @@ class StatusDisplay implements Disposable {
       _updateJobsDialog();
     });
 
-    _disposables.add(atom.commands.add('atom-text-editor', 'core:cancel', (_) {
+    _disposables.add(atom.commands.add('atom-workspace', 'core:cancel', (_) {
       if (_jobsPanel != null) _jobsPanel.hide();
     }));
 

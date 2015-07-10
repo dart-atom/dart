@@ -7,6 +7,7 @@ import 'dart:js';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
+import '../atom_utils.dart';
 import '../editors.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -20,20 +21,23 @@ final Logger _logger = new Logger('navigation');
 // TODO: use shift-F3 to navigate back?
 
 class NavigationHelper implements Disposable {
-  Disposable _commandDisposable;
+  Disposables _commands = new Disposables();
   AnalysisNavigation _lastNavInfo;
   Map<String, Completer> _navCompleters = {};
   Set<String> _listening = new Set();
 
   NavigationHelper() {
-    _commandDisposable = atom.commands.add('atom-text-editor',
-        'dartlang:jump-to-declaration', _handleNavigate);
+    _commands.add(atom.commands.add('atom-text-editor',
+        'dartlang:jump-to-declaration', _handleNavigate));
+    _commands.add(atom.commands.add('atom-text-editor[data-grammar~="dart"]',
+        'symbols-view:go-to-declaration', _handleNavigate));
+
     analysisServer.onNavigaton.listen(_navigationEvent);
     editorManager.dartProjectEditors.onActiveEditorChanged.listen(_activate);
     _activate(editorManager.dartProjectEditors.activeEditor);
   }
 
-  void dispose() => _commandDisposable.dispose();
+  void dispose() => _commands.dispose();
 
   void _activate(TextEditor editor) {
     if (editor == null) return;
@@ -49,7 +53,17 @@ class NavigationHelper implements Disposable {
     var fn = (e) {
       try {
         JsObject evt = new JsObject.fromBrowserObject(e);
-        if (evt['altKey']) Timer.run(() => _handleNavigateEditor(editor));
+        // TODO: Consider using the `hyperclick` package - once atom has package
+        // dependencies - and defering to their keybinding settings.
+        bool jump = false;
+        if (isLinux) {
+          jump = evt['ctrlKey '] || evt['altKey'];
+        } else {
+          // TODO: This does override multiple cursors (cmd-click) on the mac,
+          // which might not be desired by some users.
+          jump = evt['altKey'] || evt['metaKey'];
+        }
+        if (jump) Timer.run(() => _handleNavigateEditor(editor));
       } catch (e) { }
     };
     view.callMethod('addEventListener', ['click', fn]);
