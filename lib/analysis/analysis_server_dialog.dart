@@ -24,7 +24,7 @@ class AnalysisServerDialog implements Disposable {
     _disposables.add(atom.commands.add('atom-workspace',
         'dartlang:analysis-server-status', (_) => showDialog()));
 
-    _disposables.add(atom.commands.add('atom-text-editor', 'core:cancel', (_) {
+    _disposables.add(atom.commands.add('atom-workspace', 'core:cancel', (_) {
       if (_panel != null) _panel.hide();
     }));
 

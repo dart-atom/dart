@@ -70,9 +70,8 @@ class BufferUpdater extends Disposables {
   addOverlay() {
     if (analysisServer.isActive) {
       lastSent = editor.getText();
-      var addOverlay = new AddContentOverlay('add', lastSent);
       server.analysis.updateContent({
-        editor.getPath(): addOverlay
+        editor.getPath(): new AddContentOverlay('add', lastSent)
       });
     }
   }
@@ -83,12 +82,21 @@ class BufferUpdater extends Disposables {
         addOverlay();
       } else {
         String contents = editor.getText();
-        List<Edit> edits = simpleDiff(lastSent, contents);
-        int count = 1;
-        List<SourceEdit> diffs = edits.map((edit) => new SourceEdit(
-            edit.offset, edit.length, edit.replacement, id: '${count++}')).toList();
-        var overlay = new ChangeContentOverlay('change', diffs);
-        server.analysis.updateContent({ editor.getPath(): overlay });
+
+        // TODO: See #31.
+        // List<Edit> edits = simpleDiff(lastSent, contents);
+        // int count = 1;
+        // List<SourceEdit> diffs = edits.map((edit) => new SourceEdit(
+        //     edit.offset, edit.length, edit.replacement, id: '${count++}')).toList();
+        // var overlay = new ChangeContentOverlay('change', diffs);
+        // server.analysis.updateContent({ editor.getPath(): overlay });
+        server.analysis.updateContent({
+          editor.getPath(): new RemoveContentOverlay('remove')
+        });
+        server.analysis.updateContent({
+          editor.getPath(): new AddContentOverlay('add', contents)
+        });
+
         lastSent = contents;
       }
     }
@@ -96,9 +104,8 @@ class BufferUpdater extends Disposables {
 
   removeOverlay() {
     if (analysisServer.isActive) {
-      var removeOverlay = new RemoveContentOverlay('remove');
       server.analysis.updateContent({
-        editor.getPath(): removeOverlay
+        editor.getPath(): new RemoveContentOverlay('remove')
       });
     }
 

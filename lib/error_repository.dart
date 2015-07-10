@@ -111,6 +111,8 @@ class ErrorRepository implements Disposable {
   static bool _identicalLocation(Location a, Location b) {
     if (a.offset != b.offset) return false;
     if (a.length != b.length) return false;
+    if (a.startLine != b.startLine) return false;
+    if (a.startColumn != b.startColumn) return false;
     return a.file == b.file;
   }
 }

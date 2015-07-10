@@ -6,7 +6,8 @@
     submenu: [
       label: 'Dart'
       submenu: [
-        {label: 'Smoke Test', command: 'dartlang:smoke-test-dev'}
+        {label: 'Reanalyze Sources', command: 'dartlang:reanalyze-sources'},
+        {label: 'Show Analysis Server Status', command: 'dartlang:analysis-server-status'}
       ]
     ]
   }
