@@ -1,13 +1,13 @@
 # See https://atom.io/docs/latest/hacking-atom-package-word-count#menus.
 
-'menu': [
-  {
+'menu': [ {
     label: 'Packages'
     submenu: [
       label: 'Dart'
       submenu: [
-        {label: 'Reanalyze Sources', command: 'dartlang:reanalyze-sources'},
-        {label: 'Show Analysis Server Status', command: 'dartlang:analysis-server-status'}
+        {label: 'Re-analyze Sources', command: 'dartlang:reanalyze-sources'},
+        {label: 'Show Analysis Server Status', command: 'dartlang:analysis-server-status'},
+        {label: 'Send Feedback…', command: 'dartlang:send-feedback'}
       ]
     ]
   }

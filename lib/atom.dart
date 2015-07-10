@@ -19,6 +19,8 @@ AtomPackage _package;
 /// The singleton instance of [Atom].
 final Atom atom = new Atom();
 
+final Shell shell = new Shell();
+
 final JsObject _ctx = context['atom'];
 
 /// An Atom package. Register your package using [registerPackage].
@@ -636,6 +638,14 @@ class AtomEvent extends ProxyHolder {
   void abortKeyBinding() => invoke('abortKeyBinding');
   void stopPropagation() => invoke('stopPropagation');
   void stopImmediatePropagation() => invoke('stopImmediatePropagation');
+}
+
+class Shell {
+  Shell();
+
+  JsObject get _shell => require('shell');
+
+  openExternal(String url) => _shell.callMethod('openExternal', [url]);
 }
 
 class BufferedProcess extends ProxyHolder {
