@@ -102,6 +102,9 @@ class AtomDartPackage extends AtomPackage {
         return new Future.delayed((new Duration(milliseconds: 100)));
       }).then((_) => analysisServer.reanalyzeSources());
     });
+    _addCmd('atom-workspace', 'dartlang:send-feedback', (_) {
+      shell.openExternal('https://github.com/dart-atom/dartlang/issues');
+    });
 
     // Text editor commands.
     _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
