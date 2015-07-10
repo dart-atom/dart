@@ -1,5 +1,8 @@
 # Changelog
 
+## unreleased
+-
+
 ## 0.3.0
 - fixes for jump to declaration
 - fixes for the offset location of some errors and warnings
