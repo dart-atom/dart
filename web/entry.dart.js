@@ -14354,7 +14354,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
             t1._sendData$1(null);
           }
         } else
-          $.get$_logger8().info$1("received an error event for a non-existent file: " + H.S(path));
+          $.get$_logger9().info$1("received an error event for a non-existent file: " + H.S(path));
       }, "call$1", "get$_handleAddErrors", 2, 0, 7, 17],
       _handleFlushErrors$1: [function(analysisFlushResults) {
         var t1 = this.knownErrors;
@@ -14445,7 +14445,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
             prefix = J.substring$2$s($event, 0, J.indexOf$1$asx($event, "."));
             t1 = this._domains;
             if (t1.$index(0, prefix) == null)
-              $.get$_logger6().severe$1("no domain for notification: " + H.S(message));
+              $.get$_logger7().severe$1("no domain for notification: " + H.S(message));
             else {
               t1 = t1.$index(0, prefix);
               t2 = $event;
@@ -14461,7 +14461,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
           } else {
             completer = this._completers.remove$1(0, J.$index$asx(json, "id"));
             if (completer == null)
-              $.get$_logger6().severe$1("unmatched request response: " + H.S(message));
+              $.get$_logger7().severe$1("unmatched request response: " + H.S(message));
             else if (J.$index$asx(json, "error") != null)
               completer.completeError$1(N.RequestError_parse(J.$index$asx(json, "error")));
             else
@@ -14470,7 +14470,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e = t1;
-          $.get$_logger6().severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e));
+          $.get$_logger7().severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e));
         }
       }, "call$1", "get$_processMessage", 2, 0, 9, 21],
       _call$2: function(method, args) {
@@ -15490,7 +15490,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         t1 = this._server;
         if (t1 != null && t1.process != null) {
           roots = H.setRuntimeTypeInfo(new H.MappedListIterable(this.knownRoots, new X.AnalysisServer__syncRoots_closure()), [null, null]).toList$0(0);
-          $.get$_logger4().fine$1("setAnalysisRoots(" + H.S(roots) + ")");
+          $.get$_logger5().fine$1("setAnalysisRoots(" + H.S(roots) + ")");
           t1 = this._server._analysis;
           t1.toString;
           m = P.LinkedHashMap__makeLiteral(["included", roots, "excluded", []]);
@@ -15498,7 +15498,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         }
       },
       dispose$0: [function() {
-        $.get$_logger4().fine$1("dispose()");
+        $.get$_logger5().fine$1("dispose()");
         this._checkTrigger$1$dispose(true);
         this.subs.cancel$0();
         this.disposables.dispose$0();
@@ -15513,11 +15513,11 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         C.JSArray_methods.set$length(t1, 0);
         C.JSArray_methods.addAll$1(t1, currentProjects);
         if (removedProjects._collection$_length !== 0) {
-          $.get$_logger4().fine$1("removed: " + P.IterableBase_iterableToFullString(removedProjects, "{", "}"));
+          $.get$_logger5().fine$1("removed: " + P.IterableBase_iterableToFullString(removedProjects, "{", "}"));
           removedProjects.forEach$1(0, new X.AnalysisServer__reconcileRoots_closure());
         }
         if (addedProjects._collection$_length !== 0)
-          $.get$_logger4().fine$1("added: " + P.IterableBase_iterableToFullString(addedProjects, "{", "}"));
+          $.get$_logger5().fine$1("added: " + P.IterableBase_iterableToFullString(addedProjects, "{", "}"));
         if (removedProjects._collection$_length !== 0 || addedProjects._collection$_length !== 0)
           this._syncRoots$0();
         this._checkTrigger$0();
@@ -15636,13 +15636,13 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     AnalysisServer__setup_closure1: {
       "^": "Closure:6;",
       call$1: [function(message) {
-        return $.get$_logger4().finer$1("--> " + H.S(message));
+        return $.get$_logger5().finer$1("--> " + H.S(message));
       }, null, null, 2, 0, null, 21, "call"]
     },
     AnalysisServer__setup_closure2: {
       "^": "Closure:6;",
       call$1: [function(message) {
-        return $.get$_logger4().finer$1("<-- " + H.S(message));
+        return $.get$_logger5().finer$1("<-- " + H.S(message));
       }, null, null, 2, 0, null, 21, "call"]
     },
     AnalysisServer__syncRoots_closure: {
@@ -15777,7 +15777,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         if (t1 === 1)
           X.QuickFixHelper__applyChange(this._captured_editor_0, C.JSArray_methods.get$first(changes));
         else {
-          $.get$_logger4().info$1("multiple fixes returned (" + t1 + ")");
+          $.get$_logger5().info$1("multiple fixes returned (" + t1 + ")");
           $.get$atom0().invoke$1("beep");
         }
       }, null, null, 2, 0, null, 14, "call"]
@@ -15803,7 +15803,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     QuickFixHelper_handleQuickFix_closure0: {
       "^": "Closure:2;",
       call$1: [function(e) {
-        $.get$_logger4().warning$1(H.S(e));
+        $.get$_logger5().warning$1(H.S(e));
         $.get$atom0().invoke$1("beep");
       }, null, null, 2, 0, null, 3, "call"]
     },
@@ -15874,7 +15874,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       },
       kill$0: function() {
         var t1, exception;
-        t1 = $.get$_logger4();
+        t1 = $.get$_logger5();
         t1.fine$1("server forcibly terminated");
         if (this.process != null) {
           try {
@@ -15977,7 +15977,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     _AnalysisServerWrapper__startProcess_closure: {
       "^": "Closure:6;",
       call$1: [function(str) {
-        return $.get$_logger4().severe$1(J.trim$0$s(str));
+        return $.get$_logger5().severe$1(J.trim$0$s(str));
       }, null, null, 2, 0, null, 36, "call"]
     },
     _AnalysisServerWrapper__startProcess_closure0: {
@@ -16001,7 +16001,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       "^": "Closure:22;_analysis_server$_captured_completer_1",
       call$1: [function(exitCode) {
         var t1;
-        $.get$_logger4().fine$1("exited with code " + H.S(exitCode));
+        $.get$_logger5().fine$1("exited with code " + H.S(exitCode));
         t1 = this._analysis_server$_captured_completer_1;
         if (t1.future._state === 0)
           t1.complete$1(0, exitCode);
@@ -16216,7 +16216,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       "^": "Closure:2;_captured_timer_0",
       call$1: [function(suggestions) {
         var t1 = J.getInterceptor$asx(suggestions);
-        $.get$_logger7().fine$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this._captured_timer_0.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
+        $.get$_logger8().fine$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this._captured_timer_0.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
         return J.toList$0$ax(t1.map$1(suggestions, new X.AutocompleteProvider__getSuggestions__closure()));
       }, null, null, 2, 0, null, 39, "call"]
     },
@@ -16273,7 +16273,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       } catch (exception) {
         t1 = H.unwrapException(exception);
         e = t1;
-        $.get$_logger1().severe$1("exception during enter key handling: " + H.S(e));
+        $.get$_logger2().severe$1("exception during enter key handling: " + H.S(e));
       }
     }, "call$1", "handleEnterKey$closure", 2, 0, 32],
     _handleEnterKey: function($event) {
@@ -16357,7 +16357,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         t1 = H.unwrapException(exception);
         e = t1;
         buffer.invoke$1("revertToCheckpoint");
-        $.get$_logger5().warning$1("error applying source edits: " + H.S(e));
+        $.get$_logger6().warning$1("error applying source edits: " + H.S(e));
       }
     },
     selectEditGroups: function(editor, groups) {
@@ -16826,12 +16826,20 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         return this.invoke$4(method, arg1, null, null);
       },
       eventStream$1: function(eventName) {
-        var t1, controller;
+        var t1, controller, e, st, exception;
         t1 = {};
         t1._captured_disposable_0 = null;
         controller = P.StreamController_StreamController$broadcast(new K.ProxyHolder_eventStream_closure(t1), null, false, null);
-        t1._captured_disposable_0 = new K.JsDisposable(this.invoke$2(eventName, new K.ProxyHolder_eventStream_closure0(controller)));
-        return H.setRuntimeTypeInfo(new P._BroadcastStream(controller), [H.getTypeArgumentByIndex(controller, 0)]);
+        try {
+          t1._captured_disposable_0 = new K.JsDisposable(this.invoke$2(eventName, new K.ProxyHolder_eventStream_closure0(controller)));
+        } catch (exception) {
+          t1 = H.unwrapException(exception);
+          e = t1;
+          st = H.getTraceFromException(exception);
+          $.get$_logger1().warning$1(H.S(e) + " listening to " + H.S(eventName) + "\n" + H.S(st));
+        }
+        t1 = controller;
+        return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
       }
     },
     ProxyHolder_eventStream_closure: {
@@ -17365,7 +17373,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         var t1, t2, t3, t4, t5;
         if (this._process != null)
           throw H.wrapException(new P.StateError("exec can only be called once"));
-        t1 = $.get$_logger3();
+        t1 = $.get$_logger4();
         t2 = this.command;
         t3 = "exec: " + H.S(t2) + " ";
         t4 = this.args;
@@ -17376,7 +17384,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         return this._exitCompleter.future;
       },
       kill$0: function() {
-        $.get$_logger3().fine$1("kill: " + H.S(this.command) + " ");
+        $.get$_logger4().fine$1("kill: " + H.S(this.command) + " ");
         this._process.invoke$1("kill");
         P.Future_Future$delayed(P.Duration$(0, 0, 0, 50, 0, 0), new Z.ProcessRunner_kill_closure(this), null);
         return this._exitCompleter.future;
@@ -17430,7 +17438,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       "^": "Closure:2;_process$_captured_this_2",
       call$1: [function(code) {
         var t1 = this._process$_captured_this_2;
-        $.get$_logger3().fine$1("exit code: " + H.S(code) + " (" + H.S(t1.command) + ")");
+        $.get$_logger4().fine$1("exit code: " + H.S(code) + " (" + H.S(t1.command) + ")");
         t1._exit = code;
         t1 = t1._exitCompleter;
         if (t1.future._state === 0)
@@ -17474,7 +17482,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
       },
       dispose$0: [function() {
-        $.get$_logger2().fine$1("dispose()");
+        $.get$_logger3().fine$1("dispose()");
         this._sub.cancel$0();
         var t1 = this._directoryListeners;
         t1.get$values(t1).forEach$1(0, new L.ProjectManager_dispose_closure());
@@ -17490,7 +17498,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
           dir = t2._collection$_current;
           if (!allDirs.contains$1(0, dir)) {
             C.JSArray_methods._removeWhere$2(t1, new L.ProjectManager__fullScanForProjects_closure0(dir), true);
-            $.get$_logger2().info$1("removed project " + H.S(dir));
+            $.get$_logger3().info$1("removed project " + H.S(dir));
             changed = true;
           }
         }
@@ -17501,7 +17509,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         }
         C.JSArray_methods.addAll$1(t1, H.setRuntimeTypeInfo(new H.EfficientLengthMappedIterable(newDirs, new L.ProjectManager__fullScanForProjects_closure2()), [H.getTypeArgumentByIndex(newDirs, 0), null]));
         if (changed) {
-          $.get$_logger2().fine$1(H.S(t1));
+          $.get$_logger3().fine$1(H.S(t1));
           t2 = this._projects$_controller;
           if (!t2.get$_mayAddEvent())
             H.throwExpression(t2._addEventError$0());
@@ -17592,7 +17600,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     ProjectManager__fullScanForProjects_closure1: {
       "^": "Closure:2;",
       call$1: function(dir) {
-        return $.get$_logger2().info$1("added project " + H.S(dir));
+        return $.get$_logger3().info$1("added project " + H.S(dir));
       }
     },
     ProjectManager__fullScanForProjects_closure2: {
@@ -29478,9 +29486,9 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         return e.message;
       }
     }());
-  }, "undefinedLiteralPropertyPattern", "_logger8", "get$_logger8", function() {
+  }, "undefinedLiteralPropertyPattern", "_logger9", "get$_logger9", function() {
     return N.Logger_Logger("error_repository");
-  }, "_logger", "_logger6", "get$_logger6", function() {
+  }, "_logger", "_logger7", "get$_logger7", function() {
     return N.Logger_Logger("analysis-server-gen");
   }, "_logger", "atom0", "get$atom0", function() {
     var t1 = new E.Atom(null, null, null, null, null, null, null, $.get$_ctx());
@@ -29490,7 +29498,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     return new E.Shell();
   }, "shell", "_ctx", "get$_ctx", function() {
     return J.$index$asx($.get$context(), "atom");
-  }, "_ctx", "_logger4", "get$_logger4", function() {
+  }, "_ctx", "_logger5", "get$_logger5", function() {
     return N.Logger_Logger("analysis-server");
   }, "_logger", "_process", "get$_process", function() {
     return K.require("process");
@@ -29504,11 +29512,11 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     return $.get$isWindows() !== true && $.get$isMac() !== true;
   }, "isLinux", "separator", "get$separator", function() {
     return $.get$isWindows() === true ? "\\" : "/";
-  }, "separator", "_logger7", "get$_logger7", function() {
+  }, "separator", "_logger8", "get$_logger8", function() {
     return N.Logger_Logger("atom.autocomplete");
-  }, "_logger", "_logger1", "get$_logger1", function() {
+  }, "_logger", "_logger2", "get$_logger2", function() {
     return N.Logger_Logger("editing");
-  }, "_logger", "_logger5", "get$_logger5", function() {
+  }, "_logger", "_logger6", "get$_logger6", function() {
     return N.Logger_Logger("editors");
   }, "_logger", "_flashDuration", "get$_flashDuration", function() {
     return P.Duration$(0, 0, 0, 100, 0, 0);
@@ -29518,11 +29526,13 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     return P.JsObject_JsObject$fromBrowserObject(J.$index$asx($.get$context(), "window"));
   }, "_browserWindow", "_browserJson", "get$_browserJson", function() {
     return J.$index$asx($.get$_browserWindow(), "JSON");
-  }, "_browserJson", "_logger", "get$_logger", function() {
+  }, "_browserJson", "_logger1", "get$_logger1", function() {
+    return N.Logger_Logger("js");
+  }, "_logger", "_logger", "get$_logger", function() {
     return N.Logger_Logger("atom-dart");
-  }, "_logger", "_logger3", "get$_logger3", function() {
+  }, "_logger", "_logger4", "get$_logger4", function() {
     return N.Logger_Logger("process");
-  }, "_logger", "_logger2", "get$_logger2", function() {
+  }, "_logger", "_logger3", "get$_logger3", function() {
     return N.Logger_Logger("projects");
   }, "_logger", "jobs", "get$jobs", function() {
     var t1 = new S.JobManager(P.StreamController_StreamController$broadcast(null, null, false, null), [], null, null);
