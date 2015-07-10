@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.3
+## 0.3.0
 - fixes for jump to declaration
 - fixes for the offset location of some errors and warnings
 - added a `Send Feedback` menu item
