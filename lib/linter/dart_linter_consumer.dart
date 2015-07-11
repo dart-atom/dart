@@ -22,9 +22,13 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
       if (!_shouldShowTodosMessages()) {
         sortedErrors = sortedErrors.where((issue) => issue.type != 'TODO');
       }
-      if (_filterUnnamedLibraryWarnings()) {
+      if (_shouldFilterUnnamedLibraryWarnings()) {
         sortedErrors = sortedErrors.where(
             (issue) => !issue.message.contains('cannot both be unnamed'));
+      }
+      if (_shouldFilterCompiledToJSWarnings()) {
+        sortedErrors = sortedErrors.where(
+            (issue) => !issue.message.contains('When compiled to JS'));
       }
 
       var formattedErrors = sortedErrors
