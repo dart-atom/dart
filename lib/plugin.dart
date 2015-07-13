@@ -153,15 +153,17 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': false
       },
-      'filterUnnamedLibraryWarnings': {
+      // These settings start with `x_` so they sort after the other settings in
+      // our preferences dialog.
+      'x_filterUnnamedLibraryWarnings': {
         'title': 'Filter unnamed library warnings',
-        'description': 'Don\'t display warnings about unnamed libraries.',
+        'description': "Don't display warnings about unnamed libraries.",
         'type': 'boolean',
         'default': true
       },
-      'filterCompiledToJSWarnings': {
+      'x_filterCompiledToJSWarnings': {
         'title': 'Filter warnings about compiling to JavaScript',
-        'description': 'Don\'t display warnings about compiling to JavaScript.',
+        'description': "Don't display warnings about compiling to JavaScript.",
         'type': 'boolean',
         'default': true
       }

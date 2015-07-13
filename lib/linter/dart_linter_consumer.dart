@@ -22,6 +22,7 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
       if (!_shouldShowTodosMessages()) {
         sortedErrors = sortedErrors.where((issue) => issue.type != 'TODO');
       }
+      // TODO: Remove this once the warning is no longer in the spec.
       if (_shouldFilterUnnamedLibraryWarnings()) {
         sortedErrors = sortedErrors.where(
             (issue) => !issue.message.contains('cannot both be unnamed'));
