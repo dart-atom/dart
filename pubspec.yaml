@@ -1,5 +1,5 @@
 name: atom_dartlang
-version: 0.3.0
+version: 0.3.1
 description: An experimental Dart plugin for Atom.
 homepage: https://github.com/dart-atom/dartlang
 environment:

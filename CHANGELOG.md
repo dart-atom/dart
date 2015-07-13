@@ -1,6 +1,9 @@
 # Changelog
 
 ## unreleased
+-
+
+## 0.3.1
 - improved editing for dartdoc comments and improved the auto-indent behavior
 - added the ability to filter out certain analysis warnings
 
