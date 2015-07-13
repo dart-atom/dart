@@ -56,6 +56,15 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     var editor = options.editor;
     var path = editor.getPath();
     var offset = editor.getBuffer().characterIndexForPosition(options.bufferPosition);
+
+    // TODO: Can we tell if the auto-complete was explicitly requested by the
+    // user?
+
+    // Atom autocompletes right after a semi-colon, and often the user's return
+    // key event is captured as a code complete select - inserting an item
+    // (inadvertently) into the editor.
+    if (options.prefix == ';') return new Future.value([]);
+
     return server.completion.getSuggestions(path, offset).then((result) {
       return server.completion.onResults
           .where((cr) => cr.id == result.id)

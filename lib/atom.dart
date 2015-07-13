@@ -9,10 +9,14 @@ import 'dart:async';
 import 'dart:html' hide File, Directory, Point;
 import 'dart:js';
 
+import 'package:logging/logging.dart';
+
 import 'js.dart';
 import 'utils.dart';
 
 export 'js.dart' show Promise, ProxyHolder;
+
+final Logger _logger = new Logger('atom');
 
 AtomPackage _package;
 
@@ -461,6 +465,8 @@ class TextEditor extends ProxyHolder {
 
   void insertNewline() => invoke('insertNewline');
 
+  void backspace() => invoke('backspace');
+
   /// Returns a [Range] when the text has been inserted. Returns a `bool`
   /// (`false`) when the text has not been inserted.
   ///
@@ -514,6 +520,22 @@ class TextEditor extends ProxyHolder {
   void undo() => invoke('undo');
   void redo() => invoke('redo');
 
+  dynamic createCheckpoint() => invoke('createCheckpoint');
+  bool groupChangesSinceCheckpoint(checkpoint) => invoke('groupChangesSinceCheckpoint', checkpoint);
+  bool revertToCheckpoint(checkpoint) => invoke('revertToCheckpoint', checkpoint);
+
+  /// Perform the [fn] in one atomic, undoable transaction.
+  void atomic(void fn()) {
+    var checkpoint = createCheckpoint();
+    try {
+      fn();
+      groupChangesSinceCheckpoint(checkpoint);
+    } catch (e) {
+      revertToCheckpoint(checkpoint);
+      _logger.warning('transaction failed: ${e}');
+    }
+  }
+
   void save() => invoke('save');
 
   /// Calls your callback when the grammar that interprets and colorizes the
@@ -523,6 +545,10 @@ class TextEditor extends ProxyHolder {
     var disposable = invoke('observeGrammar', (g) => callback(new Grammar(g)));
     return new JsDisposable(disposable);
   }
+
+  /// Determine if the given row is entirely a comment.
+  bool isBufferRowCommented(int bufferRow) =>
+      invoke('isBufferRowCommented', bufferRow);
 
   /// Invoke the given callback synchronously when the content of the buffer changes.
   /// Because observers are invoked synchronously, it's important not to perform
@@ -560,19 +586,31 @@ class TextBuffer extends ProxyHolder {
       new Range(invoke('setTextInRange', range, text));
 
   /// Create a pointer to the current state of the buffer for use with
-  void createCheckpoint() => invoke('createCheckpoint');
+  /// [groupChangesSinceCheckpoint] and [revertToCheckpoint].
+  dynamic createCheckpoint() => invoke('createCheckpoint');
   /// Group all changes since the given checkpoint into a single transaction for
   /// purposes of undo/redo. If the given checkpoint is no longer present in the
   /// undo history, no grouping will be performed and this method will return
   /// false.
-  bool groupChangesSinceCheckpoint() => invoke('groupChangesSinceCheckpoint');
+  bool groupChangesSinceCheckpoint(checkpoint) => invoke('groupChangesSinceCheckpoint', checkpoint);
   /// Revert the buffer to the state it was in when the given checkpoint was
   /// created. The redo stack will be empty following this operation, so changes
   /// since the checkpoint will be lost. If the given checkpoint is no longer
   /// present in the undo history, no changes will be made to the buffer and
   /// this method will return false.
-  bool revertToCheckpoint() => invoke('revertToCheckpoint');
+  bool revertToCheckpoint(checkpoint) => invoke('revertToCheckpoint', checkpoint);
 
+  /// Perform the [fn] in one atomic, undoable transaction.
+  void atomic(void fn()) {
+    var checkpoint = createCheckpoint();
+    try {
+      fn();
+      groupChangesSinceCheckpoint(checkpoint);
+    } catch (e) {
+      revertToCheckpoint(checkpoint);
+      _logger.warning('transaction failed: ${e}');
+    }
+  }
 }
 
 class Grammar extends ProxyHolder {
@@ -636,8 +674,17 @@ class AtomEvent extends ProxyHolder {
   }
 
   void abortKeyBinding() => invoke('abortKeyBinding');
+
+  bool get keyBindingAborted => obj['keyBindingAborted'];
+
+  void preventDefault() => invoke('preventDefault');
+
+  bool get defaultPrevented => obj['defaultPrevented'];
+
   void stopPropagation() => invoke('stopPropagation');
   void stopImmediatePropagation() => invoke('stopImmediatePropagation');
+
+  bool get propagationStopped => obj['propagationStopped'];
 }
 
 class Shell {
