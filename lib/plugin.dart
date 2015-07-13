@@ -153,9 +153,15 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': false
       },
-      'showUnnamedLibraryWarning': {
+      'filterUnnamedLibraryWarnings': {
         'title': 'Filter unnamed library warnings',
-        'description': 'Filter all unnamed library warnings.',
+        'description': 'Don\'t display warnings about unnamed libraries.',
+        'type': 'boolean',
+        'default': true
+      },
+      'filterCompiledToJSWarnings': {
+        'title': 'Filter warnings about compiling to JavaScript',
+        'description': 'Don\'t display warnings about compiling to JavaScript.',
         'type': 'boolean',
         'default': true
       }
