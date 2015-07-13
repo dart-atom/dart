@@ -1,7 +1,8 @@
 # Changelog
 
 ## unreleased
--
+- improved editing for dartdoc comments and improved the auto-indent behavior
+- added the ability to filter out certain analysis warnings
 
 ## 0.3.0
 - fixes for jump to declaration
