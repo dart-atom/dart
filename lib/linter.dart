@@ -53,10 +53,12 @@ final Map<String, String> _severityMap = {
 
 String _infosPrefPath = '${pluginId}.showInfos';
 String _todosPrefPath = '${pluginId}.showTodos';
-String _filterUnnamedLibraryWarningsPath = '${pluginId}.filterUnnamedLibraryWarnings';
-String _filterCompiledToJSWarningsPath = '${pluginId}.filterCompiledToJSWarnings';
+String _filterUnnamedLibraryWarningsPath = '${pluginId}.x_filterUnnamedLibraryWarnings';
+String _filterCompiledToJSWarningsPath = '${pluginId}.x_filterCompiledToJSWarnings';
 
 bool _shouldShowInfoMessages() => atom.config.get(_infosPrefPath);
 bool _shouldShowTodosMessages() => atom.config.get(_todosPrefPath);
-bool _shouldFilterUnnamedLibraryWarnings() => atom.config.get(_filterUnnamedLibraryWarningsPath);
-bool _shouldFilterCompiledToJSWarnings() => atom.config.get(_filterCompiledToJSWarningsPath);
+bool _shouldFilterUnnamedLibraryWarnings() =>
+    atom.config.get(_filterUnnamedLibraryWarningsPath);
+bool _shouldFilterCompiledToJSWarnings() =>
+    atom.config.get(_filterCompiledToJSWarningsPath);
