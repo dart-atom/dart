@@ -2628,8 +2628,81 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     Suggestion.prototype.get$type = function(receiver) {
       return this.type;
     };
-    function applyEdits_closure(_captured_buffer_0) {
-      this._captured_buffer_0 = _captured_buffer_0;
+    function _handleEnterKey_closure(_captured_editor_1) {
+      this._captured_editor_1 = _captured_editor_1;
+      this.$deferredAction();
+    }
+    _handleEnterKey_closure.builtin$cls = "_handleEnterKey_closure";
+    if (!("name" in _handleEnterKey_closure))
+      _handleEnterKey_closure.name = "_handleEnterKey_closure";
+    $desc = $collectedClasses$._handleEnterKey_closure[1];
+    _handleEnterKey_closure.prototype = $desc;
+    _handleEnterKey_closure.$__fields__ = ["_captured_editor_1"];
+    function _handleEnterKey_closure0(_editing$_box_0, _captured_editor_2) {
+      this._editing$_box_0 = _editing$_box_0;
+      this._captured_editor_2 = _captured_editor_2;
+      this.$deferredAction();
+    }
+    _handleEnterKey_closure0.builtin$cls = "_handleEnterKey_closure0";
+    if (!("name" in _handleEnterKey_closure0))
+      _handleEnterKey_closure0.name = "_handleEnterKey_closure0";
+    $desc = $collectedClasses$._handleEnterKey_closure0[1];
+    _handleEnterKey_closure0.prototype = $desc;
+    _handleEnterKey_closure0.$__fields__ = ["_editing$_box_0", "_captured_editor_2"];
+    function _handleEnterKey_closure1(_captured_editor_3) {
+      this._captured_editor_3 = _captured_editor_3;
+      this.$deferredAction();
+    }
+    _handleEnterKey_closure1.builtin$cls = "_handleEnterKey_closure1";
+    if (!("name" in _handleEnterKey_closure1))
+      _handleEnterKey_closure1.name = "_handleEnterKey_closure1";
+    $desc = $collectedClasses$._handleEnterKey_closure1[1];
+    _handleEnterKey_closure1.prototype = $desc;
+    _handleEnterKey_closure1.$__fields__ = ["_captured_editor_3"];
+    function _handleEnterKey_closure2(_captured_editor_4) {
+      this._captured_editor_4 = _captured_editor_4;
+      this.$deferredAction();
+    }
+    _handleEnterKey_closure2.builtin$cls = "_handleEnterKey_closure2";
+    if (!("name" in _handleEnterKey_closure2))
+      _handleEnterKey_closure2.name = "_handleEnterKey_closure2";
+    $desc = $collectedClasses$._handleEnterKey_closure2[1];
+    _handleEnterKey_closure2.prototype = $desc;
+    _handleEnterKey_closure2.$__fields__ = ["_captured_editor_4"];
+    function _handleEnterKey_closure3(_captured_editor_5) {
+      this._captured_editor_5 = _captured_editor_5;
+      this.$deferredAction();
+    }
+    _handleEnterKey_closure3.builtin$cls = "_handleEnterKey_closure3";
+    if (!("name" in _handleEnterKey_closure3))
+      _handleEnterKey_closure3.name = "_handleEnterKey_closure3";
+    $desc = $collectedClasses$._handleEnterKey_closure3[1];
+    _handleEnterKey_closure3.prototype = $desc;
+    _handleEnterKey_closure3.$__fields__ = ["_captured_editor_5"];
+    function _handleEnterKey_closure4(_captured_editor_6) {
+      this._captured_editor_6 = _captured_editor_6;
+      this.$deferredAction();
+    }
+    _handleEnterKey_closure4.builtin$cls = "_handleEnterKey_closure4";
+    if (!("name" in _handleEnterKey_closure4))
+      _handleEnterKey_closure4.name = "_handleEnterKey_closure4";
+    $desc = $collectedClasses$._handleEnterKey_closure4[1];
+    _handleEnterKey_closure4.prototype = $desc;
+    _handleEnterKey_closure4.$__fields__ = ["_captured_editor_6"];
+    function _handleEnterKey_closure5(_editing$_box_0, _captured_editor_7) {
+      this._editing$_box_0 = _editing$_box_0;
+      this._captured_editor_7 = _captured_editor_7;
+      this.$deferredAction();
+    }
+    _handleEnterKey_closure5.builtin$cls = "_handleEnterKey_closure5";
+    if (!("name" in _handleEnterKey_closure5))
+      _handleEnterKey_closure5.name = "_handleEnterKey_closure5";
+    $desc = $collectedClasses$._handleEnterKey_closure5[1];
+    _handleEnterKey_closure5.prototype = $desc;
+    _handleEnterKey_closure5.$__fields__ = ["_editing$_box_0", "_captured_editor_7"];
+    function applyEdits_closure(_captured_edits_0, _captured_buffer_1) {
+      this._captured_edits_0 = _captured_edits_0;
+      this._captured_buffer_1 = _captured_buffer_1;
       this.$deferredAction();
     }
     applyEdits_closure.builtin$cls = "applyEdits_closure";
@@ -2637,7 +2710,17 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       applyEdits_closure.name = "applyEdits_closure";
     $desc = $collectedClasses$.applyEdits_closure[1];
     applyEdits_closure.prototype = $desc;
-    applyEdits_closure.$__fields__ = ["_captured_buffer_0"];
+    applyEdits_closure.$__fields__ = ["_captured_edits_0", "_captured_buffer_1"];
+    function applyEdits__closure(_captured_buffer_2) {
+      this._captured_buffer_2 = _captured_buffer_2;
+      this.$deferredAction();
+    }
+    applyEdits__closure.builtin$cls = "applyEdits__closure";
+    if (!("name" in applyEdits__closure))
+      applyEdits__closure.name = "applyEdits__closure";
+    $desc = $collectedClasses$.applyEdits__closure[1];
+    applyEdits__closure.prototype = $desc;
+    applyEdits__closure.$__fields__ = ["_captured_buffer_2"];
     function selectEditGroups_closure(_editors$_box_0, _captured_buffer_1) {
       this._editors$_box_0 = _editors$_box_0;
       this._captured_buffer_1 = _captured_buffer_1;
@@ -2690,10 +2773,10 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     $desc = $collectedClasses$.Editors[1];
     Editors.prototype = $desc;
     Editors.$__fields__ = ["_matches", "_editorObserve", "_itemObserve", "_editors$_subs", "_editorOpenedController", "_activeEditorController", "_editorClosedController", "_activeEditor", "_openEditors"];
-    function Editors__observeTextEditors_closure(_editors$_box_0, _editors$_captured_this_1, _captured_editor_2) {
+    function Editors__observeTextEditors_closure(_editors$_box_0, _editors$_captured_this_1, _editors$_captured_editor_2) {
       this._editors$_box_0 = _editors$_box_0;
       this._editors$_captured_this_1 = _editors$_captured_this_1;
-      this._captured_editor_2 = _captured_editor_2;
+      this._editors$_captured_editor_2 = _editors$_captured_editor_2;
       this.$deferredAction();
     }
     Editors__observeTextEditors_closure.builtin$cls = "Editors__observeTextEditors_closure";
@@ -2701,7 +2784,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       Editors__observeTextEditors_closure.name = "Editors__observeTextEditors_closure";
     $desc = $collectedClasses$.Editors__observeTextEditors_closure[1];
     Editors__observeTextEditors_closure.prototype = $desc;
-    Editors__observeTextEditors_closure.$__fields__ = ["_editors$_box_0", "_editors$_captured_this_1", "_captured_editor_2"];
+    Editors__observeTextEditors_closure.$__fields__ = ["_editors$_box_0", "_editors$_captured_this_1", "_editors$_captured_editor_2"];
     function CoreElement(element) {
       this.element = element;
       this.$deferredAction();
@@ -3063,9 +3146,9 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     $desc = $collectedClasses$.NavigationHelper__activate_closure[1];
     NavigationHelper__activate_closure.prototype = $desc;
     NavigationHelper__activate_closure.$__fields__ = ["_navigation$_captured_this_0", "_captured_path_1"];
-    function NavigationHelper__activate_closure0(_navigation$_captured_this_2, _captured_editor_3) {
+    function NavigationHelper__activate_closure0(_navigation$_captured_this_2, _navigation$_captured_editor_3) {
       this._navigation$_captured_this_2 = _navigation$_captured_this_2;
-      this._captured_editor_3 = _captured_editor_3;
+      this._navigation$_captured_editor_3 = _navigation$_captured_editor_3;
       this.$deferredAction();
     }
     NavigationHelper__activate_closure0.builtin$cls = "NavigationHelper__activate_closure0";
@@ -3073,10 +3156,10 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       NavigationHelper__activate_closure0.name = "NavigationHelper__activate_closure0";
     $desc = $collectedClasses$.NavigationHelper__activate_closure0[1];
     NavigationHelper__activate_closure0.prototype = $desc;
-    NavigationHelper__activate_closure0.$__fields__ = ["_navigation$_captured_this_2", "_captured_editor_3"];
-    function NavigationHelper__activate__closure(_captured_this_4, _captured_editor_5) {
+    NavigationHelper__activate_closure0.$__fields__ = ["_navigation$_captured_this_2", "_navigation$_captured_editor_3"];
+    function NavigationHelper__activate__closure(_captured_this_4, _navigation$_captured_editor_5) {
       this._captured_this_4 = _captured_this_4;
-      this._captured_editor_5 = _captured_editor_5;
+      this._navigation$_captured_editor_5 = _navigation$_captured_editor_5;
       this.$deferredAction();
     }
     NavigationHelper__activate__closure.builtin$cls = "NavigationHelper__activate__closure";
@@ -3084,10 +3167,10 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       NavigationHelper__activate__closure.name = "NavigationHelper__activate__closure";
     $desc = $collectedClasses$.NavigationHelper__activate__closure[1];
     NavigationHelper__activate__closure.prototype = $desc;
-    NavigationHelper__activate__closure.$__fields__ = ["_captured_this_4", "_captured_editor_5"];
-    function NavigationHelper__handleNavigateEditor_closure(_navigation$_captured_this_0, _captured_editor_1, _captured_offset_2) {
+    NavigationHelper__activate__closure.$__fields__ = ["_captured_this_4", "_navigation$_captured_editor_5"];
+    function NavigationHelper__handleNavigateEditor_closure(_navigation$_captured_this_0, _navigation$_captured_editor_1, _captured_offset_2) {
       this._navigation$_captured_this_0 = _navigation$_captured_this_0;
-      this._captured_editor_1 = _captured_editor_1;
+      this._navigation$_captured_editor_1 = _navigation$_captured_editor_1;
       this._captured_offset_2 = _captured_offset_2;
       this.$deferredAction();
     }
@@ -3096,7 +3179,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       NavigationHelper__handleNavigateEditor_closure.name = "NavigationHelper__handleNavigateEditor_closure";
     $desc = $collectedClasses$.NavigationHelper__handleNavigateEditor_closure[1];
     NavigationHelper__handleNavigateEditor_closure.prototype = $desc;
-    NavigationHelper__handleNavigateEditor_closure.$__fields__ = ["_navigation$_captured_this_0", "_captured_editor_1", "_captured_offset_2"];
+    NavigationHelper__handleNavigateEditor_closure.$__fields__ = ["_navigation$_captured_this_0", "_navigation$_captured_editor_1", "_captured_offset_2"];
     function NavigationHelper__handleNavigateEditor_closure0(_navigation$_captured_this_3) {
       this._navigation$_captured_this_3 = _navigation$_captured_this_3;
       this.$deferredAction();
@@ -10028,7 +10111,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     $desc = $collectedClasses$._bindStream__closure1[1];
     _bindStream__closure1.prototype = $desc;
     _bindStream__closure1.$__fields__ = [];
-    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, _Serializer, _Deserializer, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, ExceptionAndStackTrace, asyncHelper_closure, _wrapJsFunctionForAsync_closure, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, ErrorRepository, Server, Server_dispose_closure, Domain, ServerDomain, ServerStatus, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, EditDomain, FixesResult, FixesResult_parse_closure, ExecutionDomain, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisStatus, CompletionSuggestion, Element0, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Position, PubStatus, RemoveContentOverlay, RequestError, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, ViewRegistry, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, NotificationManager, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextBuffer, Range, Point, AtomEvent, Shell, BufferedProcess, AnalysisServer, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__setup_closure1, AnalysisServer__setup_closure2, AnalysisServer__syncRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, DartdocHelper_handleDartdoc_closure, QuickFixHelper_handleQuickFix_closure, QuickFixHelper_handleQuickFix__closure, QuickFixHelper_handleQuickFix__closure0, QuickFixHelper_handleQuickFix___closure, QuickFixHelper_handleQuickFix_closure0, QuickFixHelper__applyChange_closure, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_closure2, AnalysisServerDialog_showDialog_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions__closure, AutocompleteOptions, Suggestion, applyEdits_closure, selectEditGroups_closure, _sortEdits_closure, EditorManager, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_click_closure, ProgressElement, main_closure, Job, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintMessage, Rn, Pt, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__activate_closure0, NavigationHelper__activate__closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__getNavigationInfoFor_closure, NavigationHelper__getNavigationInfoFor_closure0, NavigationHelper__processNavInfo_closure, NavigationHelper__processNavInfo__closure, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage__closure, AtomDartPackage__closure0, AtomDartPackage_closure1, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated__closure, AtomDartPackage_packageActivated__closure0, AtomDartPackage_packageActivated_closure3, AtomDartPackage_packageActivated_closure4, AtomDartPackage_packageActivated_closure5, AtomDartPackage_packageActivated_closure6, AtomDartPackage_packageActivated_closure7, AtomDartPackage__addSdkCmd_closure, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure0, ProcessRunner_execStreaming_closure, ProcessRunner_kill_closure, ProcessResult, ProjectManager, ProjectManager_closure, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, DartProject, ProjectScanJob, PubJob, PubJob_run_closure, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RebuildJob_run__closure0, SdkManager, SdkManager_closure, SdkManager_tryToAutoConfigure_closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure8, smokeTest_closure7, smokeTest_closure6, smokeTest_closure9, smokeTest_closure10, smokeTest_closure11, smokeTest_closure12, smokeTest_closure13, _TestJob, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay_closure0, StatusDisplay_closure1, StatusDisplay__createJobsPanel_closure, StatusBar, Tile, Disposable, Disposables, StreamSubscriptions, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions__closure, DartAutocompleteProvider_getSuggestions__closure0, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__handleCompletionResults_closure0, DartAutocompleteProvider__handleCompletionResults__closure, BufferUpdaterManager, BufferUpdaterManager_closure, BufferUpdaterManager__closure, BufferUpdaterManager_dispose_closure, BufferUpdater, Dependencies, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, EmptyIterator, FixedLengthListMixin, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _UncaughtAsyncError, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _SyncBroadcastStreamController__sendError_closure, _SyncBroadcastStreamController__sendDone_closure, _AsyncBroadcastStreamController, _AsBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, Future_wait_handleError, Future_wait_closure, _Completer, _AsyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_Stream$fromIterable_closure, Stream_Stream$periodic_sendEvent, Stream_Stream$periodic_startPeriodicTimer, Stream_Stream$periodic_startPeriodicTimer_closure, Stream_Stream$periodic_closure0, Stream_Stream$periodic_closure1, Stream_Stream$periodic_closure2, Stream_Stream$periodic__closure, Stream_Stream$periodic_closure, Stream_join_closure, Stream_join_closure1, Stream_join_closure0, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_last_closure, Stream_last_closure0, StreamSubscription, EventSink, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _StreamController__AsyncStreamControllerDispatch, _SyncStreamController, _StreamController__SyncStreamControllerDispatch, _NoCallbacks, _NoCallbackAsyncStreamController, _StreamController__AsyncStreamControllerDispatch0, _NoCallbackSyncStreamController, _StreamController__SyncStreamControllerDispatch0, _ControllerStream, _ControllerSubscription, _AddStreamState, _AddStreamState_makeErrorHandler_closure, _AddStreamState_cancel_closure, _StreamControllerAddStreamState, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _GeneratedStreamImpl, _IterablePendingEvents, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _AsBroadcastStream, _BroadcastSubscriptionWrapper, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _TakeStream, _StateStreamSubscription, _EventSinkWrapper, _SinkTransformerStreamSubscription, _BoundSinkStream, Timer, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _RootZone_bindUnaryCallback_closure0, _HashMap, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, LinkedHashMap_LinkedHashMap$from_closure, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMapKeyIterable, _JsonDecoderSink, ChunkedConversionSink, _ConverterStreamEventSink, Codec, Converter, Converter_bind_closure, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, _JsonEncoderSink, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, _StringConversionSinkAsStringSinkAdapter, StringConversionSinkBase, StringConversionSinkMixin, _StringSinkConversionSink, _StringAdapterSink, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, IntegerDivisionByZeroException, Expando, $int, Iterable, Iterator, List, Map, Null, num, Object, Match, StackTrace, Stopwatch, String, StringBuffer, Symbol, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, Blob, BodyElement, ButtonElement, CharacterData, DeviceLightEvent, DivElement, Document, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, LinkElement, Location0, MapElement, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MediaStream, MenuElement, MenuItemElement, MetaElement, MeterElement, MouseEvent, Navigator, NavigatorUserMediaError, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, ScriptElement, SelectElement, SourceElement, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesisEvent, StyleElement, TextAreaElement, TrackElement, UIEvent, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _SpeechRecognitionResultList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, _AttributeMap, _ElementAttributeMap, _ElementCssClassSet, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement0, StyleElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, Point0, _RectangleBase, Rectangle, Uint8List, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, EventStream, EventStream__createControllerForStream_onListen, EventStream__createControllerForStream_onCancel, Property, Property__createControllerForStream_closure, Property__createControllerForStream_onListen, Property__createControllerForStream_onListen_closure, Property__createControllerForStream_onListen_closure0, Property__createControllerForStream_onCancel, Property_listen_closure, Property_operator$gt_closure, Property_operator$ge_closure, Property_operator$lt_closure, Property_operator$le_closure, Property_operator$add_closure, Property_operator$sub_closure, Property_operator$mul_closure, Reactable, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, DartLinterConsumer, LinterConsumer_Disposables, DartLinterConsumer_consume_closure, DartLinterConsumer_consume__closure, DartLinterConsumer_consume__closure0, DartLinterConsumer_consume__closure1, DartLinterConsumer_consume__closure2, DartLinterConsumer_consume__closure3, DartLinterProvider, Logger, Logger_Logger_closure, Level, LogRecord, Combine, Combine_all_closure, Combine_all__closure, Combine_all___closure0, Combine_all__closure0, Combine_all__closure1, Combine_all__closure2, Combine_all___closure, Combine_all__closure3, Combine_bind_closure, Combine_bind__closure, Debounce, Debounce_bind_closure, Debounce_bind__closure, FlatMap, FlatMap_bind_onListen, FlatMap_bind_onListen_closeSinkIfDone, FlatMap_bind_onListen_onData, FlatMap_bind_onListen_onData_closure, FlatMap_bind_onListen_onData_closure0, FlatMap_bind_onListen_closure, FlatMap_bind_onListen_closure0, FlatMap_bind_onCancel, FlatMapLatest, FlatMapLatest_bind_closure, FlatMapLatest_bind_onListen, FlatMapLatest_bind_onListen_closure, FlatMapLatest_bind_onListen_closure1, FlatMapLatest_bind_onListen_closure0, FlatMapLatest_bind_onListen_closure2, FlatMapLatest_bind_onListen_closure3, FlatMapLatest_bind_onListen_closure4, FlatMapLatest_bind_closure0, MergeAll, MergeAll_bind_closure, Scan, Scan_bind_closure, Scan_bind__onData, TakeUntil, TakeUntil_bind_onListen, TakeUntil_bind_onListen_done, TakeUntil_bind_onListen_closure, TakeUntil_bind_onListen_closure0, TakeUntil_bind_onListen_closure1, TakeUntil_bind_closure, _bindStream_closure0, _bindStream_closure1, _bindStream_closure2, _bindStream_closure, _bindStream__closure, _bindStream__closure0, _bindStream__closure1];
+    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, _Serializer, _Deserializer, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, ExceptionAndStackTrace, asyncHelper_closure, _wrapJsFunctionForAsync_closure, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, ErrorRepository, Server, Server_dispose_closure, Domain, ServerDomain, ServerStatus, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, EditDomain, FixesResult, FixesResult_parse_closure, ExecutionDomain, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisStatus, CompletionSuggestion, Element0, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Position, PubStatus, RemoveContentOverlay, RequestError, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, ViewRegistry, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, NotificationManager, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextBuffer, Range, Point, AtomEvent, Shell, BufferedProcess, AnalysisServer, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__setup_closure1, AnalysisServer__setup_closure2, AnalysisServer__syncRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, DartdocHelper_handleDartdoc_closure, QuickFixHelper_handleQuickFix_closure, QuickFixHelper_handleQuickFix__closure, QuickFixHelper_handleQuickFix__closure0, QuickFixHelper_handleQuickFix___closure, QuickFixHelper_handleQuickFix_closure0, QuickFixHelper__applyChange_closure, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_closure2, AnalysisServerDialog_showDialog_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions__closure, AutocompleteOptions, Suggestion, _handleEnterKey_closure, _handleEnterKey_closure0, _handleEnterKey_closure1, _handleEnterKey_closure2, _handleEnterKey_closure3, _handleEnterKey_closure4, _handleEnterKey_closure5, applyEdits_closure, applyEdits__closure, selectEditGroups_closure, _sortEdits_closure, EditorManager, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_click_closure, ProgressElement, main_closure, Job, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintMessage, Rn, Pt, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__activate_closure0, NavigationHelper__activate__closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__getNavigationInfoFor_closure, NavigationHelper__getNavigationInfoFor_closure0, NavigationHelper__processNavInfo_closure, NavigationHelper__processNavInfo__closure, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage__closure, AtomDartPackage__closure0, AtomDartPackage_closure1, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated__closure, AtomDartPackage_packageActivated__closure0, AtomDartPackage_packageActivated_closure3, AtomDartPackage_packageActivated_closure4, AtomDartPackage_packageActivated_closure5, AtomDartPackage_packageActivated_closure6, AtomDartPackage_packageActivated_closure7, AtomDartPackage__addSdkCmd_closure, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure0, ProcessRunner_execStreaming_closure, ProcessRunner_kill_closure, ProcessResult, ProjectManager, ProjectManager_closure, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, DartProject, ProjectScanJob, PubJob, PubJob_run_closure, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RebuildJob_run__closure0, SdkManager, SdkManager_closure, SdkManager_tryToAutoConfigure_closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure8, smokeTest_closure7, smokeTest_closure6, smokeTest_closure9, smokeTest_closure10, smokeTest_closure11, smokeTest_closure12, smokeTest_closure13, _TestJob, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay_closure0, StatusDisplay_closure1, StatusDisplay__createJobsPanel_closure, StatusBar, Tile, Disposable, Disposables, StreamSubscriptions, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions__closure, DartAutocompleteProvider_getSuggestions__closure0, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__handleCompletionResults_closure0, DartAutocompleteProvider__handleCompletionResults__closure, BufferUpdaterManager, BufferUpdaterManager_closure, BufferUpdaterManager__closure, BufferUpdaterManager_dispose_closure, BufferUpdater, Dependencies, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, EmptyIterator, FixedLengthListMixin, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _UncaughtAsyncError, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _SyncBroadcastStreamController__sendError_closure, _SyncBroadcastStreamController__sendDone_closure, _AsyncBroadcastStreamController, _AsBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, Future_wait_handleError, Future_wait_closure, _Completer, _AsyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_Stream$fromIterable_closure, Stream_Stream$periodic_sendEvent, Stream_Stream$periodic_startPeriodicTimer, Stream_Stream$periodic_startPeriodicTimer_closure, Stream_Stream$periodic_closure0, Stream_Stream$periodic_closure1, Stream_Stream$periodic_closure2, Stream_Stream$periodic__closure, Stream_Stream$periodic_closure, Stream_join_closure, Stream_join_closure1, Stream_join_closure0, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_last_closure, Stream_last_closure0, StreamSubscription, EventSink, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _StreamController__AsyncStreamControllerDispatch, _SyncStreamController, _StreamController__SyncStreamControllerDispatch, _NoCallbacks, _NoCallbackAsyncStreamController, _StreamController__AsyncStreamControllerDispatch0, _NoCallbackSyncStreamController, _StreamController__SyncStreamControllerDispatch0, _ControllerStream, _ControllerSubscription, _AddStreamState, _AddStreamState_makeErrorHandler_closure, _AddStreamState_cancel_closure, _StreamControllerAddStreamState, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _GeneratedStreamImpl, _IterablePendingEvents, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _AsBroadcastStream, _BroadcastSubscriptionWrapper, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _TakeStream, _StateStreamSubscription, _EventSinkWrapper, _SinkTransformerStreamSubscription, _BoundSinkStream, Timer, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _RootZone_bindUnaryCallback_closure0, _HashMap, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, LinkedHashMap_LinkedHashMap$from_closure, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMapKeyIterable, _JsonDecoderSink, ChunkedConversionSink, _ConverterStreamEventSink, Codec, Converter, Converter_bind_closure, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, _JsonEncoderSink, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, _StringConversionSinkAsStringSinkAdapter, StringConversionSinkBase, StringConversionSinkMixin, _StringSinkConversionSink, _StringAdapterSink, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, IntegerDivisionByZeroException, Expando, $int, Iterable, Iterator, List, Map, Null, num, Object, Match, StackTrace, Stopwatch, String, StringBuffer, Symbol, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, Blob, BodyElement, ButtonElement, CharacterData, DeviceLightEvent, DivElement, Document, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, LinkElement, Location0, MapElement, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MediaStream, MenuElement, MenuItemElement, MetaElement, MeterElement, MouseEvent, Navigator, NavigatorUserMediaError, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, ScriptElement, SelectElement, SourceElement, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesisEvent, StyleElement, TextAreaElement, TrackElement, UIEvent, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _SpeechRecognitionResultList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, _AttributeMap, _ElementAttributeMap, _ElementCssClassSet, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement0, StyleElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, Point0, _RectangleBase, Rectangle, Uint8List, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, EventStream, EventStream__createControllerForStream_onListen, EventStream__createControllerForStream_onCancel, Property, Property__createControllerForStream_closure, Property__createControllerForStream_onListen, Property__createControllerForStream_onListen_closure, Property__createControllerForStream_onListen_closure0, Property__createControllerForStream_onCancel, Property_listen_closure, Property_operator$gt_closure, Property_operator$ge_closure, Property_operator$lt_closure, Property_operator$le_closure, Property_operator$add_closure, Property_operator$sub_closure, Property_operator$mul_closure, Reactable, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, DartLinterConsumer, LinterConsumer_Disposables, DartLinterConsumer_consume_closure, DartLinterConsumer_consume__closure, DartLinterConsumer_consume__closure0, DartLinterConsumer_consume__closure1, DartLinterConsumer_consume__closure2, DartLinterConsumer_consume__closure3, DartLinterProvider, Logger, Logger_Logger_closure, Level, LogRecord, Combine, Combine_all_closure, Combine_all__closure, Combine_all___closure0, Combine_all__closure0, Combine_all__closure1, Combine_all__closure2, Combine_all___closure, Combine_all__closure3, Combine_bind_closure, Combine_bind__closure, Debounce, Debounce_bind_closure, Debounce_bind__closure, FlatMap, FlatMap_bind_onListen, FlatMap_bind_onListen_closeSinkIfDone, FlatMap_bind_onListen_onData, FlatMap_bind_onListen_onData_closure, FlatMap_bind_onListen_onData_closure0, FlatMap_bind_onListen_closure, FlatMap_bind_onListen_closure0, FlatMap_bind_onCancel, FlatMapLatest, FlatMapLatest_bind_closure, FlatMapLatest_bind_onListen, FlatMapLatest_bind_onListen_closure, FlatMapLatest_bind_onListen_closure1, FlatMapLatest_bind_onListen_closure0, FlatMapLatest_bind_onListen_closure2, FlatMapLatest_bind_onListen_closure3, FlatMapLatest_bind_onListen_closure4, FlatMapLatest_bind_closure0, MergeAll, MergeAll_bind_closure, Scan, Scan_bind_closure, Scan_bind__onData, TakeUntil, TakeUntil_bind_onListen, TakeUntil_bind_onListen_done, TakeUntil_bind_onListen_closure, TakeUntil_bind_onListen_closure0, TakeUntil_bind_onListen_closure1, TakeUntil_bind_closure, _bindStream_closure0, _bindStream_closure1, _bindStream_closure2, _bindStream_closure, _bindStream__closure, _bindStream__closure0, _bindStream__closure1];
   };
   function setupProgram(programData, typesOffset) {
     "use strict";
@@ -15278,6 +15361,19 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       selectRight$1: function(columnCount) {
         return this.invoke$2("selectRight", columnCount);
       },
+      atomic$1: function(fn) {
+        var checkpoint, e, exception, t1;
+        checkpoint = this.invoke$1("createCheckpoint");
+        try {
+          fn.call$0();
+          this.invoke$2("groupChangesSinceCheckpoint", checkpoint);
+        } catch (exception) {
+          t1 = H.unwrapException(exception);
+          e = t1;
+          this.invoke$2("revertToCheckpoint", checkpoint);
+          $.get$_logger3().warning$1("transaction failed: " + H.S(e));
+        }
+      },
       save$0: function() {
         return this.invoke$1("save");
       },
@@ -15301,6 +15397,19 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       "^": "ProxyHolder;obj",
       getPath$0: function() {
         return this.invoke$1("getPath");
+      },
+      atomic$1: function(fn) {
+        var checkpoint, e, exception, t1;
+        checkpoint = this.invoke$1("createCheckpoint");
+        try {
+          fn.call$0();
+          this.invoke$2("groupChangesSinceCheckpoint", checkpoint);
+        } catch (exception) {
+          t1 = H.unwrapException(exception);
+          e = t1;
+          this.invoke$2("revertToCheckpoint", checkpoint);
+          $.get$_logger3().warning$1("transaction failed: " + H.S(e));
+        }
       }
     },
     Range: {
@@ -15490,7 +15599,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         t1 = this._server;
         if (t1 != null && t1.process != null) {
           roots = H.setRuntimeTypeInfo(new H.MappedListIterable(this.knownRoots, new X.AnalysisServer__syncRoots_closure()), [null, null]).toList$0(0);
-          $.get$_logger5().fine$1("setAnalysisRoots(" + H.S(roots) + ")");
+          $.get$_logger6().fine$1("setAnalysisRoots(" + H.S(roots) + ")");
           t1 = this._server._analysis;
           t1.toString;
           m = P.LinkedHashMap__makeLiteral(["included", roots, "excluded", []]);
@@ -15498,7 +15607,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         }
       },
       dispose$0: [function() {
-        $.get$_logger5().fine$1("dispose()");
+        $.get$_logger6().fine$1("dispose()");
         this._checkTrigger$1$dispose(true);
         this.subs.cancel$0();
         this.disposables.dispose$0();
@@ -15513,11 +15622,11 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         C.JSArray_methods.set$length(t1, 0);
         C.JSArray_methods.addAll$1(t1, currentProjects);
         if (removedProjects._collection$_length !== 0) {
-          $.get$_logger5().fine$1("removed: " + P.IterableBase_iterableToFullString(removedProjects, "{", "}"));
+          $.get$_logger6().fine$1("removed: " + P.IterableBase_iterableToFullString(removedProjects, "{", "}"));
           removedProjects.forEach$1(0, new X.AnalysisServer__reconcileRoots_closure());
         }
         if (addedProjects._collection$_length !== 0)
-          $.get$_logger5().fine$1("added: " + P.IterableBase_iterableToFullString(addedProjects, "{", "}"));
+          $.get$_logger6().fine$1("added: " + P.IterableBase_iterableToFullString(addedProjects, "{", "}"));
         if (removedProjects._collection$_length !== 0 || addedProjects._collection$_length !== 0)
           this._syncRoots$0();
         this._checkTrigger$0();
@@ -15636,13 +15745,13 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     AnalysisServer__setup_closure1: {
       "^": "Closure:6;",
       call$1: [function(message) {
-        return $.get$_logger5().finer$1("--> " + H.S(message));
+        return $.get$_logger6().finer$1("--> " + H.S(message));
       }, null, null, 2, 0, null, 21, "call"]
     },
     AnalysisServer__setup_closure2: {
       "^": "Closure:6;",
       call$1: [function(message) {
-        return $.get$_logger5().finer$1("<-- " + H.S(message));
+        return $.get$_logger6().finer$1("<-- " + H.S(message));
       }, null, null, 2, 0, null, 21, "call"]
     },
     AnalysisServer__syncRoots_closure: {
@@ -15777,7 +15886,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         if (t1 === 1)
           X.QuickFixHelper__applyChange(this._captured_editor_0, C.JSArray_methods.get$first(changes));
         else {
-          $.get$_logger5().info$1("multiple fixes returned (" + t1 + ")");
+          $.get$_logger6().info$1("multiple fixes returned (" + t1 + ")");
           $.get$atom0().invoke$1("beep");
         }
       }, null, null, 2, 0, null, 14, "call"]
@@ -15803,7 +15912,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     QuickFixHelper_handleQuickFix_closure0: {
       "^": "Closure:2;",
       call$1: [function(e) {
-        $.get$_logger5().warning$1(H.S(e));
+        $.get$_logger6().warning$1(H.S(e));
         $.get$atom0().invoke$1("beep");
       }, null, null, 2, 0, null, 3, "call"]
     },
@@ -15874,7 +15983,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       },
       kill$0: function() {
         var t1, exception;
-        t1 = $.get$_logger5();
+        t1 = $.get$_logger6();
         t1.fine$1("server forcibly terminated");
         if (this.process != null) {
           try {
@@ -15977,7 +16086,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     _AnalysisServerWrapper__startProcess_closure: {
       "^": "Closure:6;",
       call$1: [function(str) {
-        return $.get$_logger5().severe$1(J.trim$0$s(str));
+        return $.get$_logger6().severe$1(J.trim$0$s(str));
       }, null, null, 2, 0, null, 36, "call"]
     },
     _AnalysisServerWrapper__startProcess_closure0: {
@@ -16001,7 +16110,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       "^": "Closure:22;_analysis_server$_captured_completer_1",
       call$1: [function(exitCode) {
         var t1;
-        $.get$_logger5().fine$1("exited with code " + H.S(exitCode));
+        $.get$_logger6().fine$1("exited with code " + H.S(exitCode));
         t1 = this._analysis_server$_captured_completer_1;
         if (t1.future._state === 0)
           t1.complete$1(0, exitCode);
@@ -16267,48 +16376,153 @@ self.clearInterval = function(id) { window.clearInterval(id); };
   }], ["atom.editing", "package:atom_dartlang/impl/editing.dart",, B, {
     "^": "",
     handleEnterKey: [function($event) {
-      var e, exception, t1;
+      var view, editor, selection, row, col, handled, e, t1, exception;
       try {
-        B._handleEnterKey($event);
+        view = new E.TextEditorView(E._cvt(J.$index$asx($event.get$obj(), "currentTarget")));
+        editor = new E.TextEditor(E._cvt(view.invoke$1("getModel")));
+        t1 = editor.invoke$1("getSelectedBufferRange");
+        selection = t1 == null ? null : new E.Range(E._cvt(t1));
+        if (selection.invoke$1("isEmpty") !== true)
+          $event.invoke$1("abortKeyBinding");
+        else {
+          row = J.$index$asx(E._cvt(J.$index$asx(selection.get$obj(), "start")), "row");
+          if (!J.$eq(editor.invoke$2("isBufferRowCommented", row), true))
+            $event.invoke$1("abortKeyBinding");
+          else {
+            col = J.$index$asx(E._cvt(J.$index$asx(selection.get$obj(), "start")), "column");
+            handled = B._handleEnterKey(editor, row, col);
+            if (handled !== true)
+              $event.invoke$1("abortKeyBinding");
+          }
+        }
       } catch (exception) {
         t1 = H.unwrapException(exception);
         e = t1;
+        $event.invoke$1("abortKeyBinding");
         $.get$_logger2().severe$1("exception during enter key handling: " + H.S(e));
       }
     }, "call$1", "handleEnterKey$closure", 2, 0, 32],
-    _handleEnterKey: function($event) {
-      var editor, t1, selection, bufferRow, trimmedText, previousLine;
-      editor = new E.TextEditor(E._cvt(new E.TextEditorView(E._cvt(J.$index$asx($event.obj, "currentTarget"))).invoke$1("getModel")));
-      t1 = editor.invoke$1("getSelectedBufferRange");
-      selection = t1 == null ? null : new E.Range(E._cvt(t1));
-      if (selection.invoke$1("isEmpty") !== true) {
-        $event.invoke$1("abortKeyBinding");
-        return;
-      }
-      bufferRow = J.$index$asx(E._cvt(J.$index$asx(selection.obj, "start")), "row");
-      trimmedText = J.trimLeft$0$s(editor.invoke$2("lineTextForBufferRow", bufferRow));
+    _handleEnterKey: function(editor, row, col) {
+      var t1, line, t2, trimmedText, atEol, t3, leading, inComment, previousLine;
+      t1 = {};
+      col = J.$sub$n(col, 1);
+      line = editor.invoke$2("lineTextForBufferRow", row);
+      t2 = J.getInterceptor$s(line);
+      trimmedText = t2.trimLeft$0(line);
+      atEol = J.$eq(J.$add$ns(col, 1), t2.get$length(line));
+      t1._captured_leading_0 = " ";
       if (C.JSString_methods.startsWith$1(trimmedText, "///")) {
-        editor.invoke$1("insertNewline");
-        editor.insertText$1("/// ");
-        return;
+        t3 = trimmedText.length;
+        leading = C.JSString_methods.substring$2(trimmedText, 3, t3 - C.JSString_methods.trimLeft$0(C.JSString_methods.substring$1(trimmedText, 3)).length);
+        t1._captured_leading_0 = leading;
+        inComment = J.$le$n(J.$add$ns(J.$sub$n(t2.get$length(line), t3), 2), col);
+        t2 = leading;
+      } else if (C.JSString_methods.startsWith$1(trimmedText, "*")) {
+        t3 = trimmedText.length;
+        leading = C.JSString_methods.substring$2(trimmedText, 1, t3 - C.JSString_methods.trimLeft$0(C.JSString_methods.substring$1(trimmedText, 1)).length);
+        t1._captured_leading_0 = leading;
+        inComment = J.$le$n(J.$add$ns(J.$sub$n(t2.get$length(line), t3), 0), col);
+        t2 = leading;
+      } else {
+        inComment = C.JSString_methods.startsWith$1(trimmedText, "/*") && J.$le$n(J.$add$ns(J.$sub$n(t2.get$length(line), trimmedText.length), 1), col);
+        t2 = " ";
+      }
+      if (inComment !== true)
+        return false;
+      if (t2.length === 0)
+        t1._captured_leading_0 = " ";
+      t2 = J.getInterceptor$n(row);
+      previousLine = t2.$gt(row, 0) === true ? J.trimLeft$0$s(editor.invoke$2("lineTextForBufferRow", t2.$sub(row, 1))) : "";
+      if (C.JSString_methods.startsWith$1(trimmedText, "///")) {
+        if (trimmedText === "/// /" && atEol)
+          editor.atomic$1(new B._handleEnterKey_closure(editor));
+        else
+          editor.atomic$1(new B._handleEnterKey_closure0(t1, editor));
+        return true;
       }
       if (C.JSString_methods.startsWith$1(trimmedText, "/*")) {
-        editor.invoke$1("insertNewline");
-        editor.insertText$1(" * ");
-        return;
+        editor.atomic$1(new B._handleEnterKey_closure1(editor));
+        return true;
       }
-      if (C.JSString_methods.startsWith$1(trimmedText, "* ")) {
-        t1 = J.getInterceptor$n(bufferRow);
-        if (t1.$gt(bufferRow, 0) === true) {
-          previousLine = J.trimLeft$0$s(editor.invoke$2("lineTextForBufferRow", t1.$sub(bufferRow, 1)));
-          if (C.JSString_methods.startsWith$1(previousLine, "/*") || C.JSString_methods.startsWith$1(previousLine, "* ")) {
-            editor.invoke$1("insertNewline");
-            editor.insertText$1("* ");
-            return;
+      if (C.JSString_methods.endsWith$1(trimmedText, "*/") && atEol) {
+        editor.atomic$1(new B._handleEnterKey_closure2(editor));
+        return true;
+      }
+      if (C.JSString_methods.startsWith$1(trimmedText, "*"))
+        if (t2.$gt(row, 0) === true)
+          if (C.JSString_methods.startsWith$1(previousLine, "/*") || C.JSString_methods.startsWith$1(previousLine, "*")) {
+            if (C.JSString_methods.endsWith$1(trimmedText, "* /"))
+              editor.atomic$1(new B._handleEnterKey_closure3(editor));
+            else if (C.JSString_methods.endsWith$1(trimmedText, " /") && atEol)
+              editor.atomic$1(new B._handleEnterKey_closure4(editor));
+            else
+              editor.atomic$1(new B._handleEnterKey_closure5(t1, editor));
+            return true;
           }
-        }
+      return false;
+    },
+    _handleEnterKey_closure: {
+      "^": "Closure:0;_captured_editor_1",
+      call$0: function() {
+        var t1 = this._captured_editor_1;
+        t1.invoke$1("backspace");
+        t1.invoke$1("backspace");
+        t1.invoke$1("backspace");
+        t1.invoke$1("backspace");
+        t1.invoke$1("backspace");
       }
-      $event.invoke$1("abortKeyBinding");
+    },
+    _handleEnterKey_closure0: {
+      "^": "Closure:0;_editing$_box_0,_captured_editor_2",
+      call$0: function() {
+        var t1 = this._captured_editor_2;
+        t1.invoke$1("insertNewline");
+        t1.insertText$1("///" + this._editing$_box_0._captured_leading_0);
+      }
+    },
+    _handleEnterKey_closure1: {
+      "^": "Closure:0;_captured_editor_3",
+      call$0: function() {
+        var t1 = this._captured_editor_3;
+        t1.invoke$1("insertNewline");
+        t1.insertText$1(" * ");
+      }
+    },
+    _handleEnterKey_closure2: {
+      "^": "Closure:0;_captured_editor_4",
+      call$0: function() {
+        var t1 = this._captured_editor_4;
+        t1.invoke$1("insertNewline");
+        t1.invoke$1("backspace");
+      }
+    },
+    _handleEnterKey_closure3: {
+      "^": "Closure:0;_captured_editor_5",
+      call$0: function() {
+        var t1 = this._captured_editor_5;
+        t1.invoke$1("backspace");
+        t1.invoke$1("backspace");
+        t1.insertText$1("/");
+        t1.invoke$1("insertNewline");
+        t1.invoke$1("backspace");
+      }
+    },
+    _handleEnterKey_closure4: {
+      "^": "Closure:0;_captured_editor_6",
+      call$0: function() {
+        var t1 = this._captured_editor_6;
+        t1.invoke$1("backspace");
+        t1.invoke$1("insertNewline");
+        t1.insertText$1("*/");
+      }
+    },
+    _handleEnterKey_closure5: {
+      "^": "Closure:0;_editing$_box_0,_captured_editor_7",
+      call$0: function() {
+        var t1 = this._captured_editor_7;
+        t1.invoke$1("insertNewline");
+        t1.insertText$1("*" + this._editing$_box_0._captured_leading_0);
+      }
     }
   }], ["atom.editors", "package:atom_dartlang/editors.dart",, F, {
     "^": "",
@@ -16346,19 +16560,10 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       return H.asyncHelper(null, flashSelection, completer, null);
     },
     applyEdits: function(editor, edits) {
-      var buffer, e, exception, t1;
+      var buffer;
       F._sortEdits(edits);
       buffer = new E.TextBuffer(E._cvt(editor.invoke$1("getBuffer")));
-      buffer.invoke$1("createCheckpoint");
-      try {
-        J.forEach$1$ax(edits, new F.applyEdits_closure(buffer));
-        buffer.invoke$1("groupChangesSinceCheckpoint");
-      } catch (exception) {
-        t1 = H.unwrapException(exception);
-        e = t1;
-        buffer.invoke$1("revertToCheckpoint");
-        $.get$_logger6().warning$1("error applying source edits: " + H.S(e));
-      }
+      buffer.atomic$1(new F.applyEdits_closure(edits, buffer));
     },
     selectEditGroups: function(editor, groups) {
       var t1, t2, group, bestLength, g;
@@ -16383,16 +16588,22 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       C.JSArray_methods.sort$1(edits, new F._sortEdits_closure());
     },
     applyEdits_closure: {
-      "^": "Closure:25;_captured_buffer_0",
+      "^": "Closure:0;_captured_edits_0,_captured_buffer_1",
+      call$0: function() {
+        C.JSArray_methods.forEach$1(this._captured_edits_0, new F.applyEdits__closure(this._captured_buffer_1));
+      }
+    },
+    applyEdits__closure: {
+      "^": "Closure:25;_captured_buffer_2",
       call$1: function(edit) {
-        var range, t1;
-        t1 = this._captured_buffer_0;
-        range = new E.Range(E._create("Range", E._cvt(t1.invoke$2("positionForCharacterIndex", J.get$offset$x(edit))), E._cvt(t1.invoke$2("positionForCharacterIndex", J.$add$ns(J.get$offset$x(edit), J.get$length$asx(edit))))));
-        t1 = t1.invoke$3("setTextInRange", range, edit.get$replacement());
-        if (t1 == null)
+        var t1, t2;
+        t1 = this._captured_buffer_2;
+        t2 = J.getInterceptor$x(edit);
+        t2 = t1.invoke$3("setTextInRange", new E.Range(E._create("Range", E._cvt(t1.invoke$2("positionForCharacterIndex", t2.get$offset(edit))), E._cvt(t1.invoke$2("positionForCharacterIndex", J.$add$ns(t2.get$offset(edit), t2.get$length(edit)))))), edit.get$replacement());
+        if (t2 == null)
           ;
         else
-          E._cvt(t1);
+          E._cvt(t2);
       }
     },
     selectEditGroups_closure: {
@@ -16478,14 +16689,14 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         }}
     },
     Editors__observeTextEditors_closure: {
-      "^": "Closure:2;_editors$_box_0,_editors$_captured_this_1,_captured_editor_2",
+      "^": "Closure:2;_editors$_box_0,_editors$_captured_this_1,_editors$_captured_editor_2",
       call$1: [function(_) {
         var t1 = this._editors$_captured_this_1;
         C.JSArray_methods.remove$1(t1._editors$_subs._subscriptions, this._editors$_box_0._captured_sub_0);
         t1 = t1._editorClosedController;
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
-        t1._sendData$1(this._captured_editor_2);
+        t1._sendData$1(this._editors$_captured_editor_2);
       }, null, null, 2, 0, null, 35, "call"]
     }
   }], ["atom.elements", "package:atom_dartlang/elements.dart",, K, {
@@ -17032,7 +17243,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       }, null, null, 2, 0, null, 35, "call"]
     },
     NavigationHelper__activate_closure0: {
-      "^": "Closure:2;_navigation$_captured_this_2,_captured_editor_3",
+      "^": "Closure:2;_navigation$_captured_this_2,_navigation$_captured_editor_3",
       call$1: [function(e) {
         var evt, jump, exception;
         try {
@@ -17043,23 +17254,23 @@ self.clearInterval = function(id) { window.clearInterval(id); };
           else
             jump = J.$index$asx(evt, "altKey") === true || J.$index$asx(evt, "metaKey") === true;
           if (jump === true)
-            P.Timer_Timer(C.Duration_0, new Y.NavigationHelper__activate__closure(this._navigation$_captured_this_2, this._captured_editor_3));
+            P.Timer_Timer(C.Duration_0, new Y.NavigationHelper__activate__closure(this._navigation$_captured_this_2, this._navigation$_captured_editor_3));
         } catch (exception) {
           H.unwrapException(exception);
         }
       }, null, null, 2, 0, null, 3, "call"]
     },
     NavigationHelper__activate__closure: {
-      "^": "Closure:0;_captured_this_4,_captured_editor_5",
+      "^": "Closure:0;_captured_this_4,_navigation$_captured_editor_5",
       call$0: function() {
-        return this._captured_this_4._handleNavigateEditor$1(this._captured_editor_5);
+        return this._captured_this_4._handleNavigateEditor$1(this._navigation$_captured_editor_5);
       }
     },
     NavigationHelper__handleNavigateEditor_closure: {
-      "^": "Closure:33;_navigation$_captured_this_0,_captured_editor_1,_captured_offset_2",
+      "^": "Closure:33;_navigation$_captured_this_0,_navigation$_captured_editor_1,_captured_offset_2",
       call$1: [function(navInfo) {
         if (navInfo != null)
-          return Y.NavigationHelper__processNavInfo(this._captured_editor_1, this._captured_offset_2, navInfo);
+          return Y.NavigationHelper__processNavInfo(this._navigation$_captured_editor_1, this._captured_offset_2, navInfo);
         else
           $.get$atom0().invoke$1("beep");
       }, null, null, 2, 0, null, 49, "call"]
@@ -17373,7 +17584,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         var t1, t2, t3, t4, t5;
         if (this._process != null)
           throw H.wrapException(new P.StateError("exec can only be called once"));
-        t1 = $.get$_logger4();
+        t1 = $.get$_logger5();
         t2 = this.command;
         t3 = "exec: " + H.S(t2) + " ";
         t4 = this.args;
@@ -17384,7 +17595,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         return this._exitCompleter.future;
       },
       kill$0: function() {
-        $.get$_logger4().fine$1("kill: " + H.S(this.command) + " ");
+        $.get$_logger5().fine$1("kill: " + H.S(this.command) + " ");
         this._process.invoke$1("kill");
         P.Future_Future$delayed(P.Duration$(0, 0, 0, 50, 0, 0), new Z.ProcessRunner_kill_closure(this), null);
         return this._exitCompleter.future;
@@ -17438,7 +17649,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       "^": "Closure:2;_process$_captured_this_2",
       call$1: [function(code) {
         var t1 = this._process$_captured_this_2;
-        $.get$_logger4().fine$1("exit code: " + H.S(code) + " (" + H.S(t1.command) + ")");
+        $.get$_logger5().fine$1("exit code: " + H.S(code) + " (" + H.S(t1.command) + ")");
         t1._exit = code;
         t1 = t1._exitCompleter;
         if (t1.future._state === 0)
@@ -17482,7 +17693,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
       },
       dispose$0: [function() {
-        $.get$_logger3().fine$1("dispose()");
+        $.get$_logger4().fine$1("dispose()");
         this._sub.cancel$0();
         var t1 = this._directoryListeners;
         t1.get$values(t1).forEach$1(0, new L.ProjectManager_dispose_closure());
@@ -17498,7 +17709,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
           dir = t2._collection$_current;
           if (!allDirs.contains$1(0, dir)) {
             C.JSArray_methods._removeWhere$2(t1, new L.ProjectManager__fullScanForProjects_closure0(dir), true);
-            $.get$_logger3().info$1("removed project " + H.S(dir));
+            $.get$_logger4().info$1("removed project " + H.S(dir));
             changed = true;
           }
         }
@@ -17509,7 +17720,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         }
         C.JSArray_methods.addAll$1(t1, H.setRuntimeTypeInfo(new H.EfficientLengthMappedIterable(newDirs, new L.ProjectManager__fullScanForProjects_closure2()), [H.getTypeArgumentByIndex(newDirs, 0), null]));
         if (changed) {
-          $.get$_logger3().fine$1(H.S(t1));
+          $.get$_logger4().fine$1(H.S(t1));
           t2 = this._projects$_controller;
           if (!t2.get$_mayAddEvent())
             H.throwExpression(t2._addEventError$0());
@@ -17600,7 +17811,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     ProjectManager__fullScanForProjects_closure1: {
       "^": "Closure:2;",
       call$1: function(dir) {
-        return $.get$_logger3().info$1("added project " + H.S(dir));
+        return $.get$_logger4().info$1("added project " + H.S(dir));
       }
     },
     ProjectManager__fullScanForProjects_closure2: {
@@ -18415,6 +18626,11 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         editor = options.editor;
         path = editor.invoke$1("getPath");
         offset = new E.TextBuffer(E._cvt(editor.invoke$1("getBuffer"))).invoke$2("characterIndexForPosition", options.bufferPosition);
+        if (J.$eq(options.prefix, ";")) {
+          t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
+          t1._asyncComplete$1([]);
+          return t1;
+        }
         t1 = server.get$completion();
         t1.toString;
         m = P.LinkedHashMap__makeLiteral(["file", path, "offset", offset]);
@@ -29490,6 +29706,8 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     return N.Logger_Logger("error_repository");
   }, "_logger", "_logger7", "get$_logger7", function() {
     return N.Logger_Logger("analysis-server-gen");
+  }, "_logger", "_logger3", "get$_logger3", function() {
+    return N.Logger_Logger("atom");
   }, "_logger", "atom0", "get$atom0", function() {
     var t1 = new E.Atom(null, null, null, null, null, null, null, $.get$_ctx());
     t1.Atom$0();
@@ -29498,7 +29716,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     return new E.Shell();
   }, "shell", "_ctx", "get$_ctx", function() {
     return J.$index$asx($.get$context(), "atom");
-  }, "_ctx", "_logger5", "get$_logger5", function() {
+  }, "_ctx", "_logger6", "get$_logger6", function() {
     return N.Logger_Logger("analysis-server");
   }, "_logger", "_process", "get$_process", function() {
     return K.require("process");
@@ -29516,8 +29734,6 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     return N.Logger_Logger("atom.autocomplete");
   }, "_logger", "_logger2", "get$_logger2", function() {
     return N.Logger_Logger("editing");
-  }, "_logger", "_logger6", "get$_logger6", function() {
-    return N.Logger_Logger("editors");
   }, "_logger", "_flashDuration", "get$_flashDuration", function() {
     return P.Duration$(0, 0, 0, 100, 0, 0);
   }, "_flashDuration", "_logger0", "get$_logger0", function() {
@@ -29530,9 +29746,9 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     return N.Logger_Logger("js");
   }, "_logger", "_logger", "get$_logger", function() {
     return N.Logger_Logger("atom-dart");
-  }, "_logger", "_logger4", "get$_logger4", function() {
+  }, "_logger", "_logger5", "get$_logger5", function() {
     return N.Logger_Logger("process");
-  }, "_logger", "_logger3", "get$_logger3", function() {
+  }, "_logger", "_logger4", "get$_logger4", function() {
     return N.Logger_Logger("projects");
   }, "_logger", "jobs", "get$jobs", function() {
     var t1 = new S.JobManager(P.StreamController_StreamController$broadcast(null, null, false, null), [], null, null);

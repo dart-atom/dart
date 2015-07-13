@@ -31,9 +31,8 @@ void applyEdits(TextEditor editor, List<SourceEdit> edits) {
   _sortEdits(edits);
 
   TextBuffer buffer = editor.getBuffer();
-  buffer.createCheckpoint();
 
-  try {
+  buffer.atomic(() {
     edits.forEach((SourceEdit edit) {
       Range range = new Range.fromPoints(
         buffer.positionForCharacterIndex(edit.offset),
@@ -41,12 +40,7 @@ void applyEdits(TextEditor editor, List<SourceEdit> edits) {
       );
       buffer.setTextInRange(range, edit.replacement);
     });
-
-    buffer.groupChangesSinceCheckpoint();
-  } catch (e) {
-    buffer.revertToCheckpoint();
-    _logger.warning('error applying source edits: ${e}');
-  }
+  });
 }
 
 /// Select the given edit groups in the text editor.
