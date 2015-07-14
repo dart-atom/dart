@@ -84,7 +84,10 @@ class ProjectManager implements Disposable {
 
     Set<Directory> allDirs = new Set();
     for (Directory dir in atom.project.getDirectories()) {
-      allDirs.addAll(_findDartProjects(dir, _recurse_depth));
+      // Guard against synthetic project directories (like `config`).
+      if (dir.existsSync()) {
+        allDirs.addAll(_findDartProjects(dir, _recurse_depth));
+      }
     }
 
     for (Directory dir in previousDirs) {
@@ -127,8 +130,11 @@ class ProjectManager implements Disposable {
 
     for (String addedPath in addedPaths) {
       Directory dir = new Directory.fromPath(addedPath);
-      _directoryListeners[addedPath] = dir.onDidChange.listen(
-          (_) => _handleDirectoryChanged(dir));
+      // Guard against synthetic project directories (like `config`).
+      if (dir.existsSync()) {
+        _directoryListeners[addedPath] = dir.onDidChange.listen(
+            (_) => _handleDirectoryChanged(dir));
+      }
     }
   }
 
