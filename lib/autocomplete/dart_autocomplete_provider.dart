@@ -64,6 +64,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     // key event is captured as a code complete select - inserting an item
     // (inadvertently) into the editor.
     if (options.prefix == ';') return new Future.value([]);
+    if (options.prefix == '}') return new Future.value([]);
 
     return server.completion.getSuggestions(path, offset).then((result) {
       return server.completion.onResults

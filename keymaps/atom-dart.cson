@@ -14,4 +14,11 @@
   'enter': 'dartlang:newline'
   'f1': 'dartlang:show-dartdoc'
   'f3': 'dartlang:jump-to-declaration'
+
+'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
   'cmd-1': 'dartlang:quick-fix'
+  'shift-cmd-f': 'dartlang:dart-format'
+
+'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
+  'ctrl-1': 'dartlang:quick-fix'
+  'shift-ctrl-f': 'dartlang:dart-format'
