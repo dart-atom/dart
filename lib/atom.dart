@@ -251,13 +251,13 @@ class Config extends ProxyHolder {
   Config(JsObject object) : super(object);
 
   /// [keyPath] should be in the form `pluginid.keyid` - e.g. `${pluginId}.sdkLocation`.
-  dynamic get(String keyPath, {scope}) {
+  dynamic getValue(String keyPath, {scope}) {
     Map options;
     if (scope != null) options = {'scope': scope};
     return invoke('get', keyPath, options);
   }
 
-  void set(String keyPath, dynamic value) => invoke('set', keyPath, value);
+  void setValue(String keyPath, dynamic value) => invoke('set', keyPath, value);
 
   /// Add a listener for changes to a given key path. This will immediately call
   /// your callback with the current value of the config entry.
@@ -486,8 +486,8 @@ class TextEditor extends ProxyHolder {
   /// {
   ///   'scopes': ['source.dart']
   /// }
-  Map getRootScopeDescriptor()
-    => toDartObjectViaWizardy(invoke('getRootScopeDescriptor'));
+  Map getRootScopeDescriptor() =>
+      toDartObjectViaWizardy(invoke('getRootScopeDescriptor'));
 
   String getText() => invoke('getText');
   String getSelectedText() => invoke('getSelectedText');

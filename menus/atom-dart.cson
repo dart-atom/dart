@@ -19,8 +19,16 @@
     {label: 'Pub Upgrade', command: 'dartlang:pub-upgrade'}
     {type: 'separator'}
   ]
+  'atom-pane[data-active-item-path$=".dart"] atom-text-editor[data-grammar~="dart"]': [
+    {label: 'Format', command: 'dartlang:dart-format' }
+    {type: 'separator'}
+  ]
   '.tree-view.full-menu li[is="tree-view-file"] span[data-name="pubspec.yaml"]': [
-    {'label': 'Pub Get', 'command': 'dartlang:pub-get' }
-    {'label': 'Pub Upgrade', 'command': 'dartlang:pub-upgrade' }
-    {'type': 'separator'}
+    {label: 'Pub Get', command: 'dartlang:pub-get' }
+    {label: 'Pub Upgrade', command: 'dartlang:pub-upgrade' }
+    {type: 'separator'}
+  ]
+  '.tree-view.full-menu li[is="tree-view-file"] span[data-name$=".dart"]': [
+    {label: 'Format', command: 'dartlang:dart-format' }
+    {type: 'separator'}
   ]

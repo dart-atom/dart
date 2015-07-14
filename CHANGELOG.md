@@ -1,7 +1,8 @@
 # Changelog
 
 ## unreleased
--
+- fixed an issue with stoping and re-starting the analysis server
+- exposed the `dartfmt` tool as a context menu item
 
 ## 0.3.1
 - improved editing for dartdoc comments and improved the auto-indent behavior

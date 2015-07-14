@@ -24,6 +24,8 @@ import 'utils.dart';
 import 'analysis/analysis_server_dialog.dart';
 import 'analysis/analysis_server_gen.dart';
 
+export 'analysis/analysis_server_gen.dart' show FormatResult, RequestError;
+
 final Logger _logger = new Logger('analysis-server');
 
 // TODO: When trying to kill the AS process, we should just assume that a kill
@@ -174,7 +176,7 @@ class AnalysisServer implements Disposable {
     }
   }
 
-  /// Explictely and manually start the analysis server. This will not succeed
+  /// Explicitly and manually start the analysis server. This will not succeed
   /// if there is no SDK.
   void start() {
     if (!sdkManager.hasSdk) return;
@@ -192,6 +194,12 @@ class AnalysisServer implements Disposable {
   /// Reanalyze the world.
   void reanalyzeSources() {
     if (_server != null) _server.analysis.reanalyze();
+  }
+
+  Future<FormatResult> format(String path, int selectionOffset, int selectionLength,
+      {int lineLength}) {
+    return server.edit.format(
+        path, selectionOffset, selectionLength, lineLength: lineLength);
   }
 
   /// If an analysis server is running, terminate it.

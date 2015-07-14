@@ -21,6 +21,8 @@ String toStartingLowerCase(String str) {
   return str.substring(0, 1).toLowerCase() + str.substring(1);
 }
 
+String pluralize(String word, int count) => count == 1 ? word : '${word}s';
+
 abstract class Disposable {
   void dispose();
 }

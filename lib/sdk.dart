@@ -28,7 +28,7 @@ class SdkManager implements Disposable {
 
   SdkManager() {
     // Load the existing setting and initiate auto-discovery if necessary.
-    _setSdkPath(atom.config.get(_prefPath));
+    _setSdkPath(atom.config.getValue(_prefPath));
     if (!hasSdk) tryToAutoConfigure(complainOnFailure: false);
 
     _prefObserve = atom.config.observe(_prefPath, null, (value) {
@@ -50,7 +50,7 @@ class SdkManager implements Disposable {
   void tryToAutoConfigure({bool complainOnFailure: true}) {
     new SdkDiscovery().discoverSdk().then((String sdkPath) {
       if (sdkPath != null) {
-        atom.config.set(_prefPath, sdkPath);
+        atom.config.setValue(_prefPath, sdkPath);
       } else {
         if (complainOnFailure) {
           atom.notifications.addWarning('Unable to auto-locate a Dart SDK.');
