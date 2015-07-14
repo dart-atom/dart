@@ -58,7 +58,7 @@ class Server {
 
   void dispose() {
     if (_streamSub != null) _streamSub.cancel();
-    _completers.values.forEach((c) => c.completeError('disposed'));
+    //_completers.values.forEach((c) => c.completeError('disposed'));
     _completers.clear();
   }
 
