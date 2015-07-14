@@ -51,13 +51,15 @@ class Server {
 
   void configure(Stream<String> inStream, void writeMessage(String message)) {
     dispose();
-    _writeMessage = writeMessage;
+
     _streamSub = inStream.listen(_processMessage);
+    _writeMessage = writeMessage;
   }
 
   void dispose() {
     if (_streamSub != null) _streamSub.cancel();
     _completers.values.forEach((c) => c.completeError('disposed'));
+    _completers.clear();
   }
 
   void _processMessage(String message) {

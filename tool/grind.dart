@@ -49,14 +49,14 @@ clean() {
 @Task('generate the analysis server API')
 analysisApi() {
   // https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/tool/spec/spec_input.html
-  Dart.run('tool/analysis/generate_analysis_lib.dart', packageRoot: 'packages');
+  Dart.run('tool/analysis/generate_analysis.dart', packageRoot: 'packages');
   DartFmt.format('lib/analysis/analysis_server_gen.dart');
 }
 
 @Task('generate the observatory API')
 observatoryApi() {
   // https://github.com/dart-lang/sdk/blob/master/runtime/vm/service/service.md
-  Dart.run('tool/observatory/generate_observatory_lib.dart', packageRoot: 'packages');
+  Dart.run('tool/observatory/generate_observatory.dart', packageRoot: 'packages');
   DartFmt.format('lib/impl/observatory_gen.dart');
 }
 

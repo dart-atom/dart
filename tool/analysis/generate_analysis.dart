@@ -9,8 +9,6 @@ import 'package:html/dom.dart';
 
 import '../src/src_gen.dart';
 
-// TODO: Consolidate args owners; create a common to / from from class.
-
 Api api;
 
 main(List<String> args) {
@@ -614,13 +612,15 @@ final String _serverCode = r'''
 
   void configure(Stream<String> inStream, void writeMessage(String message)) {
     dispose();
-    _writeMessage = writeMessage;
+
     _streamSub = inStream.listen(_processMessage);
+    _writeMessage = writeMessage;
   }
 
   void dispose() {
     if (_streamSub != null) _streamSub.cancel();
     _completers.values.forEach((c) => c.completeError('disposed'));
+    _completers.clear();
   }
 
   void _processMessage(String message) {

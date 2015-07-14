@@ -220,7 +220,7 @@ class AnalysisServer implements Disposable {
 
   void _initNewServer(_AnalysisServerWrapper server) {
     server.onAnalyzing.listen((value) => _serverBusyController.add(value));
-    server.whenDisposed.then((exitCode) => _handleServerDeath(server));
+    server.onDisposed.listen((exitCode) => _handleServerDeath(server));
 
     server.onSend.listen((message) => _onSendController.add(message));
     server.onReceive.listen((message) => _onReceiveController.add(message));
@@ -417,9 +417,12 @@ class _AnalysisServerWrapper extends Server {
   Completer<int> _processCompleter;
   bool analyzing = false;
   StreamController _analyzingController = new StreamController.broadcast();
+  StreamController<int> _disposedController = new StreamController.broadcast();
 
   _AnalysisServerWrapper(this.process, this._processCompleter,
-      Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage);
+      Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage) {
+    _processCompleter.future.then((result) => _disposedController.add(result));
+  }
 
   void setup() {
     server.setSubscriptions(['STATUS']);
@@ -435,7 +438,7 @@ class _AnalysisServerWrapper extends Server {
 
   Stream<bool> get onAnalyzing => _analyzingController.stream;
 
-  Future<int> get whenDisposed => _processCompleter.future;
+  Stream<int> get onDisposed => _disposedController.stream;
 
   /// Restarts, or starts, the analysis server process.
   void restart(sdk) {
@@ -443,6 +446,7 @@ class _AnalysisServerWrapper extends Server {
       var controller = new StreamController();
       process = _createProcess(sdk);
       _processCompleter = _startProcess(process, controller);
+      _processCompleter.future.then((result) => _disposedController.add(result));
       configure(controller.stream, _messageWriter(process));
       setup();
     };
@@ -461,9 +465,16 @@ class _AnalysisServerWrapper extends Server {
       try {
         server.shutdown().catchError((e) => null);
       } catch (e) { }
+
       /*Future f =*/ process.kill();
       process = null;
+
+      try {
+        dispose();
+      } catch (e) { }
+
       if (!_processCompleter.isCompleted) _processCompleter.complete(0);
+
       return new Future.value(0);
     } else {
       _logger.warning("kill signal sent to dead analysis server");
