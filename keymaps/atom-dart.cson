@@ -17,8 +17,8 @@
 
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
   'cmd-1': 'dartlang:quick-fix'
-  'shift-cmd-f': 'dartlang:dart-format'
+  'cmd-alt-b': 'dartlang:dart-format'
 
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
   'ctrl-1': 'dartlang:quick-fix'
-  'shift-ctrl-f': 'dartlang:dart-format'
+  'ctrl-alt-b': 'dartlang:dart-format'
