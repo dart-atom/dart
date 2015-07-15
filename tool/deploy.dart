@@ -56,6 +56,6 @@ deployIt() {
   Process.runSync("git", ["push", "-t"]);
   Process.runSync("apm", ["publish", "-t", nextVersion.toString()]);
 
-  print("Version ${nextVersion} has been prepared!");
+  print("Version ${nextVersion} has been published!");
   print('¯\\_(ツ)_/¯');
 }
