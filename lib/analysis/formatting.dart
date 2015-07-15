@@ -51,7 +51,6 @@ class FormattingHelper implements Disposable {
     });
   }
 
-  // TODO: Also support formatting just a selection?
   void _formatEditor(TextEditor editor) {
     String path = editor.getPath();
 
@@ -69,6 +68,8 @@ class FormattingHelper implements Disposable {
     TextBuffer buffer = editor.getBuffer();
     int offset = buffer.characterIndexForPosition(range.start);
     int end = buffer.characterIndexForPosition(range.end);
+
+    // TODO: If range.isNotEmpty, just format the given selection?
 
     analysisServer
         .format(path, offset, end - offset, lineLength: _prefLineLength)

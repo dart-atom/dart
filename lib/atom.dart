@@ -568,6 +568,11 @@ class TextEditor extends ProxyHolder {
   /// Invoke the given callback after the buffer is saved to disk.
   Stream get onDidSave => eventStream('onDidSave');
 
+  // Return the editor's TextEditorView / <text-editor-view> / HtmlElement. This
+  // view is an HtmlElement, but we can't use it as one. we need to access it
+  // through JS interop.
+  dynamic get view => atom.views.getView(obj);
+
   String toString() => getTitle();
 }
 

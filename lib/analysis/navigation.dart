@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../editors.dart';
+import '../js.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'analysis_server_gen.dart';
@@ -24,7 +25,7 @@ class NavigationHelper implements Disposable {
   Disposables _commands = new Disposables();
   AnalysisNavigation _lastNavInfo;
   Map<String, Completer> _navCompleters = {};
-  Set<String> _listening = new Set();
+  Disposable _eventListener = new Disposables();
 
   NavigationHelper() {
     _commands.add(atom.commands.add('atom-text-editor',
@@ -40,21 +41,18 @@ class NavigationHelper implements Disposable {
   void dispose() => _commands.dispose();
 
   void _activate(TextEditor editor) {
-    if (editor == null) return;
+    _eventListener.dispose();
 
-    String path = editor.getPath();
-    if (_listening.contains(path)) return;
-    _listening.add(path);
-    editor.onDidDestroy.listen((_) => _listening.remove(path));
+    if (editor == null) return;
 
     // This view is an HtmlElement, but I can't use it as one. I have to access
     // it through JS interop.
-    var view = atom.views.getView(editor.obj);
+    var view = editor.view;
     var fn = (e) {
       try {
         JsObject evt = new JsObject.fromBrowserObject(e);
         // TODO: Consider using the `hyperclick` package - once atom has package
-        // dependencies - and defering to their keybinding settings.
+        // dependencies - and deferring to their keybinding settings.
         bool jump = false;
         if (isLinux) {
           jump = evt['ctrlKey '] || evt['altKey'];
@@ -66,7 +64,8 @@ class NavigationHelper implements Disposable {
         if (jump) Timer.run(() => _handleNavigateEditor(editor));
       } catch (e) { }
     };
-    view.callMethod('addEventListener', ['click', fn]);
+
+    _eventListener = new EventListener(view, 'click', fn);
   }
 
   void _navigationEvent(AnalysisNavigation navInfo) {
@@ -136,6 +135,11 @@ class NavigationHelper implements Disposable {
             'searchAllPanes': true
           };
 
+          // If we're editing the target file, then use the current editor.
+          if (editor.getPath() == file) {
+            options['searchAllPanes'] = false;
+          }
+
           return atom.workspace.open(file, options).then((TextEditor editor) {
             editor.selectRight(target.length);
           });
@@ -146,18 +150,3 @@ class NavigationHelper implements Disposable {
     return new Future.error('no element');
   }
 }
-
-// class _EventDisposable implements Disposable {
-//   final JsObject obj;
-//   final fn;
-//
-//   _EventDisposable(this.obj, this.fn);
-//
-//   void dispose() {
-//     try {
-//       obj.callMethod('removeEventListener', ['click', fn]);
-//     } catch (e) {
-//       print(e);
-//     }
-//   }
-// }

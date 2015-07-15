@@ -126,3 +126,23 @@ class JsDisposable extends ProxyHolder implements Disposable {
 
   void dispose() => invoke('dispose');
 }
+
+/// A utility class to wrap calling `addEventListener` and `removeEventListener`.
+class EventListener implements Disposable {
+  final JsObject obj;
+  final String eventName;
+
+  dynamic _callback;
+
+  EventListener(this.obj, this.eventName, void fn(e)) {
+    _callback = new JsFunction.withThis((_this, e) => fn(e));
+    obj.callMethod('addEventListener', [eventName, _callback]);
+  }
+
+  void dispose() {
+    if (_callback != null) {
+      obj.callMethod('removeEventListener', [eventName, _callback]);
+    }
+    _callback = null;
+  }
+}

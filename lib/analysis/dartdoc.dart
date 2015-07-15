@@ -1,4 +1,6 @@
 
+import 'dart:html' show Element, window;
+
 //import 'package:markdown/markdown.dart';
 
 import '../analysis_server.dart';
@@ -13,9 +15,28 @@ class DartdocHelper implements Disposable {
     _disposables.add(atom.commands.add('atom-text-editor', 'dartlang:show-dartdoc', (event) {
       _handleDartdoc(event);
     }));
+
+    editorManager.dartProjectEditors.onActiveEditorChanged.listen(_activateEditor);
+    _activateEditor(editorManager.dartProjectEditors.activeEditor);
   }
 
   void dispose() => _disposables.dispose();
+
+  void _activateEditor(TextEditor editor) {
+    // TODO: remove old listeners
+
+    if (editor == null) return;
+    if (!analysisServer.isActive) return;
+    
+    // TODO: add new listeners
+
+    print(editor);
+
+    dynamic view = editor.view;
+    window.console.log(view);
+
+    //Element e = view.obj;
+  }
 
   void _handleDartdoc(AtomEvent event) {
     if (!analysisServer.isActive) {

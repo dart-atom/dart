@@ -1,11 +1,6 @@
 part of autocomplete;
 
-// TODO: Is documentation being sent? CompletionSuggestion.docSummary and
-// docComplete are always null.
-
 // TODO: When would we use parameterName and parameterType?
-
-// TODO: Have a more info link? Use the docComplete field?
 
 // TODO: The code completion popup can be very sticky - perhaps due to the
 // latency involved in using the analysis server?
