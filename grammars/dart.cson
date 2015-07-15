@@ -254,7 +254,7 @@
         'name': 'storage.modifier.dart'
       }
       {
-        'match': '\\b(?:void|bool|num|int|double|dynamic|var|String)\\b'
+        'match': '\\b(?:void|bool|num|int|double|dynamic|var)\\b'
         'name': 'storage.type.primitive.dart'
       }
     ]
