@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:grinder/grinder.dart';
@@ -33,7 +34,7 @@ deployIt() {
 
   var jsonPattern         = (version) => '"version": "${version}"';
   var yamlPattern         = (version) => 'version: ${version}';
-  var changelogPattern    = (version) => "# ${version}"
+  var changelogPattern    = (version) => "# ${version}";
   // We do pattern matches to preserve the formatting in the existing files.
 
   var newPackageFileData =
