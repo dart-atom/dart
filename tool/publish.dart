@@ -1,17 +1,14 @@
-import 'dart:convert';
-import 'dart:io';
+part of atom.grind;
 
-import 'package:grinder/grinder.dart';
-import 'package:pub_semver/pub_semver.dart';
+// import 'dart:convert';
+// import 'dart:io';
 
-main(List args) => grind(args);
+// import 'package:grinder/grinder.dart';
+// import 'package:pub_semver/pub_semver.dart';
 
-@DefaultTask('Deploy software')
-deploy() {
-  deployIt();
-}
-
-deployIt() {
+@Task('Publish a new version of dartlang')
+publish() {
+  throw 'Sorry -- grinder does not yet support specifying options on the command line!';
   // TODO: command line parsing (major, minor, patch) version update
   // Comment out the if statements while developing this task.
   var diffResult = Process.runSync("git", ["diff", "--shortstat"]);
