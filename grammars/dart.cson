@@ -161,7 +161,7 @@
         'name': 'constant.numeric.dart'
       }
       {
-        'match': '\\b[A-Z][a-zA-Z0-9_]+\\b'
+        'match': '\\b_?[A-Z][a-zA-Z0-9_]+\\b'
         'name': 'support.class.dart'
       }
       {
