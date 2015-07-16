@@ -611,6 +611,13 @@ class TextBuffer extends ProxyHolder {
       _logger.warning('transaction failed: ${e}');
     }
   }
+
+  /// Get the range for the given row. [row] is a number representing a
+  /// 0-indexed row. [includeNewline] is a bool indicating whether or not to
+  /// include the newline, which results in a range that extends to the start of
+  /// the next line.
+  Range rangeForRow(int row, bool includeNewline) =>
+      new Range(invoke('rangeForRow', row, includeNewline));
 }
 
 class Grammar extends ProxyHolder {

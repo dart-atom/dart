@@ -18,7 +18,7 @@ final Logger _logger = new Logger('navigation');
 // TODO: Switch over to something link nuclide-click-to-symbol when that's
 // available as a platform API.
 
-// TODO: use shift-F3 to navigate back?
+// TODO: use shift-F3 to navigate back? cmd-[?
 
 class NavigationHelper implements Disposable {
   Disposables _commands = new Disposables();
