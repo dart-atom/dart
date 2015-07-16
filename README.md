@@ -14,9 +14,8 @@ This plugin is written in Dart.
 - install this [dartlang][] package
 - (potentially) configure the location of your Dart SDK
 
-The plugin _should_ auto-detect the Dart SDK location. If not, you can set it
-manually in the plugin configuration page (Preferences > Packages >
-dartlang).
+The plugin should auto-detect the Dart SDK location. If not, you can set it
+manually in the plugin configuration page (`Preferences > Packages > dartlang`).
 
 ## Features
 
