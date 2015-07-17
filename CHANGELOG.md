@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.2
 - fixed an issue with stopping and re-starting the analysis server
 - exposed the `dartfmt` tool as a context menu item
 - guard against watching synthetic project directories (like the `config` dir)
