@@ -134,8 +134,8 @@ class EventListener implements Disposable {
 
   dynamic _callback;
 
-  EventListener(this.obj, this.eventName, void fn(e)) {
-    _callback = new JsFunction.withThis((_this, e) => fn(e));
+  EventListener(this.obj, this.eventName, void fn(JsObject e)) {
+    _callback = new JsFunction.withThis((_this, e) => fn(new JsObject.fromBrowserObject(e)));
     obj.callMethod('addEventListener', [eventName, _callback]);
   }
 

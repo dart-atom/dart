@@ -48,9 +48,8 @@ class NavigationHelper implements Disposable {
     // This view is an HtmlElement, but I can't use it as one. I have to access
     // it through JS interop.
     var view = editor.view;
-    var fn = (e) {
+    var fn = (JsObject evt) {
       try {
-        JsObject evt = new JsObject.fromBrowserObject(e);
         // TODO: Consider using the `hyperclick` package - once atom has package
         // dependencies - and deferring to their keybinding settings.
         bool jump = false;
