@@ -1,5 +1,8 @@
 # Changelog
 
+## unreleased
+- improve the UI of the dartdoc modal window (`F1`)
+
 ## 0.3.2
 - fixed an issue with stopping and re-starting the analysis server
 - exposed the `dartfmt` tool as a context menu item
