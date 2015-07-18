@@ -138,7 +138,7 @@ class DartdocControl extends CoreElement {
     parent.append(this.element);
   }
 
-  setTitle(String desc) {
+  void setTitle(String desc) {
     _titleDiv.element.children.clear();
 
     _titleDiv.add(div(text: desc, c: 'inline-block text-highlight'));
