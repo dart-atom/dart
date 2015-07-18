@@ -10,7 +10,6 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 import 'package:frappe/frappe.dart';
-//import 'package:markdown/markdown.dart';
 
 import 'atom.dart';
 import 'dependencies.dart';
@@ -24,7 +23,8 @@ import 'utils.dart';
 import 'analysis/analysis_server_dialog.dart';
 import 'analysis/analysis_server_gen.dart';
 
-export 'analysis/analysis_server_gen.dart' show FormatResult, RequestError;
+export 'analysis/analysis_server_gen.dart' show FormatResult, HoverInformation,
+    HoverResult, RequestError;
 
 final Logger _logger = new Logger('analysis-server');
 
@@ -82,11 +82,6 @@ class AnalysisServer implements Disposable {
 
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
-
-    disposables.add(atom.commands.add('atom-text-editor',
-        'dartlang:show-dartdoc', (event) {
-      DartdocHelper.handleDartdoc(_server, event);
-    }));
 
     disposables.add(atom.commands.add('atom-text-editor',
         'dartlang:quick-fix', (event) {
@@ -202,6 +197,9 @@ class AnalysisServer implements Disposable {
         path, selectionOffset, selectionLength, lineLength: lineLength);
   }
 
+  Future<HoverResult> getHover(String file, int offset) =>
+      server.analysis.getHover(file, offset);
+
   /// If an analysis server is running, terminate it.
   void shutdown() {
     if (_server != null) _server.kill();
@@ -259,66 +257,6 @@ class AnalysisServer implements Disposable {
       _serverBusyController.add(false);
       errorRepository.clearAll();
     }
-  }
-}
-
-class DartdocHelper {
-  static void handleDartdoc(Server server, AtomEvent event) {
-    if (server == null) return;
-
-    bool explicit = true;
-
-    TextEditor editor = event.editor;
-    Range range = editor.getSelectedBufferRange();
-    int offset = editor.getBuffer().characterIndexForPosition(range.start);
-    server.analysis.getHover(editor.getPath(), offset).then((HoverResult result) {
-      if (result.hovers.isEmpty) {
-        if (explicit) atom.beep();
-        return;
-      }
-
-      HoverInformation hover = result.hovers.first;
-      atom.notifications.addInfo(_title(hover),
-          dismissable: true, detail: _render(hover));
-    });
-  }
-
-  static String _title(HoverInformation hover) {
-    if (hover.elementDescription != null) return hover.elementDescription;
-    if (hover.staticType != null) return hover.staticType;
-    if (hover.propagatedType != null) return hover.propagatedType;
-    return 'Dartdoc';
-  }
-
-  static String _render(HoverInformation hover) {
-    StringBuffer buf = new StringBuffer();
-    if (hover.containingLibraryName != null) buf
-        .write('library: ${hover.containingLibraryName}\n');
-    if (hover.containingClassDescription != null) buf
-        .write('class: ${hover.containingClassDescription}\n');
-    if (hover.propagatedType != null) buf
-        .write('propagated type: ${hover.propagatedType}\n');
-    // TODO: Translate markdown.
-    if (hover.dartdoc != null) buf.write('\n${_renderMarkdownToText(hover.dartdoc)}\n');
-    return buf.toString();
-  }
-
-  static String _renderMarkdownToText(String str) {
-    if (str == null) return null;
-
-    StringBuffer buf = new StringBuffer();
-
-    List<String> lines = str.replaceAll('\r\n', '\n').split('\n');
-
-    for (String line in lines) {
-      if (line.trim().isEmpty) {
-        buf.write('\n');
-      } else {
-        buf.write('${line.trimRight()} ');
-      }
-    }
-
-    return buf.toString();
   }
 }
 

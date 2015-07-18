@@ -19,14 +19,23 @@ CoreElement button({String text, String c, String a}) =>
 CoreElement div({String text, String c, String a}) =>
     new CoreElement('div', text: text, classes: c, attributes: a);
 
+CoreElement span({String text, String c, String a}) =>
+    new CoreElement('span', text: text, classes: c, attributes: a);
+
 CoreElement img({String text, String c, String a}) =>
     new CoreElement('img', text: text, classes: c, attributes: a);
 
 CoreElement ol({String text, String c, String a}) =>
     new CoreElement('ol', text: text, classes: c, attributes: a);
 
+CoreElement ul({String text, String c, String a}) =>
+    new CoreElement('ul', text: text, classes: c, attributes: a);
+
 CoreElement li({String text, String c, String a}) =>
     new CoreElement('li', text: text, classes: c, attributes: a);
+
+CoreElement para({String text, String c, String a}) =>
+    new CoreElement('p', text: text, classes: c, attributes: a);
 
 class CoreElement {
   final Element element;

@@ -436,6 +436,9 @@ class TextEditorView extends ProxyHolder {
   TextEditorView(JsObject object) : super(_cvt(object));
 
   TextEditor getModel() => new TextEditor(invoke('getModel'));
+
+  // num scrollTop() => invoke('scrollTop');
+  // num scrollLeft() => invoke('scrollLeft');
 }
 
 class TextEditor extends ProxyHolder {
@@ -550,6 +553,20 @@ class TextEditor extends ProxyHolder {
   bool isBufferRowCommented(int bufferRow) =>
       invoke('isBufferRowCommented', bufferRow);
 
+  Point screenPositionForPixelPosition(Point position) =>
+      invoke('screenPositionForPixelPosition', position);
+
+  Point pixelPositionForScreenPosition(Point position) =>
+      invoke('pixelPositionForScreenPosition', position);
+
+  /// Convert a position in buffer-coordinates to screen-coordinates.
+  Point screenPositionForBufferPosition(Point position) =>
+      invoke('screenPositionForBufferPosition', position);
+
+  /// Convert a position in screen-coordinates to buffer-coordinates.
+  Point bufferPositionForScreenPosition(position) =>
+      invoke('bufferPositionForScreenPosition', position);
+
   /// Invoke the given callback synchronously when the content of the buffer changes.
   /// Because observers are invoked synchronously, it's important not to perform
   /// any expensive operations via this method.
@@ -567,6 +584,11 @@ class TextEditor extends ProxyHolder {
 
   /// Invoke the given callback after the buffer is saved to disk.
   Stream get onDidSave => eventStream('onDidSave');
+
+  // Return the editor's TextEditorView / <text-editor-view> / HtmlElement. This
+  // view is an HtmlElement, but we can't use it as one. we need to access it
+  // through JS interop.
+  dynamic get view => atom.views.getView(obj);
 
   String toString() => getTitle();
 }
@@ -644,6 +666,7 @@ class Range extends ProxyHolder {
 /// Represents a point in a buffer in row / column coordinates.
 class Point extends ProxyHolder {
   Point(JsObject object) : super(_cvt(object));
+  Point.coords(int row, int column) : super(_create('Point', row, column));
 
   /// A zero-indexed Number representing the row of the Point.
   int get row => obj['row'];

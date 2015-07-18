@@ -62,6 +62,12 @@ class StreamSubscriptions implements Disposable {
   void dispose() => cancel();
 }
 
+class DisposeableSubscription implements Disposable {
+  final StreamSubscription sub;
+  DisposeableSubscription(this.sub);
+  void dispose() { sub.cancel(); }
+}
+
 class Edit {
   final int offset;
   final int length;
