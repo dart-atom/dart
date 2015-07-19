@@ -6,6 +6,7 @@
 - added support for null aware operators
 - fixed some auto-indent issues
 - added a per file and per project cap to the number of reported issues
+- fixed inconsistent syntax highlighting between setters and getters
 
 ## 0.3.2
 - fixed an issue with stopping and re-starting the analysis server
