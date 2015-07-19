@@ -87,6 +87,20 @@ class Edit {
   String toString() => '[Edit offset: ${offset}, length: ${length}]';
 }
 
+bool listIdentical(List a, List b) {
+  if (a.length != b.length) return false;
+
+  for (int i = 0; i < a.length; i++) {
+    var _a = a[i];
+    var _b = b[i];
+    if (_a == null && _b != null) return false;
+    if (_a != null && _b == null) return false;
+    if (_a != _b) return false;
+  }
+
+  return true;
+}
+
 /// Diff the two strings and return the list of edits to convert [oldText] to
 /// [newText].
 List<Edit> simpleDiff(String oldText, String newText) {

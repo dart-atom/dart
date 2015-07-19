@@ -142,6 +142,17 @@ abstract class Jsonable {
   Map toMap();
 }
 
+Map _mapify(Map m) {
+  Map copy = {};
+
+  for (var key in m.keys) {
+    var value = m[key];
+    if (value != null) copy[key] = value;
+  }
+
+  return copy;
+}
+
 // server domain
 
 class ServerDomain extends Domain {
@@ -788,7 +799,7 @@ class AddContentOverlay implements Jsonable {
   final String type;
   final String content;
 
-  Map toMap() => {'type': type, 'content': content};
+  Map toMap() => _mapify({'type': type, 'content': content});
 
   AddContentOverlay(this.type, this.content);
 }
@@ -809,6 +820,16 @@ class AnalysisError {
 
   AnalysisError(this.severity, this.type, this.location, this.message,
       {this.correction});
+
+  operator ==(o) => o is AnalysisError &&
+      severity == o.severity &&
+      type == o.type &&
+      location == o.location &&
+      message == o.message &&
+      correction == o.correction;
+
+  get hashCode =>
+      severity.hashCode ^ type.hashCode ^ location.hashCode ^ message.hashCode;
 
   String toString() =>
       '[AnalysisError severity: ${severity}, type: ${type}, location: ${location}, message: ${message}]';
@@ -850,7 +871,7 @@ class AnalysisOptions implements Jsonable {
   @optional final bool generateHints;
   @optional final bool generateLints;
 
-  Map toMap() => {
+  Map toMap() => _mapify({
     'enableAsync': enableAsync,
     'enableDeferredLoading': enableDeferredLoading,
     'enableEnums': enableEnums,
@@ -858,7 +879,7 @@ class AnalysisOptions implements Jsonable {
     'generateDart2jsHints': generateDart2jsHints,
     'generateHints': generateHints,
     'generateLints': generateLints
-  };
+  });
 
   AnalysisOptions({this.enableAsync, this.enableDeferredLoading,
       this.enableEnums, this.enableNullAwareOperators,
@@ -889,7 +910,7 @@ class ChangeContentOverlay implements Jsonable {
   final String type;
   final List<SourceEdit> edits;
 
-  Map toMap() => {'type': type, 'edits': edits};
+  Map toMap() => _mapify({'type': type, 'edits': edits});
 
   ChangeContentOverlay(this.type, this.edits);
 }
@@ -1089,6 +1110,19 @@ class Location {
   Location(
       this.file, this.offset, this.length, this.startLine, this.startColumn);
 
+  operator ==(o) => o is Location &&
+      file == o.file &&
+      offset == o.offset &&
+      length == o.length &&
+      startLine == o.startLine &&
+      startColumn == o.startColumn;
+
+  get hashCode => file.hashCode ^
+      offset.hashCode ^
+      length.hashCode ^
+      startLine.hashCode ^
+      startColumn.hashCode;
+
   String toString() =>
       '[Location file: ${file}, offset: ${offset}, length: ${length}, startLine: ${startLine}, startColumn: ${startColumn}]';
 }
@@ -1254,7 +1288,7 @@ class RefactoringOptions implements Jsonable {
     return new RefactoringOptions();
   }
 
-  Map toMap() => {};
+  Map toMap() => _mapify({});
 
   RefactoringOptions();
 }
@@ -1281,7 +1315,7 @@ class RemoveContentOverlay implements Jsonable {
 
   final String type;
 
-  Map toMap() => {'type': type};
+  Map toMap() => _mapify({'type': type});
 
   RemoveContentOverlay(this.type);
 }
@@ -1356,12 +1390,12 @@ class SourceEdit implements Jsonable {
   final String replacement;
   @optional final String id;
 
-  Map toMap() => {
+  Map toMap() => _mapify({
     'offset': offset,
     'length': length,
     'replacement': replacement,
     'id': id
-  };
+  });
 
   SourceEdit(this.offset, this.length, this.replacement, {this.id});
 

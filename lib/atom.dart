@@ -265,6 +265,12 @@ class Config extends ProxyHolder {
     if (options == null) options = {};
     return new JsDisposable(invoke('observe', keyPath, options, callback));
   }
+
+  /// Add a listener for changes to a given key path.
+  Stream<dynamic> onDidChange(String keyPath, [Map options]) {
+    if (options == null) options = {};
+    return eventStream2Args('onDidChangePaths', keyPath, options);
+  }
 }
 
 /// A notification manager used to create notifications to be shown to the user.
@@ -567,11 +573,11 @@ class TextEditor extends ProxyHolder {
   Point bufferPositionForScreenPosition(position) =>
       invoke('bufferPositionForScreenPosition', position);
 
-  /// Invoke the given callback synchronously when the content of the buffer changes.
-  /// Because observers are invoked synchronously, it's important not to perform
-  /// any expensive operations via this method.
-  /// Consider ::onDidStopChanging to delay expensive operations until
-  /// after changes stop occurring.
+  /// Invoke the given callback synchronously when the content of the buffer
+  /// changes. Because observers are invoked synchronously, it's important not
+  /// to perform any expensive operations via this method. Consider
+  /// [onDidStopChanging] to delay expensive operations until after changes stop
+  /// occurring.
   Stream get onDidChange => eventStream('onDidChange');
 
   /// Fire an event when the buffer's contents change. It is emitted
