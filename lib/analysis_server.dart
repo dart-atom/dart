@@ -372,6 +372,20 @@ class _AnalysisServerWrapper extends Server {
 
   void setup() {
     server.setSubscriptions(['STATUS']);
+    // TODO: Remove once 1.12.0 is shipped as stable.
+    // Uncaught Uncaught Error: [RequestError code: INVALID_PARAMETER,
+    // message: Invalid parameter 'params.options.enableAsync'. Expected to be bool.]
+    // https://github.com/dart-lang/sdk/issues/23863
+    analysis.updateOptions(new AnalysisOptions(
+      enableAsync: true,
+      enableDeferredLoading: true,
+      enableEnums: true,
+      generateDart2jsHints: false,
+      generateHints: true,
+      generateLints: true,
+      enableNullAwareOperators: true
+    ));
+    server.getVersion().then((v) => _logger.info('analysis server version: ${v.version}'));
     server.onStatus.listen((ServerStatus status) {
       if (status.analysis != null) {
         analyzing = status.analysis.isAnalyzing;

@@ -205,6 +205,8 @@ class VersionResult {
 class AnalysisDomain extends Domain {
   AnalysisDomain(Server server) : super(server, 'analysis');
 
+  Stream<AnalysisAnalyzedFiles> get onAnalyzedFiles =>
+      _listen('analysis.analyzedFiles', AnalysisAnalyzedFiles.parse);
   Stream<AnalysisErrors> get onErrors =>
       _listen('analysis.errors', AnalysisErrors.parse);
   Stream<AnalysisFlushResults> get onFlushResults =>
@@ -256,6 +258,9 @@ class AnalysisDomain extends Domain {
     return _call('analysis.setAnalysisRoots', m);
   }
 
+  Future setGeneralSubscriptions(List<String> subscriptions) => _call(
+      'analysis.setGeneralSubscriptions', {'subscriptions': subscriptions});
+
   Future setPriorityFiles(List<String> files) =>
       _call('analysis.setPriorityFiles', {'files': files});
 
@@ -267,6 +272,15 @@ class AnalysisDomain extends Domain {
 
   Future updateOptions(AnalysisOptions options) =>
       _call('analysis.updateOptions', {'options': options});
+}
+
+class AnalysisAnalyzedFiles {
+  static AnalysisAnalyzedFiles parse(Map m) =>
+      new AnalysisAnalyzedFiles(m['directories']);
+
+  final List<String> directories;
+
+  AnalysisAnalyzedFiles(this.directories);
 }
 
 class AnalysisErrors {

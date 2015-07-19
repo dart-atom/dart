@@ -1,7 +1,5 @@
 part of autocomplete;
 
-// TODO: When would we use parameterName and parameterType?
-
 // TODO: The code completion popup can be very sticky - perhaps due to the
 // latency involved in using the analysis server?
 
@@ -34,7 +32,8 @@ class DartAutocompleteProvider extends AutocompleteProvider {
   static Map _rightLabelMap = {null: null, 'FUNCTION_TYPE_ALIAS': 'function type'};
 
   static int _compareSuggestions(CompletionSuggestion a, CompletionSuggestion b) {
-    return b.relevance - a.relevance;
+    if (a.relevance != b.relevance) return b.relevance - a.relevance;
+    return a.completion.toLowerCase().compareTo(b.completion.toLowerCase());
   }
 
   DartAutocompleteProvider() : super(
@@ -138,6 +137,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
   String _sanitizeReturnType(CompletionSuggestion cs) {
     if (cs.element != null && cs.element.kind == 'CONSTRUCTOR') return null;
+    if (cs.parameterType != null) return cs.parameterType;
     return cs.returnType;
   }
 
@@ -159,6 +159,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     }
 
     // TODO: But, docSummary is always null...
+    // See https://github.com/dart-lang/sdk/issues/23694.
     if (cs.docSummary != null) return cs.docSummary;
 
     return cs.completion;

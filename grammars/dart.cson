@@ -186,10 +186,6 @@
         'name': 'keyword.control.catch-exception.dart'
       }
       {
-        'match': '\\?|:'
-        'name': 'keyword.control.ternary.dart'
-      }
-      {
         'match': '\\b(break|case|continue|default|do|else|for|if|in|return|switch|while)\\b'
         'name': 'keyword.control.dart'
       }
@@ -212,6 +208,10 @@
       {
         'match': '\\b(is\\!?)\\b'
         'name': 'keyword.operator.dart'
+      }
+      {
+        'match': '\\?|:'
+        'name': 'keyword.operator.ternary.dart'
       }
       {
         'match': '(<<|>>>?|~|\\^|\\||&)'
