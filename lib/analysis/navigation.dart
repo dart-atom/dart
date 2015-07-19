@@ -53,12 +53,12 @@ class NavigationHelper implements Disposable {
         // TODO: Consider using the `hyperclick` package - once atom has package
         // dependencies - and deferring to their keybinding settings.
         bool jump = false;
-        if (isLinux) {
-          jump = evt['ctrlKey '] || evt['altKey'];
-        } else {
+        if (isMac) {
           // TODO: This does override multiple cursors (cmd-click) on the mac,
           // which might not be desired by some users.
           jump = evt['altKey'] || evt['metaKey'];
+        } else {
+          jump = evt['ctrlKey '] || evt['altKey'];
         }
         if (jump) Timer.run(() => _handleNavigateEditor(editor));
       } catch (e) { }
