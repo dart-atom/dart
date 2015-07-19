@@ -11,6 +11,8 @@ import '../src/src_gen.dart';
 
 Api api;
 
+// TODO: Have [Jsonable] classes known about their list of properties?
+
 main(List<String> args) {
   // Parse spec_input.html into a model.
   File file = new File('tool/analysis/spec_input.html');
@@ -372,6 +374,11 @@ class TypeDef {
     'CompletionSuggestion'
   ]);
 
+  static final Set<String> _shouldHaveEquals = new Set.from([
+    'Location',
+    'AnalysisError'
+  ]);
+
   String name;
   bool isString = false;
   List<Field> fields;
@@ -443,7 +450,7 @@ class TypeDef {
     if (callParam) {
       gen.writeln();
       String map = fields.map((f) => "'${f.name}': ${f.name}").join(', ');
-      gen.writeln("Map toMap() => {${map}};");
+      gen.writeln("Map toMap() => _mapify({${map}});");
     }
     gen.writeln();
     gen.write('${name}(');
@@ -458,6 +465,16 @@ class TypeDef {
     }).join(', '));
     gen.writeln(');');
 
+    if (hasEquals) {
+      gen.writeln();
+      String str = fields.map((f) => "${f.name} == o.${f.name}").join(' && ');
+      gen.writeln("operator==(o) => o is ${name} && ${str};");
+      gen.writeln();
+      String str2 = fields.where((f) => !f.optional).map(
+          (f) => "${f.name}.hashCode").join(' ^ ');
+      gen.writeln("get hashCode => ${str2};");
+    }
+
     if (hasToString) {
       gen.writeln();
       String str = fields.where((f) => !f.optional).map(
@@ -467,6 +484,8 @@ class TypeDef {
 
     gen.writeln('}');
   }
+
+  bool get hasEquals => _shouldHaveEquals.contains(name);
 
   bool get hasToString => _shouldHaveToString.contains(name);
 
@@ -702,5 +721,16 @@ abstract class Domain {
 
 abstract class Jsonable {
   Map toMap();
+}
+
+Map _mapify(Map m) {
+  Map copy = {};
+
+  for (var key in m.keys) {
+    var value = m[key];
+    if (value != null) copy[key] = value;
+  }
+
+  return copy;
 }
 ''';

@@ -1,16 +1,11 @@
 '.source.dart':
   'editor':
     'commentStart': '// '
-    'increaseIndentPattern': '^.*(\\{[^}]*|\\[[^\\]]*|\\([^\\)]*)$'
-    'decreaseIndentPattern': '^\\s*[}\\]\\)],?\\s*$'
-
-    # 'increaseIndentPattern': '^.*(\\{[^}]*|\\[[^\\]]*)$'
-    # 'decreaseIndentPattern': '^\\s*[}\\]],?\\s*$'
-    # 'increaseIndentPattern': '(?x)
-    #     \\{ [^}"\']* $
-    #   | \\[ [^\\]"\']* $
-    #   | \\( [^)"\']* $
-    #   '
-    # 'decreaseIndentPattern': '(?x)
-    #     ^ \\s* (\\s* /[*] .* [*]/ \\s*)* [}\\])]
-    #   '
+    'increaseIndentPattern': '(?x)
+        \\{ [^}"\']* $
+      | \\[ [^\\]"\']* $
+      | \\( [^)"\']* $
+      '
+    'decreaseIndentPattern': '(?x)
+        ^ \\s* (\\s* /[*] .* [*]/ \\s*)* [}\\])]
+      '

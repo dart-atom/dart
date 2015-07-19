@@ -1,7 +1,11 @@
 # Changelog
 
 ## unreleased
-- improve the UI of the dartdoc modal window (`F1`)
+- improved the UI of the dartdoc modal window (`F1`)
+- fixes to code completion
+- added support for null aware operators
+- fixed some auto-indent issues
+- added a per file and per project cap to the number of reported issues
 
 ## 0.3.2
 - fixed an issue with stopping and re-starting the analysis server
