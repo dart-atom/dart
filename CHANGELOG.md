@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.3
 - improved the UI of the dartdoc modal window (`F1`)
 - fixes to code completion
 - added support for null aware operators

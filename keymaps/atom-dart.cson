@@ -14,9 +14,9 @@
   'ctrl-alt-;': 'dartlang:rebuild-restart-dev'
 
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'enter': 'dartlang:newline'
   'f1': 'dartlang:show-dartdoc'
   'f3': 'dartlang:jump-to-declaration'
+#  'enter': 'dartlang:newline'
 
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
   'cmd-1': 'dartlang:quick-fix'
