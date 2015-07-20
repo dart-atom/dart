@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.4
+- minor release to address a performance issue
+
 ## 0.3.3
 - improved the UI of the dartdoc modal window (`F1`)
 - fixes to code completion
