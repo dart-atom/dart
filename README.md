@@ -1,7 +1,6 @@
 # Dart plugin for Atom
 
-An experimental [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
-This plugin is written in Dart.
+A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 
 [![Build Status](https://travis-ci.org/dart-atom/dartlang.svg)](https://travis-ci.org/dart-atom/dartlang)
 
