@@ -95,7 +95,7 @@ class AnalysisServer implements Disposable {
   /// Returns whether the analysis server is active and running.
   bool get isActive => _server != null && _server.isRunning;
 
-  bool get isBusy => _server.analyzing;
+  bool get isBusy => _server != null && _server.analyzing;
 
   /// Subscribe to this to get told when the issues list has changed.
   Stream get issuesUpdatedNotification => null;

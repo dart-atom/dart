@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+- send the analysis server fewer notifications of changed files
+- only send the analysis server change notifications for files in Dart projects
+
 ## 0.3.4
 - minor release to address a performance issue
 

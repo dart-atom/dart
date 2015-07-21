@@ -67,6 +67,7 @@ class AnalysisServerDialog implements Disposable {
 
   void _logTraffic(String message) {
     if (_messageElement != null && _panel != null) {
+      if (message.length > 300) message = '${message.substring(0, 300)}…';
       _messageElement.text = '${message}';
     }
   }

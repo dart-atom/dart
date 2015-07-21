@@ -27,7 +27,7 @@ import 'utils.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/formatting.dart';
 import 'analysis/navigation.dart';
-//import 'impl/editing.dart' as editing;
+import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
@@ -111,7 +111,7 @@ class AtomDartPackage extends AtomPackage {
     });
 
     // Text editor commands.
-    //_addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
+    _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
 
     // Register commands that require an SDK to be present.
     _addSdkCmd('atom-text-editor', 'dartlang:pub-get', (event) {
