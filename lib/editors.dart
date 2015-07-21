@@ -76,6 +76,8 @@ void _sortEdits(List<SourceEdit> edits) {
 class EditorManager implements Disposable {
   final Editors dartEditors = new Editors._allDartEditors();
   final Editors dartProjectEditors = new Editors._allDartEditors();
+  // TODO: Fix this.
+  //final Editors dartProjectEditors = new Editors._dartProjectEditors();
 
   EditorManager();
 

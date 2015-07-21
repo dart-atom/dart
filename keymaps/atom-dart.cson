@@ -16,7 +16,7 @@
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
   'f1': 'dartlang:show-dartdoc'
   'f3': 'dartlang:jump-to-declaration'
-#  'enter': 'dartlang:newline'
+  'enter': 'dartlang:newline'
 
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
   'cmd-1': 'dartlang:quick-fix'

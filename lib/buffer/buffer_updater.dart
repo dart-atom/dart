@@ -1,5 +1,7 @@
 library buffer.updater;
 
+import 'package:frappe/frappe.dart';
+
 import '../atom.dart';
 import '../analysis/analysis_server_gen.dart';
 import '../state.dart';
@@ -12,6 +14,7 @@ class BufferUpdaterManager implements Disposable {
     analysisServer.isActiveProperty.listen((active) {
       updaters.forEach((BufferUpdater updater) => updater.serverActive(active));
     });
+    // TODO: Fix editorManager.dartProjectEditors.
     editorManager.dartProjectEditors.openEditors.forEach(_newEditor);
     editorManager.dartProjectEditors.onEditorOpened.listen(_newEditor);
   }
@@ -44,8 +47,16 @@ class BufferUpdater extends Disposables {
   String lastSent;
 
   BufferUpdater(this.manager, this.editor) {
-    _subs.add(editor.onDidChange.listen(_didChange));
+    // Debounce atom onDidChange events; atom sends us several events as a file
+    // is opening. The number of events is proportional to the file size. For
+    // a file like dart:html, this is on the order of 800 onDidChange events.
+    var onDidChangeSub = new EventStream(editor.onDidChange)
+        .debounce(new Duration(milliseconds: 10))
+        .listen(_didChange);
+
+    _subs.add(onDidChangeSub);
     _subs.add(editor.onDidDestroy.listen(_didDestroy));
+
     addOverlay();
   }
 
@@ -68,7 +79,7 @@ class BufferUpdater extends Disposables {
   }
 
   addOverlay() {
-    if (analysisServer.isActive) {
+    if (analysisServer.isActive && dartProject) {
       lastSent = editor.getText();
       server.analysis.updateContent({
         editor.getPath(): new AddContentOverlay('add', lastSent)
@@ -77,7 +88,7 @@ class BufferUpdater extends Disposables {
   }
 
   changedOverlay() {
-    if (analysisServer.isActive) {
+    if (analysisServer.isActive && dartProject) {
       if (lastSent == null) {
         addOverlay();
       } else {
@@ -103,7 +114,7 @@ class BufferUpdater extends Disposables {
   }
 
   removeOverlay() {
-    if (analysisServer.isActive) {
+    if (analysisServer.isActive && dartProject) {
       server.analysis.updateContent({
         editor.getPath(): new RemoveContentOverlay('remove')
       });
@@ -111,6 +122,10 @@ class BufferUpdater extends Disposables {
 
     lastSent = null;
   }
+
+  // TODO: Remove once we only watch Dart files that are in a Dart project.
+  bool get dartProject =>
+      projectManager.getProjectFor(editor.getPath()) != null;
 
   dispose() {
     removeOverlay();
