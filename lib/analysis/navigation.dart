@@ -139,7 +139,7 @@ class NavigationHelper implements Disposable {
             options['searchAllPanes'] = false;
           }
 
-          return atom.workspace.open(file, options).then((TextEditor editor) {
+          return atom.workspace.open(file, options: options).then((TextEditor editor) {
             editor.selectRight(target.length);
           });
         });

@@ -24,7 +24,8 @@ import 'analysis/analysis_server_dialog.dart';
 import 'analysis/analysis_server_gen.dart';
 
 export 'analysis/analysis_server_gen.dart' show FormatResult, HoverInformation,
-    HoverResult, RequestError;
+    HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
+    RefactoringOptions;
 
 final Logger _logger = new Logger('analysis-server');
 
@@ -195,6 +196,18 @@ class AnalysisServer implements Disposable {
       {int lineLength}) {
     return server.edit.format(
         path, selectionOffset, selectionLength, lineLength: lineLength);
+  }
+
+  Future<AvailableRefactoringsResult> getAvailableRefactorings(
+      String path, int offset, int length) {
+    return server.edit.getAvailableRefactorings(path, offset, length);
+  }
+
+  Future<RefactoringResult> getRefactoring(
+      String kind, String path, int offset, int length, bool validateOnly,
+      {RefactoringOptions options}) {
+    return server.edit.getRefactoring(kind, path, offset, length, validateOnly,
+        options: options);
   }
 
   Future<HoverResult> getHover(String file, int offset) =>
@@ -471,4 +484,12 @@ class _AnalysisServerWrapper extends Server {
       if (process != null) process.write("${message}\n");
     };
   }
+}
+
+class RenameRefactoringOptions extends RefactoringOptions {
+  final String newName;
+
+  RenameRefactoringOptions(this.newName);
+
+  Map toMap() => {'newName': newName};
 }

@@ -4,8 +4,13 @@
 
 library atom.atom_utils;
 
+import 'dart:async';
+import 'dart:html' show DivElement, Element, NodeValidator, NodeTreeSanitizer, window;
+import 'dart:js';
+
 import 'atom.dart';
 import 'js.dart';
+import 'utils.dart';
 
 final JsObject _process = require('process');
 final JsObject _fs = require('fs');
@@ -43,3 +48,67 @@ String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
 /// mac since mac apps are launched in a different shell then the terminal
 /// default.
 String env(String key) => _process['env'][key];
+
+Future<String> promptUser({String prompt: '', String defaultText: '',
+    bool selectText: false}) {
+  // div, atom-text-editor.editor.mini div.message atom-text-editor[mini]
+  Completer<String> completer = new Completer();
+  Disposables disposables = new Disposables();
+
+  Element element = new DivElement();
+  // ..add([
+  //   editor = new CoreElement('atom-text-editor', attributes: 'mini'),
+  //   div(text: prompt, c: 'message')
+  // ]);
+  element.setInnerHtml('''
+    <atom-text-editor mini>${defaultText}</atom-text-editor>
+    <div class="message">${prompt}</div>
+''',
+      validator: new PermissiveNodeValidator(),
+      treeSanitizer: NodeTreeSanitizer.trusted);
+
+  // var e = new Element.tag('atom-text-editor');
+  // print(e);
+  // window.console.log(e);
+
+  Element ed = element.querySelector('atom-text-editor');
+  print('ed=${ed}');
+  window.console.log(ed);
+  JsObject obj = new JsObject.fromBrowserObject(ed);
+  print('obj=${obj}');
+  window.console.log(obj);
+  TextEditorView editorView = new TextEditorView(obj);
+  print('editorView=${editorView}');
+  TextEditor editor = editorView.getModel();
+  print('editor');
+  if (selectText) editor.selectAll();
+  print('selectAll');
+
+  disposables.add(atom.commands.add('atom-workspace', 'core:cancel', (_) {
+    if (!completer.isCompleted) completer.complete(null);
+  }));
+
+  // TODO:
+  // TextEditor ed = new TextEditor(new JsObject.fromBrowserObject(editor.element));
+  // if (defaultText != null) {
+  //   ed.insertText(defaultText);
+  //   if (selectText) ed.selectAll();
+  // }
+
+  Panel panel = atom.workspace.addModalPanel(item: element, visible: true);
+
+  completer.future.whenComplete(() {
+    disposables.dispose();
+    panel.destroy();
+  });
+
+  return completer.future;
+}
+
+/// A [NodeValidator] which allows everything.
+class PermissiveNodeValidator implements NodeValidator {
+  bool allowsElement(Element element) => true;
+  bool allowsAttribute(Element element, String attributeName, String value) {
+    return true;
+  }
+}

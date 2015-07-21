@@ -21,6 +21,7 @@
   ]
   'atom-pane[data-active-item-path$=".dart"] atom-text-editor[data-grammar~="dart"]': [
     {label: 'Format', command: 'dartlang:dart-format' }
+    {label: 'Rename…', command: 'dartlang:refactor-rename' }
     {type: 'separator'}
   ]
   '.tree-view.full-menu li[is="tree-view-file"] span[data-name="pubspec.yaml"]': [

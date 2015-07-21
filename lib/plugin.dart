@@ -27,6 +27,7 @@ import 'utils.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/formatting.dart';
 import 'analysis/navigation.dart';
+import 'analysis/refactor.dart';
 //import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
@@ -92,6 +93,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
+    disposables.add(new RefactoringHelper());
 
     // Register commands.
     _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
