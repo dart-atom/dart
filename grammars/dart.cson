@@ -190,7 +190,7 @@
         'name': 'keyword.control.dart'
       }
       {
-        'match': '\\b(sync\\*|async(\\*)?|await|yield(\\*)?)'
+        'match': '\\b(sync\\*|async(\\*)?|await|yield(\\*)?)\\b'
         'name': 'keyword.control.dart'
       }
       {
