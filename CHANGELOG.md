@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.5
 - send the analysis server fewer notifications of changed files
 - only send the analysis server change notifications for files in Dart projects
 
