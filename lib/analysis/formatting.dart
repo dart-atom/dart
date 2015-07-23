@@ -1,5 +1,7 @@
 library atom.formatting;
 
+import 'dart:async';
+
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
@@ -15,22 +17,24 @@ final Logger _logger = new Logger('formatting');
 int get _prefLineLength =>
     atom.config.getValue('editor.preferredLineLength', scope: ['source.dart']);
 
+// TODO: this should be "FormattingCommandManger" (?), containing only logic
+// for responding to formatting commands sent by Atom.
 class FormattingHelper implements Disposable {
   Disposables _commands = new Disposables();
 
   FormattingHelper() {
     _commands.add(atom.commands.add('.tree-view', 'dartlang:dart-format', (e) {
-      _formatFile(e.selectedFilePath);
+      formatFile(e.selectedFilePath);
     }));
     _commands.add(atom.commands.add('atom-text-editor', 'dartlang:dart-format',
         (e) {
-      _formatEditor(e.editor);
+      formatEditor(e.editor);
     }));
   }
 
   void dispose() => _commands.dispose();
 
-  void _formatFile(String path) {
+  static void formatFile(String path) {
     if (!sdkManager.hasSdk) {
       atom.beep();
       return;
@@ -51,17 +55,19 @@ class FormattingHelper implements Disposable {
     });
   }
 
-  void _formatEditor(TextEditor editor) {
+  /// Formats a [TextEditor]
+  /// Returns false if the editor was not formatted; true if it was.
+  static Future<bool> formatEditor(TextEditor editor) {
     String path = editor.getPath();
 
     if (projectManager.getProjectFor(path) == null) {
       atom.beep();
-      return;
+      return new Future.value(false);
     }
 
     if (!analysisServer.isActive) {
       atom.beep();
-      return;
+      return new Future.value(false);
     }
 
     Range range = editor.getSelectedBufferRange();
@@ -71,11 +77,12 @@ class FormattingHelper implements Disposable {
 
     // TODO: If range.isNotEmpty, just format the given selection?
 
-    analysisServer
+    return analysisServer
         .format(path, offset, end - offset, lineLength: _prefLineLength)
         .then((FormatResult result) {
       if (result.edits.isEmpty) {
         atom.notifications.addSuccess('No formatting changes.');
+        return false;
       } else {
         atom.notifications.addSuccess('Formatting successful.');
         applyEdits(editor, result.edits);
@@ -83,6 +90,7 @@ class FormattingHelper implements Disposable {
             buffer.positionForCharacterIndex(result.selectionOffset), buffer
                 .positionForCharacterIndex(
                     result.selectionOffset + result.selectionLength)));
+        return true;
       }
     }).catchError((e) {
       if (e is RequestError) {
@@ -92,6 +100,7 @@ class FormattingHelper implements Disposable {
         atom.beep();
         _logger.warning('error when formatting: ${e}');
       }
+      return false;
     });
   }
 }
