@@ -128,7 +128,7 @@ class AtomDartPackage extends AtomPackage {
     });
 
     // Observe all buffers and send updates to analysis server
-    disposables.add(new BufferUpdaterManager());
+    disposables.add(new BufferObserverManager());
   }
 
   void packageDeactivated() {
@@ -159,6 +159,12 @@ class AtomDartPackage extends AtomPackage {
       },
       // These settings start with `x_` so they sort after the other settings in
       // our preferences dialog.
+      'x_formatOnSave': {
+        'title': 'Format current file on save',
+        'description': 'Will format current editor on save',
+        'type': 'boolean',
+        'default': false
+      },
       'x_filterUnnamedLibraryWarnings': {
         'title': 'Filter unnamed library warnings',
         'description': "Don't display warnings about unnamed libraries.",

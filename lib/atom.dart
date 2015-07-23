@@ -646,6 +646,9 @@ class TextBuffer extends ProxyHolder {
   /// the next line.
   Range rangeForRow(int row, bool includeNewline) =>
       new Range(invoke('rangeForRow', row, includeNewline));
+
+  /// Invoke the given callback before the buffer is saved to disk.
+  Stream get onWillSave => eventStream('onWillSave');
 }
 
 class Grammar extends ProxyHolder {
