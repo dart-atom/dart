@@ -1,4 +1,4 @@
-library buffer.updater;
+library buffer.observer;
 
 import 'dart:async';
 

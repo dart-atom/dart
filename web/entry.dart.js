@@ -4406,10 +4406,9 @@ self.clearInterval = function(id) { window.clearInterval(id); };
     $desc = $collectedClasses$.BufferObserver[1];
     BufferObserver.prototype = $desc;
     BufferObserver.$__fields__ = [];
-    function BufferFormatter(_subs, isFormatting, formatCount, editor, manager, Disposables__disposables) {
+    function BufferFormatter(_subs, isFormatting, editor, manager, Disposables__disposables) {
       this._subs = _subs;
       this.isFormatting = isFormatting;
-      this.formatCount = formatCount;
       this.editor = editor;
       this.manager = manager;
       this.Disposables__disposables = Disposables__disposables;
@@ -4420,7 +4419,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       BufferFormatter.name = "BufferFormatter";
     $desc = $collectedClasses$.BufferFormatter[1];
     BufferFormatter.prototype = $desc;
-    BufferFormatter.$__fields__ = ["_subs", "isFormatting", "formatCount", "editor", "manager", "Disposables__disposables"];
+    BufferFormatter.$__fields__ = ["_subs", "isFormatting", "editor", "manager", "Disposables__disposables"];
     function BufferFormatter_closure(_captured_this_0, _captured_editor_1) {
       this._captured_this_0 = _captured_this_0;
       this._captured_editor_1 = _captured_editor_1;
@@ -18618,7 +18617,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         this._addSdkCmd$3("atom-text-editor", "dartlang:pub-upgrade", new R.AtomDartPackage_packageActivated_closure5());
         this._addSdkCmd$3(".tree-view", "dartlang:pub-get", new R.AtomDartPackage_packageActivated_closure6());
         this._addSdkCmd$3(".tree-view", "dartlang:pub-upgrade", new R.AtomDartPackage_packageActivated_closure7());
-        t5 = new V.BufferObserverManager([]);
+        t5 = new N.BufferObserverManager([]);
         C.JSArray_methods.forEach$1(X.Dependencies_instance().getDependency$1(C.Type_pbf).get$dartProjectEditors()._openEditors, t5.get$_newEditor());
         t3 = X.Dependencies_instance().getDependency$1(C.Type_pbf).get$dartProjectEditors()._editorOpenedController;
         H.setRuntimeTypeInfo(new P._BroadcastStream(t3), [H.getTypeArgumentByIndex(t3, 0)]).listen$1(t5.get$_newEditor());
@@ -20050,7 +20049,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         return "${" + ++this._autocomplete0$_box_0._captured_count_0 + ":" + H.S($name) + "}";
       }, null, null, 2, 0, null, 63, "call"]
     }
-  }], ["buffer.updater", "package:atom_dartlang/buffer/buffer_updater.dart",, V, {
+  }], ["buffer.observer", "package:atom_dartlang/buffer/buffer_observer.dart",, N, {
     "^": "",
     BufferObserverManager: {
       "^": "Object;observers",
@@ -20058,7 +20057,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         var t1, t2, t3, t4, t5;
         t1 = this.observers;
         t2 = [];
-        t3 = new V.BufferUpdater(new G.StreamSubscriptions(t2), null, editor, this, []);
+        t3 = new N.BufferUpdater(new G.StreamSubscriptions(t2), null, editor, this, []);
         t2.push(X.Dependencies_instance().getDependency$1(C.Type_goj).get$isActiveProperty().listen$1(t3.get$serverActive()));
         t4 = editor.get$onDidChange();
         t5 = H.setRuntimeTypeInfo(new Z.EventStream(null), [null]);
@@ -20072,13 +20071,13 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         t2.push(editor.get$onDidDestroy().listen$1(t3.get$_didDestroy()));
         t3.addOverlay$0();
         t1.push(t3);
-        t1.push(V.BufferFormatter$(this, editor));
+        t1.push(N.BufferFormatter$(this, editor));
       }, "call$1", "get$_newEditor", 2, 0, 17, 31],
       dispose$0: [function() {
         var t1, t2;
         t1 = this.observers;
         t2 = H.setRuntimeTypeInfo(t1.slice(), [H.getTypeArgumentByIndex(t1, 0)]);
-        C.JSArray_methods.forEach$1(t2, new V.BufferObserverManager_dispose_closure());
+        C.JSArray_methods.forEach$1(t2, new N.BufferObserverManager_dispose_closure());
         C.JSArray_methods.set$length(t1, 0);
       }, "call$0", "get$dispose", 0, 0, 1],
       $isDisposable: 1
@@ -20094,7 +20093,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
       $isDisposable: 1
     },
     BufferFormatter: {
-      "^": "BufferObserver;_subs,isFormatting,formatCount,editor,manager,Disposables__disposables",
+      "^": "BufferObserver;_subs,isFormatting,editor,manager,Disposables__disposables",
       dispose$0: [function() {
         this._subs.cancel$0();
         C.JSArray_methods.remove$1(this.manager.observers, this);
@@ -20103,11 +20102,11 @@ self.clearInterval = function(id) { window.clearInterval(id); };
         var t1, t2;
         t1 = this.editor;
         t2 = this._subs._subscriptions;
-        t2.push(t1.get$onDidSave().listen$1(new V.BufferFormatter_closure(this, editor)));
-        t2.push(t1.get$onDidDestroy().listen$1(new V.BufferFormatter_closure0(this)));
+        t2.push(t1.get$onDidSave().listen$1(new N.BufferFormatter_closure(this, editor)));
+        t2.push(t1.get$onDidDestroy().listen$1(new N.BufferFormatter_closure0(this)));
       },
       static: {BufferFormatter$: function(manager, editor) {
-          var t1 = new V.BufferFormatter(new G.StreamSubscriptions([]), false, 0, editor, manager, []);
+          var t1 = new N.BufferFormatter(new G.StreamSubscriptions([]), false, editor, manager, []);
           t1.BufferFormatter$2(manager, editor);
           return t1;
         }}
@@ -20125,26 +20124,17 @@ self.clearInterval = function(id) { window.clearInterval(id); };
           return;
         if (X.Dependencies_instance().getDependency$1(C.Type_61i).getProjectFor$1(t1.editor.getPath$0()) == null)
           return;
-        P.print("Formatting...");
         t1.isFormatting = true;
         t2 = this._captured_editor_1;
-        F.FormattingHelper_formatEditor(t2).then$1(new V.BufferFormatter__closure(t1, t2));
-        P.print("Exiting formatting function");
+        F.FormattingHelper_formatEditor(t2).then$1(new N.BufferFormatter__closure(t1, t2));
       }, null, null, 2, 0, null, 37, "call"]
     },
     BufferFormatter__closure: {
       "^": "Closure:2;_captured_this_2,_captured_editor_3",
       call$1: [function(didFormat) {
-        var t1 = didFormat === true;
-        if (t1)
-          P.print("Formatted, saving...");
-        if (t1)
-          ++this._captured_this_2.formatCount;
-        if (t1)
+        if (didFormat === true)
           this._captured_editor_3.save$0();
-        t1 = this._captured_this_2;
-        P.print("Current format count: " + t1.formatCount);
-        P.Timer_Timer(P.Duration$(0, 0, 0, 10, 0, 0), new V.BufferFormatter___closure(t1));
+        P.Timer_Timer(P.Duration$(0, 0, 0, 10, 0, 0), new N.BufferFormatter___closure(this._captured_this_2));
       }, null, null, 2, 0, null, 64, "call"]
     },
     BufferFormatter___closure: {
