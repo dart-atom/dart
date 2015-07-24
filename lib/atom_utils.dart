@@ -56,10 +56,6 @@ Future<String> promptUser({String prompt: '', String defaultText: '',
   Disposables disposables = new Disposables();
 
   Element element = new DivElement();
-  // ..add([
-  //   editor = new CoreElement('atom-text-editor', attributes: 'mini'),
-  //   div(text: prompt, c: 'message')
-  // ]);
   element.setInnerHtml('''
     <atom-text-editor mini>${defaultText}</atom-text-editor>
     <div class="message">${prompt}</div>
@@ -67,33 +63,19 @@ Future<String> promptUser({String prompt: '', String defaultText: '',
       validator: new PermissiveNodeValidator(),
       treeSanitizer: NodeTreeSanitizer.trusted);
 
-  // var e = new Element.tag('atom-text-editor');
-  // print(e);
-  // window.console.log(e);
-
-  Element ed = element.querySelector('atom-text-editor');
-  print('ed=${ed}');
-  window.console.log(ed);
-  JsObject obj = new JsObject.fromBrowserObject(ed);
-  print('obj=${obj}');
-  window.console.log(obj);
+  // TODO: Create a JS method, get TextEditor for html element?
+  Element editorElement = element.querySelector('atom-text-editor');
+  JsObject obj = new JsObject.fromBrowserObject(editorElement);
   TextEditorView editorView = new TextEditorView(obj);
-  print('editorView=${editorView}');
+  // TODO: This throws...
   TextEditor editor = editorView.getModel();
-  print('editor');
   if (selectText) editor.selectAll();
-  print('selectAll');
+
+  // TODO: listen for enter key hit
 
   disposables.add(atom.commands.add('atom-workspace', 'core:cancel', (_) {
     if (!completer.isCompleted) completer.complete(null);
   }));
-
-  // TODO:
-  // TextEditor ed = new TextEditor(new JsObject.fromBrowserObject(editor.element));
-  // if (defaultText != null) {
-  //   ed.insertText(defaultText);
-  //   if (selectText) ed.selectAll();
-  // }
 
   Panel panel = atom.workspace.addModalPanel(item: element, visible: true);
 

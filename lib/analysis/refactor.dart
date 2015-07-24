@@ -47,8 +47,7 @@ class RefactoringHelper implements Disposable {
     String oldName = _findIdentifier(text, offset);
     String newName;
 
-    // TODO: Timeout if it takes too long?
-
+    // TODO: Timeout if the refactor request takes too long?
     analysisServer.getAvailableRefactorings(path, offset, end - offset).then(
         (AvailableRefactoringsResult result) {
       List refactorings = result.kinds;
@@ -60,14 +59,10 @@ class RefactoringHelper implements Disposable {
         return null;
       }
 
-      // TODO:
-      return '${oldName}FooBar';
-      promptUser();
-
-      // return promptUser(
-      //     prompt: 'Rename refactor: enter the new name.',
-      //     defaultText: oldName,
-      //     selectText: true);
+      return promptUser(
+          prompt: 'Rename refactor: enter the new name.',
+          defaultText: oldName,
+          selectText: true);
     }).then((_newName) {
       newName = _newName;
 
