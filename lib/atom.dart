@@ -318,6 +318,14 @@ class NotificationManager extends ProxyHolder {
 class PackageManager extends ProxyHolder {
   PackageManager(JsObject object) : super(object);
 
+  /// Get the path to the apm command.
+  ///
+  /// Return a String file path to apm.
+  String getApmPath() => invoke('getApmPath');
+
+  /// Get the paths being used to look for packages.
+  List<String> getPackageDirPaths() => invoke('getPackageDirPaths');
+
   /// Is the package with the given name bundled with Atom?
   bool isBundledPackage(name) => invoke('isBundledPackage', name);
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## unreleased
+- add an option to format on save
+- warn when packages that we require are not installed
+- fix an NPE from the `re-analyze sources` command
+- added a close button to the jobs dialog and the analysis server dialog
+
 ## 0.3.5
 - send the analysis server fewer notifications of changed files
 - only send the analysis server change notifications for files in Dart projects

@@ -4,6 +4,10 @@
 
 library atom.atom_utils;
 
+import 'dart:async';
+import 'dart:convert' show JSON;
+import 'dart:html' show HttpRequest;
+
 import 'atom.dart';
 import 'js.dart';
 
@@ -43,3 +47,9 @@ String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
 /// mac since mac apps are launched in a different shell then the terminal
 /// default.
 String env(String key) => _process['env'][key];
+
+Future<Map> loadPackageJson() {
+  return HttpRequest.getString('atom://dartlang/package.json').then((str) {
+    return JSON.decode(str);
+  });
+}
