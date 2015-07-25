@@ -7,6 +7,9 @@ library atom.elements;
 import 'dart:async';
 import 'dart:html';
 
+import 'atom.dart';
+import 'utils.dart';
+
 /// Finds the first descendant element of this document with the given id.
 Element queryId(String id) => querySelector('#${id}');
 
@@ -153,7 +156,7 @@ class CoreElement {
     }
   }
 
-  Stream<Event> get onClick => element.onClick;
+  Stream<MouseEvent> get onClick => element.onClick;
 
   /// Subscribe to the [onClick] event stream with a no-arg handler.
   StreamSubscription<Event> click(void handle()) => onClick.listen((_) => handle());
@@ -182,4 +185,45 @@ class ProgressElement extends CoreElement {
 
   set value(int val) => _progress.setAttribute('value', val.toString());
   set max(int val) => _progress.setAttribute('max', val.toString());
+}
+
+class CloseButton extends CoreElement {
+  CloseButton() : super('div', classes: 'close-button');
+}
+
+class TitledModelDialog implements Disposable {
+  Panel _panel;
+  Disposable _cancelCommand;
+
+  CoreElement title;
+  CoreElement content;
+
+  TitledModelDialog(String inTitle, {String classes: ''}) {
+    CoreElement closeButton;
+
+    CoreElement root = div(c: classes)..add([
+      div(c: 'modal-header')..layoutHorizontal()..add([
+        title = div(text: inTitle, c: 'text-highlight')..flex(),
+        closeButton = new CloseButton()
+      ]),
+      content = div()
+    ]);
+
+    closeButton.onClick.listen((e) {
+      hide();
+      e.preventDefault();
+    });
+
+    _panel = atom.workspace.addModalPanel(item: root.element);
+    _cancelCommand = atom.commands.add('atom-workspace', 'core:cancel', (_) => hide());
+  }
+
+  void show() => _panel.show();
+
+  void hide() => _panel.hide();
+
+  void dispose() {
+    _panel.invoke('destroy');
+    _cancelCommand.dispose();
+  }
 }

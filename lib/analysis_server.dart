@@ -188,7 +188,7 @@ class AnalysisServer implements Disposable {
 
   /// Reanalyze the world.
   void reanalyzeSources() {
-    if (_server != null) _server.analysis.reanalyze();
+    if (isActive) _server.analysis.reanalyze();
   }
 
   Future<FormatResult> format(String path, int selectionOffset, int selectionLength,

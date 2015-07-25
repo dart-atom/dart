@@ -47,11 +47,34 @@
   }
 }
 
-.analysis-dialog {
-  .title {
-    margin-bottom: 0.5em;
-  }
+.modal-header {
+  margin-bottom: 4px;
+}
 
+.close-button {
+  top: 1px;
+  color: @text-color;
+  cursor: default;
+}
+
+.close-button:hover {
+  color: @text-color-highlight;
+}
+
+.close-button:before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  font-size: 12px;
+  width: 12px;
+  height: 12px;
+  content: "\f081";
+}
+
+.analysis-dialog {
   .last-message {
     font-family: monospace;
     overflow-x: hidden;

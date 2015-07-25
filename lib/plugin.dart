@@ -104,7 +104,13 @@ class AtomDartPackage extends AtomPackage {
     _addCmd('atom-workspace', 'dartlang:reanalyze-sources', (_) {
       new ProjectScanJob().schedule().then((_) {
         return new Future.delayed((new Duration(milliseconds: 100)));
-      }).then((_) => analysisServer.reanalyzeSources());
+      }).then((_) {
+        if (analysisServer.isActive) {
+          analysisServer.reanalyzeSources();
+        } else {
+          atom.notifications.addWarning('Analysis server not active.');
+        }
+      });
     });
     _addCmd('atom-workspace', 'dartlang:send-feedback', (_) {
       shell.openExternal('https://github.com/dart-atom/dartlang/issues');
@@ -129,6 +135,27 @@ class AtomDartPackage extends AtomPackage {
 
     // Observe all buffers and send updates to analysis server
     disposables.add(new BufferObserverManager());
+
+    Timer.run(_initPlugin);
+  }
+
+  void _initPlugin() {
+    // Verify that our dependencies are satisfied.
+    loadPackageJson().then((Map m) {
+      List<String> deps = m['packages'];
+      if (deps == null) deps = [];
+
+      List<String> packages = atom.packages.getAvailablePackageNames();
+
+      for (String dep in deps) {
+        if (!packages.contains(dep)) {
+          atom.notifications.addWarning(
+            "The 'dartlang' plugin requires the '${dep}' plugin in order to work. "
+            "You can install it via the Install section of the Settings dialog.",
+            dismissable: true);
+        }
+      }
+    });
   }
 
   void packageDeactivated() {
