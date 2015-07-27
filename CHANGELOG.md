@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.6
 - add an option to format on save
 - warn when packages that we require are not installed
 - fix an NPE from the `re-analyze sources` command
