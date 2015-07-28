@@ -204,7 +204,7 @@ class Workspace extends ProxyHolder {
   ///
   /// [options] can include initialLine, initialColumn, split, activePane, and
   /// searchAllPanes.
-  Future<TextEditor> open(String url, [Map options]) {
+  Future<TextEditor> open(String url, {Map options}) {
     Future future = promiseToFuture(invoke('open', url, options));
     return future.then((result) {
       if (result == null) throw 'unable to open ${url}';
@@ -502,6 +502,8 @@ class TextEditor extends ProxyHolder {
     var result = invoke('insertText', text, options);
     return result is bool ? result : new Range(result);
   }
+
+  String selectAll() => invoke('selectAll');
 
   /// An ambiguous type:
   /// {

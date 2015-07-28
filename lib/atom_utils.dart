@@ -6,10 +6,17 @@ library atom.atom_utils;
 
 import 'dart:async';
 import 'dart:convert' show JSON;
-import 'dart:html' show HttpRequest;
+import 'dart:html' show DivElement, Element, HttpRequest, NodeValidator,
+    NodeTreeSanitizer, window;
+import 'dart:js';
+
+import 'package:logging/logging.dart';
 
 import 'atom.dart';
 import 'js.dart';
+import 'utils.dart';
+
+final Logger _logger = new Logger('atom_utils');
 
 final JsObject _process = require('process');
 final JsObject _fs = require('fs');
@@ -47,6 +54,57 @@ String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
 /// mac since mac apps are launched in a different shell then the terminal
 /// default.
 String env(String key) => _process['env'][key];
+
+/// Display a textual prompt to the user.
+Future<String> promptUser({String prompt: '', String defaultText: '',
+    bool selectText: false}) {
+  // div, atom-text-editor.editor.mini div.message atom-text-editor[mini]
+  Completer<String> completer = new Completer();
+  Disposables disposables = new Disposables();
+
+  Element element = new DivElement();
+  element.setInnerHtml('''
+    <atom-text-editor mini>${defaultText}</atom-text-editor>
+    <div class="message">${prompt}</div>
+''',
+      validator: new PermissiveNodeValidator(),
+      treeSanitizer: NodeTreeSanitizer.trusted);
+
+  Element editorElement = element.querySelector('atom-text-editor');
+  JsFunction editorConverter = context['getTextEditorForElement'];
+  TextEditor editor = new TextEditor(editorConverter.apply([editorElement]));
+  if (selectText) editor.selectAll();
+  // Focus the element.
+  Timer.run(() {
+    try { editorElement.focus(); }
+    catch (e) { _logger.warning(e); }
+  });
+
+  disposables.add(atom.commands.add('atom-workspace', 'core:confirm', (_) {
+    if (!completer.isCompleted) completer.complete(editor.getText());
+  }));
+
+  disposables.add(atom.commands.add('atom-workspace', 'core:cancel', (_) {
+    if (!completer.isCompleted) completer.complete(null);
+  }));
+
+  Panel panel = atom.workspace.addModalPanel(item: element, visible: true);
+
+  completer.future.whenComplete(() {
+    disposables.dispose();
+    panel.destroy();
+  });
+
+  return completer.future;
+}
+
+/// A [NodeValidator] which allows everything.
+class PermissiveNodeValidator implements NodeValidator {
+  bool allowsElement(Element element) => true;
+  bool allowsAttribute(Element element, String attributeName, String value) {
+    return true;
+  }
+}
 
 Future<Map> loadPackageJson() {
   return HttpRequest.getString('atom://dartlang/package.json').then((str) {

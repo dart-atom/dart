@@ -78,6 +78,9 @@ self.clearTimeout = function(id) { window.clearTimeout(id); };
 self.setInterval = function(f, millis) { return window.setInterval(f, millis); };
 self.clearInterval = function(id) { window.clearInterval(id); };
 
+// Work around interop issues.
+self.getTextEditorForElement = function(element) { return element.o.getModel(); };
+
 """;
 
 String _patchJSFile(String input) {

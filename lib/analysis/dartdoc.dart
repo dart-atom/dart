@@ -6,6 +6,7 @@ import 'package:markdown/markdown.dart' as markdown;
 
 import '../analysis_server.dart';
 import '../atom.dart';
+import '../atom_utils.dart';
 import '../elements.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -174,13 +175,5 @@ class DartdocControl extends CoreElement {
     _sub.cancel();
     _cmdDispose.dispose();
     super.dispose();
-  }
-}
-
-/// A [NodeValidator] which allows everything.
-class PermissiveNodeValidator implements NodeValidator {
-  bool allowsElement(Element element) => true;
-  bool allowsAttribute(Element element, String attributeName, String value) {
-    return true;
   }
 }

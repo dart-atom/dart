@@ -27,6 +27,7 @@ import 'utils.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/formatting.dart';
 import 'analysis/navigation.dart';
+import 'analysis/refactor.dart';
 import 'analysis/references.dart';
 import 'analysis/type_hierarchy.dart';
 import 'impl/changelog.dart';
@@ -98,6 +99,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
+    disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
 

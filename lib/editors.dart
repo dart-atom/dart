@@ -88,7 +88,7 @@ class EditorManager implements Disposable {
       'initialColumn': location.startColumn - 1,
       'searchAllPanes': true
     };
-    atom.workspace.open(location.file, options).then((TextEditor editor) {
+    atom.workspace.open(location.file, options: options).then((TextEditor editor) {
       editor.selectRight(location.length);
     });
   }
