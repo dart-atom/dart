@@ -461,5 +461,9 @@ class Node<T> {
 
   bool get hasChildren => children.isNotEmpty;
   void add(Node node) => children.add(node);
+
+  bool operator ==(other) => other is Node && data == other.data;
+  int get hashCode => data.hashCode;
+
   String toString() => data.toString();
 }

@@ -56,7 +56,8 @@ class TypeHierarchyView extends AtomView {
   ListTreeBuilder treeBuilder;
   List<TypeHierarchyItem> _items;
 
-  TypeHierarchyView() : super('Type Hierarchy', prefName: 'TypeHierarchyView') {
+  TypeHierarchyView() : super('Type Hierarchy', classes: 'type-hierarchy',
+      prefName: 'TypeHierarchyView') {
     treeBuilder = content.add(new ListTreeBuilder(_render)..flex());
     treeBuilder.onDoubleClick.listen(_jumpTo);
   }
@@ -112,19 +113,9 @@ class TypeHierarchyView extends AtomView {
   }
 
   void _jumpTo(Node node) {
-    TypeHierarchyItem item = node.data;
-    Location location = item.classElement.location;
-
+    Location location = (node.data as TypeHierarchyItem).classElement.location;
     if (location != null) {
-      Map options = {
-        'initialLine': location.startLine - 1,
-        'initialColumn': location.startColumn - 1,
-        'searchAllPanes': true
-      };
-
-      atom.workspace.open(location.file, options).then((TextEditor editor) {
-        editor.selectRight(location.length);
-      });
+      editorManager.jumpToLocation(location);
     } else {
       atom.beep();
     }

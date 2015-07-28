@@ -406,6 +406,10 @@ class File extends Entry {
   Future<String> read([bool flushCache]) =>
       promiseToFuture(invoke('read', flushCache));
 
+  /// Reads the contents of the file. [flushCache] indicates whether to require
+  /// a direct read or if a cached copy is acceptable.
+  String readSync([bool flushCache]) => invoke('readSync', flushCache);
+
   /// Overwrites the file with the given text.
   void writeSync(String text) => invoke('writeSync', text);
 

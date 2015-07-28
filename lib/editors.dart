@@ -12,7 +12,8 @@ import 'atom.dart';
 import 'projects.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'analysis/analysis_server_gen.dart' show LinkedEditGroup, Position, SourceEdit;
+import 'analysis/analysis_server_gen.dart'
+    show LinkedEditGroup, Location, Position, SourceEdit;
 
 final Logger _logger = new Logger('editors');
 
@@ -80,6 +81,17 @@ class EditorManager implements Disposable {
   //final Editors dartProjectEditors = new Editors._dartProjectEditors();
 
   EditorManager();
+
+  void jumpToLocation(Location location) {
+    Map options = {
+      'initialLine': location.startLine - 1,
+      'initialColumn': location.startColumn - 1,
+      'searchAllPanes': true
+    };
+    atom.workspace.open(location.file, options).then((TextEditor editor) {
+      editor.selectRight(location.length);
+    });
+  }
 
   void dispose() {
     dartEditors.dispose();

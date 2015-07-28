@@ -23,6 +23,22 @@ String toStartingLowerCase(String str) {
 
 String pluralize(String word, int count) => count == 1 ? word : '${word}s';
 
+String commas(int n) {
+  String str = '${n}';
+  int len = str.length;
+  // if (len > 6) {
+  //   int pos1 = len - 6;
+  //   int pos2 = len - 3;
+  //   return '${str.substring(0, pos1)},${str.substring(pos1, pos2)},${str.substring(pos2)}';
+  // } else
+  if (len > 3) {
+    int pos = len - 3;
+    return '${str.substring(0, pos)},${str.substring(pos)}';
+  } else {
+    return str;
+  }
+}
+
 abstract class Disposable {
   void dispose();
 }

@@ -192,6 +192,10 @@ div.linter-tab.active {
 }
 
 /* type hierarchy */
+.type-hierarchy {
+
+}
+
 .hierarchy-abstract {
   font-style: italic;
 }
@@ -208,4 +212,38 @@ div.linter-tab.active {
 .list-tree .list-item.tree-selected,
 .list-tree li.list-nested-item div.list-item.tree-selected {
   color: @text-color-highlight;
+}
+
+/* find references */
+.find-references {
+  .search-summary {
+
+  }
+
+  .searching {
+    font-style: italic;
+  }
+
+  .potential-match {
+    text-decoration: line-through;
+  }
+
+  .search-result {
+    white-space: pre;
+  }
+
+  .result-line {
+    color: @text-color-subtle;
+    display: inline-block;
+    min-width: 27px;
+    text-align: end;
+  }
+
+  .result-exact {
+
+  }
+}
+
+.find-references li.list-item.search-result {
+  white-space: pre;
 }
