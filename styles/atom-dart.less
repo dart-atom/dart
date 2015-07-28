@@ -80,6 +80,17 @@ div.atom-view {
   }
 }
 
+.atom-view {
+  .list-tree {
+    .list-item,
+    li.list-nested-item div.list-item {
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+      white-space: pre;
+    }
+  }
+}
+
 .close-button {
   top: 1px;
   color: @text-color;
