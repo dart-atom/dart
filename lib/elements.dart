@@ -6,8 +6,10 @@ library atom.elements;
 
 import 'dart:async';
 import 'dart:html';
+import 'dart:math' as math;
 
-import 'atom.dart';
+import 'atom.dart' hide Point;
+import 'state.dart';
 import 'utils.dart';
 
 /// Finds the first descendant element of this document with the given id.
@@ -187,6 +189,113 @@ class ProgressElement extends CoreElement {
   set max(int val) => _progress.setAttribute('max', val.toString());
 }
 
+class ViewResizer extends CoreElement {
+  StreamController<num> _controller = new StreamController.broadcast();
+
+  Point _offset = new Point(0, 0);
+
+  StreamSubscription _moveSub;
+  StreamSubscription _upSub;
+
+  ViewResizer.createHorizontal() : super('div') {
+    horizontalSplitter = true;
+    _init();
+  }
+
+  ViewResizer.createVertical() : super('div') {
+    verticalSplitter = true;
+    _init();
+  }
+
+  bool get horizontalSplitter => hasAttribute('horizontal');
+  set horizontalSplitter(bool value) {
+    clearAttribute(value ? 'vertical' : 'horizontal');
+    attribute(value ? 'horizontal' : 'vertical');
+  }
+
+  bool get verticalSplitter => hasAttribute('vertical');
+  set verticalSplitter(bool value) {
+    clearAttribute(value ? 'horizontal' : 'vertical');
+    attribute(value ? 'vertical' : 'horizontal');
+  }
+
+  num get position => _targetSize;
+
+  set position(num value) {
+    _targetSize = value;
+  }
+
+  Stream<num> get onPositionChanged => _controller.stream;
+
+  void _init() {
+    element.classes.toggle('view-resize', true);
+    if (!horizontalSplitter && !verticalSplitter) horizontalSplitter = true;
+
+    var cancel = () {
+      if (_moveSub != null) _moveSub.cancel();
+      if (_upSub != null) _upSub.cancel();
+    };
+
+    element.onMouseDown.listen((e) {
+      if (e.which != 1) return;
+
+      e.preventDefault();
+      _offset = e.offset;
+
+      _moveSub = document.onMouseMove.listen((MouseEvent e) {
+        if (e.which != 1) {
+          cancel();
+        } else {
+          Point current = _target.marginEdge.bottomRight - e.client + _offset;
+          _handleDrag(current);
+        }
+      });
+
+      _upSub = document.onMouseUp.listen((e) {
+        cancel();
+      });
+    });
+  }
+
+  void _handleDrag(Point size) {
+    _targetSize = verticalSplitter ? size.x : size.y;
+  }
+
+  Element get _target => element.parent;
+
+  num _minSize(Element e) {
+    CssStyleDeclaration style = e.getComputedStyle();
+    String str = verticalSplitter ? style.minWidth : style.minHeight;
+    if (str.isEmpty) return 0;
+    if (str.endsWith('px')) str = str.substring(0, str.length - 2);
+    return num.parse(str);
+  }
+
+  num get _targetSize {
+    CssStyleDeclaration style = _target.getComputedStyle();
+    String str = verticalSplitter ? style.width : style.height;
+    if (str.endsWith('px')) str = str.substring(0, str.length - 2);
+    return num.parse(str);
+  }
+
+  set _targetSize(num size) {
+    final num currentPos = _controller.hasListener ? position : null;
+
+    size = math.max(size, _minSize(element));
+
+    if (verticalSplitter) {
+      _target.style.width = '${size}px';
+    } else {
+      _target.style.height = '${size}px';
+    }
+
+    if (_controller.hasListener) {
+      num newPos = position;
+      if (currentPos != newPos) _controller.add(newPos);
+    }
+  }
+}
+
 class CloseButton extends CoreElement {
   CloseButton() : super('div', classes: 'close-button');
 }
@@ -198,7 +307,7 @@ class TitledModelDialog implements Disposable {
   CoreElement title;
   CoreElement content;
 
-  TitledModelDialog(String inTitle, {String classes: ''}) {
+  TitledModelDialog(String inTitle, {String classes}) {
     CoreElement closeButton;
 
     CoreElement root = div(c: classes)..add([
@@ -226,4 +335,131 @@ class TitledModelDialog implements Disposable {
     _panel.invoke('destroy');
     _cancelCommand.dispose();
   }
+}
+
+class AtomView implements Disposable  {
+  Panel _panel;
+
+  CoreElement title;
+  CoreElement content;
+
+  AtomView(String inTitle, {String classes, String prefName}) {
+    CoreElement closeButton;
+    ViewResizer resizer;
+
+    String c = 'atom-view tree-view';
+    if (classes != null) c = '${c} ${classes}';
+
+    CoreElement root = div(c: c)..layoutVertical()..add([
+      div(c: 'panel-heading')..layoutHorizontal()..add([
+        title = div(text: inTitle, c: 'text-highlight view-header')..flex(),
+        closeButton = new CloseButton()
+      ]),
+      content = div(c: 'view-content')..flex(),
+      resizer = new ViewResizer.createVertical()
+    ]);
+
+    closeButton.onClick.listen((e) {
+      hide();
+      e.preventDefault();
+    });
+
+    if (prefName != null) {
+      int pos = state[prefName];
+      if (pos != null) resizer.position = pos;
+      resizer.onPositionChanged.listen((pos) {
+        state[prefName] = pos;
+      });
+    }
+
+    _panel = atom.workspace.addRightPanel(item: root.element);
+  }
+
+  void show() => _panel.show();
+  void hide() => _panel.hide();
+  void dispose() => _panel.invoke('destroy');
+}
+
+class ListTreeBuilder extends CoreElement {
+  final StreamController<Node> _selectedController = new StreamController.broadcast();
+  final StreamController<Node> _doubleClickController = new StreamController.broadcast();
+  final Function render;
+
+  Node _selectedNode;
+  Map<Node, Element> _nodeToElementMap = {};
+
+  // focusable-panel ?
+  ListTreeBuilder(this.render) :
+      super('div', classes: 'list-tree has-collapsable-children');
+
+  Node get selectedNode => _selectedNode;
+
+  void addNode(Node node) => _addNode(this, node);
+
+  void _addNode(CoreElement parent, Node node) {
+    if (!node.canHaveChildren) {
+      CoreElement element = li(c: 'list-item');
+      Element e = element.element;
+      render(node.data, e);
+      _nodeToElementMap[node] = e;
+      e.onClick.listen((_) => selectNode(node));
+      e.onDoubleClick.listen((_) => _doubleClickController.add(node));
+      parent.add(element);
+    } else {
+      CoreElement element = li(c: 'list-nested-item');
+      parent.add(element);
+
+      CoreElement d = div(c: 'list-item');
+      Element e = d.element;
+      render(node.data, e);
+      _nodeToElementMap[node] = e;
+      e.onClick.listen((_) => selectNode(node));
+      e.onDoubleClick.listen((_) => _doubleClickController.add(node));
+      element.add(d);
+
+      CoreElement u = ul(c: 'list-tree');
+      element.add(u);
+
+      for (Node child in node.children) {
+        _addNode(u, child);
+      }
+    }
+  }
+
+  void selectNode(Node node) {
+    // .selected uses absolute positioning...
+    if (_selectedNode != null) {
+      Element e = _nodeToElementMap[_selectedNode];
+      if (e != null) e.classes.toggle('tree-selected', false);
+    }
+
+    _selectedNode = node;
+
+    if (_selectedNode != null) {
+      Element e = _nodeToElementMap[_selectedNode];
+      if (e != null) e.classes.toggle('tree-selected', true);
+    }
+
+    _selectedController.add(selectedNode);
+  }
+
+  void clear() {
+    _nodeToElementMap.clear();
+    element.children.clear();
+  }
+
+  Stream<Node> get onSelected => _selectedController.stream;
+  Stream<Node> get onDoubleClick => _doubleClickController.stream;
+}
+
+class Node<T> {
+  final T data;
+  final bool canHaveChildren;
+  final List<Node> children = [];
+
+  Node(this.data, {this.canHaveChildren: false});
+
+  bool get hasChildren => children.isNotEmpty;
+  void add(Node node) => children.add(node);
+  String toString() => data.toString();
 }

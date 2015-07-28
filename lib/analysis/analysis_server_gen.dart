@@ -986,6 +986,9 @@ class Element {
 
   Element(this.kind, this.name, this.flags,
       {this.location, this.parameters, this.returnType, this.typeParameters});
+
+  String toString() =>
+      '[Element kind: ${kind}, name: ${name}, flags: ${flags}]';
 }
 
 class ExecutableFile {

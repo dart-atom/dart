@@ -47,7 +47,7 @@ void applyEdits(TextEditor editor, List<SourceEdit> edits) {
 void selectEditGroups(TextEditor editor, List<LinkedEditGroup> groups) {
   if (groups.isEmpty) return;
 
-  // First, choose the bext group.
+  // First, choose the best group.
   LinkedEditGroup group = groups.first;
   int bestLength = group.positions.length;
 

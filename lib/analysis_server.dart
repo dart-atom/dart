@@ -200,6 +200,14 @@ class AnalysisServer implements Disposable {
   Future<HoverResult> getHover(String file, int offset) =>
       server.analysis.getHover(file, offset);
 
+  Future<FindElementReferencesResult> findElementReferences(
+      String path, int offset, bool includePotential) {
+    return server.search.findElementReferences(path, offset, includePotential);
+  }
+
+  Future<TypeHierarchyResult> getTypeHierarchy(String path, int offset) =>
+      server.search.getTypeHierarchy(path, offset);
+
   /// If an analysis server is running, terminate it.
   void shutdown() {
     if (_server != null) _server.kill();
