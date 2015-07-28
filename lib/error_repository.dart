@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import 'atom.dart' show Directory, File;
+import 'atom.dart' show Directory, File, statSync;
 import 'utils.dart';
 import 'analysis/analysis_server_gen.dart' show AnalysisErrors, AnalysisError,
   AnalysisFlushResults, Location;
@@ -67,7 +67,10 @@ class ErrorRepository implements Disposable {
 
     String path = analysisErrors.file;
     File file = new File.fromPath(path);
-    if (file.existsSync()) {
+
+    // We use statSync() here and not file.isFile() as File.isFile() always
+    // returns true.
+    if (file.existsSync() && statSync(path).isFile()) {
       var oldErrors = knownErrors[path];
       var newErrors = analysisErrors.errors;
 
