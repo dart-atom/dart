@@ -8,9 +8,13 @@ import 'dart:async';
 import 'dart:html' show DivElement, Element, NodeValidator, NodeTreeSanitizer, window;
 import 'dart:js';
 
+import 'package:logging/logging.dart';
+
 import 'atom.dart';
 import 'js.dart';
 import 'utils.dart';
+
+final Logger _logger = new Logger('atom_utils');
 
 final JsObject _process = require('process');
 final JsObject _fs = require('fs');
@@ -49,6 +53,7 @@ String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
 /// default.
 String env(String key) => _process['env'][key];
 
+/// Display a textual prompt to the user.
 Future<String> promptUser({String prompt: '', String defaultText: '',
     bool selectText: false}) {
   // div, atom-text-editor.editor.mini div.message atom-text-editor[mini]
@@ -63,15 +68,19 @@ Future<String> promptUser({String prompt: '', String defaultText: '',
       validator: new PermissiveNodeValidator(),
       treeSanitizer: NodeTreeSanitizer.trusted);
 
-  // TODO: Create a JS method, get TextEditor for html element?
   Element editorElement = element.querySelector('atom-text-editor');
-  JsObject obj = new JsObject.fromBrowserObject(editorElement);
-  TextEditorView editorView = new TextEditorView(obj);
-  // TODO: This throws...
-  TextEditor editor = editorView.getModel();
+  JsFunction editorConverter = context['getTextEditorForElement'];
+  TextEditor editor = new TextEditor(editorConverter.apply([editorElement]));
   if (selectText) editor.selectAll();
+  // Focus the element.
+  Timer.run(() {
+    try { editorElement.focus(); }
+    catch (e) { _logger.warning(e); }
+  });
 
-  // TODO: listen for enter key hit
+  disposables.add(atom.commands.add('atom-workspace', 'core:confirm', (_) {
+    if (!completer.isCompleted) completer.complete(editor.getText());
+  }));
 
   disposables.add(atom.commands.add('atom-workspace', 'core:cancel', (_) {
     if (!completer.isCompleted) completer.complete(null);
