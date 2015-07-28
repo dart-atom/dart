@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.7
 - implement a type hierarchy view (F4)
 - implement a find references view (available from the context menu)
 - expose the rename refactoring as a context menu item
