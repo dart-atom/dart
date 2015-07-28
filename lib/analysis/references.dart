@@ -17,9 +17,6 @@ import 'analysis_server_gen.dart';
 
 final Logger _logger = new Logger('references');
 
-// TODO: Clean up SDK references.
-// TODO: Clean up .pub-cache references.
-
 class FindReferencesHelper implements Disposable {
   Disposable _command;
   FindReferencesView _view;
@@ -106,17 +103,9 @@ class FindReferencesView extends AtomView {
 
   void _render(item, html.Element intoElement) {
     if (item is String) {
-      projectManager.getProjectFor(item);
-      List<String> relPath = atom.project.relativizePath(item);
-      String path = relPath[1];
-      if (relPath[0] != null) {
-        String base = relPath[0];
-        int index = base.lastIndexOf(separator);
-        if (index != -1) base = base.substring(index + 1);
-        path = '${base} ${path}';
-      }
+      List<String> items = _renderPath(item);
       html.SpanElement span = new html.SpanElement();
-      span.text = path;
+      span.text = items.join(' ');
       intoElement.children.add(span);
     } else {
       SearchResult result = item;
@@ -157,6 +146,43 @@ class FindReferencesView extends AtomView {
     if (sub != null) sub.cancel();
     super.hide();
   }
+
+  List<String> _renderPath(String originalPath) {
+    // Check for project files.
+    List<String> relPath = atom.project.relativizePath(originalPath);
+    if (relPath[0] != null) {
+      String base = relPath[0];
+      int index = base.lastIndexOf(separator);
+      if (index != -1) base = base.substring(index + 1);
+      return [base, relPath[1]];
+    }
+
+    // Check for package files.
+    if (originalPath.contains(_cachePrefix)) {
+      int index = originalPath.indexOf(_cachePrefix);
+      String path = originalPath.substring(index + _cachePrefix.length);
+      if (path.startsWith(_pubPrefix)) path = path.substring(_pubPrefix.length);
+      return ['Package', path];
+    }
+
+    // Check for SDK files.
+    var sdk = sdkManager.sdk;
+    if (sdk != null) {
+      String prefix = sdk.path;
+      if (originalPath.startsWith(prefix)) {
+        String path = originalPath.substring(prefix.length);
+        if (path.startsWith(_libPrefix)) path = path.substring(_libPrefix.length);
+        return ['SDK', path];
+      }
+    }
+
+    // Return the original path.
+    return [originalPath];
+  }
+
+  static final _cachePrefix = '${separator}.pub-cache${separator}';
+  static final _pubPrefix = 'hosted${separator}pub.dartlang.org${separator}';
+  static final _libPrefix = '${separator}lib${separator}';
 }
 
 class _MatchParser {
@@ -183,10 +209,11 @@ class _MatchParser {
     start = start.trimLeft();
     end = end.trimRight();
 
-    final int len = 20;
+    final int llen = 20;
+    final int rlen = 30;
 
-    if (start.length > len) start = '…${start.substring(start.length - len + 2)}';
-    if (end.length > len) end = '${end.substring(0, len - 2)}…';
+    if (start.length > llen) start = '…${start.substring(start.length - llen + 2)}';
+    if (end.length > rlen) end = '${end.substring(0, rlen - 2)}…';
 
     return [start, extract, end];
   }
