@@ -191,6 +191,27 @@ class AnalysisServer implements Disposable {
     if (isActive) _server.analysis.reanalyze();
   }
 
+  Stream<SearchResult> filterSearchResults(String id) {
+    StreamSubscription sub;
+    StreamController controller = new StreamController(
+        onCancel: () => sub.cancel());
+
+    sub = server.search.onResults.listen((SearchResults result) {
+      if (id == result.id && !controller.isClosed) {
+        for (SearchResult r in result.results) {
+          controller.add(r);
+        }
+
+        if (result.isLast) {
+          sub.cancel();
+          controller.close();
+        }
+      }
+    });
+
+    return controller.stream;
+  }
+
   Future<FormatResult> format(String path, int selectionOffset, int selectionLength,
       {int lineLength}) {
     return server.edit.format(

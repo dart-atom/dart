@@ -1354,6 +1354,9 @@ class SearchResult {
   final List<Element> path;
 
   SearchResult(this.location, this.kind, this.isPotential, this.path);
+
+  String toString() =>
+      '[SearchResult location: ${location}, kind: ${kind}, isPotential: ${isPotential}, path: ${path}]';
 }
 
 class SourceChange {
