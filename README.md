@@ -26,6 +26,7 @@ manually in the plugin configuration page (`Preferences > Packages > dartlang`).
 - `F3` (or option-click) to jump to definition
 - `F4` to see a type hierarchy
 - find references to classes and methods
+- rename refactoring
 - pub commands (get and update) are available via context menus
 
 A lot of Atom's functionality is surfaced via named commands. You can see all
