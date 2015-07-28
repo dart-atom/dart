@@ -29,6 +29,7 @@ import 'analysis/formatting.dart';
 import 'analysis/navigation.dart';
 import 'analysis/references.dart';
 import 'analysis/type_hierarchy.dart';
+import 'impl/changelog.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
@@ -37,7 +38,7 @@ import 'impl/status_display.dart';
 
 export 'atom.dart' show registerPackage;
 
-final Logger _logger = new Logger("atom-dart");
+final Logger _logger = new Logger('plugin');
 
 class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
@@ -87,6 +88,7 @@ class AtomDartPackage extends AtomPackage {
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
 
     state.loadFrom(inState);
+    checkChangelog();
 
     disposables.add(deps[SdkManager] = new SdkManager());
     disposables.add(deps[ProjectManager] = new ProjectManager());
@@ -146,22 +148,24 @@ class AtomDartPackage extends AtomPackage {
   }
 
   void _initPlugin() {
-    // Verify that our dependencies are satisfied.
-    loadPackageJson().then((Map m) {
-      List<String> deps = m['packages'];
-      if (deps == null) deps = [];
+    loadPackageJson().then(_verifyPackages);
+  }
 
-      List<String> packages = atom.packages.getAvailablePackageNames();
+  // Verify that our dependencies are satisfied.
+  void _verifyPackages(Map m) {
+    List<String> deps = m['packages'];
+    if (deps == null) deps = [];
 
-      for (String dep in deps) {
-        if (!packages.contains(dep)) {
-          atom.notifications.addWarning(
-            "The 'dartlang' plugin requires the '${dep}' plugin in order to work. "
-            "You can install it via the Install section of the Settings dialog.",
-            dismissable: true);
-        }
+    List<String> packages = atom.packages.getAvailablePackageNames();
+
+    for (String dep in deps) {
+      if (!packages.contains(dep)) {
+        atom.notifications.addWarning(
+          "The 'dartlang' plugin requires the '${dep}' plugin in order to work. "
+          "You can install it via the Install section of the Settings dialog.",
+          dismissable: true);
       }
-    });
+    }
   }
 
   Map serialize() => state.toMap();

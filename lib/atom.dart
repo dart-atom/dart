@@ -800,3 +800,13 @@ JsObject _cvt(JsObject object) {
   // from JS interop.
   return new JsObject.fromBrowserObject(object);
 }
+
+Stats statSync(String path) =>
+    new Stats(require('fs').callMethod('statSync', [path]));
+
+class Stats extends ProxyHolder {
+  Stats(JsObject obj) : super(obj);
+
+  bool isFile() => invoke('isFile');
+  bool isDirectory() => invoke('isDirectory');
+}

@@ -1,5 +1,10 @@
 # Changelog
 
+## unreleased
+- implement a type hierarchy view (F4)
+- implement a find references view (available from the context menu)
+- display new plugin features after an upgrade
+
 ## 0.3.6
 - add an option to format on save
 - warn when packages that we require are not installed
