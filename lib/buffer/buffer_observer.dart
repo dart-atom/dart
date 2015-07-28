@@ -142,8 +142,10 @@ class BufferUpdater extends BufferObserver {
         // TODO: See #31.
         // List<Edit> edits = simpleDiff(lastSent, contents);
         // int count = 1;
-        // List<SourceEdit> diffs = edits.map((edit) => new SourceEdit(
-        //     edit.offset, edit.length, edit.replacement, id: '${count++}')).toList();
+        // List<SourceEdit> diffs = edits
+        //   .map((edit) => new SourceEdit(
+        //       edit.offset, edit.length, edit.replacement, id: '${count++}'))
+        //   .toList();
         // var overlay = new ChangeContentOverlay('change', diffs);
         // server.analysis.updateContent({ editor.getPath(): overlay });
         server.analysis.updateContent(

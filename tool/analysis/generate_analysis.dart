@@ -371,7 +371,8 @@ class TypeDef {
     'Position',
     'NavigationRegion',
     'NavigationTarget',
-    'CompletionSuggestion'
+    'CompletionSuggestion',
+    'Element'
   ]);
 
   static final Set<String> _shouldHaveEquals = new Set.from([

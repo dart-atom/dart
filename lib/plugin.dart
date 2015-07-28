@@ -27,6 +27,8 @@ import 'utils.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/formatting.dart';
 import 'analysis/navigation.dart';
+import 'analysis/references.dart';
+import 'analysis/type_hierarchy.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
@@ -77,12 +79,14 @@ class AtomDartPackage extends AtomPackage {
     exports['provideAutocomplete'] = () => provider.toProxy();
   }
 
-  void packageActivated([Map state]) {
+  void packageActivated([Map inState]) {
     _setupLogging();
 
     _logger.fine("packageActivated");
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
+
+    state.loadFrom(inState);
 
     disposables.add(deps[SdkManager] = new SdkManager());
     disposables.add(deps[ProjectManager] = new ProjectManager());
@@ -92,6 +96,8 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
+    disposables.add(new FindReferencesHelper());
+    disposables.add(new TypeHierarchyHelper());
 
     // Register commands.
     _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
@@ -158,10 +164,15 @@ class AtomDartPackage extends AtomPackage {
     });
   }
 
+  Map serialize() => state.toMap();
+
   void packageDeactivated() {
     _logger.fine('packageDeactivated');
     disposables.dispose();
     subscriptions.cancel();
+
+    // TODO: Cancel any running Jobs (see #120).
+
   }
 
   Map config() {
