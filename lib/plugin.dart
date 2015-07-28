@@ -15,7 +15,7 @@ import 'atom.dart';
 import 'atom_linter.dart' show LinterService;
 import 'atom_statusbar.dart';
 import 'atom_utils.dart';
-import 'buffer/buffer_updater.dart';
+import 'buffer/buffer_observer.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
@@ -28,7 +28,10 @@ import 'analysis/dartdoc.dart';
 import 'analysis/formatting.dart';
 import 'analysis/navigation.dart';
 import 'analysis/refactor.dart';
-//import 'impl/editing.dart' as editing;
+import 'analysis/references.dart';
+import 'analysis/type_hierarchy.dart';
+import 'impl/changelog.dart';
+import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
@@ -36,7 +39,7 @@ import 'impl/status_display.dart';
 
 export 'atom.dart' show registerPackage;
 
-final Logger _logger = new Logger("atom-dart");
+final Logger _logger = new Logger('plugin');
 
 class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
@@ -78,12 +81,15 @@ class AtomDartPackage extends AtomPackage {
     exports['provideAutocomplete'] = () => provider.toProxy();
   }
 
-  void packageActivated([Map state]) {
+  void packageActivated([Map inState]) {
     _setupLogging();
 
     _logger.fine("packageActivated");
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
+
+    state.loadFrom(inState);
+    checkChangelog();
 
     disposables.add(deps[SdkManager] = new SdkManager());
     disposables.add(deps[ProjectManager] = new ProjectManager());
@@ -94,6 +100,8 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
     disposables.add(new RefactoringHelper());
+    disposables.add(new FindReferencesHelper());
+    disposables.add(new TypeHierarchyHelper());
 
     // Register commands.
     _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
@@ -106,14 +114,20 @@ class AtomDartPackage extends AtomPackage {
     _addCmd('atom-workspace', 'dartlang:reanalyze-sources', (_) {
       new ProjectScanJob().schedule().then((_) {
         return new Future.delayed((new Duration(milliseconds: 100)));
-      }).then((_) => analysisServer.reanalyzeSources());
+      }).then((_) {
+        if (analysisServer.isActive) {
+          analysisServer.reanalyzeSources();
+        } else {
+          atom.notifications.addWarning('Analysis server not active.');
+        }
+      });
     });
     _addCmd('atom-workspace', 'dartlang:send-feedback', (_) {
       shell.openExternal('https://github.com/dart-atom/dartlang/issues');
     });
 
     // Text editor commands.
-    //_addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
+    _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
 
     // Register commands that require an SDK to be present.
     _addSdkCmd('atom-text-editor', 'dartlang:pub-get', (event) {
@@ -130,13 +144,41 @@ class AtomDartPackage extends AtomPackage {
     });
 
     // Observe all buffers and send updates to analysis server
-    disposables.add(new BufferUpdaterManager());
+    disposables.add(new BufferObserverManager());
+
+    Timer.run(_initPlugin);
   }
+
+  void _initPlugin() {
+    loadPackageJson().then(_verifyPackages);
+  }
+
+  // Verify that our dependencies are satisfied.
+  void _verifyPackages(Map m) {
+    List<String> deps = m['packages'];
+    if (deps == null) deps = [];
+
+    List<String> packages = atom.packages.getAvailablePackageNames();
+
+    for (String dep in deps) {
+      if (!packages.contains(dep)) {
+        atom.notifications.addWarning(
+          "The 'dartlang' plugin requires the '${dep}' plugin in order to work. "
+          "You can install it via the Install section of the Settings dialog.",
+          dismissable: true);
+      }
+    }
+  }
+
+  Map serialize() => state.toMap();
 
   void packageDeactivated() {
     _logger.fine('packageDeactivated');
     disposables.dispose();
     subscriptions.cancel();
+
+    // TODO: Cancel any running Jobs (see #120).
+
   }
 
   Map config() {
@@ -161,6 +203,12 @@ class AtomDartPackage extends AtomPackage {
       },
       // These settings start with `x_` so they sort after the other settings in
       // our preferences dialog.
+      'x_formatOnSave': {
+        'title': 'Format current file on save',
+        'description': 'Will format current editor on save',
+        'type': 'boolean',
+        'default': false
+      },
       'x_filterUnnamedLibraryWarnings': {
         'title': 'Filter unnamed library warnings',
         'description': "Don't display warnings about unnamed libraries.",

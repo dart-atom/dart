@@ -20,3 +20,23 @@ ErrorRepository get errorRepository => deps[ErrorRepository];
 final JobManager jobs = new JobManager();
 ProjectManager get projectManager => deps[ProjectManager];
 SdkManager get sdkManager => deps[SdkManager];
+final State state = new State();
+
+class State {
+  Map _map = {};
+
+  State();
+
+  dynamic operator[](String key) => _map[key];
+
+  void operator[]=(String key, dynamic value) {
+    _map[key] = value;
+  }
+
+  void loadFrom(Map map) {
+    if (map == null) map = {};
+    _map = map;
+  }
+
+  Map toMap() => _map;
+}

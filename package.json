@@ -1,7 +1,7 @@
 {
   "name": "dartlang",
   "main": "./web/entry.dart.js",
-  "version": "0.3.4",
+  "version": "0.3.6",
   "description": "A Dart plugin for Atom.",
   "keywords": [],
   "repository": "https://github.com/dart-atom/dartlang",
@@ -10,6 +10,9 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {},
+  "packages": [
+    "linter"
+  ],
   "consumedServices": {
     "status-bar": {
       "versions": {

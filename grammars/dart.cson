@@ -33,6 +33,9 @@
     'include': '#comments'
   }
   {
+    'include': '#punctuation'
+  }
+  {
     'include': '#annotations'
   }
   {
@@ -190,7 +193,7 @@
         'name': 'keyword.control.dart'
       }
       {
-        'match': '\\b(sync\\*|async(\\*)?|await|yield(\\*)?)'
+        'match': '\\b(sync\\*|async(\\*)?|await|yield(\\*)?)\\b'
         'name': 'keyword.control.dart'
       }
       {
@@ -244,10 +247,6 @@
       {
         'match': '(!|&&|\\|\\|)'
         'name': 'keyword.operator.logical.dart'
-      }
-      {
-        'match': ';'
-        'name': 'punctuation.terminator.dart'
       }
       {
         'match': '\\b(static|final|const)\\b'
@@ -354,6 +353,21 @@
             'name': 'invalid.string.newline'
           }
         ]
+      }
+    ]
+  'punctuation':
+    'patterns': [
+      {
+        'match': ','
+        'name': 'punctuation.comma.dart'
+      }
+      {
+        'match': ';'
+        'name': 'punctuation.terminator.dart'
+      }
+      {
+        'match': '\\.'
+        'name': 'punctuation.dot.dart'
       }
     ]
 'scopeName': 'source.dart'

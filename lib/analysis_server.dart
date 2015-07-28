@@ -96,7 +96,7 @@ class AnalysisServer implements Disposable {
   /// Returns whether the analysis server is active and running.
   bool get isActive => _server != null && _server.isRunning;
 
-  bool get isBusy => _server.analyzing;
+  bool get isBusy => _server != null && _server.analyzing;
 
   /// Subscribe to this to get told when the issues list has changed.
   Stream get issuesUpdatedNotification => null;
@@ -189,7 +189,28 @@ class AnalysisServer implements Disposable {
 
   /// Reanalyze the world.
   void reanalyzeSources() {
-    if (_server != null) _server.analysis.reanalyze();
+    if (isActive) _server.analysis.reanalyze();
+  }
+
+  Stream<SearchResult> filterSearchResults(String id) {
+    StreamSubscription sub;
+    StreamController controller = new StreamController(
+        onCancel: () => sub.cancel());
+
+    sub = server.search.onResults.listen((SearchResults result) {
+      if (id == result.id && !controller.isClosed) {
+        for (SearchResult r in result.results) {
+          controller.add(r);
+        }
+
+        if (result.isLast) {
+          sub.cancel();
+          controller.close();
+        }
+      }
+    });
+
+    return controller.stream;
   }
 
   Future<FormatResult> format(String path, int selectionOffset, int selectionLength,
@@ -212,6 +233,14 @@ class AnalysisServer implements Disposable {
 
   Future<HoverResult> getHover(String file, int offset) =>
       server.analysis.getHover(file, offset);
+
+  Future<FindElementReferencesResult> findElementReferences(
+      String path, int offset, bool includePotential) {
+    return server.search.findElementReferences(path, offset, includePotential);
+  }
+
+  Future<TypeHierarchyResult> getTypeHierarchy(String path, int offset) =>
+      server.search.getTypeHierarchy(path, offset);
 
   /// If an analysis server is running, terminate it.
   void shutdown() {

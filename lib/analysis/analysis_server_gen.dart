@@ -986,6 +986,9 @@ class Element {
 
   Element(this.kind, this.name, this.flags,
       {this.location, this.parameters, this.returnType, this.typeParameters});
+
+  String toString() =>
+      '[Element kind: ${kind}, name: ${name}, flags: ${flags}]';
 }
 
 class ExecutableFile {
@@ -1351,6 +1354,9 @@ class SearchResult {
   final List<Element> path;
 
   SearchResult(this.location, this.kind, this.isPotential, this.path);
+
+  String toString() =>
+      '[SearchResult location: ${location}, kind: ${kind}, isPotential: ${isPotential}, path: ${path}]';
 }
 
 class SourceChange {

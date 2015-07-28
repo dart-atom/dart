@@ -1,5 +1,20 @@
 # Changelog
 
+## unreleased
+- implement a type hierarchy view (F4)
+- implement a find references view (available from the context menu)
+- display new plugin features after an upgrade
+
+## 0.3.6
+- add an option to format on save
+- warn when packages that we require are not installed
+- fix an NPE from the `re-analyze sources` command
+- added a close button to the jobs dialog and the analysis server dialog
+
+## 0.3.5
+- send the analysis server fewer notifications of changed files
+- only send the analysis server change notifications for files in Dart projects
+
 ## 0.3.4
 - minor release to address a performance issue
 

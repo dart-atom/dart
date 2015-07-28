@@ -12,7 +12,8 @@ import 'atom.dart';
 import 'projects.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'analysis/analysis_server_gen.dart' show LinkedEditGroup, Position, SourceEdit;
+import 'analysis/analysis_server_gen.dart'
+    show LinkedEditGroup, Location, Position, SourceEdit;
 
 final Logger _logger = new Logger('editors');
 
@@ -47,7 +48,7 @@ void applyEdits(TextEditor editor, List<SourceEdit> edits) {
 void selectEditGroups(TextEditor editor, List<LinkedEditGroup> groups) {
   if (groups.isEmpty) return;
 
-  // First, choose the bext group.
+  // First, choose the best group.
   LinkedEditGroup group = groups.first;
   int bestLength = group.positions.length;
 
@@ -76,8 +77,21 @@ void _sortEdits(List<SourceEdit> edits) {
 class EditorManager implements Disposable {
   final Editors dartEditors = new Editors._allDartEditors();
   final Editors dartProjectEditors = new Editors._allDartEditors();
+  // TODO: Fix this.
+  //final Editors dartProjectEditors = new Editors._dartProjectEditors();
 
   EditorManager();
+
+  void jumpToLocation(Location location) {
+    Map options = {
+      'initialLine': location.startLine - 1,
+      'initialColumn': location.startColumn - 1,
+      'searchAllPanes': true
+    };
+    atom.workspace.open(location.file, options: options).then((TextEditor editor) {
+      editor.selectRight(location.length);
+    });
+  }
 
   void dispose() {
     dartEditors.dispose();

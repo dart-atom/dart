@@ -318,6 +318,14 @@ class NotificationManager extends ProxyHolder {
 class PackageManager extends ProxyHolder {
   PackageManager(JsObject object) : super(object);
 
+  /// Get the path to the apm command.
+  ///
+  /// Return a String file path to apm.
+  String getApmPath() => invoke('getApmPath');
+
+  /// Get the paths being used to look for packages.
+  List<String> getPackageDirPaths() => invoke('getPackageDirPaths');
+
   /// Is the package with the given name bundled with Atom?
   bool isBundledPackage(name) => invoke('isBundledPackage', name);
 
@@ -397,6 +405,10 @@ class File extends Entry {
   /// a direct read or if a cached copy is acceptable.
   Future<String> read([bool flushCache]) =>
       promiseToFuture(invoke('read', flushCache));
+
+  /// Reads the contents of the file. [flushCache] indicates whether to require
+  /// a direct read or if a cached copy is acceptable.
+  String readSync([bool flushCache]) => invoke('readSync', flushCache);
 
   /// Overwrites the file with the given text.
   void writeSync(String text) => invoke('writeSync', text);
@@ -648,6 +660,9 @@ class TextBuffer extends ProxyHolder {
   /// the next line.
   Range rangeForRow(int row, bool includeNewline) =>
       new Range(invoke('rangeForRow', row, includeNewline));
+
+  /// Invoke the given callback before the buffer is saved to disk.
+  Stream get onWillSave => eventStream('onWillSave');
 }
 
 class Grammar extends ProxyHolder {
@@ -786,4 +801,14 @@ JsObject _cvt(JsObject object) {
   // TODO: We really shouldn't have to be wrapping objects we've already gotten
   // from JS interop.
   return new JsObject.fromBrowserObject(object);
+}
+
+Stats statSync(String path) =>
+    new Stats(require('fs').callMethod('statSync', [path]));
+
+class Stats extends ProxyHolder {
+  Stats(JsObject obj) : super(obj);
+
+  bool isFile() => invoke('isFile');
+  bool isDirectory() => invoke('isDirectory');
 }

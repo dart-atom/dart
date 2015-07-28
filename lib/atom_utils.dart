@@ -5,7 +5,9 @@
 library atom.atom_utils;
 
 import 'dart:async';
-import 'dart:html' show DivElement, Element, NodeValidator, NodeTreeSanitizer, window;
+import 'dart:convert' show JSON;
+import 'dart:html' show DivElement, Element, HttpRequest, NodeValidator,
+    NodeTreeSanitizer, window;
 import 'dart:js';
 
 import 'package:logging/logging.dart';
@@ -102,4 +104,10 @@ class PermissiveNodeValidator implements NodeValidator {
   bool allowsAttribute(Element element, String attributeName, String value) {
     return true;
   }
+}
+
+Future<Map> loadPackageJson() {
+  return HttpRequest.getString('atom://dartlang/package.json').then((str) {
+    return JSON.decode(str);
+  });
 }

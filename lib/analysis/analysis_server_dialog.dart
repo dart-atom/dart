@@ -12,7 +12,7 @@ import '../utils.dart';
 class AnalysisServerDialog implements Disposable {
   final Disposables _disposables = new Disposables();
 
-  Panel _panel;
+  TitledModelDialog _dialog;
 
   CoreElement _messageElement;
   CoreElement _statusElement;
@@ -24,29 +24,22 @@ class AnalysisServerDialog implements Disposable {
     _disposables.add(atom.commands.add('atom-workspace',
         'dartlang:analysis-server-status', (_) => showDialog()));
 
-    _disposables.add(atom.commands.add('atom-workspace', 'core:cancel', (_) {
-      if (_panel != null) _panel.hide();
-    }));
-
-    analysisServer.onActive.listen((val) => _updateStatus());
+    analysisServer.onActive.listen((val) => _updateStatus(updateTitle: true));
     analysisServer.onBusy.listen((val) => _updateStatus());
     analysisServer.onSend.listen(_logTraffic);
     analysisServer.onReceive.listen(_logTraffic);
   }
 
-  void dispose() {
-    _disposables.dispose();
-    if (_panel != null) _panel.destroy();
-  }
+  void dispose() => _disposables.dispose();
 
   void showDialog() {
-    if (_panel != null) {
-      _panel.show();
+    if (_dialog != null) {
+      _dialog.show();
       return;
     }
 
-    CoreElement main = div(c: 'analysis-dialog')..add([
-      div(text: 'Analysis Server', c: 'message title text-highlight'),
+    _dialog = new TitledModelDialog('Analysis Server', classes: 'analysis-dialog');
+    _dialog.content.add([
       div(c: 'block')..layoutHorizontal()..add([
         _statusElement = div(text: 'Status:')..flex()..inlineBlockTight(),
         _startButton = button(text: 'Start', c: 'btn btn-sm')..inlineBlockTight()
@@ -59,19 +52,19 @@ class AnalysisServerDialog implements Disposable {
       _messageElement = div(c: 'last-message text-subtle')
     ]);
 
-    _panel = atom.workspace.addModalPanel(item: main.element);
-    _panel.onDidDestroy.listen((_) => _panel = null);
+    _updateStatus(updateTitle: true);
 
-    _updateStatus();
+    _disposables.add(_dialog);
   }
 
   void _logTraffic(String message) {
-    if (_messageElement != null && _panel != null) {
+    if (_messageElement != null && _dialog != null) {
+      if (message.length > 300) message = '${message.substring(0, 300)}…';
       _messageElement.text = '${message}';
     }
   }
 
-  void _updateStatus() {
+  void _updateStatus({bool updateTitle: false}) {
     if (_statusElement == null) return;
 
     if (analysisServer.isBusy) {
@@ -85,17 +78,19 @@ class AnalysisServerDialog implements Disposable {
     _startButton.toggleAttribute('disabled', analysisServer.isActive);
     _reanalyzeButton.toggleAttribute('disabled', !analysisServer.isActive);
     _stopButton.toggleAttribute('disabled', !analysisServer.isActive);
+
+    if (updateTitle) {
+      if (analysisServer.isActive) {
+        analysisServer.server.server.getVersion().then((result) {
+          _dialog.title.text = 'Analysis Server (v${result.version})';
+        });
+      } else {
+        _dialog.title.text = 'Analysis Server';
+      }
+    }
   }
 
-  void _handleServerStart() {
-    analysisServer.start();
-  }
-
-  void _handleReanalyze() {
-    analysisServer.reanalyzeSources();
-  }
-
-  void _handleServerStop() {
-    analysisServer.shutdown();
-  }
+  void _handleServerStart() => analysisServer.start();
+  void _handleReanalyze() => analysisServer.reanalyzeSources();
+  void _handleServerStop() => analysisServer.shutdown();
 }
