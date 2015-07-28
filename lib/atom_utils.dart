@@ -6,7 +6,7 @@ library atom.atom_utils;
 
 import 'dart:async';
 import 'dart:convert' show JSON;
-import 'dart:html' show DivElement, Element, HttpRequest, NodeValidator,
+import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
     NodeTreeSanitizer, window;
 import 'dart:js';
 
@@ -68,7 +68,7 @@ Future<String> promptUser({String prompt: '', String defaultText: '',
     <div class="message">${prompt}</div>
 ''',
       validator: new PermissiveNodeValidator(),
-      treeSanitizer: NodeTreeSanitizer.trusted);
+      treeSanitizer: new TrustedHtmlTreeSanitizer());
 
   Element editorElement = element.querySelector('atom-text-editor');
   JsFunction editorConverter = context['getTextEditorForElement'];
@@ -104,6 +104,12 @@ class PermissiveNodeValidator implements NodeValidator {
   bool allowsAttribute(Element element, String attributeName, String value) {
     return true;
   }
+}
+
+class TrustedHtmlTreeSanitizer implements NodeTreeSanitizer {
+  const TrustedHtmlTreeSanitizer();
+
+  void sanitizeTree(Node node) { }
 }
 
 Future<Map> loadPackageJson() {
