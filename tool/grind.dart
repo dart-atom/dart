@@ -5,8 +5,17 @@
 library atom.grind;
 
 import 'dart:io';
+import 'dart:convert';
+
 
 import 'package:grinder/grinder.dart';
+import 'package:pub_semver/pub_semver.dart';
+
+part "publish.dart";
+
+// crashes grinder -- so add it as a library dependency for now.
+// import 'deploy.dart' show deploy;
+// export 'publish.dart' show deploy;
 
 main(List args) => grind(args);
 
