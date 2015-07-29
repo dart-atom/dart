@@ -4,6 +4,7 @@ library atom.changelog;
 import 'dart:html' show HttpRequest;
 
 import 'package:logging/logging.dart';
+import 'package:semver/semver.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
@@ -23,18 +24,43 @@ void _checkChangelog(Map m) {
     _logger.info("upgraded from ${last} to ${version}");
 
     HttpRequest.getString('atom://dartlang/CHANGELOG.md').then((str) {
-      List<String> changes = str.split('\n');
-      String match = '## ${version}';
-      Iterable itor = changes.skipWhile((line) => line != match);
-      changes = itor.takeWhile((line) => line.trim().isNotEmpty).toList();
-      if (changes.isNotEmpty) {
+      String changes;
+      if (last != null) {
+        changes = _extractAfterVersion(str, last);
+      } else {
+        changes = _extractVersion(str, version);
+      }
+      if (changes != null && changes.isNotEmpty) {
         atom.notifications.addSuccess(
           'Upgraded to dartlang plugin version ${version}.',
-          detail: changes.join('\n'),
+          detail: changes,
           dismissable: true);
       }
     });
   }
 
   state['version'] = version;
+}
+
+String _extractVersion(String changelog, String version) {
+  List<String> changes = changelog.split('\n');
+  String match = '## ${version}';
+  Iterable itor = changes.skipWhile((line) => line != match);
+  changes = itor.takeWhile((line) => line.trim().isNotEmpty).toList();
+  return changes.join('\n').trim();
+}
+
+String _extractAfterVersion(String changelog, String last) {
+  SemanticVersion ver = new SemanticVersion.fromString(last);
+  List<String> changes = changelog.split('\n');
+  Iterable itor = changes.skipWhile((line) => !line.startsWith('##'));
+  changes = itor.takeWhile((line) {
+    if (line.startsWith('## ')) {
+      line = line.substring(3);
+      SemanticVersion v = new SemanticVersion.fromString(line);
+      return v > ver;
+    }
+    return true;
+  }).toList();
+  return changes.join('\n').trim();
 }

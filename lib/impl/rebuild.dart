@@ -41,27 +41,24 @@ class RebuildJob extends Job {
 
     Future f = sdk.execBinSimple(
         'dart2js',
-        ['--csp', '-oweb/entry.dart.js', '--show-package-warnings', 'web/entry.dart'],
+        ['--csp', '-oweb/entry.dart.js', 'web/entry.dart'],
         cwd: proj);
 
     return f.then((ProcessResult result) {
-      if (result.exit == 0) {
-        File file = proj.getSubdirectory('web').getFile('entry.dart.js');
-        file.read().then((contents) {
-          file.writeSync(_patchJSFile(contents));
-        });
-      }
-
-      if (result.stdout.isNotEmpty) {
+      if (result.exit != 0) {
         throw '${result.stdout}\n${result.stderr}';
-      } else {
-        atom.notifications.addSuccess("Recompiled dart-tools! Restarting…");
-
-        return new Future.delayed(new Duration(seconds: 1)).then((_) {
-          // re-start atom
-          atom.reload();
-        });
       }
+
+      atom.notifications.addSuccess("Recompiled dart-tools! Restarting…");
+
+      File file = proj.getSubdirectory('web').getFile('entry.dart.js');
+      return file.read().then((contents) {
+        file.writeSync(_patchJSFile(contents));
+        return new Future.delayed(new Duration(seconds: 1));
+      }).then((_) {
+        // re-start atom
+        atom.reload();
+      });
     });
   }
 }
