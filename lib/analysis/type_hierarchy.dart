@@ -115,7 +115,8 @@ class TypeHierarchyView extends AtomView {
   void _jumpTo(Node node) {
     Location location = (node.data as TypeHierarchyItem).classElement.location;
     if (location != null) {
-      editorManager.jumpToLocation(location);
+      editorManager.jumpToLocation(location.file,
+          location.startLine - 1, location.startColumn - 1, location.length);
     } else {
       atom.beep();
     }
