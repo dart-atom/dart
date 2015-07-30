@@ -23,6 +23,7 @@ import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
+import 'sky/toolbar.dart';
 import 'utils.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/declaration_nav.dart';
@@ -50,6 +51,11 @@ class AtomDartPackage extends AtomPackage {
     registerServiceConsumer('consumeStatusBar', (obj) {
       // Create a new status bar display.
       return new StatusDisplay(new StatusBar(obj));
+    });
+
+    // Register a method to consume the `atom-toolbar` service API.
+    registerServiceConsumer('consumeToolbar', (obj) {
+      return new ToolbarContribution(new Toolbar(obj));
     });
 
     // Register a method to consume the `linter-plus-self` service API.
