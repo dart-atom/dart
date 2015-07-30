@@ -1,5 +1,5 @@
 
-library atom.navigation;
+library atom.declaration_nav;
 
 import 'dart:async';
 import 'dart:js';
@@ -14,7 +14,7 @@ import '../state.dart';
 import '../utils.dart';
 import 'analysis_server_gen.dart';
 
-final Logger _logger = new Logger('navigation');
+final Logger _logger = new Logger('declaration_nav');
 
 // TODO: Switch over to something link nuclide-click-to-symbol when that's
 // available as a platform API.
@@ -128,20 +128,8 @@ class NavigationHelper implements Disposable {
             buffer.positionForCharacterIndex(region.offset),
             buffer.positionForCharacterIndex(region.offset + region.length));
         return flashSelection(editor, sourceRange).then((_) {
-          Map options = {
-            'initialLine': target.startLine - 1,
-            'initialColumn': target.startColumn - 1,
-            'searchAllPanes': true
-          };
-
-          // If we're editing the target file, then use the current editor.
-          if (editor.getPath() == file) {
-            options['searchAllPanes'] = false;
-          }
-
-          return atom.workspace.open(file, options: options).then((TextEditor editor) {
-            editor.selectRight(target.length);
-          });
+          editorManager.jumpToLocation(file,
+              target.startLine - 1, target.startColumn - 1, target.length);
         });
       }
     }

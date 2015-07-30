@@ -130,7 +130,9 @@ class FindReferencesView extends AtomView {
 
   void _jumpTo(Node node) {
     if (node.data is SearchResult) {
-      editorManager.jumpToLocation((node.data as SearchResult).location);
+      Location l = (node.data as SearchResult).location;
+      editorManager.jumpToLocation(l.file,
+          l.startLine - 1, l.startColumn - 1, l.length);
     }
   }
 
