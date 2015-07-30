@@ -1,13 +1,14 @@
-# Keybindings require three things to be fully defined: A selector that is
-# matched against the focused element, the keystroke and the command to execute.
-# For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth.
 
 'body.platform-darwin':
   'ctrl-alt-cmd-;': 'dartlang:rebuild-restart-dev'
+  'cmd-{': 'dartlang:navigate-back'
+  'cmd-}': 'dartlang:navigate-forward'
 
 'body.platform-win32, body.platform-linux':
   'ctrl-alt-;': 'dartlang:rebuild-restart-dev'
+  'ctrl-{': 'dartlang:navigate-back'
+  'ctrl-}': 'dartlang:navigate-forward'
 
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
   'f1': 'dartlang:show-dartdoc'

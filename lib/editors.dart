@@ -83,14 +83,16 @@ class EditorManager implements Disposable {
   EditorManager();
 
   void jumpToLocation(Location location) {
-    Map options = {
-      'initialLine': location.startLine - 1,
-      'initialColumn': location.startColumn - 1,
-      'searchAllPanes': true
-    };
-    atom.workspace.open(location.file, options: options).then((TextEditor editor) {
-      editor.selectRight(location.length);
-    });
+    navigationManager.navigate(location.file,
+        location.startLine - 1, location.startColumn - 1, location.length);
+    // Map options = {
+    //   'initialLine': location.startLine - 1,
+    //   'initialColumn': location.startColumn - 1,
+    //   'searchAllPanes': true
+    // };
+    // atom.workspace.open(location.file, options: options).then((TextEditor editor) {
+    //   editor.selectRight(location.length);
+    // });
   }
 
   void dispose() {

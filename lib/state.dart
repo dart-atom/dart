@@ -9,6 +9,7 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'jobs.dart';
+import 'navigation.dart';
 import 'projects.dart';
 import 'sdk.dart';
 
@@ -18,6 +19,7 @@ AnalysisServer get analysisServer => deps[AnalysisServer];
 EditorManager get editorManager => deps[EditorManager];
 ErrorRepository get errorRepository => deps[ErrorRepository];
 final JobManager jobs = new JobManager();
+NavigationManager get navigationManager => deps[NavigationManager];
 ProjectManager get projectManager => deps[ProjectManager];
 SdkManager get sdkManager => deps[SdkManager];
 final State state = new State();

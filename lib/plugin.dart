@@ -20,13 +20,15 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'linter.dart' show DartLinterConsumer;
+import 'navigation.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
+import 'toolbar.dart';
 import 'utils.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/formatting.dart';
-import 'analysis/navigation.dart';
+import 'analysis/declaration_nav.dart';
 import 'analysis/refactor.dart';
 import 'analysis/references.dart';
 import 'analysis/type_hierarchy.dart';
@@ -50,6 +52,11 @@ class AtomDartPackage extends AtomPackage {
     registerServiceConsumer('consumeStatusBar', (obj) {
       // Create a new status bar display.
       return new StatusDisplay(new StatusBar(obj));
+    });
+
+    // Register a method to consume the `toolbar` service API.
+    registerServiceConsumer('consumeToolbar', (obj) {
+      return new ToolbarContribution(new Toolbar(obj));
     });
 
     // Register a method to consume the `linter-plus-self` service API.
@@ -96,6 +103,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
+    _initNavigation();
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
@@ -252,5 +260,54 @@ class AtomDartPackage extends AtomPackage {
 
       _logger.info("logging level: ${Logger.root.level}");
     }));
+  }
+
+  void _initNavigation() {
+    deps[NavigationManager] = new NavigationManager(new _NavigationLocationProvider());
+    navigationManager.onNavigate.listen((NavigationLocation loc) {
+      Map options = { 'searchAllPanes': true };
+
+      if (loc.selection != null) {
+        options['initialLine'] = loc.selection.line;
+        options['initialColumn'] = loc.selection.column;
+      } else {
+        print('no selection');
+      }
+
+      // If we're editing the target file, then use the current editor.
+      var ed = atom.workspace.getActiveTextEditor();
+      if (ed != null && ed.getPath() == loc.file) {
+        options['searchAllPanes'] = false;
+      }
+
+      atom.workspace.open(loc.file, options: options).then((TextEditor editor) {
+        if (loc.selection != null && loc.selection.length != null) {
+          //editor.selectRight(loc.selection.length);
+        }
+      });
+
+      _addCmd('atom-workspace', 'dartlang:navigate-back', (_) {
+        navigationManager.goBack();
+      });
+      _addCmd('atom-workspace', 'dartlang:navigate-forward', (_) {
+        navigationManager.goForward();
+      });
+    });
+  }
+}
+
+class _NavigationLocationProvider implements NavigationLocationProvider {
+  NavigationLocation get navigationLocation {
+    TextEditor editor = atom.workspace.getActiveTextEditor();
+    if (editor == null) return null;
+    Point start = editor.getSelectedBufferRange().start;
+    Point end = editor.getSelectedBufferRange().end;
+    int length;
+    if (start.row == end.row) {
+      length = end.column - start.column;
+      if (length < 0) length = null;
+    }
+    return new NavigationLocation(
+        editor.getPath(), new Span(start.row, start.column, length));
   }
 }
