@@ -11,12 +11,18 @@
   },
   "dependencies": {},
   "packages": [
-    "linter"
+    "linter",
+    "atom-toolbar"
   ],
   "consumedServices": {
     "status-bar": {
       "versions": {
         "^1.0.0": "consumeStatusBar"
+      }
+    },
+    "atom-toolbar": {
+      "versions": {
+        "^1.0.0": "consumeToolbar"
       }
     },
     "linter-plus-self": {
