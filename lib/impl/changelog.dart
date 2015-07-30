@@ -4,7 +4,7 @@ library atom.changelog;
 import 'dart:html' show HttpRequest;
 
 import 'package:logging/logging.dart';
-import 'package:semver/semver.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
@@ -51,13 +51,13 @@ String _extractVersion(String changelog, String version) {
 }
 
 String _extractAfterVersion(String changelog, String last) {
-  SemanticVersion ver = new SemanticVersion.fromString(last);
+  Version ver = new Version.parse(last);
   List<String> changes = changelog.split('\n');
   Iterable itor = changes.skipWhile((line) => !line.startsWith('##'));
   changes = itor.takeWhile((line) {
     if (line.startsWith('## ')) {
       line = line.substring(3);
-      SemanticVersion v = new SemanticVersion.fromString(line);
+      Version v = new Version.parse(line);
       return v > ver;
     }
     return true;
