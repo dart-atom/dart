@@ -178,43 +178,54 @@ class AtomDartPackage extends AtomPackage {
 
   Map config() {
     return {
+      // sdk
       'sdkLocation': {
         'title': 'Dart SDK Location',
         'description': 'The location of the Dart SDK.',
         'type': 'string',
-        'default': ''
+        'default': '',
+        'order': 1
       },
+
+      // show infos and todos
       'showInfos': {
         'title': 'Show infos',
         'description': 'Show informational level analysis issues.',
         'type': 'boolean',
-        'default': true
+        'default': true,
+        'order': 2
       },
       'showTodos': {
         'title': 'Show todos',
         'description': 'When showing infos, also show TODO items.',
         'type': 'boolean',
-        'default': false
+        'default': false,
+        'order': 2
       },
-      // These settings start with `x_` so they sort after the other settings in
-      // our preferences dialog.
-      'x_formatOnSave': {
+
+      // format on save
+      'formatOnSave': {
         'title': 'Format current file on save',
-        'description': 'Will format current editor on save',
+        'description': 'Format the current editor on save.',
         'type': 'boolean',
-        'default': false
+        'default': false,
+        'order': 3
       },
-      'x_filterUnnamedLibraryWarnings': {
+
+      // filter specific warnings
+      'filterUnnamedLibraryWarnings': {
         'title': 'Filter unnamed library warnings',
         'description': "Don't display warnings about unnamed libraries.",
         'type': 'boolean',
-        'default': true
+        'default': true,
+        'order': 4
       },
-      'x_filterCompiledToJSWarnings': {
+      'filterCompiledToJSWarnings': {
         'title': 'Filter warnings about compiling to JavaScript',
         'description': "Don't display warnings about compiling to JavaScript.",
         'type': 'boolean',
-        'default': true
+        'default': true,
+        'order': 4
       }
     };
   }

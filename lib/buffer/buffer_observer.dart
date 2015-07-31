@@ -41,7 +41,7 @@ class BufferObserver extends Disposables {
 class BufferFormatter extends BufferObserver {
   StreamSubscriptions _subs = new StreamSubscriptions();
   bool isFormatting = false;
-  bool get formatOnSave => atom.config.getValue('dartlang.x_formatOnSave');
+  bool get formatOnSave => atom.config.getValue('dartlang.formatOnSave');
 
   BufferFormatter(manager, editor) : super(manager, editor) {
     _subs.add(this.editor.onDidSave.listen((_) {
