@@ -107,15 +107,16 @@ class JobManager {
 
     job.run().then((result) {
       if (!job.quiet) {
+        String detail = result == null ? null : '${result}';
         _toasts.addSuccess('${jobInstance.name} completed.',
-            detail: result is String ? result : null,
-            dismissable: result != null && job.pinResult);
+            detail: detail,
+            dismissable: detail != null && detail.isNotEmpty && job.pinResult);
       }
       jobInstance._completer.complete(result);
     }).whenComplete(() {
       _complete(jobInstance);
     }).catchError((e) {
-      jobInstance._completer.completeError(e);
+      jobInstance._completer.complete();
       _toasts.addError('${job.name} failed.', detail: '${e}', dismissable: true);
     });
   }

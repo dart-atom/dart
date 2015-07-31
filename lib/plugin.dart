@@ -105,6 +105,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
+    disposables.add(new PubManager());
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
@@ -134,20 +135,6 @@ class AtomDartPackage extends AtomPackage {
 
     // Text editor commands.
     _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
-
-    // Register commands that require an SDK to be present.
-    _addSdkCmd('atom-text-editor', 'dartlang:pub-get', (event) {
-      new PubJob.get(dirname(event.editor.getPath())).schedule();
-    });
-    _addSdkCmd('atom-text-editor', 'dartlang:pub-upgrade', (event) {
-      new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
-    });
-    _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
-      new PubJob.get(dirname(event.selectedFilePath)).schedule();
-    });
-    _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (event) {
-      new PubJob.upgrade(dirname(event.selectedFilePath)).schedule();
-    });
 
     // Observe all buffers and send updates to analysis server
     disposables.add(new BufferObserverManager());
@@ -184,6 +171,8 @@ class AtomDartPackage extends AtomPackage {
     subscriptions.cancel();
 
     // TODO: Cancel any running Jobs (see #120).
+
+    // TODO: dispose status-bar and toolbar contributions?
 
   }
 
@@ -232,17 +221,6 @@ class AtomDartPackage extends AtomPackage {
 
   void _addCmd(String target, String command, void callback(AtomEvent e)) {
     disposables.add(atom.commands.add(target, command, callback));
-  }
-
-  // Validate that an sdk is available before calling the target function.
-  void _addSdkCmd(String target, String command, void callback(AtomEvent e)) {
-    disposables.add(atom.commands.add(target, command, (event) {
-      if (!sdkManager.hasSdk) {
-        sdkManager.showNoSdkMessage();
-      } else {
-        callback(event);
-      }
-    }));
   }
 
   void _setupLogging() {
