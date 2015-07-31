@@ -4068,7 +4068,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.AtomDartPackage[1];
     AtomDartPackage.prototype = $desc;
     AtomDartPackage.$__fields__ = ["disposables", "subscriptions", "_registeredMethods"];
-    function AtomDartPackage_closure() {
+    function AtomDartPackage_closure(_plugin$_captured_this_0) {
+      this._plugin$_captured_this_0 = _plugin$_captured_this_0;
       this.$deferredAction();
     }
     AtomDartPackage_closure.builtin$cls = "AtomDartPackage_closure";
@@ -4076,8 +4077,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       AtomDartPackage_closure.name = "AtomDartPackage_closure";
     $desc = $collectedClasses$.AtomDartPackage_closure[1];
     AtomDartPackage_closure.prototype = $desc;
-    AtomDartPackage_closure.$__fields__ = [];
-    function AtomDartPackage_closure0() {
+    AtomDartPackage_closure.$__fields__ = ["_plugin$_captured_this_0"];
+    function AtomDartPackage_closure0(_plugin$_captured_this_1) {
+      this._plugin$_captured_this_1 = _plugin$_captured_this_1;
       this.$deferredAction();
     }
     AtomDartPackage_closure0.builtin$cls = "AtomDartPackage_closure0";
@@ -4085,7 +4087,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       AtomDartPackage_closure0.name = "AtomDartPackage_closure0";
     $desc = $collectedClasses$.AtomDartPackage_closure0[1];
     AtomDartPackage_closure0.prototype = $desc;
-    AtomDartPackage_closure0.$__fields__ = [];
+    AtomDartPackage_closure0.$__fields__ = ["_plugin$_captured_this_1"];
     function AtomDartPackage_closure1() {
       this.$deferredAction();
     }
@@ -4104,9 +4106,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.AtomDartPackage__closure[1];
     AtomDartPackage__closure.prototype = $desc;
     AtomDartPackage__closure.$__fields__ = [];
-    function AtomDartPackage__closure0(_captured_errorController_0, _captured_flushController_1) {
-      this._captured_errorController_0 = _captured_errorController_0;
-      this._captured_flushController_1 = _captured_flushController_1;
+    function AtomDartPackage__closure0(_captured_errorController_2, _captured_flushController_3) {
+      this._captured_errorController_2 = _captured_errorController_2;
+      this._captured_flushController_3 = _captured_flushController_3;
       this.$deferredAction();
     }
     AtomDartPackage__closure0.builtin$cls = "AtomDartPackage__closure0";
@@ -4114,9 +4116,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       AtomDartPackage__closure0.name = "AtomDartPackage__closure0";
     $desc = $collectedClasses$.AtomDartPackage__closure0[1];
     AtomDartPackage__closure0.prototype = $desc;
-    AtomDartPackage__closure0.$__fields__ = ["_captured_errorController_0", "_captured_flushController_1"];
-    function AtomDartPackage_closure2(_captured_provider_2) {
-      this._captured_provider_2 = _captured_provider_2;
+    AtomDartPackage__closure0.$__fields__ = ["_captured_errorController_2", "_captured_flushController_3"];
+    function AtomDartPackage_closure2(_captured_provider_4) {
+      this._captured_provider_4 = _captured_provider_4;
       this.$deferredAction();
     }
     AtomDartPackage_closure2.builtin$cls = "AtomDartPackage_closure2";
@@ -4124,7 +4126,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       AtomDartPackage_closure2.name = "AtomDartPackage_closure2";
     $desc = $collectedClasses$.AtomDartPackage_closure2[1];
     AtomDartPackage_closure2.prototype = $desc;
-    AtomDartPackage_closure2.$__fields__ = ["_captured_provider_2"];
+    AtomDartPackage_closure2.$__fields__ = ["_captured_provider_4"];
     function AtomDartPackage_packageActivated_closure() {
       this.$deferredAction();
     }
@@ -20975,7 +20977,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       packageActivated$1: [function(inState) {
         var t1, t2, t3, t4, t5;
         this._setupLogging$0();
-        $.$get$_logger().fine$1("packageActivated");
+        $.$get$_logger().info$1("activated");
         if (X.Dependencies_instance() == null)
           $.Dependencies__global = new X.Dependencies(P.LinkedHashMap__makeEmpty());
         t1 = $.$get$state();
@@ -21067,7 +21069,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return $.$get$state()._state$_map;
       }, "call$0", "get$serialize", 0, 0, 40],
       packageDeactivated$0: [function() {
-        $.$get$_logger().fine$1("packageDeactivated");
+        $.$get$_logger().info$1("deactivated");
         this.disposables.dispose$0();
         this.subscriptions.cancel$0();
       }, "call$0", "get$packageDeactivated", 0, 0, 2],
@@ -21075,8 +21077,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this.disposables.Disposables__disposables.push($.$get$atom()._config.observe$3("dartlang.logging", null, new R.AtomDartPackage__setupLogging_closure()));
       },
       AtomDartPackage$0: function() {
-        this.registerServiceConsumer$2("consumeStatusBar", new R.AtomDartPackage_closure());
-        this.registerServiceConsumer$2("consumeToolbar", new R.AtomDartPackage_closure0());
+        this.registerServiceConsumer$2("consumeStatusBar", new R.AtomDartPackage_closure(this));
+        this.registerServiceConsumer$2("consumeToolbar", new R.AtomDartPackage_closure0(this));
         this.registerServiceConsumer$2("consumeLinter", new R.AtomDartPackage_closure1());
         J.$indexSet$ax(J.$index$asx(J.$index$asx($.$get$context(), "module"), "exports"), "provideAutocomplete", new R.AtomDartPackage_closure2(new D.DartAutocompleteProvider(".source.dart", ".source.dart .comment", 100, true, true)));
       },
@@ -21087,20 +21089,23 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }}
     },
     AtomDartPackage_closure: {
-      "^": "Closure:0;",
+      "^": "Closure:0;_plugin$_captured_this_0",
       call$1: [function(obj) {
-        return E.StatusDisplay$(new T.StatusBar(obj));
+        var $status = E.StatusDisplay$(new T.StatusBar(obj));
+        this._plugin$_captured_this_0.disposables.Disposables__disposables.push($status);
+        return $status;
       }, null, null, 2, 0, null, 3, "call"]
     },
     AtomDartPackage_closure0: {
-      "^": "Closure:0;",
+      "^": "Closure:0;_plugin$_captured_this_1",
       call$1: [function(obj) {
-        var t1, e;
-        t1 = new D.ToolbarContribution(null);
+        var $toolbar, e;
+        $toolbar = new D.ToolbarContribution(null);
         e = K.CoreElement$("div", null, "btn-group btn-group-sm dartlang-toolbar", null);
         e.add$1(0, []);
-        t1._tile = new D.Toolbar(obj).addRightTile$1$item(e.element);
-        return t1;
+        $toolbar._tile = new D.Toolbar(obj).addRightTile$1$item(e.element);
+        this._plugin$_captured_this_1.disposables.Disposables__disposables.push($toolbar);
+        return $toolbar;
       }, null, null, 2, 0, null, 3, "call"]
     },
     AtomDartPackage_closure1: {
@@ -21129,19 +21134,19 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     AtomDartPackage__closure0: {
-      "^": "Closure:0;_captured_errorController_0,_captured_flushController_1",
+      "^": "Closure:0;_captured_errorController_2,_captured_flushController_3",
       call$1: [function(_) {
-        var t1 = this._captured_errorController_0;
+        var t1 = this._captured_errorController_2;
         X.Dependencies_instance().getDependency$1(C.Type_bhC).get$onAnalysisErrors()._createSubscription$4(t1.get$add(t1), null, null, false);
-        t1 = this._captured_flushController_1;
+        t1 = this._captured_flushController_3;
         X.Dependencies_instance().getDependency$1(C.Type_bhC).get$onAnalysisFlushResults()._createSubscription$4(t1.get$add(t1), null, null, false);
       }, null, null, 2, 0, null, 0, "call"]
     },
     AtomDartPackage_closure2: {
-      "^": "Closure:1;_captured_provider_2",
+      "^": "Closure:1;_captured_provider_4",
       call$0: [function() {
         var t1, map;
-        t1 = this._captured_provider_2;
+        t1 = this._captured_provider_4;
         map = P.LinkedHashMap__makeLiteral(["selector", t1.selector, "getSuggestions", t1.get$_getSuggestions(), "onDidInsertSuggestion", t1.get$_onDidInsertSuggestion(), "dispose", t1.get$dispose()]);
         map.$indexSet(0, "disableForSelector", t1.disableForSelector);
         map.$indexSet(0, "inclusionPriority", t1.inclusionPriority);

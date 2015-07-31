@@ -49,13 +49,16 @@ class AtomDartPackage extends AtomPackage {
   AtomDartPackage() {
     // Register a method to consume the `status-bar` service API.
     registerServiceConsumer('consumeStatusBar', (obj) {
-      // Create a new status bar display.
-      return new StatusDisplay(new StatusBar(obj));
+      StatusDisplay status = new StatusDisplay(new StatusBar(obj));
+      disposables.add(status);
+      return status;
     });
 
     // Register a method to consume the `atom-toolbar` service API.
     registerServiceConsumer('consumeToolbar', (obj) {
-      return new ToolbarContribution(new Toolbar(obj));
+      ToolbarContribution toolbar = new ToolbarContribution(new Toolbar(obj));
+      disposables.add(toolbar);
+      return toolbar;
     });
 
     // Register a method to consume the `linter-plus-self` service API.
@@ -90,7 +93,7 @@ class AtomDartPackage extends AtomPackage {
   void packageActivated([Map inState]) {
     _setupLogging();
 
-    _logger.fine("packageActivated");
+    _logger.info("activated");
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
 
@@ -166,7 +169,7 @@ class AtomDartPackage extends AtomPackage {
   Map serialize() => state.toMap();
 
   void packageDeactivated() {
-    _logger.fine('packageDeactivated');
+    _logger.info('deactivated');
     disposables.dispose();
     subscriptions.cancel();
 
