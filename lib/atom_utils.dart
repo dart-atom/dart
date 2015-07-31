@@ -40,6 +40,7 @@ String join(dir, String arg1, [String arg2, String arg3]) {
   return path;
 }
 
+/// Return the parent of the given file path or entry.
 String dirname(entry) {
   if (entry is Entry) return entry.getParent().path;
   int index = entry.lastIndexOf(separator);
@@ -56,8 +57,10 @@ String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
 String env(String key) => _process['env'][key];
 
 /// Display a textual prompt to the user.
-Future<String> promptUser({String prompt: '', String defaultText: '',
-    bool selectText: false}) {
+Future<String> promptUser(String prompt,
+    {String defaultText, bool selectText: false}) {
+  if (defaultText == null) defaultText = '';
+
   // div, atom-text-editor.editor.mini div.message atom-text-editor[mini]
   Completer<String> completer = new Completer();
   Disposables disposables = new Disposables();
@@ -67,7 +70,6 @@ Future<String> promptUser({String prompt: '', String defaultText: '',
     <atom-text-editor mini>${defaultText}</atom-text-editor>
     <div class="message">${prompt}</div>
 ''',
-      validator: new PermissiveNodeValidator(),
       treeSanitizer: new TrustedHtmlTreeSanitizer());
 
   Element editorElement = element.querySelector('atom-text-editor');

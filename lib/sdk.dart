@@ -136,14 +136,21 @@ class Sdk {
     return file.path;
   }
 
-  // TODO: Process finagling on the mac; exec in the bash shell.
-
   /// Execute the given SDK binary (a command in the `bin/` folder). [cwd] can
   /// be either a [String] or a [Directory].
   Future<ProcessResult> execBinSimple(String binName, List<String> args, {cwd}) {
     if (cwd is Directory) cwd = cwd.path;
     String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
-    return new ProcessRunner(command, args: args, cwd: cwd).execSimple();
+
+    // Run process under bash on the mac, to capture the user's env variables.
+    if (isMac) {
+      //exec('/bin/bash', ['-l', '-c', 'which dart'])
+      String arg = args.join(' ');
+      arg = command + ' ' + arg;
+      return new ProcessRunner('/bin/bash', args: ['-l', '-c', arg], cwd: cwd).execSimple();
+    } else {
+      return new ProcessRunner(command, args: args, cwd: cwd).execSimple();
+    }
   }
 
   String toString() => directory.getPath();

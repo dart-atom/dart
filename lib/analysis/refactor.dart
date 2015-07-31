@@ -59,8 +59,7 @@ class RefactoringHelper implements Disposable {
         return null;
       }
 
-      return promptUser(
-          prompt: 'Rename refactor: enter the new name.',
+      return promptUser('Rename refactor: enter the new name.',
           defaultText: oldName,
           selectText: true);
     }).then((_newName) {

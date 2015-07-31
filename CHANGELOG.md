@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+- added the ability to run `pub run` and `pub global run` applications
+- added a `pub global activate` command
+
 ## 0.3.7
 - implement a type hierarchy view (F4)
 - implement a find references view (available from the context menu)
