@@ -17924,7 +17924,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       t1.$indexSet(exports, "activate", $._package.get$packageActivated());
       t1.$indexSet(exports, "deactivate", $._package.get$packageDeactivated());
       $._package.toString;
-      t1.$indexSet(exports, "config", K.jsify(P.LinkedHashMap__makeLiteral(["sdkLocation", P.LinkedHashMap__makeLiteral(["title", "Dart SDK Location", "description", "The location of the Dart SDK.", "type", "string", "default", ""]), "showInfos", P.LinkedHashMap__makeLiteral(["title", "Show infos", "description", "Show informational level analysis issues.", "type", "boolean", "default", true]), "showTodos", P.LinkedHashMap__makeLiteral(["title", "Show todos", "description", "When showing infos, also show TODO items.", "type", "boolean", "default", false]), "x_formatOnSave", P.LinkedHashMap__makeLiteral(["title", "Format current file on save", "description", "Will format current editor on save", "type", "boolean", "default", false]), "x_filterUnnamedLibraryWarnings", P.LinkedHashMap__makeLiteral(["title", "Filter unnamed library warnings", "description", "Don't display warnings about unnamed libraries.", "type", "boolean", "default", true]), "x_filterCompiledToJSWarnings", P.LinkedHashMap__makeLiteral(["title", "Filter warnings about compiling to JavaScript", "description", "Don't display warnings about compiling to JavaScript.", "type", "boolean", "default", true])])));
+      t1.$indexSet(exports, "config", K.jsify(P.LinkedHashMap__makeLiteral(["sdkLocation", P.LinkedHashMap__makeLiteral(["title", "Dart SDK Location", "description", "The location of the Dart SDK.", "type", "string", "default", "", "order", 1]), "showInfos", P.LinkedHashMap__makeLiteral(["title", "Show infos", "description", "Show informational level analysis issues.", "type", "boolean", "default", true, "order", 2]), "showTodos", P.LinkedHashMap__makeLiteral(["title", "Show todos", "description", "When showing infos, also show TODO items.", "type", "boolean", "default", false, "order", 2]), "formatOnSave", P.LinkedHashMap__makeLiteral(["title", "Format current file on save", "description", "Format the current editor on save.", "type", "boolean", "default", false, "order", 3]), "filterUnnamedLibraryWarnings", P.LinkedHashMap__makeLiteral(["title", "Filter unnamed library warnings", "description", "Don't display warnings about unnamed libraries.", "type", "boolean", "default", true, "order", 4]), "filterCompiledToJSWarnings", P.LinkedHashMap__makeLiteral(["title", "Filter warnings about compiling to JavaScript", "description", "Don't display warnings about compiling to JavaScript.", "type", "boolean", "default", true, "order", 4])])));
       t1.$indexSet(exports, "serialize", $._package.get$serialize());
       $package._registeredMethods.forEach$1(0, new E.registerPackage_closure(exports));
       $package._registeredMethods = null;
@@ -23315,7 +23315,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = this._observer$_captured_this_0;
         if (t1.isFormatting)
           return;
-        if ($.$get$atom()._config.getValue$1("dartlang.x_formatOnSave") !== true)
+        if ($.$get$atom()._config.getValue$1("dartlang.formatOnSave") !== true)
           return;
         if (!X.Dependencies_instance().getDependency$1(C.Type_bhC).get$isActive())
           return;
@@ -36893,8 +36893,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   $.Device__cachedCssPrefix = null;
   $._infosPrefPath = "dartlang.showInfos";
   $._todosPrefPath = "dartlang.showTodos";
-  $._filterUnnamedLibraryWarningsPath = "dartlang.x_filterUnnamedLibraryWarnings";
-  $._filterCompiledToJSWarningsPath = "dartlang.x_filterCompiledToJSWarnings";
+  $._filterUnnamedLibraryWarningsPath = "dartlang.filterUnnamedLibraryWarnings";
+  $._filterCompiledToJSWarningsPath = "dartlang.filterCompiledToJSWarnings";
   $.hierarchicalLoggingEnabled = false;
   $.recordStackTraceAtLevel = C.Level_OFF_2000;
   $._rootLevel = C.Level_INFO_800;
