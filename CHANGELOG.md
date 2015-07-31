@@ -3,6 +3,10 @@
 ## unreleased
 - added the ability to run `pub run` and `pub global run` applications
 - added a `pub global activate` command
+- sort the preferences from ~most to least important
+- tweak the display of the `Find Referecnes` view
+- fixed an issue where upgrading the plugin (or disabling and re-enabling it)
+  would leave a status-bar contribution behind
 
 ## 0.3.7
 - implement a type hierarchy view (F4)
