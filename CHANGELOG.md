@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.8
 - added the ability to run `pub run` and `pub global run` applications
 - added a `pub global activate` command
 - sort the preferences from ~most to least important
