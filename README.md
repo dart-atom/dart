@@ -16,6 +16,13 @@ A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 The plugin should auto-detect the Dart SDK location. If not, you can set it
 manually in the plugin configuration page (`Preferences > Packages > dartlang`).
 
+### Optional packages
+
+We also recommend the following (optional) packages:
+
+- [last-cursor-position](https://atom.io/packages/last-cursor-position): helps you
+  move between cursor location history (useful when using "jump to definition")
+
 ## Features
 
 - auto-discovery of Dart SDK location
@@ -28,6 +35,7 @@ manually in the plugin configuration page (`Preferences > Packages > dartlang`).
 - find references to classes and methods
 - rename refactoring
 - pub commands (get and update) are available via context menus
+- view type hierarchy
 
 A lot of Atom's functionality is surfaced via named commands. You can see all
 the available commands by hitting `shift-command-p`.
