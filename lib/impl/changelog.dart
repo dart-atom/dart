@@ -13,11 +13,10 @@ import '../state.dart';
 final Logger _logger = new Logger('changelog');
 
 void checkChangelog() {
-  loadPackageJson().then(_checkChangelog);
+  getPackageVersion().then(_checkChangelog);
 }
 
-void _checkChangelog(Map m) {
-  String version = m['version'];
+void _checkChangelog(String version) {
   String last = state['version'];
 
   if (last != version) {

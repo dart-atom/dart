@@ -27,6 +27,11 @@ final Shell shell = new Shell();
 
 final JsObject _ctx = context['atom'];
 
+typedef void CommandWatcher(String command, AtomEvent event);
+
+/// Set a value for this typedef to be notified of all executed commands.
+CommandWatcher commandWatcher;
+
 /// An Atom package. Register your package using [registerPackage].
 abstract class AtomPackage {
   Map<String, Function> _registeredMethods = {};
@@ -239,10 +244,14 @@ class CommandRegistry extends ProxyHolder {
   CommandRegistry(JsObject object) : super(object);
 
   Disposable add(String target, String commandName, void callback(AtomEvent event)) {
-    return new JsDisposable(
-        invoke('add', target, commandName, (e) => callback(new AtomEvent(e))));
+    return new JsDisposable(invoke('add', target, commandName, (e) {
+      AtomEvent event = new AtomEvent(e);
+      if (commandWatcher != null) commandWatcher(commandName, event);
+      callback(event);
+    }));
   }
 
+  /// Simulate the dispatch of a command on a DOM node.
   void dispatch(Element target, String commandName, {Map options}) =>
       invoke('dispatch', target, commandName, options);
 }

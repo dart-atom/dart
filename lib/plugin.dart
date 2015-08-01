@@ -23,7 +23,7 @@ import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
-import 'sky/toolbar.dart';
+import 'usage.dart' as usage;
 import 'utils.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/declaration_nav.dart';
@@ -37,6 +37,7 @@ import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
+import 'sky/toolbar.dart';
 
 export 'atom.dart' show registerPackage;
 
@@ -92,7 +93,6 @@ class AtomDartPackage extends AtomPackage {
 
   void packageActivated([Map inState]) {
     _setupLogging();
-
     _logger.info("activated");
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
@@ -112,6 +112,8 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
+
+    usage.init().then((_) => usage.trackCommand('auto-startup'));
 
     // Register commands.
     _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
@@ -170,12 +172,11 @@ class AtomDartPackage extends AtomPackage {
 
   void packageDeactivated() {
     _logger.info('deactivated');
+    usage.trackCommand('auto-shutdown');
     disposables.dispose();
     subscriptions.cancel();
 
     // TODO: Cancel any running Jobs (see #120).
-
-    // TODO: dispose status-bar and toolbar contributions?
 
   }
 
@@ -229,6 +230,15 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': true,
         'order': 4
+      },
+
+      // google analytics
+      'sendUsageInformation': {
+        'title': 'Report usage information to Google Analytics.',
+        'description': "Report anonymized usage information to Google Analytics.",
+        'type': 'boolean',
+        'default': true,
+        'order': 5
       }
     };
   }

@@ -119,3 +119,9 @@ Future<Map> loadPackageJson() {
     return JSON.decode(str);
   });
 }
+
+Future<String> getPackageVersion() {
+  return loadPackageJson().then((map) {
+    return map == null ? null : map['version'];
+  });
+}
