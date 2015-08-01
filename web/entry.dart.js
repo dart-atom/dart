@@ -18091,14 +18091,16 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     },
     NotificationManager: {
       "^": "ProxyHolder;obj",
-      _options$3$detail$dismissable$icon: function(detail, dismissable, icon) {
+      _options$4$description$detail$dismissable$icon: function(description, detail, dismissable, icon) {
         var t1, m;
         t1 = detail == null;
-        if (t1 && dismissable == null && icon == null)
+        if (t1 && description == null && dismissable == null && icon == null)
           return;
         m = P.LinkedHashMap__makeEmpty();
         if (!t1)
           m.$indexSet(0, "detail", detail);
+        if (description != null)
+          m.$indexSet(0, "description", description);
         if (dismissable != null)
           m.$indexSet(0, "dismissable", dismissable);
         if (icon != null)
@@ -18420,7 +18422,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       F.applyEdits(editor, P.List_List$from(t1, true, H.getRuntimeTypeArgument(t1, "Iterable", 0)));
       F.selectEditGroups(editor, linkedEditGroups);
       t1 = $.$get$atom()._notifications;
-      t1.invoke$3("addSuccess", "Executed quick fix: " + H.S(G.toStartingLowerCase(J.get$message$x(change))), t1._options$3$detail$dismissable$icon(null, null, null));
+      t1.invoke$3("addSuccess", "Executed quick fix: " + H.S(G.toStartingLowerCase(J.get$message$x(change))), t1._options$4$description$detail$dismissable$icon(null, null, null, null));
     },
     AnalysisServer: {
       "^": "Object;subs,disposables,_serverActiveController,_serverBusyController,_onSendController,_onReceiveController,_onNavigatonController,_server<,_job,knownRoots,isActiveProperty<",
@@ -19447,7 +19449,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         changes = t1 != null ? Z._extractAfterVersion(str, t1) : Z._extractVersion(str, this._captured_version_0);
         if (changes.length !== 0) {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addSuccess", "Upgraded to dartlang plugin version " + H.S(this._captured_version_0) + ".", t1._options$3$detail$dismissable$icon(changes, true, null));
+          t1.invoke$3("addSuccess", "Upgraded to dartlang version " + H.S(this._captured_version_0) + ".", t1._options$4$description$detail$dismissable$icon(null, changes, true, null));
         }
       }, null, null, 2, 0, null, 10, "call"]
     },
@@ -20520,10 +20522,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1;
         if (J.$eq$(result.get$exit(), 0)) {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addSuccess", "Formatting successful.", t1._options$3$detail$dismissable$icon(null, null, null));
+          t1.invoke$3("addSuccess", "Formatting successful.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
         } else {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addError", "Error while formatting", t1._options$3$detail$dismissable$icon(result.get$stderr(), null, null));
+          t1.invoke$3("addError", "Error while formatting", t1._options$4$description$detail$dismissable$icon(null, result.get$stderr(), null, null));
         }
       }, null, null, 2, 0, null, 1, "call"]
     },
@@ -20533,11 +20535,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1, t2;
         if (J.get$isEmpty$asx(result.get$edits())) {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addSuccess", "No formatting changes.", t1._options$3$detail$dismissable$icon(null, null, null));
+          t1.invoke$3("addSuccess", "No formatting changes.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
           return false;
         } else {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addSuccess", "Formatting successful.", t1._options$3$detail$dismissable$icon(null, null, null));
+          t1.invoke$3("addSuccess", "Formatting successful.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
           t1 = this._captured_editor_0;
           F.applyEdits(t1, result.get$edits());
           t2 = this._captured_buffer_1;
@@ -20552,7 +20554,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1;
         if (e instanceof N.RequestError) {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addError", "Error while formatting", t1._options$3$detail$dismissable$icon(e.message, null, null));
+          t1.invoke$3("addError", "Error while formatting", t1._options$4$description$detail$dismissable$icon(null, e.message, null, null));
         } else {
           $.$get$atom().invoke$1("beep");
           $.$get$_logger0().warning$1("error when formatting: " + H.S(e));
@@ -20665,7 +20667,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           detail = result == null ? null : H.S(result);
           t2 = this._jobs$_captured_this_0._toasts;
           t3 = H.S(J.get$name$x(this._captured_jobInstance_1)) + " completed.";
-          t2.invoke$3("addSuccess", t3, t2._options$3$detail$dismissable$icon(detail, detail != null && detail.length !== 0 && t1.get$pinResult(), null));
+          t2.invoke$3("addSuccess", t3, t2._options$4$description$detail$dismissable$icon(null, detail, detail != null && detail.length !== 0 && t1.get$pinResult(), null));
         }
         this._captured_jobInstance_1.get$_completer().complete$1(0, result);
       }, null, null, 2, 0, null, 1, "call"]
@@ -20690,7 +20692,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._captured_jobInstance_6.get$_completer().complete$0(0);
         t1 = this._jobs$_captured_this_5._toasts;
         t2 = this._captured_job_7;
-        t1.invoke$3("addError", t2.get$name(t2) + " failed.", t1._options$3$detail$dismissable$icon(H.S(e), true, null));
+        t1.invoke$3("addError", t2.get$name(t2) + " failed.", t1._options$4$description$detail$dismissable$icon(null, H.S(e), true, null));
       }, null, null, 2, 0, null, 2, "call"]
     },
     JobInstance: {
@@ -21061,7 +21063,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           dep = t1.get$current();
           if (t2.contains$1(packages, dep) !== true) {
             t3 = $.$get$atom()._notifications;
-            t3.invoke$3("addWarning", "The 'dartlang' plugin requires the '" + H.S(dep) + "' plugin in order to work. You can install it via the Install section of the Settings dialog.", t3._options$3$detail$dismissable$icon(null, true, null));
+            t3.invoke$3("addWarning", "The 'dartlang' plugin requires the '" + H.S(dep) + "' plugin in order to work. You can install it via the Install section of the Settings dialog.", t3._options$4$description$detail$dismissable$icon(null, null, true, null));
           }
         }
       }, "call$1", "get$_verifyPackages", 2, 0, 21, 6],
@@ -21194,7 +21196,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           X.Dependencies_instance().getDependency$1(C.Type_bhC).reanalyzeSources$0();
         else {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addWarning", "Analysis server not active.", t1._options$3$detail$dismissable$icon(null, null, null));
+          t1.invoke$3("addWarning", "Analysis server not active.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
         }
       }, null, null, 2, 0, null, 0, "call"]
     },
@@ -21563,7 +21565,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1, path, dir;
         if (editor == null) {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addWarning", "This commands requires an open file editor.", t1._options$3$detail$dismissable$icon(null, null, null));
+          t1.invoke$3("addWarning", "This commands requires an open file editor.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
           return;
         }
         path = editor.invoke$1("getPath");
@@ -21574,7 +21576,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         dir = R._locatePubspecDir(path);
         if (dir == null) {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addWarning", "No pubspec.yaml file found for '" + H.S(path) + "'.", t1._options$3$detail$dismissable$icon(null, null, null));
+          t1.invoke$3("addWarning", "No pubspec.yaml file found for '" + H.S(path) + "'.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
           return;
         }
         S.promptUser("pub run: pub application to run (ex. sky:init).", J.$index$asx($.$get$state()._state$_map, "lastRunText"), true).then$1(new R.PubManager__handleRun_closure(dir));
@@ -21790,7 +21792,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         proj = J.firstWhere$2$orElse$ax(t1._project.getDirectories$0(), new Z.RebuildJob_run_closure("dartlang"), new Z.RebuildJob_run_closure0());
         if (proj == null) {
           t1 = t1._notifications;
-          t1.invoke$3("addWarning", "Unable to find project 'dartlang'.", t1._options$3$detail$dismissable$icon(null, null, null));
+          t1.invoke$3("addWarning", "Unable to find project 'dartlang'.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
           t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
           t1._asyncComplete$1(null);
           return t1;
@@ -21825,7 +21827,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (!J.$eq$(result.get$exit(), 0))
           throw H.wrapException(result.get$stdout() + "\n" + result.get$stderr());
         t1 = $.$get$atom()._notifications;
-        t1.invoke$3("addSuccess", "Recompiled dart-tools! Restarting\u2026", t1._options$3$detail$dismissable$icon(null, null, null));
+        t1.invoke$3("addSuccess", "Recompiled dart-tools! Restarting\u2026", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
         file = new E.File(E._cvt(this._captured_proj_1.getSubdirectory$1("web").invoke$2("getFile", "entry.dart.js")));
         return K.promiseToFuture(file.invoke$2("read", null)).then$1(new Z.RebuildJob_run__closure(file)).then$1(new Z.RebuildJob_run__closure0());
       }, null, null, 2, 0, null, 1, "call"]
@@ -21951,12 +21953,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           if (J.get$isNotEmpty$asx(result.get$initialProblems())) {
             t1 = $.$get$atom();
             t2 = t1._notifications;
-            t2.invoke$3("addError", "Unable to Perform Rename", t2._options$3$detail$dismissable$icon(H.S(J.get$message$x(J.get$first$ax(result.get$initialProblems()))), null, null));
+            t2.invoke$3("addError", "Unable to Perform Rename", t2._options$4$description$detail$dismissable$icon(null, H.S(J.get$message$x(J.get$first$ax(result.get$initialProblems()))), null, null));
             t1.invoke$1("beep");
           } else if (result.get$change() == null) {
             t1 = $.$get$atom();
             t2 = t1._notifications;
-            t2.invoke$3("addError", "Unable to Perform Rename", t2._options$3$detail$dismissable$icon("No change information returned.", null, null));
+            t2.invoke$3("addError", "Unable to Perform Rename", t2._options$4$description$detail$dismissable$icon(null, "No change information returned.", null, null));
             t1.invoke$1("beep");
           } else {
             sourceFileEdits = result.get$change().edits;
@@ -22004,7 +22006,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (t2.get$length(t1) === 1)
           fileSummary = null;
         t1 = $.$get$atom()._notifications;
-        t1.invoke$3("addSuccess", "Renamed '" + this._captured_oldName_2 + "' to '" + H.S(this._captured_newName_3) + "'.", t1._options$3$detail$dismissable$icon(fileSummary, null, null));
+        t1.invoke$3("addSuccess", "Renamed '" + this._captured_oldName_2 + "' to '" + H.S(this._captured_newName_3) + "'.", t1._options$4$description$detail$dismissable$icon(null, fileSummary, null, null));
       }, null, null, 2, 0, null, 0, "call"]
     },
     RefactoringHelper__apply__closure: {
@@ -22017,7 +22019,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(e) {
         var t1 = $.$get$atom()._notifications;
-        t1.invoke$3("addError", "Error Performing Rename", t1._options$3$detail$dismissable$icon(H.S(e), null, null));
+        t1.invoke$3("addError", "Error Performing Rename", t1._options$4$description$detail$dismissable$icon(null, H.S(e), null, null));
       }, null, null, 2, 0, null, 2, "call"]
     }
   }], ["atom.references", "package:atom_dartlang/analysis/references.dart",, V, {
@@ -22219,13 +22221,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     _MatchParser: {
       "^": "Object;file<,lines",
       parseMatch$1: function(l) {
-        var t1, t2, line, col, start, max, extract, t3, end;
+        var line, col, start, max, extract, end, llen, rlen, t1, t2, exception;
         if (!J.$eq$(this.file, l.get$file())) {
           this.file = null;
           this.lines = null;
-          t1 = l.get$file();
-          this.lines = J.split$1$s(new E.File(E._create("File", t1, null)).invoke$2("readSync", null), "\n");
-          this.file = t1;
+          this._parse$1(l.get$file());
         }
         if (this.lines == null || J.$ge$n(l.get$startLine(), this.lines.length) === true)
           return;
@@ -22234,22 +22234,48 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (t2 >>> 0 !== t2 || t2 >= t1.length)
           return H.ioore(t1, t2);
         line = t1[t2];
-        col = J.$sub$n(l.get$startColumn(), 1);
-        t2 = J.getInterceptor$s(line);
-        start = t2.substring$2(line, 0, col);
-        max = P.min(J.get$length$asx(l), J.$sub$n(t2.get$length(line), col));
-        t1 = J.getInterceptor$ns(col);
-        extract = t2.substring$2(line, col, t1.$add(col, max));
-        t3 = t2.get$length(line);
-        if (typeof t3 !== "number")
-          return H.iae(t3);
-        end = max < t3 ? t2.substring$1(line, t1.$add(col, max)) : "";
-        start = C.JSString_methods.trimLeft$0(start);
-        end = C.JSString_methods.trimRight$0(end);
-        t1 = start.length;
-        if (t1 > 20)
-          start = "\u2026" + C.JSString_methods.substring$1(start, t1 - 20 + 2);
-        return [start, extract, end.length > 30 ? C.JSString_methods.substring$2(end, 0, 28) + "\u2026" : end];
+        try {
+          col = J.$sub$n(l.get$startColumn(), 1);
+          col = P.min(col, J.get$length$asx(line));
+          start = J.substring$2$s(line, 0, col);
+          max = P.min(J.get$length$asx(l), J.$sub$n(J.get$length$asx(line), col));
+          extract = J.substring$2$s(line, col, J.$add$ns(col, max));
+          end = "";
+          if (J.$lt$n(max, J.get$length$asx(line)))
+            end = J.substring$1$s(line, J.$add$ns(col, max));
+          start = J.trimLeft$0$s(start);
+          end = J.trimRight$0$s(end);
+          llen = 20;
+          rlen = 30;
+          if (J.$gt$n(J.get$length$asx(start), llen))
+            start = "\u2026" + J.substring$1$s(start, J.$sub$n(J.get$length$asx(start), llen) + 2);
+          if (J.$gt$n(J.get$length$asx(end), rlen))
+            end = J.substring$2$s(end, 0, J.$sub$n(rlen, 2)) + "\u2026";
+          return [start, extract, end];
+        } catch (exception) {
+          H.unwrapException(exception);
+          if (J.$gt$n(J.get$length$asx(line), 60) === true)
+            line = J.substring$2$s(line, 0, 60);
+          return [line, "", ""];
+        }
+      },
+      _parse$1: function(path) {
+        var contents, t1, editor, exception;
+        this.file = path;
+        for (t1 = J.get$iterator$ax($.$get$atom()._workspace.getTextEditors$0()); t1.moveNext$0();) {
+          editor = t1.__interceptors$_current;
+          if (J.$eq$(editor.getPath$0(), path)) {
+            this.lines = J.split$1$s(editor.getText$0(), "\n");
+            return;
+          }
+        }
+        try {
+          contents = new E.File(E._create("File", path, null)).invoke$2("readSync", null);
+          this.lines = contents == null ? [] : J.split$1$s(contents, "\n");
+        } catch (exception) {
+          H.unwrapException(exception);
+          this.lines = [];
+        }
       }
     }
   }], ["atom.sdk", "package:atom_dartlang/sdk.dart",, V, {
@@ -22264,7 +22290,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       },
       showNoSdkMessage$0: function() {
         var t1 = $.$get$atom()._notifications;
-        t1.invoke$3("addInfo", "No Dart SDK found.", t1._options$3$detail$dismissable$icon("You can configure your SDK location in Settings > Packages > dart-lang > Settings.", true, null));
+        t1.invoke$3("addInfo", "No Dart SDK found.", t1._options$4$description$detail$dismissable$icon(null, "You can configure your SDK location in Settings > Packages > dart-lang > Settings.", true, null));
       },
       tryToAutoConfigure$1$complainOnFailure: function(complainOnFailure) {
         new V.SdkDiscovery().discoverSdk$0().then$1(new V.SdkManager_tryToAutoConfigure_closure(complainOnFailure));
@@ -22292,10 +22318,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             if (verbose)
               if (!t1 || J.get$isEmpty$asx(path) === true) {
                 t1 = $.$get$atom()._notifications;
-                t1.invoke$3("addInfo", "No Dart SDK configured.", t1._options$3$detail$dismissable$icon(null, null, null));
+                t1.invoke$3("addInfo", "No Dart SDK configured.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
               } else {
                 t1 = $.$get$atom()._notifications;
-                t1.invoke$3("addInfo", "No Dart SDK configured.", t1._options$3$detail$dismissable$icon("SDK not found at " + H.S(path) + ".", null, null));
+                t1.invoke$3("addInfo", "No Dart SDK configured.", t1._options$4$description$detail$dismissable$icon(null, "SDK not found at " + H.S(path) + ".", null, null));
               }
           }
         } else {
@@ -22314,7 +22340,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             t2._sendData$1(t1);
             if (verbose) {
               t1 = $.$get$atom()._notifications;
-              t1.invoke$3("addSuccess", "Dart SDK found at " + H.S(path) + ".", t1._options$3$detail$dismissable$icon(null, null, null));
+              t1.invoke$3("addSuccess", "Dart SDK found at " + H.S(path) + ".", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
             }
           }
         }
@@ -22353,7 +22379,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           $.$get$atom()._config.invoke$3("set", "dartlang.sdkLocation", sdkPath);
         else if (this._captured_complainOnFailure_0) {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addWarning", "Unable to auto-locate a Dart SDK.", t1._options$3$detail$dismissable$icon(null, null, null));
+          t1.invoke$3("addWarning", "Unable to auto-locate a Dart SDK.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
         }
       }, null, null, 2, 0, null, 98, "call"]
     },
@@ -22512,11 +22538,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       P.Future_Future$microtask(new E.smokeTest_closure4(), null);
       P.Future_Future$delayed(P.Duration$(0, 0, 0, 0, 0, 2), new E.smokeTest_closure5(panel), null);
       t3 = t2._notifications;
-      t3.invoke$3("addSuccess", "Hello world from dart-lang!", t3._options$3$detail$dismissable$icon(null, null, null));
+      t3.invoke$3("addSuccess", "Hello world from dart-lang!", t3._options$4$description$detail$dismissable$icon(null, null, null, null));
       t3 = t2._notifications;
-      t3.invoke$3("addInfo", "Hello world from dart-lang!", t3._options$3$detail$dismissable$icon("Foo bar.", null, null));
+      t3.invoke$3("addInfo", "Hello world from dart-lang!", t3._options$4$description$detail$dismissable$icon(null, "Foo bar.", null, null));
       t2 = t2._notifications;
-      t2.invoke$3("addWarning", "Hello world from dart-lang!", t2._options$3$detail$dismissable$icon("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", null, null));
+      t2.invoke$3("addWarning", "Hello world from dart-lang!", t2._options$4$description$detail$dismissable$icon(null, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", null, null));
       E.BufferedProcess_create("pwd", null, null, null, new E.smokeTest_closure6(), new E.smokeTest_closure7(), new E.smokeTest_closure8());
       Z.exec("date", null).then$1(new E.smokeTest_closure9());
       sdk = X.Dependencies_instance().getDependency$1(C.Type_OHH).get$sdk();
@@ -22640,7 +22666,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:1;",
       call$0: function() {
         var t1 = $.$get$atom()._notifications;
-        t1.invoke$3("addSuccess", "Hello world from dart-lang!", t1._options$3$detail$dismissable$icon(null, null, null));
+        t1.invoke$3("addSuccess", "Hello world from dart-lang!", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
       }
     },
     smokeTest_closure13: {
@@ -22997,7 +23023,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = J.getInterceptor$x(intoElement);
         J.add$1$ax(t1.get$children(intoElement), span);
         if (J.get$isNotEmpty$asx(item.get$mixins()) === true || J.get$isNotEmpty$asx(item.get$interfaces()) === true) {
-          t2 = J.get$isNotEmpty$asx(item.get$interfaces()) === true ? H.S(J.join$1$ax(J.map$1$ax(item.get$interfaces(), new E.TypeHierarchyView__render_closure(this)), ", ")) : "";
+          t2 = J.get$isNotEmpty$asx(item.get$interfaces()) === true ? " " + H.S(J.join$1$ax(J.map$1$ax(item.get$interfaces(), new E.TypeHierarchyView__render_closure(this)), ", ")) : "";
           if (J.get$isNotEmpty$asx(item.get$mixins()) === true)
             t2 = (t2.length !== 0 ? t2 + ", " : t2) + "with " + H.S(J.join$1$ax(J.map$1$ax(item.get$mixins(), new E.TypeHierarchyView__render_closure0(this)), ", "));
           span = document.createElement("span", null);
@@ -32908,7 +32934,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (typeof a === "number")
           if (a === 0)
             return (a + b) * a * b;
-        if (a === 0 && C.JSNumber_methods.get$isNegative(b) || isNaN(b))
+        if (a === 0 && C.JSDouble_methods.get$isNegative(b) || C.JSDouble_methods.get$isNaN(b))
           return b;
         return a;
       }
@@ -34338,7 +34364,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return;
         this._displayedWarning = true;
         t1 = $.$get$atom()._notifications;
-        t1.invoke$3("addWarning", "Warning: displaying 500 issues of " + issues.length + " total.", t1._options$3$detail$dismissable$icon(null, null, null));
+        t1.invoke$3("addWarning", "Warning: displaying 500 issues of " + issues.length + " total.", t1._options$4$description$detail$dismissable$icon(null, null, null, null));
       },
       _emit$1: function(newIssues) {
         var t1;
@@ -36619,6 +36645,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   J.startsWith$1$s = function(receiver, a0) {
     return J.getInterceptor$s(receiver).startsWith$1(receiver, a0);
   };
+  J.substring$1$s = function(receiver, a0) {
+    return J.getInterceptor$s(receiver).substring$1(receiver, a0);
+  };
   J.substring$2$s = function(receiver, a0, a1) {
     return J.getInterceptor$s(receiver).substring$2(receiver, a0, a1);
   };
@@ -36642,6 +36671,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   };
   J.trimLeft$0$s = function(receiver) {
     return J.getInterceptor$s(receiver).trimLeft$0(receiver);
+  };
+  J.trimRight$0$s = function(receiver) {
+    return J.getInterceptor$s(receiver).trimRight$0(receiver);
   };
   J.where$1$ax = function(receiver, a0) {
     return J.getInterceptor$ax(receiver).where$1(receiver, a0);

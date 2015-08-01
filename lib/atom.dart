@@ -277,36 +277,53 @@ class Config extends ProxyHolder {
 class NotificationManager extends ProxyHolder {
   NotificationManager(JsObject object) : super(object);
 
+  // TODO: Expose the `buttons` field.
+  // https://github.com/atom/exception-reporting/blob/master/lib/reporter.coffee#L101
+
   /// Add an success notification. If [dismissable] is `true`, the notification
   /// is rendered with a close button and does not auto-close.
-  void addSuccess(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addSuccess', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addSuccess(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addSuccess', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
   /// Add an informational notification.
-  void addInfo(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addInfo', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addInfo(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addInfo', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
   /// Add an warning notification.
-  void addWarning(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addWarning', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addWarning(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addWarning', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
   /// Add an error notification.
-  void addError(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addError', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addError(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addError', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
   /// Add an fatal error notification.
-  void addFatalError(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addFatalError', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addFatalError(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addFatalError', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
-  Map _options({String detail, bool dismissable, String icon}) {
-    if (detail == null && dismissable == null && icon == null) return null;
+  Map _options({String detail, String description, bool dismissable, String icon}) {
+    if (detail == null && description == null && dismissable == null && icon == null) {
+      return null;
+    }
+
     Map m = {};
     if (detail != null) m['detail'] = detail;
+    if (description != null) m['description'] = description;
     if (dismissable != null) m['dismissable'] = dismissable;
     if (icon != null) m['icon'] = icon;
     return m;

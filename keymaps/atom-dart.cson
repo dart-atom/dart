@@ -3,22 +3,30 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth.
 
+# Global commands (mac)
 'body.platform-darwin':
   'ctrl-alt-cmd-;': 'dartlang:rebuild-restart-dev'
 
+# Global commands (windows and linux)
 'body.platform-win32, body.platform-linux':
   'ctrl-alt-;': 'dartlang:rebuild-restart-dev'
 
+# Dart editor commands (common to all platforms)
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
   'f1': 'dartlang:show-dartdoc'
   'f3': 'dartlang:jump-to-declaration'
   'f4': 'dartlang:type-hierarchy'
   'enter': 'dartlang:newline'
+  'alt-shift-r': 'dartlang:refactor-rename'
 
+# Dart editor commands (mac)
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
   'cmd-1': 'dartlang:quick-fix'
   'cmd-alt-b': 'dartlang:dart-format'
+  'shift-cmd-g': 'dartlang:find-references'
 
+# Dart editor commands (windows and linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
   'ctrl-1': 'dartlang:quick-fix'
   'ctrl-alt-b': 'dartlang:dart-format'
+  'ctrl-shift-g': 'dartlang:find-references'

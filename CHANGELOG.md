@@ -1,23 +1,28 @@
 # Changelog
 
+## unreleased
+- fixed exceptions in the find references feature
+- added a key binding for `dartlang:find-references` (ctrl-shift-g / shift-cmd-g)
+- added a key binding for `dartlang:refactor-rename` alt-shift-r
+
 ## 0.3.8
 - added the ability to run `pub run` and `pub global run` applications
 - added a `pub global activate` command
-- sort the preferences from ~most to least important
-- tweak the display of the `Find References` view
+- sorted the preferences from ~most to least important
+- tweaked the display of the `Find References` view
 - fixed an issue where upgrading the plugin (or disabling and re-enabling it)
   would leave a status-bar contribution behind
 
 ## 0.3.7
-- implement a type hierarchy view (F4)
-- implement a find references view (available from the context menu)
-- expose the rename refactoring as a context menu item
-- display new plugin features after an upgrade
+- implemented a type hierarchy view (F4)
+- implemented a find references view (available from the context menu)
+- exposed the rename refactoring as a context menu item
+- we now display new plugin features after an upgrade
 
 ## 0.3.6
-- add an option to format on save
-- warn when packages that we require are not installed
-- fix an NPE from the `re-analyze sources` command
+- added an option to format on save
+- we now warn when packages that we require are not installed
+- fixed an NPE from the `re-analyze sources` command
 - added a close button to the jobs dialog and the analysis server dialog
 
 ## 0.3.5
