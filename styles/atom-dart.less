@@ -86,7 +86,7 @@ div.atom-view {
     li.list-nested-item div.list-item {
       text-overflow: ellipsis;
       overflow-x: hidden;
-      white-space: pre;
+      white-space: nowrap;
     }
   }
 }
@@ -154,8 +154,6 @@ div.linter-tab.active {
   width: 450px;
   padding: 0;
   color: @text-color;
-  /*background-color: @pane-item-background-color;
-  border: 1px solid @tool-panel-border-color;*/
   border-radius: 2px;
   z-index: 100;
   font-size: 110%;
@@ -217,7 +215,6 @@ div.linter-tab.active {
 
 .hierarchy-muted {
   color: @text-color-subtle;
-  margin-left: 8px;
 }
 
 .list-tree .list-item.tree-selected,

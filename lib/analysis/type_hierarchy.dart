@@ -139,7 +139,7 @@ class TypeHierarchyView extends AtomView {
       StringBuffer buf = new StringBuffer();
 
       if (item.interfaces.isNotEmpty) {
-        //buf.write('implements ');
+        buf.write(' '); //'implements ');
         buf.write(item.interfaces.map((i) => _items[i].classElement.name).join(', '));
       }
 

@@ -32,7 +32,7 @@ void _checkChangelog(Map m) {
       }
       if (changes != null && changes.isNotEmpty) {
         atom.notifications.addSuccess(
-          'Upgraded to dartlang plugin version ${version}.',
+          'Upgraded to dartlang version ${version}.',
           detail: changes,
           dismissable: true);
       }
