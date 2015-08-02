@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.10
+- fix an exception when used with the 1.3.0 version of the `linter` package
+
 ## 0.3.9
 - fixed exceptions in the find references feature
 - added a key binding for `dartlang:find-references` (ctrl-shift-g / shift-cmd-g)

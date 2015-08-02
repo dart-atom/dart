@@ -11454,10 +11454,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.DartLinterConsumer__emit_closure[1];
     DartLinterConsumer__emit_closure.prototype = $desc;
     DartLinterConsumer__emit_closure.$__fields__ = [];
-    function DartLinterProvider(grammarScopes, scope, lintOnFly) {
+    function DartLinterProvider(grammarScopes, scope, lintOnFly, _key) {
       this.grammarScopes = grammarScopes;
       this.scope = scope;
       this.lintOnFly = lintOnFly;
+      this._key = _key;
       this.$deferredAction();
     }
     DartLinterProvider.builtin$cls = "DartLinterProvider";
@@ -11465,7 +11466,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       DartLinterProvider.name = "DartLinterProvider";
     $desc = $collectedClasses$.DartLinterProvider[1];
     DartLinterProvider.prototype = $desc;
-    DartLinterProvider.$__fields__ = ["grammarScopes", "scope", "lintOnFly"];
+    DartLinterProvider.$__fields__ = ["grammarScopes", "scope", "lintOnFly", "_key"];
     function Logger(name, parent, _level, _children, children, _controller) {
       this.name = name;
       this.parent = parent;
@@ -20922,10 +20923,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     LinterService: {
       "^": "ProxyHolder;obj",
       deleteMessages$1: function(provider) {
-        this.invoke$2("deleteMessages", null);
+        this.invoke$2("deleteMessages", provider._key);
       },
       setMessages$2: function(provider, messages) {
-        this.invoke$3("setMessages", null, H.setRuntimeTypeInfo(new H.MappedListIterable(messages, new E.LinterService_setMessages_closure()), [null, null]).toList$0(0));
+        this.invoke$3("setMessages", provider._key, H.setRuntimeTypeInfo(new H.MappedListIterable(messages, new E.LinterService_setMessages_closure()), [null, null]).toList$0(0));
       }
     },
     LinterService_setMessages_closure: {
@@ -34379,7 +34380,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this.add$1(0, t1._config.observe$3($._filterCompiledToJSWarningsPath, null, regen));
       },
       static: {DartLinterConsumer$: function(_errorRepository) {
-          var t1 = new T.DartLinterConsumer(_errorRepository, P.Duration$(0, 0, 0, 750, 0, 0), new T.DartLinterProvider(["source.dart"], "project", false), null, [], false, []);
+          var t1 = new T.DartLinterConsumer(_errorRepository, P.Duration$(0, 0, 0, 750, 0, 0), new T.DartLinterProvider(["source.dart"], "project", false, K.jsify(P.LinkedHashMap__makeLiteral(["scope", "project"]))), null, [], false, []);
           t1.DartLinterConsumer$1(_errorRepository);
           return t1;
         }}
@@ -34448,7 +34449,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 2, "call"]
     },
     DartLinterProvider: {
-      "^": "LinterProvider;grammarScopes,scope,lintOnFly"
+      "^": "LinterProvider;grammarScopes,scope,lintOnFly,_key"
     }
   }], ["logging", "package:logging/logging.dart",, N, {
     "^": "",
