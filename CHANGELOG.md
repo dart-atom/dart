@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.9
 - fixed exceptions in the find references feature
 - added a key binding for `dartlang:find-references` (ctrl-shift-g / shift-cmd-g)
 - added a key binding for `dartlang:refactor-rename` alt-shift-r
