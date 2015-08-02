@@ -110,7 +110,6 @@ class PermissiveNodeValidator implements NodeValidator {
 
 class TrustedHtmlTreeSanitizer implements NodeTreeSanitizer {
   const TrustedHtmlTreeSanitizer();
-
   void sanitizeTree(Node node) { }
 }
 
@@ -118,4 +117,8 @@ Future<Map> loadPackageJson() {
   return HttpRequest.getString('atom://dartlang/package.json').then((str) {
     return JSON.decode(str);
   });
+}
+
+Future<String> getPackageVersion() {
+  return loadPackageJson().then((map) => map['version']);
 }
