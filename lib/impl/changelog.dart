@@ -16,48 +16,45 @@ void checkChangelog() {
   getPackageVersion().then(_checkChangelog);
 }
 
-void _checkChangelog(String version) {
-  String last = state['version'];
+void _checkChangelog(String currentVersion) {
+  String lastVersion = state['version'];
 
-  if (last != version) {
-    _logger.info("upgraded from ${last} to ${version}");
+  if (lastVersion != currentVersion) {
+    _logger.info("upgraded from ${lastVersion} to ${currentVersion}");
 
     HttpRequest.getString('atom://dartlang/CHANGELOG.md').then((str) {
       String changes;
-      if (last != null) {
-        changes = _extractAfterVersion(str, last);
+      if (lastVersion != null) {
+        changes = _extractVersion(str, lastVersion, inclusive: false);
       } else {
-        changes = _extractVersion(str, version);
+        changes = _extractVersion(str, currentVersion, inclusive: true);
       }
       if (changes != null && changes.isNotEmpty) {
         atom.notifications.addSuccess(
-          'Upgraded to dartlang plugin version ${version}.',
+          'Upgraded to dartlang plugin version ${currentVersion}.',
           detail: changes,
           dismissable: true);
       }
     });
   }
 
-  state['version'] = version;
+  state['version'] = currentVersion;
 }
 
-String _extractVersion(String changelog, String version) {
-  List<String> changes = changelog.split('\n');
-  String match = '## ${version}';
-  Iterable itor = changes.skipWhile((line) => line != match);
-  changes = itor.takeWhile((line) => line.trim().isNotEmpty).toList();
-  return changes.join('\n').trim();
-}
-
-String _extractAfterVersion(String changelog, String last) {
-  Version ver = new Version.parse(last);
+String _extractVersion(String changelog, String last, {bool inclusive: true}) {
+  Version lastVersion = new Version.parse(last);
   List<String> changes = changelog.split('\n');
   Iterable itor = changes.skipWhile((line) => !line.startsWith('##'));
   changes = itor.takeWhile((line) {
     if (line.startsWith('## ')) {
-      line = line.substring(3);
-      Version v = new Version.parse(line);
-      return v > ver;
+      try {
+        line = line.substring(3);
+        Version ver = new Version.parse(line);
+        if (inclusive) return ver >= lastVersion;
+        return ver > lastVersion;
+      } catch (_) {
+        return true;
+      }
     }
     return true;
   }).toList();

@@ -23,7 +23,7 @@ import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
-import 'usage.dart' as usage;
+import 'usage.dart' show UsageManager;
 import 'utils.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/declaration_nav.dart';
@@ -113,7 +113,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
 
-    usage.init().then((_) => usage.trackCommand('auto-startup'));
+    disposables.add(new UsageManager());
 
     // Register commands.
     _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
@@ -172,7 +172,6 @@ class AtomDartPackage extends AtomPackage {
 
   void packageDeactivated() {
     _logger.info('deactivated');
-    usage.trackCommand('auto-shutdown');
     disposables.dispose();
     subscriptions.cancel();
 
