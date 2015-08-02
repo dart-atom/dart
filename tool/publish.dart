@@ -1,19 +1,21 @@
 part of atom.grind;
 
 @Task('Publish a new major version of dartlang')
-publishMajor() => _publish('major');
+publishMajor() => _publish(PublishType.major);
 
 @Task('Publish a new minor version of dartlang')
-publishMinor() => _publish('minor');
+publishMinor() => _publish(PublishType.minor);
 
 @Task('Publish a new patch version of dartlang')
-publishPatch() => _publish('patch');
+publishPatch() => _publish(PublishType.patch);
 
-_publish(String publishType) {
-  // Command line parsing (major, minor, patch) version update.
-  if (publishType != 'major' && publishType != 'minor' && publishType != 'patch') {
-    fail('Invalid publish type: ${publishType}');
-  }
+enum PublishType {
+  major,
+  minor,
+  patch
+}
+
+_publish(PublishType type) {
   // Comment out the if statements while developing this task.
   var diffResult = Process.runSync("git", ["diff", "--shortstat"]);
   if (diffResult.stdout.toString().isNotEmpty)
@@ -31,9 +33,9 @@ _publish(String publishType) {
 
   var currentVersion = new Version.parse(packageData['version']);
   var nextVersion;
-  if (publishType == 'major') nextVersion = currentVersion.nextMajor;
-  if (publishType == 'minor') nextVersion = currentVersion.nextMinor;
-  if (publishType == 'patch') nextVersion = currentVersion.nextPatch;
+  if (type == PublishType.major) nextVersion = currentVersion.nextMajor;
+  if (type == PublishType.minor) nextVersion = currentVersion.nextMinor;
+  if (type == PublishType.patch) nextVersion = currentVersion.nextPatch;
 
   // We do pattern matches to preserve the formatting in the existing files.
   var jsonPattern         = (version) => '"version": "${version}"';
