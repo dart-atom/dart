@@ -1,15 +1,19 @@
 part of atom.grind;
 
-// import 'dart:convert';
-// import 'dart:io';
+@Task('Publish a new major version of dartlang')
+publishMajor() => _publish('major');
 
-// import 'package:grinder/grinder.dart';
-// import 'package:pub_semver/pub_semver.dart';
+@Task('Publish a new minor version of dartlang')
+publishMinor() => _publish('minor');
 
-@Task('Publish a new version of dartlang')
-publish() {
-  throw 'Sorry -- grinder does not yet support specifying options on the command line!';
-  // TODO: command line parsing (major, minor, patch) version update
+@Task('Publish a new patch version of dartlang')
+publishPatch() => _publish('patch');
+
+_publish(String publishType) {
+  // Command line parsing (major, minor, patch) version update.
+  if (publishType != 'major' && publishType != 'minor' && publishType != 'patch') {
+    fail('Invalid publish type: ${publishType}');
+  }
   // Comment out the if statements while developing this task.
   var diffResult = Process.runSync("git", ["diff", "--shortstat"]);
   if (diffResult.stdout.toString().isNotEmpty)
@@ -26,13 +30,19 @@ publish() {
   var packageData = JSON.decode(packageFileData);
 
   var currentVersion = new Version.parse(packageData['version']);
-  // TODO: have this match the parameter passed in on the command line
-  var nextVersion = currentVersion.nextPatch;
+  var nextVersion;
+  if (publishType == 'major') nextVersion = currentVersion.nextMajor;
+  if (publishType == 'minor') nextVersion = currentVersion.nextMinor;
+  if (publishType == 'patch') nextVersion = currentVersion.nextPatch;
 
+  // We do pattern matches to preserve the formatting in the existing files.
   var jsonPattern         = (version) => '"version": "${version}"';
   var yamlPattern         = (version) => 'version: ${version}';
   var changelogPattern    = (version) => "# ${version}";
-  // We do pattern matches to preserve the formatting in the existing files.
+
+  if (!changelogData.contains('## unreleased')) {
+    fail("Please add a '## unreleased' section to the changelog.");
+  }
 
   var newPackageFileData =
     packageFileData.replaceFirst(jsonPattern(currentVersion),
@@ -41,7 +51,7 @@ publish() {
     yamlFileData.replaceFirst(yamlPattern(currentVersion),
       yamlPattern(nextVersion));
   var newChangelogData =
-    changelogData.replaceFirst(changelogPattern('Upcoming Version'),
+    changelogData.replaceFirst(changelogPattern('unreleased'),
       changelogPattern(nextVersion));
 
   new File('package.json').writeAsStringSync(newPackageFileData);
