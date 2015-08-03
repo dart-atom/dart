@@ -167,7 +167,9 @@ class AnalysisServer implements Disposable {
 
       if (projectManager.getProjectFor(path) != null) {
         // Ensure that the path is in a dart project.
-        server.analysis.setPriorityFiles([path]);
+        server.analysis.setPriorityFiles([path]).catchError((e) {
+          _logger.warning('Error from setPriorityFiles', e);
+        });
       }
     }
   }
