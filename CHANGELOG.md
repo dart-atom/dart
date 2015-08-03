@@ -3,6 +3,7 @@
 ## unreleased
 - added a check to ensure the the Dart SDK meets a minimum required version
 - added code to trap an exception from the analysis server (`setPriorityFiles`)
+- fixed an issue with code completion and `import` statements
 
 ## 0.3.10
 - fixed an exception when used with the 1.3.0 version of the `linter` package
