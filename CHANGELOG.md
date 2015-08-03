@@ -1,7 +1,10 @@
 # Changelog
 
+## unreleased
+- added a check to ensure the the Dart SDK meets a minimum required version
+
 ## 0.3.10
-- fix an exception when used with the 1.3.0 version of the `linter` package
+- fixed an exception when used with the 1.3.0 version of the `linter` package
 
 ## 0.3.9
 - fixed exceptions in the find references feature
