@@ -36,6 +36,7 @@ We also recommend the following (optional) packages:
 - rename refactoring
 - pub commands (get and update) are available via context menus
 - view type hierarchy
+- format source code with `dartfmt` (use the Command Palette)
 
 A lot of Atom's functionality is surfaced via named commands. You can see all
 the available commands by hitting `shift-command-p`.
