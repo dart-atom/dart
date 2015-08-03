@@ -15,6 +15,8 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('refactoring');
 
+final RegExp _idRegex = new RegExp(r'[_a-zA-Z0-9]');
+
 class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 
@@ -116,8 +118,6 @@ class RefactoringHelper implements Disposable {
       atom.notifications.addError('Error Performing Rename', detail: '${e}');
     });
   }
-
-  static RegExp _idRegex = new RegExp(r'[_a-zA-Z0-9]');
 
   static String _findIdentifier(String text, int offset) {
     while (offset > 0) {

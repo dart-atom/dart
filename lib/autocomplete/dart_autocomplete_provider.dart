@@ -49,7 +49,9 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     var server = analysisServer.server;
     var editor = options.editor;
     var path = editor.getPath();
+    String text = editor.getText();
     var offset = editor.getBuffer().characterIndexForPosition(options.bufferPosition);
+    String prefix = options.prefix;
 
     // TODO: Can we tell if the auto-complete was explicitly requested by the
     // user?
@@ -57,13 +59,15 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     // Atom autocompletes right after a semi-colon, and often the user's return
     // key event is captured as a code complete select - inserting an item
     // (inadvertently) into the editor.
-    if (options.prefix == ';') return new Future.value([]);
-    if (options.prefix == '{' || options.prefix == '}') return new Future.value([]);
+    if (prefix == ';') return new Future.value([]);
+    if (prefix == '{' || prefix == '}') return new Future.value([]);
 
     return server.completion.getSuggestions(path, offset).then((result) {
       return server.completion.onResults
           .where((cr) => cr.id == result.id)
-          .where((cr) => cr.isLast).first.then(_handleCompletionResults);
+          .where((cr) => cr.isLast).first.then((r) {
+              return _handleCompletionResults(text, offset, prefix, r);
+          });
     });
   }
 
@@ -72,19 +76,24 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     String requiredImport = suggestion['requiredImport'];
     if (requiredImport != null) {
       // TODO: insert it...
-      print('TODO: add an import for ${requiredImport}');
+      _logger.info('TODO: add an import for ${requiredImport}');
     }
   }
 
-  List<Suggestion> _handleCompletionResults(CompletionResults cr) {
+  List<Suggestion> _handleCompletionResults(String fileText, int offset, String prefix,
+      CompletionResults cr) {
     List<CompletionSuggestion> results = cr.results;
+
+    int replacementOffset = cr.replacementOffset;
+
+    // TODO: It is difficult to use replacementLength with the atom autocomplete apis.
+    // int replacementLength = cr.replacementLength;
 
     if (_filterLowRelevance) {
       // Apply filtering from `dart-tools`.
       results = results.where((result) => result.relevance > 500).toList();
     }
 
-    // TODO: Do we want to trust the AS's priority?
     results.sort(_compareSuggestions);
 
     var suggestions = results.map((CompletionSuggestion cs) {
@@ -116,11 +125,21 @@ class DartAutocompleteProvider extends AutocompleteProvider {
         }
       }
 
+      // Calculate the prefix based on the insert location and the offset.
+      String _prefix = prefix;
+
+      if (replacementOffset < offset) {
+        _prefix = fileText.substring(replacementOffset, offset);
+      }
+
+      // TODO: Filter out completions where the suggestions.tolowercase != the prefix?
+
       bool potential = cs.isPotential || cs.importUri != null;
 
       return new Suggestion(
         text: text,
         snippet: snippet,
+        replacementPrefix: _prefix,
         type: _mapType(cs),
         leftLabel: _sanitizeReturnType(cs),
         rightLabel: _rightLabel(cs.element != null ? cs.element.kind : cs.kind),
