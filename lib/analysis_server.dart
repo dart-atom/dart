@@ -165,10 +165,10 @@ class AnalysisServer implements Disposable {
       // TODO: What a truly interesting API.
       _server.analysis.setSubscriptions({'NAVIGATION': [path]});
 
+      // Ensure that the path is in a Dart project.
       if (projectManager.getProjectFor(path) != null) {
-        // Ensure that the path is in a dart project.
         server.analysis.setPriorityFiles([path]).catchError((e) {
-          _logger.warning('Error from setPriorityFiles', e);
+          _logger.warning('Error from setPriorityFiles()', e);
         });
       }
     }

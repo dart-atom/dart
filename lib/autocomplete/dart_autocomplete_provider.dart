@@ -83,11 +83,15 @@ class DartAutocompleteProvider extends AutocompleteProvider {
   List<Suggestion> _handleCompletionResults(String fileText, int offset, String prefix,
       CompletionResults cr) {
     List<CompletionSuggestion> results = cr.results;
-
+    String prefixLower = prefix.toLowerCase();
     int replacementOffset = cr.replacementOffset;
 
-    // TODO: It is difficult to use replacementLength with the atom autocomplete apis.
-    // int replacementLength = cr.replacementLength;
+    // Calculate the prefix based on the insert location and the offset.
+    String _prefix;
+    if (replacementOffset < offset) {
+      _prefix = fileText.substring(replacementOffset, offset);
+      if (_prefix == prefix) _prefix = null;
+    }
 
     if (_filterLowRelevance) {
       // Apply filtering from `dart-tools`.
@@ -125,21 +129,20 @@ class DartAutocompleteProvider extends AutocompleteProvider {
         }
       }
 
-      // Calculate the prefix based on the insert location and the offset.
-      String _prefix = prefix;
-
-      if (replacementOffset < offset) {
-        _prefix = fileText.substring(replacementOffset, offset);
+      // Filter out completions where the suggestions.tolowercase != the prefix.
+      String completionPrefix = _prefix != null  ? _prefix.toLowerCase() : prefixLower;
+      if (idRegex.hasMatch(completionPrefix[0])) {
+        if (text != null && !text.toLowerCase().startsWith(completionPrefix)) {
+          return null;
+        }
+        if (snippet != null && !snippet.toLowerCase().startsWith(completionPrefix)) {
+          return null;
+        }
       }
-
-      // TODO: Filter out completions where the suggestions.tolowercase != the prefix?
 
       bool potential = cs.isPotential || cs.importUri != null;
 
-      return new Suggestion(
-        text: text,
-        snippet: snippet,
-        replacementPrefix: _prefix,
+      Suggestion suggestion = new Suggestion(
         type: _mapType(cs),
         leftLabel: _sanitizeReturnType(cs),
         rightLabel: _rightLabel(cs.element != null ? cs.element.kind : cs.kind),
@@ -149,7 +152,11 @@ class DartAutocompleteProvider extends AutocompleteProvider {
         description: _describe(cs),
         requiredImport: cs.importUri
       );
-    }).toList();
+      if (text != null) suggestion.text = text;
+      if (snippet != null) suggestion.snippet = snippet;
+      if (_prefix != null) suggestion.replacementPrefix = _prefix;
+      return suggestion;
+    }).where((suggestion) => suggestion != null).toList();
 
     return suggestions;
   }

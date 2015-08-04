@@ -115,13 +115,13 @@ class AutocompleteOptions {
 class Suggestion {
   /// (required; or [snippet]): The text which will be inserted into the
   /// editor, in place of the prefix.
-  final String text;
+  String text;
 
   /// (required; or [text]): A snippet string. This will allow users to tab
   /// through function arguments or other options. e.g.
   /// `myFunction(${1:arg1}, ${2:arg2})`. See the snippets package for more
   /// information.
-  final String snippet;
+  String snippet;
 
   /// (optional): A string that will show in the UI for this suggestion. When
   /// not set, snippet || text is displayed. This is useful when snippet or text
@@ -132,7 +132,7 @@ class Suggestion {
   /// (optional): The text immediately preceding the cursor, which will be
   /// replaced by the text. If not provided, the prefix passed into
   /// `getSuggestions` will be used.
-  final String replacementPrefix;
+  String replacementPrefix;
 
   /// (optional): The suggestion type. It will be converted into an icon shown
   /// against the suggestion. Predefined styles exist for `variable`, `constant`,

@@ -15,8 +15,6 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('refactoring');
 
-final RegExp _idRegex = new RegExp(r'[_a-zA-Z0-9]');
-
 class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 
@@ -121,7 +119,7 @@ class RefactoringHelper implements Disposable {
 
   static String _findIdentifier(String text, int offset) {
     while (offset > 0) {
-      if (_idRegex.hasMatch(text[offset - 1])) {
+      if (idRegex.hasMatch(text[offset - 1])) {
         offset--;
       } else {
         break;
@@ -133,7 +131,7 @@ class RefactoringHelper implements Disposable {
     while (offset < text.length) {
       String c = text[offset];
 
-      if (_idRegex.hasMatch(c)) {
+      if (idRegex.hasMatch(c)) {
         buf.write(c);
         offset++;
       } else {
