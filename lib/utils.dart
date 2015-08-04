@@ -39,6 +39,8 @@ String commas(int n) {
   }
 }
 
+final RegExp idRegex = new RegExp(r'[_a-zA-Z0-9]');
+
 abstract class Disposable {
   void dispose();
 }
