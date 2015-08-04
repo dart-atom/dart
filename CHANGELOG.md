@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.11
 - added a check to ensure the the Dart SDK meets a minimum required version
 - added code to trap an exception from the analysis server (`setPriorityFiles`)
 - fixed an issue with code completion and `import` statements
