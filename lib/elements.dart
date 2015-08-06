@@ -420,6 +420,11 @@ class ListTreeBuilder extends CoreElement {
       CoreElement u = ul(c: 'list-tree');
       element.add(u);
 
+      e.onClick.listen((MouseEvent e) {
+        // Only respond to clicks on the toggle arrow.
+        if (e.offset.x < 12) element.toggleClass('collapsed');
+      });
+
       for (Node child in node.children) {
         _addNode(u, child);
       }

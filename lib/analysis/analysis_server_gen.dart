@@ -648,6 +648,12 @@ class EditDomain extends Domain {
     Map m = {'file': file};
     return _call('edit.sortMembers', m).then(SortMembersResult.parse);
   }
+
+  Future<OrganizeDirectivesResult> organizeDirectives(String file) {
+    Map m = {'file': file};
+    return _call('edit.organizeDirectives', m)
+        .then(OrganizeDirectivesResult.parse);
+  }
 }
 
 class FormatResult {
@@ -730,6 +736,15 @@ class SortMembersResult {
   final SourceFileEdit edit;
 
   SortMembersResult(this.edit);
+}
+
+class OrganizeDirectivesResult {
+  static OrganizeDirectivesResult parse(Map m) =>
+      new OrganizeDirectivesResult(SourceFileEdit.parse(m['edit']));
+
+  final SourceFileEdit edit;
+
+  OrganizeDirectivesResult(this.edit);
 }
 
 // execution domain

@@ -88,6 +88,19 @@ div.atom-view {
       overflow-x: hidden;
       white-space: nowrap;
     }
+
+    /* TODO: Should we have any clickable item in the list have a pointer cursor?
+    li.list-nested-item > div.list-item::before {
+      cursor: pointer;
+    }*/
+
+    li.list-nested-item.collapsed > div.list-item::before {
+      content: "\f078";
+    }
+
+    li.list-nested-item.collapsed > ul.list-tree {
+      display: none;
+    }
   }
 }
 

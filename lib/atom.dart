@@ -526,8 +526,13 @@ class TextEditor extends ProxyHolder {
   /// {
   ///   'scopes': ['source.dart']
   /// }
-  Map getRootScopeDescriptor() =>
-      toDartObjectViaWizardy(invoke('getRootScopeDescriptor'));
+  ScopeDescriptor getRootScopeDescriptor() =>
+      new ScopeDescriptor(invoke('getRootScopeDescriptor'));
+
+  /// Get the syntactic scopeDescriptor for the given position in buffer
+  /// coordinates.
+  ScopeDescriptor scopeDescriptorForBufferPosition(Point bufferPosition) =>
+      new ScopeDescriptor(invoke('scopeDescriptorForBufferPosition', bufferPosition));
 
   String getText() => invoke('getText');
   String getSelectedText() => invoke('getSelectedText');
@@ -763,6 +768,17 @@ class Shell {
   JsObject get _shell => require('shell');
 
   openExternal(String url) => _shell.callMethod('openExternal', [url]);
+}
+
+class ScopeDescriptor extends ProxyHolder {
+  factory ScopeDescriptor(JsObject object) {
+    return object == null ? null : new ScopeDescriptor._(object);
+  }
+  ScopeDescriptor._(JsObject object) : super(object);
+
+  List<String> get scopes => obj['scopes'];
+
+  List<String> getScopesArray() => invoke('getScopesArray');
 }
 
 class BufferedProcess extends ProxyHolder {
