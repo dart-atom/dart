@@ -17,11 +17,22 @@ import 'utils.dart';
 
 final Logger _logger = new Logger('atom.autocomplete');
 
+_AutocompleteOverride _override;
+
 void triggerAutocomplete(TextEditor editor) {
   atom.commands.dispatch(
     atom.views.getView(editor),
     'autocomplete-plus:activate',
     options: {'activatedManually': false});
+}
+
+/// Display the code completion UI with the given list of items, and return the
+/// user's selection.
+Future<dynamic> chooseItemUsingCompletions(TextEditor editor,
+    List<dynamic> items, Suggestion renderer(var item)) {
+  _override = new _AutocompleteOverride(items, renderer);
+  triggerAutocomplete(editor);
+  return _override.future;
 }
 
 abstract class AutocompleteProvider implements Disposable {
@@ -71,21 +82,36 @@ abstract class AutocompleteProvider implements Disposable {
   }
 
   JsObject _getSuggestions(options) {
+    Future<List<Suggestion>> f;
     AutocompleteOptions opts = new AutocompleteOptions(options);
-    Stopwatch timer = new Stopwatch()..start();
-    Future f = getSuggestions(opts).then((suggestions) {
-      _logger.fine('code completion in ${timer.elapsedMilliseconds}ms, ${suggestions.length} results');
-      return suggestions.map((suggestion) => suggestion._toProxy()).toList();
-    });
-    Promise promise = new Promise.fromFuture(f);
-    return promise.obj;
+
+    if (_override != null && _override.hasShown) _override = null;
+
+    if (_override != null) {
+      _override.hasShown = true;
+      List<Suggestion> suggestions = _override.renderSuggestions();
+      f = new Future.value(suggestions.map((s) => s._toProxy()).toList());
+    } else {
+      Stopwatch timer = new Stopwatch()..start();
+      f = getSuggestions(opts).then((suggestions) {
+        _logger.fine('code completion in ${timer.elapsedMilliseconds}ms, ${suggestions.length} results');
+        return suggestions.map((suggestion) => suggestion._toProxy()).toList();
+      });
+    }
+
+    return new Promise.fromFuture(f).obj;
   }
 
   void _onDidInsertSuggestion(options) {
-    onDidInsertSuggestion(
-      new TextEditor(options['editor']),
-      new Point(options['triggerPosition']),
-      toDartObjectViaWizardy(options['suggestion']));
+    if (_override != null && _override.hasShown) {
+      _override.userSelection(toDartObjectViaWizardy(options['suggestion']));
+      _override = null;
+    } else {
+      onDidInsertSuggestion(
+        new TextEditor(options['editor']),
+        new Point(options['triggerPosition']),
+        toDartObjectViaWizardy(options['suggestion']));
+    }
   }
 }
 
@@ -179,10 +205,12 @@ class Suggestion {
 
   int selectionOffset;
 
+  int itemIndex;
+
   Suggestion({this.text, this.snippet, this.displayText, this.replacementPrefix,
     this.type, this.leftLabel, this.leftLabelHTML, this.rightLabel, this.rightLabelHTML,
     this.className, this.iconHTML, this.description, this.descriptionMoreURL,
-    this.requiredImport, this.selectionOffset});
+    this.requiredImport, this.selectionOffset, this.itemIndex});
 
   Map _toMap() {
     Map m = {};
@@ -201,8 +229,36 @@ class Suggestion {
     if (descriptionMoreURL != null) m['descriptionMoreURL'] = descriptionMoreURL;
     if (requiredImport != null) m['requiredImport'] = requiredImport;
     if (selectionOffset != null) m['selectionOffset'] = selectionOffset;
+    if (itemIndex != null) m['itemIndex'] = itemIndex;
     return m;
   }
 
   JsObject _toProxy() => jsify(_toMap());
+}
+
+class _AutocompleteOverride {
+  final List<dynamic> items;
+  final Function renderer;
+  final Completer<dynamic> completer = new Completer();
+
+  bool hasShown = false;
+
+  _AutocompleteOverride(this.items, this.renderer);
+
+  List<Suggestion> renderSuggestions() {
+    List result = [];
+    for (int i = 0; i < items.length; i++) {
+      Suggestion suggestion = renderer(items[i]);
+      suggestion.itemIndex = i;
+      result.add(suggestion);
+    }
+    return result;
+  }
+
+  void userSelection(Map selectedSuggestion) {
+    int index = selectedSuggestion['itemIndex'];
+    completer.complete(index == null ? null : items[index]);
+  }
+
+  Future<dynamic> get future => completer.future;
 }
