@@ -28,6 +28,7 @@ import 'utils.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/declaration_nav.dart';
 import 'analysis/formatting.dart';
+import 'analysis/quick_fixes.dart';
 import 'analysis/refactor.dart';
 import 'analysis/references.dart';
 import 'analysis/type_hierarchy.dart';
@@ -112,6 +113,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
+    disposables.add(new QuickFixHelper());
 
     // Register commands.
     _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());

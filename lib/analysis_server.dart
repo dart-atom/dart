@@ -13,7 +13,6 @@ import 'package:frappe/frappe.dart';
 
 import 'atom.dart';
 import 'dependencies.dart';
-import 'editors.dart';
 import 'jobs.dart';
 import 'projects.dart';
 import 'process.dart';
@@ -85,11 +84,6 @@ class AnalysisServer implements Disposable {
 
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
-
-    disposables.add(atom.commands.add('atom-text-editor',
-        'dartlang:quick-fix', (event) {
-      QuickFixHelper.handleQuickFix(_server, event);
-    }));
 
     onSend.listen((String message)    => _logger.finer('--> ${message}'));
     onReceive.listen((String message) => _logger.finer('<-- ${message}'));
@@ -235,6 +229,10 @@ class AnalysisServer implements Disposable {
         options: options);
   }
 
+  Future<FixesResult> getFixes(String path, int offset) {
+    return server.edit.getFixes(path, offset);
+  }
+
   Future<HoverResult> getHover(String file, int offset) =>
       server.analysis.getHover(file, offset);
 
@@ -303,61 +301,6 @@ class AnalysisServer implements Disposable {
       _serverBusyController.add(false);
       errorRepository.clearAll();
     }
-  }
-}
-
-class QuickFixHelper {
-  static void handleQuickFix(Server server, AtomEvent event) {
-    if (server == null) return;
-
-    TextEditor editor = event.editor;
-    String path = editor.getPath();
-    Range range = editor.getSelectedBufferRange();
-    int offset = editor.getBuffer().characterIndexForPosition(range.start);
-
-    server.edit.getFixes(path, offset).then((FixesResult result) {
-      List<AnalysisErrorFixes> fixes = result.fixes;
-
-      if (fixes.isEmpty) {
-        atom.beep();
-        return;
-      }
-
-      List<SourceChange> changes = fixes
-        .expand((fix) => fix.fixes)
-        .where((SourceChange change) =>
-            change.edits.every((SourceFileEdit edit) => edit.file == path))
-        .toList();
-
-      if (changes.isEmpty) {
-        atom.beep();
-        return;
-      }
-
-      if (changes.length == 1) {
-        // Apply the fix.
-        _applyChange(editor, changes.first);
-      } else {
-        // TODO: Show a selection dialog.
-        _logger.info('multiple fixes returned (${changes.length})');
-        atom.beep();
-      }
-    }).catchError((e) {
-      _logger.warning('${e}');
-      atom.beep();
-    });
-  }
-
-  static void _applyChange(TextEditor editor, SourceChange change) {
-    List<SourceFileEdit> sourceFileEdits = change.edits;
-    List<LinkedEditGroup> linkedEditGroups = change.linkedEditGroups;
-
-    List<SourceEdit> edits = sourceFileEdits.expand((e) => e.edits).toList();
-    applyEdits(editor, edits);
-    selectEditGroups(editor, linkedEditGroups);
-
-    atom.notifications.addSuccess(
-        'Executed quick fix: ${toStartingLowerCase(change.message)}');
   }
 }
 
