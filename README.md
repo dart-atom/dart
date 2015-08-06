@@ -48,7 +48,7 @@ To view detailed info about what the analysis server is doing, run the
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: https://github.com/atom-dart/dartlang/issues
+[tracker]: https://github.com/dart-atom/dartlang/issues
 
 ## Developing the plugin
 
