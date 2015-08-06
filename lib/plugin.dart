@@ -82,12 +82,12 @@ class AtomDartPackage extends AtomPackage {
 
       return consumer;
     });
-    var provider = new DartAutocompleteProvider();
+
+    var dartProvider = new DartAutocompleteProvider();
     // TODO: why isn't this working?
-    // registerServiceProvider('provideAutocomplete',
-    //   () => provider.toProxy());
+    // registerServiceProvider('provideAutocomplete', () => provider.toProxy());
     final JsObject exports = context['module']['exports'];
-    exports['provideAutocomplete'] = () => provider.toProxy();
+    exports['provideAutocomplete'] = () => dartProvider.toProxy();
   }
 
   void packageActivated([Map inState]) {

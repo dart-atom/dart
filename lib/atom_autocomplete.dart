@@ -177,10 +177,12 @@ class Suggestion {
 
   final String requiredImport;
 
+  int selectionOffset;
+
   Suggestion({this.text, this.snippet, this.displayText, this.replacementPrefix,
     this.type, this.leftLabel, this.leftLabelHTML, this.rightLabel, this.rightLabelHTML,
     this.className, this.iconHTML, this.description, this.descriptionMoreURL,
-    this.requiredImport});
+    this.requiredImport, this.selectionOffset});
 
   Map _toMap() {
     Map m = {};
@@ -198,6 +200,7 @@ class Suggestion {
     if (description != null) m['description'] = description;
     if (descriptionMoreURL != null) m['descriptionMoreURL'] = descriptionMoreURL;
     if (requiredImport != null) m['requiredImport'] = requiredImport;
+    if (selectionOffset != null) m['selectionOffset'] = selectionOffset;
     return m;
   }
 
