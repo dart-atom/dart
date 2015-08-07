@@ -2872,7 +2872,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.RenameRefactoringOptions[1];
     RenameRefactoringOptions.prototype = $desc;
     RenameRefactoringOptions.$__fields__ = ["newName"];
-    function AnalysisServerDialog(_analysis_server_dialog$_disposables, _dialog, _messageElement, _statusElement, _startButton, _reanalyzeButton, _stopButton, _diagnosticsButton, _observatoryButton, _observatoryDiagButton) {
+    function AnalysisServerDialog(_analysis_server_dialog$_disposables, _dialog, _messageElement, _statusElement, _startButton, _reanalyzeButton, _stopButton, _diagnosticsButton, _observatoryButton, _crashDumpButton) {
       this._analysis_server_dialog$_disposables = _analysis_server_dialog$_disposables;
       this._dialog = _dialog;
       this._messageElement = _messageElement;
@@ -2882,7 +2882,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       this._stopButton = _stopButton;
       this._diagnosticsButton = _diagnosticsButton;
       this._observatoryButton = _observatoryButton;
-      this._observatoryDiagButton = _observatoryDiagButton;
+      this._crashDumpButton = _crashDumpButton;
       this.$deferredAction();
     }
     AnalysisServerDialog.builtin$cls = "AnalysisServerDialog";
@@ -2890,7 +2890,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       AnalysisServerDialog.name = "AnalysisServerDialog";
     $desc = $collectedClasses$.AnalysisServerDialog[1];
     AnalysisServerDialog.prototype = $desc;
-    AnalysisServerDialog.$__fields__ = ["_analysis_server_dialog$_disposables", "_dialog", "_messageElement", "_statusElement", "_startButton", "_reanalyzeButton", "_stopButton", "_diagnosticsButton", "_observatoryButton", "_observatoryDiagButton"];
+    AnalysisServerDialog.$__fields__ = ["_analysis_server_dialog$_disposables", "_dialog", "_messageElement", "_statusElement", "_startButton", "_reanalyzeButton", "_stopButton", "_diagnosticsButton", "_observatoryButton", "_crashDumpButton"];
     function AnalysisServerDialog_closure(_analysis_server_dialog$_captured_this_0) {
       this._analysis_server_dialog$_captured_this_0 = _analysis_server_dialog$_captured_this_0;
       this.$deferredAction();
@@ -19310,7 +19310,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   }], ["atom.analysis_server_dialog", "package:atom_dartlang/analysis/analysis_server_dialog.dart",, S, {
     "^": "",
     AnalysisServerDialog: {
-      "^": "Object;_analysis_server_dialog$_disposables,_dialog,_messageElement,_statusElement,_startButton,_reanalyzeButton,_stopButton,_diagnosticsButton,_observatoryButton,_observatoryDiagButton",
+      "^": "Object;_analysis_server_dialog$_disposables,_dialog,_messageElement,_statusElement,_startButton,_reanalyzeButton,_stopButton,_diagnosticsButton,_observatoryButton,_crashDumpButton",
       dispose$0: [function() {
         return this._analysis_server_dialog$_disposables.dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
@@ -19356,20 +19356,23 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t4 = J.getInterceptor$x(t3);
           t4.setAttribute$2(t3, "layout", "");
           t4.setAttribute$2(t3, "horizontal", "");
-          t3 = K.CoreElement$("button", null, "btn btn-sm", "View Server Diagnostics");
+          t3 = K.CoreElement$("button", null, "btn btn-sm", "View Diagnostics");
           t3.clazz$1("inline-block-tight");
           this._diagnosticsButton = t3;
-          t4 = K.CoreElement$("button", null, "btn btn-sm", "Open Observatory on Server");
+          t4 = K.CoreElement$("button", null, "btn btn-sm", "Open in Observatory");
           t4.clazz$1("inline-block-tight");
           this._observatoryButton = t4;
-          t5 = K.CoreElement$("button", null, "btn btn-sm", "View Observatory Crash Dump");
-          t5.clazz$1("inline-block-tight");
-          this._observatoryDiagButton = t5;
-          t2.add$1(0, [t3, t4, t5]);
+          t5 = K.CoreElement$("div", null, null, null);
+          t5.clazz$1("inline-block");
+          t5.flex$0(0);
+          t6 = K.CoreElement$("button", null, "btn btn-sm", "Download crash dump");
+          t6.clazz$1("inline-block-tight");
+          this._crashDumpButton = t6;
+          t2.add$1(0, [t3, t4, t5, t6]);
           t1.add$1(0, t2);
           this._diagnosticsButton.click$1(0, new S.AnalysisServerDialog_showDialog_closure());
           this._observatoryButton.click$1(0, new S.AnalysisServerDialog_showDialog_closure0());
-          this._observatoryDiagButton.click$1(0, new S.AnalysisServerDialog_showDialog_closure1());
+          this._crashDumpButton.click$1(0, new S.AnalysisServerDialog_showDialog_closure1());
         }
         this._updateStatus$1$updateTitle(true);
         this._analysis_server_dialog$_disposables.Disposables__disposables.push(this._dialog);
@@ -19406,7 +19409,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (t1 != null) {
           t1.attribute$2("disabled", !X.Dependencies_instance().getDependency$1(C.Type_bhC).get$isActive());
           this._observatoryButton.attribute$2("disabled", !X.Dependencies_instance().getDependency$1(C.Type_bhC).get$isActive());
-          this._observatoryDiagButton.attribute$2("disabled", !X.Dependencies_instance().getDependency$1(C.Type_bhC).get$isActive());
+          this._crashDumpButton.attribute$2("disabled", !X.Dependencies_instance().getDependency$1(C.Type_bhC).get$isActive());
         }
         if (updateTitle)
           if (X.Dependencies_instance().getDependency$1(C.Type_bhC).get$isActive())

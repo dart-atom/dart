@@ -23,7 +23,7 @@ class AnalysisServerDialog implements Disposable {
 
   CoreElement _diagnosticsButton;
   CoreElement _observatoryButton;
-  CoreElement _observatoryDiagButton;
+  CoreElement _crashDumpButton;
 
   AnalysisServerDialog() {
     _disposables.add(atom.commands.add('atom-workspace',
@@ -59,14 +59,15 @@ class AnalysisServerDialog implements Disposable {
 
     if (AnalysisServer.startWithDebugging) {
       _dialog.content.add(div(c: 'block')..layoutHorizontal()..add([
-        _diagnosticsButton = button(text: 'View Server Diagnostics', c: 'btn btn-sm')..inlineBlockTight(),
-        _observatoryButton = button(text: 'Open Observatory on Server', c: 'btn btn-sm')..inlineBlockTight(),
-        _observatoryDiagButton = button(text: 'View Observatory Crash Dump', c: 'btn btn-sm')..inlineBlockTight()
+        _diagnosticsButton = button(text: 'View Diagnostics', c: 'btn btn-sm')..inlineBlockTight(),
+        _observatoryButton = button(text: 'Open in Observatory', c: 'btn btn-sm')..inlineBlockTight(),
+        div()..inlineBlock()..flex(),
+        _crashDumpButton = button(text: 'Download crash dump', c: 'btn btn-sm')..inlineBlockTight()
       ]));
 
       _diagnosticsButton.click(() => shell.openExternal(AnalysisServer.diagnosticsUrl));
       _observatoryButton.click(() => shell.openExternal(AnalysisServer.observatoryUrl));
-      _observatoryDiagButton.click(() => shell.openExternal('${AnalysisServer.observatoryUrl}_getCrashDump'));
+      _crashDumpButton.click(() => shell.openExternal('${AnalysisServer.observatoryUrl}_getCrashDump'));
     }
 
     _updateStatus(updateTitle: true);
@@ -99,7 +100,7 @@ class AnalysisServerDialog implements Disposable {
     if (_diagnosticsButton != null) {
       _diagnosticsButton.toggleAttribute('disabled', !analysisServer.isActive);
       _observatoryButton.toggleAttribute('disabled', !analysisServer.isActive);
-      _observatoryDiagButton.toggleAttribute('disabled', !analysisServer.isActive);
+      _crashDumpButton.toggleAttribute('disabled', !analysisServer.isActive);
     }
 
     if (updateTitle) {
