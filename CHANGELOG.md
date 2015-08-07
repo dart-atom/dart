@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.12
 - fixed an issue with code completing empty import statements
 - items in the type hierarchy and find references views are now collapsable
 - removed Atom's default lexical completer from line and dartdoc comments
