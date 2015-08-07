@@ -34,6 +34,14 @@ final Logger _logger = new Logger('analysis-server');
 // TODO: `organizeDirectives` is only available with AS 1.9 and above
 
 class AnalysisServer implements Disposable {
+  static bool get startWithDebugging => atom.config.getValue('${pluginId}.debugAnalysisServer');
+
+  static final int OBSERVATORY_PORT = 23071;
+  static final int DIAGNOSTICS_PORT = 23072;
+
+  static String get observatoryUrl => 'http://localhost:${OBSERVATORY_PORT}/';
+  static String get diagnosticsUrl => 'http://localhost:${DIAGNOSTICS_PORT}/';
+
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
 
@@ -426,9 +434,16 @@ class _AnalysisServerWrapper extends Server {
   static ProcessRunner _createProcess(Sdk sdk) {
     List<String> arguments = [
       sdk.getSnapshotPath('analysis_server.dart.snapshot'),
-      '--sdk',
-      sdk.path
+      '--sdk=${sdk.path}'
     ];
+
+    if (AnalysisServer.startWithDebugging) {
+      arguments.insert(0, '--observe=${AnalysisServer.OBSERVATORY_PORT}');
+      _logger.info('observatory on analysis server available at ${AnalysisServer.observatoryUrl}.');
+
+      arguments.add('--port=${AnalysisServer.DIAGNOSTICS_PORT}');
+      _logger.info('analysis server diagnostics available at ${AnalysisServer.diagnosticsUrl}.');
+    }
 
     return new ProcessRunner(sdk.dartVm.path, args: arguments);
   }

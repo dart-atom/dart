@@ -5,6 +5,8 @@
 - items in the type hierarchy and find references views are now collapsable
 - removed Atom's default lexical completer from line and dartdoc comments
 - implemented support for multiple quick-fixes (cmd-1 / ctrl-1)
+- added a setting to start the analysis server with diagnostics on. Once enabled,
+  restart atom and view the diagnostics via the 'analysis server status' command
 
 ## 0.3.11
 - added a check to ensure the the Dart SDK meets a minimum required version

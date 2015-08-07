@@ -645,6 +645,8 @@ final String _serverCode = r'''
   }
 
   void _processMessage(String message) {
+    if (message.startsWith('Observatory listening on')) return;
+
     try {
       _onReceive.add(message);
 
