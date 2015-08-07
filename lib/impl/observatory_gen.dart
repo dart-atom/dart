@@ -89,20 +89,15 @@ class Observatory {
   /// some script.
   Future<Breakpoint> addBreakpoint(
       String isolateId, String scriptId, int line) {
-    return _call('addBreakpoint', {
-      'isolateId': isolateId,
-      'scriptId': scriptId,
-      'line': line
-    });
+    return _call('addBreakpoint',
+        {'isolateId': isolateId, 'scriptId': scriptId, 'line': line});
   }
 
   /// The [addBreakpointAtEntry] RPC is used to add a breakpoint at the
   /// entrypoint of some function.
   Future<Breakpoint> addBreakpointAtEntry(String isolateId, String functionId) {
-    return _call('addBreakpointAtEntry', {
-      'isolateId': isolateId,
-      'functionId': functionId
-    });
+    return _call('addBreakpointAtEntry',
+        {'isolateId': isolateId, 'functionId': functionId});
   }
 
   /// The [evaluate] RPC is used to evaluate an expression in the context of
@@ -171,10 +166,8 @@ class Observatory {
 
   /// The [removeBreakpoint] RPC is used to remove a breakpoint by its [id].
   Future<Success> removeBreakpoint(String isolateId, String breakpointId) {
-    return _call('removeBreakpoint', {
-      'isolateId': isolateId,
-      'breakpointId': breakpointId
-    });
+    return _call('removeBreakpoint',
+        {'isolateId': isolateId, 'breakpointId': breakpointId});
   }
 
   /// The [resume] RPC is used to resume execution of a paused isolate.
@@ -323,11 +316,14 @@ enum CodeKind { Dart, Native, Stub, Tag, Collected }
 enum ErrorKind {
   /// The isolate has encountered an unhandled Dart exception.
   UnhandledException,
+
   /// The isolate has encountered a Dart language error in the program.
   LanguageError,
+
   /// The isolate has encounted an internal error. These errors should be
   /// reported as bugs.
   InternalError,
+
   /// The isolate has been terminated by an external source.
   TerminationError
 }
@@ -337,29 +333,41 @@ enum ErrorKind {
 enum EventKind {
   /// Notification that a new isolate has started.
   IsolateStart,
+
   /// Notification that an isolate has exited.
   IsolateExit,
+
   /// Notification that isolate identifying information has changed. Currently
   /// used to notify of changes to the isolate debugging name via setName.
   IsolateUpdate,
+
   /// An isolate has paused at start, before executing code.
   PauseStart,
+
   /// An isolate has paused at exit, before terminating.
   PauseExit,
+
   /// An isolate has paused at a breakpoint or due to stepping.
   PauseBreakpoint,
+
   /// An isolate has paused due to interruption via pause.
   PauseInterrupted,
+
   /// An isolate has paused due to an exception.
   PauseException,
+
   /// An isolate has started or resumed execution.
   Resume,
+
   /// A breakpoint has been added for an isolate.
   BreakpointAdded,
+
   /// An unresolved breakpoint has been resolved for an isolate.
   BreakpointResolved,
+
   /// A breakpoint has been removed.
   BreakpointRemoved,
+
   /// A garbage collection event.
   GC
 }
@@ -369,22 +377,30 @@ enum EventKind {
 enum InstanceKind {
   /// A general instance of the Dart class Object.
   PlainInstance,
+
   /// null instance.
   Null,
+
   /// true or false.
   Bool,
+
   /// An instance of the Dart class double.
   Double,
+
   /// An instance of the Dart class int.
   Int,
+
   /// An instance of the Dart class String.
   String,
+
   /// An instance of the built-in VM List implementation. User-defined Lists
   /// will be PlainInstance.
   List,
+
   /// An instance of the built-in VM Map implementation. User-defined Maps will
   /// be PlainInstance.
   Map,
+
   /// An instance of the built-in VM TypedData implementations. User-defined
   /// TypedDatas will be PlainInstance.
   Uint8ClampedList,
@@ -401,21 +417,29 @@ enum InstanceKind {
   Int32x4List,
   Float32x4List,
   Float64x2List,
+
   /// An instance of the built-in VM Closure implementation. User-defined
   /// Closures will be PlainInstance.
   Closure,
+
   /// An instance of the Dart class MirrorReference.
   MirrorReference,
+
   /// An instance of the Dart class RegExp.
   RegExp,
+
   /// An instance of the Dart class WeakProperty.
   WeakProperty,
+
   /// An instance of the Dart class Type
   Type,
+
   /// An instance of the Dart class TypeParamer
   TypeParameter,
+
   /// An instance of the Dart class TypeRef
   TypeRef,
+
   /// An instance of the Dart class BoundedType
   BoundedType
 }
@@ -425,14 +449,19 @@ enum InstanceKind {
 enum SentinelKind {
   /// Indicates that the object referred to has been collected by the GC.
   Collected,
+
   /// Indicates that an object id has expired.
   Expired,
+
   /// Indicates that a variable or field has not been initialized.
   NotInitialized,
+
   /// Indicates that a variable or field is in the process of being initialized.
   BeingInitialized,
+
   /// Indicates that a variable has been eliminated by the optimizing compiler.
   OptimizedOut,
+
   /// Reserved for future use.
   Free
 }
