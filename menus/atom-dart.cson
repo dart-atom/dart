@@ -5,6 +5,7 @@
     submenu: [
       label: 'Dart'
       submenu: [
+        {label: 'Create new Sky project…', command: 'dartlang:create-sky-project'},
         {label: 'Re-analyze Sources', command: 'dartlang:reanalyze-sources'},
         {label: 'Show Analysis Server Status', command: 'dartlang:analysis-server-status'},
         {label: 'Send Feedback…', command: 'dartlang:send-feedback'}

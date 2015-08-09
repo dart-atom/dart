@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+- added the ability to create a new Sky project. This is available from the
+  `create sky project` command or via the `Packages > Dart` menu item
+
 ## 0.3.12
 - fixed an issue with code completing empty import statements
 - items in the type hierarchy and find references views are now collapsable

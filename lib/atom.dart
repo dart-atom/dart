@@ -369,6 +369,12 @@ class Project extends ProxyHolder {
     return invoke('getDirectories').map((dir) => new Directory(dir)).toList();
   }
 
+  /// Add a path to the project's list of root paths.
+  void addPath(String path) => invoke('addPath', path);
+
+  /// Remove a path from the project's list of root paths.
+  void removePath(String path) => invoke('removePath', path);
+
   /// Get the path to the project directory that contains the given path, and
   /// the relative path from that project directory to the given path. Returns
   /// an array with two elements: `projectPath` - the string path to the project
@@ -628,11 +634,14 @@ class TextEditor extends ProxyHolder {
   Stream get onDidSave => eventStream('onDidSave');
 
   // Return the editor's TextEditorView / <text-editor-view> / HtmlElement. This
-  // view is an HtmlElement, but we can't use it as one. we need to access it
+  // view is an HtmlElement, but we can't use it as one. We need to access it
   // through JS interop.
   dynamic get view => atom.views.getView(obj);
 
   String toString() => getTitle();
+
+  void moveToEndOfLine() => invoke('moveToEndOfLine');
+  void selectToBeginningOfWord() => invoke('selectToBeginningOfWord');
 }
 
 class TextBuffer extends ProxyHolder {

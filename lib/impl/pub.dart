@@ -103,7 +103,7 @@ class PubManager implements Disposable {
       response = response.trim();
       state['lastGlobalRunText'] = response;
       List<String> args = response.split(' ');
-      new PubRunJob.global(dir, args).schedule();
+      new PubRunJob.global(args, path: dir).schedule();
     });
   }
 
@@ -116,6 +116,50 @@ class PubManager implements Disposable {
   }
 
   void dispose() => disposables.dispose();
+}
+
+/// A Dart app installed via pub.
+class PubApp {
+  final String name;
+  final bool isGlobal;
+
+  bool _installed;
+
+  PubApp.global(this.name) : isGlobal = true;
+
+  Future<bool> isInstalled() {
+    if (isGlobal) {
+      if (_installed != null) return new Future.value(_installed);
+
+      return sdkManager.sdk.execBinSimple('pub', ['global', 'list']).then(
+          (ProcessResult result) {
+        if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
+        List lines = result.stdout.trim().split('\n');
+        return lines.any((l) => l.startsWith('${name} '));
+      }).then((installed) {
+        _installed = installed;
+        return _installed;
+      });
+    } else {
+      return new Future.value(true);
+    }
+  }
+
+  Future install({bool verbose: true}) {
+    if (isGlobal) {
+      Job job = new PubGlobalActivate(name);
+      return job.schedule();
+    } else {
+      return new Future.value();
+    }
+  }
+
+  Future run({List<String> args, String cwd, bool verbose: true}) {
+    List list = [name];
+    if (args != null) list.addAll(args);
+    Job job = new PubRunJob.global(list, path: cwd, verbose: verbose);
+    return job.schedule();
+  }
 }
 
 class PubJob extends Job {
@@ -154,24 +198,25 @@ class PubRunJob extends Job {
   final String path;
   final List<String> args;
   final bool isGlobal;
+  final bool verbose;
 
   String _pubspecDir;
 
-  PubRunJob(this.path, List<String> args)
+  PubRunJob(this.path, List<String> args, {this.verbose: true})
       : this.args = args,
         isGlobal = false,
         super("Pub run '${args.first}'") {
     _pubspecDir = _locatePubspecDir(path);
   }
 
-  PubRunJob.global(this.path, List<String> args)
+  PubRunJob.global(List<String> args, {this.path, this.verbose: true})
       : args = args,
         isGlobal = true,
         super("Pub global run '${args.first}'") {
     _pubspecDir = _locatePubspecDir(path);
   }
 
-  bool get pinResult => true;
+  bool get pinResult => verbose;
 
   Object get schedulingRule => _pubspecDir;
 
@@ -182,7 +227,7 @@ class PubRunJob extends Job {
         .execBinSimple('pub', l, cwd: _pubspecDir)
         .then((ProcessResult result) {
       if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
-      return result.stdout;
+      return verbose ? result.stdout : null;
     });
   }
 }
