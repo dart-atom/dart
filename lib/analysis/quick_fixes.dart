@@ -94,6 +94,10 @@ void _applyChange(TextEditor currentEditor, SourceChange change) {
     return atom.workspace.open(edit.file,
         options: {'searchAllPanes': true}).then((TextEditor editor) {
       applyEdits(editor, edit.edits);
+      int index = sourceFileEdits.indexOf(edit);
+      if (index >= 0 && index < linkedEditGroups.length) {
+        selectEditGroup(editor, linkedEditGroups[index]);
+      }
     });
   }).then((_) {
     String fileSummary = sourceFileEdits.map((edit) => edit.file).join('\n');
@@ -102,15 +106,15 @@ void _applyChange(TextEditor currentEditor, SourceChange change) {
         'Executed quick fix: ${toStartingLowerCase(change.message)}',
         detail: fileSummary);
 
-    atom.workspace.open(currentEditor.getPath(),
-        options: {'searchAllPanes': true}).then((TextEditor editor) {
-      if (change.selection != null) {
-        editor.setCursorBufferPosition(
-            editor.getBuffer().positionForCharacterIndex(change.selection.offset));
-      } else if (linkedEditGroups.isNotEmpty) {
-        selectEditGroups(currentEditor, linkedEditGroups);
-      }
-    });
+    // atom.workspace.open(currentEditor.getPath(),
+    //     options: {'searchAllPanes': true}).then((TextEditor editor) {
+    //   if (change.selection != null) {
+    //     editor.setCursorBufferPosition(
+    //         editor.getBuffer().positionForCharacterIndex(change.selection.offset));
+    //   } else if (linkedEditGroups.isNotEmpty) {
+    //     selectEditGroups(currentEditor, linkedEditGroups);
+    //   }
+    // });
   }).catchError((e) {
     atom.notifications.addError('Error Performing Rename', detail: '${e}');
   });

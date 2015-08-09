@@ -23,6 +23,7 @@ import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
+import 'sky/create_project.dart';
 import 'sky/toolbar.dart';
 import 'utils.dart';
 import 'analysis/dartdoc.dart';
@@ -106,6 +107,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
+    disposables.add(new CreateProjectManager());
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
@@ -176,8 +178,6 @@ class AtomDartPackage extends AtomPackage {
     subscriptions.cancel();
 
     // TODO: Cancel any running Jobs (see #120).
-
-    // TODO: dispose status-bar and toolbar contributions?
 
   }
 

@@ -5,6 +5,7 @@
 .pub/
 .settings/
 build/
+doc/api/
 packages
 pubspec.lock
 npm-debug.log

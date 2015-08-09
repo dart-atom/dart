@@ -69,6 +69,18 @@ void selectEditGroups(TextEditor editor, List<LinkedEditGroup> groups) {
   editor.setSelectedBufferRanges(ranges);
 }
 
+/// Select the given edit group in the text editor.
+void selectEditGroup(TextEditor editor, LinkedEditGroup group) {
+  // Select group.
+  TextBuffer buffer = editor.getBuffer();
+  List<Range> ranges = group.positions.map((Position position) {
+    return new Range.fromPoints(
+      buffer.positionForCharacterIndex(position.offset),
+      buffer.positionForCharacterIndex(position.offset + group.length));
+  }).toList();
+  editor.setSelectedBufferRanges(ranges);
+}
+
 /// Sort [SourceEdit]s last-to-first.
 void _sortEdits(List<SourceEdit> edits) {
   edits.sort((SourceEdit a, SourceEdit b) => b.offset - a.offset);
