@@ -15,7 +15,7 @@ import '../utils.dart';
 
 const String pubspecFileName = 'pubspec.yaml';
 
-class PubManager implements Disposable {
+class PubManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
   PubManager() {
@@ -38,20 +38,20 @@ class PubManager implements Disposable {
       _handleGlobalActivate();
     });
 
-    // context menus for get, upgrade, run, and global run
     // TODO: expose pub run...
-    disposables.add(atom.contextMenu.add('.tree-view', [
-      ContextMenuItem.separator,
-      new PubContextCommand('Pub Get', 'dartlang:pub-get'),
-      new PubContextCommand('Pub Upgrade', 'dartlang:pub-upgrade'),
-      ContextMenuItem.separator
-    ]));
     _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
       new PubJob.get(event.targetFilePath).schedule();
     });
     _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (AtomEvent event) {
       new PubJob.upgrade(event.targetFilePath).schedule();
     });
+  }
+
+  List<ContextMenuItem> getTreeViewContributions() {
+    return [
+      new PubContextCommand('Pub Get', 'dartlang:pub-get'),
+      new PubContextCommand('Pub Upgrade', 'dartlang:pub-upgrade')
+    ];
   }
 
   // Validate that an sdk is available before calling the target function.

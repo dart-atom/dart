@@ -308,6 +308,10 @@ abstract class ContextMenuItem {
   }
 }
 
+abstract class ContextMenuContributor {
+  List<ContextMenuItem> getTreeViewContributions();
+}
+
 class _SeparatorMenuItem extends ContextMenuItem {
   _SeparatorMenuItem() : super('', '');
   bool shouldDisplay(AtomEvent event) => true;

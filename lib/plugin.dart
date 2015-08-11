@@ -26,6 +26,7 @@ import 'state.dart';
 import 'sky/create_project.dart';
 import 'sky/toolbar.dart';
 import 'utils.dart';
+import 'analysis/analysis_options.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/declaration_nav.dart';
 import 'analysis/formatting.dart';
@@ -107,11 +108,16 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
+
+    AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
+    PubManager pubManager = new PubManager();
+
+    disposables.add(analysisOptionsManager);
     disposables.add(new CreateProjectManager());
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
-    disposables.add(new PubManager());
+    disposables.add(pubManager);
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
@@ -142,6 +148,13 @@ class AtomDartPackage extends AtomPackage {
 
     // Text editor commands.
     _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
+
+    // Set up the context menus.
+    List<ContextMenuItem> treeItems = [ContextMenuItem.separator];
+    treeItems.addAll(pubManager.getTreeViewContributions());
+    treeItems.addAll(analysisOptionsManager.getTreeViewContributions());
+    treeItems.add(ContextMenuItem.separator);
+    disposables.add(atom.contextMenu.add('.tree-view', treeItems));
 
     // Observe all buffers and send updates to analysis server
     disposables.add(new BufferObserverManager());
