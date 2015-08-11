@@ -10,6 +10,7 @@ dependencies:
   haikunator: ^0.1.0
   markdown: ^0.7.0
   pub_semver: ^1.2.1
+  yaml: ^2.0.0
 dev_dependencies:
   grinder: ^0.7.0
   html: ^0.12.0

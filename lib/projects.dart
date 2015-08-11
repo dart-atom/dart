@@ -13,6 +13,7 @@ import 'atom.dart';
 import 'jobs.dart';
 import 'state.dart';
 import 'utils.dart';
+import 'analysis/analysis_options.dart';
 import 'impl/pub.dart' as pub;
 
 final Logger _logger = new Logger('projects');
@@ -220,6 +221,8 @@ class ProjectManager implements Disposable {
 class DartProject {
   final Directory directory;
 
+  AnalysisOptions _analysisOptions;
+
   DartProject(this.directory);
 
   String get path => directory.path;
@@ -227,6 +230,37 @@ class DartProject {
   int get hashCode => directory.hashCode;
 
   bool contains(String path) => directory.contains(path);
+
+  bool isDirectoryExplicitlyExcluded(String path) {
+    return _options.getIgnoredDirectories().contains(path);
+  }
+
+  void excludeDirectory(String path) {
+    _options.addIgnoredDirectory(path);
+    _saveOptions();
+  }
+
+  void includeDirectory(String path) {
+    _options.removeIgnoredDirectory(path);
+    _saveOptions();
+  }
+
+  // TODO: Listen for changes to the .analysis_options file?
+
+  AnalysisOptions get _options {
+    if (_analysisOptions == null) {
+      File file = directory.getFile(AnalysisOptions.defaultFileName);
+      _analysisOptions = new AnalysisOptions(file.existsSync() ? file.readSync() : null);
+    }
+
+    return _analysisOptions;
+  }
+
+  void _saveOptions() {
+    File file = directory.getFile(AnalysisOptions.defaultFileName);
+    file.writeSync(_analysisOptions.writeYaml());
+    _analysisOptions.dirty = false;
+  }
 
   operator==(other) => other is DartProject && directory == other.directory;
 

@@ -15,27 +15,17 @@ import '../utils.dart';
 
 const String pubspecFileName = 'pubspec.yaml';
 
-class PubManager implements Disposable {
+class PubManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
   PubManager() {
-    // pub get
+    // get, update, run
     _addSdkCmd('atom-text-editor', 'dartlang:pub-get', (event) {
       new PubJob.get(dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
-      new PubJob.get(dirname(event.selectedFilePath)).schedule();
-    });
-
-    // pub upgrade
     _addSdkCmd('atom-text-editor', 'dartlang:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (event) {
-      new PubJob.upgrade(dirname(event.selectedFilePath)).schedule();
-    });
-
-    // pub run
     _addSdkCmd('atom-workspace', 'dartlang:pub-run', (event) {
       _handleRun(atom.workspace.getActiveTextEditor());
     });
@@ -47,6 +37,21 @@ class PubManager implements Disposable {
     _addSdkCmd('atom-workspace', 'dartlang:pub-global-activate', (event) {
       _handleGlobalActivate();
     });
+
+    // TODO: expose pub run...
+    _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
+      new PubJob.get(event.targetFilePath).schedule();
+    });
+    _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (AtomEvent event) {
+      new PubJob.upgrade(event.targetFilePath).schedule();
+    });
+  }
+
+  List<ContextMenuItem> getTreeViewContributions() {
+    return [
+      new PubContextCommand('Pub Get', 'dartlang:pub-get'),
+      new PubContextCommand('Pub Upgrade', 'dartlang:pub-upgrade')
+    ];
   }
 
   // Validate that an sdk is available before calling the target function.
@@ -265,5 +270,16 @@ class PubGlobalActivate extends Job {
       if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
       return result.stdout;
     });
+  }
+}
+
+class PubContextCommand extends ContextMenuItem {
+  PubContextCommand(String label, String command) : super(label, command);
+
+  bool shouldDisplay(AtomEvent event) {
+    String filePath = event.targetFilePath;
+    if (basename(filePath) == pubspecFileName) return true;
+    File file = new File.fromPath(join(filePath, pubspecFileName));
+    return file.existsSync();
   }
 }
