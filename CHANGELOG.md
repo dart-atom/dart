@@ -5,6 +5,8 @@
   `create sky project` command or via the `Packages > Dart` menu item
 - added a `pub get` and `pub upgrade` context menu off project directories in
   the tree view
+- added the ability to sort file members (right click in a dart editor and
+  choose `Sort Members`)
 
 ## 0.3.12
 - fixed an issue with code completing empty import statements
