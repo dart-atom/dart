@@ -19,23 +19,13 @@ class PubManager implements Disposable {
   Disposables disposables = new Disposables();
 
   PubManager() {
-    // pub get
+    // get, update, run
     _addSdkCmd('atom-text-editor', 'dartlang:pub-get', (event) {
       new PubJob.get(dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
-      new PubJob.get(dirname(event.selectedFilePath)).schedule();
-    });
-
-    // pub upgrade
     _addSdkCmd('atom-text-editor', 'dartlang:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (event) {
-      new PubJob.upgrade(dirname(event.selectedFilePath)).schedule();
-    });
-
-    // pub run
     _addSdkCmd('atom-workspace', 'dartlang:pub-run', (event) {
       _handleRun(atom.workspace.getActiveTextEditor());
     });
@@ -46,6 +36,21 @@ class PubManager implements Disposable {
     // activate
     _addSdkCmd('atom-workspace', 'dartlang:pub-global-activate', (event) {
       _handleGlobalActivate();
+    });
+
+    // context menus for get, upgrade, run, and global run
+    // TODO: expose pub run...
+    disposables.add(atom.contextMenu.add('.tree-view', [
+      ContextMenuItem.separator,
+      new PubContextCommand('Pub Get', 'dartlang:pub-get'),
+      new PubContextCommand('Pub Upgrade', 'dartlang:pub-upgrade'),
+      ContextMenuItem.separator
+    ]));
+    _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
+      new PubJob.get(event.targetFilePath).schedule();
+    });
+    _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (AtomEvent event) {
+      new PubJob.upgrade(event.targetFilePath).schedule();
     });
   }
 
@@ -265,5 +270,16 @@ class PubGlobalActivate extends Job {
       if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
       return result.stdout;
     });
+  }
+}
+
+class PubContextCommand extends ContextMenuItem {
+  PubContextCommand(String label, String command) : super(label, command);
+
+  bool shouldDisplay(AtomEvent event) {
+    String filePath = event.targetFilePath;
+    if (basename(filePath) == pubspecFileName) return true;
+    File file = new File.fromPath(join(filePath, pubspecFileName));
+    return file.existsSync();
   }
 }

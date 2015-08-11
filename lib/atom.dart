@@ -97,6 +97,7 @@ void registerPackage(AtomPackage package) {
 class Atom extends ProxyHolder {
   CommandRegistry _commands;
   Config _config;
+  ContextMenuManager _contextMenu;
   NotificationManager _notifications;
   PackageManager _packages;
   Project _project;
@@ -106,6 +107,7 @@ class Atom extends ProxyHolder {
   Atom() : super(_ctx) {
     _commands = new CommandRegistry(obj['commands']);
     _config = new Config(obj['config']);
+    _contextMenu = new ContextMenuManager(obj['contextMenu']);
     _notifications = new NotificationManager(obj['notifications']);
     _packages = new PackageManager(obj['packages']);
     _project = new Project(obj['project']);
@@ -115,6 +117,7 @@ class Atom extends ProxyHolder {
 
   CommandRegistry get commands => _commands;
   Config get config => _config;
+  ContextMenuManager get contextMenu => _contextMenu;
   NotificationManager get notifications => _notifications;
   PackageManager get packages => _packages;
   Project get project => _project;
@@ -271,6 +274,44 @@ class Config extends ProxyHolder {
     if (options == null) options = {};
     return eventStream2Args('onDidChangePaths', keyPath, options);
   }
+}
+
+/// Provides a registry for commands that you'd like to appear in the context
+/// menu.
+class ContextMenuManager extends ProxyHolder {
+  ContextMenuManager(JsObject obj) : super(obj);
+
+  /// Add context menu items scoped by CSS selectors.
+  Disposable add(String selector, List<ContextMenuItem> items) {
+    Map m = {selector: items.map((item) => item.toJs()).toList()};
+    return new JsDisposable(invoke('add', m));
+  }
+}
+
+abstract class ContextMenuItem {
+  static final ContextMenuItem separator = new _SeparatorMenuItem();
+
+  final String label;
+  final String command;
+
+  ContextMenuItem(this.label, this.command);
+
+  bool shouldDisplay(AtomEvent event);
+
+  JsObject toJs() {
+    Map m = {
+      'label': label,
+      'command': command,
+      'shouldDisplay': (e) => shouldDisplay(new AtomEvent(e))
+    };
+    return jsify(m);
+  }
+}
+
+class _SeparatorMenuItem extends ContextMenuItem {
+  _SeparatorMenuItem() : super('', '');
+  bool shouldDisplay(AtomEvent event) => true;
+  JsObject toJs() => jsify({'type': 'separator'});
 }
 
 /// A notification manager used to create notifications to be shown to the user.
@@ -743,18 +784,26 @@ class AtomEvent extends ProxyHolder {
     return view.getModel();
   }
 
-  /// Return the currently selected file item. This call will only be meaningful
-  /// if the event target is the Tree View.
-  Element get selectedFileItem {
-    Element element = currentTarget;
-    return element.querySelector('li[is=tree-view-file].selected span.name');
-  }
+  // /// Return the currently selected file item. This call will only be meaningful
+  // /// if the event target is the Tree View.
+  // // TODO: deprecate?
+  // Element get selectedFileItem {
+  //   Element element = currentTarget;
+  //   return element.querySelector('li[is=tree-view-file].selected span.name');
+  // }
+  //
+  // /// Return the currently selected file path. This call will only be meaningful
+  // /// if the event target is the Tree View.
+  // String get selectedFilePath {
+  //   Element element = selectedFileItem;
+  //   return element == null ? null : element.getAttribute('data-path');
+  // }
 
   /// Return the currently selected file path. This call will only be meaningful
   /// if the event target is the Tree View.
-  String get selectedFilePath {
-    Element element = selectedFileItem;
-    return element == null ? null : element.getAttribute('data-path');
+  String get targetFilePath {
+    Element target = obj['target'];
+    return target == null ? null : target.getAttribute('data-path');
   }
 
   void abortKeyBinding() => invoke('abortKeyBinding');

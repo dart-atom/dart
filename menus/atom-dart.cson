@@ -27,11 +27,6 @@
     {label: 'Type Hierarchy', command: 'dartlang:type-hierarchy' }
     {type: 'separator'}
   ]
-  '.tree-view.full-menu li[is="tree-view-file"] span[data-name="pubspec.yaml"]': [
-    {label: 'Pub Get', command: 'dartlang:pub-get' }
-    {label: 'Pub Upgrade', command: 'dartlang:pub-upgrade' }
-    {type: 'separator'}
-  ]
   '.tree-view.full-menu li[is="tree-view-file"] span[data-name$=".dart"]': [
     {label: 'Format', command: 'dartlang:dart-format' }
     {type: 'separator'}
