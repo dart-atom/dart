@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.13
 - added the ability to create a new Sky project. This is available from the
   `create sky project` command or via the `Packages > Dart` menu item
 - added a `pub get` and `pub upgrade` context menu off project directories in
