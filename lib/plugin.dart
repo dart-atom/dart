@@ -30,6 +30,7 @@ import 'analysis/analysis_options.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/declaration_nav.dart';
 import 'analysis/formatting.dart';
+import 'analysis/organize_file.dart';
 import 'analysis/quick_fixes.dart';
 import 'analysis/refactor.dart';
 import 'analysis/references.dart';
@@ -117,6 +118,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
+    disposables.add(new OrganizeFileManager());
     disposables.add(pubManager);
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());

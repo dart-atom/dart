@@ -24,12 +24,9 @@ import 'analysis/analysis_server_gen.dart';
 
 export 'analysis/analysis_server_gen.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
-    RefactoringOptions;
+    RefactoringOptions, SourceFileEdit;
 
 final Logger _logger = new Logger('analysis-server');
-
-// TODO: When trying to kill the AS process, we should just assume that a kill
-// call succeeds.
 
 // TODO: `organizeDirectives` is only available with AS 1.9 and above
 

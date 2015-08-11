@@ -24,6 +24,7 @@
     {label: 'Find References…', command: 'dartlang:find-references' }
     {label: 'Format', command: 'dartlang:dart-format' }
     {label: 'Rename…', command: 'dartlang:refactor-rename' }
+    {label: 'Sort Members', command: 'dartlang:sort-members' }
     {label: 'Type Hierarchy', command: 'dartlang:type-hierarchy' }
     {type: 'separator'}
   ]

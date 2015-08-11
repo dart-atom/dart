@@ -6,6 +6,8 @@
 - added a `pub get` and `pub upgrade` context menu off project directories in
   the tree view
 - added code to better recognize when the analysis server terminates
+- added the ability to sort file members (right click in a dart editor and
+  choose `Sort Members`)
 
 ## 0.3.12
 - fixed an issue with code completing empty import statements
