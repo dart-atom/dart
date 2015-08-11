@@ -61,6 +61,21 @@ class AnalysisServer implements Disposable {
   AnalysisServer() {
     isActiveProperty = new Property.fromStreamWithInitialValue(false, onActive);
     Timer.run(_setup);
+
+    bool firstNotification = true;
+
+    onActive.listen((value) {
+      if (firstNotification) {
+        firstNotification = false;
+        return;
+      }
+
+      if (value) {
+        atom.notifications.addInfo('Analysis server running.');
+      } else {
+        atom.notifications.addWarning('Analysis server terminated.');
+      }
+    });
   }
 
   Stream<bool> get onActive => _serverActiveController.stream;
@@ -71,7 +86,6 @@ class AnalysisServer implements Disposable {
 
   Stream<AnalysisNavigation> get onNavigaton => _onNavigatonController.stream;
 
-  // TODO: is it better to just expose _server?
   Stream<AnalysisErrors> get onAnalysisErrors =>
       analysisServer._server.analysis.onErrors;
   Stream<AnalysisFlushResults> get onAnalysisFlushResults =>
@@ -364,7 +378,10 @@ class _AnalysisServerWrapper extends Server {
 
   _AnalysisServerWrapper(this.process, this._processCompleter,
       Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage) {
-    _processCompleter.future.then((result) => _disposedController.add(result));
+    _processCompleter.future.then((result) {
+      _disposedController.add(result);
+      process = null;
+    });
   }
 
   void setup() {
@@ -389,12 +406,15 @@ class _AnalysisServerWrapper extends Server {
   Stream<int> get onDisposed => _disposedController.stream;
 
   /// Restarts, or starts, the analysis server process.
-  void restart(sdk) {
+  void restart(Sdk sdk) {
     var startServer = () {
       var controller = new StreamController();
       process = _createProcess(sdk);
       _processCompleter = _startProcess(process, controller);
-      _processCompleter.future.then((result) => _disposedController.add(result));
+      _processCompleter.future.then((result) {
+        _disposedController.add(result);
+        process = null;
+      });
       configure(controller.stream, _messageWriter(process));
       setup();
     };
