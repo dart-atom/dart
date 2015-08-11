@@ -30,12 +30,13 @@ We also recommend the following (optional) packages:
 - as-you-type errors and warnings
 - code completion
 - `F1` to see dartdocs
+- ctrl-1 / cmd-1 to see quick fixes for errors
 - `F3` (or option-click) to jump to definition
 - `F4` to see a type hierarchy
 - find references to classes and methods
+- view type hierarchy
 - rename refactoring
 - pub commands (get and update) are available via context menus
-- view type hierarchy
 - format source code with `dartfmt` (use the Command Palette)
 
 A lot of Atom's functionality is surfaced via named commands. You can see all
