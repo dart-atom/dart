@@ -278,6 +278,7 @@ class PubContextCommand extends ContextMenuItem {
 
   bool shouldDisplay(AtomEvent event) {
     String filePath = event.targetFilePath;
+    if (filePath == null) return false;
     if (basename(filePath) == pubspecFileName) return true;
     File file = new File.fromPath(join(filePath, pubspecFileName));
     return file.existsSync();

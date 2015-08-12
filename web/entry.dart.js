@@ -24524,6 +24524,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "ContextMenuItem;label,command",
       shouldDisplay$1: function($event) {
         var filePath = $event.get$targetFilePath();
+        if (filePath == null)
+          return false;
         if (J.$eq$(S.basename(filePath), "pubspec.yaml"))
           return true;
         return new E.File(E._create("File", S.join(filePath, "pubspec.yaml", null, null), null)).invoke$1("existsSync");
