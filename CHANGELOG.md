@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+- fixed an exception when opening a context menu
+- disabled dartdoc newline handling (#210)
+
 ## 0.3.14
 - added the ability to create a new Sky project. This is available from the
   `create sky project` command or via the `Packages > Dart` menu item
