@@ -17,7 +17,7 @@
   'f3': 'dartlang:jump-to-declaration'
   'f4': 'dartlang:type-hierarchy'
   'alt-shift-r': 'dartlang:refactor-rename'
-  # 'enter': 'dartlang:newline'
+  'enter': 'dartlang:newline'
 
 # Dart editor commands (mac)
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
