@@ -51,7 +51,7 @@ class BufferFormatter extends BufferObserver {
       if (!dartProject) return; // Breaks stand-alone dart files?
 
       isFormatting = true;
-      FormattingHelper.formatEditor(editor).then((didFormat) {
+      FormattingHelper.formatEditor(editor, quiet: true).then((didFormat) {
         if (didFormat) editor.save();
         // This is a side-effect or bug in Dart:
         // This method will complete before the callbacks initiated by

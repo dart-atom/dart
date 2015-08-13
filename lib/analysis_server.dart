@@ -8,27 +8,25 @@ library atom.analysis_server;
 
 import 'dart:async';
 
-import 'package:logging/logging.dart';
 import 'package:frappe/frappe.dart';
+import 'package:logging/logging.dart';
 
+import 'analysis/analysis_server_dialog.dart';
+import 'analysis/analysis_server_gen.dart';
 import 'atom.dart';
 import 'dependencies.dart';
 import 'jobs.dart';
-import 'projects.dart';
 import 'process.dart';
+import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'analysis/analysis_server_dialog.dart';
-import 'analysis/analysis_server_gen.dart';
 
 export 'analysis/analysis_server_gen.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
     RefactoringOptions, SourceFileEdit;
 
 final Logger _logger = new Logger('analysis-server');
-
-// TODO: `organizeDirectives` is only available with AS 1.9 and above
 
 class AnalysisServer implements Disposable {
   static bool get startWithDebugging => atom.config.getValue('${pluginId}.debugAnalysisServer');

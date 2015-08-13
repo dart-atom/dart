@@ -57,7 +57,7 @@ class FormattingHelper implements Disposable {
 
   /// Formats a [TextEditor]. Returns false if the editor was not formatted;
   /// true if it was.
-  static Future<bool> formatEditor(TextEditor editor) {
+  static Future<bool> formatEditor(TextEditor editor, {bool quiet: false}) {
     String path = editor.getPath();
 
     if (projectManager.getProjectFor(path) == null) {
@@ -81,10 +81,10 @@ class FormattingHelper implements Disposable {
         .format(path, offset, end - offset, lineLength: _prefLineLength)
         .then((FormatResult result) {
       if (result.edits.isEmpty) {
-        atom.notifications.addSuccess('No formatting changes.');
+        if (!quiet) atom.notifications.addSuccess('No formatting changes.');
         return false;
       } else {
-        atom.notifications.addSuccess('Formatting successful.');
+        if (!quiet) atom.notifications.addSuccess('Formatting successful.');
         applyEdits(editor, result.edits);
         editor.setSelectedBufferRange(new Range.fromPoints(
             buffer.positionForCharacterIndex(result.selectionOffset),
