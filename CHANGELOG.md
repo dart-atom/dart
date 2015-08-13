@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.14
+## 0.3.15
 - fixed an exception when opening a context menu
 - added the ability to sort directives (right click in a dart editor and
   choose `Organize Directives`, or `ctrl-shift-o`)
