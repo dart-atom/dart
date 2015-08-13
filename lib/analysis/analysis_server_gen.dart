@@ -4,7 +4,6 @@ library analysis_server_gen;
 
 import 'dart:async';
 import 'dart:convert' show JSON, JsonCodec;
-
 import 'package:logging/logging.dart';
 
 final Logger _logger = new Logger('analysis-server-gen');

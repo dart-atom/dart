@@ -96,7 +96,10 @@ class SdkManager implements Disposable {
       _controller.add(_sdk);
 
       if (verbose) {
-        atom.notifications.addSuccess('Dart SDK found at ${path}.');
+        _sdk.getVersion().then((version) {
+          atom.notifications.addSuccess(
+              "Dart SDK found at ${path}. Version ${version}.");
+        });
       }
 
       _verifyMinVersion(_sdk, verbose);
