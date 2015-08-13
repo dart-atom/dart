@@ -132,7 +132,5 @@ Future<Map> loadPackageJson() {
 }
 
 Future<String> getPackageVersion() {
-  return loadPackageJson().then((map) {
-    return map == null ? null : map['version'];
-  });
+  return loadPackageJson().then((map) => map['version']);
 }

@@ -22130,7 +22130,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     getPackageVersion_closure: {
       "^": "Closure:0;",
       call$1: [function(map) {
-        return map == null ? null : J.$index$asx(map, "version");
+        return J.$index$asx(map, "version");
       }, null, null, 2, 0, null, 66, "call"]
     }
   }], ["atom.autocomplete", "package:atom_dartlang/atom_autocomplete.dart",, X, {
