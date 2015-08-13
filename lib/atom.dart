@@ -806,8 +806,21 @@ class AtomEvent extends ProxyHolder {
   /// Return the currently selected file path. This call will only be meaningful
   /// if the event target is the Tree View.
   String get targetFilePath {
-    Element target = obj['target'];
-    return target == null ? null : target.getAttribute('data-path');
+    var target = obj['target'];
+
+    // Target is an Element or a JsObject. JS interop is a mess.
+    if (target is Element) {
+      if (target.children.isEmpty) return null;
+      Element child = target.children.first;
+      return child.getAttribute('data-path');
+    } else if (target is JsObject) {
+      JsObject obj = target.callMethod('querySelector', ['span']);
+      if (obj == null) return null;
+      obj = new JsObject.fromBrowserObject(obj);
+      return obj.callMethod('getAttribute', ['data-path']);
+    } else {
+      return null;
+    }
   }
 
   void abortKeyBinding() => invoke('abortKeyBinding');
