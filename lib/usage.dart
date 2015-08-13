@@ -10,8 +10,8 @@ import 'atom_utils.dart';
 import 'state.dart';
 import 'utils.dart';
 
-// TODO: !!!
-final String _UA = 'UA-55029513-1';
+// Sample Google Analytics UA code.
+final String _UA = 'UA-123456-1';
 
 Analytics _ga = new AnalyticsMock();
 
@@ -27,11 +27,12 @@ class UsageManager implements Disposable {
     return getPackageVersion().then((String version) {
       atom.config.observe('${pluginId}.sendUsageInformation', null, (value) {
         if (value) {
-          _ga = new AnalyticsHtml(_UA, pluginId, version);
-          _ga.optIn = true;
-          _ga.sendScreenView('editor');
-        } else {
-          _ga = new AnalyticsMock();
+        // TODO: re-enable this
+        //   _ga = new AnalyticsHtml(_UA, pluginId, version);
+        //   _ga.optIn = true;
+        //   _ga.sendScreenView('editor');
+        // } else {
+        //   _ga = new AnalyticsMock();
         }
       });
 
