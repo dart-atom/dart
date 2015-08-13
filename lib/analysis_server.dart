@@ -8,31 +8,35 @@ library atom.analysis_server;
 
 import 'dart:async';
 
-import 'package:logging/logging.dart';
 import 'package:frappe/frappe.dart';
+import 'package:logging/logging.dart';
 
+import 'analysis/analysis_server_dialog.dart';
+import 'analysis/analysis_server_gen.dart';
 import 'atom.dart';
 import 'dependencies.dart';
-import 'editors.dart';
 import 'jobs.dart';
-import 'projects.dart';
 import 'process.dart';
+import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'analysis/analysis_server_dialog.dart';
-import 'analysis/analysis_server_gen.dart';
 
 export 'analysis/analysis_server_gen.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
-    RefactoringOptions;
+    RefactoringOptions, SourceFileEdit;
 
 final Logger _logger = new Logger('analysis-server');
 
-// TODO: When trying to kill the AS process, we should just assume that a kill
-// call succeeds.
-
 class AnalysisServer implements Disposable {
+  static bool get startWithDebugging => atom.config.getValue('${pluginId}.debugAnalysisServer');
+
+  static final int OBSERVATORY_PORT = 23071;
+  static final int DIAGNOSTICS_PORT = 23072;
+
+  static String get observatoryUrl => 'http://localhost:${OBSERVATORY_PORT}/';
+  static String get diagnosticsUrl => 'http://localhost:${DIAGNOSTICS_PORT}/';
+
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
 
@@ -52,6 +56,21 @@ class AnalysisServer implements Disposable {
   AnalysisServer() {
     isActiveProperty = new Property.fromStreamWithInitialValue(false, onActive);
     Timer.run(_setup);
+
+    bool firstNotification = true;
+
+    onActive.listen((value) {
+      if (firstNotification) {
+        firstNotification = false;
+        return;
+      }
+
+      if (value) {
+        atom.notifications.addInfo('Analysis server running.');
+      } else {
+        atom.notifications.addWarning('Analysis server terminated.');
+      }
+    });
   }
 
   Stream<bool> get onActive => _serverActiveController.stream;
@@ -62,7 +81,6 @@ class AnalysisServer implements Disposable {
 
   Stream<AnalysisNavigation> get onNavigaton => _onNavigatonController.stream;
 
-  // TODO: is it better to just expose _server?
   Stream<AnalysisErrors> get onAnalysisErrors =>
       analysisServer._server.analysis.onErrors;
   Stream<AnalysisFlushResults> get onAnalysisFlushResults =>
@@ -83,11 +101,6 @@ class AnalysisServer implements Disposable {
 
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
-
-    disposables.add(atom.commands.add('atom-text-editor',
-        'dartlang:quick-fix', (event) {
-      QuickFixHelper.handleQuickFix(_server, event);
-    }));
 
     onSend.listen((String message)    => _logger.finer('--> ${message}'));
     onReceive.listen((String message) => _logger.finer('<-- ${message}'));
@@ -165,9 +178,11 @@ class AnalysisServer implements Disposable {
       // TODO: What a truly interesting API.
       _server.analysis.setSubscriptions({'NAVIGATION': [path]});
 
+      // Ensure that the path is in a Dart project.
       if (projectManager.getProjectFor(path) != null) {
-        // Ensure that the path is in a dart project.
-        server.analysis.setPriorityFiles([path]);
+        server.analysis.setPriorityFiles([path]).catchError((e) {
+          _logger.warning('Error from setPriorityFiles()', e);
+        });
       }
     }
   }
@@ -229,6 +244,10 @@ class AnalysisServer implements Disposable {
       {RefactoringOptions options}) {
     return server.edit.getRefactoring(kind, path, offset, length, validateOnly,
         options: options);
+  }
+
+  Future<FixesResult> getFixes(String path, int offset) {
+    return server.edit.getFixes(path, offset);
   }
 
   Future<HoverResult> getHover(String file, int offset) =>
@@ -302,61 +321,6 @@ class AnalysisServer implements Disposable {
   }
 }
 
-class QuickFixHelper {
-  static void handleQuickFix(Server server, AtomEvent event) {
-    if (server == null) return;
-
-    TextEditor editor = event.editor;
-    String path = editor.getPath();
-    Range range = editor.getSelectedBufferRange();
-    int offset = editor.getBuffer().characterIndexForPosition(range.start);
-
-    server.edit.getFixes(path, offset).then((FixesResult result) {
-      List<AnalysisErrorFixes> fixes = result.fixes;
-
-      if (fixes.isEmpty) {
-        atom.beep();
-        return;
-      }
-
-      List<SourceChange> changes = fixes
-        .expand((fix) => fix.fixes)
-        .where((SourceChange change) =>
-            change.edits.every((SourceFileEdit edit) => edit.file == path))
-        .toList();
-
-      if (changes.isEmpty) {
-        atom.beep();
-        return;
-      }
-
-      if (changes.length == 1) {
-        // Apply the fix.
-        _applyChange(editor, changes.first);
-      } else {
-        // TODO: Show a selection dialog.
-        _logger.info('multiple fixes returned (${changes.length})');
-        atom.beep();
-      }
-    }).catchError((e) {
-      _logger.warning('${e}');
-      atom.beep();
-    });
-  }
-
-  static void _applyChange(TextEditor editor, SourceChange change) {
-    List<SourceFileEdit> sourceFileEdits = change.edits;
-    List<LinkedEditGroup> linkedEditGroups = change.linkedEditGroups;
-
-    List<SourceEdit> edits = sourceFileEdits.expand((e) => e.edits).toList();
-    applyEdits(editor, edits);
-    selectEditGroups(editor, linkedEditGroups);
-
-    atom.notifications.addSuccess(
-        'Executed quick fix: ${toStartingLowerCase(change.message)}');
-  }
-}
-
 class _AnalyzingJob extends Job {
   static const Duration _debounceDelay = const Duration(milliseconds: 250);
 
@@ -409,7 +373,10 @@ class _AnalysisServerWrapper extends Server {
 
   _AnalysisServerWrapper(this.process, this._processCompleter,
       Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage) {
-    _processCompleter.future.then((result) => _disposedController.add(result));
+    _processCompleter.future.then((result) {
+      _disposedController.add(result);
+      process = null;
+    });
   }
 
   void setup() {
@@ -434,12 +401,15 @@ class _AnalysisServerWrapper extends Server {
   Stream<int> get onDisposed => _disposedController.stream;
 
   /// Restarts, or starts, the analysis server process.
-  void restart(sdk) {
+  void restart(Sdk sdk) {
     var startServer = () {
       var controller = new StreamController();
       process = _createProcess(sdk);
       _processCompleter = _startProcess(process, controller);
-      _processCompleter.future.then((result) => _disposedController.add(result));
+      _processCompleter.future.then((result) {
+        _disposedController.add(result);
+        process = null;
+      });
       configure(controller.stream, _messageWriter(process));
       setup();
     };
@@ -479,9 +449,16 @@ class _AnalysisServerWrapper extends Server {
   static ProcessRunner _createProcess(Sdk sdk) {
     List<String> arguments = [
       sdk.getSnapshotPath('analysis_server.dart.snapshot'),
-      '--sdk',
-      sdk.path
+      '--sdk=${sdk.path}'
     ];
+
+    if (AnalysisServer.startWithDebugging) {
+      arguments.insert(0, '--observe=${AnalysisServer.OBSERVATORY_PORT}');
+      _logger.info('observatory on analysis server available at ${AnalysisServer.observatoryUrl}.');
+
+      arguments.add('--port=${AnalysisServer.DIAGNOSTICS_PORT}');
+      _logger.info('analysis server diagnostics available at ${AnalysisServer.diagnosticsUrl}.');
+    }
 
     return new ProcessRunner(sdk.dartVm.path, args: arguments);
   }

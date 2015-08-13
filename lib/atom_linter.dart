@@ -16,6 +16,8 @@ abstract class LinterProvider {
   final String scope;
   final bool lintOnFly;
 
+  final JsObject _key = jsify({'scope': 'project'});
+
   static void registerLinterProvider(
       String methodName, LinterProvider provider) {
     final JsObject exports = context['module']['exports'];
@@ -29,7 +31,7 @@ abstract class LinterProvider {
 
   // A unique identifier for the provider; JS will store this in a hashmap as a
   // map key;
-  Object get _key => null;
+  Object get key => _key;
 
   Future<List<LintMessage>> lint(TextEditor editor);
 
@@ -55,14 +57,14 @@ class LinterService extends ProxyHolder {
   LinterService(obj) : super(obj);
 
   deleteMessages(LinterProvider provider) {
-    invoke('deleteMessages', provider._key);
+    invoke('deleteMessages', provider.key);
   }
 
   setMessages(LinterProvider provider, List<LintMessage> messages) {
     // jsify(messages, deep: true) ?
     // jsifyIterable(messages) ?
     var list = messages.map((m) => m.toMap()).toList();
-    invoke('setMessages', provider._key, list);
+    invoke('setMessages', provider.key, list);
   }
 }
 

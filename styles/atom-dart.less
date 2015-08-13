@@ -86,7 +86,20 @@ div.atom-view {
     li.list-nested-item div.list-item {
       text-overflow: ellipsis;
       overflow-x: hidden;
-      white-space: pre;
+      white-space: nowrap;
+    }
+
+    /* TODO: Should we have any clickable item in the list have a pointer cursor?
+    li.list-nested-item > div.list-item::before {
+      cursor: pointer;
+    }*/
+
+    li.list-nested-item.collapsed > div.list-item::before {
+      content: "\f078";
+    }
+
+    li.list-nested-item.collapsed > ul.list-tree {
+      display: none;
     }
   }
 }
@@ -122,8 +135,9 @@ div.atom-view {
     overflow-y: hidden;
     white-space: pre-line;
     line-height: 1em;
-    min-height: 3em;
+    min-height: 5em;
     max-height: 8em;
+    margin-bottom: 5px;
   }
 
   button {
@@ -154,8 +168,6 @@ div.linter-tab.active {
   width: 450px;
   padding: 0;
   color: @text-color;
-  /*background-color: @pane-item-background-color;
-  border: 1px solid @tool-panel-border-color;*/
   border-radius: 2px;
   z-index: 100;
   font-size: 110%;
@@ -217,7 +229,6 @@ div.linter-tab.active {
 
 .hierarchy-muted {
   color: @text-color-subtle;
-  margin-left: 8px;
 }
 
 .list-tree .list-item.tree-selected,
@@ -263,4 +274,9 @@ div.linter-tab.active {
 div.dartlang-toolbar button.btn {
   padding-top: 1px;
   margin-top: 1px;
+}
+
+/* hmmm, this is adjusting a global atom style... */
+atom-notification.success code {
+  text-shadow: none;
 }

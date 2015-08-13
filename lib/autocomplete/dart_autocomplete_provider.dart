@@ -3,8 +3,6 @@ part of autocomplete;
 // TODO: The code completion popup can be very sticky - perhaps due to the
 // latency involved in using the analysis server?
 
-const bool _filterLowRelevance = true;
-
 class DartAutocompleteProvider extends AutocompleteProvider {
   static final _suggestionKindMap = {
     'IMPORT': 'import',
@@ -36,9 +34,10 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     return a.completion.toLowerCase().compareTo(b.completion.toLowerCase());
   }
 
+  static final Set<String> _elided = new Set.from(['for ()']);
+
   DartAutocompleteProvider() : super(
       '.source.dart',
-      disableForSelector: '.source.dart .comment',
       filterSuggestions: true,
       inclusionPriority: 100,
       excludeLowerPriority: true);
@@ -49,21 +48,30 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     var server = analysisServer.server;
     var editor = options.editor;
     var path = editor.getPath();
-    var offset = editor.getBuffer().characterIndexForPosition(options.bufferPosition);
+    String text = editor.getText();
+    int offset = editor.getBuffer().characterIndexForPosition(options.bufferPosition);
+    String prefix = options.prefix;
 
-    // TODO: Can we tell if the auto-complete was explicitly requested by the
-    // user?
+    // If in a Dart source comment return an empty result.
+    ScopeDescriptor descriptor = editor.scopeDescriptorForBufferPosition(options.bufferPosition);
+    List<String> scopes = descriptor == null ? null : descriptor.scopes;
+    if (scopes != null && scopes.any((s) => s.startsWith('comment.line')
+        || s.startsWith('comment.block'))) {
+      return new Future.value([]);
+    }
 
     // Atom autocompletes right after a semi-colon, and often the user's return
     // key event is captured as a code complete select - inserting an item
     // (inadvertently) into the editor.
-    if (options.prefix == ';') return new Future.value([]);
-    if (options.prefix == '{' || options.prefix == '}') return new Future.value([]);
+    if (prefix == ';') return new Future.value([]);
+    if (prefix == '{' || prefix == '}') return new Future.value([]);
 
     return server.completion.getSuggestions(path, offset).then((result) {
       return server.completion.onResults
           .where((cr) => cr.id == result.id)
-          .where((cr) => cr.isLast).first.then(_handleCompletionResults);
+          .where((cr) => cr.isLast).first.then((r) {
+              return _handleCompletionResults(text, offset, prefix, r);
+          });
     });
   }
 
@@ -71,20 +79,35 @@ class DartAutocompleteProvider extends AutocompleteProvider {
       Map suggestion) {
     String requiredImport = suggestion['requiredImport'];
     if (requiredImport != null) {
-      // TODO: insert it...
-      print('TODO: add an import for ${requiredImport}');
+      // TODO: Insert it.
+      _logger.info('TODO: add an import for ${requiredImport}');
+    }
+
+    int selectionOffset = suggestion['selectionOffset'];
+    if (selectionOffset != null) {
+      Point pt = editor.getBuffer().positionForCharacterIndex(selectionOffset);
+      editor.setCursorBufferPosition(pt);
     }
   }
 
-  List<Suggestion> _handleCompletionResults(CompletionResults cr) {
+  List<Suggestion> _handleCompletionResults(String fileText, int offset, String prefix,
+      CompletionResults cr) {
     List<CompletionSuggestion> results = cr.results;
+    String prefixLower = prefix.toLowerCase();
+    int replacementOffset = cr.replacementOffset;
 
-    if (_filterLowRelevance) {
-      // Apply filtering from `dart-tools`.
-      results = results.where((result) => result.relevance > 500).toList();
+    // Calculate the prefix based on the insert location and the offset.
+    String _prefix;
+    if (replacementOffset < offset) {
+      _prefix = fileText.substring(replacementOffset, offset);
+      if (_prefix == prefix) _prefix = null;
     }
 
-    // TODO: Do we want to trust the AS's priority?
+    results = results
+        .where((result) => result.relevance > 500) // filtering from `dart-tools`
+        .where((result) => !_elided.contains(result.completion))
+        .toList();
+
     results.sort(_compareSuggestions);
 
     var suggestions = results.map((CompletionSuggestion cs) {
@@ -116,11 +139,27 @@ class DartAutocompleteProvider extends AutocompleteProvider {
         }
       }
 
+      // Filter out completions where the suggestions.tolowercase != the prefix.
+      String completionPrefix = _prefix != null  ? _prefix.toLowerCase() : prefixLower;
+      if (completionPrefix.isNotEmpty && idRegex.hasMatch(completionPrefix[0])) {
+        if (text != null && !text.toLowerCase().startsWith(completionPrefix)) {
+          return null;
+        }
+        if (snippet != null && !snippet.toLowerCase().startsWith(completionPrefix)) {
+          return null;
+        }
+      }
+
+      // Calculate the selectionOffset.
+      int selectionOffset;
+      if (cs.selectionOffset != cs.completion.length) {
+        selectionOffset =
+            replacementOffset - completionPrefix.length + cs.selectionOffset;
+      }
+
       bool potential = cs.isPotential || cs.importUri != null;
 
-      return new Suggestion(
-        text: text,
-        snippet: snippet,
+      Suggestion suggestion = new Suggestion(
         type: _mapType(cs),
         leftLabel: _sanitizeReturnType(cs),
         rightLabel: _rightLabel(cs.element != null ? cs.element.kind : cs.kind),
@@ -130,7 +169,12 @@ class DartAutocompleteProvider extends AutocompleteProvider {
         description: _describe(cs),
         requiredImport: cs.importUri
       );
-    }).toList();
+      if (text != null) suggestion.text = text;
+      if (snippet != null) suggestion.snippet = snippet;
+      if (_prefix != null) suggestion.replacementPrefix = _prefix;
+      if (selectionOffset != null) suggestion.selectionOffset = selectionOffset;
+      return suggestion;
+    }).where((suggestion) => suggestion != null).toList();
 
     return suggestions;
   }

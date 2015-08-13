@@ -28,7 +28,7 @@ final bool isWindows = platform.startsWith('win');
 final bool isMac = platform == 'darwin';
 final bool isLinux = !isWindows && !isMac;
 
-final String separator = isWindows ? '\\' : '/';
+final String separator = isWindows ? r'\' : '/';
 
 String join(dir, String arg1, [String arg2, String arg3]) {
   if (dir is Directory) dir = dir.path;
@@ -47,6 +47,12 @@ String dirname(entry) {
   return index == -1 ? null : entry.substring(0, index);
 }
 
+String basename(String path) {
+  if (path.endsWith(separator)) path = path.substring(0, path.length - 1);
+  int index = path.lastIndexOf(separator);
+  return index == -1 ? path : path.substring(index + 1);
+}
+
 /// Relative path entries are removed and symlinks are resolved to their final
 /// destination.
 String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
@@ -58,7 +64,7 @@ String env(String key) => _process['env'][key];
 
 /// Display a textual prompt to the user.
 Future<String> promptUser(String prompt,
-    {String defaultText, bool selectText: false}) {
+    {String defaultText, bool selectText: false, bool selectLastWord: false}) {
   if (defaultText == null) defaultText = '';
 
   // div, atom-text-editor.editor.mini div.message atom-text-editor[mini]
@@ -67,15 +73,21 @@ Future<String> promptUser(String prompt,
 
   Element element = new DivElement();
   element.setInnerHtml('''
+    <label>${prompt}</label>
     <atom-text-editor mini>${defaultText}</atom-text-editor>
-    <div class="message">${prompt}</div>
 ''',
       treeSanitizer: new TrustedHtmlTreeSanitizer());
 
   Element editorElement = element.querySelector('atom-text-editor');
   JsFunction editorConverter = context['getTextEditorForElement'];
   TextEditor editor = new TextEditor(editorConverter.apply([editorElement]));
-  if (selectText) editor.selectAll();
+  if (selectText) {
+    editor.selectAll();
+  } else if (selectLastWord) {
+    editor.moveToEndOfLine();
+    editor.selectToBeginningOfWord();
+  }
+
   // Focus the element.
   Timer.run(() {
     try { editorElement.focus(); }
@@ -110,7 +122,6 @@ class PermissiveNodeValidator implements NodeValidator {
 
 class TrustedHtmlTreeSanitizer implements NodeTreeSanitizer {
   const TrustedHtmlTreeSanitizer();
-
   void sanitizeTree(Node node) { }
 }
 

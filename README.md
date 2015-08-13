@@ -23,6 +23,20 @@ We also recommend the following (optional) packages:
 - [last-cursor-position](https://atom.io/packages/last-cursor-position): helps you
   move between cursor location history (useful when using "jump to definition")
 
+- [minimap](https://atom.io/packages/minimap): adds a small preview
+  window of the full source code of a file
+
+- [minimap-find-and-replace](https://atom.io/packages/minimap-find-and-replace): displays
+  the search matches in the minimap
+
+### Packages to avoid
+
+We do not recommend using both [emmet](https://atom.io/packages/emmet)
+and this dartlang package together.
+For an unknown reason, editing large .dart files slows down if
+you have the emmet plugin installed. We have filed an
+[issue](https://github.com/emmetio/emmet-atom/issues/319).
+
 ## Features
 
 - auto-discovery of Dart SDK location
@@ -30,12 +44,14 @@ We also recommend the following (optional) packages:
 - as-you-type errors and warnings
 - code completion
 - `F1` to see dartdocs
+- ctrl-1 / cmd-1 to see quick fixes for errors
 - `F3` (or option-click) to jump to definition
 - `F4` to see a type hierarchy
 - find references to classes and methods
+- view type hierarchy
 - rename refactoring
 - pub commands (get and update) are available via context menus
-- view type hierarchy
+- format source code with `dartfmt` (use the Command Palette)
 
 A lot of Atom's functionality is surfaced via named commands. You can see all
 the available commands by hitting `shift-command-p`.
@@ -47,7 +63,7 @@ To view detailed info about what the analysis server is doing, run the
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: https://github.com/atom-dart/dartlang/issues
+[tracker]: https://github.com/dart-atom/dartlang/issues
 
 ## Developing the plugin
 

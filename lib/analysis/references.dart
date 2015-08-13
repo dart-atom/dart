@@ -200,24 +200,31 @@ class _MatchParser {
     if (lines == null || l.startLine >= lines.length) return null;
 
     String line = lines[l.startLine - 1];
-    int col = l.startColumn - 1;
 
-    String start = line.substring(0, col);
-    int max = math.min(l.length, line.length - col);
-    String extract = line.substring(col, col + max);
-    String end = '';
-    if (max < line.length) end = line.substring(col + max);
+    try {
+      int col = l.startColumn - 1;
+      col = math.min(col, line.length);
 
-    start = start.trimLeft();
-    end = end.trimRight();
+      String start = line.substring(0, col);
+      int max = math.min(l.length, line.length - col);
+      String extract = line.substring(col, col + max);
+      String end = '';
+      if (max < line.length) end = line.substring(col + max);
 
-    final int llen = 20;
-    final int rlen = 30;
+      start = start.trimLeft();
+      end = end.trimRight();
 
-    if (start.length > llen) start = '…${start.substring(start.length - llen + 2)}';
-    if (end.length > rlen) end = '${end.substring(0, rlen - 2)}…';
+      final int llen = 20;
+      final int rlen = 30;
 
-    return [start, extract, end];
+      if (start.length > llen) start = '…${start.substring(start.length - llen + 2)}';
+      if (end.length > rlen) end = '${end.substring(0, rlen - 2)}…';
+
+      return [start, extract, end];
+    } catch (e) {
+      if (line.length > 60) line = line.substring(0, 60);
+      return [line, '', ''];
+    }
   }
 
   void reset() {
@@ -226,9 +233,22 @@ class _MatchParser {
   }
 
   void _parse(String path) {
-    File f = new File.fromPath(path);
-    String contents = f.readSync();
-    lines = contents.split('\n');
-    file = path;
+    this.file = path;
+
+    // Handle files that are open + modified in atom.
+    for (TextEditor editor in atom.workspace.getTextEditors()) {
+      if (editor.getPath() == path) {
+        String contents = editor.getText();
+        lines = contents.split('\n');
+        return;
+      }
+    }
+
+    try {
+      String contents = new File.fromPath(path).readSync();
+      lines = contents == null ? [] : contents.split('\n');
+    } catch (e) {
+      lines = [];
+    }
   }
 }

@@ -69,6 +69,18 @@ void selectEditGroups(TextEditor editor, List<LinkedEditGroup> groups) {
   editor.setSelectedBufferRanges(ranges);
 }
 
+/// Select the given edit group in the text editor.
+void selectEditGroup(TextEditor editor, LinkedEditGroup group) {
+  // Select group.
+  TextBuffer buffer = editor.getBuffer();
+  List<Range> ranges = group.positions.map((Position position) {
+    return new Range.fromPoints(
+      buffer.positionForCharacterIndex(position.offset),
+      buffer.positionForCharacterIndex(position.offset + group.length));
+  }).toList();
+  editor.setSelectedBufferRanges(ranges);
+}
+
 /// Sort [SourceEdit]s last-to-first.
 void _sortEdits(List<SourceEdit> edits) {
   edits.sort((SourceEdit a, SourceEdit b) => b.offset - a.offset);
@@ -107,8 +119,8 @@ class EditorManager implements Disposable {
 class Editors implements Disposable {
   static bool _isDartTypeEditor(TextEditor editor) {
     if (editor == null) return false;
-    var grammar = editor.getRootScopeDescriptor();
-    var scopes  = grammar == null ? null : grammar['scopes'];
+    ScopeDescriptor descriptor = editor.getRootScopeDescriptor();
+    List scopes  = descriptor == null ? null : descriptor.scopes;
     return scopes == null ? false: scopes.contains('source.dart');
   }
 

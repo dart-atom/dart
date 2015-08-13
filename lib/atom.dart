@@ -97,6 +97,7 @@ void registerPackage(AtomPackage package) {
 class Atom extends ProxyHolder {
   CommandRegistry _commands;
   Config _config;
+  ContextMenuManager _contextMenu;
   NotificationManager _notifications;
   PackageManager _packages;
   Project _project;
@@ -106,6 +107,7 @@ class Atom extends ProxyHolder {
   Atom() : super(_ctx) {
     _commands = new CommandRegistry(obj['commands']);
     _config = new Config(obj['config']);
+    _contextMenu = new ContextMenuManager(obj['contextMenu']);
     _notifications = new NotificationManager(obj['notifications']);
     _packages = new PackageManager(obj['packages']);
     _project = new Project(obj['project']);
@@ -115,6 +117,7 @@ class Atom extends ProxyHolder {
 
   CommandRegistry get commands => _commands;
   Config get config => _config;
+  ContextMenuManager get contextMenu => _contextMenu;
   NotificationManager get notifications => _notifications;
   PackageManager get packages => _packages;
   Project get project => _project;
@@ -280,40 +283,99 @@ class Config extends ProxyHolder {
   }
 }
 
+/// Provides a registry for commands that you'd like to appear in the context
+/// menu.
+class ContextMenuManager extends ProxyHolder {
+  ContextMenuManager(JsObject obj) : super(obj);
+
+  /// Add context menu items scoped by CSS selectors.
+  Disposable add(String selector, List<ContextMenuItem> items) {
+    Map m = {selector: items.map((item) => item.toJs()).toList()};
+    return new JsDisposable(invoke('add', m));
+  }
+}
+
+abstract class ContextMenuItem {
+  static final ContextMenuItem separator = new _SeparatorMenuItem();
+
+  final String label;
+  final String command;
+
+  ContextMenuItem(this.label, this.command);
+
+  bool shouldDisplay(AtomEvent event);
+
+  JsObject toJs() {
+    Map m = {
+      'label': label,
+      'command': command,
+      'shouldDisplay': (e) => shouldDisplay(new AtomEvent(e))
+    };
+    return jsify(m);
+  }
+}
+
+abstract class ContextMenuContributor {
+  List<ContextMenuItem> getTreeViewContributions();
+}
+
+class _SeparatorMenuItem extends ContextMenuItem {
+  _SeparatorMenuItem() : super('', '');
+  bool shouldDisplay(AtomEvent event) => true;
+  JsObject toJs() => jsify({'type': 'separator'});
+}
+
 /// A notification manager used to create notifications to be shown to the user.
 class NotificationManager extends ProxyHolder {
   NotificationManager(JsObject object) : super(object);
 
+  // TODO: Expose the `buttons` field.
+  // https://github.com/atom/exception-reporting/blob/master/lib/reporter.coffee#L101
+
   /// Add an success notification. If [dismissable] is `true`, the notification
   /// is rendered with a close button and does not auto-close.
-  void addSuccess(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addSuccess', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addSuccess(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addSuccess', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
   /// Add an informational notification.
-  void addInfo(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addInfo', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addInfo(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addInfo', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
   /// Add an warning notification.
-  void addWarning(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addWarning', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addWarning(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addWarning', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
   /// Add an error notification.
-  void addError(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addError', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addError(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addError', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
   /// Add an fatal error notification.
-  void addFatalError(String message, {String detail, bool dismissable, String icon}) =>
-      invoke('addFatalError', message,
-          _options(detail: detail, dismissable: dismissable, icon: icon));
+  void addFatalError(String message, {String detail, String description,
+      bool dismissable, String icon}) {
+    invoke('addFatalError', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon));
+  }
 
-  Map _options({String detail, bool dismissable, String icon}) {
-    if (detail == null && dismissable == null && icon == null) return null;
+  Map _options({String detail, String description, bool dismissable, String icon}) {
+    if (detail == null && description == null && dismissable == null && icon == null) {
+      return null;
+    }
+
     Map m = {};
     if (detail != null) m['detail'] = detail;
+    if (description != null) m['description'] = description;
     if (dismissable != null) m['dismissable'] = dismissable;
     if (icon != null) m['icon'] = icon;
     return m;
@@ -358,6 +420,12 @@ class Project extends ProxyHolder {
   List<Directory> getDirectories() {
     return invoke('getDirectories').map((dir) => new Directory(dir)).toList();
   }
+
+  /// Add a path to the project's list of root paths.
+  void addPath(String path) => invoke('addPath', path);
+
+  /// Remove a path from the project's list of root paths.
+  void removePath(String path) => invoke('removePath', path);
 
   /// Get the path to the project directory that contains the given path, and
   /// the relative path from that project directory to the given path. Returns
@@ -516,8 +584,13 @@ class TextEditor extends ProxyHolder {
   /// {
   ///   'scopes': ['source.dart']
   /// }
-  Map getRootScopeDescriptor() =>
-      toDartObjectViaWizardy(invoke('getRootScopeDescriptor'));
+  ScopeDescriptor getRootScopeDescriptor() =>
+      new ScopeDescriptor(invoke('getRootScopeDescriptor'));
+
+  /// Get the syntactic scopeDescriptor for the given position in buffer
+  /// coordinates.
+  ScopeDescriptor scopeDescriptorForBufferPosition(Point bufferPosition) =>
+      new ScopeDescriptor(invoke('scopeDescriptorForBufferPosition', bufferPosition));
 
   String getText() => invoke('getText');
   String getSelectedText() => invoke('getSelectedText');
@@ -613,11 +686,14 @@ class TextEditor extends ProxyHolder {
   Stream get onDidSave => eventStream('onDidSave');
 
   // Return the editor's TextEditorView / <text-editor-view> / HtmlElement. This
-  // view is an HtmlElement, but we can't use it as one. we need to access it
+  // view is an HtmlElement, but we can't use it as one. We need to access it
   // through JS interop.
   dynamic get view => atom.views.getView(obj);
 
   String toString() => getTitle();
+
+  void moveToEndOfLine() => invoke('moveToEndOfLine');
+  void selectToBeginningOfWord() => invoke('selectToBeginningOfWord');
 }
 
 class TextBuffer extends ProxyHolder {
@@ -719,18 +795,39 @@ class AtomEvent extends ProxyHolder {
     return view.getModel();
   }
 
-  /// Return the currently selected file item. This call will only be meaningful
-  /// if the event target is the Tree View.
-  Element get selectedFileItem {
-    Element element = currentTarget;
-    return element.querySelector('li[is=tree-view-file].selected span.name');
-  }
+  // /// Return the currently selected file item. This call will only be meaningful
+  // /// if the event target is the Tree View.
+  // // TODO: deprecate?
+  // Element get selectedFileItem {
+  //   Element element = currentTarget;
+  //   return element.querySelector('li[is=tree-view-file].selected span.name');
+  // }
+  //
+  // /// Return the currently selected file path. This call will only be meaningful
+  // /// if the event target is the Tree View.
+  // String get selectedFilePath {
+  //   Element element = selectedFileItem;
+  //   return element == null ? null : element.getAttribute('data-path');
+  // }
 
   /// Return the currently selected file path. This call will only be meaningful
   /// if the event target is the Tree View.
-  String get selectedFilePath {
-    Element element = selectedFileItem;
-    return element == null ? null : element.getAttribute('data-path');
+  String get targetFilePath {
+    var target = obj['target'];
+
+    // Target is an Element or a JsObject. JS interop is a mess.
+    if (target is Element) {
+      if (target.children.isEmpty) return null;
+      Element child = target.children.first;
+      return child.getAttribute('data-path');
+    } else if (target is JsObject) {
+      JsObject obj = target.callMethod('querySelector', ['span']);
+      if (obj == null) return null;
+      obj = new JsObject.fromBrowserObject(obj);
+      return obj.callMethod('getAttribute', ['data-path']);
+    } else {
+      return null;
+    }
   }
 
   void abortKeyBinding() => invoke('abortKeyBinding');
@@ -753,6 +850,17 @@ class Shell {
   JsObject get _shell => require('shell');
 
   openExternal(String url) => _shell.callMethod('openExternal', [url]);
+}
+
+class ScopeDescriptor extends ProxyHolder {
+  factory ScopeDescriptor(JsObject object) {
+    return object == null ? null : new ScopeDescriptor._(object);
+  }
+  ScopeDescriptor._(JsObject object) : super(object);
+
+  List<String> get scopes => obj['scopes'];
+
+  List<String> getScopesArray() => invoke('getScopesArray');
 }
 
 class BufferedProcess extends ProxyHolder {

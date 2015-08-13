@@ -6,6 +6,8 @@ library atom.sdk;
 
 import 'dart:async';
 
+import 'package:pub_semver/pub_semver.dart';
+
 import 'atom.dart';
 import 'atom_utils.dart';
 import 'jobs.dart';
@@ -16,6 +18,8 @@ import 'utils.dart';
 export 'process.dart' show ProcessResult;
 
 final String _prefPath = '${pluginId}.sdkLocation';
+
+final Version _minSdkVersion = new Version.parse('1.11.0');
 
 // TODO: We should not try and auto-locate the sdk when the value’s bad, only
 // when it’s empty.
@@ -92,12 +96,38 @@ class SdkManager implements Disposable {
       _controller.add(_sdk);
 
       if (verbose) {
-        atom.notifications.addSuccess('Dart SDK found at ${path}.');
+        _sdk.getVersion().then((version) {
+          atom.notifications.addSuccess(
+              "Dart SDK found at ${path}. Version ${version}.");
+        });
       }
+
+      _verifyMinVersion(_sdk, verbose);
     }
   }
 
   void dispose() => _prefObserve.dispose();
+
+  bool _alreadyWarned = false;
+
+  void _verifyMinVersion(Sdk sdk, bool verbose) {
+    sdk.getVersion().then((String version) {
+      if (version == null) return;
+      try {
+        Version ver = new Version.parse(version);
+        Version compare = ver.isPreRelease ? ver.nextPatch : ver;
+        if (compare < _minSdkVersion) {
+          if (!_alreadyWarned || verbose) {
+            _alreadyWarned = true;
+            atom.notifications.addWarning(
+              'SDK version ${ver} is older than the required verison of ${_minSdkVersion}. '
+              'Please visit www.dartlang.org to download a recent SDK.',
+              dismissable: true);
+          }
+        }
+      } catch (e) { }
+    });
+  }
 }
 
 class Sdk {
@@ -207,10 +237,6 @@ class SdkDiscovery {
     vmFile = new File.fromPath(vmFile.getRealPathSync());
     return vmFile.getParent().getParent().path;
   }
-
-  // Future<String> _readlink(String linkedFilePath) {
-  //   return exec('readlink', [linkedFilePath]);
-  // }
 }
 
 class SdkLocationJob extends Job {

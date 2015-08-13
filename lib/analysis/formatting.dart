@@ -24,7 +24,7 @@ class FormattingHelper implements Disposable {
 
   FormattingHelper() {
     _commands.add(atom.commands.add('.tree-view', 'dartlang:dart-format', (e) {
-      formatFile(e.selectedFilePath);
+      formatFile(e.targetFilePath);
     }));
     _commands.add(atom.commands.add('atom-text-editor', 'dartlang:dart-format',
         (e) {
@@ -49,15 +49,15 @@ class FormattingHelper implements Disposable {
       if (result.exit == 0) {
         atom.notifications.addSuccess('Formatting successful.');
       } else {
-        atom.notifications.addError('Error while formatting',
-            detail: result.stderr);
+        atom.notifications
+            .addError('Error while formatting', detail: result.stderr);
       }
     });
   }
 
-  /// Formats a [TextEditor]
-  /// Returns false if the editor was not formatted; true if it was.
-  static Future<bool> formatEditor(TextEditor editor) {
+  /// Formats a [TextEditor]. Returns false if the editor was not formatted;
+  /// true if it was.
+  static Future<bool> formatEditor(TextEditor editor, {bool quiet: false}) {
     String path = editor.getPath();
 
     if (projectManager.getProjectFor(path) == null) {
@@ -81,21 +81,21 @@ class FormattingHelper implements Disposable {
         .format(path, offset, end - offset, lineLength: _prefLineLength)
         .then((FormatResult result) {
       if (result.edits.isEmpty) {
-        atom.notifications.addSuccess('No formatting changes.');
+        if (!quiet) atom.notifications.addSuccess('No formatting changes.');
         return false;
       } else {
-        atom.notifications.addSuccess('Formatting successful.');
+        if (!quiet) atom.notifications.addSuccess('Formatting successful.');
         applyEdits(editor, result.edits);
         editor.setSelectedBufferRange(new Range.fromPoints(
-            buffer.positionForCharacterIndex(result.selectionOffset), buffer
-                .positionForCharacterIndex(
-                    result.selectionOffset + result.selectionLength)));
+            buffer.positionForCharacterIndex(result.selectionOffset),
+            buffer.positionForCharacterIndex(
+                result.selectionOffset + result.selectionLength)));
         return true;
       }
     }).catchError((e) {
       if (e is RequestError) {
-        atom.notifications.addError('Error while formatting',
-            detail: e.message);
+        atom.notifications
+            .addError('Error while formatting', detail: e.message);
       } else {
         atom.beep();
         _logger.warning('error when formatting: ${e}');

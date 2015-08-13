@@ -9,35 +9,39 @@ import 'dart:js';
 
 import 'package:logging/logging.dart';
 
+import 'analysis/analysis_options.dart';
+import 'analysis/dartdoc.dart';
+import 'analysis/declaration_nav.dart';
+import 'analysis/formatting.dart';
+import 'analysis/organize_file.dart';
+import 'analysis/quick_fixes.dart';
+import 'analysis/refactor.dart';
+import 'analysis/references.dart';
+import 'analysis/type_hierarchy.dart';
 import 'analysis_server.dart';
-import 'autocomplete.dart';
 import 'atom.dart';
 import 'atom_linter.dart' show LinterService;
 import 'atom_statusbar.dart';
 import 'atom_utils.dart';
+import 'autocomplete.dart';
 import 'buffer/buffer_observer.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
-import 'linter.dart' show DartLinterConsumer;
-import 'projects.dart';
-import 'sdk.dart';
-import 'state.dart';
-import 'usage.dart' show UsageManager;
-import 'utils.dart';
-import 'analysis/dartdoc.dart';
-import 'analysis/declaration_nav.dart';
-import 'analysis/formatting.dart';
-import 'analysis/refactor.dart';
-import 'analysis/references.dart';
-import 'analysis/type_hierarchy.dart';
 import 'impl/changelog.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
+import 'linter.dart' show DartLinterConsumer;
+import 'projects.dart';
+import 'sdk.dart';
+import 'sky/create_project.dart';
 import 'sky/toolbar.dart';
+import 'state.dart';
+import 'usage.dart' show UsageManager;
+import 'utils.dart';
 
 export 'atom.dart' show registerPackage;
 
@@ -83,12 +87,12 @@ class AtomDartPackage extends AtomPackage {
 
       return consumer;
     });
-    var provider = new DartAutocompleteProvider();
+
+    var dartProvider = new DartAutocompleteProvider();
     // TODO: why isn't this working?
-    // registerServiceProvider('provideAutocomplete',
-    //   () => provider.toProxy());
+    // registerServiceProvider('provideAutocomplete', () => provider.toProxy());
     final JsObject exports = context['module']['exports'];
-    exports['provideAutocomplete'] = () => provider.toProxy();
+    exports['provideAutocomplete'] = () => dartProvider.toProxy();
   }
 
   void packageActivated([Map inState]) {
@@ -105,13 +109,21 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
+
+    AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
+    PubManager pubManager = new PubManager();
+
+    disposables.add(analysisOptionsManager);
+    disposables.add(new CreateProjectManager());
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
-    disposables.add(new PubManager());
+    disposables.add(new OrganizeFileManager());
+    disposables.add(pubManager);
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
+    disposables.add(new QuickFixHelper());
 
     disposables.add(new UsageManager());
 
@@ -141,6 +153,13 @@ class AtomDartPackage extends AtomPackage {
     // Text editor commands.
     _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
 
+    // Set up the context menus.
+    List<ContextMenuItem> treeItems = [ContextMenuItem.separator];
+    treeItems.addAll(pubManager.getTreeViewContributions());
+    treeItems.addAll(analysisOptionsManager.getTreeViewContributions());
+    treeItems.add(ContextMenuItem.separator);
+    disposables.add(atom.contextMenu.add('.tree-view', treeItems));
+
     // Observe all buffers and send updates to analysis server
     disposables.add(new BufferObserverManager());
 
@@ -163,6 +182,18 @@ class AtomDartPackage extends AtomPackage {
         atom.notifications.addWarning(
           "The 'dartlang' plugin requires the '${dep}' plugin in order to work. "
           "You can install it via the Install section of the Settings dialog.",
+          dismissable: true);
+      }
+    }
+
+    if (packages.contains('emmet') && !atom.packages.isPackageDisabled('emmet')) {
+      if (state['emmet'] == null) {
+        state['emmet'] = true;
+
+        atom.notifications.addWarning(
+          "The emmet package has severe performance issues when editing Dart "
+          "files. It is recommended to disable emmet until issue "
+          "https://github.com/emmetio/emmet-atom/issues/319 is fixed.",
           dismissable: true);
       }
     }
@@ -238,6 +269,24 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': true,
         'order': 5
+      },
+
+      'logging': {
+        'title': 'Log plugin diagnostics to the devtools console.',
+        'description': 'This is for plugin development only!',
+        'type': 'string',
+        'default': 'info',
+        'enum': ['error', 'warning', 'info', 'fine', 'finer'],
+        'order': 10
+      },
+      'debugAnalysisServer': {
+        'title': 'Start the analysis server with debug flags.',
+        'description': 'This is for plugin development only! The analysis server '
+            'will be started with the observatory port and AS diagnostics ports '
+            'turned on. Restart required.',
+        'type': 'boolean',
+        'default': false,
+        'order': 11
       }
     };
   }

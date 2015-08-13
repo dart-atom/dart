@@ -17,11 +17,25 @@ import 'utils.dart';
 
 final Logger _logger = new Logger('atom.autocomplete');
 
+_AutocompleteOverride _override;
+
 void triggerAutocomplete(TextEditor editor) {
   atom.commands.dispatch(
     atom.views.getView(editor),
     'autocomplete-plus:activate',
     options: {'activatedManually': false});
+}
+
+/// Display the code completion UI with the given list of items, and return the
+/// user's selection.
+Future<dynamic> chooseItemUsingCompletions(TextEditor editor,
+    List<dynamic> items, Suggestion renderer(var item)) {
+  // TODO: _AutocompleteOverride should take the current editor and time. It
+  // should not apply if we get a request for a different editor or it's been a
+  // while since the completion was requested
+  _override = new _AutocompleteOverride(items, renderer);
+  triggerAutocomplete(editor);
+  return _override.future;
 }
 
 abstract class AutocompleteProvider implements Disposable {
@@ -71,21 +85,36 @@ abstract class AutocompleteProvider implements Disposable {
   }
 
   JsObject _getSuggestions(options) {
+    Future<List<Suggestion>> f;
     AutocompleteOptions opts = new AutocompleteOptions(options);
-    Stopwatch timer = new Stopwatch()..start();
-    Future f = getSuggestions(opts).then((suggestions) {
-      _logger.fine('code completion in ${timer.elapsedMilliseconds}ms, ${suggestions.length} results');
-      return suggestions.map((suggestion) => suggestion._toProxy()).toList();
-    });
-    Promise promise = new Promise.fromFuture(f);
-    return promise.obj;
+
+    if (_override != null && _override.hasShown) _override = null;
+
+    if (_override != null) {
+      _override.hasShown = true;
+      List<Suggestion> suggestions = _override.renderSuggestions();
+      f = new Future.value(suggestions.map((s) => s._toProxy()).toList());
+    } else {
+      Stopwatch timer = new Stopwatch()..start();
+      f = getSuggestions(opts).then((suggestions) {
+        _logger.fine('code completion in ${timer.elapsedMilliseconds}ms, ${suggestions.length} results');
+        return suggestions.map((suggestion) => suggestion._toProxy()).toList();
+      });
+    }
+
+    return new Promise.fromFuture(f).obj;
   }
 
   void _onDidInsertSuggestion(options) {
-    onDidInsertSuggestion(
-      new TextEditor(options['editor']),
-      new Point(options['triggerPosition']),
-      toDartObjectViaWizardy(options['suggestion']));
+    if (_override != null && _override.hasShown) {
+      _override.userSelection(toDartObjectViaWizardy(options['suggestion']));
+      _override = null;
+    } else {
+      onDidInsertSuggestion(
+        new TextEditor(options['editor']),
+        new Point(options['triggerPosition']),
+        toDartObjectViaWizardy(options['suggestion']));
+    }
   }
 }
 
@@ -115,13 +144,13 @@ class AutocompleteOptions {
 class Suggestion {
   /// (required; or [snippet]): The text which will be inserted into the
   /// editor, in place of the prefix.
-  final String text;
+  String text;
 
   /// (required; or [text]): A snippet string. This will allow users to tab
   /// through function arguments or other options. e.g.
   /// `myFunction(${1:arg1}, ${2:arg2})`. See the snippets package for more
   /// information.
-  final String snippet;
+  String snippet;
 
   /// (optional): A string that will show in the UI for this suggestion. When
   /// not set, snippet || text is displayed. This is useful when snippet or text
@@ -132,7 +161,7 @@ class Suggestion {
   /// (optional): The text immediately preceding the cursor, which will be
   /// replaced by the text. If not provided, the prefix passed into
   /// `getSuggestions` will be used.
-  final String replacementPrefix;
+  String replacementPrefix;
 
   /// (optional): The suggestion type. It will be converted into an icon shown
   /// against the suggestion. Predefined styles exist for `variable`, `constant`,
@@ -177,10 +206,14 @@ class Suggestion {
 
   final String requiredImport;
 
+  int selectionOffset;
+
+  int itemIndex;
+
   Suggestion({this.text, this.snippet, this.displayText, this.replacementPrefix,
     this.type, this.leftLabel, this.leftLabelHTML, this.rightLabel, this.rightLabelHTML,
     this.className, this.iconHTML, this.description, this.descriptionMoreURL,
-    this.requiredImport});
+    this.requiredImport, this.selectionOffset, this.itemIndex});
 
   Map _toMap() {
     Map m = {};
@@ -198,8 +231,37 @@ class Suggestion {
     if (description != null) m['description'] = description;
     if (descriptionMoreURL != null) m['descriptionMoreURL'] = descriptionMoreURL;
     if (requiredImport != null) m['requiredImport'] = requiredImport;
+    if (selectionOffset != null) m['selectionOffset'] = selectionOffset;
+    if (itemIndex != null) m['itemIndex'] = itemIndex;
     return m;
   }
 
   JsObject _toProxy() => jsify(_toMap());
+}
+
+class _AutocompleteOverride {
+  final List<dynamic> items;
+  final Function renderer;
+  final Completer<dynamic> completer = new Completer();
+
+  bool hasShown = false;
+
+  _AutocompleteOverride(this.items, this.renderer);
+
+  List<Suggestion> renderSuggestions() {
+    List result = [];
+    for (int i = 0; i < items.length; i++) {
+      Suggestion suggestion = renderer(items[i]);
+      suggestion.itemIndex = i;
+      result.add(suggestion);
+    }
+    return result;
+  }
+
+  void userSelection(Map selectedSuggestion) {
+    int index = selectedSuggestion['itemIndex'];
+    completer.complete(index == null ? null : items[index]);
+  }
+
+  Future<dynamic> get future => completer.future;
 }

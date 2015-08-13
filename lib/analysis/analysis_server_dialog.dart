@@ -4,6 +4,7 @@
 
 library atom.analysis_server_dialog;
 
+import '../analysis_server.dart';
 import '../atom.dart';
 import '../elements.dart';
 import '../state.dart';
@@ -20,6 +21,10 @@ class AnalysisServerDialog implements Disposable {
   CoreElement _startButton;
   CoreElement _reanalyzeButton;
   CoreElement _stopButton;
+
+  CoreElement _diagnosticsButton;
+  CoreElement _observatoryButton;
+  CoreElement _crashDumpButton;
 
   AnalysisServerDialog() {
     _disposables.add(atom.commands.add('atom-workspace',
@@ -53,6 +58,19 @@ class AnalysisServerDialog implements Disposable {
       _messageElement = div(c: 'last-message text-subtle')
     ]);
 
+    if (AnalysisServer.startWithDebugging) {
+      _dialog.content.add(div(c: 'block')..layoutHorizontal()..add([
+        _diagnosticsButton = button(text: 'View Diagnostics', c: 'btn btn-sm')..inlineBlockTight(),
+        _observatoryButton = button(text: 'Open in Observatory', c: 'btn btn-sm')..inlineBlockTight(),
+        div()..inlineBlock()..flex(),
+        _crashDumpButton = button(text: 'Download crash dump', c: 'btn btn-sm')..inlineBlockTight()
+      ]));
+
+      _diagnosticsButton.click(() => shell.openExternal(AnalysisServer.diagnosticsUrl));
+      _observatoryButton.click(() => shell.openExternal(AnalysisServer.observatoryUrl));
+      _crashDumpButton.click(() => shell.openExternal('${AnalysisServer.observatoryUrl}_getCrashDump'));
+    }
+
     _updateStatus(updateTitle: true);
 
     _disposables.add(_dialog);
@@ -79,6 +97,12 @@ class AnalysisServerDialog implements Disposable {
     _startButton.toggleAttribute('disabled', analysisServer.isActive);
     _reanalyzeButton.toggleAttribute('disabled', !analysisServer.isActive);
     _stopButton.toggleAttribute('disabled', !analysisServer.isActive);
+
+    if (_diagnosticsButton != null) {
+      _diagnosticsButton.toggleAttribute('disabled', !analysisServer.isActive);
+      _observatoryButton.toggleAttribute('disabled', !analysisServer.isActive);
+      _crashDumpButton.toggleAttribute('disabled', !analysisServer.isActive);
+    }
 
     if (updateTitle) {
       if (analysisServer.isActive) {
