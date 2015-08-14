@@ -1,5 +1,8 @@
 # Changelog
 
+## unreleased
+- changed the quick fix keybinding on the mac from `cmd-1` to `ctrl-1`
+
 ## 0.3.15
 - fixed an exception when opening a context menu
 - added the ability to sort directives (right click in a dart editor and
