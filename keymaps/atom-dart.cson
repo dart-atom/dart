@@ -21,8 +21,8 @@
   'ctrl-shift-O': 'dartlang:organize-directives'
 
 # Dart editor commands (mac)
+# TODO: Add default keybinding for dartlang:quick-fix on MacOS.
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'cmd-1': 'dartlang:quick-fix'
   'cmd-alt-b': 'dartlang:dart-format'
   'shift-cmd-g': 'dartlang:find-references'
 
