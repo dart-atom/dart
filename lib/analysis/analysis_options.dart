@@ -3,9 +3,8 @@ library atom.analysis_options;
 import 'package:yaml/yaml.dart' as yaml;
 
 import '../atom.dart';
-import '../atom_utils.dart' as atom_utils show separator;
-import '../projects.dart';
-import '../state.dart';
+// import '../atom_utils.dart' as atom_utils show separator;
+// import '../projects.dart';
 import '../utils.dart';
 
 // .analysis_options
@@ -17,14 +16,15 @@ class AnalysisOptionsManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
   AnalysisOptionsManager() {
-    disposables.add(atom.commands.add('.tree-view', 'dartlang:analysis-exclude',
-        (AtomEvent event) {
-      _handleExclude(event.targetFilePath);
-    }));
-    disposables.add(atom.commands.add('.tree-view', 'dartlang:analysis-include',
-        (AtomEvent event) {
-      _handleInclude(event.targetFilePath);
-    }));
+    // Disable these commands.
+    // disposables.add(atom.commands.add('.tree-view', 'dartlang:analysis-exclude',
+    //     (AtomEvent event) {
+    //   _handleExclude(event.targetFilePath);
+    // }));
+    // disposables.add(atom.commands.add('.tree-view', 'dartlang:analysis-include',
+    //     (AtomEvent event) {
+    //   _handleInclude(event.targetFilePath);
+    // }));
   }
 
   List<ContextMenuItem> getTreeViewContributions() {
@@ -37,37 +37,37 @@ class AnalysisOptionsManager implements Disposable, ContextMenuContributor {
     ];
   }
 
-  void _handleExclude(String path) {
-    DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return;
-    path = _relativePath(project, path);
-    if (path.isEmpty) return;
-
-    atom.notifications.addSuccess('Excluded ${path} from analysis.');
-    project.excludeDirectory(path);
-
-    if (analysisServer.isActive) {
-      String projectPath = project.directory.path;
-      analysisServer.server.analysis.reanalyze(roots: [projectPath]);
-      atom.notifications.addInfo('Re-analyzing ${projectPath}.');
-    }
-  }
-
-  void _handleInclude(String path) {
-    DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return;
-    path = _relativePath(project, path);
-    if (path.isEmpty) return;
-
-    atom.notifications.addInfo('Included ${path} in analysis.');
-    project.includeDirectory(path);
-
-    if (analysisServer.isActive) {
-      String projectPath = project.directory.path;
-      analysisServer.server.analysis.reanalyze(roots: [projectPath]);
-      atom.notifications.addInfo('Re-analyzing ${projectPath}.');
-    }
-  }
+  // void _handleExclude(String path) {
+  //   DartProject project = projectManager.getProjectFor(path);
+  //   if (project == null) return;
+  //   path = _relativePath(project, path);
+  //   if (path.isEmpty) return;
+  //
+  //   atom.notifications.addSuccess('Excluded ${path} from analysis.');
+  //   project.excludeDirectory(path);
+  //
+  //   if (analysisServer.isActive) {
+  //     String projectPath = project.directory.path;
+  //     analysisServer.server.analysis.reanalyze(roots: [projectPath]);
+  //     atom.notifications.addInfo('Re-analyzing ${projectPath}.');
+  //   }
+  // }
+  //
+  // void _handleInclude(String path) {
+  //   DartProject project = projectManager.getProjectFor(path);
+  //   if (project == null) return;
+  //   path = _relativePath(project, path);
+  //   if (path.isEmpty) return;
+  //
+  //   atom.notifications.addInfo('Included ${path} in analysis.');
+  //   project.includeDirectory(path);
+  //
+  //   if (analysisServer.isActive) {
+  //     String projectPath = project.directory.path;
+  //     analysisServer.server.analysis.reanalyze(roots: [projectPath]);
+  //     atom.notifications.addInfo('Re-analyzing ${projectPath}.');
+  //   }
+  // }
 
   void dispose() => disposables.dispose();
 }
@@ -170,11 +170,11 @@ class AnalysisOptions {
 //   }
 // }
 
-String _relativePath(DartProject project, String path) {
-  String projectPath = project.directory.path;
-  if (path.startsWith(projectPath)) {
-    path = path.substring(projectPath.length);
-    if (path.startsWith(atom_utils.separator)) path = path.substring(1);
-  }
-  return path;
-}
+// String _relativePath(DartProject project, String path) {
+//   String projectPath = project.directory.path;
+//   if (path.startsWith(projectPath)) {
+//     path = path.substring(projectPath.length);
+//     if (path.startsWith(atom_utils.separator)) path = path.substring(1);
+//   }
+//   return path;
+// }
