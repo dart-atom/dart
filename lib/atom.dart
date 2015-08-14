@@ -239,13 +239,20 @@ class Panel extends ProxyHolder {
 }
 
 class CommandRegistry extends ProxyHolder {
+  StreamController<String> _dispatchedController = new StreamController.broadcast();
+
   CommandRegistry(JsObject object) : super(object);
 
+  Stream<String> get onDidDispatch => _dispatchedController.stream;
+
   Disposable add(String target, String commandName, void callback(AtomEvent event)) {
-    return new JsDisposable(
-        invoke('add', target, commandName, (e) => callback(new AtomEvent(e))));
+    return new JsDisposable(invoke('add', target, commandName, (e) {
+      _dispatchedController.add(commandName);
+      callback(new AtomEvent(e));
+    }));
   }
 
+  /// Simulate the dispatch of a command on a DOM node.
   void dispatch(Element target, String commandName, {Map options}) =>
       invoke('dispatch', target, commandName, options);
 }

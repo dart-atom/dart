@@ -8,6 +8,7 @@ import '../analysis_server.dart';
 import '../atom.dart';
 import '../elements.dart';
 import '../state.dart';
+import '../usage.dart' show trackCommand;
 import '../utils.dart';
 
 class AnalysisServerDialog implements Disposable {
@@ -114,7 +115,18 @@ class AnalysisServerDialog implements Disposable {
     }
   }
 
-  void _handleServerStart() => analysisServer.start();
-  void _handleReanalyze() => analysisServer.reanalyzeSources();
-  void _handleServerStop() => analysisServer.shutdown();
+  void _handleServerStart() {
+    trackCommand('dartlang:analysis-server-start');
+    analysisServer.start();
+  }
+
+  void _handleReanalyze() {
+    trackCommand('dartlang:reanalyze-sources');
+    analysisServer.reanalyzeSources();
+  }
+
+  void _handleServerStop() {
+    trackCommand('dartlang:analysis-server-stop');
+    analysisServer.shutdown();
+  }
 }

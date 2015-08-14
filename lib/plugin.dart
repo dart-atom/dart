@@ -40,6 +40,7 @@ import 'sdk.dart';
 import 'sky/create_project.dart';
 import 'sky/toolbar.dart';
 import 'state.dart';
+import 'usage.dart' show UsageManager;
 import 'utils.dart';
 
 export 'atom.dart' show registerPackage;
@@ -96,7 +97,6 @@ class AtomDartPackage extends AtomPackage {
 
   void packageActivated([Map inState]) {
     _setupLogging();
-
     _logger.info("activated");
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
@@ -124,6 +124,8 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
     disposables.add(new QuickFixHelper());
+
+    disposables.add(new UsageManager());
 
     // Register commands.
     _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
@@ -259,6 +261,16 @@ class AtomDartPackage extends AtomPackage {
         'default': true,
         'order': 4
       },
+
+      // TODO: re-enable this
+      // // google analytics
+      // 'sendUsageInformation': {
+      //   'title': 'Report usage information to Google Analytics.',
+      //   'description': "Report anonymized usage information to Google Analytics.",
+      //   'type': 'boolean',
+      //   'default': true,
+      //   'order': 5
+      // },
 
       'logging': {
         'title': 'Log plugin diagnostics to the devtools console.',

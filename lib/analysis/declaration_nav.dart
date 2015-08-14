@@ -11,6 +11,7 @@ import '../atom_utils.dart';
 import '../editors.dart';
 import '../js.dart';
 import '../state.dart';
+import '../usage.dart' show trackCommand;
 import '../utils.dart';
 import 'analysis_server_gen.dart';
 
@@ -77,6 +78,8 @@ class NavigationHelper implements Disposable {
 
   void _handleNavigateEditor(TextEditor editor) {
     if (analysisServer.isActive) {
+      trackCommand('jump-to-declaration');
+
       String path = editor.getPath();
       Range range = editor.getSelectedBufferRange();
       int offset = editor.getBuffer().characterIndexForPosition(range.start);
