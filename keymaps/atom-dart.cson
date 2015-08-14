@@ -13,6 +13,7 @@
 
 # Dart editor commands (common to all platforms)
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
+  'ctrl-1': 'dartlang:quick-fix'
   'f1': 'dartlang:show-dartdoc'
   'f3': 'dartlang:jump-to-declaration'
   'f4': 'dartlang:type-hierarchy'
@@ -22,12 +23,10 @@
 
 # Dart editor commands (mac)
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'cmd-1': 'dartlang:quick-fix'
   'cmd-alt-b': 'dartlang:dart-format'
   'shift-cmd-g': 'dartlang:find-references'
 
 # Dart editor commands (windows and linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'ctrl-1': 'dartlang:quick-fix'
   'ctrl-alt-b': 'dartlang:dart-format'
   'ctrl-shift-g': 'dartlang:find-references'
