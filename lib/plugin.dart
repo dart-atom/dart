@@ -38,6 +38,7 @@ import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
 import 'sky/create_project.dart';
+import 'sky/run_app.dart';
 import 'sky/toolbar.dart';
 import 'state.dart';
 import 'usage.dart' show UsageManager;
@@ -112,6 +113,7 @@ class AtomDartPackage extends AtomPackage {
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
     PubManager pubManager = new PubManager();
+    SkyToolManager skyToolManager = new SkyToolManager();
 
     disposables.add(analysisOptionsManager);
     disposables.add(new CreateProjectManager());
@@ -120,6 +122,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());
     disposables.add(pubManager);
+    disposables.add(skyToolManager);
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
@@ -155,6 +158,7 @@ class AtomDartPackage extends AtomPackage {
 
     // Set up the context menus.
     List<ContextMenuItem> treeItems = [ContextMenuItem.separator];
+    treeItems.addAll(skyToolManager.getTreeViewContributions());
     treeItems.addAll(pubManager.getTreeViewContributions());
     treeItems.addAll(analysisOptionsManager.getTreeViewContributions());
     treeItems.add(ContextMenuItem.separator);
