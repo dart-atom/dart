@@ -8,12 +8,53 @@ import 'package:pub_semver/pub_semver.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
+import '../elements.dart';
+import '../js.dart';
 import '../state.dart';
+import '../utils.dart';
 
 final Logger _logger = new Logger('changelog');
 
-void checkChangelog() {
-  getPackageVersion().then(_checkChangelog);
+checkChangelog() => getPackageVersion().then(_checkChangelog);
+
+class ChangelogManager implements Disposable {
+  Disposables disposables = new Disposables();
+
+  ChangelogManager() {
+    disposables.add(atom.commands.add('atom-workspace', 'dartlang:getting-started', (_) {
+      _handleOpen();
+    }));
+
+    disposables.add(atom.workspace.addOpener(_urlOpener));
+  }
+
+  dynamic _urlOpener(String url, Map options) {
+    if (url == 'atom://dartlang/CHANGELOG.md') {
+      CoreElement element = div(text: 'foo')..add([
+        para(text: 'bar'),
+        para(text: 'baz')
+      ]);
+
+      Map m = {
+        'getTitle': () => 'Release notes',
+        'getViewClass': () => (foo) {
+          // TODO: I can't get a js element to return from here.
+          return element.element;
+        }
+      };
+
+      return jsify(m);
+    }
+
+    return null;
+  }
+
+  void _handleOpen() {
+    atom.workspace.open(
+      'atom://dartlang/CHANGELOG.md', options: {'split': 'right'});
+  }
+
+  void dispose() => disposables.dispose();
 }
 
 void _checkChangelog(String currentVersion) {

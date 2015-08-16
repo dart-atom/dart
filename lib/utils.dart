@@ -21,6 +21,12 @@ String toStartingLowerCase(String str) {
   return str.substring(0, 1).toLowerCase() + str.substring(1);
 }
 
+String toTitleCase(String str) {
+  if (str == null) return null;
+  if (str.isEmpty) return str;
+  return str.substring(0, 1).toUpperCase() + str.substring(1);
+}
+
 String pluralize(String word, int count) => count == 1 ? word : '${word}s';
 
 String commas(int n) {

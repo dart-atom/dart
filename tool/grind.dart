@@ -4,9 +4,8 @@
 
 library atom.grind;
 
-import 'dart:io';
 import 'dart:convert';
-
+import 'dart:io';
 
 import 'package:grinder/grinder.dart';
 import 'package:pub_semver/pub_semver.dart';
@@ -32,6 +31,16 @@ build() {
   // --trust-type-annotations? --trust-primitives?
   Dart2js.compile(inputFile, csp: true);
   outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
+
+  // Patch in the GA UA code; replace "UA-123456-1" with a valid code.
+  String code = Platform.environment['DARTLANG_UA'];
+  if (code != null) {
+    log('Patching with the dartlang Google Analytics code.');
+
+    String str = outputFile.readAsStringSync();
+    str = str.replaceAll('"UA-123456-1"', '"${code}"');
+    outputFile.writeAsStringSync(str);
+  }
 }
 
 @Task('Analyze the source code with the ddc compiler')
@@ -65,7 +74,8 @@ analysisApi() {
 @Task('generate the observatory API')
 observatoryApi() {
   // https://github.com/dart-lang/sdk/blob/master/runtime/vm/service/service.md
-  Dart.run('tool/observatory/generate_observatory.dart', packageRoot: 'packages');
+  Dart.run('tool/observatory/generate_observatory.dart',
+      packageRoot: 'packages');
   DartFmt.format('lib/impl/observatory_gen.dart');
 }
 
@@ -93,10 +103,16 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
 """;
 
 String _patchJSFile(String input) {
-  final String from = 'if (document.currentScript) {';
-  final String to = 'if (true) { // document.currentScript';
+  final String from_1 = 'if (document.currentScript) {';
+  final String from_2 = "if (typeof document.currentScript != 'undefined') {";
+  final String to = 'if (true) {';
 
-  int index = input.lastIndexOf(from);
-  input = input.substring(0, index) + to + input.substring(index + from.length);
+  int index = input.lastIndexOf(from_1);
+  if (index != -1) {
+    input = input.substring(0, index) + to + input.substring(index + from_1.length);
+  } else {
+    index = input.lastIndexOf(from_2);
+    input = input.substring(0, index) + to + input.substring(index + from_2.length);
+  }
   return _jsPrefix + input;
 }

@@ -2,11 +2,14 @@
 
 ## unreleased
 - changed the quick fix keybinding on the mac from `cmd-1` to `ctrl-1`
+- added the ability to run Sky applications (right click, Run Sky Application)
+- improved the UI for long running tasks
+- improved the feedback for long running requests into the analysis server
 
 ## 0.3.15
 - fixed an exception when opening a context menu
 - added the ability to sort directives (right click in a dart editor and
-  choose `Organize Directives`, or `ctrl-shift-o`)
+  choose `Organize Directives`, or `ctrl-alt-o`)
 - added a warning when the `emmet` package is installed (it causes editing
   performance issues in Dart files)
 

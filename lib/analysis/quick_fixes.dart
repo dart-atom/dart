@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import 'analysis_server_gen.dart';
+import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_autocomplete.dart';
 import '../editors.dart';
@@ -25,55 +26,54 @@ class QuickFixHelper implements Disposable {
   void dispose() => disposables.dispose();
 
   void _handleQuickFix(AtomEvent event) {
-    if (!analysisServer.isActive) {
-      atom.beep();
-      return;
-    }
-
     TextEditor editor = event.editor;
     String path = editor.getPath();
     Range range = editor.getSelectedBufferRange();
     int offset = editor.getBuffer().characterIndexForPosition(range.start);
 
-    analysisServer.getFixes(path, offset).then((FixesResult result) {
-      List<AnalysisErrorFixes> fixes = result.fixes;
-
-      if (fixes.isEmpty) {
-        atom.beep();
-        return;
-      }
-
-      List<_Change> changes = fixes
-        .expand((fix) => fix.fixes.map((c) => new _Change(fix.error, c)))
-        .toList();
-
-      if (changes.length == 1) {
-        // Apply the fix.
-        _applyChange(editor, changes.first.change);
-      } else {
-        int i = 0;
-        var renderer = (_Change change) {
-          // We need to create suggestions with unique text replacements.
-          return new Suggestion(
-            text: 'fix_${++i}',
-            replacementPrefix: '',
-            displayText: change.change.message,
-            rightLabel: 'quick-fix',
-            description: change.error.message,
-            type: 'function'
-          );
-        };
-
-        // Show a selection dialog.
-        chooseItemUsingCompletions(editor, changes, renderer).then((_Change choice) {
-          editor.undo();
-          _applyChange(editor, choice.change);
-        });
-      }
-    }).catchError((e) {
-      _logger.warning('${e}');
-      atom.beep();
+    Job job = new AnalysisRequestJob('quick fix', () {
+      return analysisServer.getFixes(path, offset).then((FixesResult result) {
+        _handleFixesResult(result, editor);
+      });
     });
+    job.schedule();
+  }
+
+  void _handleFixesResult(FixesResult result, TextEditor editor) {
+    List<AnalysisErrorFixes> fixes = result.fixes;
+
+    if (fixes.isEmpty) {
+      atom.beep();
+      return;
+    }
+
+    List<_Change> changes = fixes
+      .expand((fix) => fix.fixes.map((c) => new _Change(fix.error, c)))
+      .toList();
+
+    if (changes.length == 1) {
+      // Apply the fix.
+      _applyChange(editor, changes.first.change);
+    } else {
+      int i = 0;
+      var renderer = (_Change change) {
+        // We need to create suggestions with unique text replacements.
+        return new Suggestion(
+          text: 'fix_${++i}',
+          replacementPrefix: '',
+          displayText: change.change.message,
+          rightLabel: 'quick-fix',
+          description: change.error.message,
+          type: 'function'
+        );
+      };
+
+      // Show a selection dialog.
+      chooseItemUsingCompletions(editor, changes, renderer).then((_Change choice) {
+        editor.undo();
+        _applyChange(editor, choice.change);
+      });
+    }
   }
 }
 

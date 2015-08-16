@@ -116,6 +116,7 @@ class AtomDartPackage extends AtomPackage {
     SkyToolManager skyToolManager = new SkyToolManager();
 
     disposables.add(analysisOptionsManager);
+    //disposables.add(new ChangelogManager());
     disposables.add(new CreateProjectManager());
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
@@ -266,9 +267,9 @@ class AtomDartPackage extends AtomPackage {
         'order': 4
       },
 
-      // TODO: re-enable this
+      // TODO: Re-enable this.
       // // google analytics
-      // 'sendUsageInformation': {
+      // 'sendUsage': {
       //   'title': 'Report usage information to Google Analytics.',
       //   'description': "Report anonymized usage information to Google Analytics.",
       //   'type': 'boolean',

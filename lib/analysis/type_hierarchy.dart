@@ -5,6 +5,7 @@ import 'dart:html' as html show Element, SpanElement;
 
 import 'package:logging/logging.dart';
 
+import '../analysis_server.dart';
 import '../atom.dart';
 import '../elements.dart';
 import '../state.dart';
@@ -30,26 +31,23 @@ class TypeHierarchyHelper implements Disposable {
   void _handleHierarchy(AtomEvent event) => _handleHierarchyEditor(event.editor);
 
   void _handleHierarchyEditor(TextEditor editor) {
-    if (analysisServer.isActive) {
-      String path = editor.getPath();
-      Range range = editor.getSelectedBufferRange();
-      int offset = editor.getBuffer().characterIndexForPosition(range.start);
+    String path = editor.getPath();
+    Range range = editor.getSelectedBufferRange();
+    int offset = editor.getBuffer().characterIndexForPosition(range.start);
 
-      analysisServer.getTypeHierarchy(path, offset).then((TypeHierarchyResult result) {
+    Job job = new AnalysisRequestJob('type hierarchy', () {
+      return analysisServer.getTypeHierarchy(path, offset).then((result) {
         if (result.hierarchyItems == null) {
-          _beep();
+          atom.beep();
         } else {
           // TODO: Flash the token that we're doing the type hierarchy of?
           if (_view == null) _view = new TypeHierarchyView();
           _view.showHierarchy(result);
         }
-      }).catchError((_) => _beep());
-    } else {
-      _beep();
-    }
+      });
+    });
+    job.schedule();
   }
-
-  void _beep() => atom.beep();
 }
 
 class TypeHierarchyView extends AtomView {

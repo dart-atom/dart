@@ -217,6 +217,16 @@ class Workspace extends ProxyHolder {
     });
   }
 
+  /// Register an opener for a uri.
+  ///
+  /// An [TextEditor] will be used if no openers return a value.
+  Disposable addOpener(dynamic opener(String url, Map options)) {
+    return new JsDisposable(invoke('addOpener', (url, options) {
+      Map m = options == null ? {} : toDartObjectViaWizardy(options);
+      return opener(url, m);
+    }));
+  }
+
   Map _panelOptions(dynamic item, bool visible, int priority) {
     Map options = {'item': item};
     if (visible != null) options['visible'] = visible;

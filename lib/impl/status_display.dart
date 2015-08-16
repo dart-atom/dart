@@ -27,6 +27,7 @@ class StatusDisplay implements Disposable {
   StatusDisplay(StatusBar statusBar) {
     CoreElement spinner;
     CoreElement textLabel;
+    CoreElement countBadge;
 
     CoreElement statusElement = div(c: 'job-status-bar')
       ..inlineBlock()
@@ -36,13 +37,14 @@ class StatusDisplay implements Disposable {
           ..inlineBlockTight()
           ..clazz('status-spinner')
           ..src = 'atom://dartlang/images/gear.svg',
-        textLabel = div(c: 'text-label text-highlight')..inlineBlockTight()
+        textLabel = div(c: 'text-label')..inlineBlockTight(), // text-highlight
+        countBadge = span(c: 'badge badge-info badge-small badge-count')
       ]);
 
     _statusbarTile =
         statusBar.addRightTile(item: statusElement.element, priority: 1000);
 
-    _subscription = jobs.onJobChanged.listen((_) {
+    _subscription = jobs.onQueueChanged.listen((_) {
       Job job = jobs.activeJob;
       bool showing = job != null;
 
@@ -61,8 +63,12 @@ class StatusDisplay implements Disposable {
         });
       }
 
-      textLabel.toggleClass('showing', showing);
+      int jobLen = jobs.allJobs.length;
+      countBadge.text = jobLen == 0 ? '' : '${jobLen - 1} waiting';
+
       spinner.toggleClass('showing', showing);
+      textLabel.toggleClass('showing', showing);
+      countBadge.toggleClass('showing', jobLen > 1);
 
       _updateJobsDialog();
     });

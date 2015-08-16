@@ -17,6 +17,8 @@ final Logger _logger = new Logger('formatting');
 int get _prefLineLength =>
     atom.config.getValue('editor.preferredLineLength', scope: ['source.dart']);
 
+// TODO: Run in an AnalysisRequestJob job.
+
 // TODO: this should be "FormattingCommandManger" (?), containing only logic
 // for responding to formatting commands sent by Atom.
 class FormattingHelper implements Disposable {

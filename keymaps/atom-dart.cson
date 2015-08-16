@@ -14,19 +14,21 @@
 # Dart editor commands (common to all platforms)
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
   'ctrl-1': 'dartlang:quick-fix'
+  'alt-enter': 'dartlang:quick-fix'
   'f1': 'dartlang:show-dartdoc'
   'f3': 'dartlang:jump-to-declaration'
   'f4': 'dartlang:type-hierarchy'
   'alt-shift-r': 'dartlang:refactor-rename'
   'enter': 'dartlang:newline'
-  'ctrl-shift-O': 'dartlang:organize-directives'
 
 # Dart editor commands (mac)
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
   'cmd-alt-b': 'dartlang:dart-format'
+  'cmd-alt-o': 'dartlang:organize-directives'
   'shift-cmd-g': 'dartlang:find-references'
 
 # Dart editor commands (windows and linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
   'ctrl-alt-b': 'dartlang:dart-format'
+  'ctrl-alt-o': 'dartlang:organize-directives'
   'ctrl-shift-g': 'dartlang:find-references'
