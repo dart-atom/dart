@@ -47,7 +47,8 @@ abstract class Job {
 }
 
 class JobManager {
-  StreamController<Job> _controller = new StreamController.broadcast();
+  StreamController<Job> _activeJobController = new StreamController.broadcast();
+  StreamController<Job> _queueController = new StreamController.broadcast();
   List<JobInstance> _jobs = [];
   NotificationManager _toasts;
   Job _lastNotifiedJob = null;
@@ -67,7 +68,8 @@ class JobManager {
 
   List<JobInstance> get allJobs => _jobs.toList();
 
-  Stream<Job> get onJobChanged => _controller.stream;
+  Stream<Job> get onActiveJobChanged => _activeJobController.stream;
+  Stream<Job> get onQueueChanged => _queueController.stream;
 
   Future schedule(Job job) => _enqueue(job);
 
@@ -77,6 +79,7 @@ class JobManager {
     _jobs.add(instance);
     _checkForRunnableJobs();
     _checkNotifyJobChanged();
+    _queueController.add(null);
     return instance.whenComplete;
   }
 
@@ -85,7 +88,8 @@ class JobManager {
 
     // Look for a rule that has no scheduling rule or that has one that does not
     // match any currently running rules.
-    for (JobInstance jobInstance in _jobs) {
+    List jobsCopy = new List.from(_jobs);
+    for (JobInstance jobInstance in jobsCopy) {
       if (jobInstance.isRunning) {
         rules.add(jobInstance.job.schedulingRule);
       } else {
@@ -127,12 +131,13 @@ class JobManager {
     _jobs.remove(job);
     _checkForRunnableJobs();
     _checkNotifyJobChanged();
+    _queueController.add(null);
   }
 
   void _checkNotifyJobChanged() {
     Job current = activeJob;
     if (_lastNotifiedJob != current) {
-      _controller.add(current);
+      _activeJobController.add(current);
       _lastNotifiedJob = current;
     }
   }

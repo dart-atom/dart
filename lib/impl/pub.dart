@@ -93,7 +93,7 @@ class PubManager implements Disposable, ContextMenuContributor {
       response = response.trim();
       state['lastRunText'] = response;
       List<String> args = response.split(' ');
-      new PubRunJob(dir, args).schedule();
+      new PubRunJob.local(dir, args).schedule();
     });
   }
 
@@ -207,7 +207,7 @@ class PubRunJob extends Job {
 
   String _pubspecDir;
 
-  PubRunJob(this.path, List<String> args, {this.verbose: true})
+  PubRunJob.local(this.path, List<String> args, {this.verbose: true})
       : this.args = args,
         isGlobal = false,
         super("Pub run '${args.first}'") {

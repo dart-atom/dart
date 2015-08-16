@@ -6,6 +6,8 @@ import '../editors.dart';
 import '../state.dart';
 import '../utils.dart';
 
+// TODO: Run in an AnalysisRequestJob job.
+
 class OrganizeFileManager implements Disposable {
   Disposables disposables = new Disposables();
 

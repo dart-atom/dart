@@ -25,6 +25,7 @@ import 'utils.dart';
 export 'analysis/analysis_server_gen.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
     RefactoringOptions, SourceFileEdit;
+export 'jobs.dart' show Job;
 
 final Logger _logger = new Logger('analysis-server');
 
@@ -327,7 +328,7 @@ class _AnalyzingJob extends Job {
   Completer completer = new Completer();
   Function _infoAction;
 
-  _AnalyzingJob() : super('Analyzing') {
+  _AnalyzingJob() : super('Analyzing source') {
     _infoAction = () {
       deps[AnalysisServerDialog].showDialog();
     };
@@ -498,4 +499,33 @@ class RenameRefactoringOptions extends RefactoringOptions {
   RenameRefactoringOptions(this.newName);
 
   Map toMap() => {'newName': newName};
+}
+
+class AnalysisRequestJob extends Job {
+  final Function _fn;
+
+  AnalysisRequestJob(String name, this._fn) : super(toTitleCase(name));
+
+  bool get quiet => true;
+
+  Future run() {
+    if (!analysisServer.isActive) {
+      atom.beep();
+      return new Future.value();
+    }
+
+    return (_fn() as Future).catchError((e) {
+      if (!analysisServer.isActive) return;
+
+      if (e is RequestError) {
+        atom.notifications.addError(
+            '${name} error', description: '${e.code} ${e.message}');
+        if (e.stackTrace != null) {
+          _logger.warning('${name} error', e, new StackTrace.fromString(e.stackTrace));
+        }
+      }
+
+      throw e;
+    });
+  }
 }

@@ -20,15 +20,16 @@ class SkyToolManager implements Disposable, ContextMenuContributor {
   SkyToolManager() {
     disposables.add(atom.commands
         .add('.tree-view', 'dartlang:run-sky-application', (AtomEvent event) {
-          new RunSkyAppJob(event.targetFilePath).schedule();
-        }));
+      new RunSkyAppJob(event.targetFilePath).schedule();
+    }));
   }
 
   void dispose() => disposables.dispose();
 
   List<ContextMenuItem> getTreeViewContributions() {
     return [
-      new RunSkyAppContextCommand('Run Sky Application', 'dartlang:run-sky-application')
+      new RunSkyAppContextCommand(
+          'Run Sky Application', 'dartlang:run-sky-application')
     ];
   }
 }
@@ -36,17 +37,24 @@ class SkyToolManager implements Disposable, ContextMenuContributor {
 class RunSkyAppJob extends Job {
   final String path;
 
-  RunSkyAppJob(this.path)
-    : super('Launching Sky application');
+  RunSkyAppJob(this.path) : super('Launching Sky application');
 
   bool get pinResult => true;
 
   Future run() {
     DartProject project = projectManager.getProjectFor(path);
-    String sky_tool = join(project.directory, 'packages', 'sky','sky_tool');
-    ProcessRunner runner = new ProcessRunner('python', args: [sky_tool, 'start'], cwd: project.path);
+    String sky_tool = join(project.directory, 'packages', 'sky', 'sky_tool');
+    ProcessRunner runner;
+    if (isMac) {
+      // On the mac, run under bash.
+      runner = new ProcessRunner('/bin/bash',
+          args: ['-l', '-c', sky_tool], cwd: project.path);
+    } else {
+      runner = new ProcessRunner('python',
+          args: [sky_tool, 'start'], cwd: project.path);
+    }
     return runner.execSimple().then((ProcessResult result) {
-      if (result.exit != 0) return '${result.stdout}\n${result.stderr}';
+      if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
       return result.stdout;
     });
   }
@@ -59,7 +67,8 @@ class RunSkyAppContextCommand extends ContextMenuItem {
     String filePath = event.targetFilePath;
     DartProject project = projectManager.getProjectFor(filePath);
     if (project == null) return false;
-    File file = new File.fromPath(join(project.directory, 'packages', 'sky','sky_tool'));
-    return file.existsSync();
+    File skyTool = new File.fromPath(
+        join(project.directory, 'packages', 'sky', 'sky_tool'));
+    return skyTool.existsSync();
   }
 }

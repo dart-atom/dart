@@ -337,6 +337,7 @@ class TitledModelDialog implements Disposable {
   }
 }
 
+// TODO: double tap escape to close
 class AtomView implements Disposable  {
   Panel _panel;
 

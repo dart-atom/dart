@@ -25,14 +25,13 @@ class UsageManager implements Disposable {
 
   Future _init() {
     return getPackageVersion().then((String version) {
-      atom.config.observe('${pluginId}.sendUsageInformation', null, (value) {
-        if (value) {
-        // TODO: re-enable this
-        //   _ga = new AnalyticsHtml(_UA, pluginId, version);
-        //   _ga.optIn = true;
-        //   _ga.sendScreenView('editor');
-        // } else {
-        //   _ga = new AnalyticsMock();
+      atom.config.observe('${pluginId}.sendUsage', null, (value) {
+        if (value == true) {
+          _ga = new AnalyticsHtml(_UA, pluginId, version);
+          _ga.optIn = true;
+          _ga.sendScreenView('editor');
+        } else {
+          _ga = new AnalyticsMock();
         }
       });
 

@@ -49,22 +49,30 @@ class DartdocHelper implements Disposable {
     TextEditor editor = event.editor;
     Range range = editor.getSelectedBufferRange();
     int offset = editor.getBuffer().characterIndexForPosition(range.start);
-    analysisServer.getHover(editor.getPath(), offset).then((HoverResult result) {
-      _hideControl();
 
-      if (result.hovers.isEmpty) {
-        if (explicit) atom.beep();
-        return;
-      }
-
-      HoverInformation hover = result.hovers.first;
-
-      _control = new DartdocControl(editor);
-      _control.setTitle(_title(hover));
-      _control.body = _render(hover);
-      _control.setFooter(hover.containingClassDescription, hover.elementKind,
-          _getLibraryName(hover));
+    Job job = new AnalysisRequestJob('dartdoc', () {
+      return analysisServer.getHover(editor.getPath(), offset).then((HoverResult result) {
+        _handleHoverResult(result, editor, explicit);
+      });
     });
+    job.schedule();
+  }
+
+  void _handleHoverResult(HoverResult result, TextEditor editor, bool explicit) {
+    _hideControl();
+
+    if (result.hovers.isEmpty) {
+      if (explicit) atom.beep();
+      return;
+    }
+
+    HoverInformation hover = result.hovers.first;
+
+    _control = new DartdocControl(editor);
+    _control.setTitle(_title(hover));
+    _control.body = _render(hover);
+    _control.setFooter(hover.containingClassDescription, hover.elementKind,
+        _getLibraryName(hover));
   }
 
   static String _title(HoverInformation hover) {

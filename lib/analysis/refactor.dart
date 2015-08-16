@@ -15,6 +15,8 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('refactoring');
 
+// TODO: Run in an AnalysisRequestJob job.
+
 class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 

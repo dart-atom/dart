@@ -8,6 +8,7 @@ import 'dart:math' as math;
 
 import 'package:logging/logging.dart';
 
+import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../elements.dart';
@@ -34,27 +35,23 @@ class FindReferencesHelper implements Disposable {
   void _handleReferences(AtomEvent event) => _handleReferencesEditor(event.editor);
 
   void _handleReferencesEditor(TextEditor editor) {
-    if (analysisServer.isActive) {
-      String path = editor.getPath();
-      Range range = editor.getSelectedBufferRange();
-      int offset = editor.getBuffer().characterIndexForPosition(range.start);
+    String path = editor.getPath();
+    Range range = editor.getSelectedBufferRange();
+    int offset = editor.getBuffer().characterIndexForPosition(range.start);
 
-      analysisServer.findElementReferences(path, offset, false).then(
-          (FindElementReferencesResult result) {
+    Job job = new AnalysisRequestJob('find references', () {
+      return analysisServer.findElementReferences(path, offset, false).then((result) {
         if (result.id == null) {
-          _beep();
+          atom.beep();
         } else {
           // TODO: Flash the token that we're finding references to?
           if (_view == null) _view = new FindReferencesView();
           _view._showView(result);
         }
-      }).catchError((_) => _beep());
-    } else {
-      _beep();
-    }
+      });
+    });
+    job.schedule();
   }
-
-  void _beep() => atom.beep();
 }
 
 class FindReferencesView extends AtomView {

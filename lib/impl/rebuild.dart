@@ -7,9 +7,9 @@ library atom.rebuild;
 
 import 'dart:async';
 
+import 'pub.dart';
 import '../atom.dart';
 import '../jobs.dart';
-import '../sdk.dart';
 import '../state.dart';
 
 class RebuildJob extends Job {
@@ -23,11 +23,10 @@ class RebuildJob extends Job {
     }
 
     // Find the `dartlang` project.
-    final String projName = 'dartlang';
     Directory proj = atom.project.getDirectories().firstWhere(
-        (d) => d.getBaseName().endsWith(projName), orElse: () => null);
+        (d) => d.getBaseName().endsWith(pluginId), orElse: () => null);
     if (proj == null) {
-      atom.notifications.addWarning("Unable to find project '${projName}'.");
+      atom.notifications.addWarning("Unable to find project '${pluginId}'.");
       return new Future.value();
     }
 
@@ -36,58 +35,8 @@ class RebuildJob extends Job {
       if (editor.isModified()) editor.save();
     });
 
-    // Run dart2js --csp -oweb/entry.dart.js web/entry.dart.
-    Sdk sdk = sdkManager.sdk;
-
-    Future f = sdk.execBinSimple(
-        'dart2js',
-        ['--csp', '-oweb/entry.dart.js', 'web/entry.dart'],
-        cwd: proj);
-
-    return f.then((ProcessResult result) {
-      if (result.exit != 0) {
-        throw '${result.stdout}\n${result.stderr}';
-      }
-
-      atom.notifications.addSuccess("Recompiled dart-tools! Restarting…");
-
-      File file = proj.getSubdirectory('web').getFile('entry.dart.js');
-      return file.read().then((contents) {
-        file.writeSync(_patchJSFile(contents));
-        return new Future.delayed(new Duration(seconds: 1));
-      }).then((_) {
-        // re-start atom
-        atom.reload();
-      });
+    return new PubRunJob.local(proj.getPath(), ['grinder', 'build']).schedule().then((_) {
+      new Future.delayed(new Duration(seconds: 1)).then((_) => atom.reload());
     });
   }
-}
-
-// From tool/grind.dart.
-final String _jsPrefix = """
-var self = Object.create(this);
-self.require = require;
-self.module = module;
-self.window = window;
-self.atom = atom;
-self.exports = exports;
-self.Object = Object;
-self.Promise = Promise;
-self.setTimeout = function(f, millis) { return window.setTimeout(f, millis); };
-self.clearTimeout = function(id) { window.clearTimeout(id); };
-self.setInterval = function(f, millis) { return window.setInterval(f, millis); };
-self.clearInterval = function(id) { window.clearInterval(id); };
-
-// Work around interop issues.
-self.getTextEditorForElement = function(element) { return element.o.getModel(); };
-
-""";
-
-String _patchJSFile(String input) {
-  final String from = 'if (document.currentScript) {';
-  final String to = 'if (true) { // document.currentScript';
-
-  int index = input.lastIndexOf(from);
-  input = input.substring(0, index) + to + input.substring(index + from.length);
-  return _jsPrefix + input;
 }
