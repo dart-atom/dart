@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.16
 - changed the quick fix keybinding on the mac from `cmd-1` to `ctrl-1`
 - added the ability to run Sky applications (right click, Run Sky Application)
 - improved the UI for long running tasks
