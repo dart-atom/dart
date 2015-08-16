@@ -10,7 +10,7 @@
     'name': 'meta.preprocessor.script.dart'
   }
   {
-    'begin': '\\b(library|import|part of|part|export)\\b'
+    'begin': '^\\w*\\b(library|import|part of|part|export)\\b'
     'beginCaptures':
       '0':
         'name': 'keyword.other.import.dart'
