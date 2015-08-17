@@ -10,7 +10,7 @@ A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 
 - install [Atom](https://atom.io/)
 - install the [linter][] package
-- install this [dartlang][] package
+- install this [dartlang][] package with `apm install dartlang`
 - (potentially) configure the location of your Dart SDK
 
 The plugin should auto-detect the Dart SDK location. If not, you can set it
