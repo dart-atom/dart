@@ -10,8 +10,7 @@ A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 
 - install [Atom](https://atom.io/)
 - install the [linter][] package
-- install this [dartlang][] package with `apm install dartlang`
-- (potentially) configure the location of your Dart SDK
+- install this [dartlang][] package (with `apm install dartlang` or through the UI)
 
 The plugin should auto-detect the Dart SDK location. If not, you can set it
 manually in the plugin configuration page (`Preferences > Packages > dartlang`).
@@ -32,10 +31,9 @@ We also recommend the following (optional) packages:
 ### Packages to avoid
 
 We do not recommend using both [emmet](https://atom.io/packages/emmet)
-and this dartlang package together.
-For an unknown reason, editing large .dart files slows down if
-you have the emmet plugin installed. We have filed an
-[issue](https://github.com/emmetio/emmet-atom/issues/319).
+and this dartlang package together. For an unknown reason, editing large
+`.dart` files slows down if you have the emmet plugin installed. We have
+filed an [issue](https://github.com/emmetio/emmet-atom/issues/319).
 
 ## Features
 
