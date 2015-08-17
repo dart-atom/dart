@@ -1,6 +1,7 @@
 
 library atom.changelog;
 
+import 'dart:async';
 import 'dart:html' show HttpRequest;
 
 import 'package:logging/logging.dart';
@@ -8,8 +9,6 @@ import 'package:pub_semver/pub_semver.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
-import '../elements.dart';
-import '../js.dart';
 import '../state.dart';
 import '../utils.dart';
 
@@ -20,38 +19,31 @@ checkChangelog() => getPackageVersion().then(_checkChangelog);
 class ChangelogManager implements Disposable {
   Disposables disposables = new Disposables();
 
+  File _changeLogFile;
+
   ChangelogManager() {
-    disposables.add(atom.commands.add('atom-workspace', 'dartlang:getting-started', (_) {
+    disposables.add(atom.commands.add('atom-workspace', 'dartlang:release-notes', (_) {
       _handleOpen();
     }));
-
-    disposables.add(atom.workspace.addOpener(_urlOpener));
-  }
-
-  dynamic _urlOpener(String url, Map options) {
-    if (url == 'atom://dartlang/CHANGELOG.md') {
-      CoreElement element = div(text: 'foo')..add([
-        para(text: 'bar'),
-        para(text: 'baz')
-      ]);
-
-      Map m = {
-        'getTitle': () => 'Release notes',
-        'getViewClass': () => (foo) {
-          // TODO: I can't get a js element to return from here.
-          return element.element;
-        }
-      };
-
-      return jsify(m);
-    }
-
-    return null;
   }
 
   void _handleOpen() {
-    atom.workspace.open(
-      'atom://dartlang/CHANGELOG.md', options: {'split': 'right'});
+    Future<File> f;
+
+    if (_changeLogFile != null) {
+      f = new Future.value(_changeLogFile);
+    } else {
+      f = HttpRequest.getString('atom://dartlang/CHANGELOG.md').then((contents) {
+        Directory dir = new Directory.fromPath(tmpdir());
+        _changeLogFile = dir.getFile('CHANGELOG.md');
+        _changeLogFile.writeSync(contents);
+        return _changeLogFile;
+      });
+    }
+
+    f.then((File file) {
+      atom.workspace.open(file.path, options: {'split': 'right'});
+    });
   }
 
   void dispose() => disposables.dispose();

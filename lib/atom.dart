@@ -936,6 +936,9 @@ JsObject _cvt(JsObject object) {
 Stats statSync(String path) =>
     new Stats(require('fs').callMethod('statSync', [path]));
 
+/// Returns the operating system's default directory for temp files.
+String tmpdir() => require('os').callMethod('tmpdir');
+
 class Stats extends ProxyHolder {
   Stats(JsObject obj) : super(obj);
 
