@@ -116,7 +116,7 @@ class AtomDartPackage extends AtomPackage {
     SkyToolManager skyToolManager = new SkyToolManager();
 
     disposables.add(analysisOptionsManager);
-    //disposables.add(new ChangelogManager());
+    disposables.add(new ChangelogManager());
     disposables.add(new CreateProjectManager());
     disposables.add(new DartdocHelper());
     disposables.add(new FormattingHelper());
