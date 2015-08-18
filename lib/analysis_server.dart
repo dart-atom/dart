@@ -67,9 +67,9 @@ class AnalysisServer implements Disposable {
       }
 
       if (value) {
-        atom.notifications.addInfo('Analysis server running.');
+        atom.notifications.addInfo('Dart analysis server running.');
       } else {
-        atom.notifications.addWarning('Analysis server terminated.');
+        atom.notifications.addWarning('Dart analysis server terminated.');
       }
     });
   }
