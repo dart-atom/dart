@@ -2,6 +2,8 @@
 
 ## unreleased
 - added a `Packages > Dart > Release Notes` menu item
+- added a `Packages > Dart > Getting Started` menu item
+- adjusted the default delay for code completion to be less aggressive
 
 ## 0.3.16
 - changed the quick fix keybinding on the mac from `cmd-1` to `ctrl-1`
