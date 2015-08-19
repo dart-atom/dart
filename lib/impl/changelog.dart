@@ -1,4 +1,3 @@
-
 library atom.changelog;
 
 import 'dart:async';
@@ -23,17 +22,22 @@ class ChangelogManager implements Disposable {
 
   ChangelogManager() {
     disposables.add(atom.commands.add('atom-workspace', 'dartlang:release-notes', (_) {
-      _handleOpen();
+      _handleReleaseNotes();
+    }));
+    disposables.add(atom.commands.add('atom-workspace', 'dartlang:getting-started', (_) {
+      _handleGettingStarted();
     }));
   }
 
-  void _handleOpen() {
+  void _handleReleaseNotes() {
     Future<File> f;
 
     if (_changeLogFile != null) {
       f = new Future.value(_changeLogFile);
     } else {
-      f = HttpRequest.getString('atom://dartlang/CHANGELOG.md').then((contents) {
+      f = HttpRequest
+          .getString('atom://dartlang/CHANGELOG.md')
+          .then((contents) {
         Directory dir = new Directory.fromPath(tmpdir());
         _changeLogFile = dir.getFile('CHANGELOG.md');
         _changeLogFile.writeSync(contents);
@@ -44,6 +48,11 @@ class ChangelogManager implements Disposable {
     f.then((File file) {
       atom.workspace.open(file.path, options: {'split': 'right'});
     });
+  }
+
+  void _handleGettingStarted() {
+    shell.openExternal(
+        'https://github.com/dart-atom/dartlang/blob/master/doc/getting_started.md');
   }
 
   void dispose() => disposables.dispose();
@@ -64,9 +73,9 @@ void _checkChangelog(String currentVersion) {
       }
       if (changes != null && changes.isNotEmpty) {
         atom.notifications.addSuccess(
-          'Upgraded to dartlang plugin version ${currentVersion}.',
-          description: changes,
-          dismissable: true);
+            'Upgraded to dartlang plugin version ${currentVersion}.',
+            description: changes,
+            dismissable: true);
       }
     });
   }
