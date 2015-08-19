@@ -415,7 +415,9 @@ class ListTreeBuilder extends CoreElement {
       render(node.data, e);
       _nodeToElementMap[node] = e;
       e.onClick.listen((_) => selectNode(node));
-      e.onDoubleClick.listen((_) => _doubleClickController.add(node));
+      e.onDoubleClick.listen((MouseEvent event) {
+        if (!event.defaultPrevented) _doubleClickController.add(node);
+      });
       element.add(d);
 
       CoreElement u = ul(c: 'list-tree');
@@ -423,7 +425,11 @@ class ListTreeBuilder extends CoreElement {
 
       e.onClick.listen((MouseEvent e) {
         // Only respond to clicks on the toggle arrow.
-        if (e.offset.x < 12) element.toggleClass('collapsed');
+        if (e.offset.x < 12) {
+          element.toggleClass('collapsed');
+          e.preventDefault();
+          e.stopPropagation();
+        }
       });
 
       for (Node child in node.children) {
