@@ -48,6 +48,8 @@ export 'atom.dart' show registerPackage;
 
 final Logger _logger = new Logger('plugin');
 
+const int _settingsVersion = 1;
+
 class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
@@ -173,6 +175,18 @@ class AtomDartPackage extends AtomPackage {
 
   void _initPlugin() {
     loadPackageJson().then(_verifyPackages);
+
+    _validateSettings();
+  }
+
+  void _validateSettings() {
+    int oldVer = state['settingsVersion'];
+    state['settingsVersion'] = _settingsVersion;
+
+    if (oldVer != _settingsVersion) {
+      // Set up default settings.
+      atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
+    }
   }
 
   // Verify that our dependencies are satisfied.
