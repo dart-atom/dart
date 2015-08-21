@@ -44,7 +44,6 @@ class FindReferencesHelper implements Disposable {
         if (result.id == null) {
           atom.beep();
         } else {
-          // TODO: Flash the token that we're finding references to?
           if (_view == null) _view = new FindReferencesView();
           _view._showView(result);
         }
@@ -55,6 +54,7 @@ class FindReferencesHelper implements Disposable {
 }
 
 class FindReferencesView extends AtomView {
+  CoreElement target;
   CoreElement status;
   ListTreeBuilder treeBuilder;
   StreamSubscription sub;
@@ -62,14 +62,18 @@ class FindReferencesView extends AtomView {
 
   FindReferencesView() : super('References', classes: 'find-references',
       prefName: 'References') {
-    status = content.add(div(c: 'search-summary'));
+    target = content.add(span(c: 'text-highlight'));
+    status = content.add(span(c: 'search-summary'));
     treeBuilder = content.add(new ListTreeBuilder(_render)..flex());
     treeBuilder.onSelected.listen(_jumpTo);
     treeBuilder.onDoubleClick.listen(_doubleClick);
   }
 
   void _showView(FindElementReferencesResult findResult) {
-    status.text = 'Searching…';
+    bool isMethod = findResult.element.parameters != null;
+    target.text = "'${findResult.element.name}${isMethod ? '()' : ''}'";
+
+    status.text = ' - searching…';
     status.clazz('searching');
 
     treeBuilder.clear();
@@ -77,7 +81,7 @@ class FindReferencesView extends AtomView {
     Stream<SearchResult> stream = analysisServer.filterSearchResults(findResult.id);
 
     stream.toList().then((List<SearchResult> l) {
-      status.text = '${commas(l.length)} ${pluralize('result', l.length)} found.';
+      status.text = ' - ${commas(l.length)} ${pluralize('result', l.length)} found.';
       status.toggleClass('searching');
 
       LinkedHashMap<String, List<SearchResult>> results = new LinkedHashMap();
@@ -117,8 +121,7 @@ class FindReferencesView extends AtomView {
       if (match != null) {
         intoElement.children.add(
             new html.SpanElement()..text = match[0]..classes.add('text-subtle'));
-        intoElement.children.add(
-            new html.SpanElement()..text = match[1]..classes.add('result-exact'));
+        intoElement.children.add(new html.SpanElement()..text = match[1]);
         intoElement.children.add(
             new html.SpanElement()..text = match[2]..classes.add('text-subtle'));
       }
