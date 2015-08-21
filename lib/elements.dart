@@ -337,9 +337,9 @@ class TitledModelDialog implements Disposable {
   }
 }
 
-// TODO: double tap escape to close
 class AtomView implements Disposable  {
   Panel _panel;
+  Disposable _cancelCommand;
 
   CoreElement title;
   CoreElement content;
@@ -374,11 +374,28 @@ class AtomView implements Disposable  {
     }
 
     _panel = atom.workspace.addRightPanel(item: root.element);
+
+    _cancelCommand = atom.commands.add('atom-workspace', 'core:cancel', (_) => _handleCancel());
+  }
+
+  Timer _timer;
+
+  void _handleCancel() {
+    // Double tap escape to close.
+    if (_timer != null) {
+      hide();
+    } else {
+      _timer = new Timer(new Duration(milliseconds: 250), () => _timer = null);
+    }
   }
 
   void show() => _panel.show();
   void hide() => _panel.hide();
-  void dispose() => _panel.invoke('destroy');
+
+  void dispose() {
+    _panel.invoke('destroy');
+    _cancelCommand.dispose();
+  }
 }
 
 class ListTreeBuilder extends CoreElement {
@@ -442,14 +459,18 @@ class ListTreeBuilder extends CoreElement {
     // .selected uses absolute positioning...
     if (_selectedNode != null) {
       Element e = _nodeToElementMap[_selectedNode];
-      if (e != null) e.classes.toggle('tree-selected', false);
+      if (e != null) {
+        e.classes.toggle('tree-selected', false);
+      }
     }
 
     _selectedNode = node;
 
     if (_selectedNode != null) {
       Element e = _nodeToElementMap[_selectedNode];
-      if (e != null) e.classes.toggle('tree-selected', true);
+      if (e != null) {
+        e.classes.toggle('tree-selected', true);
+      }
     }
 
     _selectedController.add(selectedNode);

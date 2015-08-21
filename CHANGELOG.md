@@ -6,6 +6,7 @@
 - adjusted the default delay for code completion to be less aggressive
 - `pub run` and `pub global run` now available from the context menu
 - added a `--no-package-symlinks` option for use by `pub get` and `pub update`
+- the 'Find References' view now shows the element name that was searched for
 
 ## 0.3.16
 - changed the quick fix keybinding on the mac from `cmd-1` to `ctrl-1`
