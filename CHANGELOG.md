@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.17
 - added a `Packages > Dart > Release Notes` menu item
 - added a `Packages > Dart > Getting Started` menu item
 - adjusted the default delay for code completion to be less aggressive
