@@ -8,7 +8,6 @@ import 'package:pub_semver/pub_semver.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
-import '../state.dart';
 import '../utils.dart';
 
 final Logger _logger = new Logger('changelog');
@@ -59,7 +58,8 @@ class ChangelogManager implements Disposable {
 }
 
 void _checkChangelog(String currentVersion) {
-  String lastVersion = state['version'];
+  String lastVersion = atom.config.getValue('_dartlang._version');
+  atom.config.setValue('_dartlang._version', currentVersion);
 
   if (lastVersion != currentVersion) {
     _logger.info("upgraded from ${lastVersion} to ${currentVersion}");
@@ -79,8 +79,6 @@ void _checkChangelog(String currentVersion) {
       }
     });
   }
-
-  state['version'] = currentVersion;
 }
 
 String _extractVersion(String changelog, String last, {bool inclusive: true}) {

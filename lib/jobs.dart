@@ -17,11 +17,12 @@ import 'package:logging/logging.dart';
 
 import 'atom.dart';
 import 'state.dart';
+import 'utils.dart';
 
 final Logger _logger = new Logger('jobs');
 
 /// An abstract representation of a long running task.
-abstract class Job {
+abstract class Job implements Disposable {
   final String name;
   final Object schedulingRule;
 
@@ -43,10 +44,72 @@ abstract class Job {
 
   Future run();
 
+  bool get isCancellable => false;
+
+  void cancel() => dispose();
+
+  void dispose() { }
+
   String toString() => name;
 }
 
-class JobManager {
+abstract class CancellableJob extends Job {
+  Cancellable _cancellable;
+
+  CancellableJob(String name, [Object schedulingRule]) : super(name, schedulingRule);
+
+  bool get isCancellable => true;
+
+  /// Subclasses must not override this method. See instead [doRun].
+  Future run() {
+    _cancellable = new Cancellable(doRun(), handleCancel);
+    return _cancellable.cancellableFuture;
+  }
+
+  /// Perform the work that would normally be in [run] here.
+  Future doRun();
+
+  /// Invoked when this Job is cancelled.
+  void handleCancel();
+
+  void dispose() {
+    if (_cancellable != null) _cancellable.cancel();
+  }
+}
+
+class Cancellable {
+  Future _future;
+  Function _handleCancel;
+  Completer _completer = new Completer();
+  bool _wasCancelled = false;
+
+  Cancellable(this._future, [this._handleCancel]) {
+    _future.then((result) {
+      if (!wasCancelled) _completer.complete(result);
+    });
+    _future.catchError((e) {
+      if (!wasCancelled) _completer.completeError(e);
+    });
+  }
+
+  Future get cancellableFuture => _completer.future;
+
+  bool get wasCancelled => _wasCancelled;
+
+  void cancel() {
+    if (!wasCancelled) {
+      _wasCancelled = true;
+
+      if (!_completer.isCompleted) {
+        if (_handleCancel != null) _handleCancel();
+        // TODO: complete the completer?
+        _completer.complete(null);
+      }
+    }
+  }
+}
+
+class JobManager implements Disposable {
   StreamController<Job> _activeJobController = new StreamController.broadcast();
   StreamController<Job> _queueController = new StreamController.broadcast();
   List<JobInstance> _jobs = [];
@@ -72,6 +135,13 @@ class JobManager {
   Stream<Job> get onQueueChanged => _queueController.stream;
 
   Future schedule(Job job) => _enqueue(job);
+
+  void dispose() {
+    List<JobInstance> list = new List.from(runningJobs);
+    for (JobInstance job in list) {
+      if (job.job.isCancellable) job.job.cancel();
+    }
+  }
 
   Future _enqueue(Job job) {
     _logger.fine('scheduling job ${job.name}');
