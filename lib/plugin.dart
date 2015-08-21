@@ -34,6 +34,7 @@ import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
+import 'jobs.dart';
 import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
@@ -47,8 +48,6 @@ import 'utils.dart';
 export 'atom.dart' show registerPackage;
 
 final Logger _logger = new Logger('plugin');
-
-const int _settingsVersion = 1;
 
 class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
@@ -107,6 +106,7 @@ class AtomDartPackage extends AtomPackage {
     state.loadFrom(inState);
     checkChangelog();
 
+    disposables.add(deps[JobManager] = new JobManager());
     disposables.add(deps[SdkManager] = new SdkManager());
     disposables.add(deps[ProjectManager] = new ProjectManager());
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
@@ -180,10 +180,11 @@ class AtomDartPackage extends AtomPackage {
   }
 
   void _validateSettings() {
-    int oldVer = state['settingsVersion'];
-    state['settingsVersion'] = _settingsVersion;
+    const String keyPath = '_dartlang._firstRun';
+    bool firstRun = atom.config.getValue(keyPath) != false;
+    atom.config.setValue(keyPath, false);
 
-    if (oldVer != _settingsVersion) {
+    if (firstRun) {
       // Set up default settings.
       atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
     }
@@ -265,20 +266,32 @@ class AtomDartPackage extends AtomPackage {
         'order': 3
       },
 
+      // no package symlinks
+      'noPackageSymlinks': {
+        'title': "Run pub with '--no-package-symlinks'",
+        'description':
+            'Run pub with a command-line option to not create packages '
+            'symlinks. Note: Sky applications will not currently work with '
+            'this option enabled.',
+        'type': 'boolean',
+        'default': false,
+        'order': 4
+      },
+
       // filter specific warnings
       'filterUnnamedLibraryWarnings': {
         'title': 'Filter unnamed library warnings',
         'description': "Don't display warnings about unnamed libraries.",
         'type': 'boolean',
         'default': true,
-        'order': 4
+        'order': 5
       },
       'filterCompiledToJSWarnings': {
         'title': 'Filter warnings about compiling to JavaScript',
         'description': "Don't display warnings about compiling to JavaScript.",
         'type': 'boolean',
         'default': true,
-        'order': 4
+        'order': 5
       },
 
       // TODO: Re-enable this.
@@ -288,7 +301,7 @@ class AtomDartPackage extends AtomPackage {
       //   'description': "Report anonymized usage information to Google Analytics.",
       //   'type': 'boolean',
       //   'default': true,
-      //   'order': 5
+      //   'order': 6
       // },
 
       'logging': {

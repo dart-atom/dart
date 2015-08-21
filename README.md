@@ -53,10 +53,6 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 
 [tracker]: https://github.com/dart-atom/dartlang/issues
 
-## Developing the plugin
-
-Check out [how to develop][develop].
-
 ## License
 
 See the [LICENSE](https://github.com/dart-atom/dartlang/blob/master/LICENSE)

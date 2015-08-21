@@ -9,11 +9,13 @@ import 'dart:async';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../jobs.dart';
+import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
 import '../utils.dart';
 
 const String pubspecFileName = 'pubspec.yaml';
+const String dotPackagesFileName = '.packages';
 
 class PubManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
@@ -26,11 +28,11 @@ class PubManager implements Disposable, ContextMenuContributor {
     _addSdkCmd('atom-text-editor', 'dartlang:pub-upgrade', (event) {
       new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('atom-workspace', 'dartlang:pub-run', (event) {
-      _handleRun(atom.workspace.getActiveTextEditor());
+    _addSdkCmd('atom-text-editor', 'dartlang:pub-run', (event) {
+      _handleRun(editor: atom.workspace.getActiveTextEditor());
     });
-    _addSdkCmd('atom-workspace', 'dartlang:pub-global-run', (event) {
-      _handleGlobalRun(atom.workspace.getActiveTextEditor());
+    _addSdkCmd('atom-text-editor', 'dartlang:pub-global-run', (event) {
+      _handleGlobalRun(editor: atom.workspace.getActiveTextEditor());
     });
 
     // activate
@@ -38,19 +40,26 @@ class PubManager implements Disposable, ContextMenuContributor {
       _handleGlobalActivate();
     });
 
-    // TODO: expose pub run...
     _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
       new PubJob.get(event.targetFilePath).schedule();
     });
     _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (AtomEvent event) {
       new PubJob.upgrade(event.targetFilePath).schedule();
     });
+    _addSdkCmd('.tree-view', 'dartlang:pub-run', (AtomEvent event) {
+      _handleRun(path: event.targetFilePath);
+    });
+    _addSdkCmd('.tree-view', 'dartlang:pub-global-run', (AtomEvent event) {
+      _handleGlobalRun(path: event.targetFilePath);
+    });
   }
 
   List<ContextMenuItem> getTreeViewContributions() {
     return [
-      new PubContextCommand('Pub Get', 'dartlang:pub-get'),
-      new PubContextCommand('Pub Upgrade', 'dartlang:pub-upgrade')
+      new PubContextCommand('Pub Get', 'dartlang:pub-get', true),
+      new PubContextCommand('Pub Upgrade', 'dartlang:pub-upgrade', true),
+      new PubContextCommand('Pub Run…', 'dartlang:pub-run', false),
+      new PubContextCommand('Pub Global Run…', 'dartlang:pub-global-run', false)
     ];
   }
 
@@ -65,23 +74,22 @@ class PubManager implements Disposable, ContextMenuContributor {
     }));
   }
 
-  void _handleRun(TextEditor editor) {
-    if (editor == null) {
-      atom.notifications
-          .addWarning("This commands requires an open file editor.");
+  void _handleRun({TextEditor editor, String path}) {
+    if (editor != null) path = editor.getPath();
+
+    if (editor == null && path == null) {
+      atom.notifications.addWarning("This command requires an open file editor.");
       return;
     }
 
-    String path = editor.getPath();
-    if (editor.getPath() == null) {
+    if (path == null) {
       atom.beep();
       return;
     }
 
     String dir = _locatePubspecDir(path);
     if (dir == null) {
-      atom.notifications
-          .addWarning("No pubspec.yaml file found for '${path}'.");
+      atom.notifications.addWarning("No pubspec.yaml file found for '${path}'.");
       return;
     }
 
@@ -97,8 +105,8 @@ class PubManager implements Disposable, ContextMenuContributor {
     });
   }
 
-  void _handleGlobalRun(TextEditor editor) {
-    String path = editor == null ? null : editor.getPath();
+  void _handleGlobalRun({TextEditor editor, String path}) {
+    if (editor != null) path = editor.getPath();
     String dir = path == null ? null : _locatePubspecDir(path);
     String lastRunText = state['lastGlobalRunText'];
 
@@ -168,6 +176,9 @@ class PubApp {
 }
 
 class PubJob extends Job {
+  static bool get _noPackageSymlinks =>
+      atom.config.getValue('${pluginId}.noPackageSymlinks');
+
   final String path;
   final String pubCommand;
 
@@ -190,8 +201,11 @@ class PubJob extends Job {
   Object get schedulingRule => _pubspecDir;
 
   Future run() {
+    List<String> args = [pubCommand];
+    if (_noPackageSymlinks) args.insert(0, '--no-package-symlinks');
+
     return sdkManager.sdk
-        .execBinSimple('pub', [pubCommand], cwd: _pubspecDir)
+        .execBinSimple('pub', args, cwd: _pubspecDir)
         .then((ProcessResult result) {
       if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
       return result.stdout;
@@ -239,20 +253,8 @@ class PubRunJob extends Job {
 
 String _locatePubspecDir(String path) {
   if (path == null) return null;
-  Directory dir = new Directory.fromPath(path);
-
-  if (new File.fromPath(join(path, pubspecFileName)).existsSync()) {
-    return dir.path;
-  }
-
-  while (!dir.isRoot() && dir.path.length > 2) {
-    if (dir.getFile(pubspecFileName).existsSync()) {
-      return dir.path;
-    }
-    dir = dir.getParent();
-  }
-
-  return null;
+  DartProject project = projectManager.getProjectFor(path);
+  return project == null ? null : project.path;
 }
 
 class PubGlobalActivate extends Job {
@@ -274,13 +276,22 @@ class PubGlobalActivate extends Job {
 }
 
 class PubContextCommand extends ContextMenuItem {
-  PubContextCommand(String label, String command) : super(label, command);
+  final bool onlyPubspec;
+
+  PubContextCommand(String label, String command, this.onlyPubspec) :
+      super(label, command);
 
   bool shouldDisplay(AtomEvent event) {
     String filePath = event.targetFilePath;
     if (filePath == null) return false;
-    if (basename(filePath) == pubspecFileName) return true;
-    File file = new File.fromPath(join(filePath, pubspecFileName));
-    return file.existsSync();
+    DartProject project = projectManager.getProjectFor(filePath);
+    if (project == null) return null;
+
+    if (onlyPubspec) {
+      File file = new File.fromPath(join(project.path, pubspecFileName));
+      return file.existsSync();
+    } else {
+      return true;
+    }
   }
 }
