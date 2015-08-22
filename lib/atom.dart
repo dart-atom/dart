@@ -286,10 +286,20 @@ class Config extends ProxyHolder {
     return new JsDisposable(invoke('observe', keyPath, options, callback));
   }
 
-  /// Add a listener for changes to a given key path.
+  // TODO: This throws exceptions - eventStream2Args is buggy?
+  // /// Add a listener for changes to a given key path.
+  // Stream<dynamic> onDidChange(String keyPath, [Map options]) {
+  //   if (options == null) options = {};
+  //   return eventStream2Args('onDidChangePaths', keyPath, options);
+  // }
+
   Stream<dynamic> onDidChange(String keyPath, [Map options]) {
-    if (options == null) options = {};
-    return eventStream2Args('onDidChangePaths', keyPath, options);
+    Disposable disposable;
+    StreamController controller = new StreamController.broadcast(onCancel: () {
+      if (disposable != null) disposable.dispose();
+    });
+    disposable = observe(keyPath, options, (e) => controller.add(e));
+    return controller.stream;
   }
 }
 
