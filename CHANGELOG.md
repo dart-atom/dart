@@ -1,5 +1,8 @@
 # Changelog
 
+## unreleased
+- improved the notifications when we're unable to find a Dart SDK
+
 ## 0.3.17
 - added a `Packages > Dart > Release Notes` menu item
 - added a `Packages > Dart > Getting Started` menu item
