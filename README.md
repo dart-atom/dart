@@ -15,9 +15,10 @@ type, code completion, refactorings, and integration with Pub and other tools.
 ## Installing
 
 - install [Atom](https://atom.io/)
-- install the [linter][] package (with `apm install dartlang` or through the
+- install the [linter][] package (with `apm install linter` or through the
   Atom UI)
-- install this [dartlang][] package
+- install this [dartlang][] package (with `apm install dartlang` or through the
+  Atom UI)
 
 The plugin should auto-detect the Dart SDK location. If not, you can set it
 manually in the plugin configuration page (`Preferences > Packages > dartlang`).
@@ -43,7 +44,7 @@ slows down if you have the emmet plugin installed. We have filed an
 ## Getting started
 
 See our
-[getting started](https://github.com/dart-atom/dartlang/blob/master/getting_started.md)
+[getting started](https://github.com/dart-atom/dartlang/blob/master/doc/getting_started.md)
 guide for a walkthrough of how to use all the Dart features. This is useful for
 users new to the plugin and users new to Atom.
 
