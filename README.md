@@ -44,7 +44,7 @@ slows down if you have the emmet plugin installed. We have filed an
 ## Getting started
 
 See our
-[getting started](https://github.com/dart-atom/dartlang/blob/master/getting_started.md)
+[getting started](https://github.com/dart-atom/dartlang/blob/master/doc/getting_started.md)
 guide for a walkthrough of how to use all the Dart features. This is useful for
 users new to the plugin and users new to Atom.
 
