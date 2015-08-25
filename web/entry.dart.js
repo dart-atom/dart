@@ -22667,12 +22667,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       _initPlugin$0: [function() {
         S.loadPackageJson().then$1(this.get$_verifyPackages());
         var t1 = $.$get$atom();
-        if (J.$eq$(t1._config.getValue$1("_dartlang._initialized"), true))
-          ;
-        t1._config.invoke$3("set", "_dartlang._initialized", true);
-        t1._config.invoke$3("set", "autocomplete-plus.enableAutoActivation", false);
-        t1._config.invoke$3("set", "autocomplete-plus.autoActivationDelay", 500);
-        this._showWelcomeToast$0();
+        if (!J.$eq$(t1._config.getValue$1("_dartlang._initialized"), true)) {
+          t1._config.invoke$3("set", "_dartlang._initialized", true);
+          t1._config.invoke$3("set", "autocomplete-plus.enableAutoActivation", false);
+          t1._config.invoke$3("set", "autocomplete-plus.autoActivationDelay", 500);
+          this._showWelcomeToast$0();
+        }
       }, "call$0", "get$_initPlugin", 0, 0, 2],
       _verifyPackages$1: [function(m) {
         var deps, packages, t1, t2, dep, t3;
