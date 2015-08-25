@@ -11,7 +11,7 @@ import 'state.dart';
 import 'utils.dart';
 
 // Sample Google Analytics UA code.
-final String _UA = 'UA-123456-1';
+final String _UA = 'UA-000000-0';
 
 Analytics _ga = new AnalyticsMock();
 
@@ -26,6 +26,9 @@ class UsageManager implements Disposable {
   Future _init() {
     return getPackageVersion().then((String version) {
       atom.config.observe('${pluginId}.sendUsage', null, (value) {
+        // Disable Google Analytics if the UA is the placeholder one.
+        if (_UA.startsWith('UA-0000')) value = false;
+
         if (value == true) {
           _ga = new AnalyticsHtml(_UA, pluginId, version);
           _ga.optIn = true;

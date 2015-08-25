@@ -54,6 +54,13 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 
 [tracker]: https://github.com/dart-atom/dartlang/issues
 
+## Terms and Privacy
+
+The Dart plugin for Atom (the "Plugin") is an open-source project, contributed
+to by Google. By using the Plugin, you consent to be bound by Google's general
+Terms of Service and Google's general
+[Privacy Policy](http://www.google.com/intl/en/policies/privacy/).
+
 ## License
 
 See the [LICENSE](https://github.com/dart-atom/dartlang/blob/master/LICENSE)
