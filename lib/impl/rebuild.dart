@@ -36,6 +36,7 @@ class RebuildJob extends Job {
     });
 
     return new PubRunJob.local(proj.getPath(), ['grinder', 'build']).schedule().then((_) {
+      // TODO: This is re-starting on build failures.
       new Future.delayed(new Duration(seconds: 1)).then((_) => atom.reload());
     });
   }

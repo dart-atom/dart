@@ -1,7 +1,10 @@
-# Changelog
+# dartlang plugin changelog
 
 ## unreleased
 - improved the notifications when we're unable to find a Dart SDK
+- more work towards reducing code completion twitchiness
+- don't show the release notes at startup; they are now available from the
+  `Packages > Dart > Release Notes` menu item
 
 ## 0.3.17
 - added a `Packages > Dart > Release Notes` menu item

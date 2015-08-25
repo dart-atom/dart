@@ -133,7 +133,7 @@ class SdkManager implements Disposable {
                 "Dart SDK found at ${sdk.directory.path}. Version ${version}.");
           }
 
-          _logger.info('version ${version} at ${_sdk.path}');
+          _logger.info('version ${version} (${_sdk.path})');
           _verifyMinVersion(version);
       });
     }

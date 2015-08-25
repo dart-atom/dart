@@ -180,12 +180,15 @@ class AtomDartPackage extends AtomPackage {
   }
 
   void _validateSettings() {
-    const String keyPath = '_dartlang._firstRun';
-    bool firstRun = atom.config.getValue(keyPath) != false;
-    atom.config.setValue(keyPath, false);
+    const String keyPath = '_dartlang._initialized';
+    bool initialized = atom.config.getValue(keyPath) == true;
 
-    if (firstRun) {
-      // Set up default settings.
+    // Set up default settings.
+    if (!initialized) {
+      atom.config.setValue(keyPath, true);
+
+      // This is fairly drastic. We're disabling a setting in another plugin.
+      atom.config.setValue('autocomplete-plus.enableAutoActivation', false);
       atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
     }
   }
