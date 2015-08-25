@@ -7,23 +7,25 @@ class DartAutocompleteProvider extends AutocompleteProvider {
   static final _suggestionKindMap = {
     'IMPORT': 'import',
     'KEYWORD': 'keyword',
-    'PARAMETER': 'variable'
+    'PARAMETER': 'property',
+    'NAMED_ARGUMENT': 'property'
   };
 
   static final _elementKindMap = {
     'CLASS': 'class',
     'CLASS_TYPE_ALIAS': 'class',
     'CONSTRUCTOR': 'constant', // 'constructor' causes display issues
-    'SETTER': 'property',
-    'GETTER': 'property',
+    'SETTER': 'function',
+    'GETTER': 'function',
     'FUNCTION': 'function',
     'METHOD': 'method',
+    'LIBRARY': 'import',
     'LOCAL_VARIABLE': 'variable',
     'FUNCTION_TYPE_ALIAS': 'function',
     'ENUM': 'constant',
     'ENUM_CONSTANT': 'constant',
-    'FIELD': 'property',
-    'PARAMETER': 'variable',
+    'FIELD': 'function',
+    'PARAMETER': 'property',
     'TOP_LEVEL_VARIABLE': 'variable'
   };
 
@@ -63,8 +65,16 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     // Atom autocompletes right after a semi-colon, and often the user's return
     // key event is captured as a code complete select - inserting an item
     // (inadvertently) into the editor.
-    if (prefix == ';') return new Future.value([]);
-    if (prefix == '{' || prefix == '}') return new Future.value([]);
+    const String noCompletions = ";{},";
+
+    if (offset > 0) {
+      String prevChar = text[offset - 1];
+      if (noCompletions.indexOf(prevChar) != -1) return new Future.value([]);
+    }
+
+    if (prefix.length == 1 && noCompletions.indexOf(prefix) != -1) {
+      return new Future.value([]);
+    }
 
     return server.completion.getSuggestions(path, offset).then((result) {
       return server.completion.onResults
@@ -103,9 +113,23 @@ class DartAutocompleteProvider extends AutocompleteProvider {
       if (_prefix == prefix) _prefix = null;
     }
 
+    // Patch-up the analysis server's completion scoring.
+    var adjustRelavance = (CompletionSuggestion suggestion) {
+      if (suggestion.kind == 'KEYWORD') {
+        return _copySuggestion(suggestion, suggestion.relevance - 1);
+      }
+
+      if (suggestion.element != null && suggestion.element.kind == 'NAMED_ARGUMENT') {
+        return _copySuggestion(suggestion, suggestion.relevance + 1);
+      }
+
+      return suggestion;
+    };
+
     results = results
-        .where((result) => result.relevance > 500) // filtering from `dart-tools`
+        .where((result) => result.relevance > 500)
         .where((result) => !_elided.contains(result.completion))
+        .map((result) => adjustRelavance(result))
         .toList();
 
     results.sort(_compareSuggestions);
@@ -214,4 +238,27 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     _rightLabelMap[str] = str.toLowerCase().replaceAll('_', ' ');
     return _rightLabelMap[str];
   }
+}
+
+CompletionSuggestion _copySuggestion(CompletionSuggestion s, int relevance) {
+  return new CompletionSuggestion(
+    s.kind,
+    relevance,
+    s.completion,
+    s.selectionOffset,
+    s.selectionLength,
+    s.isDeprecated,
+    s.isPotential,
+    docSummary: s.docSummary,
+    docComplete: s.docComplete,
+    declaringType: s.declaringType,
+    element: s.element,
+    returnType: s.returnType,
+    parameterNames: s.parameterNames,
+    parameterTypes: s.parameterTypes,
+    requiredParameterCount: s.requiredParameterCount,
+    hasNamedParameters: s.hasNamedParameters,
+    parameterName: s.parameterName,
+    parameterType: s.parameterType,
+    importUri: s.importUri);
 }

@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:html' show HttpRequest;
 
 import 'package:logging/logging.dart';
-import 'package:pub_semver/pub_semver.dart';
+//import 'package:pub_semver/pub_semver.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
@@ -59,44 +59,51 @@ class ChangelogManager implements Disposable {
 
 void _checkChangelog(String currentVersion) {
   String lastVersion = atom.config.getValue('_dartlang._version');
-  atom.config.setValue('_dartlang._version', currentVersion);
 
   if (lastVersion != currentVersion) {
     _logger.info("upgraded from ${lastVersion} to ${currentVersion}");
+    atom.config.setValue('_dartlang._version', currentVersion);
 
-    HttpRequest.getString('atom://dartlang/CHANGELOG.md').then((str) {
-      String changes;
-      if (lastVersion != null) {
-        changes = _extractVersion(str, lastVersion, inclusive: false);
-      } else {
-        changes = _extractVersion(str, currentVersion, inclusive: true);
-      }
-      if (changes != null && changes.isNotEmpty) {
-        atom.notifications.addSuccess(
-            'Upgraded to dartlang plugin version ${currentVersion}.',
-            description: changes,
-            dismissable: true);
-      }
-    });
+    if (lastVersion != null) {
+      atom.notifications.addSuccess(
+          'Upgraded to dartlang plugin version ${currentVersion}.');
+    }
+
+    // HttpRequest.getString('atom://dartlang/CHANGELOG.md').then((str) {
+    //   String changes;
+    //   if (lastVersion != null) {
+    //     changes = _extractVersion(str, lastVersion, inclusive: false);
+    //   } else {
+    //     changes = _extractVersion(str, currentVersion, inclusive: true);
+    //   }
+    //   if (changes != null && changes.isNotEmpty) {
+    //     atom.notifications.addSuccess(
+    //         'Upgraded to dartlang plugin version ${currentVersion}.',
+    //         description: changes,
+    //         dismissable: true);
+    //   }
+    // });
+  } else {
+    _logger.info("dartlang version ${currentVersion}");
   }
 }
 
-String _extractVersion(String changelog, String last, {bool inclusive: true}) {
-  Version lastVersion = new Version.parse(last);
-  List<String> changes = changelog.split('\n');
-  Iterable itor = changes.skipWhile((line) => !line.startsWith('##'));
-  changes = itor.takeWhile((line) {
-    if (line.startsWith('## ')) {
-      try {
-        line = line.substring(3);
-        Version ver = new Version.parse(line);
-        if (inclusive) return ver >= lastVersion;
-        return ver > lastVersion;
-      } catch (_) {
-        return true;
-      }
-    }
-    return true;
-  }).toList();
-  return changes.join('\n').trim();
-}
+// String _extractVersion(String changelog, String last, {bool inclusive: true}) {
+//   Version lastVersion = new Version.parse(last);
+//   List<String> changes = changelog.split('\n');
+//   Iterable itor = changes.skipWhile((line) => !line.startsWith('##'));
+//   changes = itor.takeWhile((line) {
+//     if (line.startsWith('## ')) {
+//       try {
+//         line = line.substring(3);
+//         Version ver = new Version.parse(line);
+//         if (inclusive) return ver >= lastVersion;
+//         return ver > lastVersion;
+//       } catch (_) {
+//         return true;
+//       }
+//     }
+//     return true;
+//   }).toList();
+//   return changes.join('\n').trim();
+// }
