@@ -40,6 +40,8 @@ build() {
     String str = outputFile.readAsStringSync();
     str = str.replaceAll('"UA-123456-1"', '"${code}"');
     outputFile.writeAsStringSync(str);
+  } else {
+    log('No \$DARTLANG_UA environment variable set.');
   }
 }
 
