@@ -32,14 +32,16 @@ build() {
   Dart2js.compile(inputFile, csp: true);
   outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
 
-  // Patch in the GA UA code; replace "UA-123456-1" with a valid code.
+  // Patch in the GA UA code; replace "UA-000000-0" with a valid code.
   String code = Platform.environment['DARTLANG_UA'];
   if (code != null) {
     log('Patching with the dartlang Google Analytics code.');
 
     String str = outputFile.readAsStringSync();
-    str = str.replaceAll('"UA-123456-1"', '"${code}"');
+    str = str.replaceAll('"UA-000000-0"', '"${code}"');
     outputFile.writeAsStringSync(str);
+  } else {
+    log('No \$DARTLANG_UA environment variable set.');
   }
 }
 

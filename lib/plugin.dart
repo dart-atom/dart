@@ -183,13 +183,16 @@ class AtomDartPackage extends AtomPackage {
     const String keyPath = '_dartlang._initialized';
     bool initialized = atom.config.getValue(keyPath) == true;
 
-    // Set up default settings.
     if (!initialized) {
       atom.config.setValue(keyPath, true);
 
+      // Set up default settings.
       // This is fairly drastic. We're disabling a setting in another plugin.
       atom.config.setValue('autocomplete-plus.enableAutoActivation', false);
       atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
+
+      // Show a welcome toast.
+      _showWelcomeToast();
     }
   }
 
@@ -220,6 +223,21 @@ class AtomDartPackage extends AtomPackage {
           dismissable: true);
       }
     }
+  }
+
+  void _showWelcomeToast() {
+    getPackageVersion().then((String version) {
+      // where to find more info
+      // analytics disclaimer
+      atom.notifications.addSuccess('Welcome to the dartlang plugin for Atom!',
+        detail: 'v${version}',
+        description: 'For help using this plugin, please see the `Packages` > '
+          '`Dart` > `Getting Started` menu item.\n\n'
+          'The Dart plugin anonymously reports feature usage statistics and '
+          'basic crash reports to improve the tool over time. Please visit the '
+          'plugin\'s settings page to configure this behavior.',
+        dismissable: true);
+    });
   }
 
   Map serialize() => state.toMap();
@@ -297,15 +315,14 @@ class AtomDartPackage extends AtomPackage {
         'order': 5
       },
 
-      // TODO: Re-enable this.
-      // // google analytics
-      // 'sendUsage': {
-      //   'title': 'Report usage information to Google Analytics.',
-      //   'description': "Report anonymized usage information to Google Analytics.",
-      //   'type': 'boolean',
-      //   'default': true,
-      //   'order': 6
-      // },
+      // google analytics
+      'sendUsage': {
+        'title': 'Report usage information to Google Analytics.',
+        'description': "Report anonymized usage information to Google Analytics.",
+        'type': 'boolean',
+        'default': true,
+        'order': 6
+      },
 
       'logging': {
         'title': 'Log plugin diagnostics to the devtools console.',
