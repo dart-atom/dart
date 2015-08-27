@@ -338,44 +338,62 @@ class TitledModelDialog implements Disposable {
 }
 
 class AtomView implements Disposable  {
+  static const int _defaultSize = 250;
+
   Panel _panel;
   Disposable _cancelCommand;
 
+  CoreElement root;
   CoreElement title;
   CoreElement content;
 
-  AtomView(String inTitle, {String classes, String prefName}) {
+  AtomView(String inTitle, {String classes, String prefName,
+      bool rightPanel: true, bool cancelCloses: true, bool showTitle: true}) {
     CoreElement closeButton;
     ViewResizer resizer;
 
     String c = 'atom-view tree-view';
     if (classes != null) c = '${c} ${classes}';
 
-    CoreElement root = div(c: c)..layoutVertical()..add([
-      div(c: 'panel-heading')..layoutHorizontal()..add([
-        title = div(text: inTitle, c: 'text-highlight view-header')..flex(),
-        closeButton = new CloseButton()
-      ]),
-      content = div(c: 'view-content')..flex(),
-      resizer = new ViewResizer.createVertical()
-    ]);
+    root = div(c: c)..layoutVertical();
 
-    closeButton.onClick.listen((e) {
-      hide();
-      e.preventDefault();
-    });
-
-    if (prefName != null) {
-      int pos = state[prefName];
-      if (pos != null) resizer.position = pos;
-      resizer.onPositionChanged.listen((pos) {
-        state[prefName] = pos;
+    if (showTitle) {
+      root.add(
+        div(c: 'panel-heading')..layoutHorizontal()..add([
+          title = div(text: inTitle, c: 'text-highlight view-header')..flex(),
+          closeButton = new CloseButton()
+        ])
+      );
+      closeButton.onClick.listen((e) {
+        hide();
+        e.preventDefault();
       });
     }
 
-    _panel = atom.workspace.addRightPanel(item: root.element);
+    root.add([
+      content = div(c: 'view-content')..flex(),
+      resizer = rightPanel ? new ViewResizer.createVertical() : new ViewResizer.createHorizontal()
+    ]);
 
-    _cancelCommand = atom.commands.add('atom-workspace', 'core:cancel', (_) => _handleCancel());
+    if (prefName != null) {
+      int pos = state[prefName];
+      resizer.position = pos != null ? pos : _defaultSize;
+      resizer.onPositionChanged.listen((pos) {
+        state[prefName] = pos;
+      });
+    } else {
+      resizer.position = _defaultSize;
+    }
+
+    if (rightPanel) {
+      _panel = atom.workspace.addRightPanel(item: root.element);
+    } else {
+      _panel = atom.workspace.addBottomPanel(item: root.element);
+    }
+
+    if (cancelCloses) {
+      _cancelCommand = atom.commands.add('atom-workspace', 'core:cancel', (_) => _handleCancel());
+    }
   }
 
   Timer _timer;
@@ -389,6 +407,7 @@ class AtomView implements Disposable  {
     }
   }
 
+  bool isVisible() => _panel.isVisible();
   void show() => _panel.show();
   void hide() => _panel.hide();
 

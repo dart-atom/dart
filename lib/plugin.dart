@@ -31,6 +31,7 @@ import 'error_repository.dart';
 import 'impl/changelog.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
+import 'impl/errors.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
@@ -53,12 +54,18 @@ class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
 
+  ErrorsController errorsController;
+
   AtomDartPackage() {
     // Register a method to consume the `status-bar` service API.
     registerServiceConsumer('consumeStatusBar', (obj) {
-      StatusDisplay status = new StatusDisplay(new StatusBar(obj));
-      disposables.add(status);
-      return status;
+      StatusBar statusBar = new StatusBar(obj);
+
+      if (errorsController != null) errorsController.initStatusBar(statusBar);
+
+      StatusDisplay statusDisplay = new StatusDisplay(statusBar);
+      disposables.add(statusDisplay);
+      return statusDisplay;
     });
 
     // Register a method to consume the `atom-toolbar` service API.
@@ -121,6 +128,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new ChangelogManager());
     disposables.add(new CreateProjectManager());
     disposables.add(new DartdocHelper());
+    disposables.add(errorsController = new ErrorsController());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());
@@ -188,7 +196,7 @@ class AtomDartPackage extends AtomPackage {
 
       // Set up default settings.
       // This is fairly drastic. We're disabling a setting in another plugin.
-      atom.config.setValue('autocomplete-plus.enableAutoActivation', false);
+      //atom.config.setValue('autocomplete-plus.enableAutoActivation', false);
       atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
 
       // Show a welcome toast.
@@ -262,20 +270,30 @@ class AtomDartPackage extends AtomPackage {
         'order': 1
       },
 
+      // custom errors view
+      'useErrorsView': {
+        'title': 'Use Dart Errors View',
+        'description': 'Use a custom errors view to display Dart errors and '
+            'warnings. This will be used in place of the default linter view.',
+        'type': 'boolean',
+        'default': true,
+        'order': 1
+      },
+
       // show infos and todos
       'showInfos': {
         'title': 'Show infos',
         'description': 'Show informational level analysis issues.',
         'type': 'boolean',
         'default': true,
-        'order': 2
+        'order': 3
       },
       'showTodos': {
         'title': 'Show todos',
         'description': 'When showing infos, also show TODO items.',
         'type': 'boolean',
-        'default': false,
-        'order': 2
+        'default': true,
+        'order': 3
       },
 
       // format on save
@@ -284,7 +302,7 @@ class AtomDartPackage extends AtomPackage {
         'description': 'Format the current editor on save.',
         'type': 'boolean',
         'default': false,
-        'order': 3
+        'order': 4
       },
 
       // no package symlinks
@@ -296,7 +314,7 @@ class AtomDartPackage extends AtomPackage {
             'this option enabled.',
         'type': 'boolean',
         'default': false,
-        'order': 4
+        'order': 5
       },
 
       // filter specific warnings
@@ -305,14 +323,14 @@ class AtomDartPackage extends AtomPackage {
         'description': "Don't display warnings about unnamed libraries.",
         'type': 'boolean',
         'default': true,
-        'order': 5
+        'order': 6
       },
       'filterCompiledToJSWarnings': {
         'title': 'Filter warnings about compiling to JavaScript',
         'description': "Don't display warnings about compiling to JavaScript.",
         'type': 'boolean',
         'default': true,
-        'order': 5
+        'order': 6
       },
 
       // google analytics
@@ -321,7 +339,7 @@ class AtomDartPackage extends AtomPackage {
         'description': "Report anonymized usage information to Google Analytics.",
         'type': 'boolean',
         'default': true,
-        'order': 6
+        'order': 7
       },
 
       'logging': {

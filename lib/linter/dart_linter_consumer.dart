@@ -7,6 +7,8 @@ part of linter;
 const int maxIssuesPerFile = 200;
 const int maxTotalIssues = 500;
 
+StreamController<List<AnalysisError>> _processedErrorsController = new StreamController.broadcast();
+
 /// Consumes the atomlinter/linter self-service API.
 class DartLinterConsumer extends LinterConsumer with Disposables {
   ErrorRepository _errorRepository;
@@ -26,7 +28,7 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
     add(atom.config.observe(_filterCompiledToJSWarningsPath, null, regen));
   }
 
-  consume(LinterService service) {
+  void consume(LinterService service) {
     _service = service;
 
     var errorStream =
@@ -90,13 +92,16 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
   }
 
   void _emit(List newIssues) {
-    if (_service == null) return;
-
     if (!listIdentical(_oldIssues, newIssues)) {
       _oldIssues = newIssues;
-      _service.deleteMessages(_provider);
-      _service.setMessages(_provider,
-          newIssues.map((e) => _errorToLintMessage(e.location.file, e)).toList());
+
+      _processedErrorsController.add(newIssues);
+
+      if (_service != null) {
+        _service.deleteMessages(_provider);
+        _service.setMessages(_provider,
+            newIssues.map((e) => _errorToLintMessage(e.location.file, e)).toList());
+      }
     }
   }
 }
