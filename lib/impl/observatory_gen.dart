@@ -68,22 +68,22 @@ class Observatory {
   StreamController _onSend = new StreamController.broadcast();
   StreamController _onReceive = new StreamController.broadcast();
 
-  StreamController<Event> _isolateEventController =
-      new StreamController.broadcast();
-  StreamController<Event> _debugEventController =
-      new StreamController.broadcast();
-  StreamController<Event> _gcEventController = new StreamController.broadcast();
+  StreamController<Event> _isolateController = new StreamController.broadcast();
+  StreamController<Event> _debugController = new StreamController.broadcast();
+  StreamController<Event> _gcController = new StreamController.broadcast();
+  StreamController<Event> _stdoutController = new StreamController.broadcast();
+  StreamController<Event> _stderrController = new StreamController.broadcast();
 
   Observatory(Stream<String> inStream, void writeMessage(String message)) {
     _streamSub = inStream.listen(_processMessage);
     _writeMessage = writeMessage;
   }
 
-  Stream<Event> get onIsolateEvent => _isolateEventController.stream;
-
-  Stream<Event> get onDebugEvent => _debugEventController.stream;
-
-  Stream<Event> get onGcEvent => _gcEventController.stream;
+  Stream<Event> get onIsolateEvent => _isolateController.stream;
+  Stream<Event> get onDebugEvent => _debugController.stream;
+  Stream<Event> get onGcEvent => _gcController.stream;
+  Stream<Event> get onStdoutEvent => _stdoutController.stream;
+  Stream<Event> get onStderrEvent => _stderrController.stream;
 
   /// The [addBreakpoint] RPC is used to add a breakpoint at a specific line of
   /// some script.
@@ -231,17 +231,21 @@ class Observatory {
 
       var json = JSON.decode(message);
 
-      if (json['event'] != null) {
-        String streamId = json['streamId'];
+      if (json['id'] == null && json['method'] == 'streamNotify') {
+        Map params = json['params'];
+        String streamId = params['streamId'];
 
         // TODO: These could be generated from a list.
-
         if (streamId == 'Isolate') {
-          _isolateEventController.add(createObject(json['event']));
+          _isolateController.add(createObject(params['event']));
         } else if (streamId == 'Debug') {
-          _debugEventController.add(createObject(json['event']));
+          _debugController.add(createObject(params['event']));
         } else if (streamId == 'GC') {
-          _gcEventController.add(createObject(json['event']));
+          _gcController.add(createObject(params['event']));
+        } else if (streamId == 'Stdout') {
+          _stdoutController.add(createObject(params['event']));
+        } else if (streamId == 'Stderr') {
+          _stderrController.add(createObject(params['event']));
         } else {
           _logger.warning('unknown streamId: ${streamId}');
         }
@@ -334,6 +338,9 @@ enum EventKind {
   /// Notification that a new isolate has started.
   IsolateStart,
 
+  /// Notification that an isolate is ready to run.
+  IsolateRunnable,
+
   /// Notification that an isolate has exited.
   IsolateExit,
 
@@ -369,7 +376,10 @@ enum EventKind {
   BreakpointRemoved,
 
   /// A garbage collection event.
-  GC
+  GC,
+
+  /// Notification of bytes written, for example, to stdout/stderr.
+  WriteEvent
 }
 
 /// Adding new values to [InstanceKind] is considered a backwards compatible
@@ -511,7 +521,7 @@ class BoundVariable {
 }
 
 /// A [Breakpoint] describes a debugger breakpoint.
-class Breakpoint extends Response {
+class Breakpoint extends Obj {
   static Breakpoint parse(Map json) => new Breakpoint.fromJson(json);
 
   Breakpoint();
@@ -528,7 +538,7 @@ class Breakpoint extends Response {
   SourceLocation location;
 
   String toString() => '[Breakpoint ' //
-      'type: ${type}, breakpointNumber: ${breakpointNumber}, resolved: ${resolved}, location: ${location}]';
+      'type: ${type}, id: ${id}, classRef: ${classRef}, size: ${size}, breakpointNumber: ${breakpointNumber}, resolved: ${resolved}, location: ${location}]';
 }
 
 /// [ClassRef] is a reference to a [Class].
@@ -556,9 +566,6 @@ class Class extends Obj {
     error = createObject(json['error']);
     isAbstract = json['abstract'];
     isConst = json['const'];
-    finalized = json['finalized'];
-    implemented = json['implemented'];
-    patch = json['patch'];
     library = createObject(json['library']);
     location = createObject(json['location']);
     superClass = createObject(json['super']);
@@ -572,22 +579,13 @@ class Class extends Obj {
   String name;
 
   /// The error which occurred during class finalization, if it exists.
-  @optional InstanceRef error;
+  @optional ErrorRef error;
 
   /// Is this an abstract class?
   bool isAbstract;
 
   /// Is this a const class?
   bool isConst;
-
-  /// Has this class been finalized?
-  bool finalized;
-
-  /// Is this class implemented?
-  bool implemented;
-
-  /// Is this a vm patch class?
-  bool patch;
 
   /// The library which contains this class.
   LibraryRef library;
@@ -779,10 +777,12 @@ class Event extends Response {
   Event.fromJson(Map json) : super.fromJson(json) {
     kind = _parseEnum(EventKind.values, json['kind']);
     isolate = createObject(json['isolate']);
+    timestamp = json['timestamp'];
     breakpoint = createObject(json['breakpoint']);
     pauseBreakpoints = createObject(json['pauseBreakpoints']);
     topFrame = createObject(json['topFrame']);
     exception = createObject(json['exception']);
+    bytes = json['bytes'];
   }
 
   /// What kind of event is this?
@@ -790,6 +790,12 @@ class Event extends Response {
 
   /// The isolate with which this event is associated.
   IsolateRef isolate;
+
+  /// The timestamp (in milliseconds since the epoch) associated with this
+  /// event. For some isolate pause events, the timestamp is from when the
+  /// isolate was paused. For other events, the timestamp is from when the event
+  /// was created.
+  int timestamp;
 
   /// The breakpoint which was added, removed, or resolved. This is provided for
   /// the event kinds: PauseBreakpoint BreakpointAdded BreakpointRemoved
@@ -815,8 +821,11 @@ class Event extends Response {
   /// event.
   @optional InstanceRef exception;
 
-  String toString() => '[Event ' //
-      'type: ${type}, kind: ${kind}, isolate: ${isolate}, breakpoint: ${breakpoint}, pauseBreakpoints: ${pauseBreakpoints}, topFrame: ${topFrame}, exception: ${exception}]';
+  /// An array of bytes, encoded as a base64 string. This is provided for the
+  /// WriteEvent event.
+  @optional String bytes;
+
+  String toString() => '[Event]';
 }
 
 /// An [FieldRef] is a reference to a [Field].
@@ -934,18 +943,13 @@ class FlagList extends Response {
 
   FlagList();
   FlagList.fromJson(Map json) : super.fromJson(json) {
-    unmodifiedFlags = createObject(json['unmodifiedFlags']);
-    modifiedFlags = createObject(json['modifiedFlags']);
+    flags = createObject(json['flags']);
   }
 
-  /// A list of all flags which are set to default values.
-  List<Flag> unmodifiedFlags;
+  /// A list of all flags in the VM.
+  List<Flag> flags;
 
-  /// A list of all flags which have been modified by the user.
-  List<Flag> modifiedFlags;
-
-  String toString() => '[FlagList ' //
-      'type: ${type}, unmodifiedFlags: ${unmodifiedFlags}, modifiedFlags: ${modifiedFlags}]';
+  String toString() => '[FlagList type: ${type}, flags: ${flags}]';
 }
 
 class Frame extends Response {
@@ -956,8 +960,7 @@ class Frame extends Response {
     index = json['index'];
     function = createObject(json['function']);
     code = createObject(json['code']);
-    script = createObject(json['script']);
-    tokenPos = json['tokenPos'];
+    location = createObject(json['location']);
     vars = createObject(json['vars']);
   }
 
@@ -967,14 +970,12 @@ class Frame extends Response {
 
   CodeRef code;
 
-  ScriptRef script;
-
-  int tokenPos;
+  SourceLocation location;
 
   List<BoundVariable> vars;
 
   String toString() => '[Frame ' //
-      'type: ${type}, index: ${index}, function: ${function}, code: ${code}, script: ${script}, tokenPos: ${tokenPos}, vars: ${vars}]';
+      'type: ${type}, index: ${index}, function: ${function}, code: ${code}, location: ${location}, vars: ${vars}]';
 }
 
 /// An [FuncRef] is a reference to a [Func].
@@ -1114,6 +1115,8 @@ class Instance extends Obj {
     closureContext = createObject(json['closureContext']);
     mirrorReferent = createObject(json['mirrorReferent']);
     pattern = json['pattern'];
+    isCaseSensitive = json['isCaseSensitive'];
+    isMultiLine = json['isMultiLine'];
     propertyKey = createObject(json['propertyKey']);
     propertyValue = createObject(json['propertyValue']);
     typeArguments = createObject(json['typeArguments']);
@@ -1186,6 +1189,14 @@ class Instance extends Obj {
   /// The pattern of a RegExp instance. Provided for instance kinds: RegExp
   @optional String pattern;
 
+  /// Whether this regular expression is case sensitive. Provided for instance
+  /// kinds: RegExp
+  @optional bool isCaseSensitive;
+
+  /// Whether this regular expression matches multiple lines. Provided for
+  /// instance kinds: RegExp
+  @optional bool isMultiLine;
+
   /// The key for a WeakProperty instance. Provided for instance kinds:
   /// WeakProperty
   @optional InstanceRef propertyKey;
@@ -1249,14 +1260,14 @@ class Isolate extends Response {
     number = json['number'];
     name = json['name'];
     startTime = json['startTime'];
-    entry = createObject(json['entry']);
     livePorts = json['livePorts'];
     pauseOnExit = json['pauseOnExit'];
     pauseEvent = createObject(json['pauseEvent']);
-    error = createObject(json['error']);
+    entry = createObject(json['entry']);
     rootLib = createObject(json['rootLib']);
     libraries = createObject(json['libraries']);
     breakpoints = createObject(json['breakpoints']);
+    error = createObject(json['error']);
   }
 
   /// The id which is passed to the getIsolate RPC to reload this isolate.
@@ -1272,9 +1283,6 @@ class Isolate extends Response {
   /// pass to DateTime.fromMillisecondsSinceEpoch.
   int startTime;
 
-  /// The entry function for this isolate.
-  @optional FuncRef entry;
-
   /// The number of live ports for this isolate.
   int livePorts;
 
@@ -1285,17 +1293,23 @@ class Isolate extends Response {
   /// this will be a resume event.
   Event pauseEvent;
 
-  /// The error that is causing this isolate to exit, if applicable.
-  @optional Error error;
+  /// The entry function for this isolate. Guaranteed to be initialized when the
+  /// IsolateRunnable event fires.
+  @optional FuncRef entry;
 
-  /// The root library for this isolate.
-  LibraryRef rootLib;
+  /// The root library for this isolate. Guaranteed to be initialized when the
+  /// IsolateRunnable event fires.
+  @optional LibraryRef rootLib;
 
-  /// A list of all libraries for this isolate.
+  /// A list of all libraries for this isolate. Guaranteed to be initialized
+  /// when the IsolateRunnable event fires.
   List<LibraryRef> libraries;
 
   /// A list of all breakpoints for this isolate.
   List<Breakpoint> breakpoints;
+
+  /// The error that is causing this isolate to exit, if applicable.
+  @optional Error error;
 
   String toString() => '[Isolate]';
 }

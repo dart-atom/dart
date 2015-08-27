@@ -89,17 +89,21 @@ final String _implCode = r'''
 
       var json = JSON.decode(message);
 
-      if (json['event'] != null) {
-        String streamId = json['streamId'];
+      if (json['id'] == null && json['method'] == 'streamNotify') {
+        Map params = json['params'];
+        String streamId = params['streamId'];
 
         // TODO: These could be generated from a list.
-
         if (streamId == 'Isolate') {
-          _isolateEventController.add(createObject(json['event']));
+          _isolateController.add(createObject(params['event']));
         } else if (streamId == 'Debug') {
-          _debugEventController.add(createObject(json['event']));
+          _debugController.add(createObject(params['event']));
         } else if (streamId == 'GC') {
-          _gcEventController.add(createObject(json['event']));
+          _gcController.add(createObject(params['event']));
+        } else if (streamId == 'Stdout') {
+          _stdoutController.add(createObject(params['event']));
+        } else if (streamId == 'Stderr') {
+          _stderrController.add(createObject(params['event']));
         } else {
           _logger.warning('unknown streamId: ${streamId}');
         }
@@ -260,9 +264,11 @@ class Api extends Member {
     gen.writeln("StreamController _onSend = new StreamController.broadcast();");
     gen.writeln("StreamController _onReceive = new StreamController.broadcast();");
     gen.writeln();
-    gen.writeln("StreamController<Event> _isolateEventController = new StreamController.broadcast();");
-    gen.writeln("StreamController<Event> _debugEventController = new StreamController.broadcast();");
-    gen.writeln("StreamController<Event> _gcEventController = new StreamController.broadcast();");
+    gen.writeln("StreamController<Event> _isolateController = new StreamController.broadcast();");
+    gen.writeln("StreamController<Event> _debugController = new StreamController.broadcast();");
+    gen.writeln("StreamController<Event> _gcController = new StreamController.broadcast();");
+    gen.writeln("StreamController<Event> _stdoutController = new StreamController.broadcast();");
+    gen.writeln("StreamController<Event> _stderrController = new StreamController.broadcast();");
     gen.writeln();
     gen.writeStatement(
         'Observatory(Stream<String> inStream, void writeMessage(String message)) {');
@@ -270,11 +276,12 @@ class Api extends Member {
     gen.writeStatement('_writeMessage = writeMessage;');
     gen.writeln('}');
     gen.writeln();
-    gen.writeln("Stream<Event> get onIsolateEvent => _isolateEventController.stream;");
+    gen.writeln("Stream<Event> get onIsolateEvent => _isolateController.stream;");
+    gen.writeln("Stream<Event> get onDebugEvent => _debugController.stream;");
+    gen.writeln("Stream<Event> get onGcEvent => _gcController.stream;");
+    gen.writeln("Stream<Event> get onStdoutEvent => _stdoutController.stream;");
+    gen.writeln("Stream<Event> get onStderrEvent => _stderrController.stream;");
     gen.writeln();
-    gen.writeln("Stream<Event> get onDebugEvent => _debugEventController.stream;");
-    gen.writeln();
-    gen.writeln("Stream<Event> get onGcEvent => _gcEventController.stream;");
     methods.forEach((m) => m.generate(gen));
     gen.out(_implCode);
     gen.writeStatement('}');
