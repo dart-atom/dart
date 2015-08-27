@@ -14,6 +14,8 @@ import 'utils.dart';
 part 'linter/dart_linter_consumer.dart';
 part 'linter/dart_linter_provider.dart';
 
+Stream<List<AnalysisError>> get onProcessedErrorsChanged => _processedErrorsController.stream;
+
 LintMessage _errorToLintMessage(String filePath, AnalysisError error) {
   return new LintMessage(
       type: _severityMap[error.severity],

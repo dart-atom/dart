@@ -34,6 +34,7 @@
 
   .badge-count {
     display: none;
+    vertical-align: initial;
   }
 
   .badge-count.showing {
@@ -294,4 +295,36 @@ div.dartlang-toolbar button.btn {
 /* hmmm, this is adjusting a global atom style... */
 atom-notification.success code {
   text-shadow: none;
+}
+
+/* Error view */
+
+.errors-status {
+  span.badge {
+    margin-right: 4px;
+    padding: 2px 5px;
+    vertical-align: initial;
+  }
+}
+
+.errors-view {
+  .view-content {
+    padding: 3px;
+  }
+
+  .errors-item {
+    cursor: default;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+
+    .badge {
+      border-radius: 2px;
+    }
+
+    span,
+    a {
+      margin: 3px;
+    }
+  }
 }

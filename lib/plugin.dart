@@ -54,12 +54,18 @@ class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables();
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
 
+  ErrorsController errorsController;
+
   AtomDartPackage() {
     // Register a method to consume the `status-bar` service API.
     registerServiceConsumer('consumeStatusBar', (obj) {
-      StatusDisplay status = new StatusDisplay(new StatusBar(obj));
-      disposables.add(status);
-      return status;
+      StatusBar statusBar = new StatusBar(obj);
+
+      if (errorsController != null) errorsController.initStatusBar(statusBar);
+
+      StatusDisplay statusDisplay = new StatusDisplay(statusBar);
+      disposables.add(statusDisplay);
+      return statusDisplay;
     });
 
     // Register a method to consume the `atom-toolbar` service API.
@@ -122,7 +128,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new ChangelogManager());
     disposables.add(new CreateProjectManager());
     disposables.add(new DartdocHelper());
-    disposables.add(new ErrorsController());
+    disposables.add(errorsController = new ErrorsController());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());

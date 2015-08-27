@@ -343,6 +343,7 @@ class AtomView implements Disposable  {
   Panel _panel;
   Disposable _cancelCommand;
 
+  CoreElement root;
   CoreElement title;
   CoreElement content;
 
@@ -354,7 +355,7 @@ class AtomView implements Disposable  {
     String c = 'atom-view tree-view';
     if (classes != null) c = '${c} ${classes}';
 
-    CoreElement root = div(c: c)..layoutVertical();
+    root = div(c: c)..layoutVertical();
 
     if (showTitle) {
       root.add(
