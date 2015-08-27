@@ -16,6 +16,8 @@ import '../utils.dart';
 
 final String _errorPref = '${pluginId}.useErrorsView';
 
+final String _initKeyPath = '_dartlang._errorsInitialized';
+
 class ErrorsController implements Disposable {
   Disposables disposables = new Disposables();
   StreamSubscription _sub;
@@ -44,6 +46,13 @@ class ErrorsController implements Disposable {
     disposables.add(atom.workspace.observeActivePaneItem(_focusChanged));
 
     _sub = atom.config.onDidChange(_errorPref).listen(_togglePrefs);
+
+    // Check to see if this is our first run.
+    bool firstRun = atom.config.getValue(_initKeyPath) != true;
+    if (firstRun) {
+      atom.config.setValue(_initKeyPath, true);
+      _togglePrefs(true);
+    }
   }
 
   void dispose() {

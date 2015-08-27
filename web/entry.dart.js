@@ -22300,6 +22300,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._handleErrorsChanged$1([]);
         t2.push(t1._workspace.observeActivePaneItem$1(this.get$_focusChanged()));
         this._sub = t1._config.onDidChange$1("dartlang.useErrorsView").listen$1(this.get$_togglePrefs());
+        if (!J.$eq$(t1._config.getValue$1("_dartlang._errorsInitialized"), true)) {
+          t1._config.invoke$3("set", "_dartlang._errorsInitialized", true);
+          this._togglePrefs$1(true);
+        }
       },
       $isDisposable: 1,
       static: {ErrorsController$: function() {
@@ -23076,7 +23080,6 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1 = $.$get$atom();
         if (!J.$eq$(t1._config.getValue$1("_dartlang._initialized"), true)) {
           t1._config.invoke$3("set", "_dartlang._initialized", true);
-          t1._config.invoke$3("set", "autocomplete-plus.enableAutoActivation", false);
           t1._config.invoke$3("set", "autocomplete-plus.autoActivationDelay", 500);
           this._showWelcomeToast$0();
         }
@@ -23152,9 +23155,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           m.$indexSet(0, "priority", -100);
           t2.statusTile = new T.Tile(statusBar.invoke$2("addLeftTile", m));
           if (t2._showing !== true) {
-            t2 = J.get$style$x(t2._errors0$_element.element);
-            t2.display = "none";
+            t3 = J.get$style$x(t2._errors0$_element.element);
+            t3.display = "none";
           }
+          t2._handleErrorsChanged$1([]);
         }
         statusDisplay = E.StatusDisplay$(statusBar);
         t1.disposables.Disposables__disposables.push(statusDisplay);

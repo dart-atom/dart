@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- added a fancy new errors view
+
 ## 0.4.0
 - improved the notifications when we're unable to find a Dart SDK
 - more work towards reducing code completion twitchiness
