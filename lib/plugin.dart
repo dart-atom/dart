@@ -31,6 +31,7 @@ import 'error_repository.dart';
 import 'impl/changelog.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/pub.dart';
+import 'impl/errors.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
@@ -121,6 +122,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new ChangelogManager());
     disposables.add(new CreateProjectManager());
     disposables.add(new DartdocHelper());
+    disposables.add(new ErrorsController());
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());

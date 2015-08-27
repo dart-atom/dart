@@ -60,8 +60,9 @@
 }
 
 div.atom-view {
-  width: 250px;
   min-width: 100px;
+  min-height: 40px;
+  height: 100%;
   padding-left: 0;
   padding-right: 0;
 }
@@ -78,13 +79,23 @@ div.atom-view {
     overflow: auto;
   }
 
-  .view-resize {
+  .view-resize[vertical] {
     cursor: col-resize;
     z-index: 3;
     position: absolute;;
     top: 0;
     bottom: 0;
     width: 8px;
+  }
+
+  .view-resize[horizontal] {
+    cursor: row-resize;
+    z-index: 3;
+    position: absolute;;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 8px;
   }
 }
 
