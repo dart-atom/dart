@@ -1,10 +1,9 @@
-# Dart VM Service Protocol 1.0 (Draft 1)
+# Dart VM Service Protocol 2.0
 
 > Please post feedback to the [observatory-discuss group][discuss-list]
 
-This document describes _draft 1_ of _version 1.0_ of the Dart VM
-Service Protocol.  This protocol is used to communicate with a running
-Dart Virtual Machine.
+This document describes of _version 2.0_ of the Dart VM Service Protocol. This
+protocol is used to communicate with a running Dart Virtual Machine.
 
 To use the Service Protocol, start the VM with the *--observe* flag.
 The VM will start a webserver which services protocol requests via WebSocket.
@@ -12,10 +11,9 @@ It is possible to make HTTP (non-WebSocket) requests,
 but this does not allow access to VM _events_ and is not documented
 here.
 
-The Service Protocol is based on JSON-RPC 2.0
-(http://www.jsonrpc.org/specification). The Service Protocol has been
-extended to support pushing _events_ to the client, which is
-apparently outside the scope of the JSON-RPC specification.
+The Service Protocol uses [JSON-RPC 2.0][].
+
+[JSON-RPC 2.0]: http://www.jsonrpc.org/specification
 
 **Table of Contents**
 
@@ -97,7 +95,7 @@ example [getVersion](#getversion) request:
 }
 ```
 
-Currently the _id_ property must be a string. The Service Protocol
+The _id_ property must be a string, number, or `null`. The Service Protocol
 optionally accepts requests without the _jsonprc_ property.
 
 An RPC response is a JSON object (http://json.org/). The response always specifies an
@@ -108,10 +106,10 @@ Here is an example response for our [getVersion](#getversion) request above:
 
 ```
 {
-  "json-rpc": "2.0",
+  "jsonrpc": "2.0",
   "result": {
     "type": "Version",
-    "major": 1,
+    "major": 2,
     "minor": 0
   }
   "id": "1"
@@ -152,7 +150,7 @@ subscribe to the _GC_ stream multiple times from the same client.
 
 ```
 {
-  "json-rpc": "2.0",
+  "jsonrpc": "2.0",
   "error": {
     "code": 103,
     "message": "Stream already subscribed",
@@ -189,27 +187,33 @@ Each stream provides access to certain kinds of events. For example the _Isolate
 access to events pertaining to isolate births, deaths, and name changes. See [streamListen](#streamlisten)
 for a list of the well-known stream ids and their associated events.
 
-Events arrive asynchronously over the WebSocket and always have the
-_streamId_ and _event_ properties:
+Stream events arrive asynchronously over the WebSocket. They're structured as
+JSON-RPC 2.0 requests with no _id_ property. The _method_ property will be
+_streamNotify_, and the _params_ will have _streamId_ and _event_ properties:
 
-```
+```json
 {
-  "event": {
-    "type": "Event",
-    "kind": "IsolateExit",
-    "isolate": {
-      "type": "@Isolate",
-      "id": "isolates/33",
-      "number": "51048743613",
-      "name": "worker-isolate"
+  "json-rpc": "2.0",
+  "method": "streamNotify",
+  "params": {
+    "streamId": "Isolate",
+    "event": {
+      "type": "Event",
+      "kind": "IsolateExit",
+      "isolate": {
+        "type": "@Isolate",
+        "id": "isolates/33",
+        "number": "51048743613",
+        "name": "worker-isolate"
+      }
     }
   }
-  "streamId": "Isolate"
 }
 ```
 
 It is considered a _backwards compatible_ change to add a new type of event to an existing stream.
 Clients should be written to handle this gracefully.
+
 
 
 ## Types
@@ -295,7 +299,7 @@ version number:
 ```
   "result": {
     "type": "Version",
-    "major": 1,
+    "major": 2,
     "minor": 0
   }
 ```
@@ -616,9 +620,18 @@ The _streamId_ parameter may have the following published values:
 
 streamId | event types provided
 -------- | -----------
-Isolate | IsolateStart, IsolateExit, IsolateUpdate
+Isolate | IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
 Debug | PauseStart, PauseExit, PauseBreakpoint, PauseInterrupted, PauseException, Resume, BreakpointAdded, BreakpointResolved, BreakpointRemoved, Inspect
 GC | GC
+
+Additionally, some embedders provide the _Stdout_ and _Stderr_
+streams.  These streams allow the client to subscribe to writes to
+stdout and stderr.
+
+streamId | event types provided
+-------- | -----------
+Stdout | WriteEvent
+Stderr | WriteEvent
 
 It is considered a _backwards compatible_ change to add a new type of event to an existing stream.
 Clients should be written to handle this gracefully, perhaps by warning and ignoring.
@@ -743,7 +756,7 @@ will be the _OptimizedOut_ [Sentinel](#sentinel).
 ### Breakpoint
 
 ```
-class Breakpoint extends Response {
+class Breakpoint extends Object {
   int breakpointNumber;
   bool resolved;
   SourceLocation location;
@@ -769,22 +782,13 @@ class Class extends Object {
   string name;
 
   // The error which occurred during class finalization, if it exists.
-  @Instance error [optional];
+  @Error error [optional];
 
   // Is this an abstract class?
   bool abstract;
 
   // Is this a const class?
   bool const;
-
-  // Has this class been finalized?
-  bool finalized;
-
-  // Is this class implemented?
-  bool implemented;
-
-  // Is this a vm patch class?
-  bool patch;
 
   // The library which contains this class.
   @Library library;
@@ -955,6 +959,11 @@ class Event extends Response {
   // The isolate with which this event is associated.
   @Isolate isolate;
 
+  // The timestamp (in milliseconds since the epoch) associated with this event.
+  // For some isolate pause events, the timestamp is from when the isolate was
+  // paused. For other events, the timestamp is from when the event was created.
+  int timestamp;
+
   // The breakpoint which was added, removed, or resolved.
   //
   // This is provided for the event kinds:
@@ -992,6 +1001,11 @@ class Event extends Response {
   // The exception associated with this event, if this is a
   // PauseException event.
   @Instance exception [optional];
+
+  // An array of bytes, encoded as a base64 string.
+  //
+  // This is provided for the WriteEvent event.
+  string bytes [optional];
 }
 ```
 
@@ -1007,6 +1021,9 @@ For more information, see [events](#events).
 enum EventKind {
   // Notification that a new isolate has started.
   IsolateStart,
+
+  // Notification that an isolate is ready to run.
+  IsolateRunnable,
 
   // Notification that an isolate has exited.
   IsolateExit,
@@ -1044,7 +1061,10 @@ enum EventKind {
   BreakpointRemoved,
 
   // A garbage collection event.
-  GC
+  GC,
+
+  // Notification of bytes written, for example, to stdout/stderr.
+  WriteEvent
 }
 ```
 
@@ -1143,11 +1163,8 @@ A _Flag_ represents a single VM command line flag.
 
 ```
 class FlagList extends Response {
-  // A list of all flags which are set to default values.
-  Flag[] unmodifiedFlags;
-
-  // A list of all flags which have been modified by the user.
-  Flag[] modifiedFlags;
+  // A list of all flags in the VM.
+  Flag[] flags;
 }
 ```
 
@@ -1160,8 +1177,7 @@ class Frame extends Response {
   int index;
   @Function function;
   @Code code;
-  @Script script;
-  int tokenPos;
+  SourceLocation location;
   BoundVariable[] vars;
 }
 ```
@@ -1399,6 +1415,18 @@ class Instance extends Object {
   //   RegExp
   String pattern [optional];
 
+  // Whether this regular expression is case sensitive.
+  //
+  // Provided for instance kinds:
+  //   RegExp
+  bool isCaseSensitive [optional];
+
+  // Whether this regular expression matches multiple lines.
+  //
+  // Provided for instance kinds:
+  //   RegExp
+  bool isMultiLine [optional];
+
   // The key for a WeakProperty instance.
   //
   // Provided for instance kinds:
@@ -1561,9 +1589,6 @@ class Isolate extends Response {
   // Suitable to pass to DateTime.fromMillisecondsSinceEpoch.
   int startTime;
 
-  // The entry function for this isolate.
-  @Function entry [optional];
-
   // The number of live ports for this isolate.
   int livePorts;
 
@@ -1574,17 +1599,26 @@ class Isolate extends Response {
   // running, this will be a resume event.
   Event pauseEvent;
 
-  // The error that is causing this isolate to exit, if applicable.
-  Error error [optional];
+  // The entry function for this isolate.
+  //
+  // Guaranteed to be initialized when the IsolateRunnable event fires.
+  @Function entry [optional];
 
   // The root library for this isolate.
-  @Library rootLib;
+  //
+  // Guaranteed to be initialized when the IsolateRunnable event fires.
+  @Library rootLib [optional];
 
   // A list of all libraries for this isolate.
+  //
+  // Guaranteed to be initialized when the IsolateRunnable event fires.
   @Library[] libraries;
 
   // A list of all breakpoints for this isolate.
   Breakpoint[] breakpoints;
+
+  // The error that is causing this isolate to exit, if applicable.
+  Error error [optional];
 }
 ```
 

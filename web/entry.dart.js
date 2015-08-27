@@ -1655,11 +1655,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.AnalysisErrorFixes_parse_closure[1];
     AnalysisErrorFixes_parse_closure.prototype = $desc;
     AnalysisErrorFixes_parse_closure.$__fields__ = [];
-    function AnalysisOptions(enableAsync, enableDeferredLoading, enableEnums, enableNullAwareOperators, generateDart2jsHints, generateHints, generateLints) {
+    function AnalysisOptions(enableAsync, enableDeferredLoading, enableEnums, enableNullAwareOperators, enableSuperMixins, generateDart2jsHints, generateHints, generateLints) {
       this.enableAsync = enableAsync;
       this.enableDeferredLoading = enableDeferredLoading;
       this.enableEnums = enableEnums;
       this.enableNullAwareOperators = enableNullAwareOperators;
+      this.enableSuperMixins = enableSuperMixins;
       this.generateDart2jsHints = generateDart2jsHints;
       this.generateHints = generateHints;
       this.generateLints = generateLints;
@@ -1670,7 +1671,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       AnalysisOptions.name = "AnalysisOptions";
     $desc = $collectedClasses$.AnalysisOptions[1];
     AnalysisOptions.prototype = $desc;
-    AnalysisOptions.$__fields__ = ["enableAsync", "enableDeferredLoading", "enableEnums", "enableNullAwareOperators", "generateDart2jsHints", "generateHints", "generateLints"];
+    AnalysisOptions.$__fields__ = ["enableAsync", "enableDeferredLoading", "enableEnums", "enableNullAwareOperators", "enableSuperMixins", "generateDart2jsHints", "generateHints", "generateLints"];
     function AnalysisStatus(isAnalyzing, analysisTarget) {
       this.isAnalyzing = isAnalyzing;
       this.analysisTarget = analysisTarget;
@@ -18765,9 +18766,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 4, "call"]
     },
     AnalysisOptions: {
-      "^": "Object;enableAsync,enableDeferredLoading,enableEnums,enableNullAwareOperators,generateDart2jsHints,generateHints,generateLints",
+      "^": "Object;enableAsync,enableDeferredLoading,enableEnums,enableNullAwareOperators,enableSuperMixins,generateDart2jsHints,generateHints,generateLints",
       toMap$0: function() {
-        return N._mapify(P.LinkedHashMap__makeLiteral(["enableAsync", this.enableAsync, "enableDeferredLoading", this.enableDeferredLoading, "enableEnums", this.enableEnums, "enableNullAwareOperators", this.enableNullAwareOperators, "generateDart2jsHints", this.generateDart2jsHints, "generateHints", this.generateHints, "generateLints", this.generateLints]));
+        return N._mapify(P.LinkedHashMap__makeLiteral(["enableAsync", this.enableAsync, "enableDeferredLoading", this.enableDeferredLoading, "enableEnums", this.enableEnums, "enableNullAwareOperators", this.enableNullAwareOperators, "enableSuperMixins", this.enableSuperMixins, "generateDart2jsHints", this.generateDart2jsHints, "generateHints", this.generateHints, "generateLints", this.generateLints]));
       },
       $isJsonable: 1
     },
@@ -20208,7 +20209,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1.server._call$2("server.setSubscriptions", t2);
         t2 = this._analysis;
         t2.toString;
-        t1 = P.LinkedHashMap__makeLiteral(["options", new N.AnalysisOptions(null, null, null, true, null, null, null)]);
+        t1 = P.LinkedHashMap__makeLiteral(["options", new N.AnalysisOptions(null, null, null, true, null, null, null, null)]);
         t2.server._call$2("analysis.updateOptions", t1);
         this._analysis_server_gen$_server.server._call$2("server.getVersion", null).then$1(N.analysis_server_gen_VersionResult_parse$closure()).then$1(new X._AnalysisServerWrapper_setup_closure());
         this._analysis_server_gen$_server._listen$2("server.status", N.analysis_server_gen_ServerStatus_parse$closure())._createSubscription$4(new X._AnalysisServerWrapper_setup_closure0(this), null, null, false);

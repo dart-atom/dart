@@ -64,12 +64,15 @@ main(List<String> args) async {
   observatory.onSend.listen((str)    => print('--> ${str}'));
   observatory.onReceive.listen((str) => print('<-- ${str}'));
 
-  observatory.onIsolateEvent.listen(print);
-  observatory.onDebugEvent.listen(print);
-  observatory.onGcEvent.listen(print);
+  observatory.onIsolateEvent.listen((e) => print('onIsolateEvent: ${e}'));
+  observatory.onDebugEvent.listen((e) => print('onDebugEvent: ${e}'));
+  observatory.onGcEvent.listen((e) => print('onGcEvent: ${e}'));
+  observatory.onStdoutEvent.listen((e) => print('onStdoutEvent: ${e}'));
+  observatory.onStderrEvent.listen((e) => print('onStderrEvent: ${e}'));
 
   observatory.streamListen('Isolate');
   observatory.streamListen('Debug');
+  observatory.streamListen('Stdout');
 
   VM vm = await observatory.getVM();
   print(await observatory.getVersion());
