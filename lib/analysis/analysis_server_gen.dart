@@ -4,6 +4,7 @@ library analysis_server_gen;
 
 import 'dart:async';
 import 'dart:convert' show JSON, JsonCodec;
+
 import 'package:logging/logging.dart';
 
 final Logger _logger = new Logger('analysis-server-gen');
@@ -891,6 +892,7 @@ class AnalysisOptions implements Jsonable {
         enableDeferredLoading: m['enableDeferredLoading'],
         enableEnums: m['enableEnums'],
         enableNullAwareOperators: m['enableNullAwareOperators'],
+        enableSuperMixins: m['enableSuperMixins'],
         generateDart2jsHints: m['generateDart2jsHints'],
         generateHints: m['generateHints'],
         generateLints: m['generateLints']);
@@ -900,6 +902,7 @@ class AnalysisOptions implements Jsonable {
   @optional final bool enableDeferredLoading;
   @optional final bool enableEnums;
   @optional final bool enableNullAwareOperators;
+  @optional final bool enableSuperMixins;
   @optional final bool generateDart2jsHints;
   @optional final bool generateHints;
   @optional final bool generateLints;
@@ -909,6 +912,7 @@ class AnalysisOptions implements Jsonable {
         'enableDeferredLoading': enableDeferredLoading,
         'enableEnums': enableEnums,
         'enableNullAwareOperators': enableNullAwareOperators,
+        'enableSuperMixins': enableSuperMixins,
         'generateDart2jsHints': generateDart2jsHints,
         'generateHints': generateHints,
         'generateLints': generateLints
@@ -919,6 +923,7 @@ class AnalysisOptions implements Jsonable {
       this.enableDeferredLoading,
       this.enableEnums,
       this.enableNullAwareOperators,
+      this.enableSuperMixins,
       this.generateDart2jsHints,
       this.generateHints,
       this.generateLints});

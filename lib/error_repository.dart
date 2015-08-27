@@ -4,10 +4,10 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import 'analysis/analysis_server_gen.dart'
+    show AnalysisErrors, AnalysisError, AnalysisFlushResults, Location;
 import 'atom.dart' show Directory, File, statSync;
 import 'utils.dart';
-import 'analysis/analysis_server_gen.dart' show AnalysisErrors, AnalysisError,
-  AnalysisFlushResults, Location;
 
 final Logger _logger = new Logger('error_repository');
 
