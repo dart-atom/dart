@@ -24,7 +24,7 @@ import 'utils.dart';
 
 export 'analysis/analysis_server_gen.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
-    RefactoringOptions, SourceFileEdit;
+    RefactoringOptions, SourceFileEdit, AnalysisOutline, Outline;
 export 'jobs.dart' show Job;
 
 final Logger _logger = new Logger('analysis-server');
@@ -46,6 +46,7 @@ class AnalysisServer implements Disposable {
   StreamController<String> _onSendController = new StreamController.broadcast();
   StreamController<String> _onReceiveController = new StreamController.broadcast();
   StreamController<AnalysisNavigation> _onNavigatonController = new StreamController.broadcast();
+  StreamController<AnalysisOutline> _onOutlineController = new StreamController.broadcast();
 
   _AnalysisServerWrapper _server;
   _AnalyzingJob _job;
@@ -81,6 +82,7 @@ class AnalysisServer implements Disposable {
   Stream<String> get onReceive => _onReceiveController.stream;
 
   Stream<AnalysisNavigation> get onNavigaton => _onNavigatonController.stream;
+  Stream<AnalysisOutline> get onOutline => _onOutlineController.stream;
 
   Stream<AnalysisErrors> get onAnalysisErrors =>
       analysisServer._server.analysis.onErrors;
@@ -176,8 +178,11 @@ class AnalysisServer implements Disposable {
     String path = editor.getPath();
 
     if (path != null) {
-      // TODO: What a truly interesting API.
-      _server.analysis.setSubscriptions({'NAVIGATION': [path]});
+      // TODO: Only use OUTLINE if required.
+      _server.analysis.setSubscriptions({
+        'NAVIGATION': [path],
+        'OUTLINE': [path]
+      });
 
       // Ensure that the path is in a Dart project.
       if (projectManager.getProjectFor(path) != null) {
@@ -294,6 +299,7 @@ class AnalysisServer implements Disposable {
     server.onReceive.listen((message) => _onReceiveController.add(message));
 
     server.analysis.onNavigation.listen((e) => _onNavigatonController.add(e));
+    server.analysis.onOutline.listen((e) => _onOutlineController.add(e));
 
     onBusy.listen((busy) {
       if (!busy && _job != null) {

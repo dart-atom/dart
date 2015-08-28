@@ -335,3 +335,88 @@ atom-notification.success code {
     }
   }
 }
+
+/* outline */
+
+atom-text-editor::shadow .outline-view {
+  color: @text-color;
+  background-color: @tool-panel-background-color;
+  border-left: 1px solid @tool-panel-border-color;
+  font-size: @font-size;
+  font-family: @font-family;
+  line-height: 18px; //@component-line-height;
+
+  padding: 6px;
+  order: 2;
+  min-width: 175px;
+  width: 260px;
+  overflow-x: hidden;
+
+  display: flex;
+  position: relative;
+  flex-direction: column;
+
+  .title {
+    //color: @text-color-highlight;
+    border-bottom: 1px solid @tool-panel-border-color;
+    margin-bottom: @component-padding;
+  }
+
+  .outline-tree {
+    flex: 20;
+    overflow-y: auto;
+  }
+
+  ul,
+  ol {
+    padding-left: 20px;
+  }
+
+  ol,
+  ul,
+  li {
+    list-style: none;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  li {
+    cursor: default;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+  }
+
+  .list-item {
+    white-space: nowrap;
+  }
+
+  .selected {
+    font-weight: bold;
+  }
+
+  .deprecated {
+    text-decoration: line-through;
+  }
+
+  .muted {
+    color: @text-color-subtle;
+  }
+
+  a {
+    cursor: pointer;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .view-resize[vertical] {
+    cursor: col-resize;
+    z-index: 3;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+  }
+}

@@ -18,6 +18,10 @@ final String _errorPref = '${pluginId}.useErrorsView';
 
 final String _initKeyPath = '_dartlang._errorsInitialized';
 
+// TODO: the hidden state does not persist between sessions
+
+// TODO: error count in the view
+
 class ErrorsController implements Disposable {
   Disposables disposables = new Disposables();
   StreamSubscription _sub;

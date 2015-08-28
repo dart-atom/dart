@@ -30,8 +30,9 @@ import 'editors.dart';
 import 'error_repository.dart';
 import 'impl/changelog.dart';
 import 'impl/editing.dart' as editing;
-import 'impl/pub.dart';
 import 'impl/errors.dart';
+import 'impl/outline.dart';
+import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
@@ -132,6 +133,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new FormattingHelper());
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());
+    disposables.add(new OutlineController());
     disposables.add(pubManager);
     disposables.add(skyToolManager);
     disposables.add(new RefactoringHelper());
@@ -270,14 +272,21 @@ class AtomDartPackage extends AtomPackage {
         'order': 1
       },
 
-      // custom errors view
+      // custom views
       'useErrorsView': {
         'title': 'Use Dart Errors View',
         'description': 'Use a custom errors view to display Dart errors and '
             'warnings. This will be used in place of the default linter view.',
         'type': 'boolean',
         'default': true,
-        'order': 1
+        'order': 2
+      },
+      'showOutlineView': {
+        'title': 'Show Outline View',
+        'description': 'Show an outline view for Dart files.',
+        'type': 'boolean',
+        'default': true,
+        'order': 2
       },
 
       // show infos and todos

@@ -29,10 +29,6 @@ We recommend the following (optional) packages:
 
 - [last-cursor-position](https://atom.io/packages/last-cursor-position) helps you
 move between cursor location history (useful when using "jump to definition").
-- [minimap](https://atom.io/packages/minimap) adds a small preview window of the
-full source code of a file.
-- [minimap-find-and-replace](https://atom.io/packages/minimap-find-and-replace)
-displays the search matches in the minimap.
 
 ### Packages to avoid
 
