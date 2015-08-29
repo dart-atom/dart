@@ -9,7 +9,8 @@ import 'package:logging/logging.dart';
 
 final Logger _logger = new Logger('analysis-server-gen');
 
-const optional = 'optional';
+/// @optional
+const String optional = 'optional';
 
 class Server {
   StreamSubscription _streamSub;

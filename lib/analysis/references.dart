@@ -65,7 +65,7 @@ class FindReferencesView extends AtomView {
     target = content.add(span(c: 'text-highlight'));
     status = content.add(span(c: 'search-summary'));
     treeBuilder = content.add(new ListTreeBuilder(_render)..flex());
-    treeBuilder.onSelected.listen(_jumpTo);
+    treeBuilder.onClickNode.listen(_jumpTo);
     treeBuilder.onDoubleClick.listen(_doubleClick);
   }
 
@@ -130,6 +130,8 @@ class FindReferencesView extends AtomView {
 
   void _jumpTo(Node node) {
     if (node.data is SearchResult) {
+      treeBuilder.selectNode(node);
+
       Location l = (node.data as SearchResult).location;
       editorManager.jumpToLocation(l.file,
           l.startLine - 1, l.startColumn - 1, l.length);

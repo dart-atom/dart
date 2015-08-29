@@ -337,6 +337,8 @@ class TitledModelDialog implements Disposable {
   }
 }
 
+// TODO: let subclasses opt-in to mutually exclusive visibility
+
 class AtomView implements Disposable  {
   static const int _defaultSize = 250;
 
@@ -359,8 +361,8 @@ class AtomView implements Disposable  {
 
     if (showTitle) {
       root.add(
-        div(c: 'panel-heading')..layoutHorizontal()..add([
-          title = div(text: inTitle, c: 'text-highlight view-header')..flex(),
+        div(c: 'view-header')..layoutHorizontal()..add([
+          title = div(text: inTitle, c: 'text-highlight')..flex(),
           closeButton = new CloseButton()
         ])
       );
@@ -418,28 +420,33 @@ class AtomView implements Disposable  {
 }
 
 class ListTreeBuilder extends CoreElement {
-  final StreamController<Node> _selectedController = new StreamController.broadcast();
+  final StreamController<Node> _clickController = new StreamController.broadcast();
   final StreamController<Node> _doubleClickController = new StreamController.broadcast();
   final Function render;
 
-  Node _selectedNode;
+  final bool hasToggle;
+
+  List<Node> nodes = [];
+
+  List<Node> _selectedNodes = [];
   Map<Node, Element> _nodeToElementMap = {};
 
-  // focusable-panel ?
-  ListTreeBuilder(this.render) :
+  ListTreeBuilder(this.render, {this.hasToggle: true}) :
       super('div', classes: 'list-tree has-collapsable-children');
 
-  Node get selectedNode => _selectedNode;
+  Node get selectedNode => _selectedNodes.isEmpty ? null : _selectedNodes.first;
 
   void addNode(Node node) => _addNode(this, node);
 
   void _addNode(CoreElement parent, Node node) {
+    nodes.add(node);
+
     if (!node.canHaveChildren) {
       CoreElement element = li(c: 'list-item');
       Element e = element.element;
       render(node.data, e);
       _nodeToElementMap[node] = e;
-      e.onClick.listen((_) => selectNode(node));
+      e.onClick.listen((_) => _clickController.add(node));
       e.onDoubleClick.listen((_) => _doubleClickController.add(node));
       parent.add(element);
     } else {
@@ -450,7 +457,7 @@ class ListTreeBuilder extends CoreElement {
       Element e = d.element;
       render(node.data, e);
       _nodeToElementMap[node] = e;
-      e.onClick.listen((_) => selectNode(node));
+      e.onClick.listen((_) => _clickController.add(node));
       e.onDoubleClick.listen((MouseEvent event) {
         if (!event.defaultPrevented) _doubleClickController.add(node);
       });
@@ -459,14 +466,16 @@ class ListTreeBuilder extends CoreElement {
       CoreElement u = ul(c: 'list-tree');
       element.add(u);
 
-      e.onClick.listen((MouseEvent e) {
-        // Only respond to clicks on the toggle arrow.
-        if (e.offset.x < 12) {
-          element.toggleClass('collapsed');
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      });
+      if (hasToggle) {
+        e.onClick.listen((MouseEvent e) {
+          // Only respond to clicks on the toggle arrow.
+          if (e.offset.x < 12) {
+            element.toggleClass('collapsed');
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        });
+      }
 
       for (Node child in node.children) {
         _addNode(u, child);
@@ -475,33 +484,46 @@ class ListTreeBuilder extends CoreElement {
   }
 
   void selectNode(Node node) {
+    selectNodes(node == null ? [] : [node]);
+  }
+
+  void selectNodes(List<Node> selected) {
     // .selected uses absolute positioning...
-    if (_selectedNode != null) {
-      Element e = _nodeToElementMap[_selectedNode];
-      if (e != null) {
-        e.classes.toggle('tree-selected', false);
+    if (_selectedNodes.isNotEmpty) {
+      for (Node n in _selectedNodes) {
+        Element e = _nodeToElementMap[n];
+        if (e != null) e.classes.toggle('tree-selected', false);
       }
     }
 
-    _selectedNode = node;
+    _selectedNodes.clear();
+    _selectedNodes.addAll(selected);
 
-    if (_selectedNode != null) {
-      Element e = _nodeToElementMap[_selectedNode];
-      if (e != null) {
-        e.classes.toggle('tree-selected', true);
+    if (_selectedNodes.isNotEmpty) {
+      for (Node n in _selectedNodes) {
+        Element e = _nodeToElementMap[n];
+        if (e != null) e.classes.toggle('tree-selected', true);
       }
     }
-
-    _selectedController.add(selectedNode);
   }
 
   void clear() {
+    nodes.clear();
+    _selectedNodes.clear();
     _nodeToElementMap.clear();
     element.children.clear();
   }
 
-  Stream<Node> get onSelected => _selectedController.stream;
+  Stream<Node> get onClickNode => _clickController.stream;
   Stream<Node> get onDoubleClick => _doubleClickController.stream;
+
+  void scrollToSelection() {
+    if (_selectedNodes.isNotEmpty) {
+      Node sel = _selectedNodes.last;
+      Element e = _nodeToElementMap[sel];
+      if (e != null) e.scrollIntoView(); //ScrollAlignment.TOP);
+    }
+  }
 }
 
 class Node<T> {

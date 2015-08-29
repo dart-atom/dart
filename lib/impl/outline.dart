@@ -14,13 +14,11 @@ import '../utils.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';
 
-// TODO: outline view header
+// TODO: splitter - fix the resizing
 
-// TODO: splitter
+// TODO: splitter - remember the size and listen for changes
 
-// TODO: sync outline highlight with editor selection
-
-// TODO: icons?
+// TODO: have a scroll sync button
 
 class OutlineController implements Disposable {
   Disposables disposables = new Disposables();
@@ -82,6 +80,7 @@ class OutlineView implements Disposable {
 
   OutlineView(this.controller, this.editor) {
     subs.add(editor.onDidDestroy.listen((_) => dispose()));
+    subs.add(editor.onDidChangeCursorPosition.listen(_cursorChanged));
     subs.add(analysisServer.onOutline.listen(_handleOutline));
 
     root = editor.view['shadowRoot'];
@@ -96,15 +95,16 @@ class OutlineView implements Disposable {
 
     String title = basename(editor.getPath());
 
-    ViewResizer resizer;
+    /*ViewResizer resizer;*/
 
     content = div(c: 'outline-view')..add([
       div(text: title, c: 'title'),
-      treeBuilder = new ListTreeBuilder(_render)..toggleClass('outline-tree'),
-      resizer = new ViewResizer.createVertical()
+      treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
+          ..toggleClass('outline-tree'),
+      /*resizer =*/ new ViewResizer.createVertical()
     ]);
 
-    treeBuilder.onSelected.listen(_jumpTo);
+    treeBuilder.onClickNode.listen(_jumpTo);
 
     root.append(content.element);
   }
@@ -131,13 +131,41 @@ class OutlineView implements Disposable {
 
   void _handleOutline(AnalysisOutline data) {
     if (data.file == editor.getPath()) {
-      // TODO: make this more efficient
-
       treeBuilder.clear();
 
       List nodes = data.outline.children;
       for (Outline node in nodes) {
         treeBuilder.addNode(_toNode(node));
+      }
+
+      _cursorChanged(editor.getCursorBufferPosition());
+    }
+  }
+
+  // TODO: handle multiple cursors
+  void _cursorChanged(Point pos) {
+    if (pos == null) return;
+
+    int offset = editor.getBuffer().characterIndexForPosition(pos);
+    List<Node> selected = [];
+
+    for (Node node in treeBuilder.nodes) {
+      _collectSelected(node, offset, selected);
+    }
+
+    treeBuilder.selectNodes(selected);
+  }
+
+  void _collectSelected(Node node, int offset, List<Node> selected) {
+    Outline o = node.data;
+
+    if (offset >= o.offset && offset < o.offset + o.length) {
+      selected.add(node);
+
+      if (node.children != null) {
+        for (Node child in node.children) {
+          _collectSelected(child, offset, selected);
+        }
       }
     }
   }
@@ -145,6 +173,8 @@ class OutlineView implements Disposable {
   Node _toNode(Outline outline) {
     Node n = new Node(outline, canHaveChildren: outline.children != null);
     if (outline.children != null) {
+      if (outline.element.kind == 'ENUM') outline.children.clear();
+
       for (Outline child in outline.children) {
         n.add(_toNode(child));
       }
@@ -155,25 +185,43 @@ class OutlineView implements Disposable {
   void _render(Outline item, html.Element intoElement) {
     analysis.Element e = item.element;
 
+    if (e.kind == 'CLASS') {
+      intoElement.children.add(
+          new html.SpanElement()..classes.add('muted')..text = 'class ');
+    } else if (e.kind == 'ENUM') {
+      intoElement.children.add(
+          new html.SpanElement()..classes.add('muted')..text = 'enum ');
+    } else if (e.kind == 'FUNCTION_TYPE_ALIAS') {
+      intoElement.children.add(
+          new html.SpanElement()..classes.add('muted')..text = 'typedef ');
+    }
+
+    if (e.returnType != null && e.returnType.isNotEmpty) {
+      intoElement.children.add(
+          new html.SpanElement()..classes.add('muted')..text = '${e.returnType} ');
+    }
+
+    if (e.kind == 'GETTER') {
+      intoElement.children.add(
+          new html.SpanElement()..classes.add('muted')..text = 'get ');
+    } else if (e.kind == 'SETTER') {
+      intoElement.children.add(
+          new html.SpanElement()..classes.add('muted')..text = 'set ');
+    }
+
     html.Element span = new html.AnchorElement();
     span.text = e.name;
     if ((e.flags & 0x20) != 0) span.classes.add('deprecated');
     intoElement.children.add(span);
 
+    if (e.typeParameters != null) {
+      intoElement.children.add(
+          new html.SpanElement()..classes.add('muted')..text = e.typeParameters);
+    }
+
     if (e.parameters != null) {
-      String text = e.parameters;
-      if (e.returnType != null) {
-        text = '${text} ${e.returnType}'; // →
-      }
-      span = new html.SpanElement();
-      span.classes.add('muted');
-      span.text = text;
-      intoElement.children.add(span);
-    } else if (e.returnType != null) {
-      span = new html.SpanElement();
-      span.classes.add('muted');
-      span.text = ' ${e.returnType}';
-      intoElement.children.add(span);
+      intoElement.children.add(
+          new html.SpanElement()..classes.add('muted')..text = e.parameters);
     }
   }
 
@@ -185,4 +233,13 @@ class OutlineView implements Disposable {
     editor.setCursorBufferPosition(
         editor.getBuffer().positionForCharacterIndex(outline.offset));
   }
+
+  // void _scrollSync() {
+  //   // TODO: get the current top visible line
+  //   // TODO: get the char index
+  //   // TODO: get the last node the overlaps that index
+  //   // TODO: scroll the cooresponding element into view
+  //
+  //   if (treeBuilder != null) treeBuilder.scrollToSelection();
+  // }
 }

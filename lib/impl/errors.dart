@@ -18,8 +18,6 @@ final String _errorPref = '${pluginId}.useErrorsView';
 
 final String _initKeyPath = '_dartlang._errorsInitialized';
 
-// TODO: the hidden state does not persist between sessions
-
 // TODO: error count in the view
 
 class ErrorsController implements Disposable {
@@ -137,10 +135,12 @@ class ErrorsView extends AtomView {
     ]);
 
     bool hidden = state['errorViewShowing'] == false;
-    if (!hidden) show();
+    hidden ? hide() : show();
   }
 
-  void toggle() => isVisible() ? hide() : show();
+  void toggle() {
+    isVisible() ? hide() : show();
+  }
 
   void show() {
     super.show();

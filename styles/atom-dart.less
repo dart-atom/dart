@@ -73,6 +73,9 @@ div.atom-view {
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    background-color: @panel-heading-background-color;
+    padding: 8px;
+    border-bottom: 1px solid @tool-panel-border-color;
   }
 
   .view-content {
@@ -107,6 +110,7 @@ div.atom-view {
       text-overflow: ellipsis;
       overflow-x: hidden;
       white-space: nowrap;
+      line-height: 22px;
     }
 
     /* TODO: Should we have any clickable item in the list have a pointer cursor?
@@ -254,6 +258,7 @@ div.linter-tab.active {
 .list-tree .list-item.tree-selected,
 .list-tree li.list-nested-item div.list-item.tree-selected {
   color: @text-color-highlight;
+  font-weight: bold;
 }
 
 /* find references */
@@ -344,7 +349,7 @@ atom-text-editor::shadow .outline-view {
   border-left: 1px solid @tool-panel-border-color;
   font-size: @font-size;
   font-family: @font-family;
-  line-height: 18px; //@component-line-height;
+  line-height: 22px; //@component-line-height;
 
   padding: 6px;
   order: 2;
@@ -357,9 +362,17 @@ atom-text-editor::shadow .outline-view {
   flex-direction: column;
 
   .title {
-    //color: @text-color-highlight;
+    cursor: default;
     border-bottom: 1px solid @tool-panel-border-color;
     margin-bottom: @component-padding;
+    font-size: 1.45em;
+    line-height: 1em;
+    color: inherit;
+    font-family: inherit;
+    margin-top: 0.5em;
+    padding-bottom: 0.25em;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
   }
 
   .outline-tree {
@@ -418,5 +431,11 @@ atom-text-editor::shadow .outline-view {
     top: 0;
     bottom: 0;
     width: 8px;
+  }
+
+  .tree-selected,
+  .tree-selected span {
+    color: @text-color-highlight;
+    font-weight: bold;
   }
 }
