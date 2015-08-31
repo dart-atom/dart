@@ -274,7 +274,7 @@ class AtomDartPackage extends AtomPackage {
 
       // custom views
       'useErrorsView': {
-        'title': 'Use Dart Errors View',
+        'title': 'Show errors view',
         'description': 'Use a custom errors view to display Dart errors and '
             'warnings. This will be used in place of the default linter view.',
         'type': 'boolean',
@@ -282,7 +282,7 @@ class AtomDartPackage extends AtomPackage {
         'order': 2
       },
       'showOutlineView': {
-        'title': 'Show Outline View',
+        'title': 'Show outline view',
         'description': 'Show an outline view for Dart files.',
         'type': 'boolean',
         'default': true,
@@ -349,6 +349,16 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': true,
         'order': 7
+      },
+
+      // analysis server options
+      'analysisServerFlags': {
+        'title': 'Additional Dart analysis server flags.',
+        'description': "Pass additional flags into the Dart analysis server. A "
+            "restart is required for these to take effect.",
+        'type': 'string',
+        'default': '',
+        'order': 8
       },
 
       'logging': {

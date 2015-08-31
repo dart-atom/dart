@@ -9,12 +9,14 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import 'analysis/analysis_options.dart';
 import 'atom.dart';
+import 'impl/pub.dart' as pub;
 import 'jobs.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'analysis/analysis_options.dart';
-import 'impl/pub.dart' as pub;
+
+const String bazelBuildFileName = 'BUILD';
 
 final Logger _logger = new Logger('projects');
 
@@ -29,9 +31,15 @@ class ProjectManager implements Disposable {
 
   /// Return whether the given directory is a Dart project.
   static bool isDartProject(Directory dir) {
-    if (dir.getFile(pub.pubspecFileName).existsSync()) return true;
-    if (dir.getFile('.packages').existsSync()) return true;
-    return false;
+    var projectSigils = [
+      bazelBuildFileName,
+      pub.dotPackagesFileName,
+      pub.pubspecFileName
+    ];
+
+    // TODO: introspec BUILD files
+
+    return projectSigils.any((sigil) => dir.getFile(sigil).existsSync());
   }
 
   StreamController<List<DartProject>> _controller = new StreamController.broadcast();
@@ -216,8 +224,8 @@ class ProjectManager implements Disposable {
   }
 }
 
-/// A representation of a Dart project; a directory with a `pubspec.yaml` file
-/// or a `.packages` file.
+/// A representation of a Dart project; a directory with a `pubspec.yaml` file,
+/// a `.packages` file, or a `BUILD` file.
 class DartProject {
   final Directory directory;
 
