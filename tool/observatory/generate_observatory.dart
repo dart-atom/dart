@@ -56,7 +56,8 @@ import 'package:logging/logging.dart';
 
 final Logger _logger = new Logger('observatory_gen');
 
-const optional = 'optional';
+/// @optional
+const String optional = 'optional';
 
 ''';
 

@@ -2,6 +2,7 @@
 
 ## unreleased
 - added a fancy new errors view
+- added an outline view for Dart files
 
 ## 0.4.0
 - improved the notifications when we're unable to find a Dart SDK

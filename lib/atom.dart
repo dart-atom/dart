@@ -705,6 +705,15 @@ class TextEditor extends ProxyHolder {
   /// Invoke the given callback after the buffer is saved to disk.
   Stream get onDidSave => eventStream('onDidSave');
 
+  /// Calls your callback when a Cursor is moved. If there are multiple cursors,
+  /// your callback will be called for each cursor.
+  ///
+  /// Returns the new buffer position.
+  Stream get onDidChangeCursorPosition {
+    return eventStream('onDidChangeCursorPosition').map(
+      (e) => new Point(e['newBufferPosition']));
+  }
+
   // Return the editor's TextEditorView / <text-editor-view> / HtmlElement. This
   // view is an HtmlElement, but we can't use it as one. We need to access it
   // through JS interop.
@@ -714,6 +723,13 @@ class TextEditor extends ProxyHolder {
 
   void moveToEndOfLine() => invoke('moveToEndOfLine');
   void selectToBeginningOfWord() => invoke('selectToBeginningOfWord');
+
+  /// Get the position of the most recently added cursor in buffer coordinates.
+  Point getCursorBufferPosition() => new Point(invoke('getCursorBufferPosition'));
+
+  /// Get the position of all the cursor positions in buffer coordinates.
+  /// Returns Array of Points in the order they were added
+  //List<Point> getCursorBufferPositions() => 
 }
 
 class TextBuffer extends ProxyHolder {

@@ -71,7 +71,7 @@ class LinterService extends ProxyHolder {
 class LintMessage {
   static const String ERROR = 'Error';
   static const String WARNING = 'Warning';
-  static const String INFO = 'Info';
+  static const String INFO = 'Trace';
 
   final String type;
   final String text;
