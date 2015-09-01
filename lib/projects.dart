@@ -9,12 +9,14 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import 'analysis/analysis_options.dart';
 import 'atom.dart';
+import 'impl/pub.dart' as pub;
 import 'jobs.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'analysis/analysis_options.dart';
-import 'impl/pub.dart' as pub;
+
+const String bazelBuildFileName = 'BUILD';
 
 final Logger _logger = new Logger('projects');
 
@@ -30,7 +32,14 @@ class ProjectManager implements Disposable {
   /// Return whether the given directory is a Dart project.
   static bool isDartProject(Directory dir) {
     if (dir.getFile(pub.pubspecFileName).existsSync()) return true;
-    if (dir.getFile('.packages').existsSync()) return true;
+
+    if (dir.getFile(pub.dotPackagesFileName).existsSync()) return true;
+
+    File buildFile = dir.getFile(bazelBuildFileName);
+    if (buildFile.existsSync()) {
+      if (_isDartBuildFile(buildFile)) return true;
+    }
+
     return false;
   }
 
@@ -216,8 +225,8 @@ class ProjectManager implements Disposable {
   }
 }
 
-/// A representation of a Dart project; a directory with a `pubspec.yaml` file
-/// or a `.packages` file.
+/// A representation of a Dart project; a directory with a `pubspec.yaml` file,
+/// a `.packages` file, or a `BUILD` file.
 class DartProject {
   final Directory directory;
 
@@ -273,5 +282,17 @@ class ProjectScanJob extends Job {
   Future run() {
     projectManager.rescanForProjects();
     return new Future.delayed(new Duration(seconds: 1));
+  }
+}
+
+bool _isDartBuildFile(File file) {
+  const String marker1 = '//dart/build_defs';
+  const String marker2 = 'dart_library(';
+
+  try {
+    String contents = file.readSync();
+    return contents.contains(marker1) || contents.contains(marker2);
+  } catch (_) {
+    return false;
   }
 }
