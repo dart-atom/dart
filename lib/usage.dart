@@ -7,6 +7,7 @@ import 'package:usage/usage_html.dart';
 
 import 'atom.dart';
 import 'atom_utils.dart';
+import 'projects.dart';
 import 'state.dart';
 import 'utils.dart';
 
@@ -79,12 +80,16 @@ void _activePaneItemChanged(_) {
   if (editor == null || editor.getPath() == null) return;
 
   String path = editor.getPath();
-  int index = path.lastIndexOf('.');
-  if (index == -1) {
-    _ga.sendScreenView('editor');
-  } else {
-    path = path.substring(index + 1);
-    _ga.sendScreenView('editor/${path.toLowerCase()}');
+
+  // Ensure that the file is Dart related.
+  if (isDartFile(path) || projectManager.getProjectFor(path) != null) {
+    int index = path.lastIndexOf('.');
+    if (index == -1) {
+      _ga.sendScreenView('editor');
+    } else {
+      path = path.substring(index + 1);
+      _ga.sendScreenView('editor/${path.toLowerCase()}');
+    }
   }
 }
 
