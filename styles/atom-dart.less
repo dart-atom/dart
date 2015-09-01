@@ -309,6 +309,7 @@ atom-notification.success code {
     margin-right: 4px;
     padding: 2px 5px;
     vertical-align: initial;
+    text-shadow: none;
   }
 }
 
@@ -343,6 +344,10 @@ atom-notification.success code {
 
 /* outline */
 
+atom-text-editor::shadow .editor--private {
+  flex: 1;
+}
+
 atom-text-editor::shadow .outline-view {
   color: @text-color;
   background-color: @tool-panel-background-color;
@@ -354,7 +359,7 @@ atom-text-editor::shadow .outline-view {
   padding: 6px;
   order: 2;
   min-width: 175px;
-  width: 260px;
+  width: 220px;
   overflow-x: hidden;
 
   display: flex;
