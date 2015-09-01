@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.1
 - added a fancy new errors view
 - added an outline view for Dart files
 - fixed an issue with context menus not being enabled for some items
