@@ -3,6 +3,8 @@
 ## unreleased
 - added a fancy new errors view
 - added an outline view for Dart files
+- fixed an issue with context menus not being enabled for some items
+- make `info` level analysis issues more visible in the editor
 
 ## 0.4.0
 - improved the notifications when we're unable to find a Dart SDK

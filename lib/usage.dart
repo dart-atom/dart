@@ -87,8 +87,8 @@ void _activePaneItemChanged(_) {
     if (index == -1) {
       _ga.sendScreenView('editor');
     } else {
-      path = path.substring(index + 1);
-      _ga.sendScreenView('editor/${path.toLowerCase()}');
+      String extension = path.substring(index + 1);
+      _ga.sendScreenView('editor/${extension.toLowerCase()}');
     }
   }
 }

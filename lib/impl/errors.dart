@@ -221,7 +221,7 @@ class ErrorsStatusElement implements Disposable {
 
   CoreElement _element;
   CoreElement _badgeSpan;
-  CoreElement _messageSpan;
+  //CoreElement _messageSpan;
 
   ErrorsStatusElement(this.parent, this._showing);
 
@@ -243,8 +243,8 @@ class ErrorsStatusElement implements Disposable {
 
   void _init(StatusBar statusBar) {
     _element = div(c: 'errors-status')..inlineBlock()..add([
-      _badgeSpan = span(c: 'badge badge-small badge-error'),
-      _messageSpan = new CoreElement('a')
+      _badgeSpan = span(c: 'badge text-subtle') // badge-small
+      //_messageSpan = new CoreElement('a')
     ]);
 
     _element.click(parent._toggleView);
@@ -272,25 +272,30 @@ class ErrorsStatusElement implements Disposable {
     bool hasIssues = errorCount != 0 || warningCount != 0;
 
     if (hasIssues) {
-      _badgeSpan.element.style.display = 'inline';
+      //_badgeSpan.element.style.display = 'inline';
       _badgeSpan.toggleClass('badge-error', errorCount > 0);
       _badgeSpan.toggleClass('badge-warning', errorCount == 0);
-      _badgeSpan.text = (errorCount + warningCount).toString();
+      _badgeSpan.toggleClass('text-subtle', false);
+      //_badgeSpan.text = (errorCount + warningCount).toString();
 
       // 4 errors, 1 warning
       if (errorCount > 0 && warningCount > 0) {
-        _messageSpan.text = '${errorCount} ${pluralize('error', errorCount)}, '
+        _badgeSpan.text = '${errorCount} ${pluralize('error', errorCount)}, '
           '${warningCount} ${pluralize('warning', warningCount)}';
       } else if (errorCount > 0) {
-        _messageSpan.text = pluralize('error', errorCount);
+        _badgeSpan.text = '${errorCount} ${pluralize('error', errorCount)}';
       } else {
-        _messageSpan.text = pluralize('warning', warningCount);
+        _badgeSpan.text = '${warningCount} ${pluralize('warning', warningCount)}';
       }
-      _messageSpan.toggleClass('text-subtle', false);
+      //_messageSpan.toggleClass('text-subtle', false);
+      //_badgeSpan.text = _messageSpan.text;
     } else {
-      _badgeSpan.element.style.display = 'none';
-      _messageSpan.text = 'no errors';
-      _messageSpan.toggleClass('text-subtle', true);
+      //_badgeSpan.element.style.display = 'none';
+      _badgeSpan.text = 'no errors';
+      _badgeSpan.toggleClass('badge-error', false);
+      _badgeSpan.toggleClass('badge-warning', false);
+      _badgeSpan.toggleClass('text-subtle', true);
+      //_messageSpan.toggleClass('text-subtle', true);
     }
   }
 }
