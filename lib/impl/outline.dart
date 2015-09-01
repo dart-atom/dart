@@ -211,6 +211,7 @@ class OutlineView implements Disposable {
           new html.SpanElement()..classes.add('muted')..text = 'typedef ');
     }
 
+    // Type on the left.
     if (e.returnType != null && e.returnType.isNotEmpty) {
       intoElement.children.add(
           new html.SpanElement()..classes.add('muted')..text = '${e.returnType} ');
@@ -238,6 +239,12 @@ class OutlineView implements Disposable {
       intoElement.children.add(
           new html.SpanElement()..classes.add('muted')..text = e.parameters);
     }
+
+    // Type on the right?
+    // if (e.returnType != null && e.returnType.isNotEmpty) {
+    //   intoElement.children.add(
+    //       new html.SpanElement()..classes.add('muted')..text = ' → ${e.returnType} ');
+    // }
   }
 
   void _jumpTo(Node node) {
