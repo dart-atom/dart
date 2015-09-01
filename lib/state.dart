@@ -4,6 +4,8 @@
 
 library atom.state;
 
+import 'dart:async';
+
 import 'analysis_server.dart';
 import 'dependencies.dart';
 import 'editors.dart';
@@ -24,6 +26,7 @@ final State state = new State();
 
 class State {
   Map _map = {};
+  Map<String, StreamController> _controllers = {};
 
   State();
 
@@ -31,11 +34,25 @@ class State {
 
   void operator[]=(String key, dynamic value) {
     _map[key] = value;
+
+    if (_controllers[key] != null) _controllers[key].add(value);
   }
 
   void loadFrom(Map map) {
     if (map == null) map = {};
     _map = map;
+  }
+
+  Stream onValueChanged(String key) {
+    if (_controllers[key] != null) {
+      return _controllers[key].stream;
+    } else {
+      StreamController controller = new StreamController.broadcast(
+        sync: true,
+        onCancel: () => _controllers.remove(key));
+      _controllers[key] = controller;
+      return controller.stream;
+    }
   }
 
   Map toMap() => _map;

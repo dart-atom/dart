@@ -14,10 +14,6 @@ import '../utils.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';
 
-// TODO: splitter - fix the resizing
-
-// TODO: splitter - remember the size and listen for changes
-
 // TODO: have a scroll sync button
 
 class OutlineController implements Disposable {
@@ -95,18 +91,37 @@ class OutlineView implements Disposable {
 
     String title = basename(editor.getPath());
 
-    /*ViewResizer resizer;*/
+    ViewResizer resizer;
 
     content = div(c: 'outline-view')..add([
       div(text: title, c: 'title'),
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
           ..toggleClass('outline-tree'),
-      /*resizer =*/ new ViewResizer.createVertical()
+      resizer = new ViewResizer.createVertical()
     ]);
 
     treeBuilder.onClickNode.listen(_jumpTo);
+    _setupResizer(resizer);
 
     root.append(content.element);
+  }
+
+  void _setupResizer(ViewResizer resizer) {
+    final String prefName = '_outlineResize';
+
+    if (state[prefName] != null) resizer.position = state[prefName];
+
+    bool _amChanging = false;
+
+    subs.add(state.onValueChanged(prefName).listen((val) {
+      if (!_amChanging) resizer.position = val;
+    }));
+
+    resizer.onPositionChanged.listen((pos) {
+      _amChanging = true;
+      state[prefName] = pos;
+      _amChanging = false;
+    });
   }
 
   void _uninstall() {
@@ -196,6 +211,7 @@ class OutlineView implements Disposable {
           new html.SpanElement()..classes.add('muted')..text = 'typedef ');
     }
 
+    // Type on the left.
     if (e.returnType != null && e.returnType.isNotEmpty) {
       intoElement.children.add(
           new html.SpanElement()..classes.add('muted')..text = '${e.returnType} ');
@@ -223,6 +239,12 @@ class OutlineView implements Disposable {
       intoElement.children.add(
           new html.SpanElement()..classes.add('muted')..text = e.parameters);
     }
+
+    // Type on the right?
+    // if (e.returnType != null && e.returnType.isNotEmpty) {
+    //   intoElement.children.add(
+    //       new html.SpanElement()..classes.add('muted')..text = ' → ${e.returnType} ');
+    // }
   }
 
   void _jumpTo(Node node) {

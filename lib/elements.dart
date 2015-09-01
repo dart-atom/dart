@@ -97,6 +97,8 @@ class CoreElement {
     element.classes.toggle(name, value);
   }
 
+  String get text => element.text;
+
   set text(String value) {
     element.text = value;
   }
@@ -258,7 +260,14 @@ class ViewResizer extends CoreElement {
   }
 
   void _handleDrag(Point size) {
+    final num currentPos = _controller.hasListener ? position : null;
+
     _targetSize = verticalSplitter ? size.x : size.y;
+
+    if (_controller.hasListener) {
+      num newPos = position;
+      if (currentPos != newPos) _controller.add(newPos);
+    }
   }
 
   Element get _target => element.parent;
@@ -268,30 +277,23 @@ class ViewResizer extends CoreElement {
     String str = verticalSplitter ? style.minWidth : style.minHeight;
     if (str.isEmpty) return 0;
     if (str.endsWith('px')) str = str.substring(0, str.length - 2);
-    return num.parse(str);
+    return num.parse(str, (_) => 0);
   }
 
   num get _targetSize {
     CssStyleDeclaration style = _target.getComputedStyle();
     String str = verticalSplitter ? style.width : style.height;
     if (str.endsWith('px')) str = str.substring(0, str.length - 2);
-    return num.parse(str);
+    return num.parse(str, (_) => 0);
   }
 
   set _targetSize(num size) {
-    final num currentPos = _controller.hasListener ? position : null;
-
     size = math.max(size, _minSize(element));
 
     if (verticalSplitter) {
       _target.style.width = '${size}px';
     } else {
       _target.style.height = '${size}px';
-    }
-
-    if (_controller.hasListener) {
-      num newPos = position;
-      if (currentPos != newPos) _controller.add(newPos);
     }
   }
 }
