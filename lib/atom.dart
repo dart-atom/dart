@@ -729,7 +729,7 @@ class TextEditor extends ProxyHolder {
 
   /// Get the position of all the cursor positions in buffer coordinates.
   /// Returns Array of Points in the order they were added
-  //List<Point> getCursorBufferPositions() => 
+  //List<Point> getCursorBufferPositions() =>
 }
 
 class TextBuffer extends ProxyHolder {
@@ -854,6 +854,9 @@ class AtomEvent extends ProxyHolder {
 
       // Target is an Element or a JsObject. JS interop is a mess.
       if (target is Element) {
+        if (target.getAttribute('data-path') != null) {
+          return target.getAttribute('data-path');
+        }
         if (target.children.isEmpty) return null;
         Element child = target.children.first;
         return child.getAttribute('data-path');

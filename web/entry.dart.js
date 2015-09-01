@@ -19893,6 +19893,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         try {
           target = J.$index$asx(this.obj, "target");
           if (!!J.getInterceptor(target).$isElement) {
+            if (J.getAttribute$1$x(target, "data-path") != null) {
+              t1 = J.getAttribute$1$x(target, "data-path");
+              return t1;
+            }
             if (J.get$isEmpty$asx(J.get$children$x(target)))
               return;
             child = J.get$first$ax(J.get$children$x(target));
