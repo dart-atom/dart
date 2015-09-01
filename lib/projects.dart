@@ -31,15 +31,16 @@ class ProjectManager implements Disposable {
 
   /// Return whether the given directory is a Dart project.
   static bool isDartProject(Directory dir) {
-    var projectSigils = [
-      bazelBuildFileName,
-      pub.dotPackagesFileName,
-      pub.pubspecFileName
-    ];
+    if (dir.getFile(pub.pubspecFileName).existsSync()) return true;
 
-    // TODO: introspec BUILD files
+    if (dir.getFile(pub.dotPackagesFileName).existsSync()) return true;
 
-    return projectSigils.any((sigil) => dir.getFile(sigil).existsSync());
+    File buildFile = dir.getFile(bazelBuildFileName);
+    if (buildFile.existsSync()) {
+      if (_isDartBuildFile(buildFile)) return true;
+    }
+
+    return false;
   }
 
   StreamController<List<DartProject>> _controller = new StreamController.broadcast();
@@ -281,5 +282,17 @@ class ProjectScanJob extends Job {
   Future run() {
     projectManager.rescanForProjects();
     return new Future.delayed(new Duration(seconds: 1));
+  }
+}
+
+bool _isDartBuildFile(File file) {
+  const String marker1 = '//dart/build_defs';
+  const String marker2 = 'dart_library(';
+
+  try {
+    String contents = file.readSync();
+    return contents.contains(marker1) || contents.contains(marker2);
+  } catch (_) {
+    return false;
   }
 }

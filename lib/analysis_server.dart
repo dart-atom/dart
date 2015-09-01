@@ -467,10 +467,6 @@ class _AnalysisServerWrapper extends Server {
       _logger.info('analysis server diagnostics available at ${AnalysisServer.diagnosticsUrl}.');
     }
 
-    // analysisServerFlags setting
-    String flags = atom.config.getValue('${pluginId}.analysisServerFlags').trim();
-    if (flags.isNotEmpty) arguments.addAll(flags.split(' '));
-
     return new ProcessRunner(sdk.dartVm.path, args: arguments);
   }
 

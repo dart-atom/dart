@@ -351,16 +351,6 @@ class AtomDartPackage extends AtomPackage {
         'order': 7
       },
 
-      // analysis server options
-      'analysisServerFlags': {
-        'title': 'Additional Dart analysis server flags.',
-        'description': "Pass additional flags into the Dart analysis server. A "
-            "restart is required for these to take effect.",
-        'type': 'string',
-        'default': '',
-        'order': 8
-      },
-
       'logging': {
         'title': 'Log plugin diagnostics to the devtools console.',
         'description': 'This is for plugin development only!',
