@@ -6,7 +6,7 @@
 library atom;
 
 import 'dart:async';
-import 'dart:html' hide File, Directory, Point;
+import 'dart:html' hide Directory, File, Notification, Point;
 import 'dart:js';
 
 import 'package:logging/logging.dart';
@@ -354,39 +354,43 @@ class NotificationManager extends ProxyHolder {
 
   /// Add an success notification. If [dismissable] is `true`, the notification
   /// is rendered with a close button and does not auto-close.
-  void addSuccess(String message, {String detail, String description,
+  Notification addSuccess(String message, {String detail, String description,
       bool dismissable, String icon}) {
-    invoke('addSuccess', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon));
+    return new Notification(invoke('addSuccess', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon)));
   }
 
   /// Add an informational notification.
-  void addInfo(String message, {String detail, String description,
+  Notification addInfo(String message, {String detail, String description,
       bool dismissable, String icon}) {
-    invoke('addInfo', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon));
+    return new Notification(invoke('addInfo', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon)));
   }
 
   /// Add an warning notification.
-  void addWarning(String message, {String detail, String description,
+  Notification addWarning(String message, {String detail, String description,
       bool dismissable, String icon}) {
-    invoke('addWarning', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon));
+    return new Notification(invoke('addWarning', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon)));
   }
 
   /// Add an error notification.
-  void addError(String message, {String detail, String description,
+  Notification addError(String message, {String detail, String description,
       bool dismissable, String icon}) {
-    invoke('addError', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon));
+    return new Notification(invoke('addError', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon)));
   }
 
   /// Add an fatal error notification.
-  void addFatalError(String message, {String detail, String description,
+  Notification addFatalError(String message, {String detail, String description,
       bool dismissable, String icon}) {
-    invoke('addFatalError', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon));
+    return new Notification(invoke('addFatalError', message, _options(detail: detail,
+      description: description, dismissable: dismissable, icon: icon)));
   }
+
+  /// Get all the notifications.
+  List<Notification> getNotifications() =>
+      invoke('getNotifications').map((n) => new Notification(n)).toList();
 
   Map _options({String detail, String description, bool dismissable, String icon}) {
     if (detail == null && description == null && dismissable == null && icon == null) {
@@ -400,6 +404,31 @@ class NotificationManager extends ProxyHolder {
     if (icon != null) m['icon'] = icon;
     return m;
   }
+}
+
+/// A notification to the user containing a message and type.
+class Notification extends ProxyHolder {
+  Notification(JsObject object) : super(object);
+
+  /// Return the associated `atom-notification` custom element.
+  dynamic get view => atom.views.getView(obj);
+
+  /// Invoke the given callback when the notification is dismissed.
+  Stream get onDidDismiss => eventStream('onDidDismiss');
+
+  bool get dismissed => obj['dismissed'];
+  bool get displayed => obj['displayed'];
+
+  /// Invoke the given callback when the notification is displayed.
+  //onDidDisplay(callback)
+
+  String getType() => invoke('getType');
+
+  String getMessage() => invoke('getMessage');
+
+  /// Dismisses the notification, removing it from the UI. Calling this
+  /// programmatically will call all callbacks added via `onDidDismiss`.
+  void dismiss() => invoke('dismiss');
 }
 
 /// Package manager for coordinating the lifecycle of Atom packages. Packages

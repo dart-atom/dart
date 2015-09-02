@@ -56,6 +56,7 @@ class AtomDartPackage extends AtomPackage {
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
 
   ErrorsController errorsController;
+  DartLinterConsumer _consumer;
 
   AtomDartPackage() {
     // Register a method to consume the `status-bar` service API.
@@ -78,27 +79,11 @@ class AtomDartPackage extends AtomPackage {
 
     // Register a method to consume the `linter-plus-self` service API.
     registerServiceConsumer('consumeLinter', (obj) {
-      // This hoopla allows us to construct an object with Disposable
-      // and return it without having to create a new class that
-      // just does the same thing, but in another file.
-      var errorController = new StreamController.broadcast();
-      var flushController = new StreamController.broadcast();
-      // TODO: expose analysis domain streams to avoid indirections
-      errorRepository.initStreams(errorController.stream, flushController.stream);
-      var consumer = new DartLinterConsumer(errorRepository);
-      consumer.consume(new LinterService(obj));
-
-      // Proxy error messages from analysis server to ErrorRepository when the
-      // analysis server becomes active.
-      analysisServer.isActiveProperty.where((active) => active).listen((_) {
-        analysisServer.onAnalysisErrors.listen(errorController.add);
-        analysisServer.onAnalysisFlushResults.listen(flushController.add);
-      });
-
-      return consumer;
+      _consumer.consume(new LinterService(obj));
+      return _consumer;
     });
 
-    var dartProvider = new DartAutocompleteProvider();
+    DartAutocompleteProvider dartProvider = new DartAutocompleteProvider();
     // TODO: why isn't this working?
     // registerServiceProvider('provideAutocomplete', () => provider.toProxy());
     final JsObject exports = context['module']['exports'];
@@ -142,6 +127,8 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new QuickFixHelper());
 
     disposables.add(new UsageManager());
+
+    _registerLinter();
 
     // Register commands.
     _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
@@ -334,13 +321,6 @@ class AtomDartPackage extends AtomPackage {
         'default': true,
         'order': 6
       },
-      'filterCompiledToJSWarnings': {
-        'title': 'Filter warnings about compiling to JavaScript',
-        'description': "Don't display warnings about compiling to JavaScript.",
-        'type': 'boolean',
-        'default': true,
-        'order': 6
-      },
 
       // google analytics
       'sendUsage': {
@@ -373,6 +353,24 @@ class AtomDartPackage extends AtomPackage {
 
   void _addCmd(String target, String command, void callback(AtomEvent e)) {
     disposables.add(atom.commands.add(target, command, callback));
+  }
+
+  void _registerLinter() {
+    // This hoopla allows us to construct an object with Disposable and return
+    // it without having to create a new class that just does the same thing,
+    // but in another file.
+    var errorController = new StreamController.broadcast();
+    var flushController = new StreamController.broadcast();
+    errorRepository.initStreams(errorController.stream, flushController.stream);
+    _consumer = new DartLinterConsumer(errorRepository);
+
+    // Proxy error messages from analysis server to ErrorRepository when the
+    // analysis server becomes active.
+    analysisServer.isActiveProperty.where((active) => active).listen((_) {
+      // TODO: does this keep adding listeners?
+      analysisServer.onAnalysisErrors.listen(errorController.add);
+      analysisServer.onAnalysisFlushResults.listen(flushController.add);
+    });
   }
 
   void _setupLogging() {
