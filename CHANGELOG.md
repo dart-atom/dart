@@ -2,6 +2,7 @@
 
 ## unpublished
 - improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)
+- fixed running sky apps (the `run sky application` command)
 
 ## 0.4.2
 - fixed an exception from the outline view when viewing empty Dart files

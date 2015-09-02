@@ -39,6 +39,7 @@ abstract class Job implements Disposable {
   /// the job.
   Function get infoAction => null;
 
+  // TODO: return a job status (a return code, not an exception)
   /// Schedule the [Job] for execution.
   Future schedule() => jobs.schedule(this);
 
