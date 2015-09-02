@@ -148,7 +148,7 @@ class OutlineView implements Disposable {
     if (data.file == editor.getPath()) {
       treeBuilder.clear();
 
-      List nodes = data.outline.children;
+      List nodes = data.outline.children ?? [];
       for (Outline node in nodes) {
         treeBuilder.addNode(_toNode(node));
       }
