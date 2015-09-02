@@ -1,5 +1,10 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an exception from the outline view when viewing empty Dart files
+- removed the setting to filter 'When compiled to JS' warnings
+- made the dependency on the `linter` package optional
+
 ## 0.4.1
 - added a fancy new errors view
 - added an outline view for Dart files

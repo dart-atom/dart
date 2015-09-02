@@ -57,7 +57,12 @@ void smokeTest() {
 
   // notifications
   atom.notifications.addSuccess('Hello world from dart-lang!');
-  atom.notifications.addInfo('Hello world from dart-lang!', detail: 'Foo bar.');
+  Notification notification = atom.notifications.addInfo(
+    'Hello world from dart-lang!',
+    detail: 'Bar baz.',
+    description: 'Foo bar.',
+    dismissable: true);
+  notification.onDidDismiss.listen((_) => print('notification closed'));
   atom.notifications.addWarning('Hello world from dart-lang!', detail: loremIpsum);
 
   // processes

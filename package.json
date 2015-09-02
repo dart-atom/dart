@@ -10,9 +10,7 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {},
-  "packages": [
-    "linter"
-  ],
+  "packages": [],
   "consumedServices": {
     "status-bar": {
       "versions": {

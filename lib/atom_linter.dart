@@ -50,17 +50,17 @@ abstract class LinterProvider {
 }
 
 abstract class LinterConsumer {
-  consume(LinterService linterService);
+  void consume(LinterService linterService);
 }
 
 class LinterService extends ProxyHolder {
   LinterService(obj) : super(obj);
 
-  deleteMessages(LinterProvider provider) {
+  void deleteMessages(LinterProvider provider) {
     invoke('deleteMessages', provider.key);
   }
 
-  setMessages(LinterProvider provider, List<LintMessage> messages) {
+  void setMessages(LinterProvider provider, List<LintMessage> messages) {
     // jsify(messages, deep: true) ?
     // jsifyIterable(messages) ?
     var list = messages.map((m) => m.toMap()).toList();

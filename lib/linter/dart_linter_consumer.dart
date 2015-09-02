@@ -25,20 +25,17 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
     add(atom.config.observe(_infosPrefPath, null, regen));
     add(atom.config.observe(_todosPrefPath, null, regen));
     add(atom.config.observe(_filterUnnamedLibraryWarningsPath, null, regen));
-    add(atom.config.observe(_filterCompiledToJSWarningsPath, null, regen));
+
+    EventStream errorStream = new EventStream(
+        _errorRepository.onChange).debounce(_reportingDelay);
+    errorStream.listen((_) => _regenErrors());
   }
 
   void consume(LinterService service) {
     _service = service;
-
-    var errorStream =
-        new EventStream(_errorRepository.onChange).debounce(_reportingDelay);
-    errorStream.listen((_) => _regenErrors());
   }
 
   void _regenErrors() {
-    if (_service == null) return;
-
     // Get issues per file.
     Map<String, List<AnalysisError>> issuesMap = _errorRepository.knownErrors;
     List<AnalysisError> allIssues = [];
@@ -72,13 +69,11 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
     bool showInfos = _shouldShowInfoMessages();
     bool showTodos = _shouldShowTodosMessages();
     bool filterUnnamed = _shouldFilterUnnamedLibraryWarnings();
-    bool filterJavaScript = _shouldFilterCompiledToJSWarnings();
 
     return issues.where((AnalysisError issue) {
       if (!showInfos && issue.severity == 'INFO') return false;
       if (!showTodos && issue.type == 'TODO') return false;
       if (filterUnnamed && issue.message.contains('cannot both be unnamed')) return false;
-      if (filterJavaScript && issue.message.contains('When compiled to JS')) return false;
 
       return true;
     }).toList();
