@@ -33,8 +33,8 @@ class ProcessRunner {
   Completer<int> _exitCompleter = new Completer();
   int _exit;
 
-  StreamController<String> _stdoutController = new StreamController.broadcast();
-  StreamController<String> _stderrController = new StreamController.broadcast();
+  StreamController<String> _stdoutController = new StreamController();
+  StreamController<String> _stderrController = new StreamController();
 
   ProcessRunner(this.command, {this.args, this.cwd, this.env});
 
@@ -42,6 +42,8 @@ class ProcessRunner {
   bool get finished => _exit != null;
 
   int get exit => _exit;
+
+  Future<int> get onExit => _exitCompleter.future;
 
   Stream<String> get onStdout => _stdoutController.stream;
   Stream<String> get onStderr => _stderrController.stream;
@@ -73,7 +75,8 @@ class ProcessRunner {
           _logger.fine('exit code: ${code} (${command})');
           _exit = code;
           if (!_exitCompleter.isCompleted) _exitCompleter.complete(code);
-        });
+        }
+    );
 
     return _exitCompleter.future;
   }

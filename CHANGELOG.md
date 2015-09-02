@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unpublished
+- improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)
+
 ## 0.4.2
 - fixed an exception from the outline view when viewing empty Dart files
 - removed the setting to filter 'When compiled to JS' warnings
