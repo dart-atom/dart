@@ -212,8 +212,7 @@ class Workspace extends ProxyHolder {
     return future.then((result) {
       if (result == null) throw 'unable to open ${url}';
       TextEditor editor = new TextEditor(result);
-      if (editor.isValid()) return editor;
-      throw 'result is not a text editor';
+      return editor.isValid() ? editor : null;
     });
   }
 

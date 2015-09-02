@@ -138,6 +138,9 @@ class AtomDartPackage extends AtomPackage {
     _addCmd('atom-workspace', 'dartlang:auto-locate-sdk', (_) {
       new SdkLocationJob(sdkManager).schedule();
     });
+    _addCmd('atom-workspace', 'dartlang:settings', (_) {
+      atom.workspace.open('atom://config/packages/dartlang');
+    });
     _addCmd('atom-workspace', 'dartlang:reanalyze-sources', (_) {
       new ProjectScanJob().schedule().then((_) {
         return new Future.delayed((new Duration(milliseconds: 100)));
