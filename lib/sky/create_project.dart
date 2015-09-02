@@ -37,7 +37,7 @@ class CreateProjectManager implements Disposable {
       if (_response != null) return f;
     }).then((_) {
       if (_response != null) {
-        return skyTools.run(args: ['init', '--out', _response], verbose: false);
+        return skyTools.run(args: ['init', '--out', _response]);
       }
     }).then((_) {
       if (_response != null) {

@@ -102,3 +102,44 @@ class ProcessResult {
 
   String toString() => '${exit}';
 }
+
+/// A helper class to visualize a running process.
+class ProcessNotifier {
+  final String title;
+
+  Notification _notification;
+  NotificationHelper _helper;
+
+  ProcessNotifier(this.title) {
+    _notification = atom.notifications.addInfo(title,
+        detail: '', description: 'Running…', dismissable: true);
+
+    _helper = new NotificationHelper(_notification.view);
+    _helper.setNoWrap();
+    _helper.setRunning();
+  }
+
+  /// Visualize the running process; watch the stdout and stderr streams.
+  /// Complete the returned future when the process completes. Note that errors
+  /// from the process are not propagated through to the returned Future.
+  Future watch(ProcessRunner runner) {
+    runner.onStdout.listen((str) => _helper.appendText(str));
+    runner.onStderr.listen((str) => _helper.appendText(str, stderr: true));
+
+    _notification.onDidDismiss.listen((_) {
+      // If the process has not already exited, kill it.
+      if (runner.exit == null) runner.kill();
+    });
+
+    return runner.onExit.then((int result) {
+      if (result == 0) {
+        _helper.showSuccess();
+        _helper.setSummary('Finished.');
+      } else {
+        _helper.showError();
+        _helper.setSummary('Finished with exit code ${result}.');
+      }
+      return null;
+    });
+  }
+}

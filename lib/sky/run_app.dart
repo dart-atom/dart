@@ -18,9 +18,13 @@ class SkyToolManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
   SkyToolManager() {
-    disposables.add(atom.commands
-        .add('.tree-view', 'dartlang:run-sky-application', (AtomEvent event) {
+    disposables.add(atom.commands.add(
+        '.tree-view', 'dartlang:run-sky-application', (AtomEvent event) {
       new RunSkyAppJob(event.targetFilePath).schedule();
+    }));
+    disposables.add(atom.commands.add(
+        'atom-text-editor', 'dartlang:run-sky-application', (AtomEvent event) {
+      new RunSkyAppJob(event.editor.getPath()).schedule();
     }));
   }
 
@@ -39,24 +43,25 @@ class RunSkyAppJob extends Job {
 
   RunSkyAppJob(this.path) : super('Launching Sky application');
 
-  bool get pinResult => true;
+  bool get quiet => true;
 
   Future run() {
     DartProject project = projectManager.getProjectFor(path);
     String sky_tool = join(project.directory, 'packages', 'sky', 'sky_tool');
     ProcessRunner runner;
+
     if (isMac) {
       // On the mac, run under bash.
-      runner = new ProcessRunner('/bin/bash',
-          args: ['-l', '-c', sky_tool], cwd: project.path);
+      runner = new ProcessRunner(
+        '/bin/bash', args: ['-l', '-c', '${sky_tool} start'], cwd: project.path);
     } else {
-      runner = new ProcessRunner('python',
-          args: [sky_tool, 'start'], cwd: project.path);
+      runner = new ProcessRunner(
+        'python', args: [sky_tool, 'start'], cwd: project.path);
     }
-    return runner.execSimple().then((ProcessResult result) {
-      if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
-      return result.stdout;
-    });
+
+    ProcessNotifier notifier = new ProcessNotifier(name);
+    runner.execStreaming();
+    return notifier.watch(runner);
   }
 }
 

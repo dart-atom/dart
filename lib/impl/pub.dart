@@ -9,7 +9,7 @@ import 'dart:async';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../jobs.dart';
-import '../process.dart' show ProcessRunner;
+import '../process.dart' show ProcessNotifier, ProcessRunner;
 import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
@@ -168,10 +168,10 @@ class PubApp {
     }
   }
 
-  Future run({List<String> args, String cwd, bool verbose: true}) {
+  Future run({List<String> args, String cwd}) {
     List list = [name];
     if (args != null) list.addAll(args);
-    Job job = new PubRunJob.global(list, path: cwd, verbose: verbose);
+    Job job = new PubRunJob.global(list, path: cwd);
     return job.schedule();
   }
 }
@@ -184,9 +184,6 @@ class PubJob extends Job {
   final String pubCommand;
 
   String _pubspecDir;
-
-  Notification _notification;
-  NotificationHelper _helper;
 
   PubJob.get(this.path) : pubCommand = 'get', super('Pub get') {
     _pubspecDir = _locatePubspecDir(path);
@@ -204,31 +201,9 @@ class PubJob extends Job {
     List<String> args = [pubCommand];
     if (_noPackageSymlinks) args.insert(0, '--no-package-symlinks');
 
-    _notification = atom.notifications.addInfo(
-        name, detail: '', description: 'Running…', dismissable: true);
-
-    _helper = new NotificationHelper(_notification.view);
-    _helper.setNoWrap();
-    _helper.setRunning();
-
+    ProcessNotifier notifier = new ProcessNotifier(name);
     ProcessRunner runner = sdkManager.sdk.execBin('pub', args, cwd: _pubspecDir);
-    runner.onStdout.listen((str) => _helper.appendText(str));
-    runner.onStderr.listen((str) => _helper.appendText(str, stderr: true));
-
-    _notification.onDidDismiss.listen((_) {
-      if (runner.exit != null) runner.kill();
-    });
-
-    return runner.onExit.then((int result) {
-      if (result == 0) {
-        _helper.showSuccess();
-        _helper.setSummary('Finished.');
-      } else {
-        _helper.showError();
-        _helper.setSummary('Finished with exit code ${result}.');
-      }
-      return null;
-    });
+    return notifier.watch(runner);
   }
 }
 
@@ -236,37 +211,34 @@ class PubRunJob extends Job {
   final String path;
   final List<String> args;
   final bool isGlobal;
-  final bool verbose;
 
   String _pubspecDir;
 
-  PubRunJob.local(this.path, List<String> args, {this.verbose: true})
+  PubRunJob.local(this.path, List<String> args)
       : this.args = args,
         isGlobal = false,
         super("Pub run '${args.first}'") {
     _pubspecDir = _locatePubspecDir(path);
   }
 
-  PubRunJob.global(List<String> args, {this.path, this.verbose: true})
+  PubRunJob.global(List<String> args, {this.path})
       : args = args,
         isGlobal = true,
         super("Pub global run '${args.first}'") {
     _pubspecDir = _locatePubspecDir(path);
   }
 
-  bool get pinResult => verbose;
+  bool get quiet => true;
 
   Object get schedulingRule => _pubspecDir;
 
   Future run() {
     List<String> l = isGlobal ? ['global', 'run'] : ['run'];
     l.addAll(args);
-    return sdkManager.sdk
-        .execBinSimple('pub', l, cwd: _pubspecDir)
-        .then((ProcessResult result) {
-      if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
-      return verbose ? result.stdout : null;
-    });
+
+    ProcessNotifier notifier = new ProcessNotifier(name);
+    ProcessRunner runner = sdkManager.sdk.execBin('pub', l, cwd: _pubspecDir);
+    return notifier.watch(runner);
   }
 }
 
@@ -282,15 +254,12 @@ class PubGlobalActivate extends Job {
   PubGlobalActivate(String packageName) : this.packageName = packageName,
       super("Pub global activate '${packageName}'");
 
-  bool get pinResult => true;
+  bool get quiet => true;
 
   Future run() {
-    return sdkManager.sdk
-        .execBinSimple('pub', ['global', 'activate', packageName])
-        .then((ProcessResult result) {
-      if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
-      return result.stdout;
-    });
+    ProcessNotifier notifier = new ProcessNotifier(name);
+    ProcessRunner runner = sdkManager.sdk.execBin('pub', ['global', 'activate', packageName]);
+    return notifier.watch(runner);
   }
 }
 
