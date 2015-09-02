@@ -56,14 +56,24 @@ void smokeTest() {
   });
 
   // notifications
-  atom.notifications.addSuccess('Hello world from dart-lang!');
   Notification notification = atom.notifications.addInfo(
     'Hello world from dart-lang!',
-    detail: 'Bar baz.',
-    description: 'Foo bar.',
+    detail: 'Foo bar.',
+    description: ' ',
     dismissable: true);
   notification.onDidDismiss.listen((_) => print('notification closed'));
+  atom.notifications.addSuccess('Hello world from dart-lang!');
   atom.notifications.addWarning('Hello world from dart-lang!', detail: loremIpsum);
+  NotificationHelper helper = new NotificationHelper(notification.view);
+  helper.setSummary('Running...');
+  helper.setNoWrap();
+  helper.setRunning();
+  helper.appendText(loremIpsum.replaceAll('. ', '.\n').replaceAll(', ', ',\n'));
+  new Timer(new Duration(seconds: 3), () {
+    helper.setSummary('Finished in 3.10 seconds.');
+    helper.appendText(loremIpsum.replaceAll('. ', '.\n').replaceAll(', ', ',\n'));
+    helper.showSuccess();
+  });
 
   // processes
   BufferedProcess.create('pwd',

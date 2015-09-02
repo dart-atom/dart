@@ -431,6 +431,83 @@ class Notification extends ProxyHolder {
   void dismiss() => invoke('dismiss');
 }
 
+/// A helper class to manipulate the UI of [Notification]s.
+class NotificationHelper {
+  JsObject _view;
+  var _classList;
+  Element _content;
+  Element _titleElement;
+  Element _detailContent;
+  Element _description;
+
+  NotificationHelper(this._view) {
+    _classList = _view['classList'];
+    _content = _view.callMethod('querySelector', ['div.content']);
+    _titleElement = _content.querySelector('div.message p');
+    _detailContent = _content.querySelector('div.detail-content');
+    _description = _content.querySelector('div.meta div.description');
+  }
+
+  void setNoWrap() {
+    _detailContent.classes.toggle('detail-content-no-wrap');
+  }
+
+  void setRunning() {
+    try {
+      // TODO: We can't actually get an html element for the `atom-notification`
+      // custom element, because Dart and custom elements.
+      _classList.callMethod('remove', ['icon-info']);
+      _classList.callMethod('add', ['icon-running']);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Element get titleElement => _titleElement;
+  Element get detailContent => _detailContent;
+
+  String get title => _titleElement.text;
+  set title(String value) {
+    _titleElement.text = value;
+  }
+
+  void appendText(String text, {bool stderr: false}) {
+    _classList.callMethod('toggle', ['has-detail', true]);
+
+    List<Element> elements = text.split('\n').map((line) {
+      DivElement div = new DivElement()..text = line;
+      div.classes.toggle('line');
+      if (stderr) div.classes.toggle('text-error');
+      return div;
+    }).toList();
+
+    _detailContent.children.addAll(elements);
+    if (elements.isNotEmpty) elements.last.scrollIntoView(ScrollAlignment.BOTTOM);
+  }
+
+  void setSummary(String text) {
+    _description.text = text;
+  }
+
+  void showSuccess() {
+    try {
+      _classList.callMethod('remove', ['info', 'icon-info', 'icon-running']);
+      _classList.callMethod('add', ['success', 'icon-check']);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void showError() {
+    try {
+      _classList.callMethod('remove', ['info', 'icon-info', 'icon-running']);
+      _classList.callMethod('add', ['error', 'icon-flame']);
+    } catch (e) {
+      print(e);
+    }
+  }
+}
+
 /// Package manager for coordinating the lifecycle of Atom packages. Packages
 /// can be loaded, activated, and deactivated, and unloaded.
 class PackageManager extends ProxyHolder {

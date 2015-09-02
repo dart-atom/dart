@@ -204,6 +204,27 @@ class Sdk {
 
   /// Execute the given SDK binary (a command in the `bin/` folder). [cwd] can
   /// be either a [String] or a [Directory].
+  ProcessRunner execBin(String binName, List<String> args, {cwd}) {
+    if (cwd is Directory) cwd = cwd.path;
+    String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
+
+    // Run process under bash on the mac, to capture the user's env variables.
+    if (isMac) {
+      //exec('/bin/bash', ['-l', '-c', 'which dart'])
+      String arg = args.join(' ');
+      arg = command + ' ' + arg;
+      ProcessRunner runner = new ProcessRunner('/bin/bash', args: ['-l', '-c', arg], cwd: cwd);
+      runner.execStreaming();
+      return runner;
+    } else {
+      ProcessRunner runner = new ProcessRunner(command, args: args, cwd: cwd);
+      runner.execStreaming();
+      return runner;
+    }
+  }
+
+  /// Execute the given SDK binary (a command in the `bin/` folder). [cwd] can
+  /// be either a [String] or a [Directory].
   Future<ProcessResult> execBinSimple(String binName, List<String> args, {cwd}) {
     if (cwd is Directory) cwd = cwd.path;
     String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);

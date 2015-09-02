@@ -2,8 +2,10 @@ name: atom_dartlang
 version: 0.4.2
 description: A Dart plugin for Atom.
 homepage: https://github.com/dart-atom/dartlang
+
 environment:
   sdk: '>=1.0.0 <2.0.0'
+
 dependencies:
   frappe: ^0.4.0
   haikunator: ^0.1.0
@@ -12,6 +14,7 @@ dependencies:
   pub_semver: ^1.2.1
   usage: ^1.0.0
   yaml: ^2.0.0
+
 dev_dependencies:
   grinder: ^0.7.0
   html: ^0.12.0

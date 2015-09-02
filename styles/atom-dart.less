@@ -444,3 +444,35 @@ atom-text-editor::shadow .outline-view {
     font-weight: bold;
   }
 }
+
+/* notifications */
+
+atom-notification.icon-running::before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  content: "\f087";
+  -webkit-font-smoothing: antialiased;
+
+  // -webkit-animation-name: spin;
+  // -webkit-animation-duration: 4000ms;
+  // -webkit-animation-iteration-count: infinite;
+  // -webkit-animation-timing-function: linear;
+}
+
+atom-notification {
+  .detail-content-no-wrap {
+    word-wrap: initial;
+  }
+}
+
+// @keyframes spin {
+//   from {transform:rotate(0deg);}
+//   to {transform:rotate(360deg);}
+// }

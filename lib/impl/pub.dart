@@ -9,6 +9,7 @@ import 'dart:async';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../jobs.dart';
+import '../process.dart' show ProcessRunner;
 import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
@@ -184,19 +185,18 @@ class PubJob extends Job {
 
   String _pubspecDir;
 
-  PubJob.get(this.path)
-      : pubCommand = 'get',
-        super('Pub get') {
+  Notification _notification;
+  NotificationHelper _helper;
+
+  PubJob.get(this.path) : pubCommand = 'get', super('Pub get') {
     _pubspecDir = _locatePubspecDir(path);
   }
 
-  PubJob.upgrade(this.path)
-      : pubCommand = 'upgrade',
-        super('Pub upgrade') {
+  PubJob.upgrade(this.path) : pubCommand = 'upgrade', super('Pub upgrade') {
     _pubspecDir = _locatePubspecDir(path);
   }
 
-  bool get pinResult => true;
+  bool get quiet => true;
 
   Object get schedulingRule => _pubspecDir;
 
@@ -204,11 +204,30 @@ class PubJob extends Job {
     List<String> args = [pubCommand];
     if (_noPackageSymlinks) args.insert(0, '--no-package-symlinks');
 
-    return sdkManager.sdk
-        .execBinSimple('pub', args, cwd: _pubspecDir)
-        .then((ProcessResult result) {
-      if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
-      return result.stdout;
+    _notification = atom.notifications.addInfo(
+        name, detail: '', description: 'Running…', dismissable: true);
+
+    _helper = new NotificationHelper(_notification.view);
+    _helper.setNoWrap();
+    _helper.setRunning();
+
+    ProcessRunner runner = sdkManager.sdk.execBin('pub', args, cwd: _pubspecDir);
+    runner.onStdout.listen((str) => _helper.appendText(str));
+    runner.onStderr.listen((str) => _helper.appendText(str, stderr: true));
+
+    _notification.onDidDismiss.listen((_) {
+      if (runner.exit != null) runner.kill();
+    });
+
+    return runner.onExit.then((int result) {
+      if (result == 0) {
+        _helper.showSuccess();
+        _helper.setSummary('Finished.');
+      } else {
+        _helper.showError();
+        _helper.setSummary('Finished with exit code ${result}.');
+      }
+      return null;
     });
   }
 }
