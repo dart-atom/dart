@@ -35,9 +35,12 @@ class RebuildJob extends Job {
       if (editor.isModified()) editor.save();
     });
 
-    return new PubRunJob.local(proj.getPath(), ['grinder', 'build']).schedule().then((_) {
-      // TODO: This is re-starting on build failures.
-      new Future.delayed(new Duration(seconds: 1)).then((_) => atom.reload());
+    return new PubRunJob.local(proj.getPath(), ['grinder', 'build']).schedule().then(
+        (JobStatus status) {
+      // Check for an exit code of `0` from grind build.
+      if (status.isOk && status.result == 0) {
+        new Future.delayed(new Duration(seconds: 1)).then((_) => atom.reload());
+      }
     });
   }
 }

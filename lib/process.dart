@@ -122,7 +122,7 @@ class ProcessNotifier {
   /// Visualize the running process; watch the stdout and stderr streams.
   /// Complete the returned future when the process completes. Note that errors
   /// from the process are not propagated through to the returned Future.
-  Future watch(ProcessRunner runner) {
+  Future<int> watch(ProcessRunner runner) {
     runner.onStdout.listen((str) => _helper.appendText(str));
     runner.onStderr.listen((str) => _helper.appendText(str, stderr: true));
 
@@ -139,7 +139,7 @@ class ProcessNotifier {
         _helper.showError();
         _helper.setSummary('Finished with exit code ${result}.');
       }
-      return null;
+      return result;
     });
   }
 }
