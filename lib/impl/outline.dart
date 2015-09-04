@@ -14,7 +14,8 @@ import '../utils.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';
 
-// TODO: have a scroll sync button
+// TODO: Have a scroll sync button.
+// <span class='badge icon icon-diff-renamed'>
 
 class OutlineController implements Disposable {
   Disposables disposables = new Disposables();
@@ -72,6 +73,7 @@ class OutlineView implements Disposable {
   html.Element root;
   CoreElement content;
   ListTreeBuilder treeBuilder;
+  AnalysisOutline lastOutline;
   StreamSubscriptions subs = new StreamSubscriptions();
 
   OutlineView(this.controller, this.editor) {
@@ -104,6 +106,8 @@ class OutlineView implements Disposable {
     _setupResizer(resizer);
 
     root.append(content.element);
+
+    if (lastOutline != null) _handleOutline(lastOutline);
   }
 
   void _setupResizer(ViewResizer resizer) {
@@ -145,6 +149,10 @@ class OutlineView implements Disposable {
   }
 
   void _handleOutline(AnalysisOutline data) {
+    lastOutline = data;
+
+    if (treeBuilder == null) return;
+
     if (data.file == editor.getPath()) {
       treeBuilder.clear();
 
@@ -159,7 +167,7 @@ class OutlineView implements Disposable {
 
   // TODO: handle multiple cursors
   void _cursorChanged(Point pos) {
-    if (pos == null) return;
+    if (pos == null || treeBuilder == null) return;
 
     int offset = editor.getBuffer().characterIndexForPosition(pos);
     List<Node> selected = [];

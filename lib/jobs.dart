@@ -39,9 +39,8 @@ abstract class Job implements Disposable {
   /// the job.
   Function get infoAction => null;
 
-  // TODO: return a job status (a return code, not an exception)
   /// Schedule the [Job] for execution.
-  Future schedule() => jobs.schedule(this);
+  Future<JobStatus> schedule() => jobs.schedule(this);
 
   Future run();
 
@@ -52,6 +51,26 @@ abstract class Job implements Disposable {
   void dispose() { }
 
   String toString() => name;
+}
+
+enum Status {
+  OK, ERROR
+}
+
+class JobStatus {
+  static final JobStatus OK = new JobStatus(Status.OK);
+
+  final Status status;
+  final dynamic result;
+
+  JobStatus(this.status, {this.result});
+  JobStatus.ok(this.result) : status = Status.OK;
+  JobStatus.error(this.result) : status = Status.ERROR;
+
+  bool get isOk => status == Status.OK;
+  bool get isError => status == Status.ERROR;
+
+  String toString() => result == null ? status.toString() : '${status}: ${result}';
 }
 
 abstract class CancellableJob extends Job {
@@ -135,7 +154,7 @@ class JobManager implements Disposable {
   Stream<Job> get onActiveJobChanged => _activeJobController.stream;
   Stream<Job> get onQueueChanged => _queueController.stream;
 
-  Future schedule(Job job) => _enqueue(job);
+  Future<JobStatus> schedule(Job job) => _enqueue(job);
 
   void dispose() {
     List<JobInstance> list = new List.from(runningJobs);
@@ -144,7 +163,7 @@ class JobManager implements Disposable {
     }
   }
 
-  Future _enqueue(Job job) {
+  Future<JobStatus> _enqueue(Job job) {
     _logger.fine('scheduling job ${job.name}');
     JobInstance instance = new JobInstance(this, job);
     _jobs.add(instance);
@@ -187,12 +206,13 @@ class JobManager implements Disposable {
             detail: detail,
             dismissable: detail != null && detail.isNotEmpty && job.pinResult);
       }
-      jobInstance._completer.complete(result);
+      jobInstance._completer.complete(new JobStatus.ok(result));
     }).whenComplete(() {
       _complete(jobInstance);
     }).catchError((e) {
-      jobInstance._completer.complete();
-      _toasts.addError('${job.name} failed.', detail: '${e}', dismissable: true);
+      jobInstance._completer.complete(new JobStatus.error(e));
+      _toasts.addError('${job.name} failed.',
+          description: '${e}', dismissable: true);
     });
   }
 
@@ -218,7 +238,7 @@ class JobInstance {
   final JobManager jobs;
   final Job job;
 
-  Completer _completer = new Completer();
+  Completer<JobStatus> _completer = new Completer();
   bool _running = false;
 
   JobInstance(this.jobs, this.job);
@@ -226,5 +246,5 @@ class JobInstance {
   String get name => job.name;
   bool get isRunning => _running;
 
-  Future get whenComplete => _completer.future;
+  Future<JobStatus> get whenComplete => _completer.future;
 }

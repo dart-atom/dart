@@ -235,7 +235,6 @@ class PubRunJob extends Job {
   Future run() {
     List<String> l = isGlobal ? ['global', 'run'] : ['run'];
     l.addAll(args);
-
     ProcessNotifier notifier = new ProcessNotifier(name);
     ProcessRunner runner = sdkManager.sdk.execBin('pub', l, cwd: _pubspecDir);
     return notifier.watch(runner);

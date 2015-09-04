@@ -14,6 +14,8 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('sky');
 
+// TODO: introduce a key binding
+
 class SkyToolManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
@@ -48,6 +50,13 @@ class RunSkyAppJob extends Job {
   Future run() {
     DartProject project = projectManager.getProjectFor(path);
     String sky_tool = join(project.directory, 'packages', 'sky', 'sky_tool');
+
+    bool exists = new File.fromPath(sky_tool).existsSync();
+    if (!exists) {
+      return new Future.error("Unable to locate 'packages/sky/sky_tool'; did "
+          "you import the 'sky' package into your project?");
+    }
+
     ProcessRunner runner;
 
     if (isMac) {

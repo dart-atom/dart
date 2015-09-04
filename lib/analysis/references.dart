@@ -92,7 +92,11 @@ class FindReferencesView extends AtomView {
       }
       for (String path in results.keys) {
         Node node = new Node(path, canHaveChildren: true);
-        results[path].forEach((r) => node.add(new Node(r)));
+        List<SearchResult> fileResults = results[path];
+        fileResults.sort((SearchResult a, SearchResult b) {
+          return a.location.offset - b.location.offset;
+        });
+        fileResults.forEach((r) => node.add(new Node(r)));
         treeBuilder.addNode(node);
       }
     });

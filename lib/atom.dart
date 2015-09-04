@@ -629,6 +629,7 @@ class Directory extends Entry {
 
   // TODO: Should we move this _cvt guard into the File and Directory ctors?
   File getFile(filename) => new File(_cvt(invoke('getFile', filename)));
+
   Directory getSubdirectory(String dirname) =>
       new Directory(invoke('getSubdirectory', dirname));
 
