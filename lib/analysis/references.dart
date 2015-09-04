@@ -14,6 +14,7 @@ import '../atom_utils.dart';
 import '../elements.dart';
 import '../state.dart';
 import '../utils.dart';
+import '../views.dart';
 import 'analysis_server_gen.dart';
 
 final Logger _logger = new Logger('references');
@@ -57,11 +58,10 @@ class FindReferencesView extends AtomView {
   CoreElement target;
   CoreElement status;
   ListTreeBuilder treeBuilder;
-  StreamSubscription sub;
   _MatchParser matchParser = new _MatchParser();
 
   FindReferencesView() : super('References', classes: 'find-references',
-      prefName: 'References') {
+      groupName: 'rightView') {
     target = content.add(span(c: 'text-highlight'));
     status = content.add(span(c: 'search-summary'));
     treeBuilder = content.add(new ListTreeBuilder(_render)..flex());
@@ -150,8 +150,6 @@ class FindReferencesView extends AtomView {
   }
 
   void hide() {
-    // Cancel any active search.
-    if (sub != null) sub.cancel();
     super.hide();
   }
 

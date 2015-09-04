@@ -3,8 +3,11 @@
 ## unpublished
 - improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)
 - fixed running sky apps (the `run sky application` command)
+- added a key binding for `run sky application` - `cmd-r`
 - added a `Settings…` menu item to the Dart package menu
 - sorted results in the `Find References` view by file location
+- the views on the right-hand side - type hierarchy and find references - are
+  now mutually exclusive
 
 ## 0.4.2
 - fixed an exception from the outline view when viewing empty Dart files

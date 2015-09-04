@@ -11,11 +11,11 @@ import '../elements.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
+import '../views.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';
 
-// TODO: Have a scroll sync button.
-// <span class='badge icon icon-diff-renamed'>
+// TODO: Have a scroll sync button: <span class='badge icon icon-diff-renamed'>
 
 class OutlineController implements Disposable {
   Disposables disposables = new Disposables();

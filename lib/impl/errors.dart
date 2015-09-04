@@ -13,6 +13,7 @@ import '../elements.dart';
 import '../linter.dart';
 import '../state.dart';
 import '../utils.dart';
+import '../views.dart';
 
 final String _errorPref = '${pluginId}.useErrorsView';
 
