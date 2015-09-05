@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unpublished
+## 0.4.3
 - improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)
 - fixed running sky apps (the `run sky application` command)
 - added a key binding for `run sky application` - `cmd-r`
