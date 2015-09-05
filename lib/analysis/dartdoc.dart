@@ -1,4 +1,6 @@
 
+library atom.dartdoc;
+
 import 'dart:async';
 import 'dart:html' show DivElement, Element, NodeValidator;
 

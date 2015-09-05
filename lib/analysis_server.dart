@@ -12,7 +12,7 @@ import 'package:frappe/frappe.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_dialog.dart';
-import 'analysis/analysis_server_gen.dart';
+import 'analysis/analysis_server_lib.dart';
 import 'atom.dart';
 import 'dependencies.dart';
 import 'jobs.dart';
@@ -22,7 +22,7 @@ import 'sdk.dart';
 import 'state.dart';
 import 'utils.dart';
 
-export 'analysis/analysis_server_gen.dart' show FormatResult, HoverInformation,
+export 'analysis/analysis_server_lib.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
     RefactoringOptions, SourceFileEdit, AnalysisOutline, Outline;
 export 'jobs.dart' show Job;

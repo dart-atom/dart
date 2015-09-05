@@ -25,7 +25,7 @@ main(List<String> args) {
   api.parse(domains, typedefs);
 
   // Generate code from the model.
-  File outputFile = new File('lib/analysis/analysis_server_gen.dart');
+  File outputFile = new File('lib/analysis/analysis_server_lib.dart');
   DartGenerator generator = new DartGenerator();
   api.generate(generator);
   outputFile.writeAsStringSync(generator.toString());
@@ -614,14 +614,15 @@ class PrimitiveType extends Type {
 final String _headerCode = r'''
 // This is a generated file.
 
-library analysis_server_gen;
+/// A library to access the analysis server API.
+library atom.analysis_server_lib;
 
 import 'dart:async';
 import 'dart:convert' show JSON, JsonCodec;
 
 import 'package:logging/logging.dart';
 
-final Logger _logger = new Logger('analysis-server-gen');
+final Logger _logger = new Logger('analysis_server_lib');
 
 /// @optional
 const String optional = 'optional';

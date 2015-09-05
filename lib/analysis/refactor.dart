@@ -5,8 +5,8 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import '../analysis/analysis_server_lib.dart' show SourceChange, SourceFileEdit;
 import '../analysis_server.dart';
-import '../analysis/analysis_server_gen.dart' show SourceChange, SourceFileEdit;
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../editors.dart';

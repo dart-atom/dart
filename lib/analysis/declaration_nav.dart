@@ -13,7 +13,7 @@ import '../js.dart';
 import '../state.dart';
 import '../usage.dart' show trackCommand;
 import '../utils.dart';
-import 'analysis_server_gen.dart';
+import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('declaration_nav');
 

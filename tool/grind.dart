@@ -70,7 +70,7 @@ clean() {
 analysisApi() {
   // https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/tool/spec/spec_input.html
   Dart.run('tool/analysis/generate_analysis.dart', packageRoot: 'packages');
-  DartFmt.format('lib/analysis/analysis_server_gen.dart');
+  DartFmt.format('lib/analysis/analysis_server_lib.dart');
 }
 
 @Task('generate the observatory API')

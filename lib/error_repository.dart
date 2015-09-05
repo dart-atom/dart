@@ -1,10 +1,10 @@
-library analysis.errors;
+library atom.error_repository;
 
 import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import 'analysis/analysis_server_gen.dart'
+import 'analysis/analysis_server_lib.dart'
     show AnalysisErrors, AnalysisError, AnalysisFlushResults, Location;
 import 'atom.dart' show Directory, File, statSync;
 import 'utils.dart';

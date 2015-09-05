@@ -1,13 +1,14 @@
 // This is a generated file.
 
-library analysis_server_gen;
+/// A library to access the analysis server API.
+library atom.analysis_server_lib;
 
 import 'dart:async';
 import 'dart:convert' show JSON, JsonCodec;
 
 import 'package:logging/logging.dart';
 
-final Logger _logger = new Logger('analysis-server-gen');
+final Logger _logger = new Logger('analysis_server_lib');
 
 /// @optional
 const String optional = 'optional';
