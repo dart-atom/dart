@@ -1,8 +1,8 @@
 ---
 title: "Getting Started"
-bg: turquoise  #defined in _config.yml, can use html color like '#0fbfcf'
-color: white   #text color
-fa-icon: paint-brush
+bg: turquoise  
+color: white   
+fa-icon: sign-in
 ---
 
-#### Getting started
+TODO: atom walkthrough, dart features walkthrough
