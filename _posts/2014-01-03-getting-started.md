@@ -5,4 +5,4 @@ color: white   #text color
 fa-icon: paint-brush
 ---
 
-#### A new section- oh the humanity!
+#### Getting started
