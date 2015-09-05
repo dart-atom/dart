@@ -22007,7 +22007,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_changelog$_captured_this_1",
       call$1: function(_) {
         $.$get$shell().toString;
-        $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", ["https://github.com/dart-atom/dartlang/blob/master/doc/getting_started.md"]);
+        $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", ["https://dart-atom.github.io/dartlang/"]);
       }
     },
     ChangelogManager__handleReleaseNotes_closure: {

@@ -50,8 +50,7 @@ class ChangelogManager implements Disposable {
   }
 
   void _handleGettingStarted() {
-    shell.openExternal(
-        'https://github.com/dart-atom/dartlang/blob/master/doc/getting_started.md');
+    shell.openExternal('https://dart-atom.github.io/dartlang/');
   }
 
   void dispose() => disposables.dispose();

@@ -8,6 +8,7 @@
 - sorted results in the `Find References` view by file location
 - the views on the right-hand side - type hierarchy and find references - are
   now mutually exclusive
+- wrote a new getting started guide: https://dart-atom.github.io/dartlang/
 
 ## 0.4.2
 - fixed an exception from the outline view when viewing empty Dart files
