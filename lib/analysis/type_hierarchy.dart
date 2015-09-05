@@ -10,7 +10,7 @@ import '../atom.dart';
 import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
-import 'analysis_server_gen.dart';
+import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('type_hierarchy');
 
@@ -57,7 +57,7 @@ class TypeHierarchyView extends AtomView {
   TypeHierarchyView() : super('Type Hierarchy', classes: 'type-hierarchy',
       groupName: 'rightView') {
     treeBuilder = content.add(new ListTreeBuilder(_render)..flex());
-    treeBuilder.onDoubleClick.listen(_jumpTo);
+    treeBuilder.onClickNode.listen(_jumpTo);
   }
 
   void showHierarchy(TypeHierarchyResult result) {

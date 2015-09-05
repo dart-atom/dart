@@ -8,12 +8,12 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import 'analysis/analysis_server_lib.dart'
+    show LinkedEditGroup, Location, Position, SourceEdit;
 import 'atom.dart';
 import 'projects.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'analysis/analysis_server_gen.dart'
-    show LinkedEditGroup, Location, Position, SourceEdit;
 
 final Logger _logger = new Logger('editors');
 

@@ -1,4 +1,4 @@
-part of linter;
+part of atom.linter_impl;
 
 /// This only class exists to provide linting information to atomlinter/linter.
 class DartLinterProvider extends LinterProvider {

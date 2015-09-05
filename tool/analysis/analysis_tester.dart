@@ -1,12 +1,11 @@
 
 library analysis_tester;
 
-import 'dart:io';
-
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:atom_dartlang/analysis/analysis_server_gen.dart';
+import 'package:atom_dartlang/analysis/analysis_server_lib.dart';
 import 'package:logging/logging.dart';
 
 Server client;

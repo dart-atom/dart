@@ -3,7 +3,7 @@ library atom.outline;
 import 'dart:async';
 import 'dart:html' as html;
 
-import '../analysis/analysis_server_gen.dart' as analysis;
+import '../analysis/analysis_server_lib.dart' as analysis;
 import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_utils.dart';

@@ -1,4 +1,4 @@
-part of linter;
+part of atom.linter_impl;
 
 // TODO: Show that an error has an associated quick-fix.
 

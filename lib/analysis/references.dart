@@ -15,7 +15,7 @@ import '../elements.dart';
 import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
-import 'analysis_server_gen.dart';
+import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('references');
 

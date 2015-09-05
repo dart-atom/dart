@@ -5,7 +5,7 @@ library atom.errors;
 import 'dart:async';
 import 'dart:html' show Element;
 
-import '../analysis/analysis_server_gen.dart' hide Element;
+import '../analysis/analysis_server_lib.dart' hide Element;
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../atom_utils.dart';

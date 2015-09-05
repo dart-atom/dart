@@ -1,12 +1,12 @@
-library buffer.observer;
+library atom.buffer_observer;
 
 import 'dart:async';
 
 import 'package:frappe/frappe.dart';
 
-import '../atom.dart';
-import '../analysis/analysis_server_gen.dart';
+import '../analysis/analysis_server_lib.dart';
 import '../analysis/formatting.dart';
+import '../atom.dart';
 import '../state.dart';
 import '../utils.dart';
 

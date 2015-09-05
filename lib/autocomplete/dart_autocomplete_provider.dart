@@ -1,4 +1,4 @@
-part of autocomplete;
+part of atom.autocomplete_impl;
 
 // TODO: The code completion popup can be very sticky - perhaps due to the
 // latency involved in using the analysis server?

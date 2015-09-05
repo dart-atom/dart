@@ -1,10 +1,10 @@
-library autocomplete;
+library atom.autocomplete_impl;
 
 import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import 'analysis/analysis_server_gen.dart' show CompletionResults,
+import 'analysis/analysis_server_lib.dart' show CompletionResults,
     CompletionSuggestion, SuggestionsResult;
 import 'atom.dart';
 import 'atom_autocomplete.dart';
