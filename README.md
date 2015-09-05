@@ -4,7 +4,7 @@ A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 
 [![Build Status](https://travis-ci.org/dart-atom/dartlang.svg)](https://travis-ci.org/dart-atom/dartlang)
 
-![Screenshot of Dart plugin in Atom](https://raw.githubusercontent.com/dart-atom/dartlang/master/doc/images/screenshot.png)
+![Screenshot of Dart plugin](https://raw.githubusercontent.com/dart-atom/dartlang/master/doc/images/screenshot.png)
 
 ## What is it?
 
@@ -20,29 +20,11 @@ type, code completion, refactorings, and integration with Pub and other tools.
 - install this [dartlang][] package (with `apm install dartlang` or through the
   Atom UI)
 
-The plugin should auto-detect the Dart SDK location. If not, you can set it
-manually in the plugin configuration page (`Preferences > Packages > dartlang`).
-
-### Optional packages
-
-We recommend the following (optional) packages:
-
-- [last-cursor-position](https://atom.io/packages/last-cursor-position) helps you
-move between cursor location history (useful when using "jump to definition").
-
-### Packages to avoid
-
-We do not recommend using both [emmet](https://atom.io/packages/emmet) and the
-dartlang package together. For an unknown reason, editing large `.dart` files
-slows down if you have the emmet plugin installed. We have filed an
-[issue](https://github.com/emmetio/emmet-atom/issues/319).
-
 ## Getting started
 
-See our
-[getting started](https://github.com/dart-atom/dartlang/blob/master/doc/getting_started.md)
-guide for a walkthrough of how to use all the Dart features. This is useful for
-users new to the plugin and users new to Atom.
+See our [getting started](https://dart-atom.github.io/dartlang/) guide for a
+walkthrough of how to use all the Dart features. This is useful for users new to
+the plugin and users new to Atom as well.
 
 ## Sending feedback
 
@@ -63,5 +45,4 @@ See the [LICENSE](https://github.com/dart-atom/dartlang/blob/master/LICENSE)
 file.
 
 [linter]: https://atom.io/packages/linter
-[develop]: https://github.com/dart-atom/dartlang/wiki/Developing
 [dartlang]: https://atom.io/packages/dartlang
