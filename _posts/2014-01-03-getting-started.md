@@ -37,8 +37,8 @@ invoke it, and which keys choose from selections.
 
 To open a project, use the `'add project folder'` command, or select the
 `File > Add Project Folder…` menu item. When a project is added to Atom, the
-`dartlang` plugin will scan recursively through the project, 2 directory levels
-deep, looking for Dart projects. These are projects with `pubspec.yaml` or
+`dartlang` plugin will recursively scan through the project, two directory levels
+deep, looking for Dart projects. These are directories with `pubspec.yaml` or
 `.packages` files.
 
 When there are any Dart projects open in Atom, the `dartlang` plugin will
@@ -68,17 +68,17 @@ The `dartlang` plugin shows errors and warnings in your code as you type. These
 are displayed in a problems view at the bottom of Atom, in-line in the code, and
 in a summary in the status line.
 
-<img src="img/status.png" width="20%" class="img-centered"/>
+<img src="img/problems.png" width="75%" class="img-centered"/>
 
 You can toggle the problems view on and off by clicking on the status line
 summary, or configure it in the settings page.
 
-<img src="img/problems.png" width="75%" class="img-centered"/>
+<img src="img/status.png" width="20%" class="img-centered"/>
 
 Clicking on an issue in the problems view will take you to that source code with
 the problem. For some issues, the plugin can provide automated fixes - so called
 'quick fixes'. When at a source location with errors, hit `ctrl-1`; if there are
-any available fixes a code completion menu with available options will be shown.
+any available fixes a menu with available options will be shown.
 
 When looking at source code, you can get more information about a class, method,
 or variable by placing the cursor on that symbol and hitting `F1`. That will
@@ -86,19 +86,19 @@ display the dartdoc information for that element.
 
 Option-clicking on an element, or hitting `F3`, will jump to its definition.
 
-You can toggle and and off a structural outline view of the current Dart file by
+You can toggle on and off a structural outline view of the current Dart file by
 executing the command `'toggle outline view'`.
 
 In order to find all the places where an element if referenced, right click on
 that element and select the menu item `Find References…`. You can also use the
 key binding `shift-⌘-g`. The results will be displayed in a view on the right;
 clicking on a result will jump to the associated source location. The results
-view can be closed via the close button or by hitting escape twice.
+view can be closed via the close button or by hitting the escape key twice.
 
 To view the type hierarchy of a class, hit `F4` or right click on the class and
 choose `Type Hierarchy`.
 
-## Code modifications
+## Refactorings and code modifications
 
 In addition to quick fixes, the plugin can also perform some automated code
 transformations. These include a rename refactoring, available from the context
