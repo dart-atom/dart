@@ -1,17 +1,7 @@
----
-title: "Getting Started"
-bg: blue  
-color: white   
-fa-icon: sign-in
----
+# Getting started
 
 TODO: Expand this getting started guide into a 5 minute walkthrough of using
 Atom and the Dart plugin.
-
-## Using commands
-
-Much of Atom's functionality is surfaced via named commands. You can see all the
-available commands by hitting `shift-command-p`.
 
 ## Features
 
@@ -28,6 +18,11 @@ available commands by hitting `shift-command-p`.
 - rename refactoring
 - pub commands (get and update) are available via context menus
 - format source code with `dartfmt` (use the Command Palette)
+
+## Using commands
+
+A lot of Atom's functionality is surfaced via named commands. You can see all
+the available commands by hitting `shift-command-p`.
 
 ## Diagnosing analysis server issues
 
