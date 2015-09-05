@@ -42,13 +42,19 @@ code {
 }
 
 /* block code */
-pre code { background: none; display: block; }
+pre code {
+  background: none;
+  display: block;
+  font-size: 100%;
+}
+
 pre {
   display: block;
   margin: 20px 5%;
   padding: 4px 8px;
   background: rgba(255,255,255,0.1);
   word-wrap: break-word;
+  border-radius: 4px;
 }
 
 .highlighttable { margin:20px 5%; }
@@ -60,6 +66,12 @@ img {
   max-width:100%!important;
   height:auto;
   vertical-align:middle;
+}
+
+img.img-centered {
+  margin-left: auto;
+  margin-right: auto;
+  display: inherit;
 }
 
 hr {

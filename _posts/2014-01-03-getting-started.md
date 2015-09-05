@@ -1,6 +1,6 @@
 ---
 title: "Getting Started"
-bg: turquoise  
+bg: blue  
 color: white   
 fa-icon: sign-in
 ---
