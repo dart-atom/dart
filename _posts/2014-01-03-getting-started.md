@@ -8,13 +8,13 @@ fa-icon: sign-in
 ## Using commands
 
 Much of Atom's functionality is surfaced via named commands. You can see all the
-available commands by hitting `shift-⌘-p`. You can execute a command directly by
+available commands by hitting `shift-cmd-p`. You can execute a command directly by
 searching for it and selecting it in the command palette. Many commands can also
-be accessed using associated key-bindings.
+be accessed using associated key bindings.
 
 ## Setting up and configuring
 
-To open the settings for Atom, hit `⌘-,` or select the `Atom > Preferences…`
+To open the settings for Atom, hit `cmd-,` or select the `Atom > Preferences…`
 menu item. From here you can configure general text editor settings, customize
 key bindings, customize the theme and look of Atom, and adjust settings for
 various Atom packages, including the `dartlang` package.
@@ -23,7 +23,7 @@ various Atom packages, including the `dartlang` package.
 
 The `dartlang` plugin will attempt to auto-locate the Dart SDK. If it fails, you
 can adjust your operating system's `PATH` settings and manually run the SDK
-auto-locate command (`auto locate sdk`). Or, you can configure the SDK's path
+auto-locate command (`'auto locate sdk'`). Or, you can configure the SDK's path
 in `dartlang` settings section.
 
 In addition, the `autocomplete-plus` plugin has settings that are useful to
@@ -52,7 +52,7 @@ This process is automatically managed by the `dartlang` plugin.
 There are various tools and commands available to help you work with Dart
 projects. The various `pub` commands are available as context menu items in the
 files view. The commands are also available from the command palette
-(`shift-⌘-p`). So, to run `pub get` on a project, select the `pubspec.yaml` file
+(`shift-cmd-p`). So, to run `pub get` on a project, select the `pubspec.yaml` file
 in the files view, right click, and select the `Pub Get` menu item. Alternatively,
 whenever a Dart file is open, you can run the `pub get` Atom command, and pub
 will be run for the associated Dart project.
@@ -71,7 +71,7 @@ in a summary in the status line.
 <img src="img/problems.png" width="75%" class="img-centered"/>
 
 You can toggle the problems view on and off by clicking on the status line
-summary, or configure it in the settings page.
+summary, or by configuring it in the settings page.
 
 <img src="img/status.png" width="20%" class="img-centered"/>
 
@@ -81,8 +81,8 @@ the problem. For some issues, the plugin can provide automated fixes - so called
 any available fixes a menu with available options will be shown.
 
 When looking at source code, you can get more information about a class, method,
-or variable by placing the cursor on that symbol and hitting `F1`. That will
-display the dartdoc information for that element.
+or variable by placing the cursor on that symbol and hitting `F1`. The dartdoc
+information for that element will be displayed.
 
 Option-clicking on an element, or hitting `F3`, will jump to its definition.
 
@@ -90,8 +90,8 @@ You can toggle on and off a structural outline view of the current Dart file by
 executing the command `'toggle outline view'`.
 
 In order to find all the places where an element if referenced, right click on
-that element and select the menu item `Find References…`. You can also use the
-key binding `shift-⌘-g`. The results will be displayed in a view on the right;
+that element and select the menu item `Find References`. You can also use the
+key binding `shift-cmd-g`. The results will be displayed in a view on the right;
 clicking on a result will jump to the associated source location. The results
 view can be closed via the close button or by hitting the escape key twice.
 
@@ -102,10 +102,10 @@ choose `Type Hierarchy`.
 
 In addition to quick fixes, the plugin can also perform some automated code
 transformations. These include a rename refactoring, available from the context
-menu or via `option-shift-r`. Also, the ability to automatically organize import
-directives, available by the `'organize directives'` command or `option-⌘-o`.
-And the ability to format a Dart source file, through the `'dart format'`
-command or the `option-⌘-b` key binding.
+menu or via `option-shift-r`. Also, the plugin has the ability to automatically
+organize import directives, available by the `'organize directives'` command or
+`option-cmd-o`. Additionally, you can format a Dart source code using the
+`'dart format'` command or the `option-cmd-b` key binding.
 
 ## Diagnosing analysis server issues
 
