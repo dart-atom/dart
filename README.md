@@ -14,7 +14,7 @@ type, code completion, refactorings, and integration with Pub and other tools.
 
 ## Installing
 
-- install [Atom](https://atom.io/)
+- install Atom [atom.io](https://atom.io/)
 - install the [linter][] package (with `apm install linter` or through the
   Atom UI)
 - install this [dartlang][] package (with `apm install dartlang` or through the

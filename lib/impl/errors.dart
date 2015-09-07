@@ -19,8 +19,6 @@ final String _errorPref = '${pluginId}.useErrorsView';
 
 final String _initKeyPath = '_dartlang._errorsInitialized';
 
-// TODO: error count in the view
-
 class ErrorsController implements Disposable {
   Disposables disposables = new Disposables();
   StreamSubscription _sub;
@@ -125,6 +123,7 @@ class ErrorsView extends AtomView {
   CoreElement target;
   CoreElement body;
   CoreElement focusElement;
+  CoreElement countElement;
 
   ErrorsView() : super('Errors', classes: 'errors-view', prefName: 'Errors',
       rightPanel: false, cancelCloses: false, showTitle: false) {
@@ -132,7 +131,10 @@ class ErrorsView extends AtomView {
 
     content.add([
       body = div(),
-      focusElement = span(c: 'text-muted badge errors-focus-title')
+      div(c: 'text-muted errors-focus-area')..add([
+        focusElement = div(c: 'badge focus-title'),
+        countElement = div(c: 'errors-count')
+      ])
     ]);
 
     bool hidden = state['errorViewShowing'] == false;
@@ -154,6 +156,7 @@ class ErrorsView extends AtomView {
   }
 
   void _handleErrorsChanged(List<AnalysisError> errors, {String focus}) {
+    // Update the main view.
     body.element.children.clear();
 
     if (errors.isEmpty) {
@@ -166,11 +169,39 @@ class ErrorsView extends AtomView {
       body.element.children.addAll(errors.map(_cvtError));
     }
 
+    // Update the focus label.
     if (focus != null) {
       focusElement.text = focus;
-      focusElement.element.style.display = 'inline';
+      focusElement.element.style.display = 'block';
     } else {
       focusElement.element.style.display = 'none';
+    }
+
+    // Update the issues count.
+    int len = errors.length;
+    int errorCount = 0;
+    int warningCount = 0;
+    int infoCount = 0;
+
+    for (int i = 0; i < len; i++) {
+      AnalysisError error = errors[i];
+      if (error.severity == 'ERROR') errorCount++;
+      else if (error.severity == 'WARNING') warningCount++;
+      else infoCount++;
+    }
+
+    countElement.element.children.clear();
+    if (errorCount > 0) {
+      countElement.add(span(c: 'badge badge-error')
+          ..text = '${errorCount} ${pluralize('error', errorCount)}');
+    }
+    if (warningCount > 0) {
+      countElement.add(span(c: 'badge badge-warning')
+          ..text = '${warningCount} ${pluralize('warning', warningCount)}');
+    }
+    if (infoCount > 0) {
+      countElement.add(span(c: 'badge')
+          ..text = '${infoCount} ${pluralize('info', infoCount)}');
     }
   }
 
@@ -222,7 +253,6 @@ class ErrorsStatusElement implements Disposable {
 
   CoreElement _element;
   CoreElement _badgeSpan;
-  //CoreElement _messageSpan;
 
   ErrorsStatusElement(this.parent, this._showing);
 
@@ -245,7 +275,6 @@ class ErrorsStatusElement implements Disposable {
   void _init(StatusBar statusBar) {
     _element = div(c: 'errors-status')..inlineBlock()..add([
       _badgeSpan = span(c: 'badge text-subtle') // badge-small
-      //_messageSpan = new CoreElement('a')
     ]);
 
     _element.click(parent._toggleView);
@@ -288,15 +317,11 @@ class ErrorsStatusElement implements Disposable {
       } else {
         _badgeSpan.text = '${warningCount} ${pluralize('warning', warningCount)}';
       }
-      //_messageSpan.toggleClass('text-subtle', false);
-      //_badgeSpan.text = _messageSpan.text;
     } else {
-      //_badgeSpan.element.style.display = 'none';
       _badgeSpan.text = 'no errors';
       _badgeSpan.toggleClass('badge-error', false);
       _badgeSpan.toggleClass('badge-warning', false);
       _badgeSpan.toggleClass('text-subtle', true);
-      //_messageSpan.toggleClass('text-subtle', true);
     }
   }
 }
