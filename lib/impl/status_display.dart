@@ -29,7 +29,7 @@ class StatusDisplay implements Disposable {
     CoreElement textLabel;
     CoreElement countBadge;
 
-    CoreElement statusElement = div(c: 'job-status-bar')
+    CoreElement statusElement = div(c: 'job-status-bar dartlang')
       ..inlineBlock()
       ..click(_showJobsDialog)
       ..add([

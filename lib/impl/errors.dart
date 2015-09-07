@@ -125,7 +125,7 @@ class ErrorsView extends AtomView {
   CoreElement focusElement;
   CoreElement countElement;
 
-  ErrorsView() : super('Errors', classes: 'errors-view', prefName: 'Errors',
+  ErrorsView() : super('Errors', classes: 'errors-view dartlang', prefName: 'Errors',
       rightPanel: false, cancelCloses: false, showTitle: false) {
     root.toggleClass('tree-view', false);
 
@@ -273,7 +273,7 @@ class ErrorsStatusElement implements Disposable {
   }
 
   void _init(StatusBar statusBar) {
-    _element = div(c: 'errors-status')..inlineBlock()..add([
+    _element = div(c: 'dartlang')..inlineBlock()..add([
       _badgeSpan = span(c: 'badge text-subtle') // badge-small
     ]);
 
