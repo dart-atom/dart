@@ -63,7 +63,7 @@
 
 div.atom-view {
   min-width: 100px;
-  min-height: 40px;
+  min-height: 54px;
   height: 100%;
   padding-left: 0;
   padding-right: 0;
@@ -314,11 +314,29 @@ atom-notification.success code {
 }
 
 .errors-view {
-  .errors-focus-title {
+  .errors-focus-area {
     position: absolute;
     top: 6px;
     right: 20px;
+    display: flex;
+    flex-direction: column;
+    -webkit-user-select: none;
     //background-color: @overlay-background-color;
+
+    .badge {
+      padding: 2px 5px;
+      vertical-align: initial;
+      margin-left: 5px;
+    }
+
+    .focus-title {
+      align-self: flex-end;
+    }
+
+    .errors-count {
+      align-self: flex-end;
+      margin-top: 4px;
+    }
   }
 
   .view-content {

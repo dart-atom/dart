@@ -4248,10 +4248,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.ErrorsController__handleErrorsChanged_closure[1];
     ErrorsController__handleErrorsChanged_closure.prototype = $desc;
     ErrorsController__handleErrorsChanged_closure.$__fields__ = ["_errors$_captured_this_0"];
-    function ErrorsView(target, body, focusElement, groupName, _panel, _cancelCommand, subs, root, title, content, _timer) {
+    function ErrorsView(target, body, focusElement, countElement, groupName, _panel, _cancelCommand, subs, root, title, content, _timer) {
       this.target = target;
       this.body = body;
       this.focusElement = focusElement;
+      this.countElement = countElement;
       this.groupName = groupName;
       this._panel = _panel;
       this._cancelCommand = _cancelCommand;
@@ -4267,7 +4268,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       ErrorsView.name = "ErrorsView";
     $desc = $collectedClasses$.ErrorsView[1];
     ErrorsView.prototype = $desc;
-    ErrorsView.$__fields__ = ["target", "body", "focusElement", "groupName", "_panel", "_cancelCommand", "subs", "root", "title", "content", "_timer"];
+    ErrorsView.$__fields__ = ["target", "body", "focusElement", "countElement", "groupName", "_panel", "_cancelCommand", "subs", "root", "title", "content", "_timer"];
     function ErrorsView__cvtError_closure(_errors$_captured_this_0, _errors$_captured_error_1) {
       this._errors$_captured_this_0 = _errors$_captured_this_0;
       this._errors$_captured_error_1 = _errors$_captured_error_1;
@@ -23041,45 +23042,32 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       }, "call$1", "get$_focusChanged", 2, 0, 9],
       _handleErrorsChanged$1: [function(errors) {
-        var filteredErrors, t1, shortName, t2, t3;
+        var filteredErrors, t1, shortName;
         this._cachedErrors = errors;
         filteredErrors = this._focusedDir != null ? J.toList$0$ax(J.where$1$ax(errors, new G.ErrorsController__handleErrorsChanged_closure(this))) : errors;
         t1 = this._focusedDir;
         shortName = t1 == null ? null : S.basename(t1);
         this.statusElement._handleErrorsChanged$1(filteredErrors);
-        t1 = this.view;
-        J.clear$0$ax(J.get$children$x(t1.body.element));
-        t2 = J.getInterceptor$asx(filteredErrors);
-        if (t2.get$isEmpty(filteredErrors) === true) {
-          t2 = t1.body;
-          t3 = K.CoreElement$("div", null, "errors-item", null);
-          t3.add$1(0, K.CoreElement$("span", null, "text-muted", "No issues."));
-          t2.add$1(0, t3);
-        } else
-          J.addAll$1$ax(J.get$children$x(t1.body.element), t2.map$1(filteredErrors, t1.get$_cvtError()));
-        if (shortName != null) {
-          J.set$text$x(t1.focusElement.element, shortName);
-          t1 = J.get$style$x(t1.focusElement.element);
-          t1.display = "inline";
-        } else {
-          t1 = J.get$style$x(t1.focusElement.element);
-          t1.display = "none";
-        }
+        this.view._handleErrorsChanged$2$focus(filteredErrors, shortName);
       }, "call$1", "get$_handleErrorsChanged", 2, 0, 37, 57],
       ErrorsController$0: function() {
-        var t1, t2, t3, t4, t5, t6;
+        var t1, t2, t3, t4, t5, t6, t7, t8;
         t1 = $.$get$atom();
         t2 = this.disposables.Disposables__disposables;
         t2.push(t1._commands.add$3(0, "atom-workspace", "dartlang:toggle-errors-view", new G.ErrorsController_closure(this)));
         this.enabled = t1._config.getValue$1("dartlang.useErrorsView");
-        t3 = new G.ErrorsView(null, null, null, null, null, null, new G.StreamSubscriptions([]), null, null, null, null);
+        t3 = new G.ErrorsView(null, null, null, null, null, null, null, new G.StreamSubscriptions([]), null, null, null, null);
         t3.AtomView$7$cancelCloses$classes$groupName$prefName$rightPanel$showTitle("Errors", false, "errors-view", null, "Errors", false, false);
         J.get$classes$x(t3.root.element).toggle$2(0, "tree-view", false);
         t4 = t3.content;
         t5 = K.CoreElement$("div", null, null, null);
         t3.body = t5;
-        t6 = K.CoreElement$("span", null, "text-muted badge errors-focus-title", null);
-        t3.focusElement = t6;
+        t6 = K.CoreElement$("div", null, "text-muted errors-focus-area", null);
+        t7 = K.CoreElement$("div", null, "badge focus-title", null);
+        t3.focusElement = t7;
+        t8 = K.CoreElement$("div", null, "errors-count", null);
+        t3.countElement = t8;
+        t6.add$1(0, [t7, t8]);
         t4.add$1(0, [t5, t6]);
         t6 = $.$get$state();
         if (J.$eq$(J.$index$asx(t6._state$_map, "errorViewShowing"), false)) {
@@ -23130,7 +23118,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 5, "call"]
     },
     ErrorsView: {
-      "^": "AtomView;target,body,focusElement,groupName,_panel,_cancelCommand,subs,root,title,content,_timer",
+      "^": "AtomView;target,body,focusElement,countElement,groupName,_panel,_cancelCommand,subs,root,title,content,_timer",
       show$0: function(_) {
         this.super$AtomView$show(this);
         $.$get$state().$indexSet(0, "errorViewShowing", true);
@@ -23138,6 +23126,66 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       hide$0: function() {
         this.super$AtomView$hide();
         $.$get$state().$indexSet(0, "errorViewShowing", false);
+      },
+      _handleErrorsChanged$2$focus: function(errors, $focus) {
+        var t1, t2, t3, len, errorCount, warningCount, infoCount, i, error;
+        J.clear$0$ax(J.get$children$x(this.body.element));
+        t1 = J.getInterceptor$asx(errors);
+        t2 = t1.get$isEmpty(errors);
+        t3 = this.body;
+        if (t2 === true) {
+          t2 = K.CoreElement$("div", null, "errors-item", null);
+          t2.add$1(0, K.CoreElement$("span", null, "text-muted", "No issues."));
+          t3.add$1(0, t2);
+        } else
+          J.addAll$1$ax(J.get$children$x(t3.element), t1.map$1(errors, this.get$_cvtError()));
+        t2 = this.focusElement;
+        if ($focus != null) {
+          J.set$text$x(t2.element, $focus);
+          t2 = J.get$style$x(this.focusElement.element);
+          t2.display = "block";
+        } else {
+          t2 = J.get$style$x(t2.element);
+          t2.display = "none";
+        }
+        len = t1.get$length(errors);
+        if (typeof len !== "number")
+          return H.iae(len);
+        errorCount = 0;
+        warningCount = 0;
+        infoCount = 0;
+        i = 0;
+        for (; i < len; ++i) {
+          error = t1.$index(errors, i);
+          if (J.$eq$(error.get$severity(), "ERROR"))
+            ++errorCount;
+          else if (J.$eq$(error.get$severity(), "WARNING"))
+            ++warningCount;
+          else
+            ++infoCount;
+        }
+        J.clear$0$ax(J.get$children$x(this.countElement.element));
+        if (errorCount > 0) {
+          t1 = this.countElement;
+          t2 = K.CoreElement$("span", null, "badge badge-error", null);
+          t3 = "" + errorCount + " ";
+          J.set$text$x(t2.element, t3 + (errorCount === 1 ? "error" : "errors"));
+          t1.add$1(0, t2);
+        }
+        if (warningCount > 0) {
+          t1 = this.countElement;
+          t2 = K.CoreElement$("span", null, "badge badge-warning", null);
+          t3 = "" + warningCount + " ";
+          J.set$text$x(t2.element, t3 + (warningCount === 1 ? "warning" : "warnings"));
+          t1.add$1(0, t2);
+        }
+        if (infoCount > 0) {
+          t1 = this.countElement;
+          t2 = K.CoreElement$("span", null, "badge", null);
+          t3 = "" + infoCount + " ";
+          J.set$text$x(t2.element, t3 + (infoCount === 1 ? "info" : "infos"));
+          t1.add$1(0, t2);
+        }
       },
       _cvtError$1: [function(error) {
         var type, t1, locationText, item, t2;
