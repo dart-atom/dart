@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- added an issue count to the problems view
+
 ## 0.4.3
 - improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)
 - fixed running sky apps (the `run sky application` command)

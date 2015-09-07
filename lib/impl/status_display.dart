@@ -64,7 +64,8 @@ class StatusDisplay implements Disposable {
       }
 
       int jobLen = jobs.allJobs.length;
-      countBadge.text = jobLen == 0 ? '' : '${jobLen - 1} waiting';
+      countBadge.text = jobLen == 0
+          ? '' : '${jobLen - 1} waiting ${pluralize('job', jobLen - 1)}';
 
       spinner.toggleClass('showing', showing);
       textLabel.toggleClass('showing', showing);

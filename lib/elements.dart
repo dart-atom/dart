@@ -163,6 +163,8 @@ class CoreElement {
   /// Subscribe to the [onClick] event stream with a no-arg handler.
   StreamSubscription<Event> click(void handle()) => onClick.listen((_) => handle());
 
+  void clear() => element.children.clear();
+
   void dispose() {
     if (element.parent == null) return;
 

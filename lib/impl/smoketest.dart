@@ -10,6 +10,7 @@ import 'dart:html' show DivElement;
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../jobs.dart';
+import '../launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../sdk.dart';
@@ -92,6 +93,14 @@ void smokeTest() {
   // atom.project.onDidChangePaths.listen((e) {
   //   print("dirs = ${e}");
   // });
+
+  // launches
+  Launch launch = new Launch(launchManager, 'launch_test.sh');
+  launchManager.addLaunch(launch);
+  new Timer(new Duration(seconds: 10), () {
+    launch.launchTerminated();
+    //new Timer(new Duration(seconds: 2), () => launchManager.removeLaunch(launch));
+  });
 
   // sdk
   var sdk = sdkManager.sdk;

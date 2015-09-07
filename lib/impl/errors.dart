@@ -16,7 +16,6 @@ import '../utils.dart';
 import '../views.dart';
 
 final String _errorPref = '${pluginId}.useErrorsView';
-
 final String _initKeyPath = '_dartlang._errorsInitialized';
 
 class ErrorsController implements Disposable {
@@ -139,10 +138,6 @@ class ErrorsView extends AtomView {
 
     bool hidden = state['errorViewShowing'] == false;
     hidden ? hide() : show();
-  }
-
-  void toggle() {
-    isVisible() ? hide() : show();
   }
 
   void show() {
@@ -281,7 +276,9 @@ class ErrorsStatusElement implements Disposable {
 
     statusTile = statusBar.addLeftTile(item: _element.element, priority: -100);
 
-    if (!isShowing()) _element.element.style.display = 'none';
+    if (!isShowing()) {
+      _element.element.style.display = 'none';
+    }
 
     _handleErrorsChanged([]);
   }

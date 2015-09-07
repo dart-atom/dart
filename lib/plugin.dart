@@ -29,6 +29,7 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'impl/changelog.dart';
+import 'impl/console.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/errors.dart';
 import 'impl/outline.dart';
@@ -37,6 +38,7 @@ import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
 import 'jobs.dart';
+import 'launch.dart';
 import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
@@ -56,6 +58,7 @@ class AtomDartPackage extends AtomPackage {
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
 
   ErrorsController errorsController;
+  ConsoleController consoleController;
   DartLinterConsumer _consumer;
 
   AtomDartPackage() {
@@ -64,6 +67,7 @@ class AtomDartPackage extends AtomPackage {
       StatusBar statusBar = new StatusBar(obj);
 
       if (errorsController != null) errorsController.initStatusBar(statusBar);
+      if (consoleController != null) consoleController.initStatusBar(statusBar);
 
       StatusDisplay statusDisplay = new StatusDisplay(statusBar);
       disposables.add(statusDisplay);
@@ -105,6 +109,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
+    disposables.add(deps[LaunchManager] = new LaunchManager());
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
     PubManager pubManager = new PubManager();
@@ -125,6 +130,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
     disposables.add(new QuickFixHelper());
+    disposables.add(consoleController = new ConsoleController());
 
     disposables.add(new UsageManager());
 

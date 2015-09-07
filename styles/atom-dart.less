@@ -61,7 +61,7 @@
 
 div.atom-view {
   min-width: 100px;
-  min-height: 54px;
+  min-height: 53px;
   height: 100%;
   padding-left: 0;
   padding-right: 0;
@@ -337,6 +337,10 @@ atom-notification.success code {
       align-self: flex-end;
       margin-top: 4px;
     }
+
+    .badge {
+      margin-left: 5px;
+    }
   }
 
   .view-content {
@@ -494,3 +498,27 @@ atom-notification {
 //   from {transform:rotate(0deg);}
 //   to {transform:rotate(360deg);}
 // }
+
+/* console */
+
+.console-view {
+  .console-title-area {
+    position: absolute;
+    top: 6px;
+    right: 20px;
+    -webkit-user-select: none;
+
+    .badge {
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    .launch-terminated {
+      font-style: italic;
+    }
+  }
+
+  .view-content {
+    padding: 3px;
+  }
+}

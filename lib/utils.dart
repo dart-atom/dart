@@ -27,7 +27,11 @@ String toTitleCase(String str) {
   return str.substring(0, 1).toUpperCase() + str.substring(1);
 }
 
-String pluralize(String word, int count) => count == 1 ? word : '${word}s';
+String pluralize(String word, int count) {
+  if (count == 1) return word;
+  if (word.endsWith('s')) return '${word}es';
+  return '${word}s';
+}
 
 String commas(int n) {
   String str = '${n}';
