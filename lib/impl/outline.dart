@@ -17,6 +17,8 @@ final String _keyPath = '${pluginId}.showOutlineView';
 
 // TODO: Have a scroll sync button: <span class='badge icon icon-diff-renamed'>
 
+// TODO: Have a close button?
+
 class OutlineController implements Disposable {
   Disposables disposables = new Disposables();
 

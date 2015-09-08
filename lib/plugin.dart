@@ -29,6 +29,7 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'impl/changelog.dart';
+import 'impl/console.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/errors.dart';
 import 'impl/outline.dart';
@@ -37,6 +38,7 @@ import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
 import 'jobs.dart';
+import 'launch.dart';
 import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
@@ -56,6 +58,7 @@ class AtomDartPackage extends AtomPackage {
   final StreamSubscriptions subscriptions = new StreamSubscriptions();
 
   ErrorsController errorsController;
+  ConsoleController consoleController;
   DartLinterConsumer _consumer;
 
   AtomDartPackage() {
@@ -64,6 +67,7 @@ class AtomDartPackage extends AtomPackage {
       StatusBar statusBar = new StatusBar(obj);
 
       if (errorsController != null) errorsController.initStatusBar(statusBar);
+      if (consoleController != null) consoleController.initStatusBar(statusBar);
 
       StatusDisplay statusDisplay = new StatusDisplay(statusBar);
       disposables.add(statusDisplay);
@@ -105,6 +109,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
+    disposables.add(deps[LaunchManager] = new LaunchManager());
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
     PubManager pubManager = new PubManager();
@@ -125,6 +130,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
     disposables.add(new QuickFixHelper());
+    disposables.add(consoleController = new ConsoleController());
 
     disposables.add(new UsageManager());
 
@@ -279,20 +285,29 @@ class AtomDartPackage extends AtomPackage {
         'order': 2
       },
 
+      // auto show console
+      'autoShowConsole': {
+        'title': 'Auto open console',
+        'description': 'Automatically open the console when an application is run.',
+        'type': 'boolean',
+        'default': true,
+        'order': 3
+      },
+
       // show infos and todos
       'showInfos': {
         'title': 'Show infos',
         'description': 'Show informational level analysis issues.',
         'type': 'boolean',
         'default': true,
-        'order': 3
+        'order': 4
       },
       'showTodos': {
         'title': 'Show todos',
         'description': 'When showing infos, also show TODO items.',
         'type': 'boolean',
         'default': true,
-        'order': 3
+        'order': 4
       },
 
       // format on save
@@ -301,7 +316,7 @@ class AtomDartPackage extends AtomPackage {
         'description': 'Format the current editor on save.',
         'type': 'boolean',
         'default': false,
-        'order': 4
+        'order': 5
       },
 
       // no package symlinks
@@ -313,15 +328,6 @@ class AtomDartPackage extends AtomPackage {
             'this option enabled.',
         'type': 'boolean',
         'default': false,
-        'order': 5
-      },
-
-      // filter specific warnings
-      'filterUnnamedLibraryWarnings': {
-        'title': 'Filter unnamed library warnings',
-        'description': "Don't display warnings about unnamed libraries.",
-        'type': 'boolean',
-        'default': true,
         'order': 6
       },
 

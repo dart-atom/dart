@@ -7,14 +7,13 @@ import 'package:logging/logging.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../jobs.dart';
+import '../launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
 
-final Logger _logger = new Logger('sky');
-
-// TODO: introduce a key binding
+final Logger _logger = new Logger('sky.run_app');
 
 class SkyToolManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
@@ -49,9 +48,26 @@ class RunSkyAppJob extends Job {
 
   Future run() {
     DartProject project = projectManager.getProjectFor(path);
-    String sky_tool = join(project.directory, 'packages', 'sky', 'sky_tool');
+    if (project == null) return new Future.error("File not in a Dart project.");
 
+    // TODO: temp temp
+    if (path.endsWith('.sh')) {
+      ProcessRunner runner = new ProcessRunner(path, cwd: project.path);
+      Launch launch = new Launch(new LaunchType(LaunchType.SKY),
+          'lib/main.dart', launchManager);
+      launchManager.addLaunch(launch);
+      runner.execStreaming();
+      runner.onStdout.listen((str) => launch.pipeStdout(str));
+      runner.onStderr.listen((str) => launch.pipeStderr(str));
+      return runner.onExit.then((code) {
+        launch.launchTerminated(code);
+      });
+    }
+    // TODO: temp temp
+
+    String sky_tool = join(project.directory, 'packages', 'sky', 'sky_tool');
     bool exists = new File.fromPath(sky_tool).existsSync();
+
     if (!exists) {
       return new Future.error("Unable to locate 'packages/sky/sky_tool'; did "
           "you import the 'sky' package into your project?");
@@ -68,9 +84,21 @@ class RunSkyAppJob extends Job {
         'python', args: [sky_tool, 'start'], cwd: project.path);
     }
 
-    ProcessNotifier notifier = new ProcessNotifier(name);
+    Launch launch = new Launch(
+        new LaunchType(LaunchType.SKY),
+        'lib/main.dart',
+        launchManager);
+    launchManager.addLaunch(launch);
+
     runner.execStreaming();
-    return notifier.watch(runner);
+
+    // TODO: Add the ability to kill the process.
+    runner.onStdout.listen((str) => launch.pipeStdout(str));
+    runner.onStderr.listen((str) => launch.pipeStderr(str));
+
+    return runner.onExit.then((code) {
+      launch.launchTerminated(code);
+    });
   }
 }
 

@@ -11,6 +11,7 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'jobs.dart';
+import 'launch.dart';
 import 'projects.dart';
 import 'sdk.dart';
 
@@ -20,6 +21,7 @@ AnalysisServer get analysisServer => deps[AnalysisServer];
 EditorManager get editorManager => deps[EditorManager];
 ErrorRepository get errorRepository => deps[ErrorRepository];
 JobManager get jobs => deps[JobManager];
+LaunchManager get launchManager => deps[LaunchManager];
 ProjectManager get projectManager => deps[ProjectManager];
 SdkManager get sdkManager => deps[SdkManager];
 final State state = new State();

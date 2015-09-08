@@ -34,8 +34,6 @@
 
   .badge-count {
     display: none;
-    vertical-align: initial;
-    text-shadow: none;
   }
 
   .badge-count.showing {
@@ -63,7 +61,7 @@
 
 div.atom-view {
   min-width: 100px;
-  min-height: 54px;
+  min-height: 53px;
   height: 100%;
   padding-left: 0;
   padding-right: 0;
@@ -303,15 +301,16 @@ atom-notification.success code {
   text-shadow: none;
 }
 
-/* Error view */
-
-.errors-status {
-  span.badge {
+.dartlang {
+  .badge {
     padding: 2px 5px;
     vertical-align: initial;
     text-shadow: none;
+    font-size: inherit;
   }
 }
+
+/* Error view */
 
 .errors-view {
   .errors-focus-area {
@@ -323,12 +322,6 @@ atom-notification.success code {
     -webkit-user-select: none;
     //background-color: @overlay-background-color;
 
-    .badge {
-      padding: 2px 5px;
-      vertical-align: initial;
-      margin-left: 5px;
-    }
-
     .focus-title {
       align-self: flex-end;
     }
@@ -336,6 +329,10 @@ atom-notification.success code {
     .errors-count {
       align-self: flex-end;
       margin-top: 4px;
+    }
+
+    .badge {
+      margin-left: 5px;
     }
   }
 
@@ -494,3 +491,35 @@ atom-notification {
 //   from {transform:rotate(0deg);}
 //   to {transform:rotate(360deg);}
 // }
+
+/* console */
+
+.console-view {
+  .console-title-area {
+    position: absolute;
+    top: 6px;
+    right: 20px;
+    -webkit-user-select: none;
+
+    .badge {
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    .launch-terminated {
+      font-style: italic;
+    }
+  }
+
+  .view-content {
+    padding: 3px;
+  }
+
+  .console-line {
+    white-space: pre;
+  }
+
+  .console-error {
+    color: @text-color-error;
+  }
+}

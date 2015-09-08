@@ -180,8 +180,6 @@ class AtomView implements Disposable  {
     if (groupName != null) {
       groupManager.addView(groupName, this);
     }
-
-    show();
   }
 
   void _setupResizer(String prefName, ViewResizer resizer) {
@@ -216,6 +214,8 @@ class AtomView implements Disposable  {
   }
 
   bool isVisible() => _panel.isVisible();
+
+  void toggle() => isVisible() ? hide() : show();
 
   void show() {
     _panel.show();
