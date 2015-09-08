@@ -24,7 +24,6 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
 
     add(atom.config.observe(_infosPrefPath, null, regen));
     add(atom.config.observe(_todosPrefPath, null, regen));
-    add(atom.config.observe(_filterUnnamedLibraryWarningsPath, null, regen));
 
     EventStream errorStream = new EventStream(
         _errorRepository.onChange).debounce(_reportingDelay);
@@ -68,12 +67,10 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
   List _filter(List<AnalysisError> issues) {
     bool showInfos = _shouldShowInfoMessages();
     bool showTodos = _shouldShowTodosMessages();
-    bool filterUnnamed = _shouldFilterUnnamedLibraryWarnings();
 
     return issues.where((AnalysisError issue) {
       if (!showInfos && issue.severity == 'INFO') return false;
       if (!showTodos && issue.type == 'TODO') return false;
-      if (filterUnnamed && issue.message.contains('cannot both be unnamed')) return false;
 
       return true;
     }).toList();

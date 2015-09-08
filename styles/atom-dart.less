@@ -128,20 +128,13 @@ div.atom-view {
 }
 
 .close-button {
+  top: 1px;
   color: @text-color;
   cursor: default;
   margin-left: 8px;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  padding-left: 6px;
 }
 
 .close-button:hover {
-  background-color: @background-color-highlight;
-}
-
-.close-button:active {
   color: @text-color-highlight;
 }
 
@@ -153,8 +146,8 @@ div.atom-view {
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   font-size: 12px;
-  /*width: 12px;
-  height: 12px;*/
+  width: 12px;
+  height: 12px;
   content: "\f081";
 }
 
@@ -520,5 +513,13 @@ atom-notification {
 
   .view-content {
     padding: 3px;
+  }
+
+  .console-line {
+    white-space: pre;
+  }
+
+  .console-error {
+    color: @text-color-error;
   }
 }

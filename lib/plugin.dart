@@ -285,20 +285,29 @@ class AtomDartPackage extends AtomPackage {
         'order': 2
       },
 
+      // auto show console
+      'autoShowConsole': {
+        'title': 'Auto open console',
+        'description': 'Automatically open the console when an application is run.',
+        'type': 'boolean',
+        'default': true,
+        'order': 3
+      },
+
       // show infos and todos
       'showInfos': {
         'title': 'Show infos',
         'description': 'Show informational level analysis issues.',
         'type': 'boolean',
         'default': true,
-        'order': 3
+        'order': 4
       },
       'showTodos': {
         'title': 'Show todos',
         'description': 'When showing infos, also show TODO items.',
         'type': 'boolean',
         'default': true,
-        'order': 3
+        'order': 4
       },
 
       // format on save
@@ -307,7 +316,7 @@ class AtomDartPackage extends AtomPackage {
         'description': 'Format the current editor on save.',
         'type': 'boolean',
         'default': false,
-        'order': 4
+        'order': 5
       },
 
       // no package symlinks
@@ -319,15 +328,6 @@ class AtomDartPackage extends AtomPackage {
             'this option enabled.',
         'type': 'boolean',
         'default': false,
-        'order': 5
-      },
-
-      // filter specific warnings
-      'filterUnnamedLibraryWarnings': {
-        'title': 'Filter unnamed library warnings',
-        'description': "Don't display warnings about unnamed libraries.",
-        'type': 'boolean',
-        'default': true,
         'order': 6
       },
 

@@ -59,7 +59,7 @@ void smokeTest() {
   // notifications
   Notification notification = atom.notifications.addInfo(
     'Hello world from dart-lang!',
-    detail: 'Foo bar.',
+    detail: 'Foo bar 1.',
     description: ' ',
     dismissable: true);
   notification.onDidDismiss.listen((_) => print('notification closed'));
@@ -69,10 +69,10 @@ void smokeTest() {
   helper.setSummary('Running...');
   helper.setNoWrap();
   helper.setRunning();
-  helper.appendText(loremIpsum.replaceAll('. ', '.\n').replaceAll(', ', ',\n'));
+  helper.appendText('Foo bar 2.');
   new Timer(new Duration(seconds: 3), () {
+    helper.appendText('Foo bar 3.');
     helper.setSummary('Finished in 3.10 seconds.');
-    helper.appendText(loremIpsum.replaceAll('. ', '.\n').replaceAll(', ', ',\n'));
     helper.showSuccess();
   });
 
@@ -95,12 +95,10 @@ void smokeTest() {
   // });
 
   // launches
-  Launch launch = new Launch(launchManager, 'launch_test.sh');
+  Launch launch = new Launch(new LaunchType(LaunchType.CLI),
+      'launch_test.sh', launchManager);
   launchManager.addLaunch(launch);
-  new Timer(new Duration(seconds: 10), () {
-    launch.launchTerminated();
-    //new Timer(new Duration(seconds: 2), () => launchManager.removeLaunch(launch));
-  });
+  new Timer(new Duration(seconds: 12), () => launch.launchTerminated(0));
 
   // sdk
   var sdk = sdkManager.sdk;

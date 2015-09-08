@@ -4,7 +4,10 @@ A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 
 [![Build Status](https://travis-ci.org/dart-atom/dartlang.svg)](https://travis-ci.org/dart-atom/dartlang)
 
-![Screenshot of Dart plugin](https://raw.githubusercontent.com/dart-atom/dartlang/master/doc/images/screenshot.png)
+## Getting started
+
+See our [getting started guide](https://dart-atom.github.io/dartlang/)! This is
+useful for users new to the plugin and users new to Atom as well.
 
 ## What is it?
 
@@ -19,12 +22,6 @@ type, code completion, refactorings, and integration with Pub and other tools.
   Atom UI)
 - install this [dartlang][] package (with `apm install dartlang` or through the
   Atom UI)
-
-## Getting started
-
-See our [getting started](https://dart-atom.github.io/dartlang/) guide for a
-walkthrough of how to use all the Dart features. This is useful for users new to
-the plugin and users new to Atom as well.
 
 ## Sending feedback
 

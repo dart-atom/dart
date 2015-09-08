@@ -1,5 +1,7 @@
 library atom.console;
 
+import 'dart:html' show ScrollAlignment;
+
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../elements.dart';
@@ -11,6 +13,7 @@ import '../views.dart';
 class ConsoleController implements Disposable {
   ConsoleView view;
   ConsoleStatusElement statusElement;
+
   Disposables disposables = new Disposables();
 
   ConsoleController() {
@@ -36,72 +39,131 @@ class ConsoleController implements Disposable {
   }
 }
 
-// TODO: hide when last running launch terminates (w/o error?)
+// TODO: subtitle of debug | clear | kill
 
-// TODO: auto show when a launch starts, if set in the prefs
+// TODO: close button somewhere
 
 class ConsoleView extends AtomView {
-  CoreElement body;
+  static bool get autoShowConsole => atom.config.getValue('${pluginId}.autoShowConsole');
+
   CoreElement title;
 
+  _LaunchController _activeController;
+  Map<Launch, _LaunchController> _controllers = {};
+
   ConsoleView() : super('Console', classes: 'console-view dartlang', prefName: 'Console',
-      rightPanel: false, cancelCloses: false, showTitle: false) {
+      rightPanel: false, showTitle: false) {
     root.toggleClass('tree-view', false);
 
-    // TODO: show a close button
-
     content.add([
-      body = div(),
       title = div(c: 'console-title-area')
     ]);
 
-    // TODO: listen for launch changes
-
-    // TODO: track launch output
-
-    // TODO: auto-open on launch? on launch with console output?
-
     subs.add(launchManager.onLaunchAdded.listen(_launchAdded));
     subs.add(launchManager.onChangedActiveLaunch.listen(_changedActiveLaunch));
-    subs.add(launchManager.onLaunchChanged.listen((_) => _buildTitle()));
+    subs.add(launchManager.onLaunchChanged.listen(_launchChanged));
     subs.add(launchManager.onLaunchRemoved.listen(_launchRemoved));
   }
 
   void _launchAdded(Launch launch) {
-    // TODO:
-    _buildTitle();
+    _controllers[launch] = new _LaunchController(this, launch);
+
+    // Auto show when a launch starts.
+    if (!isVisible() && autoShowConsole) {
+      show();
+    }
+  }
+
+  void _launchChanged(Launch launch) {
+    _activeController.updateStatus();
   }
 
   void _changedActiveLaunch(Launch launch) {
-    // TODO:
-    _buildTitle();
+    if (_activeController != null) _activeController.deactivate();
+    _activeController = _controllers[launch];
+    if (_activeController != null) _activeController.activate();
   }
 
   void _launchRemoved(Launch launch) {
-    // TODO:
-    _buildTitle();
+    _controllers.remove(launch).dispose();
+  }
+}
+
+class _LaunchController implements Disposable {
+  // Only show a set amount of lines of output.
+  static const _max_lines = 200;
+
+  final ConsoleView view;
+  final Launch launch;
+
+  CoreElement badge;
+  CoreElement element;
+  StreamSubscriptions subs = new StreamSubscriptions();
+
+  _LaunchController(this.view, this.launch) {
+    badge = view.title.add(span(c: 'badge'));
+    badge.click(() => launch.manager.setActiveLaunch(launch));
+    updateStatus();
+
+    element = div(c: 'console-line');
+
+    subs.add(launch.onStdout.listen((str) => _emitText(str)));
+    subs.add(launch.onStderr.listen((str) => _emitText(str, true)));
   }
 
-  // TODO: subtitle of debug | clear | kill
+  void activate() {
+    _updateToggles();
+    view.content.add(element.element);
+  }
 
-  void _buildTitle() {
-    // TODO: close button somewhere
+  void updateStatus() {
+    _updateToggles();
 
-    title.clear();
+    if (launch.isRunning) {
+      badge.text = '${launch.launchType.type}: ${launch.title}';
+    } else {
+      badge.toggleClass('launch-terminated');
+      badge.text = '${launch.launchType.type}: ${launch.title} [${launch.exitCode}]';
+      _emitText('\n');
+      _emitBadge('exited with code ${launch.exitCode}',
+          launch.errored ? 'error' : 'info');
+    }
+  }
 
-    for (Launch launch in launchManager.launches) {
-      CoreElement badge = span(c: 'badge');
-      if (launch.isActive) badge.toggleClass('badge-info');
+  void deactivate() {
+    _updateToggles();
+    element.dispose();
+  }
 
-      if (launch.isRunning) {
-        badge.text = launch.title;
-      } else {
-        badge.toggleClass('launch-terminated');
-        badge.text = '${launch.title} [0]'; // TODO: use a real exit code
-      }
+  void _updateToggles() {
+    badge.toggleClass('badge-info', launch.isActive && !launch.errored);
+    badge.toggleClass('badge-error', launch.isActive && launch.errored);
+  }
 
-      badge.click(() => launch.manager.setActiveLaunch(launch));
-      title.add(badge);
+  void dispose() {
+    badge.dispose();
+    element.dispose();
+    subs.cancel();
+  }
+
+  void _emitBadge(String text, String type) {
+    CoreElement e = element.add(span(text: text, c: 'badge badge-${type}'));
+    if (element.element.parent != null) {
+      e.element.scrollIntoView(ScrollAlignment.BOTTOM);
+    }
+  }
+
+  void _emitText(String str, [bool error = false]) {
+    CoreElement e = element.add(span(text: str));
+    if (error) e.toggleClass('console-error');
+
+    List children = element.element.children;
+    if (children.length > _max_lines) {
+      children.remove(children.first);
+    }
+
+    if (element.element.parent != null) {
+      e.element.scrollIntoView(ScrollAlignment.BOTTOM);
     }
   }
 }

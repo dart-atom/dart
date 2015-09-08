@@ -3,9 +3,8 @@ library atom.launch;
 
 import 'dart:async';
 
+import 'atom.dart';
 import 'utils.dart';
-
-// TODO: launch type: sky, cli, web, shell, ...
 
 class LaunchManager implements Disposable {
   StreamController<Launch> _launchAdded = new StreamController.broadcast();
@@ -23,18 +22,21 @@ class LaunchManager implements Disposable {
 
   List<Launch> get launches => _launches;
 
-  // TODO: automatically remove all dead launches?
-
   void addLaunch(Launch launch) {
     _launches.add(launch);
-    bool activeChanged = false;
-    if (_activeLaunch == null) {
-      _activeLaunch = launch;
-      activeChanged = true;
-    }
+    _activeLaunch = launch;
+
+    // Automatically remove all dead launches.
+    List removed = [];
+    _launches.removeWhere((l) {
+      if (l.isTerminated) removed.add(l);
+      return l.isTerminated;
+    });
+
+    removed.forEach((l) => _launchRemoved.add(l));
 
     _launchAdded.add(launch);
-    if (activeChanged) _changedActiveLaunch.add(launch);
+    _changedActiveLaunch.add(launch);
   }
 
   void removeLaunch(Launch launch) {
@@ -65,31 +67,61 @@ class LaunchManager implements Disposable {
   void dispose() { }
 }
 
+class LaunchType {
+  static const CLI = 'cli';
+  static const SHELL = 'shell';
+  static const SKY = 'sky';
+  static const WEB = 'web';
+
+  final String type;
+
+  LaunchType(this.type);
+
+  operator== (obj) => obj is LaunchType && obj.type == type;
+
+  int get hashCode => type.hashCode;
+
+  String toString() => type;
+}
+
 class Launch {
-  final LaunchManager manager;
+  final LaunchType launchType;
   final String title;
+  final LaunchManager manager;
 
-  bool isTerminated = false;
+  StreamController<String> _stdout = new StreamController.broadcast();
+  StreamController<String> _stderr = new StreamController.broadcast();
 
-  Launch(this.manager, this.title);
+  int _exitCode;
 
-  // TODO: launch state changed
+  Launch(this.launchType, this.title, this.manager);
 
-  //final Console console;
+  int get exitCode => _exitCode;
+  bool get errored => _exitCode != null && _exitCode != 0;
 
-  bool get isRunning => !isTerminated;
+  bool get isRunning => _exitCode == null;
+  bool get isTerminated => _exitCode != null;
+
   bool get isActive => manager.activeLaunch == this;
 
-  // public?
-  void launchTerminated() {
-    if (isTerminated) return;
-    isTerminated = true;
+  Stream<String> get onStdout => _stdout.stream;
+  Stream<String> get onStderr => _stderr.stream;
+
+  void pipeStdout(String str) => _stdout.add(str);
+  void pipeStderr(String str) => _stderr.add(str);
+
+  void launchTerminated(int exitCode) {
+    if (_exitCode != null) return;
+    _exitCode = exitCode;
+
+    if (errored) {
+      atom.notifications.addError('${this} exited with error code ${exitCode}.');
+    } else {
+      atom.notifications.addSuccess('${this} finished.');
+    }
+
     manager._launchChanged.add(this);
   }
 
-}
-
-// TODO: stdout, stderr, exit code
-class Console {
-
+  String toString() => '${launchType}: ${title}';
 }
