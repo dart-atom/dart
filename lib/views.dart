@@ -118,7 +118,8 @@ class ViewResizer extends CoreElement {
 }
 
 class AtomView implements Disposable  {
-  static const int _defaultSize = 250;
+  static const int _defaultWidth = 250;
+  static const int _defaultHeight = 125;
 
   static ViewGroupManager get groupManager {
     if (deps[ViewGroupManager] == null) deps[ViewGroupManager] = new ViewGroupManager();
@@ -165,7 +166,7 @@ class AtomView implements Disposable  {
     ]);
 
     if (prefName == null && groupName != null) prefName = groupName;
-    _setupResizer(prefName, resizer);
+    _setupResizer(prefName, resizer, rightPanel ? _defaultWidth : _defaultHeight);
 
     if (rightPanel) {
       _panel = atom.workspace.addRightPanel(item: root.element, visible: false);
@@ -182,11 +183,11 @@ class AtomView implements Disposable  {
     }
   }
 
-  void _setupResizer(String prefName, ViewResizer resizer) {
+  void _setupResizer(String prefName, ViewResizer resizer, int defaultSize) {
     if (prefName == null) {
-      resizer.position = _defaultSize;
+      resizer.position = defaultSize;
     } else {
-      if (state[prefName] != null) resizer.position = state[prefName];
+      resizer.position = state[prefName] == null ? defaultSize : state[prefName];
 
       bool _amChanging = false;
 

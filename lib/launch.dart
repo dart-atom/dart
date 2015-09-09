@@ -8,10 +8,9 @@ import 'utils.dart';
 
 class LaunchManager implements Disposable {
   StreamController<Launch> _launchAdded = new StreamController.broadcast();
-  StreamController<Launch> _launchChanged = new StreamController.broadcast();
+  StreamController<Launch> _launchActivated = new StreamController.broadcast();
+  StreamController<Launch> _launchTerminated = new StreamController.broadcast();
   StreamController<Launch> _launchRemoved = new StreamController.broadcast();
-
-  StreamController<Launch> _changedActiveLaunch = new StreamController.broadcast();
 
   Launch _activeLaunch;
   final List<Launch> _launches = [];
@@ -34,9 +33,8 @@ class LaunchManager implements Disposable {
     });
 
     removed.forEach((l) => _launchRemoved.add(l));
-
     _launchAdded.add(launch);
-    _changedActiveLaunch.add(launch);
+    _launchActivated.add(launch);
   }
 
   void removeLaunch(Launch launch) {
@@ -49,20 +47,20 @@ class LaunchManager implements Disposable {
     }
 
     _launchRemoved.add(launch);
-    if (activeChanged) _changedActiveLaunch.add(_activeLaunch);
+    if (activeChanged) _launchActivated.add(_activeLaunch);
   }
 
   void setActiveLaunch(Launch launch) {
     if (launch != _activeLaunch) {
       _activeLaunch = launch;
-      _changedActiveLaunch.add(_activeLaunch);
+      _launchActivated.add(_activeLaunch);
     }
   }
 
   Stream<Launch> get onLaunchAdded => _launchAdded.stream;
-  Stream<Launch> get onLaunchChanged => _launchChanged.stream;
+  Stream<Launch> get onLaunchActivated => _launchActivated.stream;
+  Stream<Launch> get onLaunchTerminated => _launchTerminated.stream;
   Stream<Launch> get onLaunchRemoved => _launchRemoved.stream;
-  Stream<Launch> get onChangedActiveLaunch => _changedActiveLaunch.stream;
 
   void dispose() { }
 }
@@ -85,9 +83,12 @@ class LaunchType {
 }
 
 class Launch {
+  static int _id = 0;
+
   final LaunchType launchType;
   final String title;
   final LaunchManager manager;
+  final int id = ++_id;
 
   StreamController<String> _stdout = new StreamController.broadcast();
   StreamController<String> _stderr = new StreamController.broadcast();
@@ -120,8 +121,8 @@ class Launch {
       atom.notifications.addSuccess('${this} finished.');
     }
 
-    manager._launchChanged.add(this);
+    manager._launchTerminated.add(this);
   }
 
-  String toString() => '${launchType}: ${title}';
+  String toString() => '${launchType}-${id}: ${title}';
 }
