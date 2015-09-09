@@ -4,6 +4,7 @@
 - added an issue count to the problems view
 - added a console view to display stdout from launched applications
 - added a status line contribution to track launched applications
+- running a Sky app now pipes the stdout back to the console view
 
 ## 0.4.3
 - improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)

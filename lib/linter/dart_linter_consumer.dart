@@ -71,6 +71,7 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
     return issues.where((AnalysisError issue) {
       if (!showInfos && issue.severity == 'INFO') return false;
       if (!showTodos && issue.type == 'TODO') return false;
+      if (issue.message.endsWith('cannot both be unnamed')) return false;
 
       return true;
     }).toList();
