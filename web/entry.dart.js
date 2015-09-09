@@ -22351,16 +22351,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this.disposables.dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
       ConsoleController$0: function() {
-        var t1, t2, t3, t4, t5;
+        var t1, t2, t3, t4;
         t1 = [];
         t2 = new Y.ConsoleView(null, null, P.LinkedHashMap__makeEmpty(), null, null, null, new G.StreamSubscriptions(t1), null, null, null, null);
         t2.AtomView$7$cancelCloses$classes$groupName$prefName$rightPanel$showTitle("Console", true, "console-view dartlang", null, "Console", false, false);
-        J.get$classes$x(t2.root.element).toggle$2(0, "tree-view", false);
         t3 = t2.content;
-        t4 = t3.element;
-        t5 = J.getInterceptor$x(t4);
-        t5.setAttribute$2(t4, "layout", "");
-        t5.setAttribute$2(t4, "vertical", "");
         t4 = K.CoreElement$("div", null, "console-title-area", null);
         t2.ConsoleView_title = t4;
         t3.add$1(0, [t4]);
@@ -22404,7 +22399,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       }, "call$1", "get$_console$_launchAdded", 2, 0, 13, 18],
       _console$_launchTerminated$1: [function(launch) {
-        var t1, t2, t3, e;
+        var t1, t2, t3;
         t1 = this._console$_controllers.$index(0, launch);
         t1._updateToggles$0();
         t1.badge.toggleClass$2("launch-terminated", true);
@@ -22414,9 +22409,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1._emitText$1("\n");
         t2 = "exited with code " + H.S(t3.get$exitCode());
         t3 = t3.get$errored() ? "error" : "info";
-        e = t1.output.add$1(0, K.CoreElement$("span", null, "badge badge-" + t3, t2));
+        t1.output.add$1(0, K.CoreElement$("span", null, "badge badge-" + t3, t2));
         if (J.get$parent$x(t1.output.element) != null)
-          J.scrollIntoView$1$x(e.get$element(), C.ScrollAlignment_BOTTOM);
+          J.scrollIntoView$1$x(t1.output.element, C.ScrollAlignment_BOTTOM);
       }, "call$1", "get$_console$_launchTerminated", 2, 0, 13, 18],
       _console$_launchActivated$1: [function(launch) {
         var t1 = this._activeController;
@@ -22473,9 +22468,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = this.launch;
         J.set$text$x(this.badge, "[" + t1.get$launchType().type + "] " + H.S(J.get$title$x(t1)));
         this._updateToggles$0();
-        t2 = K.CoreElement$("pre", null, "console-line", null);
-        t2.flex$0(0);
-        this.output = t2;
+        this.output = K.CoreElement$("pre", null, "console-line", null);
         t2 = this.subs._subscriptions;
         t2.push(t1.get$onStdout().listen$1(new Y._LaunchController_closure0(this)));
         t2.push(t1.get$onStderr().listen$1(new Y._LaunchController_closure1(this)));
@@ -23571,7 +23564,6 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this.enabled = t1._config.getValue$1("dartlang.useErrorsView");
         t3 = new G.ErrorsView(null, null, null, null, null, null, null, new G.StreamSubscriptions([]), null, null, null, null);
         t3.AtomView$7$cancelCloses$classes$groupName$prefName$rightPanel$showTitle("Errors", false, "errors-view dartlang", null, "Errors", false, false);
-        J.get$classes$x(t3.root.element).toggle$2(0, "tree-view", false);
         t4 = t3.content;
         t5 = K.CoreElement$("div", null, null, null);
         t3.body = t5;

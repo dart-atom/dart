@@ -126,7 +126,7 @@ class ErrorsView extends AtomView {
 
   ErrorsView() : super('Errors', classes: 'errors-view dartlang', prefName: 'Errors',
       rightPanel: false, cancelCloses: false, showTitle: false) {
-    root.toggleClass('tree-view', false);
+    //root.toggleClass('tree-view', false);
 
     content.add([
       body = div(),

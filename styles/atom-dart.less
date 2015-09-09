@@ -310,6 +310,10 @@ atom-notification.success code {
   }
 }
 
+status-bar .dartlang .badge {
+  cursor: pointer;
+}
+
 /* Error view */
 
 .errors-view {
@@ -333,6 +337,7 @@ atom-notification.success code {
 
     .badge {
       margin-left: 5px;
+      cursor: default;
     }
   }
 
@@ -499,7 +504,7 @@ atom-notification {
     position: absolute;
     top: 6px;
     right: 20px;
-    -webkit-user-select: none;
+    z-index: 1;
 
     .badge {
       margin-left: 5px;
@@ -516,9 +521,10 @@ atom-notification {
   }
 
   .console-line {
-    //white-space: pre;
     word-wrap: normal;
     padding: 6px;
+    background-color: inherit;
+    -webkit-user-select: text;
   }
 
   .console-error {
