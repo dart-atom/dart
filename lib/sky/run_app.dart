@@ -48,22 +48,8 @@ class RunSkyAppJob extends Job {
 
   Future run() {
     DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return new Future.error("File not in a Dart project.");
 
-    // TODO: temp temp
-    if (path.endsWith('.sh')) {
-      ProcessRunner runner = new ProcessRunner(path, cwd: project.path);
-      Launch launch = new Launch(new LaunchType(LaunchType.SKY),
-          'lib/main.dart', launchManager);
-      launchManager.addLaunch(launch);
-      runner.execStreaming();
-      runner.onStdout.listen((str) => launch.pipeStdout(str));
-      runner.onStderr.listen((str) => launch.pipeStderr(str));
-      return runner.onExit.then((code) {
-        launch.launchTerminated(code);
-      });
-    }
-    // TODO: temp temp
+    if (project == null) return new Future.error("File not in a Dart project.");
 
     String sky_tool = join(project.directory, 'packages', 'sky', 'sky_tool');
     bool exists = new File.fromPath(sky_tool).existsSync();
@@ -87,12 +73,12 @@ class RunSkyAppJob extends Job {
     Launch launch = new Launch(
         new LaunchType(LaunchType.SKY),
         'lib/main.dart',
-        launchManager);
+        launchManager,
+        killHandler: () => runner.kill());
     launchManager.addLaunch(launch);
 
     runner.execStreaming();
 
-    // TODO: Add the ability to kill the process.
     runner.onStdout.listen((str) => launch.pipeStdout(str));
     runner.onStderr.listen((str) => launch.pipeStderr(str));
 

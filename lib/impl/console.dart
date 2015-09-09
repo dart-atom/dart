@@ -39,14 +39,13 @@ class ConsoleController implements Disposable {
   }
 }
 
-// TODO: subtitle of debug | clear | kill
-
-// TODO: close button somewhere
+// TODO: Close button somewhere?
 
 class ConsoleView extends AtomView {
   static bool get autoShowConsole => atom.config.getValue('${pluginId}.autoShowConsole');
 
-  CoreElement title;
+  CoreElement tabsElement;
+  CoreElement buttonsElement;
 
   _LaunchController _activeController;
   Map<Launch, _LaunchController> _controllers = {};
@@ -56,7 +55,10 @@ class ConsoleView extends AtomView {
     //root.toggleClass('tree-view', false);
 
     content..add([
-      title = div(c: 'console-title-area')
+      div(c: 'console-title-area')..add([
+        tabsElement = div(c: 'console-tabs'),
+        buttonsElement = div(c: 'console-buttons')
+      ])
     ]);
 
     subs.add(launchManager.onLaunchAdded.listen(_launchAdded));
@@ -86,6 +88,8 @@ class ConsoleView extends AtomView {
 
   void _launchRemoved(Launch launch) {
     _controllers.remove(launch).dispose();
+
+    if (_controllers.isEmpty && isVisible()) hide();
   }
 }
 
@@ -101,7 +105,7 @@ class _LaunchController implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
 
   _LaunchController(this.view, this.launch) {
-    badge = view.title.add(span(c: 'badge'));
+    badge = view.tabsElement.add(span(c: 'badge'));
     badge.click(() => launch.manager.setActiveLaunch(launch));
     badge.text = '[${launch.launchType.type}] ${launch.title}';
     _updateToggles();
@@ -114,11 +118,13 @@ class _LaunchController implements Disposable {
 
   void activate() {
     _updateToggles();
+    _updateButtons();
     view.content.add(output.element);
   }
 
   void handleTerminated() {
     _updateToggles();
+    _updateButtons();
 
     badge.toggleClass('launch-terminated', true);
     badge.text = '[${launch.launchType.type}] ${launch.title}: ${launch.exitCode}';
@@ -128,12 +134,37 @@ class _LaunchController implements Disposable {
 
   void deactivate() {
     _updateToggles();
+    _updateButtons();
     output.dispose();
   }
 
   void _updateToggles() {
     badge.toggleClass('badge-info', launch.isActive && !launch.errored);
     badge.toggleClass('badge-error', launch.isActive && launch.errored);
+  }
+
+  void _updateButtons() {
+    view.buttonsElement.clear();
+
+    if (!launch.isActive) return;
+
+    // [debug] [clear] [kill]
+
+    // clear
+    CoreElement clear = view.buttonsElement.add(span(text: 'clear', c: 'badge'));
+    clear.click(() {
+      if (launch.isRunning) {
+        output.element.children.clear();
+      } else {
+        launchManager.removeLaunch(launch);
+      }
+    });
+
+    // kill
+    if (launch.canKill() && launch.isRunning) {
+      CoreElement kill = view.buttonsElement.add(span(text: 'kill', c: 'badge'));
+      kill.click(() => launch.kill());
+    }
   }
 
   void dispose() {
@@ -145,7 +176,6 @@ class _LaunchController implements Disposable {
   void _emitBadge(String text, String type) {
     output.add(span(text: text, c: 'badge badge-${type}'));
     if (output.element.parent != null) {
-      // TODO: This does not take into account the 6px bottom padding.
       output.element.scrollIntoView(ScrollAlignment.BOTTOM);
     }
   }

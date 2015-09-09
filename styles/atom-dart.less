@@ -308,6 +308,10 @@ atom-notification.success code {
     text-shadow: none;
     font-size: inherit;
   }
+
+  .badge[disabled] {
+    cursor: default;
+  }
 }
 
 status-bar .dartlang .badge {
@@ -504,6 +508,8 @@ atom-notification {
     position: absolute;
     top: 6px;
     right: 20px;
+    display: flex;
+    flex-direction: column;
     z-index: 1;
 
     .badge {
@@ -511,8 +517,21 @@ atom-notification {
       cursor: pointer;
     }
 
+    .badge[disabled] {
+      cursor: default;
+    }
+
     .launch-terminated {
       font-style: italic;
+    }
+
+    .console-tabs {
+      align-self: flex-end;
+    }
+
+    .console-buttons {
+      margin-top: 4px;
+      align-self: flex-end;
     }
   }
 

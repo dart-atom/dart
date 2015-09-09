@@ -89,13 +89,14 @@ class Launch {
   final String title;
   final LaunchManager manager;
   final int id = ++_id;
+  final Function killHandler;
 
   StreamController<String> _stdout = new StreamController.broadcast();
   StreamController<String> _stderr = new StreamController.broadcast();
 
   int _exitCode;
 
-  Launch(this.launchType, this.title, this.manager);
+  Launch(this.launchType, this.title, this.manager, {this.killHandler});
 
   int get exitCode => _exitCode;
   bool get errored => _exitCode != null && _exitCode != 0;
@@ -110,6 +111,17 @@ class Launch {
 
   void pipeStdout(String str) => _stdout.add(str);
   void pipeStderr(String str) => _stderr.add(str);
+
+  bool canKill() => killHandler != null;
+
+  Future kill() {
+    if (killHandler != null) {
+      var f = killHandler();
+      return f is Future ? f : new Future.value();
+    } else {
+      return new Future.value();
+    }
+  }
 
   void launchTerminated(int exitCode) {
     if (_exitCode != null) return;

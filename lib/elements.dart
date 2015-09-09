@@ -158,7 +158,7 @@ class CoreElement {
     }
   }
 
-  Stream<MouseEvent> get onClick => element.onClick;
+  Stream<MouseEvent> get onClick => element.onClick.where((_) => !disabled);
 
   /// Subscribe to the [onClick] event stream with a no-arg handler.
   StreamSubscription<Event> click(void handle()) => onClick.listen((_) => handle());
