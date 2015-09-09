@@ -53,9 +53,9 @@ class ConsoleView extends AtomView {
 
   ConsoleView() : super('Console', classes: 'console-view dartlang', prefName: 'Console',
       rightPanel: false, showTitle: false) {
-    root.toggleClass('tree-view', false);
+    //root.toggleClass('tree-view', false);
 
-    content..layoutVertical()..add([
+    content..add([
       title = div(c: 'console-title-area')
     ]);
 
@@ -106,7 +106,7 @@ class _LaunchController implements Disposable {
     badge.text = '[${launch.launchType.type}] ${launch.title}';
     _updateToggles();
 
-    output = new CoreElement('pre', classes: 'console-line')..flex();
+    output = new CoreElement('pre', classes: 'console-line');
 
     subs.add(launch.onStdout.listen((str) => _emitText(str)));
     subs.add(launch.onStderr.listen((str) => _emitText(str, true)));
@@ -143,10 +143,10 @@ class _LaunchController implements Disposable {
   }
 
   void _emitBadge(String text, String type) {
-    CoreElement e = output.add(span(text: text, c: 'badge badge-${type}'));
+    output.add(span(text: text, c: 'badge badge-${type}'));
     if (output.element.parent != null) {
       // TODO: This does not take into account the 6px bottom padding.
-      e.element.scrollIntoView(ScrollAlignment.BOTTOM);
+      output.element.scrollIntoView(ScrollAlignment.BOTTOM);
     }
   }
 
