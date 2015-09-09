@@ -17,8 +17,6 @@ final Logger _logger = new Logger('formatting');
 int get _prefLineLength =>
     atom.config.getValue('editor.preferredLineLength', scope: ['source.dart']);
 
-// TODO: Run in an AnalysisRequestJob job.
-
 // TODO: this should be "FormattingCommandManger" (?), containing only logic
 // for responding to formatting commands sent by Atom.
 class FormattingHelper implements Disposable {
@@ -28,8 +26,8 @@ class FormattingHelper implements Disposable {
     _commands.add(atom.commands.add('.tree-view', 'dartlang:dart-format', (e) {
       formatFile(e.targetFilePath);
     }));
-    _commands.add(atom.commands.add('atom-text-editor', 'dartlang:dart-format',
-        (e) {
+    _commands
+        .add(atom.commands.add('atom-text-editor', 'dartlang:dart-format', (e) {
       formatEditor(e.editor);
     }));
   }
@@ -52,7 +50,7 @@ class FormattingHelper implements Disposable {
         atom.notifications.addSuccess('Formatting successful.');
       } else {
         atom.notifications
-            .addError('Error while formatting', detail: result.stderr);
+            .addError('Error while formatting', description: result.stderr);
       }
     });
   }
@@ -78,7 +76,6 @@ class FormattingHelper implements Disposable {
     int end = buffer.characterIndexForPosition(range.end);
 
     // TODO: If range.isNotEmpty, just format the given selection?
-
     return analysisServer
         .format(path, offset, end - offset, lineLength: _prefLineLength)
         .then((FormatResult result) {
@@ -96,8 +93,10 @@ class FormattingHelper implements Disposable {
       }
     }).catchError((e) {
       if (e is RequestError) {
-        atom.notifications
-            .addError('Error while formatting', detail: e.message);
+        if (!quiet) {
+          atom.notifications
+              .addError('Error while formatting', description: e.message);
+        }
       } else {
         atom.beep();
         _logger.warning('error when formatting: ${e}');

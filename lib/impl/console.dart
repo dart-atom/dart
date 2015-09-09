@@ -10,6 +10,8 @@ import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
 
+// TODO: Add a link for the observatory.
+
 class ConsoleController implements Disposable {
   ConsoleView view;
   ConsoleStatusElement statusElement;
@@ -92,6 +94,8 @@ class ConsoleView extends AtomView {
     if (_controllers.isEmpty && isVisible()) hide();
   }
 }
+
+// TODO: The buttons should be under the process name badge.
 
 class _LaunchController implements Disposable {
   // Only show a set amount of lines of output.
