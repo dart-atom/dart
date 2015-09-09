@@ -19,6 +19,10 @@ import 'utils.dart';
 
 export 'process.dart' show ProcessResult;
 
+// TODO: create an sdk status dialog (w/ the version)
+
+// TODO: print the sdk version on successful auto-location (and path)
+
 final String _prefPath = '${pluginId}.sdkLocation';
 
 final Version _minSdkVersion = new Version.parse('1.11.0');
@@ -81,7 +85,8 @@ class SdkManager implements Disposable {
   void showNoSdkMessage() {
     atom.notifications.addInfo(
         'No Dart SDK found.',
-        description: 'You can configure your SDK location in Settings > Packages > dart-lang > Settings.',
+        description: 'You can configure your SDK location in Settings > '
+            'Packages > dart-lang > Settings.',
         dismissable: true);
   }
 
@@ -169,7 +174,8 @@ class Sdk {
 
   Sdk(this.directory);
 
-  factory Sdk.fromPath(String path) => path == null ? null : new Sdk(new Directory.fromPath(path));
+  factory Sdk.fromPath(String path) =>
+      path == null ? null : new Sdk(new Directory.fromPath(path));
 
   bool get isValidSdk =>
       directory.getFile('version').existsSync() &&
@@ -213,7 +219,8 @@ class Sdk {
       //exec('/bin/bash', ['-l', '-c', 'which dart'])
       String arg = args.join(' ');
       arg = command + ' ' + arg;
-      ProcessRunner runner = new ProcessRunner('/bin/bash', args: ['-l', '-c', arg], cwd: cwd);
+      ProcessRunner runner = new ProcessRunner(
+          '/bin/bash', args: ['-l', '-c', arg], cwd: cwd);
       runner.execStreaming();
       return runner;
     } else {

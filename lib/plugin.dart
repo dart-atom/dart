@@ -233,15 +233,15 @@ class AtomDartPackage extends AtomPackage {
 
   void _showWelcomeToast() {
     getPackageVersion().then((String version) {
-      // where to find more info
-      // analytics disclaimer
+      // Show where to find more info and the analytics disclaimer.
       atom.notifications.addSuccess('Welcome to the dartlang plugin for Atom!',
         detail: 'v${version}',
-        description: 'For help using this plugin, please see the `Packages` > '
-          '`Dart` > `Getting Started` menu item.\n\n'
-          'The Dart plugin anonymously reports feature usage statistics and '
-          'basic crash reports to improve the tool over time. Please visit the '
-          'plugin\'s settings page to configure this behavior.',
+        description:
+          "For help using this plugin, please see our getting started guide, "
+          "available from the `Packages` > `Dart` > `Getting Started` menu item.\n\n"
+          "The Dart plugin anonymously reports feature usage statistics and "
+          "basic crash reports to improve the tool over time. Please visit the "
+          "plugin's settings page to configure this behavior.",
         dismissable: true);
     });
   }

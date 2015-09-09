@@ -83,7 +83,7 @@ div.atom-view {
   }
 
   .view-resize[vertical] {
-    cursor: col-resize;
+    cursor: ew-resize;
     z-index: 3;
     position: absolute;;
     top: 0;
@@ -92,7 +92,7 @@ div.atom-view {
   }
 
   .view-resize[horizontal] {
-    cursor: row-resize;
+    cursor: ns-resize;
     z-index: 3;
     position: absolute;;
     left: 0;
@@ -444,7 +444,7 @@ atom-text-editor::shadow .outline-view {
   }
 
   .view-resize[vertical] {
-    cursor: col-resize;
+    cursor: ew-resize;
     z-index: 3;
     position: absolute;
     left: 0;
@@ -512,11 +512,13 @@ atom-notification {
   }
 
   .view-content {
-    padding: 3px;
+    padding: 0;
   }
 
   .console-line {
-    white-space: pre;
+    //white-space: pre;
+    word-wrap: normal;
+    padding: 6px;
   }
 
   .console-error {

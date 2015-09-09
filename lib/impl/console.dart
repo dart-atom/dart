@@ -55,13 +55,13 @@ class ConsoleView extends AtomView {
       rightPanel: false, showTitle: false) {
     root.toggleClass('tree-view', false);
 
-    content.add([
+    content..layoutVertical()..add([
       title = div(c: 'console-title-area')
     ]);
 
     subs.add(launchManager.onLaunchAdded.listen(_launchAdded));
-    subs.add(launchManager.onChangedActiveLaunch.listen(_changedActiveLaunch));
-    subs.add(launchManager.onLaunchChanged.listen(_launchChanged));
+    subs.add(launchManager.onLaunchActivated.listen(_launchActivated));
+    subs.add(launchManager.onLaunchTerminated.listen(_launchTerminated));
     subs.add(launchManager.onLaunchRemoved.listen(_launchRemoved));
   }
 
@@ -74,11 +74,11 @@ class ConsoleView extends AtomView {
     }
   }
 
-  void _launchChanged(Launch launch) {
-    _activeController.updateStatus();
+  void _launchTerminated(Launch launch) {
+    _controllers[launch].handleTerminated();
   }
 
-  void _changedActiveLaunch(Launch launch) {
+  void _launchActivated(Launch launch) {
     if (_activeController != null) _activeController.deactivate();
     _activeController = _controllers[launch];
     if (_activeController != null) _activeController.activate();
@@ -97,15 +97,16 @@ class _LaunchController implements Disposable {
   final Launch launch;
 
   CoreElement badge;
-  CoreElement element;
+  CoreElement output;
   StreamSubscriptions subs = new StreamSubscriptions();
 
   _LaunchController(this.view, this.launch) {
     badge = view.title.add(span(c: 'badge'));
     badge.click(() => launch.manager.setActiveLaunch(launch));
-    updateStatus();
+    badge.text = '[${launch.launchType.type}] ${launch.title}';
+    _updateToggles();
 
-    element = div(c: 'console-line');
+    output = new CoreElement('pre', classes: 'console-line')..flex();
 
     subs.add(launch.onStdout.listen((str) => _emitText(str)));
     subs.add(launch.onStderr.listen((str) => _emitText(str, true)));
@@ -113,26 +114,21 @@ class _LaunchController implements Disposable {
 
   void activate() {
     _updateToggles();
-    view.content.add(element.element);
+    view.content.add(output.element);
   }
 
-  void updateStatus() {
+  void handleTerminated() {
     _updateToggles();
 
-    if (launch.isRunning) {
-      badge.text = '${launch.launchType.type}: ${launch.title}';
-    } else {
-      badge.toggleClass('launch-terminated');
-      badge.text = '${launch.launchType.type}: ${launch.title} [${launch.exitCode}]';
-      _emitText('\n');
-      _emitBadge('exited with code ${launch.exitCode}',
-          launch.errored ? 'error' : 'info');
-    }
+    badge.toggleClass('launch-terminated', true);
+    badge.text = '[${launch.launchType.type}] ${launch.title}: ${launch.exitCode}';
+    _emitText('\n');
+    _emitBadge('exited with code ${launch.exitCode}', launch.errored ? 'error' : 'info');
   }
 
   void deactivate() {
     _updateToggles();
-    element.dispose();
+    output.dispose();
   }
 
   void _updateToggles() {
@@ -142,28 +138,29 @@ class _LaunchController implements Disposable {
 
   void dispose() {
     badge.dispose();
-    element.dispose();
+    output.dispose();
     subs.cancel();
   }
 
   void _emitBadge(String text, String type) {
-    CoreElement e = element.add(span(text: text, c: 'badge badge-${type}'));
-    if (element.element.parent != null) {
+    CoreElement e = output.add(span(text: text, c: 'badge badge-${type}'));
+    if (output.element.parent != null) {
+      // TODO: This does not take into account the 6px bottom padding.
       e.element.scrollIntoView(ScrollAlignment.BOTTOM);
     }
   }
 
   void _emitText(String str, [bool error = false]) {
-    CoreElement e = element.add(span(text: str));
+    CoreElement e = output.add(span(text: str));
     if (error) e.toggleClass('console-error');
 
-    List children = element.element.children;
+    List children = output.element.children;
     if (children.length > _max_lines) {
       children.remove(children.first);
     }
 
-    if (element.element.parent != null) {
-      e.element.scrollIntoView(ScrollAlignment.BOTTOM);
+    if (output.element.parent != null) {
+      output.element.scrollIntoView(ScrollAlignment.BOTTOM);
     }
   }
 }
@@ -180,7 +177,7 @@ class ConsoleStatusElement implements Disposable {
 
   ConsoleStatusElement(this.parent, this._showing) {
     subs.add(launchManager.onLaunchAdded.listen(_handleLaunchesChanged));
-    subs.add(launchManager.onLaunchChanged.listen(_handleLaunchesChanged));
+    subs.add(launchManager.onLaunchTerminated.listen(_handleLaunchesChanged));
     subs.add(launchManager.onLaunchRemoved.listen(_handleLaunchesChanged));
   }
 
