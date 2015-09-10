@@ -15,6 +15,8 @@ import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
 
+// TODO: display error counts in-line with the title / focus
+
 final String _errorPref = '${pluginId}.useErrorsView';
 final String _initKeyPath = '_dartlang._errorsInitialized';
 
