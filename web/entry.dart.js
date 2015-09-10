@@ -6473,8 +6473,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.SkyToolManager_closure0[1];
     SkyToolManager_closure0.prototype = $desc;
     SkyToolManager_closure0.$__fields__ = [];
-    function RunSkyAppJob(path, name, schedulingRule) {
+    function RunSkyAppJob(path, _runner, name, schedulingRule) {
       this.path = path;
+      this._runner = _runner;
       this.name = name;
       this.schedulingRule = schedulingRule;
       this.$deferredAction();
@@ -6484,12 +6485,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       RunSkyAppJob.name = "RunSkyAppJob";
     $desc = $collectedClasses$.RunSkyAppJob[1];
     RunSkyAppJob.prototype = $desc;
-    RunSkyAppJob.$__fields__ = ["path", "name", "schedulingRule"];
+    RunSkyAppJob.$__fields__ = ["path", "_runner", "name", "schedulingRule"];
     RunSkyAppJob.prototype.get$path = function(receiver) {
       return this.path;
     };
-    function RunSkyAppJob_run_closure(_run_app$_box_0) {
-      this._run_app$_box_0 = _run_app$_box_0;
+    function RunSkyAppJob_run_closure(_run_app$_captured_this_0) {
+      this._run_app$_captured_this_0 = _run_app$_captured_this_0;
       this.$deferredAction();
     }
     RunSkyAppJob_run_closure.builtin$cls = "RunSkyAppJob_run_closure";
@@ -6497,7 +6498,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       RunSkyAppJob_run_closure.name = "RunSkyAppJob_run_closure";
     $desc = $collectedClasses$.RunSkyAppJob_run_closure[1];
     RunSkyAppJob_run_closure.prototype = $desc;
-    RunSkyAppJob_run_closure.$__fields__ = ["_run_app$_box_0"];
+    RunSkyAppJob_run_closure.$__fields__ = ["_run_app$_captured_this_0"];
     function RunSkyAppJob_run_closure0(_captured_launch_1) {
       this._captured_launch_1 = _captured_launch_1;
       this.$deferredAction();
@@ -6518,8 +6519,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.RunSkyAppJob_run_closure1[1];
     RunSkyAppJob_run_closure1.prototype = $desc;
     RunSkyAppJob_run_closure1.$__fields__ = ["_captured_launch_2"];
-    function RunSkyAppJob_run_closure2(_run_app$_box_0, _run_app$_captured_this_3, _captured_project_4, _captured_sky_tool_5, _captured_launch_6) {
-      this._run_app$_box_0 = _run_app$_box_0;
+    function RunSkyAppJob_run_closure2(_run_app$_captured_this_3, _captured_project_4, _captured_sky_tool_5, _captured_launch_6) {
       this._run_app$_captured_this_3 = _run_app$_captured_this_3;
       this._captured_project_4 = _captured_project_4;
       this._captured_sky_tool_5 = _captured_sky_tool_5;
@@ -6531,7 +6531,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       RunSkyAppJob_run_closure2.name = "RunSkyAppJob_run_closure2";
     $desc = $collectedClasses$.RunSkyAppJob_run_closure2[1];
     RunSkyAppJob_run_closure2.prototype = $desc;
-    RunSkyAppJob_run_closure2.$__fields__ = ["_run_app$_box_0", "_run_app$_captured_this_3", "_captured_project_4", "_captured_sky_tool_5", "_captured_launch_6"];
+    RunSkyAppJob_run_closure2.$__fields__ = ["_run_app$_captured_this_3", "_captured_project_4", "_captured_sky_tool_5", "_captured_launch_6"];
     function RunSkyAppJob_run__closure(_captured_launch_7) {
       this._captured_launch_7 = _captured_launch_7;
       this.$deferredAction();
@@ -22451,7 +22451,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1.badge.toggleClass$2("launch-terminated", true);
         t2 = t1.badge;
         t3 = t1.launch;
-        J.set$text$x(t2, "[" + t3.get$launchType().type + "] " + H.S(J.get$title$x(t3)) + ": " + H.S(t3.get$exitCode()));
+        J.set$text$x(t2, t3.get$launchType().type + ": " + H.S(J.get$title$x(t3)) + ": [" + H.S(t3.get$exitCode()) + "]");
         t1._emitText$1("\n");
         t2 = "exited with code " + H.S(t3.get$exitCode());
         t3 = t3.get$errored() ? "error" : "info";
@@ -22498,9 +22498,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t2 = this.launch;
         if (!t2.get$isActive())
           return;
-        J.click$1$x(t1.buttonsElement.add$1(0, K.CoreElement$("span", null, "badge", "clear")), new Y._LaunchController__updateButtons_closure(this));
         if (t2.canKill$0() && t2.get$isRunning())
-          J.click$1$x(t1.buttonsElement.add$1(0, K.CoreElement$("span", null, "badge", "kill")), new Y._LaunchController__updateButtons_closure0(this));
+          J.click$1$x(t1.buttonsElement.add$1(0, K.CoreElement$("span", null, "badge icon-circle-slash", "\u200b")), new Y._LaunchController__updateButtons_closure(this));
+        if (t2.get$isTerminated())
+          J.click$1$x(t1.buttonsElement.add$1(0, K.CoreElement$("span", null, "badge icon-x", "\u200b")), new Y._LaunchController__updateButtons_closure0(this));
       },
       dispose$0: [function() {
         this.badge.dispose$0();
@@ -22528,7 +22529,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this.badge = t1;
         J.click$1$x(t1, new Y._LaunchController_closure(this));
         t1 = this.launch;
-        J.set$text$x(this.badge, "[" + t1.get$launchType().type + "] " + H.S(J.get$title$x(t1)));
+        J.set$text$x(this.badge, t1.get$launchType().type + ": " + H.S(J.get$title$x(t1)));
         this._updateToggles$0();
         this.output = K.CoreElement$("pre", null, "console-line", null);
         t2 = this.subs._subscriptions;
@@ -22564,19 +22565,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     _LaunchController__updateButtons_closure: {
       "^": "Closure:1;_console$_captured_this_0",
       call$0: function() {
-        var t1, t2;
-        t1 = this._console$_captured_this_0;
-        t2 = t1.launch;
-        if (t2.get$isRunning())
-          J.clear$0$ax(J.get$children$x(t1.output.element));
-        else
-          Q.Dependencies_instance().getDependency$1(C.Type_mXK).removeLaunch$1(t2);
+        return this._console$_captured_this_0.launch.kill$0();
       }
     },
     _LaunchController__updateButtons_closure0: {
       "^": "Closure:1;_console$_captured_this_1",
       call$0: function() {
-        return this._console$_captured_this_1.launch.kill$0();
+        return Q.Dependencies_instance().getDependency$1(C.Type_mXK).removeLaunch$1(this._console$_captured_this_1.launch);
       }
     },
     ConsoleStatusElement: {
@@ -22609,7 +22604,6 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t2 = "" + count + " ";
           t2 = t2 + (hasRunning ? "running " : "") + " " + G.pluralize("process", count);
           J.set$text$x(t1.element, t2);
-          J.get$classes$x(this._badgeSpan.element).toggle$2(0, "badge-info", hasRunning);
         } else {
           this.hide$0();
           J.set$text$x(this._badgeSpan.element, "");
@@ -24445,6 +24439,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
       },
       dispose$0: [function() {
+        var t1, t2, _i;
+        t1 = this._launches;
+        t1 = H.setRuntimeTypeInfo(t1.slice(), [H.getTypeArgumentByIndex(t1, 0)]);
+        t2 = t1.length;
+        _i = 0;
+        for (; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
+          t1[_i].dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
       $isDisposable: 1
     },
@@ -24547,12 +24548,17 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(this);
       },
+      dispose$0: [function() {
+        if (this.killHandler != null && this._exitCode != null)
+          this.kill$0();
+      }, "call$0", "get$dispose", 0, 0, 2],
       toString$0: function(_) {
         return this.launchType.type + "-" + this.id + ": " + this.title;
       },
       killHandler$0: function() {
         return this.killHandler.call$0();
-      }
+      },
+      $isDisposable: 1
     }
   }], ["atom.linter", "package:atom_dartlang/atom_linter.dart",, E, {
     "^": "",
@@ -25106,7 +25112,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t2._instances.$indexSet(0, C.Type_jfx, t4);
         t1.push(t4);
         t4 = Q.Dependencies_instance();
-        t2 = new X.LaunchManager(P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), null, []);
+        t2 = new X.LaunchManager(P.StreamController_StreamController$broadcast(null, null, true, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), null, []);
         t4._instances.$indexSet(0, C.Type_mXK, t2);
         t1.push(t2);
         pubManager = R.PubManager$();
@@ -25478,6 +25484,15 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._process$_process.invoke$1("kill");
         P.Future_Future$delayed(P.Duration$(0, 0, 0, 50, 0, 0), new Z.ProcessRunner_kill_closure(this), null);
         return this._exitCompleter.future;
+      },
+      getDescription$0: function() {
+        var t1, t2;
+        t1 = this.args;
+        t2 = this.command;
+        if (t1 != null)
+          return H.S(t2) + " " + (t1 && C.JSArray_methods).join$1(t1, " ");
+        else
+          return t2;
       }
     },
     ProcessRunner_execSimple_closure: {
@@ -27157,42 +27172,46 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:7;",
       call$1: function($event) {
         var t1 = $event.get$targetFilePath();
-        Q.Dependencies_instance().getDependency$1(C.Type_cMb).schedule$1(new G.RunSkyAppJob(t1, "Launching Sky application", null));
+        Q.Dependencies_instance().getDependency$1(C.Type_cMb).schedule$1(new G.RunSkyAppJob(t1, null, "Launching Sky application", null));
       }
     },
     SkyToolManager_closure0: {
       "^": "Closure:7;",
       call$1: function($event) {
         var t1 = $event.get$editor().invoke$1("getPath");
-        Q.Dependencies_instance().getDependency$1(C.Type_cMb).schedule$1(new G.RunSkyAppJob(t1, "Launching Sky application", null));
+        Q.Dependencies_instance().getDependency$1(C.Type_cMb).schedule$1(new G.RunSkyAppJob(t1, null, "Launching Sky application", null));
       }
     },
     RunSkyAppJob: {
-      "^": "Job;path>,name,schedulingRule",
+      "^": "Job;path>,_runner,name,schedulingRule",
       get$quiet: function() {
         return true;
       },
       run$0: function() {
-        var t1, project, sky_tool, t2, t3, launch;
-        t1 = {};
+        var project, sky_tool, t1, t2, t3, launch;
         project = Q.Dependencies_instance().getDependency$1(C.Type_CvJ).getProjectFor$1(this.path);
         if (project == null)
           return P.Future_Future$error("File not in a Dart project.", null, null);
         sky_tool = S.join(J.get$directory$x(project), "packages", "sky", "sky_tool");
         if (new E.File(E._create("File", sky_tool, null)).invoke$1("existsSync") !== true)
           return P.Future_Future$error("Unable to locate 'packages/sky/sky_tool'; did you import the 'sky' package into your project?", null, null);
-        t1._captured_runner_0 = this._skyTool$3(project, sky_tool, ["start"]);
-        t2 = Q.Dependencies_instance().getDependency$1(C.Type_mXK);
-        t3 = $.Launch__id + 1;
-        $.Launch__id = t3;
-        launch = new X.Launch(new X.LaunchType("sky"), "lib/main.dart", t2, t3, new G.RunSkyAppJob_run_closure(t1), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), null);
+        this._runner = this._skyTool$3(project, sky_tool, ["start"]);
+        t1 = Q.Dependencies_instance().getDependency$1(C.Type_mXK);
+        t2 = $.Launch__id + 1;
+        $.Launch__id = t2;
+        t3 = P.StreamController_StreamController$broadcast(null, null, false, null);
+        launch = new X.Launch(new X.LaunchType("sky"), "lib/main.dart", t1, t2, new G.RunSkyAppJob_run_closure(this), t3, P.StreamController_StreamController$broadcast(null, null, false, null), null);
         Q.Dependencies_instance().getDependency$1(C.Type_mXK).addLaunch$1(launch);
-        t1._captured_runner_0.execStreaming$0();
-        t3 = t1._captured_runner_0._stdoutController;
-        H.setRuntimeTypeInfo(new P._ControllerStream(t3), [H.getTypeArgumentByIndex(t3, 0)]).listen$1(new G.RunSkyAppJob_run_closure0(launch));
-        t3 = t1._captured_runner_0._stderrController;
-        H.setRuntimeTypeInfo(new P._ControllerStream(t3), [H.getTypeArgumentByIndex(t3, 0)]).listen$1(new G.RunSkyAppJob_run_closure1(launch));
-        return t1._captured_runner_0._exitCompleter.future.then$1(new G.RunSkyAppJob_run_closure2(t1, this, project, sky_tool, launch));
+        this._runner.execStreaming$0();
+        t2 = this._runner._stdoutController;
+        H.setRuntimeTypeInfo(new P._ControllerStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(new G.RunSkyAppJob_run_closure0(launch));
+        t2 = this._runner._stderrController;
+        H.setRuntimeTypeInfo(new P._ControllerStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(new G.RunSkyAppJob_run_closure1(launch));
+        t2 = H.S(this._runner.getDescription$0()) + "\n";
+        if (!t3.get$_mayAddEvent())
+          H.throwExpression(t3._addEventError$0());
+        t3._sendData$1(t2);
+        return this._runner._exitCompleter.future.then$1(new G.RunSkyAppJob_run_closure2(this, project, sky_tool, launch));
       },
       _skyTool$3: function(project, sky_tool, args) {
         var t1 = J.getInterceptor$x(project);
@@ -27205,9 +27224,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     RunSkyAppJob_run_closure: {
-      "^": "Closure:1;_run_app$_box_0",
+      "^": "Closure:1;_run_app$_captured_this_0",
       call$0: [function() {
-        return this._run_app$_box_0._captured_runner_0.kill$0();
+        return this._run_app$_captured_this_0._runner.kill$0();
       }, null, null, 0, 0, null, "call"]
     },
     RunSkyAppJob_run_closure0: {
@@ -27231,22 +27250,23 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 9, "call"]
     },
     RunSkyAppJob_run_closure2: {
-      "^": "Closure:0;_run_app$_box_0,_run_app$_captured_this_3,_captured_project_4,_captured_sky_tool_5,_captured_launch_6",
+      "^": "Closure:0;_run_app$_captured_this_3,_captured_project_4,_captured_sky_tool_5,_captured_launch_6",
       call$1: [function(code) {
-        var t1, runner, t2, t3;
-        t1 = this._captured_launch_6;
+        var t1, t2, t3;
+        t1 = this._run_app$_captured_this_3;
+        t1._runner = null;
+        t2 = this._captured_launch_6;
         if (J.$eq$(code, 0)) {
-          runner = this._run_app$_captured_this_3._skyTool$3(this._captured_project_4, this._captured_sky_tool_5, ["logs", "--clear"]);
-          t2 = this._run_app$_box_0;
-          t2._captured_runner_0 = runner;
-          runner.execStreaming$0();
-          t3 = t2._captured_runner_0._stdoutController;
-          H.setRuntimeTypeInfo(new P._ControllerStream(t3), [H.getTypeArgumentByIndex(t3, 0)]).listen$1(new G.RunSkyAppJob_run__closure(t1));
-          t3 = t2._captured_runner_0._stderrController;
-          H.setRuntimeTypeInfo(new P._ControllerStream(t3), [H.getTypeArgumentByIndex(t3, 0)]).listen$1(new G.RunSkyAppJob_run__closure0(t1));
-          t2._captured_runner_0._exitCompleter.future.then$1(new G.RunSkyAppJob_run__closure1(t1));
+          t3 = t1._skyTool$3(this._captured_project_4, this._captured_sky_tool_5, ["logs", "--clear"]);
+          t1._runner = t3;
+          t3.execStreaming$0();
+          t3 = t1._runner._stdoutController;
+          H.setRuntimeTypeInfo(new P._ControllerStream(t3), [H.getTypeArgumentByIndex(t3, 0)]).listen$1(new G.RunSkyAppJob_run__closure(t2));
+          t3 = t1._runner._stderrController;
+          H.setRuntimeTypeInfo(new P._ControllerStream(t3), [H.getTypeArgumentByIndex(t3, 0)]).listen$1(new G.RunSkyAppJob_run__closure0(t2));
+          t1._runner._exitCompleter.future.then$1(new G.RunSkyAppJob_run__closure1(t2));
         } else
-          t1.launchTerminated$1(code);
+          t2.launchTerminated$1(code);
       }, null, null, 2, 0, null, 17, "call"]
     },
     RunSkyAppJob_run__closure: {

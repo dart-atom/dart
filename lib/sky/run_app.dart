@@ -42,6 +42,8 @@ class SkyToolManager implements Disposable, ContextMenuContributor {
 class RunSkyAppJob extends Job {
   final String path;
 
+  ProcessRunner _runner;
+
   RunSkyAppJob(this.path) : super('Launching Sky application');
 
   bool get quiet => true;
@@ -60,30 +62,34 @@ class RunSkyAppJob extends Job {
     }
 
     // Chain together both 'sky_tool start' and 'sky_tool logs'.
-    ProcessRunner runner = _skyTool(project, sky_tool, ['start']);
+    _runner = _skyTool(project, sky_tool, ['start']);
 
     Launch launch = new Launch(
         new LaunchType(LaunchType.SKY),
         'lib/main.dart',
         launchManager,
-        killHandler: () => runner.kill());
+        killHandler: () => _runner.kill());
     launchManager.addLaunch(launch);
 
-    runner.execStreaming();
+    _runner.execStreaming();
 
-    runner.onStdout.listen((str) => launch.pipeStdout(str));
-    runner.onStderr.listen((str) => launch.pipeStderr(str));
+    _runner.onStdout.listen((str) => launch.pipeStdout(str));
+    _runner.onStderr.listen((str) => launch.pipeStderr(str));
 
-    return runner.onExit.then((code) {
+    launch.pipeStdout('${_runner.getDescription()}\n');
+
+    return _runner.onExit.then((code) {
+      _runner = null;
+
       if (code == 0) {
         // Chain 'sky_tool logs'.
-        runner = _skyTool(project, sky_tool, ['logs', '--clear']);
-        runner.execStreaming();
-        runner.onStdout.listen((str) => launch.pipeStdout(str));
-        runner.onStderr.listen((str) => launch.pipeStderr(str));
+        _runner = _skyTool(project, sky_tool, ['logs', '--clear']);
+        _runner.execStreaming();
+        _runner.onStdout.listen((str) => launch.pipeStdout(str));
+        _runner.onStderr.listen((str) => launch.pipeStderr(str));
 
         // Don't return the future here.
-        runner.onExit.then((code) => launch.launchTerminated(code));
+        _runner.onExit.then((code) => launch.launchTerminated(code));
       } else {
         launch.launchTerminated(code);
       }
