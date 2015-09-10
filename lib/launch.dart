@@ -7,7 +7,7 @@ import 'atom.dart';
 import 'utils.dart';
 
 class LaunchManager implements Disposable {
-  StreamController<Launch> _launchAdded = new StreamController.broadcast();
+  StreamController<Launch> _launchAdded = new StreamController.broadcast(sync: true);
   StreamController<Launch> _launchActivated = new StreamController.broadcast();
   StreamController<Launch> _launchTerminated = new StreamController.broadcast();
   StreamController<Launch> _launchRemoved = new StreamController.broadcast();
@@ -62,7 +62,11 @@ class LaunchManager implements Disposable {
   Stream<Launch> get onLaunchTerminated => _launchTerminated.stream;
   Stream<Launch> get onLaunchRemoved => _launchRemoved.stream;
 
-  void dispose() { }
+  void dispose() {
+    for (Launch launch in _launches.toList()) {
+      launch.dispose();
+    }
+  }
 }
 
 class LaunchType {
@@ -82,7 +86,7 @@ class LaunchType {
   String toString() => type;
 }
 
-class Launch {
+class Launch implements Disposable {
   static int _id = 0;
 
   final LaunchType launchType;
@@ -134,6 +138,12 @@ class Launch {
     }
 
     manager._launchTerminated.add(this);
+  }
+
+  void dispose() {
+    if (canKill() && !isRunning) {
+      kill();
+    }
   }
 
   String toString() => '${launchType}-${id}: ${title}';

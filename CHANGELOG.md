@@ -6,6 +6,7 @@
 - added a status line contribution to track launched applications
 - running a Sky app now pipes the stdout back to the console view
 - revamped the UI of the outline view
+- iterated on the console UI
 
 ## 0.4.3
 - improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)

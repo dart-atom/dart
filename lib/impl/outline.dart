@@ -100,11 +100,12 @@ class OutlineView implements Disposable {
     content = div(c: 'outline-view source')..add([
       div(text: title, c: 'title'),
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
-          ..toggleClass('outline-tree'),
+          ..toggleClass('outline-tree')..toggleClass('selection'),
       resizer = new ViewResizer.createVertical()
     ]);
 
     treeBuilder.onClickNode.listen(_jumpTo);
+    treeBuilder.setSelectionClass('region');
     _setupResizer(resizer);
 
     root.append(content.element);
@@ -178,7 +179,8 @@ class OutlineView implements Disposable {
       _collectSelected(node, offset, selected);
     }
 
-    treeBuilder.selectNodes(selected);
+    treeBuilder.selectNodes(selected.isEmpty ? selected : [selected.last]);
+    treeBuilder.scrollToSelection();
   }
 
   void _collectSelected(Node node, int offset, List<Node> selected) {

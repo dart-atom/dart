@@ -111,7 +111,7 @@ class _LaunchController implements Disposable {
   _LaunchController(this.view, this.launch) {
     badge = view.tabsElement.add(span(c: 'badge'));
     badge.click(() => launch.manager.setActiveLaunch(launch));
-    badge.text = '[${launch.launchType.type}] ${launch.title}';
+    badge.text = '${launch.launchType.type}: ${launch.title}';
     _updateToggles();
 
     output = new CoreElement('pre', classes: 'console-line');
@@ -131,7 +131,7 @@ class _LaunchController implements Disposable {
     _updateButtons();
 
     badge.toggleClass('launch-terminated', true);
-    badge.text = '[${launch.launchType.type}] ${launch.title}: ${launch.exitCode}';
+    badge.text = '${launch.launchType.type}: ${launch.title}: [${launch.exitCode}]';
     _emitText('\n');
     _emitBadge('exited with code ${launch.exitCode}', launch.errored ? 'error' : 'info');
   }
@@ -154,20 +154,18 @@ class _LaunchController implements Disposable {
 
     // [debug] [clear] [kill]
 
-    // clear
-    CoreElement clear = view.buttonsElement.add(span(text: 'clear', c: 'badge'));
-    clear.click(() {
-      if (launch.isRunning) {
-        output.element.children.clear();
-      } else {
-        launchManager.removeLaunch(launch);
-      }
-    });
-
     // kill
     if (launch.canKill() && launch.isRunning) {
-      CoreElement kill = view.buttonsElement.add(span(text: 'kill', c: 'badge'));
+      CoreElement kill = view.buttonsElement.add(
+          span(text: '\u200B', c: 'badge icon-circle-slash'));
       kill.click(() => launch.kill());
+    }
+
+    // clear
+    if (launch.isTerminated) {
+      CoreElement clear = view.buttonsElement.add(
+          span(text: '\u200B', c: 'badge icon-x'));
+      clear.click(() => launchManager.removeLaunch(launch));
     }
   }
 
@@ -179,6 +177,7 @@ class _LaunchController implements Disposable {
 
   void _emitBadge(String text, String type) {
     output.add(span(text: text, c: 'badge badge-${type}'));
+
     if (output.element.parent != null) {
       output.element.scrollIntoView(ScrollAlignment.BOTTOM);
     }
@@ -259,7 +258,7 @@ class ConsoleStatusElement implements Disposable {
       if (!isShowing()) show();
       _badgeSpan.text =
           '${count} ${hasRunning ? 'running ' : ''} ${pluralize('process', count)}';
-      _badgeSpan.toggleClass('badge-info', hasRunning);
+      //_badgeSpan.toggleClass('badge-info', hasRunning);
     } else {
       hide();
       _badgeSpan.text = '';

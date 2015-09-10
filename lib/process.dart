@@ -91,6 +91,14 @@ class ProcessRunner {
     });
     return _exitCompleter.future;
   }
+
+  String getDescription() {
+    if (args != null) {
+      return '${command} ${args.join(' ')}';
+    } else {
+      return command;
+    }
+  }
 }
 
 class ProcessResult {
