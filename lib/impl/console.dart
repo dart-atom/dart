@@ -10,8 +10,6 @@ import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
 
-// TODO: Add a link for the observatory.
-
 class ConsoleController implements Disposable {
   ConsoleView view;
   ConsoleStatusElement statusElement;
@@ -47,7 +45,6 @@ class ConsoleView extends AtomView {
   static bool get autoShowConsole => atom.config.getValue('${pluginId}.autoShowConsole');
 
   CoreElement tabsElement;
-  CoreElement buttonsElement;
 
   _LaunchController _activeController;
   Map<Launch, _LaunchController> _controllers = {};
@@ -58,8 +55,7 @@ class ConsoleView extends AtomView {
 
     content..add([
       div(c: 'console-title-area')..add([
-        tabsElement = div(c: 'console-tabs'),
-        buttonsElement = div(c: 'console-buttons')
+        tabsElement = div(c: 'console-tabs')
       ])
     ]);
 
@@ -95,8 +91,6 @@ class ConsoleView extends AtomView {
   }
 }
 
-// TODO: The buttons should be under the process name badge.
-
 class _LaunchController implements Disposable {
   // Only show a set amount of lines of output.
   static const _max_lines = 200;
@@ -104,15 +98,26 @@ class _LaunchController implements Disposable {
   final ConsoleView view;
   final Launch launch;
 
-  CoreElement badge;
+  CoreElement container;
+  CoreElement title;
+  CoreElement buttons;
   CoreElement output;
   StreamSubscriptions subs = new StreamSubscriptions();
 
   _LaunchController(this.view, this.launch) {
-    badge = view.tabsElement.add(span(c: 'badge'));
-    badge.click(() => launch.manager.setActiveLaunch(launch));
-    badge.text = '${launch.launchType.type}: ${launch.title}';
+    view.tabsElement.add([
+      container = div(c: 'badge process-tab')..add([
+        span(text: launch.launchType.type),
+        span(text: ' • '),
+        title = span(text: launch.title),
+        span(text: ' • '),
+        buttons = div(c: 'run-buttons')
+      ])
+    ]);
+    title.click(() => launch.manager.setActiveLaunch(launch));
+
     _updateToggles();
+    _updateButtons();
 
     output = new CoreElement('pre', classes: 'console-line');
 
@@ -130,10 +135,11 @@ class _LaunchController implements Disposable {
     _updateToggles();
     _updateButtons();
 
-    badge.toggleClass('launch-terminated', true);
-    badge.text = '${launch.launchType.type}: ${launch.title}: [${launch.exitCode}]';
+    title.toggleClass('launch-terminated', true);
+    title.text = '${launch.title} [${launch.exitCode}]';
+
     _emitText('\n');
-    _emitBadge('exited with code ${launch.exitCode}', launch.errored ? 'error' : 'info');
+    _emitBadge('exit code ${launch.exitCode}', launch.errored ? 'error' : 'info');
   }
 
   void deactivate() {
@@ -143,34 +149,42 @@ class _LaunchController implements Disposable {
   }
 
   void _updateToggles() {
-    badge.toggleClass('badge-info', launch.isActive && !launch.errored);
-    badge.toggleClass('badge-error', launch.isActive && launch.errored);
+    container.toggleClass('badge-info', launch.isActive && !launch.errored);
+    container.toggleClass('badge-error', launch.isActive && launch.errored);
   }
 
   void _updateButtons() {
-    view.buttonsElement.clear();
+    buttons.clear();
 
-    if (!launch.isActive) return;
-
-    // [debug] [clear] [kill]
+    // debug
+    if (launch.isRunning && launch.canDebug()) {
+      CoreElement debug = buttons.add(
+          span(text: '\u200B', c: 'process-icon icon-bug'));
+      debug.toggleClass('text-highlight', launch.isActive);
+      debug.click(() {
+        shell.openExternal('http://localhost:${launch.servicePort}/');
+      });
+    }
 
     // kill
     if (launch.canKill() && launch.isRunning) {
-      CoreElement kill = view.buttonsElement.add(
-          span(text: '\u200B', c: 'badge icon-circle-slash'));
+      CoreElement kill = buttons.add(
+          span(text: '\u200B', c: 'process-icon icon-primitive-square'));
+      kill.toggleClass('text-highlight', launch.isActive);
       kill.click(() => launch.kill());
     }
 
     // clear
     if (launch.isTerminated) {
-      CoreElement clear = view.buttonsElement.add(
-          span(text: '\u200B', c: 'badge icon-x'));
+      CoreElement clear = buttons.add(
+          span(text: '\u200B', c: 'process-icon icon-x'));
+      clear.toggleClass('text-highlight', launch.isActive);
       clear.click(() => launchManager.removeLaunch(launch));
     }
   }
 
   void dispose() {
-    badge.dispose();
+    container.dispose();
     output.dispose();
     subs.cancel();
   }
@@ -252,16 +266,13 @@ class ConsoleStatusElement implements Disposable {
 
     List<Launch> launches = launchManager.launches;
     int count = launches.length;
-    bool hasRunning = launches.any((l) => l.isRunning);
 
     if (count > 0) {
       if (!isShowing()) show();
-      _badgeSpan.text =
-          '${count} ${hasRunning ? 'running ' : ''} ${pluralize('process', count)}';
-      //_badgeSpan.toggleClass('badge-info', hasRunning);
+      _badgeSpan.text = '${count} application ${pluralize('process', count)}';
     } else {
       hide();
-      _badgeSpan.text = '';
+      _badgeSpan.text = 'no processes';
     }
   }
 }

@@ -23,18 +23,26 @@ class LaunchManager implements Disposable {
 
   void addLaunch(Launch launch) {
     _launches.add(launch);
-    _activeLaunch = launch;
+    bool activated = false;
 
     // Automatically remove all dead launches.
     List removed = [];
     _launches.removeWhere((l) {
-      if (l.isTerminated) removed.add(l);
+      if (l.isTerminated) {
+        if (_activeLaunch == l) _activeLaunch = null;
+        removed.add(l);
+      }
       return l.isTerminated;
     });
 
+    if (_activeLaunch == null) {
+      _activeLaunch = launch;
+      activated = true;
+    }
+
     removed.forEach((l) => _launchRemoved.add(l));
     _launchAdded.add(launch);
-    _launchActivated.add(launch);
+    if (activated) _launchActivated.add(launch);
   }
 
   void removeLaunch(Launch launch) {
@@ -95,6 +103,8 @@ class Launch implements Disposable {
   final int id = ++_id;
   final Function killHandler;
 
+  int servicePort;
+
   StreamController<String> _stdout = new StreamController.broadcast();
   StreamController<String> _stderr = new StreamController.broadcast();
 
@@ -115,6 +125,8 @@ class Launch implements Disposable {
 
   void pipeStdout(String str) => _stdout.add(str);
   void pipeStderr(String str) => _stderr.add(str);
+
+  bool canDebug() => isRunning && servicePort != null;
 
   bool canKill() => killHandler != null;
 
