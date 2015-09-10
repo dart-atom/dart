@@ -374,14 +374,10 @@ atom-text-editor::shadow .editor--private {
 }
 
 atom-text-editor::shadow .outline-view {
-  color: @text-color;
-  background-color: @tool-panel-background-color;
   border-left: 1px solid @tool-panel-border-color;
-  font-size: @font-size;
-  font-family: @font-family;
-  line-height: 22px; //@component-line-height;
+  //line-height: 22px; //@component-line-height;
 
-  padding: 6px;
+  padding: 6px 0 0 6px;
   order: 2;
   min-width: 175px;
   width: 220px;
@@ -394,19 +390,15 @@ atom-text-editor::shadow .outline-view {
   .title {
     cursor: default;
     border-bottom: 1px solid @tool-panel-border-color;
-    margin-bottom: @component-padding;
-    font-size: 1.45em;
-    line-height: 1em;
-    color: inherit;
-    font-family: inherit;
-    margin-top: 0.5em;
-    padding-bottom: 0.25em;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
     text-overflow: ellipsis;
     overflow-x: hidden;
   }
 
   .outline-tree {
     flex: 20;
+    padding-bottom: 6px;
     overflow-y: auto;
   }
 
@@ -442,6 +434,7 @@ atom-text-editor::shadow .outline-view {
   }
 
   .muted {
+    // TODO: better style?
     color: @text-color-subtle;
   }
 
@@ -465,7 +458,7 @@ atom-text-editor::shadow .outline-view {
 
   .tree-selected,
   .tree-selected span {
-    color: @text-color-highlight;
+    //color: @text-color-highlight;
     font-weight: bold;
   }
 }

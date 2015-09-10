@@ -24839,7 +24839,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (this.content != null)
           return;
         title = S.basename(this.editor.invoke$1("getPath"));
-        t1 = K.CoreElement$("div", null, "outline-view", null);
+        t1 = K.CoreElement$("div", null, "outline-view source", null);
         t2 = K.CoreElement$("div", null, "title", title);
         t3 = this.get$_outline$_render();
         t4 = P.StreamController_StreamController$broadcast(null, null, false, null);
@@ -24955,45 +24955,38 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return n;
       },
       _outline$_render$2: [function(item, intoElement) {
-        var e, t1, t2, t3, span;
+        var e, t1, t2, t3, span, str, type, index;
         e = item.get$element();
         t1 = J.getInterceptor$x(e);
         if (J.$eq$(t1.get$kind(e), "CLASS")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).add$1(0, "muted");
+          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
           t3.textContent = "class ";
           J.add$1$ax(t2, t3);
         } else if (J.$eq$(t1.get$kind(e), "ENUM")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).add$1(0, "muted");
+          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
           t3.textContent = "enum ";
           J.add$1$ax(t2, t3);
         } else if (J.$eq$(t1.get$kind(e), "FUNCTION_TYPE_ALIAS")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).add$1(0, "muted");
+          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
           t3.textContent = "typedef ";
-          J.add$1$ax(t2, t3);
-        }
-        if (e.get$returnType() != null && J.get$isNotEmpty$asx(e.get$returnType()) === true) {
-          t2 = J.get$children$x(intoElement);
-          t3 = document.createElement("span", null);
-          J.get$classes$x(t3).add$1(0, "muted");
-          t3.textContent = H.S(e.get$returnType()) + " ";
           J.add$1$ax(t2, t3);
         }
         if (J.$eq$(t1.get$kind(e), "GETTER")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).add$1(0, "muted");
+          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
           t3.textContent = "get ";
           J.add$1$ax(t2, t3);
         } else if (J.$eq$(t1.get$kind(e), "SETTER")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).add$1(0, "muted");
+          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
           t3.textContent = "set ";
           J.add$1$ax(t2, t3);
         }
@@ -25001,20 +24994,39 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         span.textContent = t1.get$name(e);
         if (J.$and$n(e.get$flags(), 32) !== 0)
           J.get$classes$x(span).add$1(0, "deprecated");
-        t1 = J.getInterceptor$x(intoElement);
-        J.add$1$ax(t1.get$children(intoElement), span);
+        t2 = J.getInterceptor$x(intoElement);
+        J.add$1$ax(t2.get$children(intoElement), span);
+        if (J.$eq$(t1.get$kind(e), "CLASS"))
+          J.get$classes$x(span).addAll$1(0, ["support", "class"]);
+        if (J.$eq$(t1.get$kind(e), "CONSTRUCTOR"))
+          J.get$classes$x(span).addAll$1(0, ["support", "class"]);
+        if (J.$eq$(t1.get$kind(e), "FUNCTION") || J.$eq$(t1.get$kind(e), "METHOD") || J.$eq$(t1.get$kind(e), "GETTER") || J.$eq$(t1.get$kind(e), "SETTER"))
+          J.get$classes$x(span).addAll$1(0, ["entity", "name", "function"]);
         if (e.get$typeParameters() != null) {
-          t2 = t1.get$children(intoElement);
+          t1 = t2.get$children(intoElement);
           t3 = document.createElement("span", null);
           J.get$classes$x(t3).add$1(0, "muted");
           t3.textContent = e.get$typeParameters();
-          J.add$1$ax(t2, t3);
+          J.add$1$ax(t1, t3);
         }
         if (e.get$parameters() != null) {
-          t1 = t1.get$children(intoElement);
+          str = J.$gt$n(J.get$length$asx(e.get$parameters()), 2) === true ? "(\u2026)" : "()";
+          t1 = t2.get$children(intoElement);
+          t3 = document.createElement("span", null);
+          J.get$classes$x(t3).add$1(0, "muted");
+          t3.textContent = str;
+          J.add$1$ax(t1, t3);
+        }
+        if (e.get$returnType() != null && J.get$isNotEmpty$asx(e.get$returnType()) === true) {
+          type = e.get$returnType();
+          t1 = J.getInterceptor$asx(type);
+          index = t1.indexOf$1(type, "<");
+          if (index !== -1)
+            type = t1.substring$2(type, 0, index) + "<\u2026>";
+          t1 = t2.get$children(intoElement);
           t2 = document.createElement("span", null);
           J.get$classes$x(t2).add$1(0, "muted");
-          t2.textContent = e.get$parameters();
+          t2.textContent = " \u2192 " + H.S(type);
           J.add$1$ax(t1, t2);
         }
       }, "call$2", "get$_outline$_render", 4, 0, 47],
