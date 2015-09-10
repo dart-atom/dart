@@ -502,12 +502,10 @@ atom-notification {
     position: absolute;
     top: 6px;
     right: 20px;
-    display: flex;
-    flex-direction: column;
     z-index: 1;
 
     .badge {
-      margin-left: 5px;
+      margin-left: 4px;
       cursor: pointer;
     }
 
@@ -520,12 +518,22 @@ atom-notification {
     }
 
     .console-tabs {
-      align-self: flex-end;
+
     }
 
-    .console-buttons {
-      margin-top: 4px;
-      align-self: flex-end;
+    .process-tab {
+      padding-left: 5px;
+      padding-right: 5px;
+      margin-left: 16px;
+      display: inline-block;
+    }
+
+    .process-icon + .process-icon {
+      margin-left: 4px;
+    }
+
+    .run-buttons {
+      display: inline-block;
     }
   }
 

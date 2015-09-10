@@ -69,6 +69,7 @@ class RunSkyAppJob extends Job {
         'lib/main.dart',
         launchManager,
         killHandler: () => _runner.kill());
+    launch.servicePort = 8181;
     launchManager.addLaunch(launch);
 
     _runner.execStreaming();
