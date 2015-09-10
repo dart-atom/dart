@@ -7196,7 +7196,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     ViewGroup.prototype.get$name = function(receiver) {
       return this.name;
     };
-    function ListTreeBuilder(_clickController, _doubleClickController, render, hasToggle, nodes, _selectedNodes, _nodeToElementMap, element) {
+    function ListTreeBuilder(_clickController, _doubleClickController, render, hasToggle, nodes, _selectedNodes, _nodeToElementMap, _selectionClass, element) {
       this._clickController = _clickController;
       this._doubleClickController = _doubleClickController;
       this.render = render;
@@ -7204,6 +7204,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       this.nodes = nodes;
       this._selectedNodes = _selectedNodes;
       this._nodeToElementMap = _nodeToElementMap;
+      this._selectionClass = _selectionClass;
       this.element = element;
       this.$deferredAction();
     }
@@ -7212,7 +7213,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       ListTreeBuilder.name = "ListTreeBuilder";
     $desc = $collectedClasses$.ListTreeBuilder[1];
     ListTreeBuilder.prototype = $desc;
-    ListTreeBuilder.$__fields__ = ["_clickController", "_doubleClickController", "render", "hasToggle", "nodes", "_selectedNodes", "_nodeToElementMap", "element"];
+    ListTreeBuilder.$__fields__ = ["_clickController", "_doubleClickController", "render", "hasToggle", "nodes", "_selectedNodes", "_nodeToElementMap", "_selectionClass", "element"];
     ListTreeBuilder.prototype.get$nodes = function(receiver) {
       return this.nodes;
     };
@@ -24846,9 +24847,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t5 = P.StreamController_StreamController$broadcast(null, null, false, null);
         t6 = P.LinkedHashMap__makeEmpty();
         t7 = W._ElementFactoryProvider_createElement_tag("div", null);
-        t6 = new T.ListTreeBuilder(t4, t5, t3, false, [], [], t6, t7);
+        t6 = new T.ListTreeBuilder(t4, t5, t3, false, [], [], t6, "tree-selected", t7);
         t6.CoreElement$4$attributes$classes$text("div", null, "list-tree has-collapsable-children", null);
-        J.get$classes$x(t7).toggle$2(0, "outline-tree", null);
+        t3 = J.getInterceptor$x(t7);
+        t3.get$classes(t7).toggle$2(0, "outline-tree", null);
+        t3.get$classes(t7).toggle$2(0, "selection", null);
         this.treeBuilder = t6;
         t7 = P.StreamController_StreamController$broadcast(null, null, false, null);
         t3 = H.setRuntimeTypeInfo(new P.Point0(0, 0), [null]);
@@ -24862,6 +24865,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this.content = t1;
         t1 = this.treeBuilder._clickController;
         H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(this.get$_outline$_jumpTo());
+        this.treeBuilder._selectionClass = "region";
         this._outline$_setupResizer$1(resizer);
         J.append$1$x(this.root, this.content.element);
         t1 = this.lastOutline;
@@ -24918,14 +24922,23 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       }, "call$1", "get$_handleOutline", 2, 0, 45, 10],
       _cursorChanged$1: [function(pos) {
-        var offset, selected, t1, t2, _i;
+        var offset, selected, t1, t2, _i, sel, e;
         if (pos == null || this.treeBuilder == null)
           return;
         offset = new E.TextBuffer(E._cvt(this.editor.invoke$1("getBuffer"))).invoke$2("characterIndexForPosition", pos);
         selected = [];
         for (t1 = this.treeBuilder.nodes, t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
           this._collectSelected$3(t1[_i], offset, selected);
-        this.treeBuilder.selectNodes$1(selected);
+        t1 = this.treeBuilder;
+        t1.selectNodes$1(selected.length === 0 ? selected : [C.JSArray_methods.get$last(selected)]);
+        t1 = this.treeBuilder;
+        t2 = t1._selectedNodes;
+        if (t2.length !== 0) {
+          sel = C.JSArray_methods.get$last(t2);
+          e = t1._nodeToElementMap.$index(0, sel);
+          if (e != null)
+            J.scrollIntoView$0$x(e);
+        }
       }, "call$1", "get$_cursorChanged", 2, 0, 46, 32],
       _collectSelected$3: function(node, offset, selected) {
         var t1, o, t2, t3;
@@ -26591,7 +26604,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             t2.status = t2.content.add$1(0, K.CoreElement$("span", null, "search-summary", null));
             t3 = t2.content;
             t4 = t2.get$_references$_render();
-            t4 = new T.ListTreeBuilder(P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), t4, true, [], [], P.LinkedHashMap__makeEmpty(), W._ElementFactoryProvider_createElement_tag("div", null));
+            t4 = new T.ListTreeBuilder(P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), t4, true, [], [], P.LinkedHashMap__makeEmpty(), "tree-selected", W._ElementFactoryProvider_createElement_tag("div", null));
             t4.CoreElement$4$attributes$classes$text("div", null, "list-tree has-collapsable-children", null);
             t4.flex$0(0);
             t4 = t3.add$1(0, t4);
@@ -27824,7 +27837,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             t2.AtomView$7$cancelCloses$classes$groupName$prefName$rightPanel$showTitle("Type Hierarchy", true, "type-hierarchy", "rightView", null, true, true);
             t3 = t2.content;
             t4 = t2.get$_render();
-            t4 = new T.ListTreeBuilder(P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), t4, true, [], [], P.LinkedHashMap__makeEmpty(), W._ElementFactoryProvider_createElement_tag("div", null));
+            t4 = new T.ListTreeBuilder(P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), t4, true, [], [], P.LinkedHashMap__makeEmpty(), "tree-selected", W._ElementFactoryProvider_createElement_tag("div", null));
             t4.CoreElement$4$attributes$classes$text("div", null, "list-tree has-collapsable-children", null);
             t4.flex$0(0);
             t4 = t3.add$1(0, t4);
@@ -28449,7 +28462,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     ListTreeBuilder: {
-      "^": "CoreElement;_clickController,_doubleClickController,render,hasToggle,nodes>,_selectedNodes,_nodeToElementMap,element",
+      "^": "CoreElement;_clickController,_doubleClickController,render,hasToggle,nodes>,_selectedNodes,_nodeToElementMap,_selectionClass,element",
       addNode$1: function(node) {
         return this._addNode$2(this, node);
       },
@@ -28497,7 +28510,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           for (t3 = this._nodeToElementMap, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
             e = t3.$index(0, t1[_i]);
             if (e != null)
-              J.get$classes$x(e).toggle$2(0, "tree-selected", false);
+              J.get$classes$x(e).toggle$2(0, this._selectionClass, false);
           }
         C.JSArray_methods.set$length(t1, 0);
         C.JSArray_methods.addAll$1(t1, selected);
@@ -28506,7 +28519,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           for (t3 = this._nodeToElementMap, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
             e = t3.$index(0, t1[_i]);
             if (e != null)
-              J.get$classes$x(e).toggle$2(0, "tree-selected", true);
+              J.get$classes$x(e).toggle$2(0, this._selectionClass, true);
           }
       },
       clear$0: function(_) {
@@ -36155,6 +36168,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         else
           receiver.scrollIntoView();
       },
+      scrollIntoView$0: function($receiver) {
+        return this.scrollIntoView$1($receiver, null);
+      },
       get$marginEdge: function(receiver) {
         return new W._MarginCssRect(receiver, 0, 0, 0, 0);
       },
@@ -42369,6 +42385,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   };
   J.replaceWith$1$x = function(receiver, a0) {
     return J.getInterceptor$x(receiver).replaceWith$1(receiver, a0);
+  };
+  J.scrollIntoView$0$x = function(receiver) {
+    return J.getInterceptor$x(receiver).scrollIntoView$0(receiver);
   };
   J.scrollIntoView$1$x = function(receiver, a0) {
     return J.getInterceptor$x(receiver).scrollIntoView$1(receiver, a0);

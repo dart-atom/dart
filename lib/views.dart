@@ -294,8 +294,14 @@ class ListTreeBuilder extends CoreElement {
   List<Node> _selectedNodes = [];
   Map<Node, Element> _nodeToElementMap = {};
 
+  String _selectionClass = 'tree-selected';
+
   ListTreeBuilder(this.render, {this.hasToggle: true}) :
       super('div', classes: 'list-tree has-collapsable-children');
+
+  void setSelectionClass(String className) {
+    _selectionClass = className;
+  }
 
   Node get selectedNode => _selectedNodes.isEmpty ? null : _selectedNodes.first;
 
@@ -355,7 +361,7 @@ class ListTreeBuilder extends CoreElement {
     if (_selectedNodes.isNotEmpty) {
       for (Node n in _selectedNodes) {
         Element e = _nodeToElementMap[n];
-        if (e != null) e.classes.toggle('tree-selected', false);
+        if (e != null) e.classes.toggle(_selectionClass, false);
       }
     }
 
@@ -365,7 +371,7 @@ class ListTreeBuilder extends CoreElement {
     if (_selectedNodes.isNotEmpty) {
       for (Node n in _selectedNodes) {
         Element e = _nodeToElementMap[n];
-        if (e != null) e.classes.toggle('tree-selected', true);
+        if (e != null) e.classes.toggle(_selectionClass, true);
       }
     }
   }
@@ -384,7 +390,7 @@ class ListTreeBuilder extends CoreElement {
     if (_selectedNodes.isNotEmpty) {
       Node sel = _selectedNodes.last;
       Element e = _nodeToElementMap[sel];
-      if (e != null) e.scrollIntoView(); //ScrollAlignment.TOP);
+      if (e != null) e.scrollIntoView(); //ScrollAlignment.BOTTOM);
     }
   }
 }
