@@ -145,7 +145,6 @@ class _LaunchController implements Disposable {
   void _emitBadge(String text, String type) {
     output.add(span(text: text, c: 'badge badge-${type}'));
     if (output.element.parent != null) {
-      // TODO: This does not take into account the 6px bottom padding.
       output.element.scrollIntoView(ScrollAlignment.BOTTOM);
     }
   }

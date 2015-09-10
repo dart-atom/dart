@@ -97,7 +97,7 @@ class OutlineView implements Disposable {
 
     ViewResizer resizer;
 
-    content = div(c: 'outline-view')..add([
+    content = div(c: 'outline-view source')..add([
       div(text: title, c: 'title'),
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
           ..toggleClass('outline-tree'),
@@ -212,20 +212,20 @@ class OutlineView implements Disposable {
 
     if (e.kind == 'CLASS') {
       intoElement.children.add(
-          new html.SpanElement()..classes.add('muted')..text = 'class ');
+          new html.SpanElement()..classes.addAll(['keyword', 'declaration'])..text = 'class ');
     } else if (e.kind == 'ENUM') {
       intoElement.children.add(
-          new html.SpanElement()..classes.add('muted')..text = 'enum ');
+          new html.SpanElement()..classes.addAll(['keyword', 'declaration'])..text = 'enum ');
     } else if (e.kind == 'FUNCTION_TYPE_ALIAS') {
       intoElement.children.add(
-          new html.SpanElement()..classes.add('muted')..text = 'typedef ');
+          new html.SpanElement()..classes.addAll(['keyword', 'declaration'])..text = 'typedef ');
     }
 
-    // Type on the left.
-    if (e.returnType != null && e.returnType.isNotEmpty) {
-      intoElement.children.add(
-          new html.SpanElement()..classes.add('muted')..text = '${e.returnType} ');
-    }
+    // // Type on the left.
+    // if (e.returnType != null && e.returnType.isNotEmpty) {
+    //   intoElement.children.add(
+    //       new html.SpanElement()..classes.add('muted')..text = '${e.returnType} ');
+    // }
 
     if (e.kind == 'GETTER') {
       intoElement.children.add(
@@ -239,6 +239,9 @@ class OutlineView implements Disposable {
     span.text = e.name;
     if ((e.flags & 0x20) != 0) span.classes.add('deprecated');
     intoElement.children.add(span);
+    if (e.kind == 'CLASS') {
+      span.classes.addAll(['support', 'class']);
+    }
 
     if (e.typeParameters != null) {
       intoElement.children.add(
@@ -246,14 +249,15 @@ class OutlineView implements Disposable {
     }
 
     if (e.parameters != null) {
+      String str = e.parameters.length > 2 ? '(…)' : '()';
       intoElement.children.add(
-          new html.SpanElement()..classes.add('muted')..text = e.parameters);
+          new html.SpanElement()..classes.add('muted')..text = str);
     }
 
-    // Type on the right?
+    // // Type on the right?
     // if (e.returnType != null && e.returnType.isNotEmpty) {
     //   intoElement.children.add(
-    //       new html.SpanElement()..classes.add('muted')..text = ' → ${e.returnType} ');
+    //       new html.SpanElement()..classes.add('muted')..text = ' → ${e.returnType}');
     // }
   }
 
