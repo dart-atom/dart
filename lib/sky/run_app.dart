@@ -48,22 +48,8 @@ class RunSkyAppJob extends Job {
 
   Future run() {
     DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return new Future.error("File not in a Dart project.");
 
-    // TODO: temp temp
-    if (path.endsWith('.sh')) {
-      ProcessRunner runner = new ProcessRunner(path, cwd: project.path);
-      Launch launch = new Launch(new LaunchType(LaunchType.SKY),
-          'lib/main.dart', launchManager);
-      launchManager.addLaunch(launch);
-      runner.execStreaming();
-      runner.onStdout.listen((str) => launch.pipeStdout(str));
-      runner.onStderr.listen((str) => launch.pipeStderr(str));
-      return runner.onExit.then((code) {
-        launch.launchTerminated(code);
-      });
-    }
-    // TODO: temp temp
+    if (project == null) return new Future.error("File not in a Dart project.");
 
     String sky_tool = join(project.directory, 'packages', 'sky', 'sky_tool');
     bool exists = new File.fromPath(sky_tool).existsSync();
@@ -73,32 +59,47 @@ class RunSkyAppJob extends Job {
           "you import the 'sky' package into your project?");
     }
 
-    ProcessRunner runner;
-
-    if (isMac) {
-      // On the mac, run under bash.
-      runner = new ProcessRunner(
-        '/bin/bash', args: ['-l', '-c', '${sky_tool} start'], cwd: project.path);
-    } else {
-      runner = new ProcessRunner(
-        'python', args: [sky_tool, 'start'], cwd: project.path);
-    }
+    // Chain together both 'sky_tool start' and 'sky_tool logs'.
+    ProcessRunner runner = _skyTool(project, sky_tool, ['start']);
 
     Launch launch = new Launch(
         new LaunchType(LaunchType.SKY),
         'lib/main.dart',
-        launchManager);
+        launchManager,
+        killHandler: () => runner.kill());
     launchManager.addLaunch(launch);
 
     runner.execStreaming();
 
-    // TODO: Add the ability to kill the process.
     runner.onStdout.listen((str) => launch.pipeStdout(str));
     runner.onStderr.listen((str) => launch.pipeStderr(str));
 
     return runner.onExit.then((code) {
-      launch.launchTerminated(code);
+      if (code == 0) {
+        // Chain 'sky_tool logs'.
+        runner = _skyTool(project, sky_tool, ['logs', '--clear']);
+        runner.execStreaming();
+        runner.onStdout.listen((str) => launch.pipeStdout(str));
+        runner.onStderr.listen((str) => launch.pipeStderr(str));
+
+        // Don't return the future here.
+        runner.onExit.then((code) => launch.launchTerminated(code));
+      } else {
+        launch.launchTerminated(code);
+      }
     });
+  }
+
+  ProcessRunner _skyTool(DartProject project, String sky_tool, List<String> args) {
+    if (isMac) {
+      // On the mac, run under bash.
+      return new ProcessRunner('/bin/bash',
+          args: ['-l', '-c', '${sky_tool} ${args.join(' ')}'], cwd: project.path);
+    } else {
+      args.insert(0, sky_tool);
+      return new ProcessRunner('python',
+          args: [sky_tool, args], cwd: project.path);
+    }
   }
 }
 
