@@ -7,6 +7,7 @@
 - running a Sky app now pipes the stdout back to the console view
 - revamped the UI of the outline view
 - iterated on the console UI
+- added a button on sky launches to open a browser page on the Observatory
 
 ## 0.4.3
 - improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)
