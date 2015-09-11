@@ -15,12 +15,12 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('refactoring');
 
-// TODO: Run in an AnalysisRequestJob job.
-
 class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 
   RefactoringHelper() {
+    AnalysisRequestJob;
+
     _commands.add(atom.commands.add('atom-text-editor', 'dartlang:refactor-rename', (e) {
       _handleRenameRefactor(e.editor);
     }));
@@ -29,11 +29,6 @@ class RefactoringHelper implements Disposable {
   void dispose() => _commands.dispose();
 
   void _handleRenameRefactor(TextEditor editor) {
-    if (!analysisServer.isActive) {
-      atom.beep();
-      return;
-    }
-
     String path = editor.getPath();
 
     if (projectManager.getProjectFor(path) == null) {
@@ -47,24 +42,32 @@ class RefactoringHelper implements Disposable {
     int end = buffer.characterIndexForPosition(range.end);
     String text = editor.getText();
     String oldName = _findIdentifier(text, offset);
-    String newName;
 
     // TODO: Timeout if the refactor request takes too long?
-    analysisServer.getAvailableRefactorings(path, offset, end - offset).then(
-        (AvailableRefactoringsResult result) {
-      List refactorings = result.kinds;
+    Job job = new AnalysisRequestJob('rename', () {
+      return analysisServer.getAvailableRefactorings(
+          path, offset, end - offset).then((AvailableRefactoringsResult result) {
+        _handleRefactorResult(result, path, offset, end, oldName);
+      });
+    });
+    job.schedule();
+  }
 
-      bool canRefactor = refactorings.contains('RENAME');
+  void _handleRefactorResult(AvailableRefactoringsResult result, String path,
+      int offset, int end, String oldName) {
+    String newName;
+    List refactorings = result.kinds;
 
-      if (!canRefactor) {
-        atom.beep();
-        return null;
-      }
+    bool canRefactor = refactorings.contains('RENAME');
 
-      return promptUser('Rename refactor: enter the new name.',
-          defaultText: oldName,
-          selectText: true);
-    }).then((_newName) {
+    if (!canRefactor) {
+      atom.beep();
+      return null;
+    }
+
+    promptUser('Rename refactor: enter the new name.',
+        defaultText: oldName,
+        selectText: true).then((_newName) {
       newName = _newName;
 
       if (newName != null) {
@@ -97,14 +100,17 @@ class RefactoringHelper implements Disposable {
             if (val != 0) return;
           }
 
-          _apply(sourceFileEdits, oldName, newName);
+          _apply(sourceFileEdits, oldName, newName).then((_) {
+            // Ensure the original file is selected.
+            atom.workspace.open(path);
+          });
         }
       }
     });
   }
 
-  void _apply(List<SourceFileEdit> sourceFileEdits, String oldName, String newName) {
-    Future.forEach(sourceFileEdits, (SourceFileEdit edit) {
+  Future _apply(List<SourceFileEdit> sourceFileEdits, String oldName, String newName) {
+    return Future.forEach(sourceFileEdits, (SourceFileEdit edit) {
       return atom.workspace.open(edit.file, options: {'searchAllPanes': true}).then(
           (TextEditor editor) {
         applyEdits(editor, edit.edits);

@@ -507,6 +507,10 @@ class RenameRefactoringOptions extends RefactoringOptions {
   Map toMap() => {'newName': newName};
 }
 
+/// A [Job] implementation to wrap calls to the analysis server. It will not run
+/// if the analysis server is not active. If the call results in an error from
+/// the analysis server, the error will be displayed in a toast and will not be
+/// passed back from the returned Future.
 class AnalysisRequestJob extends Job {
   final Function _fn;
 

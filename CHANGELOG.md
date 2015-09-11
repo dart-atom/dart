@@ -9,6 +9,8 @@
 - iterated on the console UI
 - added a button on sky launches to open a browser page on the Observatory
 - pre-filled in the 'Send Feedback' form with version and OS information
+- fixed an issue with the wrong editor being selected after a multi-file rename
+  refactoring
 
 ## 0.4.3
 - improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)
