@@ -141,9 +141,6 @@ class AtomDartPackage extends AtomPackage {
     _addCmd('atom-workspace', 'dartlang:rebuild-restart-dev', (_) {
       new RebuildJob().schedule();
     });
-    _addCmd('atom-workspace', 'dartlang:auto-locate-sdk', (_) {
-      new SdkLocationJob(sdkManager).schedule();
-    });
     _addCmd('atom-workspace', 'dartlang:settings', (_) {
       atom.workspace.open('atom://config/packages/dartlang');
     });
@@ -245,23 +242,9 @@ class AtomDartPackage extends AtomPackage {
   }
 
   void _handleSendFeedback() {
-    // 'Atom 1.0.11, dartlang 0.4.3, SDK 1.12, running on Windows.'
-    String atomVer = atom.getVersion();
-    String pluginVer;
-    String sdkVer;
-    String os = isMac ? 'macos' : platform;
-
-    getPackageVersion().then((ver) {
-      pluginVer = ver;
-      return sdkManager.hasSdk ? sdkManager.sdk.getVersion() : null;
-    }).then((ver) {
-      sdkVer = ver;
-
-      String versionInfo = '\n\nAtom ${atomVer}, dartlang ${pluginVer}';
-      if (sdkVer != null) versionInfo += ', and SDK ${sdkVer}';
-      versionInfo += ', running on ${os}.';
+    getSystemDescription().then((String description) {
       shell.openExternal('https://github.com/dart-atom/dartlang/issues/new?'
-          'body=${Uri.encodeComponent(versionInfo)}');
+          'body=${Uri.encodeComponent(description)}');
     });
   }
 

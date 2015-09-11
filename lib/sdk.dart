@@ -19,8 +19,6 @@ import 'utils.dart';
 
 export 'process.dart' show ProcessResult;
 
-// TODO: create an sdk status dialog (w/ the version)
-
 // TODO: print the sdk version on successful auto-location (and path)
 
 final String _prefPath = '${pluginId}.sdkLocation';
@@ -57,6 +55,7 @@ class SdkManager implements Disposable {
 
   Sdk _sdk;
   StreamSubscription _prefSub;
+  Disposables _commands = new Disposables();
 
   SdkManager() {
     // Load the existing setting and initiate auto-discovery if necessary.
@@ -73,9 +72,13 @@ class SdkManager implements Disposable {
     _prefSub = new EventStream(atom.config.onDidChange(_prefPath))
         .debounce(new Duration(seconds: 1))
         .listen((value) => _setSdkPath(value));
-    // _prefSub = atom.config.onDidChange(_prefPath).listen((value) {
-    //   _setSdkPath(value);
-    // });
+
+    _commands.add(atom.commands.add('atom-workspace', 'dartlang:auto-locate-sdk', (_) {
+      new SdkLocationJob(sdkManager).schedule();
+    }));
+    _commands.add(atom.commands.add('atom-workspace', 'dartlang:show-sdk-info', (_) {
+      _handleShowSdkInfo();
+    }));
   }
 
   bool get hasSdk => _sdk != null;
@@ -146,6 +149,7 @@ class SdkManager implements Disposable {
 
   void dispose() {
     _prefSub.cancel();
+    _commands.dispose();
   }
 
   bool _alreadyWarned = false;
@@ -166,6 +170,14 @@ class SdkManager implements Disposable {
         }
       }
     } catch (e) { }
+  }
+
+  void _handleShowSdkInfo() {
+    getSystemDescription(sdkPath: true).then((String description) {
+      atom.notifications.addInfo('SDK and Plugin info',
+          description: description,
+          dismissable: true);
+    });
   }
 }
 
