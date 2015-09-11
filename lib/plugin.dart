@@ -158,9 +158,7 @@ class AtomDartPackage extends AtomPackage {
         }
       });
     });
-    _addCmd('atom-workspace', 'dartlang:send-feedback', (_) {
-      shell.openExternal('https://github.com/dart-atom/dartlang/issues');
-    });
+    _addCmd('atom-workspace', 'dartlang:send-feedback', (_) => _handleSendFeedback());
 
     // Text editor commands.
     _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
@@ -243,6 +241,27 @@ class AtomDartPackage extends AtomPackage {
           "basic crash reports to improve the tool over time. Please visit the "
           "plugin's settings page to configure this behavior.",
         dismissable: true);
+    });
+  }
+
+  void _handleSendFeedback() {
+    // 'Atom 1.0.11, dartlang 0.4.3, SDK 1.12, running on Windows.'
+    String atomVer = atom.getVersion();
+    String pluginVer;
+    String sdkVer;
+    String os = isMac ? 'macos' : platform;
+
+    getPackageVersion().then((ver) {
+      pluginVer = ver;
+      return sdkManager.hasSdk ? sdkManager.sdk.getVersion() : null;
+    }).then((ver) {
+      sdkVer = ver;
+
+      String versionInfo = '\n\nAtom ${atomVer}, dartlang ${pluginVer}';
+      if (sdkVer != null) versionInfo += ', and SDK ${sdkVer}';
+      versionInfo += ', running on ${os}.';
+      shell.openExternal('https://github.com/dart-atom/dartlang/issues/new?'
+          'body=${Uri.encodeComponent(versionInfo)}');
     });
   }
 
