@@ -62,7 +62,7 @@ class RunSkyAppJob extends Job {
     }
 
     // Chain together both 'sky_tool start' and 'sky_tool logs'.
-    _runner = _skyTool(project, sky_tool, ['start']);
+    _runner = _skyTool(project, ['start']);
 
     Launch launch = new Launch(
         new LaunchType(LaunchType.SKY),
@@ -84,7 +84,7 @@ class RunSkyAppJob extends Job {
 
       if (code == 0) {
         // Chain 'sky_tool logs'.
-        _runner = _skyTool(project, sky_tool, ['logs', '--clear']);
+        _runner = _skyTool(project, ['logs', '--clear']);
         _runner.execStreaming();
         _runner.onStdout.listen((str) => launch.pipeStdout(str));
         _runner.onStderr.listen((str) => launch.pipeStderr(str));
@@ -97,15 +97,16 @@ class RunSkyAppJob extends Job {
     });
   }
 
-  ProcessRunner _skyTool(DartProject project, String sky_tool, List<String> args) {
+  ProcessRunner _skyTool(DartProject project, List<String> args) {
+    final String skyToolPath = 'packages${separator}sky${separator}sky_tool';
+
     if (isMac) {
       // On the mac, run under bash.
       return new ProcessRunner('/bin/bash',
-          args: ['-l', '-c', '${sky_tool} ${args.join(' ')}'], cwd: project.path);
+          args: ['-l', '-c', '${skyToolPath} ${args.join(' ')}'], cwd: project.path);
     } else {
-      args.insert(0, sky_tool);
-      return new ProcessRunner('python',
-          args: [sky_tool, args], cwd: project.path);
+      args.insert(0, skyToolPath);
+      return new ProcessRunner('python', args: args, cwd: project.path);
     }
   }
 }
