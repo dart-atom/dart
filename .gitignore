@@ -1,2 +1,9 @@
 _site/
 .DS_Store
+.packages
+.pub/
+packages/
+pubspec.lock
+test/
+tool/
+web/
