@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.4
 - added an issue count to the problems view
 - added a console view to display stdout from launched applications
 - added a status line contribution to track launched applications
