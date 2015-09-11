@@ -14,6 +14,7 @@ import 'package:logging/logging.dart';
 
 import 'atom.dart';
 import 'js.dart';
+import 'state.dart';
 import 'utils.dart';
 
 final Logger _logger = new Logger('atom_utils');
@@ -110,6 +111,36 @@ Future<String> promptUser(String prompt,
   });
 
   return completer.future;
+}
+
+/// Return a description of Atom, the plugin, and the OS.
+Future<String> getSystemDescription({bool sdkPath: false}) {
+  // 'Atom 1.0.11, dartlang 0.4.3, SDK 1.12, running on Windows.'
+  String atomVer = atom.getVersion();
+  String pluginVer;
+  String sdkVer;
+  String os = isMac ? 'macos' : platform;
+
+  return getPackageVersion().then((ver) {
+    pluginVer = ver;
+    return sdkManager.hasSdk ? sdkManager.sdk.getVersion() : null;
+  }).then((ver) {
+    sdkVer = ver;
+
+    String description = '\n\nAtom ${atomVer}, dartlang ${pluginVer}';
+    if (sdkVer != null) description += ', and SDK ${sdkVer}';
+    description += ', running on ${os}.';
+
+    if (sdkPath) {
+      if (sdkManager.hasSdk) {
+        description += '\n\nSDK at ${sdkManager.sdk.path}.';
+      } else {
+        description += 'No SDK configured.';
+      }
+    }
+
+    return description;
+  });
 }
 
 /// A [NodeValidator] which allows everything.

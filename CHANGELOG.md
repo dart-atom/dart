@@ -11,6 +11,7 @@
 - pre-filled in the 'Send Feedback' form with version and OS information
 - fixed an issue with the wrong editor being selected after a multi-file rename
   refactoring
+- added a 'show sdk info' command and dialog
 
 ## 0.4.3
 - improved the UI for user executed discrete tasks (pub get, pub upgrade, ...)
