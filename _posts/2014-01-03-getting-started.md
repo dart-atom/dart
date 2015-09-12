@@ -47,6 +47,15 @@ provides functionality like analyzing code for errors and warnings, providing
 code completion information, and various code searching and refactoring tools.
 This process is automatically managed by the `dartlang` plugin.
 
+## Opening Dart files
+
+Currently, opening individual Dart files - so that their containing directory is
+*not* open in Atom - is not well supported. You will get some Dart specific
+functionality, like syntax highlighting, but you will not get much of the rest of
+it, including things like errors and warnings, hyper-link navigation, and code
+completion. We're investigating ways to better support opening individual Dart
+files in Atom; stay tuned.
+
 ## Working with Dart projects
 
 There are various tools and commands available to help you work with Dart
