@@ -15,8 +15,6 @@ import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
 
-// TODO: display error counts in-line with the title / focus
-
 final String _errorPref = '${pluginId}.useErrorsView';
 final String _initKeyPath = '_dartlang._errorsInitialized';
 
@@ -39,7 +37,7 @@ class ErrorsController implements Disposable {
 
     enabled = atom.config.getValue(_errorPref);
 
-    _restoreView();
+    view = new ErrorsView();
     statusElement = new ErrorsStatusElement(this, enabled);
 
     onProcessedErrorsChanged.listen(_handleErrorsChanged);
@@ -61,6 +59,7 @@ class ErrorsController implements Disposable {
     _sub.cancel();
     disposables.dispose();
     statusElement.dispose();
+    view.dispose();
   }
 
   void _togglePrefs(bool value) {
@@ -76,10 +75,6 @@ class ErrorsController implements Disposable {
     atom.config.setValue('linter.showErrorPanel', !enabled);
     atom.config.setValue('linter.showErrorTabFile', !enabled);
     atom.config.setValue('linter.showErrorTabProject', !enabled);
-  }
-
-  void _restoreView() {
-    view = new ErrorsView();
   }
 
   void _toggleView() => view.toggle();
@@ -123,8 +118,8 @@ class ErrorsController implements Disposable {
 class ErrorsView extends AtomView {
   CoreElement target;
   CoreElement body;
-  CoreElement focusElement;
   CoreElement countElement;
+  CoreElement focusElement;
 
   ErrorsView() : super('Errors', classes: 'errors-view dartlang', prefName: 'Errors',
       rightPanel: false, cancelCloses: false, showTitle: false) {
@@ -133,8 +128,8 @@ class ErrorsView extends AtomView {
     content.add([
       body = div(),
       div(c: 'text-muted errors-focus-area')..add([
-        focusElement = div(c: 'badge focus-title'),
-        countElement = div(c: 'errors-count')
+        countElement = div(c: 'errors-count'),
+        focusElement = div(c: 'badge focus-title')
       ])
     ]);
 
@@ -169,7 +164,7 @@ class ErrorsView extends AtomView {
     // Update the focus label.
     if (focus != null) {
       focusElement.text = focus;
-      focusElement.element.style.display = 'block';
+      focusElement.element.style.display = 'inline-block';
     } else {
       focusElement.element.style.display = 'none';
     }
@@ -309,8 +304,8 @@ class ErrorsStatusElement implements Disposable {
 
       // 4 errors, 1 warning
       if (errorCount > 0 && warningCount > 0) {
-        _badgeSpan.text = '${errorCount} ${pluralize('error', errorCount)}, '
-          '${warningCount} ${pluralize('warning', warningCount)}';
+        int total = errorCount + warningCount;
+        _badgeSpan.text = '${total} ${pluralize('issue', total)}';
       } else if (errorCount > 0) {
         _badgeSpan.text = '${errorCount} ${pluralize('error', errorCount)}';
       } else {
