@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue where we didn't dispose of the errors view on plugin shutdown
+
 ## 0.4.4
 - added an issue count to the problems view
 - added a console view to display stdout from launched applications
