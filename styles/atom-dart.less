@@ -326,18 +326,15 @@ status-bar .dartlang .badge {
     position: absolute;
     top: 6px;
     right: 20px;
-    display: flex;
-    flex-direction: column;
     -webkit-user-select: none;
     //background-color: @overlay-background-color;
 
     .focus-title {
-      align-self: flex-end;
+      display: inline-block;
     }
 
     .errors-count {
-      align-self: flex-end;
-      margin-top: 4px;
+      display: inline-block;
     }
 
     .badge {
@@ -522,8 +519,7 @@ atom-notification {
     }
 
     .process-tab {
-      padding-left: 5px;
-      padding-right: 5px;
+      padding: 1px 5px 2px 5px;
       margin-left: 16px;
       display: inline-block;
     }
@@ -534,6 +530,8 @@ atom-notification {
 
     .run-buttons {
       display: inline-block;
+      position: relative;
+      top: 1px;
     }
   }
 

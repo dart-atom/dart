@@ -115,7 +115,7 @@ Future<String> promptUser(String prompt,
 
 /// Return a description of Atom, the plugin, and the OS.
 Future<String> getSystemDescription({bool sdkPath: false}) {
-  // 'Atom 1.0.11, dartlang 0.4.3, SDK 1.12, running on Windows.'
+  // 'Atom 1.0.11, dartlang 0.4.3, SDK 1.12 running on Windows.'
   String atomVer = atom.getVersion();
   String pluginVer;
   String sdkVer;
@@ -128,14 +128,14 @@ Future<String> getSystemDescription({bool sdkPath: false}) {
     sdkVer = ver;
 
     String description = '\n\nAtom ${atomVer}, dartlang ${pluginVer}';
-    if (sdkVer != null) description += ', and SDK ${sdkVer}';
-    description += ', running on ${os}.';
+    if (sdkVer != null) description += ', SDK ${sdkVer}';
+    description += ' running on ${os}.';
 
     if (sdkPath) {
       if (sdkManager.hasSdk) {
-        description += '\n\nSDK at ${sdkManager.sdk.path}.';
+        description += '\nSDK at ${sdkManager.sdk.path}.';
       } else {
-        description += 'No SDK configured.';
+        description += '\nNo SDK configured.';
       }
     }
 

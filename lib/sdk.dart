@@ -174,9 +174,17 @@ class SdkManager implements Disposable {
 
   void _handleShowSdkInfo() {
     getSystemDescription(sdkPath: true).then((String description) {
-      atom.notifications.addInfo('SDK and Plugin info',
-          description: description,
-          dismissable: true);
+      Notification notification;
+
+      var openSettings = () {
+        notification.dismiss();
+        atom.workspace.open('atom://config/packages/dartlang');
+      };
+
+      notification = atom.notifications.addInfo('SDK and Plugin info',
+          detail: description,
+          dismissable: true,
+          buttons: [new NotificationButton('Configure SDK…', openSettings)]);
     });
   }
 }

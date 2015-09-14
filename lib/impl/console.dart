@@ -135,7 +135,7 @@ class _LaunchController implements Disposable {
     _updateToggles();
     _updateButtons();
 
-    title.toggleClass('launch-terminated', true);
+    container.toggleClass('launch-terminated', true);
     title.text = '${launch.title} [${launch.exitCode}]';
 
     _emitText('\n');

@@ -252,11 +252,14 @@ class AtomDartPackage extends AtomPackage {
 
   void packageDeactivated() {
     _logger.info('deactivated');
-    disposables.dispose();
-    subscriptions.cancel();
 
-    // TODO: Cancel any running Jobs (see #120).
-
+    try {
+      // TODO: Cancel any running Jobs (see #120).
+      disposables.dispose();
+      subscriptions.cancel();
+    } catch (e, st) {
+      _logger.severe('Exception while deactivating package', e, st);
+    }
   }
 
   Map config() {

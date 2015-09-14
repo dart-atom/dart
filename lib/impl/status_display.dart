@@ -22,6 +22,7 @@ class StatusDisplay implements Disposable {
   JobsDialog dialog;
 
   Tile _statusbarTile;
+
   Timer _timer;
 
   StatusDisplay(StatusBar statusBar) {

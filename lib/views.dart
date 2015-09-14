@@ -129,7 +129,7 @@ class AtomView implements Disposable  {
   final String groupName;
 
   Panel _panel;
-  Disposable _cancelCommand;
+  Disposables disposables = new Disposables();
   StreamSubscriptions subs = new StreamSubscriptions();
 
   CoreElement root;
@@ -175,7 +175,8 @@ class AtomView implements Disposable  {
     }
 
     if (cancelCloses) {
-      _cancelCommand = atom.commands.add('atom-workspace', 'core:cancel', (_) => _handleCancel());
+      disposables.add(
+        atom.commands.add('atom-workspace', 'core:cancel', (_) => _handleCancel()));
     }
 
     if (groupName != null) {
@@ -229,7 +230,7 @@ class AtomView implements Disposable  {
   void dispose() {
     groupManager.removeView(groupName, this);
     _panel.invoke('destroy');
-    _cancelCommand.dispose();
+    disposables.dispose();
     subs.cancel();
   }
 }

@@ -348,51 +348,50 @@ class _SeparatorMenuItem extends ContextMenuItem {
 class NotificationManager extends ProxyHolder {
   NotificationManager(JsObject object) : super(object);
 
-  // TODO: Expose the `buttons` field.
-  // https://github.com/atom/exception-reporting/blob/master/lib/reporter.coffee#L101
-
   /// Add an success notification. If [dismissable] is `true`, the notification
   /// is rendered with a close button and does not auto-close.
   Notification addSuccess(String message, {String detail, String description,
-      bool dismissable, String icon}) {
+      bool dismissable, String icon, List<NotificationButton> buttons}) {
     return new Notification(invoke('addSuccess', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon)));
+      description: description, dismissable: dismissable, icon: icon, buttons: buttons)));
   }
 
   /// Add an informational notification.
   Notification addInfo(String message, {String detail, String description,
-      bool dismissable, String icon}) {
+      bool dismissable, String icon, List<NotificationButton> buttons}) {
     return new Notification(invoke('addInfo', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon)));
+      description: description, dismissable: dismissable, icon: icon, buttons: buttons)));
   }
 
   /// Add an warning notification.
   Notification addWarning(String message, {String detail, String description,
-      bool dismissable, String icon}) {
+      bool dismissable, String icon, List<NotificationButton> buttons}) {
     return new Notification(invoke('addWarning', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon)));
+      description: description, dismissable: dismissable, icon: icon, buttons: buttons)));
   }
 
   /// Add an error notification.
   Notification addError(String message, {String detail, String description,
-      bool dismissable, String icon}) {
+      bool dismissable, String icon, List<NotificationButton> buttons}) {
     return new Notification(invoke('addError', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon)));
+      description: description, dismissable: dismissable, icon: icon, buttons: buttons)));
   }
 
   /// Add an fatal error notification.
   Notification addFatalError(String message, {String detail, String description,
-      bool dismissable, String icon}) {
+      bool dismissable, String icon, List<NotificationButton> buttons}) {
     return new Notification(invoke('addFatalError', message, _options(detail: detail,
-      description: description, dismissable: dismissable, icon: icon)));
+      description: description, dismissable: dismissable, icon: icon, buttons: buttons)));
   }
 
   /// Get all the notifications.
   List<Notification> getNotifications() =>
       invoke('getNotifications').map((n) => new Notification(n)).toList();
 
-  Map _options({String detail, String description, bool dismissable, String icon}) {
-    if (detail == null && description == null && dismissable == null && icon == null) {
+  Map _options({String detail, String description, bool dismissable, String icon,
+      List<NotificationButton> buttons}) {
+    if (detail == null && description == null && dismissable == null &&
+        icon == null && buttons == null) {
       return null;
     }
 
@@ -401,6 +400,9 @@ class NotificationManager extends ProxyHolder {
     if (description != null) m['description'] = description;
     if (dismissable != null) m['dismissable'] = dismissable;
     if (icon != null) m['icon'] = icon;
+    if (buttons != null) {
+      m['buttons'] = jsify(buttons.map((NotificationButton nb) => nb.toProxy()).toList());
+    }
     return m;
   }
 }
@@ -428,6 +430,15 @@ class Notification extends ProxyHolder {
   /// Dismisses the notification, removing it from the UI. Calling this
   /// programmatically will call all callbacks added via `onDidDismiss`.
   void dismiss() => invoke('dismiss');
+}
+
+class NotificationButton {
+  final String text;
+  final Function onDidClick;
+
+  NotificationButton(this.text, this.onDidClick);
+
+  JsObject toProxy() => jsify({'text': text, 'onDidClick': (_) => onDidClick()});
 }
 
 /// A helper class to manipulate the UI of [Notification]s.
