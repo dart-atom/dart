@@ -197,14 +197,15 @@ class ErrorsView extends AtomView {
           ..text = '${warningCount} ${pluralize('warning', warningCount)}');
     }
     if (infoCount > 0) {
-      countElement.add(span(c: 'badge')
+      countElement.add(span(c: 'badge badge-info')
           ..text = '${infoCount} ${pluralize('info', infoCount)}');
     }
   }
 
   Element _cvtError(AnalysisError error) {
     String type = error.severity == 'ERROR'
-        ? ' badge-error' : error.severity == 'WARNING' ? ' badge-warning' : '';
+        ? ' badge-error' : error.severity == 'WARNING'
+        ? ' badge-warning' : ' badge-info';
     String locationText = '${atom.project.relativizePath(error.location.file)[1]}'
         ', line ${error.location.startLine}';
 
