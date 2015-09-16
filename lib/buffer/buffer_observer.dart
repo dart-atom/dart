@@ -142,9 +142,9 @@ class BufferUpdater extends BufferObserver {
       if (lastSent == null) {
         addOverlay();
       } else {
-        String contents = editor.getText();
+        final String contents = editor.getText();
+        if (contents == lastSent) return;
 
-        // TODO: See #31.
         List<Edit> edits = simpleDiff(lastSent, contents);
         int count = 1;
         List<SourceEdit> diffs = edits

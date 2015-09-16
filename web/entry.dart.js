@@ -22540,6 +22540,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           else {
             t2 = this.editor;
             contents = t2.getText$0();
+            if (J.$eq$(contents, this.lastSent))
+              return;
             t3 = J.get$length$asx(this.lastSent);
             t1._captured_count_0 = 1;
             diffs = H.setRuntimeTypeInfo(new H.MappedListIterable([new G.Edit(0, t3, contents)], new K.BufferUpdater_changedOverlay_closure(t1)), [null, null]).toList$0(0);
