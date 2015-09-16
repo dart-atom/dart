@@ -23971,7 +23971,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
         if (infoCount > 0) {
           t1 = this.countElement;
-          t2 = K.CoreElement$("span", null, "badge", null);
+          t2 = K.CoreElement$("span", null, "badge badge-info", null);
           J.set$text$x(t2.element, "" + infoCount + " " + G.pluralize("info", infoCount));
           t1.add$1(0, t2);
         }
@@ -23981,7 +23981,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (J.$eq$(error.get$severity(), "ERROR"))
           type = " badge-error";
         else
-          type = J.$eq$(error.get$severity(), "WARNING") ? " badge-warning" : "";
+          type = J.$eq$(error.get$severity(), "WARNING") ? " badge-warning" : " badge-info";
         t1 = J.getInterceptor$x(error);
         locationText = H.S(J.$index$asx($.$get$atom()._project.invoke$2("relativizePath", t1.get$location(error).get$file()), 1)) + ", line " + H.S(t1.get$location(error).get$startLine());
         item = K.CoreElement$("div", null, "errors-item", null);
@@ -25078,7 +25078,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return;
         title = S.basename(this.editor.invoke$1("getPath"));
         t1 = K.CoreElement$("div", null, "outline-view source", null);
-        t2 = K.CoreElement$("div", null, "title", title);
+        t2 = K.CoreElement$("div", null, "title keyword", title);
         t3 = this.get$_outline$_render();
         t4 = P.StreamController_StreamController$broadcast(null, null, false, null);
         t5 = P.StreamController_StreamController$broadcast(null, null, false, null);
@@ -25205,66 +25205,55 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return n;
       },
       _outline$_render$2: [function(item, intoElement) {
-        var e, t1, t2, t3, span, str, type, index;
+        var e, t1, t2, t3, span, $name, type, index;
         e = item.get$element();
         t1 = J.getInterceptor$x(e);
         if (J.$eq$(t1.get$kind(e), "CLASS")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
+          J.get$classes$x(t3).add$1(0, "comment");
           t3.textContent = "class ";
           J.add$1$ax(t2, t3);
         } else if (J.$eq$(t1.get$kind(e), "ENUM")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
+          J.get$classes$x(t3).add$1(0, "comment");
           t3.textContent = "enum ";
           J.add$1$ax(t2, t3);
         } else if (J.$eq$(t1.get$kind(e), "FUNCTION_TYPE_ALIAS")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
+          J.get$classes$x(t3).add$1(0, "comment");
           t3.textContent = "typedef ";
           J.add$1$ax(t2, t3);
         }
         if (J.$eq$(t1.get$kind(e), "GETTER")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
+          J.get$classes$x(t3).add$1(0, "comment");
           t3.textContent = "get ";
           J.add$1$ax(t2, t3);
         } else if (J.$eq$(t1.get$kind(e), "SETTER")) {
           t2 = J.get$children$x(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).addAll$1(0, ["keyword", "declaration"]);
+          J.get$classes$x(t3).add$1(0, "comment");
           t3.textContent = "set ";
           J.add$1$ax(t2, t3);
         }
         span = W.AnchorElement_AnchorElement(null);
-        span.textContent = t1.get$name(e);
         if (J.$and$n(e.get$flags(), 32) !== 0)
           J.get$classes$x(span).add$1(0, "deprecated");
         t2 = J.getInterceptor$x(intoElement);
         J.add$1$ax(t2.get$children(intoElement), span);
-        if (J.$eq$(t1.get$kind(e), "CLASS"))
-          J.get$classes$x(span).addAll$1(0, ["support", "class"]);
-        if (J.$eq$(t1.get$kind(e), "CONSTRUCTOR"))
-          J.get$classes$x(span).addAll$1(0, ["support", "class"]);
-        if (J.$eq$(t1.get$kind(e), "FUNCTION") || J.$eq$(t1.get$kind(e), "METHOD") || J.$eq$(t1.get$kind(e), "GETTER") || J.$eq$(t1.get$kind(e), "SETTER"))
-          J.get$classes$x(span).addAll$1(0, ["entity", "name", "function"]);
+        $name = t1.get$name(e);
+        if (e.get$parameters() != null)
+          $name = J.$add$ns($name, J.$gt$n(J.get$length$asx(e.get$parameters()), 2) === true ? "(\u2026)" : "()");
+        span.textContent = $name;
         if (e.get$typeParameters() != null) {
           t1 = t2.get$children(intoElement);
           t3 = document.createElement("span", null);
-          J.get$classes$x(t3).add$1(0, "muted");
+          J.get$classes$x(t3).add$1(0, "comment");
           t3.textContent = e.get$typeParameters();
-          J.add$1$ax(t1, t3);
-        }
-        if (e.get$parameters() != null) {
-          str = J.$gt$n(J.get$length$asx(e.get$parameters()), 2) === true ? "(\u2026)" : "()";
-          t1 = t2.get$children(intoElement);
-          t3 = document.createElement("span", null);
-          J.get$classes$x(t3).add$1(0, "muted");
-          t3.textContent = str;
           J.add$1$ax(t1, t3);
         }
         if (e.get$returnType() != null && J.get$isNotEmpty$asx(e.get$returnType()) === true) {
@@ -25275,7 +25264,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             type = t1.substring$2(type, 0, index) + "<\u2026>";
           t1 = t2.get$children(intoElement);
           t2 = document.createElement("span", null);
-          J.get$classes$x(t2).add$1(0, "muted");
+          J.get$classes$x(t2).add$1(0, "comment");
           t2.textContent = " \u2192 " + H.S(type);
           J.add$1$ax(t1, t2);
         }
