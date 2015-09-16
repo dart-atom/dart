@@ -77,7 +77,7 @@ class RunSkyAppJob extends Job {
     _runner.onStdout.listen((str) => launch.pipeStdout(str));
     _runner.onStderr.listen((str) => launch.pipeStderr(str));
 
-    launch.pipeStdout('${_runner.getDescription()}\n');
+    launch.pipeStdout('[${_runner.cwd}] ${_runner.getDescription()}\n');
 
     return _runner.onExit.then((code) {
       _runner = null;

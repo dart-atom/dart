@@ -3,12 +3,15 @@ library atom.buffer_observer;
 import 'dart:async';
 
 import 'package:frappe/frappe.dart';
+import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart';
 import '../analysis/formatting.dart';
 import '../atom.dart';
 import '../state.dart';
 import '../utils.dart';
+
+final Logger _logger = new Logger('atom.buffer_observer');
 
 class BufferObserverManager implements Disposable {
   List<BufferObserver> observers = [];
@@ -33,8 +36,9 @@ class BufferObserverManager implements Disposable {
 }
 
 class BufferObserver extends Disposables {
-  final TextEditor editor;
   final BufferObserverManager manager;
+  final TextEditor editor;
+
   BufferObserver(this.manager, this.editor);
 }
 
@@ -106,6 +110,8 @@ class BufferUpdater extends BufferObserver {
     addOverlay();
   }
 
+  bool get hasOverlay => lastSent != null;
+
   Server get server => analysisServer.server;
 
   void serverActive(bool active) {
@@ -116,23 +122,22 @@ class BufferUpdater extends BufferObserver {
     }
   }
 
-  void _didChange([_]) {
-    changedOverlay();
-  }
+  void _didChange([_]) => changedOverlay();
 
-  void _didDestroy([_]) {
-    dispose();
-  }
+  void _didDestroy([_]) => dispose();
 
-  addOverlay() {
+  void addOverlay() {
+    if (hasOverlay) return;
+
     if (analysisServer.isActive && dartProject) {
       lastSent = editor.getText();
+      _logger.fine("addOverlayContent('${editor.getPath()}')");
       server.analysis.updateContent(
           {editor.getPath(): new AddContentOverlay('add', lastSent)});
     }
   }
 
-  changedOverlay() {
+  void changedOverlay() {
     if (analysisServer.isActive && dartProject) {
       if (lastSent == null) {
         addOverlay();
@@ -140,26 +145,34 @@ class BufferUpdater extends BufferObserver {
         String contents = editor.getText();
 
         // TODO: See #31.
-        // List<Edit> edits = simpleDiff(lastSent, contents);
-        // int count = 1;
-        // List<SourceEdit> diffs = edits
-        //   .map((edit) => new SourceEdit(
-        //       edit.offset, edit.length, edit.replacement, id: '${count++}'))
-        //   .toList();
-        // var overlay = new ChangeContentOverlay('change', diffs);
-        // server.analysis.updateContent({ editor.getPath(): overlay });
+        List<Edit> edits = simpleDiff(lastSent, contents);
+        int count = 1;
+        List<SourceEdit> diffs = edits
+          .map((edit) => new SourceEdit(
+              edit.offset, edit.length, edit.replacement, id: '${count++}'))
+          .toList();
+        _logger.fine("changedOverlayContent('${editor.getPath()}')");
         server.analysis.updateContent(
-            {editor.getPath(): new RemoveContentOverlay('remove')});
-        server.analysis.updateContent(
-            {editor.getPath(): new AddContentOverlay('add', contents)});
+            {editor.getPath(): new ChangeContentOverlay('change', diffs)});
+
+        // _logger.fine("removeOverlayContent('${editor.getPath()}')");
+        // server.analysis.updateContent(
+        //     {editor.getPath(): new RemoveContentOverlay('remove')});
+        //
+        // _logger.fine("addOverlayContent('${editor.getPath()}')");
+        // server.analysis.updateContent(
+        //     {editor.getPath(): new AddContentOverlay('add', contents)});
 
         lastSent = contents;
       }
     }
   }
 
-  removeOverlay() {
+  void removeOverlay() {
+    if (!hasOverlay) return;
+
     if (analysisServer.isActive && dartProject) {
+      _logger.fine("removeOverlayContent('${editor.getPath()}')");
       server.analysis.updateContent(
           {editor.getPath(): new RemoveContentOverlay('remove')});
     }
