@@ -2,6 +2,9 @@
 
 ## unreleased
 - fixed an issue where we didn't dispose of the errors view on plugin shutdown
+- changed the styling of the outline view to be less distracting
+- fixed an issue with jerkiness when dragging the size of the outline view
+- change to have the errors view better respect the user settings
 
 ## 0.4.4
 - added an issue count to the problems view

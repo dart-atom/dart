@@ -38,7 +38,6 @@ class ErrorsController implements Disposable {
     ));
 
     enabled = atom.config.getValue(_errorPref);
-
     view = new ErrorsView(enabled);
     statusElement = new ErrorsStatusElement(this, enabled);
 
@@ -126,8 +125,8 @@ class ErrorsView extends AtomView {
   CoreElement countElement;
   CoreElement focusElement;
 
-  ErrorsView(bool enabled) : super('Errors', classes: 'errors-view dartlang', prefName: 'Errors',
-      rightPanel: false, cancelCloses: false, showTitle: false) {
+  ErrorsView(bool enabled) : super('Errors', classes: 'errors-view dartlang',
+      prefName: 'Errors', rightPanel: false, cancelCloses: false, showTitle: false) {
     //root.toggleClass('tree-view', false);
 
     content.add([

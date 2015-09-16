@@ -23850,32 +23850,34 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this.view._handleErrorsChanged$2$focus(filteredErrors, shortName);
       }, "call$1", "get$_handleErrorsChanged", 2, 0, 58, 60],
       ErrorsController$0: function() {
-        var t1, t2, t3, t4, t5, t6, t7, t8;
+        var t1, t2, t3, t4, t5, t6, t7, t8, t9;
         t1 = $.$get$atom();
         t2 = this.disposables.Disposables__disposables;
         t2.push(t1._commands.add$3(0, "atom-workspace", "dartlang:toggle-errors-view", new G.ErrorsController_closure(this)));
-        this.enabled = t1._config.getValue$1("dartlang.useErrorsView");
-        t3 = new G.ErrorsView(null, null, null, null, null, null, new G.Disposables([]), new G.StreamSubscriptions([]), null, null, null, null);
-        t3.AtomView$7$cancelCloses$classes$groupName$prefName$rightPanel$showTitle("Errors", false, "errors-view dartlang", null, "Errors", false, false);
-        t4 = t3.content;
-        t5 = K.CoreElement$("div", null, null, null);
-        t3.body = t5;
-        t6 = K.CoreElement$("div", null, "text-muted errors-focus-area", null);
-        t7 = K.CoreElement$("div", null, "errors-count", null);
-        t3.countElement = t7;
-        t8 = K.CoreElement$("div", null, "badge focus-title", null);
-        t3.focusElement = t8;
-        t6.add$1(0, [t7, t8]);
-        t4.add$1(0, [t5, t6]);
-        t6 = $.$get$state();
-        if (J.$eq$(J.$index$asx(t6._state$_map, "errorViewShowing"), false)) {
-          t3.super$AtomView$hide();
-          t6.$indexSet(0, "errorViewShowing", false);
+        t3 = t1._config.getValue$1("dartlang.useErrorsView");
+        this.enabled = t3;
+        t4 = new G.ErrorsView(null, null, null, null, null, null, new G.Disposables([]), new G.StreamSubscriptions([]), null, null, null, null);
+        t4.AtomView$7$cancelCloses$classes$groupName$prefName$rightPanel$showTitle("Errors", false, "errors-view dartlang", null, "Errors", false, false);
+        t5 = t4.content;
+        t6 = K.CoreElement$("div", null, null, null);
+        t4.body = t6;
+        t7 = K.CoreElement$("div", null, "text-muted errors-focus-area", null);
+        t8 = K.CoreElement$("div", null, "errors-count", null);
+        t4.countElement = t8;
+        t9 = K.CoreElement$("div", null, "badge focus-title", null);
+        t4.focusElement = t9;
+        t7.add$1(0, [t8, t9]);
+        t5.add$1(0, [t6, t7]);
+        t7 = $.$get$state();
+        t7.$indexSet(0, "errorViewShowing", t3);
+        if (J.$eq$(J.$index$asx(t7._state$_map, "errorViewShowing"), false)) {
+          t4.super$AtomView$hide();
+          t7.$indexSet(0, "errorViewShowing", false);
         } else {
-          t3.super$AtomView$show(t3);
-          t6.$indexSet(0, "errorViewShowing", true);
+          t4.super$AtomView$show(t4);
+          t7.$indexSet(0, "errorViewShowing", true);
         }
-        this.view = t3;
+        this.view = t4;
         this.statusElement = new G.ErrorsStatusElement(this, this.enabled, null, null, null);
         t3 = $.$get$_processedErrorsController();
         t3.toString;
