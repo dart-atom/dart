@@ -16,7 +16,9 @@ import '../utils.dart';
 import '../views.dart';
 
 final String _errorPref = '${pluginId}.useErrorsView';
+
 final String _initKeyPath = '_dartlang._errorsInitialized';
+final String _initKeyPath2 = '_dartlang._errorsInitialized2';
 
 class ErrorsController implements Disposable {
   Disposables disposables = new Disposables();
@@ -48,10 +50,14 @@ class ErrorsController implements Disposable {
     _sub = atom.config.onDidChange(_errorPref).listen(_togglePrefs);
 
     // Check to see if this is our first run.
-    bool firstRun = atom.config.getValue(_initKeyPath) != true;
-    if (firstRun) {
+    if (atom.config.getValue(_initKeyPath) != true) {
       atom.config.setValue(_initKeyPath, true);
       _togglePrefs(true);
+    } else if (atom.config.getValue(_initKeyPath2) != true) {
+      // Check to see if we need to toggle the `linter.displayLinterInfo` setting.
+      atom.config.setValue(_initKeyPath2, true);
+      atom.config.setValue('linter.displayLinterInfo',
+          atom.config.getValue('linter.showErrorPanel'));
     }
   }
 
@@ -73,8 +79,7 @@ class ErrorsController implements Disposable {
 
     // Toggle linter settings.
     atom.config.setValue('linter.showErrorPanel', !enabled);
-    atom.config.setValue('linter.showErrorTabFile', !enabled);
-    atom.config.setValue('linter.showErrorTabProject', !enabled);
+    atom.config.setValue('linter.displayLinterInfo', !enabled);
   }
 
   void _toggleView() => view.toggle();
