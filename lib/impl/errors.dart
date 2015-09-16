@@ -137,7 +137,9 @@ class ErrorsView extends AtomView {
       ])
     ]);
 
-    state['errorViewShowing'] = enabled;
+    if (state['errorViewShowing'] == null) {
+      state['errorViewShowing'] = enabled;
+    }
 
     bool hidden = state['errorViewShowing'] == false;
     hidden ? hide() : show();

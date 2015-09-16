@@ -65,7 +65,10 @@ class Server {
   }
 
   void _processMessage(String message) {
+    if (message.startsWith('#')) return;
     if (message.startsWith('Observatory listening on')) return;
+    if (message.startsWith('Could not start Observatory')) return;
+    if (message.startsWith('SocketException: ')) return;
 
     try {
       _onReceive.add(message);

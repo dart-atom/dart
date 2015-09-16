@@ -11,16 +11,14 @@ import '../src/src_gen.dart';
 
 Api api;
 
-// TODO: Have [Jsonable] classes known about their list of properties?
-
 main(List<String> args) {
   // Parse spec_input.html into a model.
   File file = new File('tool/analysis/spec_input.html');
   Document document = parse(file.readAsStringSync());
   print('Parsed ${file.path}.');
   List<Element> domains = document.body.getElementsByTagName('domain');
-  List<Element> typedefs = document.body.getElementsByTagName('types').first
-      .getElementsByTagName('type');
+  List<Element> typedefs = document.body.getElementsByTagName('types')
+      .first.getElementsByTagName('type');
   api = new Api();
   api.parse(domains, typedefs);
 
@@ -647,7 +645,10 @@ final String _serverCode = r'''
   }
 
   void _processMessage(String message) {
+    if (message.startsWith('#')) return;
     if (message.startsWith('Observatory listening on')) return;
+    if (message.startsWith('Could not start Observatory')) return;
+    if (message.startsWith('SocketException: ')) return;
 
     try {
       _onReceive.add(message);
