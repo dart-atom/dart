@@ -23819,8 +23819,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
         t1 = $.$get$atom();
         t1._config.invoke$3("set", "linter.showErrorPanel", this.enabled !== true);
-        t1._config.invoke$3("set", "linter.showErrorTabFile", this.enabled !== true);
-        t1._config.invoke$3("set", "linter.showErrorTabProject", this.enabled !== true);
+        t1._config.invoke$3("set", "linter.displayLinterInfo", this.enabled !== true);
       }, "call$1", "get$_togglePrefs", 2, 0, 32, 7],
       _toggleView$0: [function() {
         var t1 = this.view;
@@ -23887,6 +23886,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (!J.$eq$(t1._config.getValue$1("_dartlang._errorsInitialized"), true)) {
           t1._config.invoke$3("set", "_dartlang._errorsInitialized", true);
           this._togglePrefs$1(true);
+        } else if (!J.$eq$(t1._config.getValue$1("_dartlang._errorsInitialized2"), true)) {
+          t1._config.invoke$3("set", "_dartlang._errorsInitialized2", true);
+          t1 = t1._config;
+          t1.invoke$3("set", "linter.displayLinterInfo", t1.getValue$1("linter.showErrorPanel"));
         }
       },
       $isDisposable: 1,
