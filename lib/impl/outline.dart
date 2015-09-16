@@ -98,7 +98,7 @@ class OutlineView implements Disposable {
     ViewResizer resizer;
 
     content = div(c: 'outline-view source')..add([
-      div(text: title, c: 'title'),
+      div(text: title, c: 'title keyword'),
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
           ..toggleClass('outline-tree')..toggleClass('selection'),
       resizer = new ViewResizer.createVertical()
@@ -214,13 +214,19 @@ class OutlineView implements Disposable {
 
     if (e.kind == 'CLASS') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.addAll(['keyword', 'declaration'])..text = 'class ');
+          //..classes.addAll(['keyword', 'declaration'])
+          ..classes.add('comment')
+          ..text = 'class ');
     } else if (e.kind == 'ENUM') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.addAll(['keyword', 'declaration'])..text = 'enum ');
+          //..classes.addAll(['keyword', 'declaration'])
+          ..classes.add('comment')
+          ..text = 'enum ');
     } else if (e.kind == 'FUNCTION_TYPE_ALIAS') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.addAll(['keyword', 'declaration'])..text = 'typedef ');
+          //..classes.addAll(['keyword', 'declaration'])
+          ..classes.add('comment')
+          ..text = 'typedef ');
     }
 
     // // Types on the left.
@@ -231,43 +237,51 @@ class OutlineView implements Disposable {
 
     if (e.kind == 'GETTER') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.addAll(['keyword', 'declaration'])..text = 'get ');
+          //..classes.addAll(['keyword', 'declaration'])
+          ..classes.add('comment')
+          ..text = 'get ');
     } else if (e.kind == 'SETTER') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.addAll(['keyword', 'declaration'])..text = 'set ');
+          //..classes.addAll(['keyword', 'declaration'])
+          ..classes.add('comment')
+          ..text = 'set ');
     }
 
     html.Element span = new html.AnchorElement();
-    span.text = e.name;
     if ((e.flags & 0x20) != 0) span.classes.add('deprecated');
     intoElement.children.add(span);
 
-    if (e.kind == 'CLASS') span.classes.addAll(['support', 'class']);
-    if (e.kind == 'CONSTRUCTOR') span.classes.addAll(['support', 'class']);
-    if (e.kind == 'FUNCTION' || e.kind == 'METHOD' || e.kind == 'GETTER' ||
-        e.kind == 'SETTER') {
-      span.classes.addAll(['entity', 'name', 'function']);
-    }
+    String name = e.name;
 
-    if (e.typeParameters != null) {
-      intoElement.children.add(
-          new html.SpanElement()..classes.add('muted')..text = e.typeParameters);
-    }
+    // if (e.kind == 'CLASS') span.classes.addAll(['support', 'class']);
+    // if (e.kind == 'CONSTRUCTOR') span.classes.addAll(['support', 'class']);
+    // if (e.kind == 'FUNCTION' || e.kind == 'METHOD' || e.kind == 'GETTER' ||
+    //     e.kind == 'SETTER') {
+    //   span.classes.addAll(['entity', 'name', 'function']);
+    // }
 
     if (e.parameters != null) {
       String str = e.parameters.length > 2 ? '(…)' : '()';
+      // intoElement.children.add(
+      //     new html.SpanElement()../*classes.add('muted')..*/text = str);
+      name += str;
+    }
+
+    span.text = name;
+
+    if (e.typeParameters != null) {
       intoElement.children.add(
-          new html.SpanElement()..classes.add('muted')..text = str);
+          new html.SpanElement()..classes.add('comment')..text = e.typeParameters);
+      //name += e.typeParameters;
     }
 
     // Types on the right?
     if (e.returnType != null && e.returnType.isNotEmpty) {
-      // TODO: could also use `: ` instead of ` → `.
       String type = e.returnType;
       int index = type.indexOf('<');
       if (index != -1) type = '${type.substring(0, index)}<…>';
       intoElement.children.add(
-          new html.SpanElement()..classes.add('muted')..text = ' → ${type}');
+          new html.SpanElement()..classes.add('comment')..text = ' → ${type}');
     }
   }
 
