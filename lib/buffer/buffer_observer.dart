@@ -135,9 +135,15 @@ class BufferUpdater extends BufferObserver {
     if (analysisServer.isActive && dartProject) {
       lastSent = editor.getText();
       _logger.fine("addOverlayContent('${_path}')");
-      server.analysis.updateContent(
-          {_path: new AddContentOverlay('add', lastSent)});
+      _logError(server.analysis.updateContent(
+          {_path: new AddContentOverlay('add', lastSent)}));
     }
+  }
+
+  void _logError(Future f) {
+    f.catchError((e) {
+      _logger.warning('overlay call error; ${e}');
+    });
   }
 
   void changedOverlay() {
@@ -157,8 +163,8 @@ class BufferUpdater extends BufferObserver {
           .toList();
 
       _logger.fine("changedOverlayContent('${_path}')");
-      server.analysis.updateContent(
-          {_path: new ChangeContentOverlay('change', diffs)});
+      _logError(server.analysis.updateContent(
+          {_path: new ChangeContentOverlay('change', diffs)}));
 
       // _logger.fine("removeOverlayContent('${_path}')");
       // server.analysis.updateContent(
@@ -177,8 +183,8 @@ class BufferUpdater extends BufferObserver {
 
     if (analysisServer.isActive && dartProject) {
       _logger.fine("removeOverlayContent('${_path}')");
-      server.analysis.updateContent(
-          {_path: new RemoveContentOverlay('remove')});
+      _logError(server.analysis.updateContent(
+          {_path: new RemoveContentOverlay('remove')}));
     }
 
     lastSent = null;

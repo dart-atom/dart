@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.5
 - fixed an issue where we didn't dispose of the errors view on plugin shutdown
 - changed the styling of the outline view to be less distracting
 - fixed an issue with jerkiness when dragging the size of the outline view
