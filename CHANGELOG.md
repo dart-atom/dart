@@ -5,6 +5,7 @@
 - changed the styling of the outline view to be less distracting
 - fixed an issue with jerkiness when dragging the size of the outline view
 - change to have the errors view better respect the user settings
+- added a close button to the outline view
 
 ## 0.4.4
 - added an issue count to the problems view

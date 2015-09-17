@@ -383,13 +383,19 @@ atom-text-editor::shadow .outline-view {
   position: relative;
   flex-direction: column;
 
-  .title {
-    cursor: default;
+  .title-container {
     border-bottom: 1px solid @tool-panel-border-color;
     margin: 6px;
     padding-bottom: 6px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .title-text {
+    cursor: default;
     text-overflow: ellipsis;
     overflow-x: hidden;
+    flex: 20;
   }
 
   .outline-tree {
@@ -456,6 +462,30 @@ atom-text-editor::shadow .outline-view {
   .tree-selected span {
     //color: @text-color-highlight;
     font-weight: bold;
+  }
+
+  .close-button {
+    top: 1px;
+    color: @text-color;
+    cursor: default;
+    margin-left: 8px;
+  }
+
+  .close-button:hover {
+    color: @text-color-highlight;
+  }
+
+  .close-button:before {
+    font-family: 'Octicons Regular';
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+    content: "\f081";
   }
 }
 

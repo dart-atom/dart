@@ -25094,6 +25094,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return;
         this.views.push(A.OutlineView$(this, editor));
       }, "call$1", "get$_handleEditor", 2, 0, 6],
+      _outline$_close$0: [function() {
+        return $.$get$atom()._config.invoke$3("set", "dartlang.showOutlineView", this.showView !== true);
+      }, "call$0", "get$_outline$_close", 0, 0, 2],
       OutlineController$0: function() {
         var t1, t2;
         t1 = $.$get$atom();
@@ -25140,22 +25143,26 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return;
         title = S.basename(this.editor.invoke$1("getPath"));
         t1 = K.CoreElement$("div", null, "outline-view source", null);
-        t2 = K.CoreElement$("div", null, "title keyword", title);
-        t3 = this.get$_outline$_render();
-        t4 = P.StreamController_StreamController$broadcast(null, null, false, null);
+        t2 = K.CoreElement$("div", null, "title-container", null);
+        t3 = K.CoreElement$("div", null, "title-text keyword", title);
+        t4 = K.CoreElement$("div", null, "close-button", null);
+        t4.click$1(0, this.controller.get$_outline$_close());
+        t2.add$1(0, [t3, t4]);
+        t4 = this.get$_outline$_render();
+        t3 = P.StreamController_StreamController$broadcast(null, null, false, null);
         t5 = P.StreamController_StreamController$broadcast(null, null, false, null);
         t6 = P.LinkedHashMap__makeEmpty();
         t7 = W._ElementFactoryProvider_createElement_tag("div", null);
-        t6 = new T.ListTreeBuilder(t4, t5, t3, false, [], [], t6, "tree-selected", t7);
+        t6 = new T.ListTreeBuilder(t3, t5, t4, false, [], [], t6, "tree-selected", t7);
         t6.CoreElement$4$attributes$classes$text("div", null, "list-tree has-collapsable-children", null);
-        t3 = J.getInterceptor$x(t7);
-        t3.get$classes(t7).toggle$2(0, "outline-tree", null);
-        t3.get$classes(t7).toggle$2(0, "selection", null);
+        t4 = J.getInterceptor$x(t7);
+        t4.get$classes(t7).toggle$2(0, "outline-tree", null);
+        t4.get$classes(t7).toggle$2(0, "selection", null);
         this.treeBuilder = t6;
         t7 = P.StreamController_StreamController$broadcast(null, null, false, null);
-        t3 = H.setRuntimeTypeInfo(new P.Point0(0, 0), [null]);
+        t4 = H.setRuntimeTypeInfo(new P.Point0(0, 0), [null]);
         t5 = W._ElementFactoryProvider_createElement_tag("div", null);
-        resizer = new T.ViewResizer(t7, t3, null, null, t5);
+        resizer = new T.ViewResizer(t7, t4, null, null, t5);
         resizer.CoreElement$4$attributes$classes$text("div", null, null, null);
         J.get$attributes$x(t5).remove$1(0, "horizontal");
         resizer.attribute$1("vertical");
