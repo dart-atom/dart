@@ -93,9 +93,12 @@ class BufferFormatter extends BufferObserver {
 class BufferUpdater extends BufferObserver {
   final StreamSubscriptions _subs = new StreamSubscriptions();
 
+  String _path;
   String lastSent;
 
   BufferUpdater(manager, editor) : super(manager, editor) {
+    _path = editor.getPath();
+
     _subs.add(analysisServer.isActiveProperty.listen(serverActive));
     // Debounce atom onDidChange events; atom sends us several events as a file
     // is opening. The number of events is proportional to the file size. For
@@ -131,9 +134,9 @@ class BufferUpdater extends BufferObserver {
 
     if (analysisServer.isActive && dartProject) {
       lastSent = editor.getText();
-      _logger.fine("addOverlayContent('${editor.getPath()}')");
+      _logger.fine("addOverlayContent('${_path}')");
       server.analysis.updateContent(
-          {editor.getPath(): new AddContentOverlay('add', lastSent)});
+          {_path: new AddContentOverlay('add', lastSent)});
     }
   }
 
@@ -141,30 +144,31 @@ class BufferUpdater extends BufferObserver {
     if (analysisServer.isActive && dartProject) {
       if (lastSent == null) {
         addOverlay();
-      } else {
-        final String contents = editor.getText();
-        if (contents == lastSent) return;
-
-        List<Edit> edits = simpleDiff(lastSent, contents);
-        int count = 1;
-        List<SourceEdit> diffs = edits
-          .map((edit) => new SourceEdit(
-              edit.offset, edit.length, edit.replacement, id: '${count++}'))
-          .toList();
-        _logger.fine("changedOverlayContent('${editor.getPath()}')");
-        server.analysis.updateContent(
-            {editor.getPath(): new ChangeContentOverlay('change', diffs)});
-
-        // _logger.fine("removeOverlayContent('${editor.getPath()}')");
-        // server.analysis.updateContent(
-        //     {editor.getPath(): new RemoveContentOverlay('remove')});
-        //
-        // _logger.fine("addOverlayContent('${editor.getPath()}')");
-        // server.analysis.updateContent(
-        //     {editor.getPath(): new AddContentOverlay('add', contents)});
-
-        lastSent = contents;
+        return;
       }
+
+      final String contents = editor.getText();
+      if (contents == lastSent) return;
+
+      List<Edit> edits = simpleDiff(lastSent, contents);
+      int count = 1;
+      List<SourceEdit> diffs = edits
+          .map((e) => new SourceEdit(e.offset, e.length, e.replacement, id: '${count++}'))
+          .toList();
+
+      _logger.fine("changedOverlayContent('${_path}')");
+      server.analysis.updateContent(
+          {_path: new ChangeContentOverlay('change', diffs)});
+
+      // _logger.fine("removeOverlayContent('${_path}')");
+      // server.analysis.updateContent(
+      //     {_path: new RemoveContentOverlay('remove')});
+      //
+      // _logger.fine("addOverlayContent('${_path}')");
+      // server.analysis.updateContent(
+      //     {_path: new AddContentOverlay('add', contents)});
+
+      lastSent = contents;
     }
   }
 
@@ -172,17 +176,16 @@ class BufferUpdater extends BufferObserver {
     if (!hasOverlay) return;
 
     if (analysisServer.isActive && dartProject) {
-      _logger.fine("removeOverlayContent('${editor.getPath()}')");
+      _logger.fine("removeOverlayContent('${_path}')");
       server.analysis.updateContent(
-          {editor.getPath(): new RemoveContentOverlay('remove')});
+          {_path: new RemoveContentOverlay('remove')});
     }
 
     lastSent = null;
   }
 
   // TODO: Remove once we only watch Dart files that are in a Dart project.
-  bool get dartProject =>
-      projectManager.getProjectFor(editor.getPath()) != null;
+  bool get dartProject => projectManager.getProjectFor(_path) != null;
 
   dispose() {
     removeOverlay();

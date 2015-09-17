@@ -104,14 +104,16 @@ class AnalysisServerDialog implements Disposable {
       _crashDumpButton.toggleAttribute('disabled', !analysisServer.isActive);
     }
 
-    if (updateTitle) {
-      if (analysisServer.isActive) {
-        analysisServer.server.server.getVersion().then((result) {
-          _dialog.title.text = 'Analysis Server (v${result.version})';
-        });
-      } else {
-        _dialog.title.text = 'Analysis Server';
-      }
+    if (updateTitle) _updateTitle();
+  }
+
+  _updateTitle() async {
+    if (analysisServer.isActive) {
+      var asVer = await analysisServer.server.server.getVersion();
+      String sdkVer = await sdkManager.sdk.getVersion();
+      _dialog.title.text = 'Analysis Server v${asVer.version}, SDK ${sdkVer}';
+    } else {
+      _dialog.title.text = 'Analysis Server';
     }
   }
 
