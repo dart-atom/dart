@@ -16,8 +16,7 @@ import '../views.dart';
 final String _keyPath = '${pluginId}.showOutlineView';
 
 // TODO: Have a scroll sync button: <span class='badge icon icon-diff-renamed'>
-
-// TODO: Have a close button?
+// TODO: Or, scroll-sync to the document automatically.
 
 class OutlineController implements Disposable {
   Disposables disposables = new Disposables();
@@ -34,9 +33,9 @@ class OutlineController implements Disposable {
       }
     }));
 
-    disposables.add(atom.commands
-        .add('atom-workspace', '${pluginId}:toggle-outline-view', (_) {
-      atom.config.setValue(_keyPath, !showView);
+    disposables.add(atom.commands.add(
+        'atom-workspace', '${pluginId}:toggle-outline-view', (_) {
+      _close();
     }));
 
     Timer.run(() {
@@ -66,6 +65,8 @@ class OutlineController implements Disposable {
   }
 
   bool _removeView(OutlineView outlineView) => views.remove(outlineView);
+
+  void _close() => atom.config.setValue(_keyPath, !showView);
 }
 
 class OutlineView implements Disposable {
@@ -98,7 +99,10 @@ class OutlineView implements Disposable {
     ViewResizer resizer;
 
     content = div(c: 'outline-view source')..add([
-      div(text: title, c: 'title keyword'),
+      div(c: 'title-container')..add([
+        div(text: title, c: 'title-text keyword'),
+        div(c: 'close-button')..click(controller._close)
+      ]),
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
           ..toggleClass('outline-tree')..toggleClass('selection'),
       resizer = new ViewResizer.createVertical()
