@@ -80,7 +80,7 @@ class LaunchManager implements Disposable {
 class LaunchType {
   static const CLI = 'cli';
   static const SHELL = 'shell';
-  static const SKY = 'sky';
+  static const FLUTTER = 'flutter';
   static const WEB = 'web';
 
   final String type;

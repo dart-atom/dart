@@ -1,4 +1,4 @@
-library atom.sky.toolbar;
+library atom.flutter.toolbar;
 
 import 'dart:js';
 

@@ -1,4 +1,4 @@
-library atom.sky.run_app;
+library atom.flutter.run_app;
 
 import 'dart:async';
 
@@ -13,22 +13,22 @@ import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
 
-final Logger _logger = new Logger('sky.run_app');
+final Logger _logger = new Logger('flutter.run_app');
 
 /// The last Flutter app run.
 String _lastRunProject;
 
-class SkyToolManager implements Disposable, ContextMenuContributor {
+class FlutterToolManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
-  SkyToolManager() {
+  FlutterToolManager() {
     disposables.add(atom.commands.add(
-        '.tree-view', 'dartlang:run-sky-application', (AtomEvent event) {
-      new RunSkyAppJob(event.targetFilePath).schedule();
+        '.tree-view', 'dartlang:run-flutter-application', (AtomEvent event) {
+      new RunFlutterAppJob(event.targetFilePath).schedule();
     }));
     disposables.add(atom.commands.add(
-        'atom-text-editor', 'dartlang:run-sky-application', (AtomEvent event) {
-      new RunSkyAppJob(event.editor.getPath()).schedule();
+        'atom-text-editor', 'dartlang:run-flutter-application', (AtomEvent event) {
+      new RunFlutterAppJob(event.editor.getPath()).schedule();
     }));
   }
 
@@ -36,18 +36,18 @@ class SkyToolManager implements Disposable, ContextMenuContributor {
 
   List<ContextMenuItem> getTreeViewContributions() {
     return [
-      new RunSkyAppContextCommand(
-          'Run Sky Application', 'dartlang:run-sky-application')
+      new RunFlutterAppContextCommand(
+          'Run Flutter Application', 'dartlang:run-flutter-application')
     ];
   }
 }
 
-class RunSkyAppJob extends Job {
+class RunFlutterAppJob extends Job {
   final String path;
 
   ProcessRunner _runner;
 
-  RunSkyAppJob(this.path) : super('Launching Sky application');
+  RunFlutterAppJob(this.path) : super('Launching Flutter application');
 
   bool get quiet => true;
 
@@ -76,7 +76,7 @@ class RunSkyAppJob extends Job {
     _runner = _skyTool(project, ['start']);
 
     Launch launch = new Launch(
-        new LaunchType(LaunchType.SKY),
+        new LaunchType(LaunchType.FLUTTER),
         'lib/main.dart',
         launchManager,
         killHandler: () => _runner.kill());
@@ -127,8 +127,8 @@ class RunSkyAppJob extends Job {
   }
 }
 
-class RunSkyAppContextCommand extends ContextMenuItem {
-  RunSkyAppContextCommand(String label, String command) : super(label, command);
+class RunFlutterAppContextCommand extends ContextMenuItem {
+  RunFlutterAppContextCommand(String label, String command) : super(label, command);
 
   bool shouldDisplay(AtomEvent event) {
     String filePath = event.targetFilePath;

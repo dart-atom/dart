@@ -42,9 +42,9 @@ import 'launch.dart';
 import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
-import 'sky/create_project.dart';
-import 'sky/run_app.dart';
-import 'sky/toolbar.dart';
+import 'flutter/create_project.dart';
+import 'flutter/run_app.dart';
+import 'flutter/toolbar.dart';
 import 'state.dart';
 import 'usage.dart' show UsageManager;
 import 'utils.dart';
@@ -113,7 +113,7 @@ class AtomDartPackage extends AtomPackage {
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
     PubManager pubManager = new PubManager();
-    SkyToolManager skyToolManager = new SkyToolManager();
+    FlutterToolManager flutterToolManager = new FlutterToolManager();
 
     disposables.add(analysisOptionsManager);
     disposables.add(new ChangelogManager());
@@ -125,7 +125,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new OrganizeFileManager());
     disposables.add(new OutlineController());
     disposables.add(pubManager);
-    disposables.add(skyToolManager);
+    disposables.add(flutterToolManager);
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
@@ -162,7 +162,7 @@ class AtomDartPackage extends AtomPackage {
 
     // Set up the context menus.
     List<ContextMenuItem> treeItems = [ContextMenuItem.separator];
-    treeItems.addAll(skyToolManager.getTreeViewContributions());
+    treeItems.addAll(flutterToolManager.getTreeViewContributions());
     treeItems.addAll(pubManager.getTreeViewContributions());
     treeItems.addAll(analysisOptionsManager.getTreeViewContributions());
     treeItems.add(ContextMenuItem.separator);
@@ -329,7 +329,7 @@ class AtomDartPackage extends AtomPackage {
         'title': "Run pub with '--no-package-symlinks'",
         'description':
             'Run pub with a command-line option to not create packages '
-            'symlinks. Note: Sky applications will not currently work with '
+            'symlinks. Note: Flutter applications will not currently work with '
             'this option enabled.',
         'type': 'boolean',
         'default': false,
