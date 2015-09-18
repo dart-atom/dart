@@ -54,6 +54,8 @@ class DartdocHelper implements Disposable {
 
     Job job = new AnalysisRequestJob('dartdoc', () {
       return analysisServer.getHover(editor.getPath(), offset).then((HoverResult result) {
+        if (result == null) return;
+
         _handleHoverResult(result, editor, explicit);
       });
     });

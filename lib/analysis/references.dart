@@ -42,6 +42,8 @@ class FindReferencesHelper implements Disposable {
 
     Job job = new AnalysisRequestJob('find references', () {
       return analysisServer.findElementReferences(path, offset, false).then((result) {
+        if (result == null) return;
+
         if (result.id == null) {
           atom.beep();
         } else {

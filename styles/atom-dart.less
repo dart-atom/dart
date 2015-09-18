@@ -72,9 +72,7 @@ div.atom-view {
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    background-color: @panel-heading-background-color;
     padding: 8px;
-    border-bottom: 1px solid @tool-panel-border-color;
   }
 
   .view-content {
@@ -389,6 +387,7 @@ atom-text-editor::shadow .outline-view {
     padding-bottom: 6px;
     display: flex;
     flex-direction: row;
+    flex-shrink: 0;
   }
 
   .title-text {
@@ -436,7 +435,6 @@ atom-text-editor::shadow .outline-view {
   }
 
   .muted {
-    // TODO: better style?
     color: @text-color-subtle;
   }
 
@@ -460,7 +458,6 @@ atom-text-editor::shadow .outline-view {
 
   .tree-selected,
   .tree-selected span {
-    //color: @text-color-highlight;
     font-weight: bold;
   }
 

@@ -15,6 +15,9 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('sky.run_app');
 
+/// The last Flutter app run.
+String _lastRunProject;
+
 class SkyToolManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
@@ -48,7 +51,7 @@ class RunSkyAppJob extends Job {
 
   bool get quiet => true;
 
-  Future run() {
+  Future run() async {
     DartProject project = projectManager.getProjectFor(path);
 
     if (project == null) return new Future.error("File not in a Dart project.");
@@ -59,6 +62,14 @@ class RunSkyAppJob extends Job {
     if (!exists) {
       return new Future.error("Unable to locate 'packages/sky/sky_tool'; did "
           "you import the 'sky' package into your project?");
+    }
+
+    // If this is the first time we've launched an app this session, ensure
+    // that the sky server isn't already running (and potentially serving an
+    // older) app. Also, if we're launching a different application.
+    if (_lastRunProject != project.path) {
+      _lastRunProject = project.path;
+      await _skyToolStop(project);
     }
 
     // Chain together both 'sky_tool start' and 'sky_tool logs'.
@@ -108,6 +119,11 @@ class RunSkyAppJob extends Job {
       args.insert(0, skyToolPath);
       return new ProcessRunner('python', args: args, cwd: project.path);
     }
+  }
+
+  /// Run `sky_tool stop` and ignore any error conditions that may occur.
+  Future _skyToolStop(DartProject project) {
+    return _skyTool(project, ['stop']).execSimple();
   }
 }
 

@@ -525,17 +525,22 @@ class AnalysisRequestJob extends Job {
     }
 
     return (_fn() as Future).catchError((e) {
-      if (!analysisServer.isActive) return;
+      if (!analysisServer.isActive) return null;
 
       if (e is RequestError) {
         atom.notifications.addError(
             '${name} error', description: '${e.code} ${e.message}');
-        if (e.stackTrace != null) {
+
+        if (e.stackTrace == null) {
+          _logger.warning('${name} error', e);
+        } else {
           _logger.warning('${name} error', e, new StackTrace.fromString(e.stackTrace));
         }
-      }
 
-      throw e;
+        return null;
+      } else {
+        throw e;
+      }
     });
   }
 }
