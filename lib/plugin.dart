@@ -311,7 +311,7 @@ class AtomDartPackage extends AtomPackage {
         'title': 'Show todos',
         'description': 'When showing infos, also show TODO items.',
         'type': 'boolean',
-        'default': true,
+        'default': false,
         'order': 4
       },
 

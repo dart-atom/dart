@@ -149,7 +149,7 @@ class AtomView implements Disposable  {
 
     if (showTitle) {
       root.add(
-        div(c: 'view-header')..layoutHorizontal()..add([
+        div(c: 'view-header panel-heading')..layoutHorizontal()..add([
           title = div(text: inTitle, c: 'text-highlight')..flex(),
           closeButton = new CloseButton()
         ])

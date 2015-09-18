@@ -19,8 +19,6 @@ class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 
   RefactoringHelper() {
-    AnalysisRequestJob;
-
     _commands.add(atom.commands.add('atom-text-editor', 'dartlang:refactor-rename', (e) {
       _handleRenameRefactor(e.editor);
     }));
@@ -47,6 +45,8 @@ class RefactoringHelper implements Disposable {
     Job job = new AnalysisRequestJob('rename', () {
       return analysisServer.getAvailableRefactorings(
           path, offset, end - offset).then((AvailableRefactoringsResult result) {
+        if (result == null) return;
+
         _handleRefactorResult(result, path, offset, end, oldName);
       });
     });

@@ -37,6 +37,8 @@ class TypeHierarchyHelper implements Disposable {
 
     Job job = new AnalysisRequestJob('type hierarchy', () {
       return analysisServer.getTypeHierarchy(path, offset).then((result) {
+        if (result == null) return;
+
         if (result.hierarchyItems == null) {
           atom.beep();
         } else {

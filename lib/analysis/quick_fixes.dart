@@ -33,6 +33,8 @@ class QuickFixHelper implements Disposable {
 
     Job job = new AnalysisRequestJob('quick fix', () {
       return analysisServer.getFixes(path, offset).then((FixesResult result) {
+        if (result == null) return;
+
         _handleFixesResult(result, editor);
       });
     });
