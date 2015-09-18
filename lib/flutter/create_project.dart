@@ -1,4 +1,4 @@
-library atom.sky.create_project;
+library atom.flutter.create_project;
 
 import 'dart:async';
 
@@ -14,13 +14,13 @@ class CreateProjectManager implements Disposable {
 
   CreateProjectManager() {
     disposables.add(atom.commands
-        .add('atom-workspace', 'dartlang:create-sky-project', _createProject));
+        .add('atom-workspace', 'dartlang:create-flutter-project', _createProject));
   }
 
   void _createProject(_) {
     String root = atom.config.getValue('core.projectHome');
     if (root.endsWith('github')) {
-      root = root.substring(0, root.length - 6) + 'sky';
+      root = root.substring(0, root.length - 6) + 'flutter';
     }
     String projectPath = "${root}${separator}${Haikunator.haikunate(delimiter: '_')}";
     String _response;
