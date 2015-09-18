@@ -1,5 +1,10 @@
 # dartlang plugin changelog
 
+## unreleased
+- improved logging when receiving errors from the analysis server
+- changed to displaying 'todo' issues to default to off
+- changed to terminating the flutter server when launching a new app
+
 ## 0.4.5
 - fixed an issue where we didn't dispose of the errors view on plugin shutdown
 - changed the styling of the outline view to be less distracting
