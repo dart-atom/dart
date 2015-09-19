@@ -100,7 +100,7 @@ class OutlineView implements Disposable {
 
     content = div(c: 'outline-view source')..add([
       div(c: 'title-container')..add([
-        div(text: title, c: 'title-text keyword'),
+        div(text: title, c: 'title-text'),
         div(c: 'close-button')..click(controller._close)
       ]),
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)

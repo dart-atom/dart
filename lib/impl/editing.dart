@@ -40,7 +40,7 @@ void handleEnterKey(AtomEvent event) {
     }
   } catch (e) {
     event.abortKeyBinding();
-    _logger.severe('exception during enter key handling: ${e}');
+    _logger.severe('exception during enter key handling', e);
   }
 }
 
