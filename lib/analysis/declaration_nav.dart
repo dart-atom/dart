@@ -57,7 +57,7 @@ class NavigationHelper implements Disposable {
           // which might not be desired by some users.
           jump = evt['altKey'] || evt['metaKey'];
         } else {
-          jump = evt['ctrlKey '] || evt['altKey'];
+          jump = evt['ctrlKey'] || evt['altKey'];
         }
         if (jump) Timer.run(() => _handleNavigateEditor(editor));
       } catch (e) { }
