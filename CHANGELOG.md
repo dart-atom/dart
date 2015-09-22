@@ -4,6 +4,7 @@
 - improved logging when receiving errors from the analysis server
 - changed to displaying 'todo' issues to default to off
 - changed to terminating the flutter server when launching a new app
+- items in the type hierarchy are now sorted lexically
 
 ## 0.4.5
 - fixed an issue where we didn't dispose of the errors view on plugin shutdown
