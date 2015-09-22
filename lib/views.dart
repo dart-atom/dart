@@ -211,7 +211,7 @@ class AtomView implements Disposable  {
     if (_timer != null) {
       hide();
     } else {
-      _timer = new Timer(new Duration(milliseconds: 500), () => _timer = null);
+      _timer = new Timer(new Duration(milliseconds: 750), () => _timer = null);
     }
   }
 

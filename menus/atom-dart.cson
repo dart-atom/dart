@@ -5,7 +5,7 @@
     submenu: [
       label: 'Dart'
       submenu: [
-        {label: 'Create new Sky project…', command: 'dartlang:create-sky-project'},
+        {label: 'Create new Flutter project…', command: 'dartlang:create-flutter-project'},
         {label: 'Package Settings…', command: 'dartlang:settings'},
         {type:  'separator'},
         {label: 'Re-analyze Sources', command: 'dartlang:reanalyze-sources'},

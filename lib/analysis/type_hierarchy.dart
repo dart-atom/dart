@@ -73,7 +73,7 @@ class TypeHierarchyView extends AtomView {
     Node targetNode = node;
 
     if (node.canHaveChildren) {
-      for (int ref in item.subclasses) {
+      for (int ref in _sort(items, item.subclasses)) {
         node.add(_createChild(items, items[ref]));
       }
     }
@@ -100,7 +100,7 @@ class TypeHierarchyView extends AtomView {
     Node node = new Node(item, canHaveChildren: _hasSubclasses(item));
 
     if (node.canHaveChildren) {
-      for (int ref in item.subclasses) {
+      for (int ref in _sort(items, item.subclasses)) {
         TypeHierarchyItem i = items[ref];
         // This works around an issue in older versions of the analysis server.
         if (i != item) {
@@ -110,6 +110,18 @@ class TypeHierarchyView extends AtomView {
     }
 
     return node;
+  }
+
+  List<int> _sort(List<TypeHierarchyItem> items, List<int> subclasses) {
+    return subclasses..sort((int aIndex, int bIndex) {
+      TypeHierarchyItem a = items[aIndex];
+      TypeHierarchyItem b = items[bIndex];
+
+      String aName = a.displayName != null ? a.displayName : a.classElement.name;
+      String bName = b.displayName != null ? b.displayName : b.classElement.name;
+
+      return aName.compareTo(bName);
+    });
   }
 
   void _jumpTo(Node node) {
