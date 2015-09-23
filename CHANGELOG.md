@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## unreleased
+- filtered 'potential' edits from rename refactorings
+- improved the confirm dialog for the rename refactoring confirmation
+
 ## 0.4.6
 - improved logging when receiving errors from the analysis server
 - changed to displaying 'todo' issues to default to off
