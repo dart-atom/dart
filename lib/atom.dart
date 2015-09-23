@@ -276,6 +276,9 @@ class Config extends ProxyHolder {
     return invoke('get', keyPath, options);
   }
 
+  bool getBoolValue(String keyPath, {scope}) =>
+      getValue(keyPath, scope: scope) == true;
+
   void setValue(String keyPath, dynamic value) => invoke('set', keyPath, value);
 
   /// Add a listener for changes to a given key path. This will immediately call
