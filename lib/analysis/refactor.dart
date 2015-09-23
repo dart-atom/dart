@@ -5,7 +5,8 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import '../analysis/analysis_server_lib.dart' show SourceChange, SourceFileEdit;
+import '../analysis/analysis_server_lib.dart'
+    show SourceChange, SourceEdit, SourceFileEdit;
 import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
@@ -19,7 +20,8 @@ class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 
   RefactoringHelper() {
-    _commands.add(atom.commands.add('atom-text-editor', 'dartlang:refactor-rename', (e) {
+    _commands.add(atom.commands.add('atom-text-editor',
+        'dartlang:refactor-rename', (e) {
       _handleRenameRefactor(e.editor);
     }));
   }
@@ -90,20 +92,55 @@ class RefactoringHelper implements Disposable {
           SourceChange change = result.change;
           List<SourceFileEdit> sourceFileEdits = change.edits;
 
+          // Remove any 'potential' edits. The analysis server sends over things
+          // like edits to package: files.
+          sourceFileEdits.forEach((SourceFileEdit fileEdit) {
+            fileEdit.edits.removeWhere((SourceEdit edit) => edit.id != null);
+          });
+          sourceFileEdits.removeWhere((SourceFileEdit fileEdit) => fileEdit.edits.isEmpty);
+
           // We want to confirm this refactoring with users if it's going to
           // rename across files.
-          if (sourceFileEdits.length > 1) {
-            String fileSummary = sourceFileEdits.map((edit) => edit.file).join('\n');
-            var val = atom.confirm('Confirm rename in ${sourceFileEdits.length} files?',
-                detailedMessage: fileSummary,
-                buttons: ['Rename', 'Cancel']);
-            if (val != 0) return;
-          }
+          var apply = () {
+            _apply(sourceFileEdits, oldName, newName).then((_) {
+              // Ensure the original file is selected.
+              atom.workspace.open(path);
+            });
+          };
 
-          _apply(sourceFileEdits, oldName, newName).then((_) {
-            // Ensure the original file is selected.
-            atom.workspace.open(path);
-          });
+          if (sourceFileEdits.length > 1) {
+            var project = projectManager.getProjectFor(path);
+            String projectPrefix = project == null ? '' : project.path;
+
+            Iterable<String> paths = sourceFileEdits.map((edit) {
+              String filePath = edit.file;
+              if (filePath.startsWith(projectPrefix)) {
+                return project.name + filePath.substring(projectPrefix.length);
+              } else {
+                return filePath;
+              }
+            });
+            String fileSummary = (paths.toList()..sort()).join('\n');
+            Notification notification;
+
+            var userConfirmed = () {
+              notification.dismiss();
+              apply();
+            };
+
+            var userCancelled = () => notification.dismiss();
+
+            notification = atom.notifications.addInfo(
+                'Confirm rename in ${sourceFileEdits.length} files?',
+                detail: fileSummary,
+                dismissable: true,
+                buttons: [
+                  new NotificationButton('Rename', userConfirmed),
+                  new NotificationButton('Cancel', userCancelled)
+                ]);
+          } else {
+            apply();
+          }
         }
       }
     });

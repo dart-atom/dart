@@ -236,6 +236,8 @@ class DartProject {
 
   String get path => directory.path;
 
+  String get name => directory.getBaseName();
+
   int get hashCode => directory.hashCode;
 
   bool contains(String path) => directory.contains(path);
