@@ -180,21 +180,28 @@ class AtomDartPackage extends AtomPackage {
     _validateSettings();
   }
 
+  // Set up default settings.
   void _validateSettings() {
-    const String keyPath = '_dartlang._initialized';
-    bool initialized = atom.config.getValue(keyPath) == true;
+    var runOnce = (String name, Function fn) {
+      if (!atom.config.getBoolValue('_dartlang.${name}')) {
+        atom.config.setValue('_dartlang.${name}', true);
 
-    if (!initialized) {
-      atom.config.setValue(keyPath, true);
+        fn();
+      }
+    };
 
-      // Set up default settings.
+    runOnce('_initialized', () {
       // This is fairly drastic. We're disabling a setting in another plugin.
       //atom.config.setValue('autocomplete-plus.enableAutoActivation', false);
       atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
 
       // Show a welcome toast.
       _showWelcomeToast();
-    }
+    });
+
+    runOnce('_initializedSymLinks', () {
+      atom.config.setValue('core.followSymlinks', false);
+    });
   }
 
   // Verify that our dependencies are satisfied.

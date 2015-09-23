@@ -3,6 +3,7 @@
 ## unreleased
 - filtered 'potential' edits from rename refactorings
 - improved the confirm dialog for the rename refactoring confirmation
+- turned off the `core.followSymlinks` by default
 
 ## 0.4.6
 - improved logging when receiving errors from the analysis server
