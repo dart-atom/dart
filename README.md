@@ -1,10 +1,9 @@
 # Dart plugin for Atom
 
-[![Join the chat at https://gitter.im/dart-atom/dartlang](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dart-atom/dartlang?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 
 [![Build Status](https://travis-ci.org/dart-atom/dartlang.svg)](https://travis-ci.org/dart-atom/dartlang)
+[![Join the chat at https://gitter.im/dart-atom/dartlang][gitterbadge]
 
 ## Getting started
 
@@ -45,3 +44,4 @@ file.
 
 [linter]: https://atom.io/packages/linter
 [dartlang]: https://atom.io/packages/dartlang
+[gitterbadge]: https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dart-atom/dartlang?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
