@@ -12,6 +12,8 @@ import '../utils.dart';
 //   exclude:
 //     - build/**
 
+const String analysisOptionsFileName = '.analysis_options';
+
 class AnalysisOptionsManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
@@ -75,8 +77,6 @@ class AnalysisOptionsManager implements Disposable, ContextMenuContributor {
 // TODO: mutable yaml stuff
 
 class AnalysisOptions {
-  static const String defaultFileName = '.analysis_options';
-
   yaml.YamlDocument _document;
   bool _dirty = false;
 

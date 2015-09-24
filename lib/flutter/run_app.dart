@@ -24,10 +24,12 @@ class FlutterToolManager implements Disposable, ContextMenuContributor {
   FlutterToolManager() {
     disposables.add(atom.commands.add(
         '.tree-view', 'dartlang:run-flutter-application', (AtomEvent event) {
+      event.stopImmediatePropagation();
       new RunFlutterAppJob(event.targetFilePath).schedule();
     }));
     disposables.add(atom.commands.add(
         'atom-text-editor', 'dartlang:run-flutter-application', (AtomEvent event) {
+      event.stopImmediatePropagation();
       new RunFlutterAppJob(event.editor.getPath()).schedule();
     }));
   }

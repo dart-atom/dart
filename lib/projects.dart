@@ -11,6 +11,7 @@ import 'package:logging/logging.dart';
 
 import 'analysis/analysis_options.dart';
 import 'atom.dart';
+import 'atom_utils.dart';
 import 'impl/pub.dart' as pub;
 import 'jobs.dart';
 import 'state.dart';
@@ -26,15 +27,19 @@ bool isDartFile(String path) {
 
 /// A class to locate Dart projects in Atom and listen for new or removed Dart
 /// projects.
-class ProjectManager implements Disposable {
+class ProjectManager implements Disposable, ContextMenuContributor {
   static const int _recurse_depth = 2;
 
   /// Return whether the given directory is a Dart project.
   static bool isDartProject(Directory dir) {
+    // Look for `pubspec.yaml` or `.packages` files.
     if (dir.getFile(pub.pubspecFileName).existsSync()) return true;
-
     if (dir.getFile(pub.dotPackagesFileName).existsSync()) return true;
 
+    // Look for an `.analysis_options` file.
+    if (dir.getFile(analysisOptionsFileName).existsSync()) return true;
+
+    // Look for a `BUILD` file with some Dart build rules.
     File buildFile = dir.getFile(bazelBuildFileName);
     if (buildFile.existsSync()) {
       if (_isDartBuildFile(buildFile)) return true;
@@ -45,6 +50,7 @@ class ProjectManager implements Disposable {
 
   StreamController<List<DartProject>> _controller = new StreamController.broadcast();
   StreamSubscription _sub;
+  Disposables disposables = new Disposables();
 
   final Map<String, StreamSubscription> _directoryListeners = {};
 
@@ -56,6 +62,20 @@ class ProjectManager implements Disposable {
       rescanForProjects();
       _updateChangeListeners(atom.project.getPaths());
     });
+    disposables.add(atom.commands.add(
+        'atom-text-editor', 'dartlang:mark-as-dart-project', (event) {
+      event.stopImmediatePropagation();
+      _markDartProject();
+    }));
+    disposables.add(atom.commands.add(
+        '.tree-view', 'dartlang:mark-as-dart-project', (AtomEvent event) {
+      event.stopImmediatePropagation();
+      _markDartProject(path: event.targetFilePath);
+    }));
+  }
+
+  Iterable<ContextMenuItem> getTreeViewContributions() {
+    return [new _MarkDartProjectContextCommand()];
   }
 
   bool get hasDartProjects => projects.isNotEmpty;
@@ -223,10 +243,52 @@ class ProjectManager implements Disposable {
       return [];
     }
   }
+
+  void _markDartProject({String path}) {
+    if (path != null) {
+      // Find the best current path.
+      TextEditor editor = atom.workspace.getActiveTextEditor();
+      if (editor != null) {
+        String temp = editor.getPath();
+        if (temp != null) path = atom.project.relativizePath(temp).first;
+      }
+    }
+
+    // Ask the user for project to make a Dart project.
+    promptUser('Select the directory to mark as a Dart project:',
+        defaultText: path, selectText: true).then((String response) {
+      if (response == null) return;
+      path = response;
+
+      // Verify the path.
+      if (!statSync(path).isDirectory()) {
+        atom.notifications.addWarning("'${path}' is not a directory.");
+        return;
+      }
+
+      if (atom.project.relativizePath(path).first == null) {
+        atom.notifications.addWarning(
+            "'${path}' is not contained in an existing Atom directory.");
+        return;
+      }
+
+      // Create the analysis options file and open it.
+      File file = new File.fromPath(join(path, analysisOptionsFileName));
+      file.writeSync('''
+# ${analysisOptionsFileName}
+meta:
+  generatedOn: '${new DateTime.now()}'
+''');
+      atom.workspace.open(file.path);
+
+      // Refresh the Dart projects.
+      _fullScanForProjects();
+    });
+  }
 }
 
 /// A representation of a Dart project; a directory with a `pubspec.yaml` file,
-/// a `.packages` file, or a `BUILD` file.
+/// a `.packages` file, an `.analysis_options` file, or a `BUILD` file.
 class DartProject {
   final Directory directory;
 
@@ -260,7 +322,7 @@ class DartProject {
 
   AnalysisOptions get _options {
     if (_analysisOptions == null) {
-      File file = directory.getFile(AnalysisOptions.defaultFileName);
+      File file = directory.getFile(analysisOptionsFileName);
       _analysisOptions = new AnalysisOptions(file.existsSync() ? file.readSync() : null);
     }
 
@@ -268,7 +330,7 @@ class DartProject {
   }
 
   void _saveOptions() {
-    File file = directory.getFile(AnalysisOptions.defaultFileName);
+    File file = directory.getFile(analysisOptionsFileName);
     file.writeSync(_analysisOptions.writeYaml());
     _analysisOptions.dirty = false;
   }
@@ -296,5 +358,23 @@ bool _isDartBuildFile(File file) {
     return contents.contains(marker1) || contents.contains(marker2);
   } catch (_) {
     return false;
+  }
+}
+
+class _MarkDartProjectContextCommand extends ContextMenuItem {
+  _MarkDartProjectContextCommand() :
+      super('Mark as a Dart Project', 'dartlang:mark-as-dart-project');
+
+  bool shouldDisplay(AtomEvent event) {
+    String filePath = event.targetFilePath;
+    if (filePath == null) return false;
+
+    DartProject project = projectManager.getProjectFor(filePath);
+    List<String> paths = atom.project.relativizePath(filePath);
+
+    if (project != null) return false;
+
+    String relativePath = paths[1];
+    return relativePath == null || relativePath.isEmpty;
   }
 }

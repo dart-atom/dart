@@ -5,6 +5,7 @@
 - improved the UI for the for the rename refactoring confirmation dialog
 - turned off the `core.followSymlinks` by default
 - bumped the minimum recommended SDK version to 1.12.0
+- changed to check for an `.analysis_options` file when looking for Dart projects
 
 ## 0.4.6
 - improved logging when receiving errors from the analysis server
