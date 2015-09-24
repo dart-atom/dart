@@ -47,6 +47,14 @@ provides functionality like analyzing code for errors and warnings, providing
 code completion information, and various code searching and refactoring tools.
 This process is automatically managed by the `dartlang` plugin.
 
+If the plugin is not able to identify your Dart projects, you can manually tell
+it to treat a directory as a Dart project. Right click on the top-level
+directory and choose the `Mark as a Dart Project` option, or run the Atom
+command `dartlang:mark-as-dart-project`. This will create an `.analysis_options`
+file in the directory; the `dartlang` plugin will use that as a hint to treat
+the directory as a Dart project, even without a `pubspec.yaml` or `.packages`
+file present.
+
 ## Opening Dart files
 
 Currently, opening individual Dart files - so that their containing directory is
@@ -61,10 +69,10 @@ files in Atom; stay tuned.
 There are various tools and commands available to help you work with Dart
 projects. The various `pub` commands are available as context menu items in the
 files view. The commands are also available from the command palette
-(`shift-cmd-p`). So, to run `pub get` on a project, select the `pubspec.yaml` file
-in the files view, right click, and select the `Pub Get` menu item. Alternatively,
-whenever a Dart file is open, you can run the `pub get` Atom command, and pub
-will be run for the associated Dart project.
+(`shift-cmd-p`). So, to run `pub get` on a project, select the `pubspec.yaml`
+file in the files view, right click, and select the `Pub Get` menu item.
+Alternatively, whenever a Dart file is open, you can run the `pub get` Atom
+command, and pub will be run for the associated Dart project.
 
 Other Pub commands which are available are `pub activate`, to install various
 Dart tools. `pub global run`, which lets you execute a previously installed pub
