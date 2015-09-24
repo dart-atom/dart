@@ -23,7 +23,7 @@ export 'process.dart' show ProcessResult;
 
 final String _prefPath = '${pluginId}.sdkLocation';
 
-final Version _minSdkVersion = new Version.parse('1.11.0');
+final Version _minSdkVersion = new Version.parse('1.12.0');
 
 final Logger _logger = new Logger('sdk');
 
@@ -158,14 +158,14 @@ class SdkManager implements Disposable {
     if (version == null) return;
 
     try {
-      Version ver = new Version.parse(version);
-      Version compare = ver.isPreRelease ? ver.nextPatch : ver;
-      if (compare < _minSdkVersion) {
+      Version installedVersion = new Version.parse(version);
+      if (installedVersion < _minSdkVersion) {
         if (!_alreadyWarned) {
           _alreadyWarned = true;
           atom.notifications.addWarning(
-            'SDK version ${ver} is older than the required verison of ${_minSdkVersion}. '
-            'Please visit www.dartlang.org to download a recent SDK.',
+            'SDK version ${installedVersion} is older than the recommended '
+            'version of ${_minSdkVersion}. Please visit www.dartlang.org to '
+            'download a recent SDK.',
             dismissable: true);
         }
       }
