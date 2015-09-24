@@ -55,6 +55,9 @@ class RefactoringHelper implements Disposable {
     job.schedule();
   }
 
+  // TODO: use the rename refactoring feedback to better select the ID being
+  // renamed.
+
   void _handleRefactorResult(AvailableRefactoringsResult result, String path,
       int offset, int end, String oldName) {
     String newName;
@@ -80,6 +83,9 @@ class RefactoringHelper implements Disposable {
       }
     }).then((RefactoringResult result) {
       if (result != null) {
+        // TODO: use optionsProblems
+        // TODO: use finalProblems
+        // TODO: use feedback
         if (result.initialProblems.isNotEmpty) {
           atom.notifications.addError('Unable to Perform Rename',
               detail: '${result.initialProblems.first.message}');
