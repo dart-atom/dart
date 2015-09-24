@@ -183,8 +183,8 @@ class AtomDartPackage extends AtomPackage {
   // Set up default settings.
   void _validateSettings() {
     var runOnce = (String name, Function fn) {
-      if (!atom.config.getBoolValue('_dartlang.${name}')) {
-        atom.config.setValue('_dartlang.${name}', true);
+      if (!atom.config.getBoolValue('_${pluginId}.${name}')) {
+        atom.config.setValue('_${pluginId}.${name}', true);
 
         fn();
       }
@@ -192,7 +192,6 @@ class AtomDartPackage extends AtomPackage {
 
     runOnce('_initialized', () {
       // This is fairly drastic. We're disabling a setting in another plugin.
-      //atom.config.setValue('autocomplete-plus.enableAutoActivation', false);
       atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
 
       // Show a welcome toast.

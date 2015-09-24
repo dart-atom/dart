@@ -27901,18 +27901,17 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._sdk$_commands.dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
       _verifyMinVersion$1: function(version) {
-        var ver, compare, t1, t2, exception;
+        var installedVersion, t1, t2, exception;
         if (version == null)
           return;
         try {
-          ver = T.Version_Version$parse(version);
-          compare = ver.get$preRelease().length !== 0 ? ver.get$nextPatch() : ver;
+          installedVersion = T.Version_Version$parse(version);
           t1 = $.$get$_minSdkVersion();
-          if (J.compareTo$1$ns(compare, t1) < 0)
+          if (J.compareTo$1$ns(installedVersion, t1) < 0)
             if (!this._alreadyWarned) {
               this._alreadyWarned = true;
               t2 = $.$get$atom()._notifications;
-              t2.invoke$3("addWarning", "SDK version " + H.S(ver) + " is older than the required verison of " + H.S(t1) + ". Please visit www.dartlang.org to download a recent SDK.", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, true, null));
+              t2.invoke$3("addWarning", "SDK version " + H.S(installedVersion) + " is older than the recommended version of " + H.S(t1) + ". Please visit www.dartlang.org to download a recent SDK.", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, true, null));
             }
         } catch (exception) {
           H.unwrapException(exception);
@@ -42147,11 +42146,6 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       get$isPreRelease: function() {
         return this.preRelease.length !== 0;
       },
-      get$nextPatch: function() {
-        if (this.preRelease.length !== 0)
-          return T.Version_Version(this.major, this.minor, this.patch, null, null);
-        return T.Version_Version(this.major, this.minor, J.$add$ns(this.patch, 1), null, null);
-      },
       compareTo$1: function(_, other) {
         var t1, t2, comparison;
         t1 = this.major;
@@ -42208,29 +42202,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
         return 0;
       },
-      Version$_$6: function(major, minor, patch, preRelease, build, _text) {
-        if (J.$lt$n(this.major, 0) === true)
-          throw H.wrapException(P.ArgumentError$("Major version must be non-negative."));
-        if (J.$lt$n(this.minor, 0) === true)
-          throw H.wrapException(P.ArgumentError$("Minor version must be non-negative."));
-        if (J.$lt$n(this.patch, 0) === true)
-          throw H.wrapException(P.ArgumentError$("Patch version must be non-negative."));
-      },
       $isComparable: 1,
       $asComparable: function() {
         return [T.Version];
       },
       $isVersionRange: 1,
-      static: {Version$_: function(major, minor, patch, preRelease, build, _text) {
-          var t1 = preRelease == null ? [] : T.Version__splitParts(preRelease);
-          t1 = new T.Version(major, minor, patch, t1, build == null ? [] : T.Version__splitParts(build), _text);
-          t1.Version$_$6(major, minor, patch, preRelease, build, _text);
-          return t1;
-        }, Version_Version: function(major, minor, patch, build, pre) {
-          var text = H.S(major) + "." + H.S(minor) + "." + H.S(patch);
-          return T.Version$_(major, minor, patch, pre, build, text);
-        }, Version_Version$parse: function(text) {
-          var match, major, minor, patch, preRelease, build, t1, exception;
+      static: {Version_Version$parse: function(text) {
+          var match, major, minor, patch, preRelease, build, t1, t2, t3, t4, t5, exception;
           match = $.$get$COMPLETE_VERSION().firstMatch$1(text);
           if (match == null)
             throw H.wrapException(new P.FormatException("Could not parse \"" + H.S(text) + "\".", null, null));
@@ -42255,8 +42233,20 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             if (8 >= t1.length)
               return H.ioore(t1, 8);
             build = t1[8];
-            t1 = T.Version$_(major, minor, patch, preRelease, build, text);
-            return t1;
+            t1 = major;
+            t2 = minor;
+            t3 = patch;
+            t4 = preRelease;
+            t5 = build;
+            t4 = t4 == null ? [] : T.Version__splitParts(t4);
+            t5 = t5 == null ? [] : T.Version__splitParts(t5);
+            if (J.$lt$n(t1, 0) === true)
+              H.throwExpression(P.ArgumentError$("Major version must be non-negative."));
+            if (J.$lt$n(t2, 0) === true)
+              H.throwExpression(P.ArgumentError$("Minor version must be non-negative."));
+            if (J.$lt$n(t3, 0) === true)
+              H.throwExpression(P.ArgumentError$("Patch version must be non-negative."));
+            return new T.Version(t1, t2, t3, t4, t5, text);
           } catch (exception) {
             if (H.unwrapException(exception) instanceof P.FormatException)
               throw H.wrapException(new P.FormatException("Could not parse \"" + H.S(text) + "\".", null, null));
@@ -43869,7 +43859,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     var t1 = $.$get$separator();
     return t1 + "lib" + t1;
   }, "_minSdkVersion", "$get$_minSdkVersion", "_minSdkVersion", function() {
-    return T.Version_Version$parse("1.11.0");
+    return T.Version_Version$parse("1.12.0");
   }, "_logger11", "$get$_logger11", "_logger", function() {
     return N.Logger_Logger("sdk");
   }, "state", "$get$state", "state", function() {
