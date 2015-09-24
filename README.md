@@ -3,7 +3,7 @@
 A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 
 [![Build Status](https://travis-ci.org/dart-atom/dartlang.svg)](https://travis-ci.org/dart-atom/dartlang)
-[![Join the chat at https://gitter.im/dart-atom/dartlang][gitterbadge]
+[![Join the chat at https://gitter.im/dart-atom/dartlang][gitterbadge]]
 
 ## Getting started
 
