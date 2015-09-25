@@ -50,7 +50,7 @@ This process is automatically managed by the `dartlang` plugin.
 If the plugin is not able to identify your Dart projects, you can manually tell
 it to treat a directory as a Dart project. Right click on the top-level
 directory and choose the `Mark as a Dart Project` option, or run the Atom
-command `dartlang:mark-as-dart-project`. This will create an `.analysis_options`
+command `'mark as dart project'`. This will create an `.analysis_options`
 file in the directory; the `dartlang` plugin will use that as a hint to treat
 the directory as a Dart project, even without a `pubspec.yaml` or `.packages`
 file present.
