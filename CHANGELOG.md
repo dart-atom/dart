@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.7
 - filtered 'potential' edits from rename refactorings
 - improved the UI for the for the rename refactoring confirmation dialog
 - turned off the `core.followSymlinks` preference by default
