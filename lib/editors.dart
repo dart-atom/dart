@@ -10,7 +10,7 @@ import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_lib.dart'
     show LinkedEditGroup, Location, Position, SourceEdit;
-import 'atom.dart';
+//import 'atom.dart';
 import 'projects.dart';
 import 'state.dart';
 import 'utils.dart';
