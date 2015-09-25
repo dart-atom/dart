@@ -44,3 +44,4 @@ file.
 
 [linter]: https://atom.io/packages/linter
 [dartlang]: https://atom.io/packages/dartlang
+
