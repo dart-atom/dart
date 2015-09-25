@@ -74,7 +74,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     }));
   }
 
-  Iterable<ContextMenuItem> getTreeViewContributions() {
+  List<ContextMenuItem> getTreeViewContributions() {
     return [new _MarkDartProjectContextCommand()];
   }
 
