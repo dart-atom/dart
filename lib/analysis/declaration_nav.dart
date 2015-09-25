@@ -26,11 +26,18 @@ class NavigationHelper implements Disposable {
   Map<String, Completer> _navCompleters = {};
   Disposable _eventListener = new Disposables();
 
+  List<_NavigationPosition> _history = [];
+
   NavigationHelper() {
     _commands.add(atom.commands.add('atom-text-editor',
         'dartlang:jump-to-declaration', _handleNavigate));
+    _commands.add(atom.commands.add('atom-text-editor',
+        'dartlang:return-from-declaration', _handleNavigateReturn));
+
     _commands.add(atom.commands.add('atom-text-editor[data-grammar~="dart"]',
         'symbols-view:go-to-declaration', _handleNavigate));
+    _commands.add(atom.commands.add('atom-text-editor[data-grammar~="dart"]',
+        'symbols-view:return-from-declaration', _handleNavigateReturn));
 
     analysisServer.onNavigaton.listen(_navigationEvent);
     editorManager.dartProjectEditors.onActiveEditorChanged.listen(_activate);
@@ -96,6 +103,15 @@ class NavigationHelper implements Disposable {
     }
   }
 
+  void _handleNavigateReturn(_) {
+    trackCommand('return-from-declaration');
+
+    if (_history.isNotEmpty) {
+      _NavigationPosition pos = _history.removeLast();
+      editorManager.jumpToLocation(pos.path, pos.line, pos.column, pos.length);
+    }
+  }
+
   void _beep() => atom.beep();
 
   Future<AnalysisNavigation> _getNavigationInfoFor(String path) {
@@ -114,7 +130,7 @@ class NavigationHelper implements Disposable {
     return completer.future;
   }
 
-  static Future _processNavInfo(TextEditor editor, int offset,
+  Future _processNavInfo(TextEditor editor, int offset,
       AnalysisNavigation navInfo) {
     List<String> files = navInfo.files;
     List<NavigationTarget> targets = navInfo.targets;
@@ -128,6 +144,9 @@ class NavigationHelper implements Disposable {
         Range sourceRange = new Range.fromPoints(
             buffer.positionForCharacterIndex(region.offset),
             buffer.positionForCharacterIndex(region.offset + region.length));
+
+        _pushCurrentLocation();
+
         return flashSelection(editor, sourceRange).then((_) {
           editorManager.jumpToLocation(file,
               target.startLine - 1, target.startColumn - 1, target.length);
@@ -137,4 +156,31 @@ class NavigationHelper implements Disposable {
 
     return new Future.error('no element');
   }
+
+  void _pushCurrentLocation() {
+    TextEditor editor = atom.workspace.getActiveTextEditor();
+
+    if (editor != null) {
+      Range range = editor.getSelectedBufferRange();
+      if (range == null) return;
+
+      int length = range.isSingleLine() ? range.end.column - range.start.column : null;
+      if (length == 0) length = null;
+
+      Point start = range.start;
+      _history.add(
+          new _NavigationPosition(editor.getPath(), start.row, start.column, length));
+    }
+  }
+}
+
+class _NavigationPosition {
+  final String path;
+  final int line;
+  final int column;
+  final int length;
+
+  _NavigationPosition(this.path, this.line, this.column, [this.length]);
+
+  //String toString() => '[${path},${position}]';
 }

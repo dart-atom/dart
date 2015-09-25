@@ -7,6 +7,8 @@
 - bumped the minimum recommended SDK version to 1.12.0
 - changed to check for an `.analysis_options` file when looking for Dart projects
 - made the notification for the analysis server shutting down less scary
+- added a `return-from-declaration` (alt-cmd-up) command to jump back from a
+  jump to declaration operation
 
 ## 0.4.6
 - improved logging when receiving errors from the analysis server
