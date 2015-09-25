@@ -20515,10 +20515,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
         if (value === true) {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addInfo", "Dart analysis server running.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+          t1.invoke$3("addInfo", "Dart analysis server starting up.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+        } else if (Q.Dependencies_instance().getDependency$1(C.Type_CvJ).get$projects().length === 0) {
+          t1 = $.$get$atom()._notifications;
+          t1.invoke$3("addInfo", "Dart analysis server shutting down (no Dart projects open).", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         } else {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addWarning", "Dart analysis server terminated.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+          t1.invoke$3("addInfo", "Dart analysis server shutting down.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         }
       }, null, null, 2, 0, null, 7, "call"]
     },

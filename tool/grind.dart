@@ -48,7 +48,7 @@ build() {
 @Task('Analyze the source code with the ddc compiler')
 ddc() {
   PubApp ddc = new PubApp.global('dev_compiler');
-  ddc.run(['web/entry.dart'], script: 'devc');
+  ddc.run(['web/entry.dart'], script: 'dartdevc');
 }
 
 @Task()
