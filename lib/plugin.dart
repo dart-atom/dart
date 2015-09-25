@@ -28,23 +28,26 @@ import 'buffer/buffer_observer.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
+import 'flutter/create_project.dart';
+import 'flutter/run_app.dart';
+import 'flutter/toolbar.dart';
 import 'impl/changelog.dart';
+import 'impl/cli_launch.dart';
 import 'impl/console.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/errors.dart';
 import 'impl/outline.dart';
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
+import 'impl/shell_launch.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
+import 'impl/web_launch.dart';
 import 'jobs.dart';
 import 'launch.dart';
 import 'linter.dart' show DartLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
-import 'flutter/create_project.dart';
-import 'flutter/run_app.dart';
-import 'flutter/toolbar.dart';
 import 'state.dart';
 import 'usage.dart' show UsageManager;
 import 'utils.dart';
@@ -135,6 +138,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new UsageManager());
 
     _registerLinter();
+    _registerLaunchTypes();
 
     // Register commands.
     _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
@@ -374,6 +378,13 @@ class AtomDartPackage extends AtomPackage {
 
   void _addCmd(String target, String command, void callback(AtomEvent e)) {
     disposables.add(atom.commands.add(target, command, callback));
+  }
+
+  void _registerLaunchTypes() {
+    CliLaunchType.register(launchManager);
+    FlutterLaunchType.register(launchManager);
+    ShellLaunchType.register(launchManager);
+    WebLaunchType.register(launchManager);
   }
 
   void _registerLinter() {

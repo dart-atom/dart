@@ -77,8 +77,9 @@ class RunFlutterAppJob extends Job {
     // Chain together both 'sky_tool start' and 'sky_tool logs'.
     _runner = _skyTool(project, ['start']);
 
+    // TODO: Don't create the launch type directly.
     Launch launch = new Launch(
-        new LaunchType(LaunchType.FLUTTER),
+        new FlutterLaunchType(),
         'lib/main.dart',
         launchManager,
         killHandler: () => _runner.kill());
@@ -140,4 +141,13 @@ class RunFlutterAppContextCommand extends ContextMenuItem {
         join(project.directory, 'packages', 'sky', 'sky_tool'));
     return skyTool.existsSync();
   }
+}
+
+// TODO:
+
+class FlutterLaunchType extends LaunchType {
+  static void register(LaunchManager manager) =>
+      manager.registerLaunchType(new FlutterLaunchType());
+
+  FlutterLaunchType() : super('flutter');
 }

@@ -12,6 +12,8 @@ class LaunchManager implements Disposable {
   StreamController<Launch> _launchTerminated = new StreamController.broadcast();
   StreamController<Launch> _launchRemoved = new StreamController.broadcast();
 
+  List<LaunchType> launchTypes = [];
+
   Launch _activeLaunch;
   final List<Launch> _launches = [];
 
@@ -70,6 +72,11 @@ class LaunchManager implements Disposable {
   Stream<Launch> get onLaunchTerminated => _launchTerminated.stream;
   Stream<Launch> get onLaunchRemoved => _launchRemoved.stream;
 
+  void registerLaunchType(LaunchType type) {
+    launchTypes.remove(type);
+    launchTypes.add(type);
+  }
+
   void dispose() {
     for (Launch launch in _launches.toList()) {
       launch.dispose();
@@ -77,12 +84,11 @@ class LaunchManager implements Disposable {
   }
 }
 
-class LaunchType {
-  static const CLI = 'cli';
-  static const SHELL = 'shell';
-  static const FLUTTER = 'flutter';
-  static const WEB = 'web';
+// TODO: give a project / resource, can we launch it?
+// TODO: give a project / resource, should we launch it?
+// TODO: give a project / resource, score how able we are to launch it
 
+abstract class LaunchType {
   final String type;
 
   LaunchType(this.type);
@@ -93,6 +99,14 @@ class LaunchType {
 
   String toString() => type;
 }
+
+// TODO: LaunchType and settings
+// TODO: persistable
+
+class LaunchConfiguration {
+
+}
+
 
 class Launch implements Disposable {
   static int _id = 0;
