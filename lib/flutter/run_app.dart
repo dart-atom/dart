@@ -87,7 +87,6 @@ class RunFlutterAppJob extends Job {
     launchManager.addLaunch(launch);
 
     _runner.execStreaming();
-
     _runner.onStdout.listen((str) => launch.pipeStdout(str));
     _runner.onStderr.listen((str) => launch.pipeStderr(str));
 
@@ -150,4 +149,8 @@ class FlutterLaunchType extends LaunchType {
       manager.registerLaunchType(new FlutterLaunchType());
 
   FlutterLaunchType() : super('flutter');
+
+  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
+    return new Future.error(new UnimplementedError());
+  }
 }

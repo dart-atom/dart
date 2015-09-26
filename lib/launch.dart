@@ -88,10 +88,13 @@ class LaunchManager implements Disposable {
 // TODO: give a project / resource, should we launch it?
 // TODO: give a project / resource, score how able we are to launch it
 
+/// A general type of launch, like a command-line launch or a web launch.
 abstract class LaunchType {
   final String type;
 
   LaunchType(this.type);
+
+  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration);
 
   operator== (obj) => obj is LaunchType && obj.type == type;
 
@@ -103,11 +106,16 @@ abstract class LaunchType {
 // TODO: LaunchType and settings
 // TODO: persistable
 
+/// A configuration for a particular launch type.
 class LaunchConfiguration {
+
+  String get primaryResource => null;
+  String get cwd => null;
+  List<String> get args => null;
 
 }
 
-
+/// The instantiation of something that was launched.
 class Launch implements Disposable {
   static int _id = 0;
 
