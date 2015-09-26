@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an style / clipping issue in the problems view
+
 ## 0.4.7
 - filtered 'potential' edits from rename refactorings
 - improved the UI for the for the rename refactoring confirmation dialog

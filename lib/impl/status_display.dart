@@ -39,7 +39,7 @@ class StatusDisplay implements Disposable {
           ..clazz('status-spinner')
           ..src = 'atom://dartlang/images/gear.svg',
         textLabel = div(c: 'text-label')..inlineBlockTight(), // text-highlight
-        countBadge = span(c: 'badge badge-info badge-small badge-count')
+        countBadge = span(c: 'badge badge-info badge-count')
       ]);
 
     _statusbarTile =
@@ -65,8 +65,7 @@ class StatusDisplay implements Disposable {
       }
 
       int jobLen = jobs.allJobs.length;
-      countBadge.text = jobLen == 0
-          ? '' : '${jobLen - 1} waiting ${pluralize('job', jobLen - 1)}';
+      countBadge.text = jobLen == 0 ? '' : '${jobLen} ${pluralize('job', jobLen)}';
 
       spinner.toggleClass('showing', showing);
       textLabel.toggleClass('showing', showing);
