@@ -275,7 +275,7 @@ class ErrorsStatusElement implements Disposable {
 
   void _init(StatusBar statusBar) {
     _element = div(c: 'dartlang')..inlineBlock()..add([
-      _badgeSpan = span(c: 'badge text-subtle') // badge-small
+      _badgeSpan = span(c: 'badge subtle')
     ]);
 
     _element.click(parent._toggleView);
@@ -305,11 +305,9 @@ class ErrorsStatusElement implements Disposable {
     bool hasIssues = errorCount != 0 || warningCount != 0;
 
     if (hasIssues) {
-      //_badgeSpan.element.style.display = 'inline';
       _badgeSpan.toggleClass('badge-error', errorCount > 0);
       _badgeSpan.toggleClass('badge-warning', errorCount == 0);
-      _badgeSpan.toggleClass('text-subtle', false);
-      //_badgeSpan.text = (errorCount + warningCount).toString();
+      _badgeSpan.toggleClass('subtle', false);
 
       // 4 errors, 1 warning
       if (errorCount > 0 && warningCount > 0) {
@@ -324,7 +322,7 @@ class ErrorsStatusElement implements Disposable {
       _badgeSpan.text = 'no errors';
       _badgeSpan.toggleClass('badge-error', false);
       _badgeSpan.toggleClass('badge-warning', false);
-      _badgeSpan.toggleClass('text-subtle', true);
+      _badgeSpan.toggleClass('subtle', true);
     }
   }
 }

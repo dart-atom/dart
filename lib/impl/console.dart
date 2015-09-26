@@ -246,7 +246,7 @@ class ConsoleStatusElement implements Disposable {
   }
 
   void _init(StatusBar statusBar) {
-    _element = div(c: 'dartlang')..inlineBlock()..add([
+    _element = div(c: 'dartlang process-status-bar')..inlineBlock()..add([
       _badgeSpan = span(c: 'badge')
     ]);
 
@@ -269,7 +269,7 @@ class ConsoleStatusElement implements Disposable {
 
     if (count > 0) {
       if (!isShowing()) show();
-      _badgeSpan.text = '${count} application ${pluralize('process', count)}';
+      _badgeSpan.text = '${count} ${pluralize('process', count)}';
     } else {
       hide();
       _badgeSpan.text = 'no processes';
