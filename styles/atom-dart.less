@@ -307,6 +307,10 @@ atom-notification.success code {
     font-size: inherit;
   }
 
+  .badge.subtle {
+    color: @text-color;
+  }
+
   .badge[disabled] {
     cursor: default;
   }
@@ -314,7 +318,6 @@ atom-notification.success code {
 
 status-bar .dartlang .badge {
   cursor: pointer;
-  //color: inherit;
 }
 
 /* Error view */
@@ -323,9 +326,9 @@ status-bar .dartlang .badge {
   .errors-focus-area {
     position: absolute;
     top: 6px;
-    right: 20px;
+    right: 15px;
     -webkit-user-select: none;
-    //background-color: @overlay-background-color;
+    background-color: @tree-view-background-color;
 
     .focus-title {
       display: inline-block;
@@ -336,7 +339,7 @@ status-bar .dartlang .badge {
     }
 
     .badge {
-      margin-left: 5px;
+      margin-right: 5px;
       cursor: default;
     }
   }
@@ -574,5 +577,11 @@ atom-notification {
 
   .console-error {
     color: @text-color-error;
+  }
+}
+
+.process-status-bar {
+  .badge {
+    color: @text-color;
   }
 }
