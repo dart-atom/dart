@@ -47,6 +47,13 @@ class LaunchManager implements Disposable {
     if (activated) _launchActivated.add(launch);
   }
 
+  void setActiveLaunch(Launch launch) {
+    if (launch != _activeLaunch) {
+      _activeLaunch = launch;
+      _launchActivated.add(_activeLaunch);
+    }
+  }
+
   void removeLaunch(Launch launch) {
     _launches.remove(launch);
     bool activeChanged = false;
@@ -58,13 +65,6 @@ class LaunchManager implements Disposable {
 
     _launchRemoved.add(launch);
     if (activeChanged) _launchActivated.add(_activeLaunch);
-  }
-
-  void setActiveLaunch(Launch launch) {
-    if (launch != _activeLaunch) {
-      _activeLaunch = launch;
-      _launchActivated.add(_activeLaunch);
-    }
   }
 
   Stream<Launch> get onLaunchAdded => _launchAdded.stream;
@@ -108,11 +108,37 @@ abstract class LaunchType {
 
 /// A configuration for a particular launch type.
 class LaunchConfiguration {
+  LaunchType launchType;
+  Map<String, String> _config = {};
 
-  String get primaryResource => null;
-  String get cwd => null;
-  List<String> get args => null;
+  LaunchConfiguration(this.launchType);
 
+  LaunchConfiguration.from(Map<String, String> m) {
+    for (String key in m.keys) {
+      _config[key] = m[key];
+    }
+  }
+
+  String get cwd => _config['cwd'];
+  set cwd(String value) {
+    _config['cwd'] = value;
+  }
+
+  String get primaryResource => _config['primary'];
+  set primaryResource(String value) {
+    _config['primary'] = value;
+  }
+
+  String get args => _config['args'];
+  set args(String value) {
+    _config['args'] = value;
+  }
+
+  List<String> get argsAsList {
+    String str = args;
+    // TODO: Handle args wrapped by quotes.
+    return str == null ? null : str.split(' ');
+  }
 }
 
 /// The instantiation of something that was launched.
@@ -180,5 +206,5 @@ class Launch implements Disposable {
     }
   }
 
-  String toString() => '${launchType}-${id}: ${title}';
+  String toString() => '${launchType}: ${title}';
 }

@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
+import '../impl/shell_launch.dart';
 import '../jobs.dart';
 import '../launch.dart';
 import '../process.dart';
@@ -23,13 +24,14 @@ class FlutterToolManager implements Disposable, ContextMenuContributor {
 
   FlutterToolManager() {
     disposables.add(atom.commands.add(
-        '.tree-view', 'dartlang:run-flutter-application', (AtomEvent event) {
+        '.tree-view', 'dartlang:run-application', (AtomEvent event) {
       event.stopImmediatePropagation();
       new RunFlutterAppJob(event.targetFilePath).schedule();
     }));
     disposables.add(atom.commands.add(
-        'atom-text-editor', 'dartlang:run-flutter-application', (AtomEvent event) {
+        'atom-text-editor', 'dartlang:run-application', (AtomEvent event) {
       event.stopImmediatePropagation();
+      event.preventDefault();
       new RunFlutterAppJob(event.editor.getPath()).schedule();
     }));
   }
@@ -39,7 +41,7 @@ class FlutterToolManager implements Disposable, ContextMenuContributor {
   List<ContextMenuItem> getTreeViewContributions() {
     return [
       new RunFlutterAppContextCommand(
-          'Run Flutter Application', 'dartlang:run-flutter-application')
+          'Run Application', 'dartlang:run-application')
     ];
   }
 }
@@ -54,6 +56,11 @@ class RunFlutterAppJob extends Job {
   bool get quiet => true;
 
   Future run() async {
+    // TODO: Generalize this.
+    if (path.endsWith('.sh')) {
+      return _launchShell();
+    }
+
     DartProject project = projectManager.getProjectFor(path);
 
     if (project == null) return new Future.error("File not in a Dart project.");
@@ -62,8 +69,8 @@ class RunFlutterAppJob extends Job {
     bool exists = new File.fromPath(sky_tool).existsSync();
 
     if (!exists) {
-      return new Future.error("Unable to locate 'packages/sky/sky_tool'; did "
-          "you import the 'sky' package into your project?");
+      return new Future.error("Unable to locate 'packages/sky/sky_tool'; "
+          "did you import the 'sky' package into your project?");
     }
 
     // If this is the first time we've launched an app this session, ensure
@@ -110,6 +117,13 @@ class RunFlutterAppJob extends Job {
     });
   }
 
+  Future _launchShell() {
+    LaunchType type = new ShellLaunchType();
+    LaunchConfiguration configuration = new LaunchConfiguration(type);
+    configuration.primaryResource = path;
+    return type.performLaunch(launchManager, configuration);
+  }
+
   ProcessRunner _skyTool(DartProject project, List<String> args) {
     final String skyToolPath = 'packages${separator}sky${separator}sky_tool';
 
@@ -136,13 +150,15 @@ class RunFlutterAppContextCommand extends ContextMenuItem {
     String filePath = event.targetFilePath;
     DartProject project = projectManager.getProjectFor(filePath);
     if (project == null) return false;
+
+    // TODO: Generalize this.
+    if (filePath.endsWith('.sh')) return true;
+
     File skyTool = new File.fromPath(
         join(project.directory, 'packages', 'sky', 'sky_tool'));
     return skyTool.existsSync();
   }
 }
-
-// TODO:
 
 class FlutterLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>

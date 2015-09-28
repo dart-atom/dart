@@ -23,14 +23,14 @@
 
 # Dart editor commands (mac)
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'cmd-r': 'dartlang:run-flutter-application'
+  'cmd-r': 'dartlang:run-application'
   'cmd-alt-b': 'dartlang:dart-format'
   'cmd-alt-o': 'dartlang:organize-directives'
   'shift-cmd-g': 'dartlang:find-references'
 
 # Dart editor commands (windows and linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'ctrl-r': 'dartlang:run-flutter-application'
+  'ctrl-r': 'dartlang:run-application'
   'ctrl-alt-b': 'dartlang:dart-format'
   'ctrl-alt-o': 'dartlang:organize-directives'
   'ctrl-shift-g': 'dartlang:find-references'

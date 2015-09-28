@@ -39,8 +39,6 @@ class ConsoleController implements Disposable {
   }
 }
 
-// TODO: Close button somewhere?
-
 class ConsoleView extends AtomView {
   static bool get autoShowConsole => atom.config.getValue('${pluginId}.autoShowConsole');
 
@@ -85,7 +83,9 @@ class ConsoleView extends AtomView {
   }
 
   void _launchRemoved(Launch launch) {
-    _controllers.remove(launch).dispose();
+    final _LaunchController controller = _controllers.remove(launch);
+    controller.dispose();
+    if (controller == _activeController) _activeController = null;
 
     if (_controllers.isEmpty && isVisible()) hide();
   }
@@ -99,7 +99,6 @@ class _LaunchController implements Disposable {
   final Launch launch;
 
   CoreElement container;
-  CoreElement title;
   CoreElement buttons;
   CoreElement output;
   StreamSubscriptions subs = new StreamSubscriptions();
@@ -109,12 +108,12 @@ class _LaunchController implements Disposable {
       container = div(c: 'badge process-tab')..add([
         span(text: launch.launchType.type),
         span(text: ' • '),
-        title = span(text: launch.title),
+        span(text: launch.title),
         span(text: ' • '),
         buttons = div(c: 'run-buttons')
       ])
     ]);
-    title.click(() => launch.manager.setActiveLaunch(launch));
+    container.click(() => launch.manager.setActiveLaunch(launch));
 
     _updateToggles();
     _updateButtons();
@@ -136,7 +135,6 @@ class _LaunchController implements Disposable {
     _updateButtons();
 
     container.toggleClass('launch-terminated', true);
-    title.text = '${launch.title} [${launch.exitCode}]';
 
     _emitText('\n');
     _emitBadge('exit code ${launch.exitCode}', launch.errored ? 'error' : 'info');
