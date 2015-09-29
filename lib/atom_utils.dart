@@ -54,6 +54,14 @@ String basename(String path) {
   return index == -1 ? path : path.substring(index + 1);
 }
 
+String relativize(String root, String path) {
+  if (path.startsWith(root)) {
+    path = path.substring(root.length);
+    if (path.startsWith(separator)) path = path.substring(1);
+  }
+  return path;
+}
+
 /// Relative path entries are removed and symlinks are resolved to their final
 /// destination.
 String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);

@@ -4,6 +4,7 @@ library atom.launch;
 import 'dart:async';
 
 import 'atom.dart';
+import 'projects.dart';
 import 'utils.dart';
 
 class LaunchManager implements Disposable {
@@ -77,6 +78,15 @@ class LaunchManager implements Disposable {
     launchTypes.add(type);
   }
 
+  /// Get the best launch handler for the given resource; return `null`
+  /// otherwise.
+  LaunchType getHandlerFor(String path) {
+    for (LaunchType type in launchTypes) {
+      if (type.canLaunch(path)) return type;
+    }
+    return null;
+  }
+
   void dispose() {
     for (Launch launch in _launches.toList()) {
       launch.dispose();
@@ -84,34 +94,37 @@ class LaunchManager implements Disposable {
   }
 }
 
-// TODO: give a project / resource, can we launch it?
-// TODO: give a project / resource, should we launch it?
-// TODO: give a project / resource, score how able we are to launch it
-
 /// A general type of launch, like a command-line launch or a web launch.
 abstract class LaunchType {
   final String type;
 
   LaunchType(this.type);
 
+  bool canLaunch(String path);
+
+  List<String> getLaunchablesFor(DartProject project);
+
+  LaunchConfiguration createConfiguration(String path) {
+    return new LaunchConfiguration(this, primaryResource: path);
+  }
+
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration);
 
   operator== (obj) => obj is LaunchType && obj.type == type;
-
   int get hashCode => type.hashCode;
-
   String toString() => type;
 }
 
-// TODO: LaunchType and settings
-// TODO: persistable
+// TODO: Make this persistable.
 
 /// A configuration for a particular launch type.
 class LaunchConfiguration {
   LaunchType launchType;
   Map<String, String> _config = {};
 
-  LaunchConfiguration(this.launchType);
+  LaunchConfiguration(this.launchType, {String primaryResource}) {
+    if (primaryResource != null) this.primaryResource = primaryResource;
+  }
 
   LaunchConfiguration.from(Map<String, String> m) {
     for (String key in m.keys) {

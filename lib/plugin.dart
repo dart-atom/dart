@@ -29,6 +29,7 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'flutter/create_project.dart';
+import 'flutter/flutter_launch.dart';
 import 'flutter/run_app.dart';
 import 'flutter/toolbar.dart';
 import 'impl/changelog.dart';
@@ -381,8 +382,8 @@ class AtomDartPackage extends AtomPackage {
   }
 
   void _registerLaunchTypes() {
-    CliLaunchType.register(launchManager);
     FlutterLaunchType.register(launchManager);
+    CliLaunchType.register(launchManager);
     ShellLaunchType.register(launchManager);
     WebLaunchType.register(launchManager);
   }

@@ -6,12 +6,19 @@ import '../atom.dart';
 import '../atom_utils.dart';
 import '../launch.dart';
 import '../process.dart';
+import '../projects.dart';
+
+// TODO: .bat files
 
 class ShellLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
       manager.registerLaunchType(new ShellLaunchType());
 
   ShellLaunchType() : super('shell');
+
+  bool canLaunch(String path) => path.endsWith('.sh');
+
+  List<String> getLaunchablesFor(DartProject project) => [];
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
     String script = configuration.primaryResource;
@@ -28,10 +35,7 @@ class ShellLaunchType extends LaunchType {
         launchName = paths[1];
       }
     } else {
-      if (launchName.startsWith(cwd)) {
-        launchName = launchName.substring(cwd.length);
-        if (launchName.startsWith(separator)) launchName = launchName.substring(1);
-      }
+      launchName = relativize(cwd, launchName);
     }
 
     ProcessRunner runner = new ProcessRunner(script, args: args, cwd: cwd);

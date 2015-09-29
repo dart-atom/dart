@@ -103,6 +103,8 @@ class _LaunchController implements Disposable {
   CoreElement output;
   StreamSubscriptions subs = new StreamSubscriptions();
 
+  String _lastText = '';
+
   _LaunchController(this.view, this.launch) {
     view.tabsElement.add([
       container = div(c: 'badge process-tab')..add([
@@ -136,8 +138,8 @@ class _LaunchController implements Disposable {
 
     container.toggleClass('launch-terminated', true);
 
-    _emitText('\n');
-    _emitBadge('exit code ${launch.exitCode}', launch.errored ? 'error' : 'info');
+    if (!_lastText.endsWith('\n')) _emitText('\n');
+    _emitBadge('- exit ${launch.exitCode} -', launch.errored ? 'error' : 'info');
   }
 
   void deactivate() {
@@ -196,6 +198,8 @@ class _LaunchController implements Disposable {
   }
 
   void _emitText(String str, [bool error = false]) {
+    _lastText = str;
+
     CoreElement e = output.add(span(text: str));
     if (error) e.toggleClass('console-error');
 
@@ -250,7 +254,7 @@ class ConsoleStatusElement implements Disposable {
 
     _element.click(parent._toggleView);
 
-    statusTile = statusBar.addRightTile(item: _element.element, priority: 200);
+    statusTile = statusBar.addLeftTile(item: _element.element, priority: -99);
 
     if (!isShowing()) {
       _element.element.style.display = 'none';

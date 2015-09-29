@@ -5,19 +5,15 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
-import '../impl/shell_launch.dart';
 import '../jobs.dart';
 import '../launch.dart';
-import '../process.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
 
 final Logger _logger = new Logger('flutter.run_app');
 
-/// The last Flutter app run.
-String _lastRunProject;
+// TODO: rename to launch_ui
 
 class FlutterToolManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
@@ -26,13 +22,13 @@ class FlutterToolManager implements Disposable, ContextMenuContributor {
     disposables.add(atom.commands.add(
         '.tree-view', 'dartlang:run-application', (AtomEvent event) {
       event.stopImmediatePropagation();
-      new RunFlutterAppJob(event.targetFilePath).schedule();
+      new RunApplicationJob(event.targetFilePath).schedule();
     }));
     disposables.add(atom.commands.add(
         'atom-text-editor', 'dartlang:run-application', (AtomEvent event) {
       event.stopImmediatePropagation();
       event.preventDefault();
-      new RunFlutterAppJob(event.editor.getPath()).schedule();
+      new RunApplicationJob(event.editor.getPath()).schedule();
     }));
   }
 
@@ -46,100 +42,22 @@ class FlutterToolManager implements Disposable, ContextMenuContributor {
   }
 }
 
-class RunFlutterAppJob extends Job {
+class RunApplicationJob extends Job {
   final String path;
 
-  ProcessRunner _runner;
-
-  RunFlutterAppJob(this.path) : super('Launching Flutter application');
+  RunApplicationJob(this.path) : super('Launching application');
 
   bool get quiet => true;
 
   Future run() async {
-    // TODO: Generalize this.
-    if (path.endsWith('.sh')) {
-      return _launchShell();
-    }
+    LaunchType launchType = launchManager.getHandlerFor(path);
 
-    DartProject project = projectManager.getProjectFor(path);
-
-    if (project == null) return new Future.error("File not in a Dart project.");
-
-    String sky_tool = join(project.directory, 'packages', 'sky', 'sky_tool');
-    bool exists = new File.fromPath(sky_tool).existsSync();
-
-    if (!exists) {
-      return new Future.error("Unable to locate 'packages/sky/sky_tool'; "
-          "did you import the 'sky' package into your project?");
-    }
-
-    // If this is the first time we've launched an app this session, ensure
-    // that the sky server isn't already running (and potentially serving an
-    // older) app. Also, if we're launching a different application.
-    if (_lastRunProject != project.path) {
-      _lastRunProject = project.path;
-      await _skyToolStop(project);
-    }
-
-    // Chain together both 'sky_tool start' and 'sky_tool logs'.
-    _runner = _skyTool(project, ['start']);
-
-    // TODO: Don't create the launch type directly.
-    Launch launch = new Launch(
-        new FlutterLaunchType(),
-        'lib/main.dart',
-        launchManager,
-        killHandler: () => _runner.kill());
-    launch.servicePort = 8181;
-    launchManager.addLaunch(launch);
-
-    _runner.execStreaming();
-    _runner.onStdout.listen((str) => launch.pipeStdout(str));
-    _runner.onStderr.listen((str) => launch.pipeStderr(str));
-
-    launch.pipeStdout('[${_runner.cwd}] ${_runner.getDescription()}\n');
-
-    return _runner.onExit.then((code) {
-      _runner = null;
-
-      if (code == 0) {
-        // Chain 'sky_tool logs'.
-        _runner = _skyTool(project, ['logs', '--clear']);
-        _runner.execStreaming();
-        _runner.onStdout.listen((str) => launch.pipeStdout(str));
-        _runner.onStderr.listen((str) => launch.pipeStderr(str));
-
-        // Don't return the future here.
-        _runner.onExit.then((code) => launch.launchTerminated(code));
-      } else {
-        launch.launchTerminated(code);
-      }
-    });
-  }
-
-  Future _launchShell() {
-    LaunchType type = new ShellLaunchType();
-    LaunchConfiguration configuration = new LaunchConfiguration(type);
-    configuration.primaryResource = path;
-    return type.performLaunch(launchManager, configuration);
-  }
-
-  ProcessRunner _skyTool(DartProject project, List<String> args) {
-    final String skyToolPath = 'packages${separator}sky${separator}sky_tool';
-
-    if (isMac) {
-      // On the mac, run under bash.
-      return new ProcessRunner('/bin/bash',
-          args: ['-l', '-c', '${skyToolPath} ${args.join(' ')}'], cwd: project.path);
+    if (launchType == null) {
+      return new Future.error("Unable to locate a suitable handler to run '${path}'.");
     } else {
-      args.insert(0, skyToolPath);
-      return new ProcessRunner('python', args: args, cwd: project.path);
+      LaunchConfiguration configuration = launchType.createConfiguration(path);
+      return launchType.performLaunch(launchManager, configuration);
     }
-  }
-
-  /// Run `sky_tool stop` and ignore any error conditions that may occur.
-  Future _skyToolStop(DartProject project) {
-    return _skyTool(project, ['stop']).execSimple();
   }
 }
 
@@ -150,23 +68,6 @@ class RunFlutterAppContextCommand extends ContextMenuItem {
     String filePath = event.targetFilePath;
     DartProject project = projectManager.getProjectFor(filePath);
     if (project == null) return false;
-
-    // TODO: Generalize this.
-    if (filePath.endsWith('.sh')) return true;
-
-    File skyTool = new File.fromPath(
-        join(project.directory, 'packages', 'sky', 'sky_tool'));
-    return skyTool.existsSync();
-  }
-}
-
-class FlutterLaunchType extends LaunchType {
-  static void register(LaunchManager manager) =>
-      manager.registerLaunchType(new FlutterLaunchType());
-
-  FlutterLaunchType() : super('flutter');
-
-  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
-    return new Future.error(new UnimplementedError());
+    return launchManager.getHandlerFor(filePath) != null;
   }
 }
