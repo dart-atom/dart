@@ -233,6 +233,8 @@ class AnalysisDomain extends Domain {
       _listen('analysis.folding', AnalysisFolding.parse);
   Stream<AnalysisHighlights> get onHighlights =>
       _listen('analysis.highlights', AnalysisHighlights.parse);
+  Stream<AnalysisImplemented> get onImplemented =>
+      _listen('analysis.implemented', AnalysisImplemented.parse);
   Stream<AnalysisInvalidate> get onInvalidate =>
       _listen('analysis.invalidate', AnalysisInvalidate.parse);
   Stream<AnalysisNavigation> get onNavigation =>
@@ -347,6 +349,23 @@ class AnalysisHighlights {
   final List<HighlightRegion> regions;
 
   AnalysisHighlights(this.file, this.regions);
+}
+
+class AnalysisImplemented {
+  static AnalysisImplemented parse(Map m) => new AnalysisImplemented(
+      m['file'],
+      m['classes'] == null
+          ? null
+          : m['classes'].map((obj) => ImplementedClass.parse(obj)).toList(),
+      m['members'] == null
+          ? null
+          : m['members'].map((obj) => ImplementedMember.parse(obj)).toList());
+
+  final String file;
+  final List<ImplementedClass> classes;
+  final List<ImplementedMember> members;
+
+  AnalysisImplemented(this.file, this.classes, this.members);
 }
 
 class AnalysisInvalidate {
@@ -543,8 +562,10 @@ class SearchDomain extends Domain {
         .then(FindTopLevelDeclarationsResult.parse);
   }
 
-  Future<TypeHierarchyResult> getTypeHierarchy(String file, int offset) {
+  Future<TypeHierarchyResult> getTypeHierarchy(String file, int offset,
+      {bool superOnly}) {
     Map m = {'file': file, 'offset': offset};
+    if (superOnly != null) m['superOnly'] = superOnly;
     return _call('search.getTypeHierarchy', m).then(TypeHierarchyResult.parse);
   }
 }
@@ -1135,6 +1156,30 @@ class HoverInformation {
       this.parameter,
       this.propagatedType,
       this.staticType});
+}
+
+class ImplementedClass {
+  static ImplementedClass parse(Map m) {
+    if (m == null) return null;
+    return new ImplementedClass(m['offset'], m['length']);
+  }
+
+  final int offset;
+  final int length;
+
+  ImplementedClass(this.offset, this.length);
+}
+
+class ImplementedMember {
+  static ImplementedMember parse(Map m) {
+    if (m == null) return null;
+    return new ImplementedMember(m['offset'], m['length']);
+  }
+
+  final int offset;
+  final int length;
+
+  ImplementedMember(this.offset, this.length);
 }
 
 class LinkedEditGroup {

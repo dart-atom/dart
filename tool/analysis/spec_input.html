@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8"/>
@@ -878,6 +879,38 @@
           </field>
         </params>
       </notification>
+      <notification event="implemented">
+        <p>
+          Reports the classes that are implemented or extended and
+          class members that are implemented or overridden in a file.
+        </p>
+        <p>
+          This notification is not subscribed to by default. Clients
+          can subscribe by including the value <tt>"IMPLEMENTED"</tt> in
+          the list of services passed in an analysis.setSubscriptions
+          request.
+        </p>
+        <params>
+          <field name="file">
+            <ref>FilePath</ref>
+            <p>
+              The file with which the implementations are associated.
+            </p>
+          </field>
+          <field name="classes">
+            <list><ref>ImplementedClass</ref></list>
+            <p>
+              The classes defined in the file that are implemented or extended.
+            </p>
+          </field>
+          <field name="members">
+            <list><ref>ImplementedMember</ref></list>
+            <p>
+              The member defined in the file that are implemented or overridden.
+            </p>
+          </field>
+        </params>
+      </notification>
       <notification event="invalidate">
         <p>
           Reports that the navigation information associated with a region of a
@@ -1306,6 +1339,13 @@
             <ref>int</ref>
             <p>
               The offset of the name of the type within the file.
+            </p>
+          </field>
+          <field name="superOnly" optional="true">
+            <ref>bool</ref>
+            <p>
+              True if the client is only requesting superclasses and
+              interfaces hierarchy.
             </p>
           </field>
         </params>
@@ -2094,6 +2134,7 @@
         <enum>
           <value><code>FOLDING</code></value>
           <value><code>HIGHLIGHTS</code></value>
+          <value><code>IMPLEMENTED</code></value>
           <value>
             <code>INVALIDATE</code>
             <p>
@@ -2918,6 +2959,44 @@
           </field>
         </object>
       </type>
+      <type name="ImplementedClass">
+        <p>
+          A description of a class that is implemented or extended.
+        </p>
+        <object>
+          <field name="offset">
+            <ref>int</ref>
+            <p>
+              The offset of the name of the implemented class.
+            </p>
+          </field>
+          <field name="length">
+            <ref>int</ref>
+            <p>
+              The length of the name of the implemented class.
+            </p>
+          </field>
+        </object>
+      </type>
+      <type name="ImplementedMember">
+        <p>
+          A description of a class member that is implemented or overridden.
+        </p>
+        <object>
+          <field name="offset">
+            <ref>int</ref>
+            <p>
+              The offset of the name of the implemented member.
+            </p>
+          </field>
+          <field name="length">
+            <ref>int</ref>
+            <p>
+              The length of the name of the implemented member.
+            </p>
+          </field>
+        </object>
+      </type>
       <type name="LinkedEditGroup">
         <p>
           A collection of positions that should be linked (edited
@@ -3047,7 +3126,7 @@
             <p>
               The indexes of the targets (in the enclosing navigation response)
               to which the given region is bound. By opening the target, clients
-              can implement one form of navigation.
+              can implement one form of navigation. This list cannot be empty.
             </p>
           </field>
         </object>
@@ -4237,6 +4316,6 @@
       TBD
     </p>
     <h2 class="domain"><a name="index">Index</a></h2>
-    <index />
+    <index></index>
   </body>
 </html>

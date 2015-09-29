@@ -30,7 +30,8 @@ export 'jobs.dart' show Job;
 final Logger _logger = new Logger('analysis-server');
 
 class AnalysisServer implements Disposable {
-  static bool get startWithDebugging => atom.config.getValue('${pluginId}.debugAnalysisServer');
+  static bool get startWithDebugging =>
+      atom.config.getValue('${pluginId}.debugAnalysisServer');
 
   static final int OBSERVATORY_PORT = 23071;
   static final int DIAGNOSTICS_PORT = 23072;
@@ -411,9 +412,9 @@ class _AnalysisServerWrapper extends Server {
     _executables.clear();
     execution.setSubscriptions(['LAUNCH_DATA']);
 
-    // TODO: Remove once 1.12.0 is shipped as stable.
+    // Tracking `enableSuperMixins` here: github.com/dart-lang/sdk/issues/23772.
     analysis.updateOptions(new AnalysisOptions(
-      enableNullAwareOperators: true
+      enableSuperMixins: atom.config.getValue('${pluginId}.enableSuperMixins')
     ));
 
     server.getVersion().then((v) => _logger.info('version ${v.version}'));
