@@ -30,7 +30,6 @@ import 'editors.dart';
 import 'error_repository.dart';
 import 'flutter/create_project.dart';
 import 'flutter/flutter_launch.dart';
-import 'flutter/run_app.dart';
 import 'flutter/toolbar.dart';
 import 'impl/changelog.dart';
 import 'impl/cli_launch.dart';
@@ -40,6 +39,7 @@ import 'impl/errors.dart';
 import 'impl/outline.dart';
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
+import 'impl/run_app.dart';
 import 'impl/shell_launch.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
@@ -117,7 +117,7 @@ class AtomDartPackage extends AtomPackage {
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
     PubManager pubManager = new PubManager();
-    FlutterToolManager flutterToolManager = new FlutterToolManager();
+    RunApplicationManager runAppManager = new RunApplicationManager();
 
     disposables.add(analysisOptionsManager);
     disposables.add(new ChangelogManager());
@@ -129,7 +129,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new OrganizeFileManager());
     disposables.add(new OutlineController());
     disposables.add(pubManager);
-    disposables.add(flutterToolManager);
+    disposables.add(runAppManager);
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
@@ -167,7 +167,7 @@ class AtomDartPackage extends AtomPackage {
 
     // Set up the context menus.
     List<ContextMenuItem> treeItems = [ContextMenuItem.separator];
-    treeItems.addAll(flutterToolManager.getTreeViewContributions());
+    treeItems.addAll(runAppManager.getTreeViewContributions());
     treeItems.addAll(pubManager.getTreeViewContributions());
     treeItems.addAll(analysisOptionsManager.getTreeViewContributions());
     treeItems.addAll(projectManager.getTreeViewContributions());

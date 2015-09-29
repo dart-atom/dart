@@ -1,4 +1,4 @@
-library atom.flutter.run_app;
+library atom.run_app;
 
 import 'dart:async';
 
@@ -11,14 +11,12 @@ import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
 
-final Logger _logger = new Logger('flutter.run_app');
+final Logger _logger = new Logger('atom.run_app');
 
-// TODO: rename to launch_ui
-
-class FlutterToolManager implements Disposable, ContextMenuContributor {
+class RunApplicationManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
-  FlutterToolManager() {
+  RunApplicationManager() {
     disposables.add(atom.commands.add(
         '.tree-view', 'dartlang:run-application', (AtomEvent event) {
       event.stopImmediatePropagation();
@@ -36,8 +34,7 @@ class FlutterToolManager implements Disposable, ContextMenuContributor {
 
   List<ContextMenuItem> getTreeViewContributions() {
     return [
-      new RunFlutterAppContextCommand(
-          'Run Application', 'dartlang:run-application')
+      new RunAppContextCommand('Run Application', 'dartlang:run-application')
     ];
   }
 }
@@ -61,8 +58,8 @@ class RunApplicationJob extends Job {
   }
 }
 
-class RunFlutterAppContextCommand extends ContextMenuItem {
-  RunFlutterAppContextCommand(String label, String command) : super(label, command);
+class RunAppContextCommand extends ContextMenuItem {
+  RunAppContextCommand(String label, String command) : super(label, command);
 
   bool shouldDisplay(AtomEvent event) {
     String filePath = event.targetFilePath;
