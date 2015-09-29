@@ -28,6 +28,9 @@
   'cmd-alt-o': 'dartlang:organize-directives'
   'shift-cmd-g': 'dartlang:find-references'
 
+# '.tree-view span[data-path]':
+#   'cmd-r': 'dartlang:run-application'
+
 # Dart editor commands (windows and linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
   'ctrl-r': 'dartlang:run-application'

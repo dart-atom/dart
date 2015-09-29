@@ -121,6 +121,8 @@ class _LaunchController implements Disposable {
     _updateButtons();
 
     output = new CoreElement('pre', classes: 'console-line');
+    // Allow the text in the console to be selected.
+    output.element.tabIndex = -1;
 
     subs.add(launch.onStdout.listen((str) => _emitText(str)));
     subs.add(launch.onStderr.listen((str) => _emitText(str, true)));
@@ -139,7 +141,7 @@ class _LaunchController implements Disposable {
     container.toggleClass('launch-terminated', true);
 
     if (!_lastText.endsWith('\n')) _emitText('\n');
-    _emitBadge('- exit ${launch.exitCode} -', launch.errored ? 'error' : 'info');
+    _emitBadge('exit ${launch.exitCode}', launch.errored ? 'error' : 'info');
   }
 
   void deactivate() {

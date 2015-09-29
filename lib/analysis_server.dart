@@ -272,6 +272,19 @@ class AnalysisServer implements Disposable {
   Future<TypeHierarchyResult> getTypeHierarchy(String path, int offset) =>
       server.search.getTypeHierarchy(path, offset);
 
+  /// Return whether the given file is executable. This means it has a `main()`
+  /// method and does not import `dart:html`;
+  bool isExecutable(String path) {
+    return _server._executables.contains(path);
+  }
+
+  /// Returns all the executables for the given project path.
+  List<String> getExecutablesFor(String projectPath) {
+    return _server._executables
+        .where((path) => path.startsWith(projectPath))
+        .toList();
+  }
+
   /// If an analysis server is running, terminate it.
   void shutdown() {
     if (_server != null) _server.kill();
@@ -382,6 +395,7 @@ class _AnalysisServerWrapper extends Server {
   bool analyzing = false;
   StreamController _analyzingController = new StreamController.broadcast();
   StreamController<int> _disposedController = new StreamController.broadcast();
+  Set<String> _executables = new Set();
 
   _AnalysisServerWrapper(this.process, this._processCompleter,
       Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage) {
@@ -393,15 +407,27 @@ class _AnalysisServerWrapper extends Server {
 
   void setup() {
     server.setSubscriptions(['STATUS']);
+
+    _executables.clear();
+    execution.setSubscriptions(['LAUNCH_DATA']);
+
     // TODO: Remove once 1.12.0 is shipped as stable.
     analysis.updateOptions(new AnalysisOptions(
       enableNullAwareOperators: true
     ));
+
     server.getVersion().then((v) => _logger.info('version ${v.version}'));
     server.onStatus.listen((ServerStatus status) {
       if (status.analysis != null) {
         analyzing = status.analysis.isAnalyzing;
         _analyzingController.add(analyzing);
+      }
+    });
+    execution.onLaunchData.listen((ExecutionLaunchData data) {
+      if (data.kind == 'SERVER') {
+        _executables.add(data.file);
+      } else {
+        _executables.remove(data.file);
       }
     });
   }

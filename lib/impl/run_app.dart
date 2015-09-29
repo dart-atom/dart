@@ -47,6 +47,8 @@ class RunApplicationJob extends Job {
   bool get quiet => true;
 
   Future run() async {
+    // TODO: Look for already created launch configs for the path.
+
     LaunchType launchType = launchManager.getHandlerFor(path);
 
     if (launchType == null) {

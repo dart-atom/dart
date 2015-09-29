@@ -17,22 +17,34 @@ class CliLaunchType extends LaunchType {
   CliLaunchType() : super('cli');
 
   bool canLaunch(String path) {
-    // TODO: Fix this - this is a hack.
     if (!path.endsWith('.dart')) return false;
 
-    File file = new File.fromPath(path);
-    if (file.existsSync()) {
+    DartProject project = projectManager.getProjectFor(path);
+
+    if (project == null) {
+      File file = new File.fromPath(path);
+      if (!file.existsSync()) return false;
+
       String contents = file.readSync();
       return contents.contains('main(');
-    }
+    } else {
+      // Check that the file is not in lib/.
+      String relativePath = relativize(project.path, path);
+      if (relativePath.startsWith('lib${separator}')) return false;
 
-    return false;
+      return analysisServer.isExecutable(path);
+    }
   }
 
   List<String> getLaunchablesFor(DartProject project) {
-    // TODO:
+    final String libSuffix = 'lib${separator}';
 
-    return [];
+    return analysisServer.getExecutablesFor(project.path).where((path) {
+      // Check that the file is not in lib/.
+      String relativePath = relativize(project.path, path);
+      if (relativePath.startsWith(libSuffix)) return false;
+      return true;
+    }).toList();
   }
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
