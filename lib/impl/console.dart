@@ -39,8 +39,6 @@ class ConsoleController implements Disposable {
   }
 }
 
-// TODO: Close button somewhere?
-
 class ConsoleView extends AtomView {
   static bool get autoShowConsole => atom.config.getValue('${pluginId}.autoShowConsole');
 
@@ -85,7 +83,9 @@ class ConsoleView extends AtomView {
   }
 
   void _launchRemoved(Launch launch) {
-    _controllers.remove(launch).dispose();
+    final _LaunchController controller = _controllers.remove(launch);
+    controller.dispose();
+    if (controller == _activeController) _activeController = null;
 
     if (_controllers.isEmpty && isVisible()) hide();
   }
@@ -99,27 +99,30 @@ class _LaunchController implements Disposable {
   final Launch launch;
 
   CoreElement container;
-  CoreElement title;
   CoreElement buttons;
   CoreElement output;
   StreamSubscriptions subs = new StreamSubscriptions();
+
+  String _lastText = '';
 
   _LaunchController(this.view, this.launch) {
     view.tabsElement.add([
       container = div(c: 'badge process-tab')..add([
         span(text: launch.launchType.type),
         span(text: ' • '),
-        title = span(text: launch.title),
+        span(text: launch.title),
         span(text: ' • '),
         buttons = div(c: 'run-buttons')
       ])
     ]);
-    title.click(() => launch.manager.setActiveLaunch(launch));
+    container.click(() => launch.manager.setActiveLaunch(launch));
 
     _updateToggles();
     _updateButtons();
 
     output = new CoreElement('pre', classes: 'console-line');
+    // Allow the text in the console to be selected.
+    output.element.tabIndex = -1;
 
     subs.add(launch.onStdout.listen((str) => _emitText(str)));
     subs.add(launch.onStderr.listen((str) => _emitText(str, true)));
@@ -136,10 +139,9 @@ class _LaunchController implements Disposable {
     _updateButtons();
 
     container.toggleClass('launch-terminated', true);
-    title.text = '${launch.title} [${launch.exitCode}]';
 
-    _emitText('\n');
-    _emitBadge('exit code ${launch.exitCode}', launch.errored ? 'error' : 'info');
+    if (!_lastText.endsWith('\n')) _emitText('\n');
+    _emitBadge('exit ${launch.exitCode}', launch.errored ? 'error' : 'info');
   }
 
   void deactivate() {
@@ -198,6 +200,8 @@ class _LaunchController implements Disposable {
   }
 
   void _emitText(String str, [bool error = false]) {
+    _lastText = str;
+
     CoreElement e = output.add(span(text: str));
     if (error) e.toggleClass('console-error');
 
@@ -252,7 +256,7 @@ class ConsoleStatusElement implements Disposable {
 
     _element.click(parent._toggleView);
 
-    statusTile = statusBar.addRightTile(item: _element.element, priority: 200);
+    statusTile = statusBar.addLeftTile(item: _element.element, priority: -99);
 
     if (!isShowing()) {
       _element.element.style.display = 'none';

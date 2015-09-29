@@ -4,6 +4,7 @@ library atom.launch;
 import 'dart:async';
 
 import 'atom.dart';
+import 'projects.dart';
 import 'utils.dart';
 
 class LaunchManager implements Disposable {
@@ -11,6 +12,8 @@ class LaunchManager implements Disposable {
   StreamController<Launch> _launchActivated = new StreamController.broadcast();
   StreamController<Launch> _launchTerminated = new StreamController.broadcast();
   StreamController<Launch> _launchRemoved = new StreamController.broadcast();
+
+  List<LaunchType> launchTypes = [];
 
   Launch _activeLaunch;
   final List<Launch> _launches = [];
@@ -45,6 +48,13 @@ class LaunchManager implements Disposable {
     if (activated) _launchActivated.add(launch);
   }
 
+  void setActiveLaunch(Launch launch) {
+    if (launch != _activeLaunch) {
+      _activeLaunch = launch;
+      _launchActivated.add(_activeLaunch);
+    }
+  }
+
   void removeLaunch(Launch launch) {
     _launches.remove(launch);
     bool activeChanged = false;
@@ -58,17 +68,24 @@ class LaunchManager implements Disposable {
     if (activeChanged) _launchActivated.add(_activeLaunch);
   }
 
-  void setActiveLaunch(Launch launch) {
-    if (launch != _activeLaunch) {
-      _activeLaunch = launch;
-      _launchActivated.add(_activeLaunch);
-    }
-  }
-
   Stream<Launch> get onLaunchAdded => _launchAdded.stream;
   Stream<Launch> get onLaunchActivated => _launchActivated.stream;
   Stream<Launch> get onLaunchTerminated => _launchTerminated.stream;
   Stream<Launch> get onLaunchRemoved => _launchRemoved.stream;
+
+  void registerLaunchType(LaunchType type) {
+    launchTypes.remove(type);
+    launchTypes.add(type);
+  }
+
+  /// Get the best launch handler for the given resource; return `null`
+  /// otherwise.
+  LaunchType getHandlerFor(String path) {
+    for (LaunchType type in launchTypes) {
+      if (type.canLaunch(path)) return type;
+    }
+    return null;
+  }
 
   void dispose() {
     for (Launch launch in _launches.toList()) {
@@ -77,23 +94,67 @@ class LaunchManager implements Disposable {
   }
 }
 
-class LaunchType {
-  static const CLI = 'cli';
-  static const SHELL = 'shell';
-  static const FLUTTER = 'flutter';
-  static const WEB = 'web';
-
+/// A general type of launch, like a command-line launch or a web launch.
+abstract class LaunchType {
   final String type;
 
   LaunchType(this.type);
 
+  bool canLaunch(String path);
+
+  List<String> getLaunchablesFor(DartProject project);
+
+  LaunchConfiguration createConfiguration(String path) {
+    return new LaunchConfiguration(this, primaryResource: path);
+  }
+
+  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration);
+
   operator== (obj) => obj is LaunchType && obj.type == type;
-
   int get hashCode => type.hashCode;
-
   String toString() => type;
 }
 
+// TODO: Make this persistable.
+
+/// A configuration for a particular launch type.
+class LaunchConfiguration {
+  LaunchType launchType;
+  Map<String, String> _config = {};
+
+  LaunchConfiguration(this.launchType, {String primaryResource}) {
+    if (primaryResource != null) this.primaryResource = primaryResource;
+  }
+
+  LaunchConfiguration.from(Map<String, String> m) {
+    for (String key in m.keys) {
+      _config[key] = m[key];
+    }
+  }
+
+  String get cwd => _config['cwd'];
+  set cwd(String value) {
+    _config['cwd'] = value;
+  }
+
+  String get primaryResource => _config['primary'];
+  set primaryResource(String value) {
+    _config['primary'] = value;
+  }
+
+  String get args => _config['args'];
+  set args(String value) {
+    _config['args'] = value;
+  }
+
+  List<String> get argsAsList {
+    String str = args;
+    // TODO: Handle args wrapped by quotes.
+    return str == null ? null : str.split(' ');
+  }
+}
+
+/// The instantiation of something that was launched.
 class Launch implements Disposable {
   static int _id = 0;
 
@@ -158,5 +219,5 @@ class Launch implements Disposable {
     }
   }
 
-  String toString() => '${launchType}-${id}: ${title}';
+  String toString() => '${launchType}: ${title}';
 }

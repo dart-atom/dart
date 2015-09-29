@@ -1034,13 +1034,18 @@ class BufferedProcess extends ProxyHolder {
       void stderr(String str),
       void exit(num code),
       String cwd,
-      Map<String, String> env}) {
+      Map<String, String> env,
+      Function onWillThrowError}) {
     Map options = {'command': command};
 
     if (args != null) options['args'] = args;
     if (stdout != null) options['stdout'] = stdout;
     if (stderr != null) options['stderr'] = stderr;
     if (exit != null) options['exit'] = exit;
+    if (onWillThrowError != null) options['onWillThrowError'] = (JsObject e) {
+      e.callMethod('handle');
+      onWillThrowError(e['error']);
+    };
 
     if (cwd != null || env != null) {
       Map nodeOptions = {};

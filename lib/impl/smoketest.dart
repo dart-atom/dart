@@ -16,6 +16,7 @@ import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
 import '../utils.dart';
+import 'cli_launch.dart';
 
 void smokeTest() {
   // panels
@@ -95,8 +96,7 @@ void smokeTest() {
   // });
 
   // launches
-  Launch launch = new Launch(new LaunchType(LaunchType.CLI),
-      'launch_test.sh', launchManager);
+  Launch launch = new Launch(new CliLaunchType(), 'launch_test.sh', launchManager);
   launchManager.addLaunch(launch);
   new Timer(new Duration(seconds: 12), () => launch.launchTerminated(0));
 

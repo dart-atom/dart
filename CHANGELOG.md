@@ -2,6 +2,9 @@
 
 ## unreleased
 - fixed an style / clipping issue in the problems view
+- added the ability to launch Dart command-line apps (cmd-R / ctrl-R)
+- the `run flutter application` is now just `run application` - it automatically
+  determines the application type to run
 
 ## 0.4.7
 - filtered 'potential' edits from rename refactorings
