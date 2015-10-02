@@ -16,6 +16,7 @@ import '../views.dart';
 final String _keyPath = '${pluginId}.showOutlineView';
 
 // TODO: Have a scroll sync button: <span class='badge icon icon-diff-renamed'>
+
 // TODO: Or, scroll-sync to the document automatically.
 
 class OutlineController implements Disposable {
@@ -75,6 +76,8 @@ class OutlineView implements Disposable {
 
   html.Element root;
   CoreElement content;
+  CoreElement fileType;
+  CoreElement title;
   ListTreeBuilder treeBuilder;
   AnalysisOutline lastOutline;
   StreamSubscriptions subs = new StreamSubscriptions();
@@ -94,13 +97,14 @@ class OutlineView implements Disposable {
   void _install() {
     if (content != null) return;
 
-    String title = basename(editor.getPath());
-
     ViewResizer resizer;
 
     content = div(c: 'outline-view source')..add([
       div(c: 'title-container')..add([
-        div(text: title, c: 'title-text'),
+        div(c: 'title-text')..add([
+          fileType = span(c: 'keyword'),
+          title = span()
+        ]),
         div(c: 'close-button')..click(controller._close)
       ]),
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
@@ -161,6 +165,18 @@ class OutlineView implements Disposable {
     if (treeBuilder == null) return;
 
     if (data.file == editor.getPath()) {
+      // Update the title.
+      if (data.libraryName == null) {
+        fileType.text = '';
+        title.text = basename(editor.getPath());
+      } else if (data.kind == 'PART') {
+        fileType.text = 'part of ';
+        title.text = data.libraryName;
+      } else {
+        fileType.text = 'library ';
+        title.text = data.libraryName;
+      }
+
       treeBuilder.clear();
 
       List nodes = data.outline.children ?? [];
@@ -257,12 +273,12 @@ class OutlineView implements Disposable {
 
     String name = e.name;
 
-    // if (e.kind == 'CLASS') span.classes.addAll(['support', 'class']);
-    // if (e.kind == 'CONSTRUCTOR') span.classes.addAll(['support', 'class']);
-    // if (e.kind == 'FUNCTION' || e.kind == 'METHOD' || e.kind == 'GETTER' ||
-    //     e.kind == 'SETTER') {
-    //   span.classes.addAll(['entity', 'name', 'function']);
-    // }
+    if (e.kind == 'CLASS') span.classes.addAll(['support', 'class']);
+    if (e.kind == 'CONSTRUCTOR') span.classes.addAll(['support', 'class']);
+    if (e.kind == 'FUNCTION' || e.kind == 'METHOD' || e.kind == 'GETTER' ||
+        e.kind == 'SETTER') {
+      span.classes.addAll(['entity', 'name', 'function']);
+    }
 
     if (e.parameters != null) {
       String str = e.parameters.length > 2 ? '(…)' : '()';
