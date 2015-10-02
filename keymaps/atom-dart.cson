@@ -16,26 +16,25 @@
   'ctrl-1': 'dartlang:quick-fix'
   'alt-enter': 'dartlang:quick-fix'
   'f1': 'dartlang:show-dartdoc'
-  'f3': 'dartlang:jump-to-declaration'
   'f4': 'dartlang:type-hierarchy'
   'alt-shift-r': 'dartlang:refactor-rename'
   'enter': 'dartlang:newline'
 
 # Dart editor commands (mac)
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
+  'f3': 'dartlang:jump-to-declaration'
+  'cmd-f4': 'dartlang:find-references'
   'cmd-r': 'dartlang:run-application-configuration'
   'cmd-shift-r': 'dartlang:run-application'
   'cmd-alt-b': 'dartlang:dart-format'
   'cmd-alt-o': 'dartlang:organize-directives'
-  'shift-cmd-g': 'dartlang:find-references'
-
-# '.tree-view span[data-path]':
-#   'cmd-r': 'dartlang:run-application'
+  'alt-cmd-down': 'dartlang:jump-to-declaration'
 
 # Dart editor commands (windows and linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'ctrl-r': 'dartlang:run-apapplicationp-configuration'
+  'ctrl-f4': 'dartlang:find-references'
+  'ctrl-r': 'dartlang:run-application-configuration'
   'ctrl-shift-r': 'dartlang:run-application'
   'ctrl-alt-b': 'dartlang:dart-format'
   'ctrl-alt-o': 'dartlang:organize-directives'
-  'ctrl-shift-g': 'dartlang:find-references'
+  'ctrl-alt-down': 'dartlang:jump-to-declaration'
