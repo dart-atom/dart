@@ -6,7 +6,7 @@
 library atom;
 
 import 'dart:async';
-import 'dart:html' hide Directory, File, Notification, Point;
+import 'dart:html' hide File, Notification, Point;
 import 'dart:js';
 
 import 'package:logging/logging.dart';
