@@ -22643,7 +22643,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_captured_timer_0",
       call$1: [function(suggestions) {
         var t1 = J.getInterceptor$asx(suggestions);
-        $.$get$_logger17().fine$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this._captured_timer_0.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
+        $.$get$_logger18().fine$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this._captured_timer_0.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
         return J.toList$0$ax(t1.map$1(suggestions, new X.AutocompleteProvider__getSuggestions__closure()));
       }, null, null, 2, 0, null, 80, "call"]
     },
@@ -22772,7 +22772,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = J.getInterceptor$asx(suggestion);
         requiredImport = t1.$index(suggestion, "requiredImport");
         if (requiredImport != null)
-          $.$get$_logger16().info$1("TODO: add an import for " + H.S(requiredImport));
+          $.$get$_logger17().info$1("TODO: add an import for " + H.S(requiredImport));
         selectionOffset = t1.$index(suggestion, "selectionOffset");
         if (selectionOffset != null)
           editor.invoke$2("setCursorBufferPosition", new E.Point(E._cvt(new E.TextBuffer(E._cvt(editor.invoke$1("getBuffer"))).invoke$2("positionForCharacterIndex", selectionOffset))));
@@ -23197,14 +23197,14 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       t1 = $.$get$atom();
       lastVersion = t1._config.getValue$1("_dartlang._version");
       if (!J.$eq$(lastVersion, currentVersion)) {
-        $.$get$_logger15().info$1("upgraded from " + H.S(lastVersion) + " to " + H.S(currentVersion));
+        $.$get$_logger16().info$1("upgraded from " + H.S(lastVersion) + " to " + H.S(currentVersion));
         t1._config.invoke$3("set", "_dartlang._version", currentVersion);
         if (lastVersion != null) {
           t1 = t1._notifications;
           t1.invoke$3("addSuccess", "Upgraded to dartlang plugin version " + H.S(currentVersion) + ".", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         }
       } else
-        $.$get$_logger15().info$1("dartlang version " + H.S(currentVersion));
+        $.$get$_logger16().info$1("dartlang version " + H.S(currentVersion));
     }, "call$1", "changelog___checkChangelog$closure", 2, 0, 11, 100],
     ChangelogManager: {
       "^": "Object;disposables,_changeLogFile",
@@ -23869,7 +23869,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         E.trackCommand("return-from-declaration");
         t1 = this._history;
         t2 = t1.length;
-        if (t2 !== 0) {
+        if (t2 === 0) {
+          $.$get$atom().invoke$1("beep");
+          $.$get$_logger10().info$1("No navigation positions on the stack.");
+        } else {
           if (0 >= t2)
             return H.ioore(t1, -1);
           pos = t1.pop();
@@ -25409,7 +25412,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       },
       schedule$1: function(job) {
         var t1, t2;
-        $.$get$_logger14().fine$1("scheduling job " + H.S(job.get$name(job)));
+        $.$get$_logger15().fine$1("scheduling job " + H.S(job.get$name(job)));
         t1 = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
         this._jobs.push(new S.JobInstance(this, job, t1, false));
         this._checkForRunnableJobs$0();
@@ -25447,7 +25450,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       _exec$1: function(jobInstance) {
         var job, current, t1;
         job = jobInstance.get$job();
-        $.$get$_logger14().fine$1("starting job " + H.S(job.get$name(job)));
+        $.$get$_logger15().fine$1("starting job " + H.S(job.get$name(job)));
         jobInstance.set$_running(true);
         current = this.get$activeJob();
         t1 = this._lastNotifiedJob;
@@ -25512,7 +25515,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1, t2;
         t1 = this._jobs$_captured_this_3;
         t2 = this._captured_jobInstance_4;
-        $.$get$_logger14().fine$1("finished job " + H.S(J.get$name$x(t2)));
+        $.$get$_logger15().fine$1("finished job " + H.S(J.get$name$x(t2)));
         t2.set$_running(false);
         C.JSArray_methods.remove$1(t1._jobs, t2);
         t1._checkForRunnableJobs$0();
@@ -25841,7 +25844,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t1 = t1.super$Iterable$where(t1, new X.LaunchManager__readConfigs_closure0());
           t1 = P.List_List$from(t1, true, H.getRuntimeTypeArgument(t1, "Iterable", 0));
           this._configs = t1;
-          $.$get$_logger11().info$1("Restored " + H.S(t1) + " launch configurations.");
+          $.$get$_logger12().info$1("Restored " + H.S(t1) + " launch configurations.");
         } else {
           t1.$indexSet(0, "launchConfigs", []);
           this._configs = [];
@@ -25910,7 +25913,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e = t1;
-          $.$get$_logger11().warning$2("Error restoring launch config", e);
+          $.$get$_logger12().warning$2("Error restoring launch config", e);
           return;
         }
       }, null, null, 2, 0, null, 69, "call"]
@@ -27284,7 +27287,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
       },
       dispose$0: [function() {
-        $.$get$_logger12().fine$1("dispose()");
+        $.$get$_logger13().fine$1("dispose()");
         this._projects$_sub.cancel$0();
         var t1 = this._directoryListeners;
         t1.get$values(t1).forEach$1(0, new L.ProjectManager_dispose_closure());
@@ -27303,7 +27306,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           dir = t2._collection$_current;
           if (!allDirs.contains$1(0, dir)) {
             C.JSArray_methods._removeWhere$2(t1, new L.ProjectManager__fullScanForProjects_closure0(dir), true);
-            $.$get$_logger12().info$1("removed project " + H.S(dir));
+            $.$get$_logger13().info$1("removed project " + H.S(dir));
             changed = true;
           }
         }
@@ -27314,7 +27317,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
         C.JSArray_methods.addAll$1(t1, H.setRuntimeTypeInfo(new H.EfficientLengthMappedIterable(newDirs, new L.ProjectManager__fullScanForProjects_closure2()), [H.getTypeArgumentByIndex(newDirs, 0), null]));
         if (changed) {
-          $.$get$_logger12().fine$1(H.S(t1));
+          $.$get$_logger13().fine$1(H.S(t1));
           t2 = this._projects$_controller;
           if (!t2.get$_mayAddEvent())
             H.throwExpression(t2._addEventError$0());
@@ -27456,7 +27459,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     ProjectManager__fullScanForProjects_closure1: {
       "^": "Closure:0;",
       call$1: function(dir) {
-        return $.$get$_logger12().info$1("added project " + H.S(dir));
+        return $.$get$_logger13().info$1("added project " + H.S(dir));
       }
     },
     ProjectManager__fullScanForProjects_closure2: {
@@ -28592,7 +28595,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var config, launchType, project, t1, displayPath;
         config = this._newest$1(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getConfigurationsForPath$1(path));
         if (config != null) {
-          $.$get$_logger10().fine$1("Using existing launch config for '" + H.S(path) + "'.");
+          $.$get$_logger11().fine$1("Using existing launch config for '" + H.S(path) + "'.");
           this._run$1(config);
           return;
         }
@@ -28600,7 +28603,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (launchType != null) {
           config = launchType.createConfiguration$1(path);
           Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).createConfiguration$1(config);
-          $.$get$_logger10().fine$1("Creating new launch config for '" + H.S(path) + "'.");
+          $.$get$_logger11().fine$1("Creating new launch config for '" + H.S(path) + "'.");
           this._run$1(config);
           return;
         }
@@ -28609,7 +28612,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (!t1) {
           config = this._newest$1(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getConfigurationsForProject$1(project));
           if (config != null) {
-            $.$get$_logger10().fine$1("Using recent launch config '" + H.S(config) + "'.");
+            $.$get$_logger11().fine$1("Using recent launch config '" + H.S(config) + "'.");
             this._run$1(config);
             return;
           }
@@ -28619,7 +28622,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1.invoke$3("addWarning", "Unable to locate a suitable execution handler for file " + H.S(displayPath) + ".", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
       },
       _run$1: function(config) {
-        $.$get$_logger10().info$1("Launching '" + H.S(config) + "'.");
+        $.$get$_logger11().info$1("Launching '" + H.S(config) + "'.");
         config.touch$0();
         Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getLaunchType$1(config.get$launchType()).performLaunch$2(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK), config).catchError$1(new T.RunApplicationManager__run_closure(config));
       },
@@ -28858,7 +28861,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t1.invoke$3("addSuccess", "Dart SDK found at " + H.S(J.$index$asx(this._sdk$_box_0._captured_sdk_0.directory.obj, "path")) + ". Version " + H.S(version) + ".", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         }
         t1 = this._sdk$_captured_this_1;
-        $.$get$_logger13().info$1("version " + H.S(version) + " (" + H.S(J.$index$asx(t1._sdk.directory.obj, "path")) + ")");
+        $.$get$_logger14().info$1("version " + H.S(version) + " (" + H.S(J.$index$asx(t1._sdk.directory.obj, "path")) + ")");
         t1._verifyMinVersion$1(version);
       }, null, null, 2, 0, null, 29, "call"]
     },
@@ -44805,9 +44808,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     return $.$get$isWindows() !== true && $.$get$isMac() !== true;
   }, "separator", "$get$separator", "separator", function() {
     return $.$get$isWindows() === true ? "\\" : "/";
-  }, "_logger17", "$get$_logger17", "_logger", function() {
+  }, "_logger18", "$get$_logger18", "_logger", function() {
     return N.Logger_Logger("atom.autocomplete");
-  }, "_logger16", "$get$_logger16", "_logger", function() {
+  }, "_logger17", "$get$_logger17", "_logger", function() {
     return N.Logger_Logger("autocomplete");
   }, "DartAutocompleteProvider__suggestionKindMap", "$get$DartAutocompleteProvider__suggestionKindMap", "_suggestionKindMap", function() {
     return P.LinkedHashMap__makeLiteral(["IMPORT", "import", "KEYWORD", "keyword", "PARAMETER", "property", "NAMED_ARGUMENT", "property"]);
@@ -44819,8 +44822,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     return P.LinkedHashSet_LinkedHashSet$from(["for ()"], null);
   }, "_logger2", "$get$_logger2", "_logger", function() {
     return N.Logger_Logger("atom.buffer_observer");
-  }, "_logger15", "$get$_logger15", "_logger", function() {
+  }, "_logger16", "$get$_logger16", "_logger", function() {
     return N.Logger_Logger("changelog");
+  }, "_logger10", "$get$_logger10", "_logger", function() {
+    return N.Logger_Logger("declaration_nav");
   }, "_logger4", "$get$_logger4", "_logger", function() {
     return N.Logger_Logger("editing");
   }, "_flashDuration", "$get$_flashDuration", "_flashDuration", function() {
@@ -44829,7 +44834,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     return N.Logger_Logger("error_repository");
   }, "_logger1", "$get$_logger1", "_logger", function() {
     return N.Logger_Logger("formatting");
-  }, "_logger14", "$get$_logger14", "_logger", function() {
+  }, "_logger15", "$get$_logger15", "_logger", function() {
     return N.Logger_Logger("jobs");
   }, "_browserWindow", "$get$_browserWindow", "_browserWindow", function() {
     return P.JsObject_JsObject$fromBrowserObject(J.$index$asx($.$get$context(), "window"));
@@ -44837,7 +44842,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     return J.$index$asx($.$get$_browserWindow(), "JSON");
   }, "_logger3", "$get$_logger3", "_logger", function() {
     return N.Logger_Logger("js");
-  }, "_logger11", "$get$_logger11", "_logger", function() {
+  }, "_logger12", "$get$_logger12", "_logger", function() {
     return N.Logger_Logger("atom.launch");
   }, "_severityMap", "$get$_severityMap", "_severityMap", function() {
     return P.LinkedHashMap__makeLiteral(["ERROR", "Error", "WARNING", "Warning", "INFO", "Info"]);
@@ -44847,7 +44852,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     return N.Logger_Logger("plugin");
   }, "_logger5", "$get$_logger5", "_logger", function() {
     return N.Logger_Logger("process");
-  }, "_logger12", "$get$_logger12", "_logger", function() {
+  }, "_logger13", "$get$_logger13", "_logger", function() {
     return N.Logger_Logger("projects");
   }, "FindReferencesView__cachePrefix", "$get$FindReferencesView__cachePrefix", "_cachePrefix", function() {
     var t1 = $.$get$separator();
@@ -44858,11 +44863,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   }, "FindReferencesView__libPrefix", "$get$FindReferencesView__libPrefix", "_libPrefix", function() {
     var t1 = $.$get$separator();
     return t1 + "lib" + t1;
-  }, "_logger10", "$get$_logger10", "_logger", function() {
+  }, "_logger11", "$get$_logger11", "_logger", function() {
     return N.Logger_Logger("atom.run_app");
   }, "_minSdkVersion", "$get$_minSdkVersion", "_minSdkVersion", function() {
     return T.Version_Version$parse("1.12.0");
-  }, "_logger13", "$get$_logger13", "_logger", function() {
+  }, "_logger14", "$get$_logger14", "_logger", function() {
     return N.Logger_Logger("sdk");
   }, "state", "$get$state", "state", function() {
     return new K.State(P.LinkedHashMap__makeEmpty(), P.LinkedHashMap__makeEmpty());

@@ -17,9 +17,6 @@ import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('declaration_nav');
 
-// TODO: Switch over to something link nuclide-click-to-symbol when that's
-// available as a platform API.
-
 class NavigationHelper implements Disposable {
   Disposables _commands = new Disposables();
   AnalysisNavigation _lastNavInfo;
@@ -106,7 +103,10 @@ class NavigationHelper implements Disposable {
   void _handleNavigateReturn(_) {
     trackCommand('return-from-declaration');
 
-    if (_history.isNotEmpty) {
+    if (_history.isEmpty) {
+      _beep();
+      _logger.info('No navigation positions on the stack.');
+    } else {
       _NavigationPosition pos = _history.removeLast();
       editorManager.jumpToLocation(pos.path, pos.line, pos.column, pos.length);
     }
