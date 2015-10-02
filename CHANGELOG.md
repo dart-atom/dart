@@ -8,6 +8,7 @@
 - added a setting to enable analysis for DEP 34 - less restricted mixins.
 - changed the outline view style _back_ to using much of the syntax highlighting
   from the current editor theme (at 0.75 opacity)
+- fixed an issue with the `linter` plugin where info level issues were named `Trace`
 
 ## 0.4.7
 - filtered 'potential' edits from rename refactorings

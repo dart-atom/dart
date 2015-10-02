@@ -71,14 +71,13 @@ class LinterService extends ProxyHolder {
 class LintMessage {
   static const String ERROR = 'Error';
   static const String WARNING = 'Warning';
-  static const String INFO = 'Trace';
+  static const String INFO = 'Info';
 
   final String type;
   final String text;
   final String html;
   final String filePath;
   final Rn range;
-  // TODO: trace: ?array<Trace>
 
   LintMessage({this.type, this.text, this.html, this.filePath, this.range});
 

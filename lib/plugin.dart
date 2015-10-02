@@ -100,6 +100,7 @@ class AtomDartPackage extends AtomPackage {
   void packageActivated([Map inState]) {
     _setupLogging();
     _logger.info("activated");
+    _logger.fine("Running on Chrome version ${chromeVersion}.");
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
 

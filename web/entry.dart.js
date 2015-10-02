@@ -26624,7 +26624,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       packageActivated$1: [function(inState) {
         var t1, t2, t3, t4, pubManager, runAppManager, treeItems;
         this._setupLogging$0();
-        $.$get$_logger().info$1("activated");
+        t1 = $.$get$_logger();
+        t1.info$1("activated");
+        t1.fine$1("Running on Chrome version " + H.S(J.$index$asx(J.$index$asx($.$get$_process(), "versions"), "chrome")) + ".");
         if (Q.Dependencies_instance() == null)
           $.Dependencies__global = new Q.Dependencies(P.LinkedHashMap__makeEmpty());
         t1 = $.$get$state();
@@ -44781,7 +44783,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   }, "_logger11", "$get$_logger11", "_logger", function() {
     return N.Logger_Logger("atom.launch");
   }, "_severityMap", "$get$_severityMap", "_severityMap", function() {
-    return P.LinkedHashMap__makeLiteral(["ERROR", "Error", "WARNING", "Warning", "INFO", "Trace"]);
+    return P.LinkedHashMap__makeLiteral(["ERROR", "Error", "WARNING", "Warning", "INFO", "Info"]);
   }, "_processedErrorsController", "$get$_processedErrorsController", "_processedErrorsController", function() {
     return P.StreamController_StreamController$broadcast(null, null, false, null);
   }, "_logger", "$get$_logger", "_logger", function() {
