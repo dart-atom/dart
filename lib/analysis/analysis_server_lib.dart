@@ -8,10 +8,12 @@ import 'dart:convert' show JSON, JsonCodec;
 
 import 'package:logging/logging.dart';
 
-final Logger _logger = new Logger('analysis_server_lib');
-
 /// @optional
 const String optional = 'optional';
+
+final Logger _logger = new Logger('analysis_server_lib');
+
+const String _version = '1.10.0';
 
 class Server {
   StreamSubscription _streamSub;
@@ -414,12 +416,15 @@ class AnalysisOccurrences {
 
 class AnalysisOutline {
   static AnalysisOutline parse(Map m) =>
-      new AnalysisOutline(m['file'], Outline.parse(m['outline']));
+      new AnalysisOutline(m['file'], m['kind'], Outline.parse(m['outline']),
+          libraryName: m['libraryName']);
 
   final String file;
+  final String kind;
   final Outline outline;
+  @optional final String libraryName;
 
-  AnalysisOutline(this.file, this.outline);
+  AnalysisOutline(this.file, this.kind, this.outline, {this.libraryName});
 }
 
 class AnalysisOverrides {
