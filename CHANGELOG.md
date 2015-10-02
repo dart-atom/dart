@@ -1,14 +1,14 @@
 # dartlang plugin changelog
 
 ## unreleased
-- fixed an style / clipping issue in the problems view
 - added the ability to launch Dart command-line apps (cmd-R / ctrl-R)
 - the `run flutter application` is now just `run application` - it automatically
   determines the application type to run
-- added a setting to enable analysis for DEP 34 - less restricted mixins.
 - changed the outline view style _back_ to using much of the syntax highlighting
   from the current editor theme (at 0.75 opacity)
+- added a setting to enable analysis for DEP 34 - less restricted mixins.
 - fixed an issue with the `linter` plugin where info level issues were named `Trace`
+- fixed an style / clipping issue in the problems view
 
 ## 0.4.7
 - filtered 'potential' edits from rename refactorings

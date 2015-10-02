@@ -9,11 +9,11 @@ import 'package:logging/logging.dart';
 
 main() {
   Logger.root.level = Level.WARNING;
-  Logger.root.onRecord.listen(_print);
+  Logger.root.onRecord.listen((LogRecord r) {
+    String tag = '${r.level.name.toLowerCase()} • ${r.loggerName} •';
+    print('${tag} ${r.message}');
+    if (r.error != null) print('${tag}   ${r.error}');
+  });
 
   registerPackage(new AtomDartPackage());
-}
-
-void _print(LogRecord record) {
-  print(record.error == null ? '${record}' : '${record}: ${record.error}');
 }
