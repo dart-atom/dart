@@ -20,8 +20,8 @@ class ConsoleController implements Disposable {
     view = new ConsoleView();
     statusElement = new ConsoleStatusElement(this, false);
 
-    disposables.add(atom.commands
-        .add('atom-workspace', '${pluginId}:toggle-console', (_) {
+    disposables.add(atom.commands.add(
+        'atom-workspace', '${pluginId}:toggle-console', (_) {
       _toggleView();
     }));
   }
@@ -49,8 +49,6 @@ class ConsoleView extends AtomView {
 
   ConsoleView() : super('Console', classes: 'console-view dartlang', prefName: 'Console',
       rightPanel: false, showTitle: false) {
-    //root.toggleClass('tree-view', false);
-
     content..add([
       div(c: 'console-title-area')..add([
         tabsElement = div(c: 'console-tabs')

@@ -19,9 +19,7 @@ part "publish.dart";
 main(List args) => grind(args);
 
 @Task()
-analyze() {
-  new PubApp.global('tuneup').run(['check']);
-}
+analyze() => new PubApp.global('tuneup').run(['check']);
 
 @DefaultTask()
 build() {
@@ -55,8 +53,7 @@ ddc() {
 test() => new PubApp.local('test').run(['-rexpanded']);
 
 // TODO: remove the `ddc` dep task for now - stream transformers make it unhappy.
-@Task()
-@Depends(analyze, build, test)
+@Task() @Depends(analyze, build, test)
 bot() => null;
 
 @Task()
