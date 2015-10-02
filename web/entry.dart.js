@@ -29789,7 +29789,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_captured_version_1",
       call$1: [function(value) {
         var t1, t2, str, t3, screenWidth, screenHeight;
-        if (J.$eq$(C.JSString_methods.startsWith$1("UA-000000-0", "UA-0000") ? false : value, true)) {
+        if (J.$eq$(C.JSString_methods.startsWith$1("UA-26406144-22", "UA-0000") ? false : value, true)) {
           t1 = this._captured_version_1;
           t2 = new V.HtmlPersistentProperties(null, "dartlang");
           str = window.localStorage.getItem("dartlang");
@@ -29797,7 +29797,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t3 = new Z.ThrottlingBucket(20, null, null);
           t3.drops = 20;
           t3._lastReplenish = Date.now();
-          t3 = new L.AnalyticsHtml("UA-000000-0", t2, new V.HtmlPostHandler(null), t3, P.LinkedHashMap__makeEmpty(), [], null);
+          t3 = new L.AnalyticsHtml("UA-26406144-22", t2, new V.HtmlPostHandler(null), t3, P.LinkedHashMap__makeEmpty(), [], null);
           t3.setSessionValue$2("an", "dartlang");
           if (t1 != null)
             t3.setSessionValue$2("av", t1);

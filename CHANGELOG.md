@@ -9,6 +9,10 @@
 - added a setting to enable analysis for DEP 34 - less restricted mixins.
 - fixed an issue with the `linter` plugin where info level issues were named `Trace`
 - fixed an style / clipping issue in the problems view
+- new and updated keybindings! Why the changes? So many, many conflicts on
+  various platforms. The latest is: `f4` is `type hierarchy`, `ctrl-f4` (or
+  `cmd-f4) is `find references`, and `ctrl-alt-down` (or `alt-cmd-down`) is
+  `jump to declaration`.
 
 ## 0.4.7
 - filtered 'potential' edits from rename refactorings
