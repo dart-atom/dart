@@ -3,9 +3,15 @@ library atom.launch;
 
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import 'atom.dart';
+import 'atom_utils.dart';
 import 'projects.dart';
+import 'state.dart';
 import 'utils.dart';
+
+final Logger _logger = new Logger('atom.launch');
 
 class LaunchManager implements Disposable {
   StreamController<Launch> _launchAdded = new StreamController.broadcast(sync: true);
@@ -18,7 +24,11 @@ class LaunchManager implements Disposable {
   Launch _activeLaunch;
   final List<Launch> _launches = [];
 
-  LaunchManager();
+  List<LaunchConfiguration> _configs;
+
+  LaunchManager() {
+    _readConfigs();
+  }
 
   Launch get activeLaunch => _activeLaunch;
 
@@ -78,6 +88,8 @@ class LaunchManager implements Disposable {
     launchTypes.add(type);
   }
 
+  List<String> getLaunchTypes() => launchTypes.map((l) => l.type).toList()..sort();
+
   /// Get the best launch handler for the given resource; return `null`
   /// otherwise.
   LaunchType getHandlerFor(String path) {
@@ -85,6 +97,62 @@ class LaunchManager implements Disposable {
       if (type.canLaunch(path)) return type;
     }
     return null;
+  }
+
+  LaunchType getLaunchType(String typeCode) {
+    for (LaunchType type in launchTypes) {
+      if (type.type == typeCode) return type;
+    }
+    return null;
+  }
+
+  void _readConfigs() {
+    var savedConfigs = state['launchConfigs'];
+
+    // TODO: This is not being restored as a List.
+    if (savedConfigs is List) {
+      _configs = savedConfigs.map((Map json) {
+        try {
+          return new LaunchConfiguration.from(json);
+        } catch (e) {
+          _logger.warning('Error restoring launch config', e);
+          return null;
+        }
+      }).where((config) => config != null).toList();
+
+      _logger.info('Restored ${_configs} launch configurations.');
+    } else {
+      state['launchConfigs'] = [];
+      _configs = [];
+    }
+  }
+
+  void createConfiguration(LaunchConfiguration config) {
+    _configs.add(config);
+    (state['launchConfigs'] as List).add(config.getStorableMap());
+  }
+
+  List<LaunchConfiguration> getAllConfigurations() => _configs;
+
+  List<LaunchConfiguration> getConfigurationsForPath(String path) {
+    return _configs.where((LaunchConfiguration config) {
+      return config.primaryResource == path;
+    }).toList();
+  }
+
+  List<LaunchConfiguration> getConfigurationsForProject(DartProject project) {
+    String path = '${project.path}${separator}';
+
+    return _configs.where((LaunchConfiguration config) {
+      String r = config.primaryResource;
+      return r != null && r.startsWith(path);
+    }).toList();
+  }
+
+  void deleteConfiguration(LaunchConfiguration config) {
+    if (_configs.remove(config)) {
+      (state['launchConfigs'] as List).remove(config.getStorableMap());
+    }
   }
 
   void dispose() {
@@ -115,22 +183,19 @@ abstract class LaunchType {
   String toString() => type;
 }
 
-// TODO: Make this persistable.
-
 /// A configuration for a particular launch type.
 class LaunchConfiguration {
-  LaunchType launchType;
-  Map<String, String> _config = {};
+  Map<String, dynamic> _config = {};
 
-  LaunchConfiguration(this.launchType, {String primaryResource}) {
+  LaunchConfiguration(LaunchType launchType, {String primaryResource}) {
+    if (launchType != null) _config['launchType'] = launchType.type;
     if (primaryResource != null) this.primaryResource = primaryResource;
+    touch();
   }
 
-  LaunchConfiguration.from(Map<String, String> m) {
-    for (String key in m.keys) {
-      _config[key] = m[key];
-    }
-  }
+  LaunchConfiguration.from(this._config);
+
+  String get launchType => _config['launchType'];
 
   String get cwd => _config['cwd'];
   set cwd(String value) {
@@ -152,6 +217,19 @@ class LaunchConfiguration {
     // TODO: Handle args wrapped by quotes.
     return str == null ? null : str.split(' ');
   }
+
+  /// Used when persisting the `LaunchConfiguration`.
+  Map getStorableMap() => _config;
+
+  /// Update the timestamp for this launch configuration.
+  void touch() {
+    _config['timestamp'] = new DateTime.now().millisecondsSinceEpoch;
+  }
+
+  /// Get the last launch time.
+  int get timestamp => _config['timestamp'];
+
+  String toString() => primaryResource;
 }
 
 /// The instantiation of something that was launched.

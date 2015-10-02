@@ -1,11 +1,8 @@
 library atom.run_app;
 
-import 'dart:async';
-
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
-import '../jobs.dart';
 import '../launch.dart';
 import '../projects.dart';
 import '../state.dart';
@@ -13,20 +10,46 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('atom.run_app');
 
+// TODO: auto-show console; auto-hide problems
+
+// cmd-R, on exact match:
+// -get existing launch config
+// -create new one
+// -launch it
+
+// cmd-R, no exact match:
+// -get existing project configs
+// -launch last one
+// -or, show a dialog to launch available project apps
+
 class RunApplicationManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
 
   RunApplicationManager() {
-    disposables.add(atom.commands.add(
-        '.tree-view', 'dartlang:run-application', (AtomEvent event) {
-      event.stopImmediatePropagation();
-      new RunApplicationJob(event.targetFilePath).schedule();
-    }));
-    disposables.add(atom.commands.add(
-        'atom-text-editor', 'dartlang:run-application', (AtomEvent event) {
+    var stop = (AtomEvent event) {
       event.stopImmediatePropagation();
       event.preventDefault();
-      new RunApplicationJob(event.editor.getPath()).schedule();
+    };
+
+    disposables.add(atom.commands.add(
+        '.tree-view', 'dartlang:run-application', (event) {
+      stop(event);
+      _handleFastRunCommand(event.targetFilePath);
+    }));
+    disposables.add(atom.commands.add(
+        'atom-text-editor', 'dartlang:run-application', (event) {
+      stop(event);
+      _handleFastRunCommand(event.editor.getPath());
+    }));
+    disposables.add(atom.commands.add(
+        '.tree-view', 'dartlang:run-application-configuration', (event) {
+      stop(event);
+      _handleRunConfigCommand(event.targetFilePath);
+    }));
+    disposables.add(atom.commands.add(
+        'atom-text-editor', 'dartlang:run-application-configuration', (event) {
+      stop(event);
+      _handleRunConfigCommand(event.editor.getPath());
     }));
   }
 
@@ -34,29 +57,89 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
   List<ContextMenuItem> getTreeViewContributions() {
     return [
-      new RunAppContextCommand('Run Application', 'dartlang:run-application')
+      new RunAppContextCommand('Run Application', 'dartlang:run-application'),
+      new RunAppContextCommand('Run App Configuration…', 'dartlang:run-application-configuration')
     ];
   }
-}
 
-class RunApplicationJob extends Job {
-  final String path;
+  void _handleFastRunCommand(String path) {
+    LaunchConfiguration config = _getConfigFor(path);
 
-  RunApplicationJob(this.path) : super('Launching application');
-
-  bool get quiet => true;
-
-  Future run() async {
-    // TODO: Look for already created launch configs for the path.
+    // Look for already created launch configs for the path.
+    if (config != null) {
+      _logger.fine("Using existing launch config for '${path}'.");
+      _run(config);
+      return;
+    }
 
     LaunchType launchType = launchManager.getHandlerFor(path);
 
-    if (launchType == null) {
-      return new Future.error("Unable to locate a suitable handler to run '${path}'.");
-    } else {
-      LaunchConfiguration configuration = launchType.createConfiguration(path);
-      return launchType.performLaunch(launchManager, configuration);
+    if (launchType != null) {
+      LaunchConfiguration config = _createConfig(launchType, path);
+      _logger.fine("Creating new launch config for '${path}'.");
+      _run(config);
+      return;
     }
+
+    DartProject project = projectManager.getProjectFor(path);
+
+    if (project != null) {
+      // Look for the last launched config for the project; run it.
+      config = _newest(launchManager.getConfigurationsForProject(project));
+
+      if (config != null) {
+        _logger.fine("Using recent launch config '${config}'.");
+        _run(config);
+        return;
+      }
+    }
+
+    String displayPath = project == null ? path : project.getRelative(path);
+    atom.notifications.addWarning(
+        'Unable to locate a suitable execution handler for file ${displayPath}.');
+
+    // TODO: Else, open the config editing dialog?
+
+  }
+
+  void _run(LaunchConfiguration config) {
+    _logger.info("Launching '${config}'.");
+    config.touch();
+
+    LaunchType launchType = launchManager.getLaunchType(config.launchType);
+    launchType.performLaunch(launchManager, config).catchError((e) {
+      atom.notifications.addError(
+          "Error running '${config.primaryResource}'.",
+          detail: '${e}');
+    });
+  }
+
+  void _handleRunConfigCommand(String path) {
+    // TODO: Show an inline config editor.
+
+    _handleFastRunCommand(path);
+  }
+
+  LaunchConfiguration _getConfigFor(String path) {
+    return _newest(launchManager.getConfigurationsForPath(path));
+  }
+
+  LaunchConfiguration _createConfig(LaunchType launchType, String path) {
+    LaunchConfiguration config = launchType.createConfiguration(path);
+    launchManager.createConfiguration(config);
+    return config;
+  }
+
+  LaunchConfiguration _newest(List<LaunchConfiguration> configs) {
+    if (configs.isEmpty) return null;
+
+    LaunchConfiguration config = configs.first;
+
+    for (LaunchConfiguration c in configs) {
+      if (c.timestamp > config.timestamp) config = c;
+    }
+
+    return config;
   }
 }
 

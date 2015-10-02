@@ -43,7 +43,6 @@ import 'impl/run_app.dart';
 import 'impl/shell_launch.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
-import 'impl/web_launch.dart';
 import 'jobs.dart';
 import 'launch.dart';
 import 'linter.dart' show DartLinterConsumer;
@@ -396,7 +395,7 @@ class AtomDartPackage extends AtomPackage {
     FlutterLaunchType.register(launchManager);
     CliLaunchType.register(launchManager);
     ShellLaunchType.register(launchManager);
-    WebLaunchType.register(launchManager);
+    //WebLaunchType.register(launchManager);
   }
 
   void _registerLinter() {

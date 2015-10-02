@@ -8,15 +8,13 @@ import '../launch.dart';
 import '../process.dart';
 import '../projects.dart';
 
-// TODO: .bat files
-
 class ShellLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
       manager.registerLaunchType(new ShellLaunchType());
 
   ShellLaunchType() : super('shell');
 
-  bool canLaunch(String path) => path.endsWith('.sh');
+  bool canLaunch(String path) => path.endsWith('.sh') || path.endsWith('.bat');
 
   List<String> getLaunchablesFor(DartProject project) => [];
 

@@ -304,6 +304,8 @@ class DartProject {
 
   bool contains(String path) => directory.contains(path);
 
+  String getRelative(String p) => relativize(path, p);
+
   bool isDirectoryExplicitlyExcluded(String path) {
     return _options.getIgnoredDirectories().contains(path);
   }
