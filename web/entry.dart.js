@@ -2274,9 +2274,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.AnalysisNavigation_parse_closure0[1];
     AnalysisNavigation_parse_closure0.prototype = $desc;
     AnalysisNavigation_parse_closure0.$__fields__ = [];
-    function AnalysisOutline(file, outline) {
+    function AnalysisOutline(file, kind, outline, libraryName) {
       this.file = file;
+      this.kind = kind;
       this.outline = outline;
+      this.libraryName = libraryName;
       this.$deferredAction();
     }
     AnalysisOutline.builtin$cls = "AnalysisOutline";
@@ -2284,12 +2286,18 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       AnalysisOutline.name = "AnalysisOutline";
     $desc = $collectedClasses$.AnalysisOutline[1];
     AnalysisOutline.prototype = $desc;
-    AnalysisOutline.$__fields__ = ["file", "outline"];
+    AnalysisOutline.$__fields__ = ["file", "kind", "outline", "libraryName"];
     AnalysisOutline.prototype.get$file = function() {
       return this.file;
     };
+    AnalysisOutline.prototype.get$kind = function(receiver) {
+      return this.kind;
+    };
     AnalysisOutline.prototype.get$outline = function(receiver) {
       return this.outline;
+    };
+    AnalysisOutline.prototype.get$libraryName = function() {
+      return this.libraryName;
     };
     function HoverResult(hovers) {
       this.hovers = hovers;
@@ -5509,11 +5517,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.OutlineController_closure1[1];
     OutlineController_closure1.prototype = $desc;
     OutlineController_closure1.$__fields__ = ["_outline$_captured_this_2"];
-    function OutlineView(controller, editor, root, content, treeBuilder, lastOutline, subs) {
+    function OutlineView(controller, editor, root, content, fileType, title, treeBuilder, lastOutline, subs) {
       this.controller = controller;
       this.editor = editor;
       this.root = root;
       this.content = content;
+      this.fileType = fileType;
+      this.title = title;
       this.treeBuilder = treeBuilder;
       this.lastOutline = lastOutline;
       this.subs = subs;
@@ -5524,7 +5534,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       OutlineView.name = "OutlineView";
     $desc = $collectedClasses$.OutlineView[1];
     OutlineView.prototype = $desc;
-    OutlineView.$__fields__ = ["controller", "editor", "root", "content", "treeBuilder", "lastOutline", "subs"];
+    OutlineView.$__fields__ = ["controller", "editor", "root", "content", "fileType", "title", "treeBuilder", "lastOutline", "subs"];
+    OutlineView.prototype.get$title = function(receiver) {
+      return this.title;
+    };
     function OutlineView_closure(_outline$_captured_this_0) {
       this._outline$_captured_this_0 = _outline$_captured_this_0;
       this.$deferredAction();
@@ -21786,10 +21799,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 4, "call"]
     },
     AnalysisOutline: {
-      "^": "Object;file<,outline>",
+      "^": "Object;file<,kind>,outline>,libraryName<",
       static: {AnalysisOutline_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
-          return new E.AnalysisOutline(t1.$index(m, "file"), E.Outline_parse(t1.$index(m, "outline")));
+          return new E.AnalysisOutline(t1.$index(m, "file"), t1.$index(m, "kind"), E.Outline_parse(t1.$index(m, "outline")), t1.$index(m, "libraryName"));
         }, "call$1", "analysis_server_lib_AnalysisOutline_parse$closure", 2, 0, 100, 5]}
     },
     HoverResult: {
@@ -26320,35 +26333,39 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     OutlineView: {
-      "^": "Object;controller,editor,root,content,treeBuilder,lastOutline,subs",
+      "^": "Object;controller,editor,root,content,fileType,title>,treeBuilder,lastOutline,subs",
       _install$0: function() {
-        var title, t1, t2, t3, t4, t5, t6, t7, resizer;
+        var t1, t2, t3, t4, t5, t6, t7, resizer;
         if (this.content != null)
           return;
-        title = S.basename(this.editor.invoke$1("getPath"));
         t1 = K.CoreElement$("div", null, "outline-view source", null);
         t2 = K.CoreElement$("div", null, "title-container", null);
-        t3 = K.CoreElement$("div", null, "title-text", title);
-        t4 = K.CoreElement$("div", null, "close-button", null);
-        t4.click$1(0, this.controller.get$_outline$_close());
-        t2.add$1(0, [t3, t4]);
-        t4 = this.get$_outline$_render();
+        t3 = K.CoreElement$("div", null, "title-text", null);
+        t4 = K.CoreElement$("span", null, "keyword", null);
+        this.fileType = t4;
+        t5 = K.CoreElement$("span", null, null, null);
+        this.title = t5;
+        t3.add$1(0, [t4, t5]);
+        t5 = K.CoreElement$("div", null, "close-button", null);
+        t5.click$1(0, this.controller.get$_outline$_close());
+        t2.add$1(0, [t3, t5]);
+        t5 = this.get$_outline$_render();
         t3 = P.StreamController_StreamController$broadcast(null, null, false, null);
-        t5 = P.StreamController_StreamController$broadcast(null, null, false, null);
+        t4 = P.StreamController_StreamController$broadcast(null, null, false, null);
         t6 = P.LinkedHashMap__makeEmpty();
         t7 = W._ElementFactoryProvider_createElement_tag("div", null);
-        t6 = new T.ListTreeBuilder(t3, t5, t4, false, [], [], t6, "tree-selected", t7);
+        t6 = new T.ListTreeBuilder(t3, t4, t5, false, [], [], t6, "tree-selected", t7);
         t6.CoreElement$4$attributes$classes$text("div", null, "list-tree has-collapsable-children", null);
-        t4 = J.getInterceptor$x(t7);
-        t4.get$classes(t7).toggle$2(0, "outline-tree", null);
-        t4.get$classes(t7).toggle$2(0, "selection", null);
+        t5 = J.getInterceptor$x(t7);
+        t5.get$classes(t7).toggle$2(0, "outline-tree", null);
+        t5.get$classes(t7).toggle$2(0, "selection", null);
         this.treeBuilder = t6;
         t7 = P.StreamController_StreamController$broadcast(null, null, false, null);
-        t4 = H.setRuntimeTypeInfo(new P.Point0(0, 0), [null]);
-        t5 = W._ElementFactoryProvider_createElement_tag("div", null);
-        resizer = new T.ViewResizer(t7, t4, null, null, t5);
+        t5 = H.setRuntimeTypeInfo(new P.Point0(0, 0), [null]);
+        t4 = W._ElementFactoryProvider_createElement_tag("div", null);
+        resizer = new T.ViewResizer(t7, t5, null, null, t4);
         resizer.CoreElement$4$attributes$classes$text("div", null, null, null);
-        J.get$attributes$x(t5).remove$1(0, "horizontal");
+        J.get$attributes$x(t4).remove$1(0, "horizontal");
         resizer.attribute$1("vertical");
         resizer._views$_init$0();
         t1.add$1(0, [t2, t6, resizer]);
@@ -26395,12 +26412,32 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       },
       _handleOutline$1: [function(data) {
-        var t1, nodes, t2, node, t3;
+        var t1, t2, t3, nodes, node;
         this.lastOutline = data;
         if (this.treeBuilder == null)
           return;
         t1 = this.editor;
         if (J.$eq$(data.get$file(), t1.invoke$1("getPath"))) {
+          if (data.get$libraryName() == null) {
+            J.set$text$x(this.fileType.element, "");
+            t2 = this.title;
+            t3 = S.basename(t1.invoke$1("getPath"));
+            J.set$text$x(t2.element, t3);
+          } else {
+            t2 = J.$eq$(J.get$kind$x(data), "PART");
+            t3 = this.fileType;
+            if (t2) {
+              J.set$text$x(t3.element, "part of ");
+              t2 = this.title;
+              t3 = data.get$libraryName();
+              J.set$text$x(t2.element, t3);
+            } else {
+              J.set$text$x(t3.element, "library ");
+              t2 = this.title;
+              t3 = data.get$libraryName();
+              J.set$text$x(t2.element, t3);
+            }
+          }
           this.treeBuilder.clear$0(0);
           nodes = J.get$children$x(J.get$outline$x(data));
           for (t2 = J.get$iterator$ax(nodes == null ? [] : nodes); t2.moveNext$0();) {
@@ -26499,6 +26536,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t2 = J.getInterceptor$x(intoElement);
         J.add$1$ax(t2.get$children(intoElement), span);
         $name = t1.get$name(e);
+        if (J.$eq$(t1.get$kind(e), "CLASS"))
+          J.get$classes$x(span).addAll$1(0, ["support", "class"]);
+        if (J.$eq$(t1.get$kind(e), "CONSTRUCTOR"))
+          J.get$classes$x(span).addAll$1(0, ["support", "class"]);
+        if (J.$eq$(t1.get$kind(e), "FUNCTION") || J.$eq$(t1.get$kind(e), "METHOD") || J.$eq$(t1.get$kind(e), "GETTER") || J.$eq$(t1.get$kind(e), "SETTER"))
+          J.get$classes$x(span).addAll$1(0, ["entity", "name", "function"]);
         if (e.get$parameters() != null)
           $name = J.$add$ns($name, J.$gt$n(J.get$length$asx(e.get$parameters()), 2) === true ? "(\u2026)" : "()");
         span.textContent = $name;
@@ -26543,7 +26586,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       },
       $isDisposable: 1,
       static: {OutlineView$: function(controller, editor) {
-          var t1 = new A.OutlineView(controller, editor, null, null, null, null, new G.StreamSubscriptions([]));
+          var t1 = new A.OutlineView(controller, editor, null, null, null, null, null, null, new G.StreamSubscriptions([]));
           t1.OutlineView$2(controller, editor);
           return t1;
         }}

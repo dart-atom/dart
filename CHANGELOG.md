@@ -6,6 +6,8 @@
 - the `run flutter application` is now just `run application` - it automatically
   determines the application type to run
 - added a setting to enable analysis for DEP 34 - less restricted mixins.
+- changed the outline view style _back_ to using much of the syntax highlighting
+  from the current editor theme (on 0.75 opacity)
 
 ## 0.4.7
 - filtered 'potential' edits from rename refactorings

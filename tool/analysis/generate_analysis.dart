@@ -4,8 +4,8 @@ library generate_analysis_lib;
 import 'dart:collection' show LinkedHashMap;
 import 'dart:io';
 
-import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
+import 'package:html/parser.dart' show parse;
 
 import '../src/src_gen.dart';
 
@@ -16,10 +16,11 @@ main(List<String> args) {
   File file = new File('tool/analysis/spec_input.html');
   Document document = parse(file.readAsStringSync());
   print('Parsed ${file.path}.');
+  Element ver = document.body.querySelector('version');
   List<Element> domains = document.body.getElementsByTagName('domain');
   List<Element> typedefs = document.body.getElementsByTagName('types')
       .first.getElementsByTagName('type');
-  api = new Api();
+  api = new Api(ver.text);
   api.parse(domains, typedefs);
 
   // Generate code from the model.
@@ -31,10 +32,12 @@ main(List<String> args) {
 }
 
 class Api {
+  final String version;
+
   List<Domain> domains;
   List<TypeDef> typedefs;
 
-  Api();
+  Api(this.version);
 
   void parse(List<Element> domainElements, List<Element> typeElements) {
     typedefs = typeElements.map((element) => new TypeDef(element)).toList();
@@ -51,6 +54,8 @@ class Api {
 
   void generate(DartGenerator gen) {
     gen.out(_headerCode);
+    gen.writeln("const String _version = '${version}';");
+    gen.writeln();
     gen.writeStatement('class Server {');
     gen.writeStatement('StreamSubscription _streamSub;');
     gen.writeStatement('Function _writeMessage;');
@@ -289,6 +294,7 @@ class Notification {
         .getElementsByTagName('field')
         .map((field) => new Field(field))
         .toList();
+    fields.sort();
   }
 
   String get title => '${domain.name}.${event}';
@@ -339,7 +345,7 @@ class Notification {
   }
 }
 
-class Field {
+class Field implements Comparable {
   String name;
   bool optional;
   Type type;
@@ -353,6 +359,13 @@ class Field {
   void setCallParam() => type.setCallParam();
 
   String toString() => name;
+
+  int compareTo(other) {
+    if (other is! Field) return 0;
+    if (!optional && other.optional) return -1;
+    if (optional && !other.optional) return 1;
+    return 0;
+  }
 }
 
 class TypeDef {
@@ -620,10 +633,10 @@ import 'dart:convert' show JSON, JsonCodec;
 
 import 'package:logging/logging.dart';
 
-final Logger _logger = new Logger('analysis_server_lib');
-
 /// @optional
 const String optional = 'optional';
+
+final Logger _logger = new Logger('analysis_server_lib');
 
 ''';
 
