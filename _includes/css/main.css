@@ -47,6 +47,7 @@ pre code {
   display: block;
   font-size: 100%;
   white-space: inherit;
+  word-wrap: normal;
 }
 
 pre {
