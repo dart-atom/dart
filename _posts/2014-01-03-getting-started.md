@@ -101,18 +101,17 @@ When looking at source code, you can get more information about a class, method,
 or variable by placing the cursor on that symbol and hitting `F1`. The dartdoc
 information for that element will be displayed.
 
-Command or option-clicking on an element, or hitting `F3`, will jump to its
-definition. To jump back, hit `cmd-option-up` (or `ctrl-alt-up`), or run the
-command `'return-from-declaration'`.
+Command or option-clicking on an element, or hitting `ctrl-alt-down`, will jump
+to its definition. To jump back, hit `cmd-option-up` (or `ctrl-alt-up`).
 
 You can toggle on and off a structural outline view of the current Dart file by
 executing the command `'toggle outline view'`.
 
-In order to find all the places where an element if referenced, right click on
+In order to find all the places where an element is referenced, right click on
 that element and select the menu item `Find References`. You can also use the
-key binding `shift-cmd-g`. The results will be displayed in a view on the right;
+key binding `ctrl-f4`. The results will be displayed in a view on the right;
 clicking on a result will jump to the associated source location. The results
-view can be closed via the close button or by hitting the escape key twice.
+view can be closed via the close button (or by hitting the escape key twice).
 
 To view the type hierarchy of a class, hit `F4` or right click on the class and
 choose `Type Hierarchy`.

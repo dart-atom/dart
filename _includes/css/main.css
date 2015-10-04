@@ -46,6 +46,7 @@ pre code {
   background: none;
   display: block;
   font-size: 100%;
+  white-space: inherit;
 }
 
 pre {
@@ -53,8 +54,8 @@ pre {
   margin: 20px 5%;
   padding: 4px 8px;
   background: rgba(255,255,255,0.1);
-  word-wrap: break-word;
   border-radius: 4px;
+  overflow-x: auto;
 }
 
 .highlighttable { margin:20px 5%; }
