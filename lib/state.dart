@@ -15,6 +15,8 @@ import 'launch.dart';
 import 'projects.dart';
 import 'sdk.dart';
 
+export 'dependencies.dart' show deps;
+
 final String pluginId = 'dartlang';
 
 AnalysisServer get analysisServer => deps[AnalysisServer];

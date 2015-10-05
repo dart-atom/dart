@@ -9,6 +9,7 @@ import '../analysis/analysis_server_lib.dart' hide Element;
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../atom_utils.dart';
+import '../analysis/quick_fixes.dart';
 import '../elements.dart';
 import '../linter.dart';
 import '../state.dart';
@@ -213,9 +214,31 @@ class ErrorsView extends AtomView {
         ', line ${error.location.startLine}';
 
     CoreElement item = div(c: 'errors-item')..add([
-      span(text: error.severity.toLowerCase(), c: 'badge badge-flexible${type}'),
+      span(text: error.severity.toLowerCase(),
+          c: 'badge badge-flexible${type} error-type')
+    ]);
+
+    if (error.hasFix != null && error.hasFix) {
+      CoreElement quickfix = item.add(div(c: 'icon-tools quick-fix'));
+      quickfix.click(() {
+        _jumpTo(error.location).then((TextEditor editor) {
+          // Show the quick fix menu.
+          QuickFixHelper helper = deps[QuickFixHelper];
+          helper.displayQuickFixes(editor);
+
+          // Show a toast with the keybinding (one time).
+          if (state['_quickFixBindings'] != true) {
+            atom.notifications.addInfo(
+              'Show quick fixes using `ctrl-1` or `alt-enter`.');
+            state['_quickFixBindings'] = true;
+          }
+        });
+      });
+    }
+
+    item.add([
       span(text: error.message),
-      new CoreElement('a', text: locationText, classes: 'text-muted'),
+      new CoreElement('a', text: locationText, classes: 'text-muted')
     ]);
 
     item.click(() => _jumpTo(error.location));
@@ -223,7 +246,7 @@ class ErrorsView extends AtomView {
     return item.element;
   }
 
-  void _jumpTo(Location location) {
+  Future<TextEditor> _jumpTo(Location location) {
     Map options = {
       'initialLine': location.startLine,
       'initialColumn': location.startColumn,
@@ -232,15 +255,19 @@ class ErrorsView extends AtomView {
 
     // If we're editing the target file, then use the current editor.
     var ed = atom.workspace.getActiveTextEditor();
-    if (ed != null && ed.getPath() == location.file) options['searchAllPanes'] = false;
+    if (ed != null && ed.getPath() == location.file) {
+      options['searchAllPanes'] = false;
+    }
 
-    atom.workspace.open(location.file, options: options).then((TextEditor editor) {
+    return atom.workspace.open(location.file, options: options).then(
+        (TextEditor editor) {
       // Select offset to length.
       TextBuffer buffer = editor.getBuffer();
       editor.setSelectedBufferRange(new Range.fromPoints(
         buffer.positionForCharacterIndex(location.offset),
         buffer.positionForCharacterIndex(location.offset + location.length)
       ));
+      return editor;
     });
   }
 }

@@ -361,13 +361,24 @@ status-bar .dartlang .badge {
     text-overflow: ellipsis;
     overflow-x: hidden;
 
-    .badge {
+    .error-type {
       border-radius: 2px;
     }
 
     span,
     a {
       margin: 3px;
+    }
+
+    .quick-fix {
+      cursor: pointer;
+      display: inline-block;
+      margin-left: 5px;
+      margin-right: 0;
+    }
+
+    .quick-fix.icon-tools::before {
+      font-size: 1.2em;
     }
   }
 }
