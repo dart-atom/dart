@@ -3,7 +3,11 @@
   "main": "./web/entry.dart.js",
   "version": "0.4.8",
   "description": "A Dart plugin for Atom.",
-  "keywords": [],
+  "keywords": [
+    "dart",
+    "dartlang",
+    "flutter"
+  ],
   "repository": "https://github.com/dart-atom/dartlang",
   "license": "BSD",
   "engines": {
