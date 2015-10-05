@@ -133,7 +133,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
     disposables.add(new TypeHierarchyHelper());
-    disposables.add(new QuickFixHelper());
+    disposables.add(deps[QuickFixHelper] = new QuickFixHelper());
     disposables.add(consoleController = new ConsoleController());
 
     disposables.add(new UsageManager());

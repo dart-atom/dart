@@ -13,7 +13,7 @@ const String optional = 'optional';
 
 final Logger _logger = new Logger('analysis_server_lib');
 
-const String _version = '1.10.0';
+const String _version = '1.11.0';
 
 class Server {
   StreamSubscription _streamSub;
@@ -873,7 +873,7 @@ class AnalysisError {
     if (m == null) return null;
     return new AnalysisError(
         m['severity'], m['type'], Location.parse(m['location']), m['message'],
-        correction: m['correction']);
+        correction: m['correction'], hasFix: m['hasFix']);
   }
 
   final String severity;
@@ -881,16 +881,18 @@ class AnalysisError {
   final Location location;
   final String message;
   @optional final String correction;
+  @optional final bool hasFix;
 
   AnalysisError(this.severity, this.type, this.location, this.message,
-      {this.correction});
+      {this.correction, this.hasFix});
 
   operator ==(o) => o is AnalysisError &&
       severity == o.severity &&
       type == o.type &&
       location == o.location &&
       message == o.message &&
-      correction == o.correction;
+      correction == o.correction &&
+      hasFix == o.hasFix;
 
   get hashCode =>
       severity.hashCode ^ type.hashCode ^ location.hashCode ^ message.hashCode;

@@ -20,13 +20,17 @@ class QuickFixHelper implements Disposable {
 
   QuickFixHelper() {
     disposables.add(atom.commands.add('atom-text-editor',
-        'dartlang:quick-fix', (event) => _handleQuickFix(event)));
+        'dartlang:quick-fix', (event) => _handleQuickFix(event.editor)));
   }
+
+  /// Open the list of available quick fixes for the given editor at the current
+  /// location. The editor should be visible and active.
+  void displayQuickFixes(TextEditor editor) =>
+      _handleQuickFix(editor, autoFix: false);
 
   void dispose() => disposables.dispose();
 
-  void _handleQuickFix(AtomEvent event) {
-    TextEditor editor = event.editor;
+  void _handleQuickFix(TextEditor editor, {bool autoFix: true}) {
     String path = editor.getPath();
     Range range = editor.getSelectedBufferRange();
     int offset = editor.getBuffer().characterIndexForPosition(range.start);
@@ -34,14 +38,14 @@ class QuickFixHelper implements Disposable {
     Job job = new AnalysisRequestJob('quick fix', () {
       return analysisServer.getFixes(path, offset).then((FixesResult result) {
         if (result == null) return;
-
-        _handleFixesResult(result, editor);
+        _handleFixesResult(result, editor, autoFix: autoFix);
       });
     });
     job.schedule();
   }
 
-  void _handleFixesResult(FixesResult result, TextEditor editor) {
+  void _handleFixesResult(FixesResult result, TextEditor editor,
+      {bool autoFix: true}) {
     List<AnalysisErrorFixes> fixes = result.fixes;
 
     if (fixes.isEmpty) {
@@ -53,7 +57,7 @@ class QuickFixHelper implements Disposable {
       .expand((fix) => fix.fixes.map((c) => new _Change(fix.error, c)))
       .toList();
 
-    if (changes.length == 1) {
+    if (autoFix && changes.length == 1) {
       // Apply the fix.
       _applyChange(editor, changes.first.change);
     } else {
