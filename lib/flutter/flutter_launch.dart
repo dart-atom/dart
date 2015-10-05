@@ -35,7 +35,7 @@ class FlutterLaunchType extends LaunchType {
     return file.existsSync() ? [file.path] : [];
   }
 
-  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) async {
+  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
     String path = configuration.primaryResource;
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return new Future.error("File not in a Dart project.");
@@ -48,15 +48,17 @@ class FlutterLaunchType extends LaunchType {
           "did you import the 'sky' package into your project?");
     }
 
-    // If this is the first time we've launched an app this session, ensure
-    // that the sky server isn't already running (and potentially serving an
-    // older) app. Also, if we're launching a different application.
+    // If this is the first time we've launched an app this session, ensure that
+    // the sky server isn't already running (and potentially serving an older)
+    // app. Also, if we're launching a different application.
+    Future f = new Future.value();
+
     if (_lastRunProject != project.path) {
       _lastRunProject = project.path;
-      await _skyToolStop(project);
+      f = _skyToolStop(project);
     }
 
-    return new _LaunchInstance(this, project).launch();
+    return f.then((_) => new _LaunchInstance(this, project).launch());
   }
 }
 

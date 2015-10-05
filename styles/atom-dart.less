@@ -237,7 +237,10 @@ div.linter-tab.active {
 
 /* type hierarchy */
 .type-hierarchy {
-
+  div.list-item > span,
+  li.list-item > span {
+    cursor: pointer;
+  }
 }
 
 .hierarchy-abstract {
@@ -274,6 +277,10 @@ div.linter-tab.active {
 
   .search-result {
     white-space: pre;
+  }
+
+  .search-result > span {
+    cursor: pointer;
   }
 
   .result-line {
