@@ -205,6 +205,8 @@ class Sdk {
 
   String get path => directory.path;
 
+  String get binPath => join(path, 'bin');
+
   Future<String> getVersion() {
     File file = directory.getFile('version');
     if (file.existsSync()) {

@@ -13,8 +13,7 @@ class FlutterLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
       manager.registerLaunchType(new FlutterLaunchType());
 
-  /// The last Flutter app run.
-  String _lastRunProject;
+  _LaunchInstance _lastLaunch;
 
   FlutterLaunchType() : super('flutter');
 
@@ -48,63 +47,68 @@ class FlutterLaunchType extends LaunchType {
           "did you import the 'sky' package into your project?");
     }
 
-    // If this is the first time we've launched an app this session, ensure that
-    // the sky server isn't already running (and potentially serving an older)
-    // app. Also, if we're launching a different application.
-    Future f = new Future.value();
+    // Ensure that the sky server isn't already running and potentially serving
+    // an older (or different) app.
+    return _skyToolStop(project).then((_) {
+      if (_lastLaunch == null) return null;
 
-    if (_lastRunProject != project.path) {
-      _lastRunProject = project.path;
-      f = _skyToolStop(project);
-    }
-
-    return f.then((_) => new _LaunchInstance(this, project).launch());
+      Launch launch = _lastLaunch._launch;
+      return launch.isTerminated ? null : launch.kill();
+    }).then((_) {
+      _lastLaunch = new _LaunchInstance(project, this);
+      return _lastLaunch.launch();
+    });
   }
 }
 
 class _LaunchInstance {
-  final LaunchType launchType;
   final DartProject project;
 
+  Launch _launch;
   ProcessRunner _runner;
 
-  _LaunchInstance(this.launchType, this.project);
-
-  Future<Launch> launch() {
-    // Chain together both 'sky_tool start' and 'sky_tool logs'.
-    _runner = _skyTool(project, ['start']);
-
-    Launch launch = new Launch(
+  _LaunchInstance(this.project, LaunchType launchType) {
+    _launch = new Launch(
         launchType,
         'lib${separator}main.dart',
         launchManager,
-        killHandler: () => _runner.kill());
-    launch.servicePort = 8181;
-    launchManager.addLaunch(launch);
+        killHandler: _kill);
+    _launch.servicePort = 8181;
+  }
+
+  Future<Launch> launch() {
+    // Chain together both 'sky_tool start' and 'sky_tool logs'.
+    _runner = _skyTool(project, ['start']); //, '--poke']);
+
+    launchManager.addLaunch(_launch);
 
     _runner.execStreaming();
-    _runner.onStdout.listen((str) => launch.pipeStdout(str));
-    _runner.onStderr.listen((str) => launch.pipeStderr(str));
+    _runner.onStdout.listen((str) => _launch.pipeStdout(str));
+    _runner.onStderr.listen((str) => _launch.pipeStderr(str));
 
-    launch.pipeStdout('[${_runner.cwd}] ${_runner.getDescription()}\n');
+    _launch.pipeStdout('[${_runner.cwd}] ${_runner.getDescription()}\n');
 
-    return _runner.onExit.then((code) {
+    // TODO: Hack - `sky_tool start` is not terminating when launched from Atom.
+    Future f = _runner.onExit.timeout(new Duration(seconds: 2), onTimeout: () => 0);
+    return f.then((code) {
       _runner = null;
 
       if (code == 0) {
         // Chain 'sky_tool logs'.
         _runner = _skyTool(project, ['logs', '--clear']);
         _runner.execStreaming();
-        _runner.onStdout.listen((str) => launch.pipeStdout(str));
-        _runner.onStderr.listen((str) => launch.pipeStderr(str));
+        _runner.onStdout.listen((str) => _launch.pipeStdout(str));
+        _runner.onStderr.listen((str) => _launch.pipeStderr(str));
 
         // Don't return the future here.
-        _runner.onExit.then((code) => launch.launchTerminated(code));
+        _runner.onExit.then((code) => _launch.launchTerminated(code));
       } else {
-        launch.launchTerminated(code);
+        _launch.launchTerminated(code);
       }
     });
   }
+
+  Future _kill() => _runner.kill();
 }
 
 ProcessRunner _skyTool(DartProject project, List<String> args) {
@@ -124,3 +128,7 @@ ProcessRunner _skyTool(DartProject project, List<String> args) {
 Future _skyToolStop(DartProject project) {
   return _skyTool(project, ['stop']).execSimple();
 }
+
+// Future<bool> hasFswatchInstalled() {
+//   return exec('fswatch', ['--version']).then((_) => true).catchError((_) => false);
+// }

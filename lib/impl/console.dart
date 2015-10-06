@@ -102,6 +102,7 @@ class _LaunchController implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
 
   String _lastText = '';
+  dynamic _scrollTop;
 
   _LaunchController(this.view, this.launch) {
     view.tabsElement.add([
@@ -130,6 +131,12 @@ class _LaunchController implements Disposable {
     _updateToggles();
     _updateButtons();
     view.content.add(output.element);
+
+    if (_scrollTop != null) {
+      output.element.parent.scrollTop = _scrollTop;
+    } else {
+      output.element.scrollIntoView(ScrollAlignment.BOTTOM);
+    }
   }
 
   void handleTerminated() {
@@ -143,6 +150,7 @@ class _LaunchController implements Disposable {
   }
 
   void deactivate() {
+    _scrollTop = output.element.parent.scrollTop;
     _updateToggles();
     _updateButtons();
     output.dispose();
@@ -161,6 +169,7 @@ class _LaunchController implements Disposable {
       CoreElement debug = buttons.add(
           span(text: '\u200B', c: 'process-icon icon-bug'));
       debug.toggleClass('text-highlight', launch.isActive);
+      debug.tooltip = 'Open the Observatory';
       debug.click(() {
         shell.openExternal('http://localhost:${launch.servicePort}/');
       });
@@ -171,6 +180,7 @@ class _LaunchController implements Disposable {
       CoreElement kill = buttons.add(
           span(text: '\u200B', c: 'process-icon icon-primitive-square'));
       kill.toggleClass('text-highlight', launch.isActive);
+      kill.tooltip = 'Terminate process';
       kill.click(() => launch.kill());
     }
 
@@ -179,6 +189,7 @@ class _LaunchController implements Disposable {
       CoreElement clear = buttons.add(
           span(text: '\u200B', c: 'process-icon icon-x'));
       clear.toggleClass('text-highlight', launch.isActive);
+      clear.tooltip = 'Remove the completed launch';
       clear.click(() => launchManager.removeLaunch(launch));
     }
   }
@@ -190,6 +201,7 @@ class _LaunchController implements Disposable {
   }
 
   void _emitBadge(String text, String type) {
+    _scrollTop = null;
     output.add(span(text: text, c: 'badge badge-${type}'));
 
     if (output.element.parent != null) {
@@ -198,6 +210,7 @@ class _LaunchController implements Disposable {
   }
 
   void _emitText(String str, [bool error = false]) {
+    _scrollTop = null;
     _lastText = str;
 
     CoreElement e = output.add(span(text: str));
