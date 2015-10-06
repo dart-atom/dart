@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.9
 - added UI to improve discoverability for quick fixes (`ctrl-1` / `alt-enter`)
 - improved launching for Flutter apps
 - improved UX of the console view
