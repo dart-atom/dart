@@ -158,6 +158,12 @@ class CoreElement {
     }
   }
 
+  String get tooltip => element.title;
+
+  set tooltip(String value) {
+    element.title = value;
+  }
+
   Stream<MouseEvent> get onClick => element.onClick.where((_) => !disabled);
 
   /// Subscribe to the [onClick] event stream with a no-arg handler.

@@ -551,7 +551,6 @@ atom-notification {
     z-index: 1;
 
     .badge {
-      margin-left: 4px;
       cursor: pointer;
     }
 
@@ -564,13 +563,18 @@ atom-notification {
     }
 
     .console-tabs {
-
+      border-bottom: 2px solid @text-color-info;
+      padding-bottom: @component-icon-padding;
     }
 
     .process-tab {
       padding: 1px 5px 2px 5px;
-      margin-left: 16px;
       display: inline-block;
+      transition: background-color 0.2s ease;
+    }
+
+    .process-tab + .process-tab {
+      margin-left: 16px;
     }
 
     .process-icon + .process-icon {

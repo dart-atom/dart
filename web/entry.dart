@@ -10,7 +10,7 @@ import 'package:logging/logging.dart';
 main() {
   Logger.root.level = Level.WARNING;
   Logger.root.onRecord.listen((LogRecord r) {
-    String tag = '${r.level.name.toLowerCase()} • ${r.loggerName} •';
+    String tag = '${r.level.name.toLowerCase()} • ${r.loggerName}:';
     print('${tag} ${r.message}');
     if (r.error != null) print('${tag}   ${r.error}');
   });

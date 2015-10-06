@@ -1,5 +1,10 @@
 # dartlang plugin changelog
 
+## unreleased
+- added UI to improve discoverability for quick fixes (`ctrl-1` / `alt-enter`)
+- improved launching for Flutter apps
+- improved UX of the console view
+
 ## 0.4.8
 - added the ability to launch Dart command-line apps (cmd-R / ctrl-R)
 - the `run flutter application` is now just `run application` - it automatically
@@ -11,7 +16,7 @@
 - fixed an style / clipping issue in the problems view
 - new and updated keybindings! Why the changes? So many, many conflicts on
   various platforms. The latest is: `f4` is `type hierarchy`, `ctrl-f4` (or
-  `cmd-f4) is `find references`, and `ctrl-alt-down` (or `alt-cmd-down`) is
+  `cmd-f4`) is `find references`, and `ctrl-alt-down` (or `alt-cmd-down`) is
   `jump to declaration`.
 
 ## 0.4.7

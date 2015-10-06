@@ -39,7 +39,7 @@ class RebuildJob extends Job {
         (JobStatus status) {
       // Check for an exit code of `0` from grind build.
       if (status.isOk && status.result == 0) {
-        new Future.delayed(new Duration(seconds: 1)).then((_) => atom.reload());
+        new Future.delayed(new Duration(seconds: 2)).then((_) => atom.reload());
       }
     });
   }

@@ -6,10 +6,10 @@ import 'dart:async';
 import 'dart:html' show Element;
 
 import '../analysis/analysis_server_lib.dart' hide Element;
+import '../analysis/quick_fixes.dart';
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../atom_utils.dart';
-import '../analysis/quick_fixes.dart';
 import '../elements.dart';
 import '../linter.dart';
 import '../state.dart';
