@@ -33,6 +33,12 @@ invoke it, and which keys choose from selections.
 
 <img src="img/autocomplete.png" width="65%" class="img-centered"/>
 
+Another good setting to toggle is the `tabs` plugin's `Use Preview Tabs` setting.
+If you check that setting, files first open in a preview mode. Their tab will get
+re-used by the next file to open, unless you make an edit in the file. This is a
+super handy option to let you explore a source base without getting a
+proliferation of open tabs.
+
 ## Opening Dart projects
 
 To open a project, use the `'add project folder'` command, or select the
