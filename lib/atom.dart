@@ -459,6 +459,7 @@ class NotificationHelper {
     _titleElement = _content.querySelector('div.message p');
     _detailContent = _content.querySelector('div.detail-content');
     _description = _content.querySelector('div.meta div.description');
+    _classList.callMethod('add', ['dartlang']);
   }
 
   void setNoWrap() {

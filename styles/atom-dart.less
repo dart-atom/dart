@@ -418,6 +418,7 @@ atom-text-editor::shadow .outline-view {
     text-overflow: ellipsis;
     overflow-x: hidden;
     flex: 20;
+    white-space: pre;
   }
 
   .outline-tree {
@@ -485,10 +486,11 @@ atom-text-editor::shadow .outline-view {
   }
 
   .close-button {
-    top: 1px;
+    top: -1px;
     color: @text-color;
     cursor: default;
     margin-left: 8px;
+    position: relative;
   }
 
   .close-button:hover {
@@ -533,6 +535,12 @@ atom-notification.icon-running::before {
 atom-notification {
   .detail-content-no-wrap {
     word-wrap: initial;
+  }
+}
+
+atom-notification.dartlang {
+  div.detail {
+    max-height: 150px;
   }
 }
 

@@ -1,3 +1,5 @@
+
+/// A console output view.
 library atom.console;
 
 import 'dart:html' show ScrollAlignment;
@@ -40,15 +42,17 @@ class ConsoleController implements Disposable {
 }
 
 class ConsoleView extends AtomView {
-  static bool get autoShowConsole => atom.config.getValue('${pluginId}.autoShowConsole');
+  static bool get autoShowConsole =>
+      atom.config.getValue('${pluginId}.autoShowConsole');
 
   CoreElement tabsElement;
 
   _LaunchController _activeController;
   Map<Launch, _LaunchController> _controllers = {};
 
-  ConsoleView() : super('Console', classes: 'console-view dartlang', prefName: 'Console',
-      rightPanel: false, showTitle: false) {
+  ConsoleView() : super('Console', classes: 'console-view dartlang',
+      prefName: 'Console', rightPanel: false, showTitle: false,
+      groupName: 'bottomView') {
     content..add([
       div(c: 'console-title-area')..add([
         tabsElement = div(c: 'console-tabs')
@@ -85,7 +89,9 @@ class ConsoleView extends AtomView {
     controller.dispose();
     if (controller == _activeController) _activeController = null;
 
-    if (_controllers.isEmpty && isVisible()) hide();
+    if (_controllers.isEmpty && isVisible()) {
+      autoHide();
+    }
   }
 }
 

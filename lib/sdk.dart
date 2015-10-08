@@ -85,9 +85,10 @@ class SdkManager implements Disposable {
 
   Sdk get sdk => _sdk;
 
-  void showNoSdkMessage() {
-    atom.notifications.addInfo(
-        'No Dart SDK found.',
+  void showNoSdkMessage({String messagePrefix}) {
+    String message = messagePrefix == null
+        ? 'No Dart SDK found.' : '${messagePrefix}: no Dart SDK found.';
+    atom.notifications.addInfo(message,
         description: 'You can configure your SDK location in Settings > '
             'Packages > dart-lang > Settings.',
         dismissable: true);

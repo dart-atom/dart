@@ -3,6 +3,9 @@
 ## unreleased
 - improved the UI for running Pub commands and applications
 - fixed an issue when traversing new projects on Windows
+- check for new versions of the `sky_tools` package when creating Flutter apps
+- improved error handling when trying to create projects and no Dart SDK is available
+- auto hide and show the errors view when running applications
 
 ## 0.4.9
 - added UI to improve discoverability for quick fixes (`ctrl-1` / `alt-enter`)

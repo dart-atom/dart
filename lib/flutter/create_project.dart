@@ -6,8 +6,9 @@ import 'package:haikunator/haikunator.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
-import '../utils.dart';
 import '../impl/pub.dart';
+import '../state.dart';
+import '../utils.dart';
 
 class CreateProjectManager implements Disposable {
   Disposables disposables = new Disposables();
@@ -18,6 +19,11 @@ class CreateProjectManager implements Disposable {
   }
 
   void _createProject(_) {
+    if (!sdkManager.hasSdk) {
+      sdkManager.showNoSdkMessage(messagePrefix: 'Unable to create project');
+      return;
+    }
+
     String root = atom.config.getValue('core.projectHome');
     if (root.endsWith('github')) {
       root = root.substring(0, root.length - 6) + 'flutter';
@@ -26,9 +32,9 @@ class CreateProjectManager implements Disposable {
     String _response;
 
     PubApp skyTools = new PubApp.global('sky_tools');
-    Future f = skyTools.isInstalled().then((installed) {
-      if (!installed) return skyTools.install();
-    });
+
+    // Install `sky_tools` if it is not installed or there is an update available.
+    Future f = skyTools.installIfUpdateAvailable();
 
     promptUser('Enter the path to the project to create:',
         defaultText: projectPath,
@@ -37,13 +43,19 @@ class CreateProjectManager implements Disposable {
       if (_response != null) return f;
     }).then((_) {
       if (_response != null) {
-        return skyTools.run(args: ['init', '--out', _response]);
+        return skyTools.run(
+            args: ['init', '--out', _response],
+            title: 'Creating Flutter Project');
       }
     }).then((_) {
       if (_response != null) {
-        atom.notifications.addSuccess('Created ${basename(_response)}!');
         atom.project.addPath(_response);
-        atom.workspace.open(join(_response, 'lib', 'main.dart'));
+        String path = join(_response, 'lib', 'main.dart');
+        atom.workspace.open(path).then((TextEditor editor) {
+          // Focus the file in the files view 'tree-view:reveal-active-file'.
+          var target = atom.views.getView(editor);
+          atom.commands.dispatch(target, 'tree-view:reveal-active-file');
+        });
       }
     });
   }
