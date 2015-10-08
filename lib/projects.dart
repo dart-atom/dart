@@ -233,10 +233,14 @@ class ProjectManager implements Disposable, ContextMenuContributor {
       return [dir];
     } else if (recurse > 0) {
       List<Directory> found = [];
-      for (Entry entry in dir.getEntriesSync()) {
-        if (entry.isDirectory()) {
-          found.addAll(_findDartProjects(entry, recurse - 1));
+      try {
+        for (Entry entry in dir.getEntriesSync()) {
+          if (entry.isDirectory()) {
+            found.addAll(_findDartProjects(entry, recurse - 1));
+          }
         }
+      } catch (e) {
+        _logger.info('Error scanning atom projects', e);
       }
       return found;
     } else {

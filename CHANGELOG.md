@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## unreleased
+- improved the UI for running Pub commands and applications
+- fixed an issue when traversing new projects on Windows
+
 ## 0.4.9
 - added UI to improve discoverability for quick fixes (`ctrl-1` / `alt-enter`)
 - improved launching for Flutter apps
