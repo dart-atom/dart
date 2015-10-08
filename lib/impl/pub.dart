@@ -5,6 +5,11 @@
 library atom.pub;
 
 import 'dart:async';
+import 'dart:convert' show JSON;
+import 'dart:html' show HttpRequest;
+
+import 'package:logging/logging.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
@@ -17,6 +22,8 @@ import '../utils.dart';
 
 const String pubspecFileName = 'pubspec.yaml';
 const String dotPackagesFileName = '.packages';
+
+final Logger _logger = new Logger('atom.pub');
 
 class PubManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
@@ -137,41 +144,99 @@ class PubApp {
   final String name;
   final bool isGlobal;
 
-  bool _installed;
-
   PubApp.global(this.name) : isGlobal = true;
 
   Future<bool> isInstalled() {
-    if (isGlobal) {
-      if (_installed != null) return new Future.value(_installed);
-
-      return sdkManager.sdk.execBinSimple('pub', ['global', 'list']).then(
-          (ProcessResult result) {
-        if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
-        List lines = result.stdout.trim().split('\n');
-        return lines.any((l) => l.startsWith('${name} '));
-      }).then((installed) {
-        _installed = installed;
-        return _installed;
-      });
-    } else {
-      return new Future.value(true);
-    }
+    return getInstalledVersion()
+      .then((ver) => ver != null)
+      .catchError((e) => false);
   }
 
-  Future install({bool verbose: true}) {
+  Future<Version> getInstalledVersion() {
+    if (!sdkManager.hasSdk) return new Future.value();
+    if (!isGlobal) return new Future.value(Version.none);
+
+    return sdkManager.sdk.execBinSimple('pub', ['global', 'list']).then(
+        (ProcessResult result) {
+      if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
+
+      List lines = result.stdout.trim().split('\n');
+
+      for (String line in lines) {
+        if (line.startsWith('${name} ')) {
+          List<String> strs = line.split(' ');
+          if (strs.length > 1) {
+            try { return new Version.parse(strs[1]); }
+            catch (_) { }
+          }
+        }
+      }
+
+      return null;
+    });
+  }
+
+  Future install({bool quiet: true}) {
+    if (!sdkManager.hasSdk) return new Future.value();
+
     if (isGlobal) {
-      Job job = new PubGlobalActivate(name);
+      Job job = new PubGlobalActivate(name, runQuiet: quiet);
       return job.schedule();
     } else {
       return new Future.value();
     }
   }
 
-  Future run({List<String> args, String cwd}) {
+  /// If this package is not installed, then install. If it is installed but the
+  /// hosted version is newer, then re-install. Otherwise, this method does not
+  /// re-install the package.
+  Future installIfUpdateAvailable({bool quiet: true}) async {
+    if (!isGlobal) return new Future.value();
+
+    Version installedVer;
+
+    try {
+      installedVer = await getInstalledVersion();
+    } catch (e) {
+      return install();
+    }
+
+    _logger.fine('installed version for ${name} is ${installedVer}');
+
+    if (installedVer == null || installedVer == Version.none) {
+      return install();
+    }
+
+    // Check hosted version.
+    return getMostRecentHostedVersion().then((Version hostedVer) {
+      _logger.fine('hosted version for ${name} is ${hostedVer}');
+
+      if (hostedVer != null && hostedVer > installedVer) {
+        install();
+      }
+    }).catchError((e) {
+      _logger.warning('Error getting the latest package version', e);
+    });
+  }
+
+  Future<Version> getMostRecentHostedVersion() {
+    // https://pub.dartlang.org/packages/sky_tools.json
+    // {"name":"sky_tools","versions":["0.0.15","0.0.16","0.0.17"]}
+
+    return HttpRequest.request('https://pub.dartlang.org/packages/${name}.json').then(
+        (HttpRequest result) {
+      Map packageInfo = JSON.decode(result.responseText);
+      Iterable<String> vers = packageInfo['versions'];
+      return Version.primary(vers.map((str) => new Version.parse(str)).toList());
+    });
+  }
+
+  Future run({List<String> args, String cwd, String title}) {
+    if (!sdkManager.hasSdk) return new Future.error('no sdk installed');
+
     List list = [name];
     if (args != null) list.addAll(args);
-    Job job = new PubRunJob.global(list, path: cwd);
+    Job job = new PubRunJob.global(list, path: cwd, title: title);
     return job.schedule();
   }
 }
@@ -209,19 +274,20 @@ class PubJob extends Job {
 
 class PubRunJob extends Job {
   final String path;
+  final String title;
   final List<String> args;
   final bool isGlobal;
 
   String _pubspecDir;
 
-  PubRunJob.local(this.path, List<String> args)
+  PubRunJob.local(this.path, List<String> args, {this.title})
       : this.args = args,
         isGlobal = false,
         super("Pub run '${args.first}'") {
     _pubspecDir = _locatePubspecDir(path);
   }
 
-  PubRunJob.global(List<String> args, {this.path})
+  PubRunJob.global(List<String> args, {this.path, this.title})
       : args = args,
         isGlobal = true,
         super("Pub global run '${args.first}'") {
@@ -235,7 +301,7 @@ class PubRunJob extends Job {
   Future run() {
     List<String> l = isGlobal ? ['global', 'run'] : ['run'];
     l.addAll(args);
-    ProcessNotifier notifier = new ProcessNotifier(name);
+    ProcessNotifier notifier = new ProcessNotifier(title == null ? name : title);
     ProcessRunner runner = sdkManager.sdk.execBin('pub', l, cwd: _pubspecDir);
     return notifier.watch(runner);
   }
@@ -249,16 +315,33 @@ String _locatePubspecDir(String path) {
 
 class PubGlobalActivate extends Job {
   final String packageName;
+  final bool runQuiet;
 
-  PubGlobalActivate(String packageName) : this.packageName = packageName,
-      super("Pub global activate '${packageName}'");
+  PubGlobalActivate(String packageName, {this.runQuiet: false}) :
+      this.packageName = packageName, super("Pub global activate '${packageName}'");
 
-  bool get quiet => true;
+  bool get quiet => runQuiet;
 
   Future run() {
-    ProcessNotifier notifier = new ProcessNotifier(name);
-    ProcessRunner runner = sdkManager.sdk.execBin('pub', ['global', 'activate', packageName]);
-    return notifier.watch(runner);
+    ProcessRunner runner = sdkManager.sdk.execBin(
+        'pub', ['global', 'activate', packageName]);
+
+    if (runQuiet) {
+      // Run as a Job; display an error on failures.
+      StringBuffer buf = new StringBuffer();
+
+      runner.onStdout.listen((str) => buf.write(str));
+      runner.onStderr.listen((str) => buf.write(str));
+
+      return runner.onExit.then((int result) {
+        if (result != 0) {
+          buf.write('\nFinished with exit code ${result}.');
+          throw buf.toString();
+        }
+      });
+    } else {
+      return new ProcessNotifier(name).watch(runner);
+    }
   }
 }
 

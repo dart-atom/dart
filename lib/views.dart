@@ -1,3 +1,5 @@
+
+/// A library for a general view implementation in Atom.
 library atom.views;
 
 import 'dart:async';
@@ -127,8 +129,10 @@ class AtomView implements Disposable  {
   }
 
   final String groupName;
+  String _previousVisibleView;
 
   Panel _panel;
+  String _id;
   Disposables disposables = new Disposables();
   StreamSubscriptions subs = new StreamSubscriptions();
 
@@ -139,6 +143,8 @@ class AtomView implements Disposable  {
   AtomView(String inTitle, {String classes, String prefName,
       bool rightPanel: true, bool cancelCloses: true, bool showTitle: true,
       this.groupName}) {
+    _id = toStartingLowerCase(inTitle);
+
     CoreElement closeButton;
     ViewResizer resizer;
 
@@ -162,7 +168,8 @@ class AtomView implements Disposable  {
 
     root.add([
       content = div(c: 'view-content')..flex(),
-      resizer = rightPanel ? new ViewResizer.createVertical() : new ViewResizer.createHorizontal()
+      resizer = rightPanel
+          ? new ViewResizer.createVertical() : new ViewResizer.createHorizontal()
     ]);
 
     if (prefName == null && groupName != null) prefName = groupName;
@@ -183,6 +190,8 @@ class AtomView implements Disposable  {
       groupManager.addView(groupName, this);
     }
   }
+
+  String get id => _id;
 
   void _setupResizer(String prefName, ViewResizer resizer, int defaultSize) {
     if (prefName == null) {
@@ -221,11 +230,17 @@ class AtomView implements Disposable  {
 
   void show() {
     _panel.show();
-
-    groupManager.viewShowing(groupName, this);
+    _previousVisibleView = groupManager.viewShowing(groupName, this);
   }
 
   void hide() => _panel.hide();
+
+  /// Like [hide], but will auto-show any view that was hidden when this view
+  /// was originally shown.
+  void autoHide() {
+    hide();
+    groupManager.showView(groupName, _previousVisibleView);
+  }
 
   void dispose() {
     groupManager.removeView(groupName, this);
@@ -247,9 +262,12 @@ class ViewGroupManager {
     _groups[name].addView(view);
   }
 
-  void viewShowing(String name, AtomView view) {
+  /// Returns the name of the previously visible view.
+  String viewShowing(String name, AtomView view) {
     if (_groups.containsKey(name)) {
-      _groups[name].viewShowing(view);
+      return _groups[name].viewShowing(view);
+    } else {
+      return null;
     }
   }
 
@@ -258,11 +276,18 @@ class ViewGroupManager {
       _groups[name].removeView(view);
     }
   }
+
+  void showView(String groupName, String viewId) {
+    if (_groups.containsKey(groupName)) {
+      _groups[groupName].showView(viewId);
+    }
+  }
 }
 
 class ViewGroup {
   final String name;
   final List<AtomView> views = [];
+  String _currentVisible;
 
   ViewGroup(this.name);
 
@@ -270,16 +295,30 @@ class ViewGroup {
     views.add(view);
   }
 
-  void viewShowing(AtomView view) {
+  /// Returns the name of the previously visible view.
+  String viewShowing(AtomView view) {
+    String lastVisible = _currentVisible;
+    _currentVisible = view?.id;
     for (AtomView v in views) {
       if (v != view) {
         if (v.isVisible()) v.hide();
       }
     }
+    return lastVisible;
   }
 
   void removeView(AtomView view) {
+    if (_currentVisible == view?.id) _currentVisible = null;
     views.remove(view);
+  }
+
+  void showView(String viewId) {
+    for (AtomView view in views) {
+      if (view.id == viewId) {
+        if (!view.isVisible()) view.show();
+        return;
+      }
+    }
   }
 }
 

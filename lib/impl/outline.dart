@@ -234,8 +234,8 @@ class OutlineView implements Disposable {
 
     if (e.kind == 'CLASS') {
       intoElement.children.add(new html.SpanElement()
-          //..classes.addAll(['keyword', 'declaration'])
-          ..classes.add('comment')
+          ..classes.add('keyword')
+          //..classes.add('comment')
           ..text = 'class ');
     } else if (e.kind == 'ENUM') {
       intoElement.children.add(new html.SpanElement()

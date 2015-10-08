@@ -109,7 +109,7 @@ class ErrorsController implements Disposable {
 
     if (_focusedDir != null) {
       filteredErrors = filteredErrors
-        .where((AnalysisError error) => error.location.file.startsWith(_focusedDir))
+        .where((AnalysisError e) => e.location.file.startsWith(_focusedDir))
         .toList();
     }
 
@@ -127,9 +127,8 @@ class ErrorsView extends AtomView {
   CoreElement focusElement;
 
   ErrorsView(bool enabled) : super('Errors', classes: 'errors-view dartlang',
-      prefName: 'Errors', rightPanel: false, cancelCloses: false, showTitle: false) {
-    //root.toggleClass('tree-view', false);
-
+      prefName: 'Errors', rightPanel: false, cancelCloses: false,
+      showTitle: false, groupName: 'bottomView') {
     content.add([
       body = div(),
       div(c: 'text-muted errors-focus-area')..add([
@@ -210,7 +209,7 @@ class ErrorsView extends AtomView {
     String type = error.severity == 'ERROR'
         ? ' badge-error' : error.severity == 'WARNING'
         ? ' badge-warning' : ' badge-info';
-    String locationText = '${atom.project.relativizePath(error.location.file)[1]}'
+    String location = '${atom.project.relativizePath(error.location.file)[1]}'
         ', line ${error.location.startLine}';
 
     CoreElement item = div(c: 'errors-item')..add([
@@ -238,7 +237,7 @@ class ErrorsView extends AtomView {
 
     item.add([
       span(text: error.message),
-      new CoreElement('a', text: locationText, classes: 'text-muted')
+      new CoreElement('a', text: location, classes: 'text-muted')
     ]);
 
     item.click(() => _jumpTo(error.location));
