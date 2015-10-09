@@ -70,16 +70,8 @@ analysisApi() {
   DartFmt.format('lib/analysis/analysis_server_lib.dart');
 }
 
-@Task('generate the observatory API')
-observatoryApi() {
-  // https://github.com/dart-lang/sdk/blob/master/runtime/vm/service/service.md
-  Dart.run('tool/observatory/generate_observatory.dart',
-      packageRoot: 'packages');
-  DartFmt.format('lib/impl/observatory_gen.dart');
-}
-
-@Task('generate both the observatory and analysis APIs')
-@Depends(analysisApi, observatoryApi)
+@Task('generate both the analysis API')
+@Depends(analysisApi)
 generate() => null;
 
 final String _jsPrefix = """
