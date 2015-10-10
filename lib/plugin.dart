@@ -347,17 +347,6 @@ class AtomDartPackage extends AtomPackage {
         'default': false,
         'order': 6
       },
-      // enableSuperMixins
-      'enableSuperMixins': {
-        'title': "Enable super mixins - analysis support for DEP 34",
-        'description':
-            'Enable analysis support for DEP 34 - allowing mixins to have '
-            'super() calls and superclasses other than object. A restart is '
-            'required.',
-        'type': 'boolean',
-        'default': false,
-        'order': 6
-      },
 
       // google analytics
       'sendUsage': {
