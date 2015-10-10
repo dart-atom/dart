@@ -6,6 +6,7 @@
 - check for new versions of the `sky_tools` package when creating Flutter apps
 - improved error handling when trying to create projects and no Dart SDK is available
 - auto hide and show the errors view when running applications
+- super-mixins - DEP 34 - now defaults to on
 
 ## 0.4.9
 - added UI to improve discoverability for quick fixes (`ctrl-1` / `alt-enter`)
@@ -18,7 +19,7 @@
   determines the application type to run
 - changed the outline view style _back_ to using much of the syntax highlighting
   from the current editor theme (at 0.75 opacity)
-- added a setting to enable analysis for DEP 34 - less restricted mixins.
+- added a setting to enable analysis for DEP 34 - less restricted mixins
 - fixed an issue with the `linter` plugin where info level issues were named `Trace`
 - fixed an style / clipping issue in the problems view
 - new and updated keybindings! Why the changes? So many, many conflicts on
