@@ -285,9 +285,9 @@
 .highlighttable pre, .highlighttable code { display:block; margin:0; padding:0; background: none; overflow:auto; word-wrap: normal; }
 
 .highlight, .linenodiv {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWPQ1dU1BgABzQC7XXMTYQAAAABJRU5ErkJggg==);
+  /*background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWPQ1dU1BgABzQC7XXMTYQAAAABJRU5ErkJggg==);*/
   display:block;
-  padding: 10px;
+  /*padding: 10px;*/
   margin-bottom:20px;
 }
 .linenodiv, .lineno { color: #ccc; }
@@ -314,7 +314,7 @@ span.lineno {
 .k { color: #66d9ef } /* Keyword */
 .l { color: #ae81ff } /* Literal */
 .n { color: #f8f8f2 } /* Name */
-.o { color: #f92672 } /* Operator */
+/*.o { color: #f92672 }*/ /* Operator */
 .p { color: #f8f8f2 } /* Punctuation */
 .cm { color: #75715e } /* Comment.Multiline */
 .cp { color: #75715e } /* Comment.Preproc */
