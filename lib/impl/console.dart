@@ -282,7 +282,7 @@ class ConsoleStatusElement implements Disposable {
     _handleLaunchesChanged();
   }
 
-  void _handleLaunchesChanged([_]) {
+  void _handleLaunchesChanged([Launch _]) {
     if (_element == null) return;
 
     List<Launch> launches = launchManager.launches;

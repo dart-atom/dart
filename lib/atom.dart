@@ -1099,4 +1099,7 @@ class Stats extends ProxyHolder {
 
   bool isFile() => invoke('isFile');
   bool isDirectory() => invoke('isDirectory');
+
+  // The last modified time (`2015-10-08 17:48:42.000`).
+  String get mtime => obj['mtime'];
 }

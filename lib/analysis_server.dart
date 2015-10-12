@@ -98,7 +98,7 @@ class AnalysisServer implements Disposable {
   Server get server => _server;
 
   void _setup() {
-    subs.add(projectManager.onChanged.listen(_reconcileRoots));
+    subs.add(projectManager.onProjectsChanged.listen(_reconcileRoots));
     subs.add(sdkManager.onSdkChange.listen(_handleSdkChange));
 
     editorManager.dartProjectEditors.onActiveEditorChanged.listen(_focusedEditorChanged);

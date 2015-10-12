@@ -7,6 +7,9 @@
 - improved error handling when trying to create projects and no Dart SDK is available
 - auto hide and show the errors view when running applications
 - super-mixins - DEP 34 - now defaults to on
+- added code to check for and warn when `pub get` should be run on a project
+- improved the ability for the pub get and pub update commands to select the
+  correct pubspec.yaml file to operate on
 
 ## 0.4.9
 - added UI to improve discoverability for quick fixes (`ctrl-1` / `alt-enter`)
