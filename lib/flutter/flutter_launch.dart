@@ -22,7 +22,7 @@ class FlutterLaunchType extends LaunchType {
     if (project == null) return false;
 
     File skyTool = new File.fromPath(
-        join(project.directory, 'packages', 'sky', 'sky_tool'));
+        join(project.directory, 'packages', 'flutter', 'sky_tool'));
     if (!skyTool.existsSync()) return false;
 
     String relPath = relativize(project.path, path);
@@ -39,11 +39,11 @@ class FlutterLaunchType extends LaunchType {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return new Future.error("File not in a Dart project.");
 
-    String sky_tool = join(project.directory, 'packages', 'sky', 'sky_tool');
+    String sky_tool = join(project.directory, 'packages', 'flutter', 'sky_tool');
     bool exists = new File.fromPath(sky_tool).existsSync();
 
     if (!exists) {
-      return new Future.error("Unable to locate 'packages/sky/sky_tool'; "
+      return new Future.error("Unable to locate 'packages/flutter/sky_tool'; "
           "did you import the 'sky' package into your project?");
     }
 
@@ -112,7 +112,7 @@ class _LaunchInstance {
 }
 
 ProcessRunner _skyTool(DartProject project, List<String> args) {
-  final String skyToolPath = 'packages${separator}sky${separator}sky_tool';
+  final String skyToolPath = 'packages${separator}flutter${separator}sky_tool';
 
   if (isMac) {
     // On the mac, run under bash.

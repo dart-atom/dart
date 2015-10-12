@@ -4758,9 +4758,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.CreateProjectManager__createProject_closure[1];
     CreateProjectManager__createProject_closure.prototype = $desc;
     CreateProjectManager__createProject_closure.$__fields__ = ["_create_project$_box_0", "_create_project$_captured_f_1"];
-    function CreateProjectManager__createProject_closure0(_create_project$_box_0, _captured_skyTools_2) {
+    function CreateProjectManager__createProject_closure0(_create_project$_box_0, _captured_flutter_2) {
       this._create_project$_box_0 = _create_project$_box_0;
-      this._captured_skyTools_2 = _captured_skyTools_2;
+      this._captured_flutter_2 = _captured_flutter_2;
       this.$deferredAction();
     }
     CreateProjectManager__createProject_closure0.builtin$cls = "CreateProjectManager__createProject_closure0";
@@ -4768,7 +4768,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       CreateProjectManager__createProject_closure0.name = "CreateProjectManager__createProject_closure0";
     $desc = $collectedClasses$.CreateProjectManager__createProject_closure0[1];
     CreateProjectManager__createProject_closure0.prototype = $desc;
-    CreateProjectManager__createProject_closure0.$__fields__ = ["_create_project$_box_0", "_captured_skyTools_2"];
+    CreateProjectManager__createProject_closure0.$__fields__ = ["_create_project$_box_0", "_captured_flutter_2"];
     function CreateProjectManager__createProject_closure1(_create_project$_box_0) {
       this._create_project$_box_0 = _create_project$_box_0;
       this.$deferredAction();
@@ -25279,7 +25279,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     CreateProjectManager: {
       "^": "Object;disposables",
       _createProject$1: [function(_) {
-        var t1, root, t2, projectPath, skyTools, f;
+        var t1, root, t2, projectPath, flutter, f;
         t1 = {};
         if (!Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$hasSdk()) {
           Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).showNoSdkMessage$1$messagePrefix("Unable to create project");
@@ -25289,9 +25289,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t2 = J.getInterceptor$s(root);
         projectPath = H.S(t2.endsWith$1(root, "github") ? t2.substring$2(root, 0, J.$sub$n(t2.get$length(root), 6)) + "flutter" : root) + $.$get$separator() + D.Haikunator_haikunate("_", "0123456789", false, 4);
         t1._captured__response_0 = null;
-        skyTools = new R.PubApp("sky_tools", true);
-        f = skyTools.installIfUpdateAvailable$0();
-        S.promptUser("Enter the path to the project to create:", projectPath, true, false).then$1(new O.CreateProjectManager__createProject_closure(t1, f)).then$1(new O.CreateProjectManager__createProject_closure0(t1, skyTools)).then$1(new O.CreateProjectManager__createProject_closure1(t1));
+        flutter = new R.PubApp("flutter", true);
+        f = flutter.installIfUpdateAvailable$0();
+        S.promptUser("Enter the path to the project to create:", projectPath, true, false).then$1(new O.CreateProjectManager__createProject_closure(t1, f)).then$1(new O.CreateProjectManager__createProject_closure0(t1, flutter)).then$1(new O.CreateProjectManager__createProject_closure1(t1));
       }, "call$1", "get$_createProject", 2, 0, 7],
       dispose$0: [function() {
         return this.disposables.dispose$0();
@@ -25307,11 +25307,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 18, "call"]
     },
     CreateProjectManager__createProject_closure0: {
-      "^": "Closure:0;_create_project$_box_0,_captured_skyTools_2",
+      "^": "Closure:0;_create_project$_box_0,_captured_flutter_2",
       call$1: [function(_) {
         var t1 = this._create_project$_box_0._captured__response_0;
         if (t1 != null)
-          return this._captured_skyTools_2.run$2$args$title(["init", "--out", t1], "Creating Flutter Project");
+          return this._captured_flutter_2.run$2$args$title(["init", "--out", t1], "Creating Flutter Project");
       }, null, null, 2, 0, null, 1, "call"]
     },
     CreateProjectManager__createProject_closure1: {
@@ -25364,7 +25364,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     _skyTool: function(project, args) {
       var t1, skyToolPath;
       t1 = $.$get$separator();
-      skyToolPath = "packages" + t1 + "sky" + t1 + "sky_tool";
+      skyToolPath = "packages" + t1 + "flutter" + t1 + "sky_tool";
       t1 = J.getInterceptor$x(project);
       if ($.$get$isMac() === true)
         return new Z.ProcessRunner("/bin/bash", ["-l", "-c", skyToolPath + " " + C.JSArray_methods.join$1(args, " ")], t1.get$path(project), null, null, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]), null, P.StreamController_StreamController(null, null, null, null, false, null), P.StreamController_StreamController(null, null, null, null, false, null));
@@ -25381,7 +25381,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (project == null)
           return false;
         t1 = J.getInterceptor$x(project);
-        if (new E.File(E._create("File", S.join(t1.get$directory(project), "packages", "sky", "sky_tool"), null)).invoke$1("existsSync") !== true)
+        if (new E.File(E._create("File", S.join(t1.get$directory(project), "packages", "flutter", "sky_tool"), null)).invoke$1("existsSync") !== true)
           return false;
         return J.$eq$(S.relativize(t1.get$path(project), path), "lib" + $.$get$separator() + "main.dart");
       },
@@ -25391,8 +25391,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         project = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
         if (project == null)
           return P.Future_Future$error("File not in a Dart project.", null, null);
-        if (new E.File(E._create("File", S.join(J.get$directory$x(project), "packages", "sky", "sky_tool"), null)).invoke$1("existsSync") !== true)
-          return P.Future_Future$error("Unable to locate 'packages/sky/sky_tool'; did you import the 'sky' package into your project?", null, null);
+        if (new E.File(E._create("File", S.join(J.get$directory$x(project), "packages", "flutter", "sky_tool"), null)).invoke$1("existsSync") !== true)
+          return P.Future_Future$error("Unable to locate 'packages/flutter/sky_tool'; did you import the 'sky' package into your project?", null, null);
         return S._skyTool(project, ["stop"]).execSimple$0().then$1(new S.FlutterLaunchType_performLaunch_closure(this)).then$1(new S.FlutterLaunchType_performLaunch_closure0(this, project));
       }
     },
