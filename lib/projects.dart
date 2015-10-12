@@ -48,7 +48,9 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     return false;
   }
 
-  StreamController<List<DartProject>> _controller = new StreamController.broadcast();
+  StreamController<List<DartProject>> _projectsController = new StreamController.broadcast();
+  StreamController<DartProject> _projectAddController = new StreamController.broadcast();
+  StreamController<DartProject> _projectRemoveController = new StreamController.broadcast();
   StreamSubscription _sub;
   Disposables disposables = new Disposables();
 
@@ -72,6 +74,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
       event.stopImmediatePropagation();
       _markDartProject(path: event.targetFilePath);
     }));
+    _initProjectControllers();
   }
 
   List<ContextMenuItem> getTreeViewContributions() {
@@ -98,7 +101,9 @@ class ProjectManager implements Disposable, ContextMenuContributor {
   /// changes are found.
   void rescanForProjects() => _fullScanForProjects();
 
-  Stream<List<DartProject>> get onChanged => _controller.stream;
+  Stream<List<DartProject>> get onProjectsChanged => _projectsController.stream;
+  Stream<DartProject> get onProjectAdd => _projectAddController.stream;
+  Stream<DartProject> get onProjectRemove => _projectRemoveController.stream;
 
   void dispose() {
     _logger.fine('dispose()');
@@ -137,7 +142,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
 
     if (changed) {
       _logger.fine('${projects}');
-      _controller.add(projects);
+      _projectsController.add(projects);
     }
   }
 
@@ -287,6 +292,31 @@ meta:
 
       // Refresh the Dart projects.
       _fullScanForProjects();
+    });
+  }
+
+  void _initProjectControllers() {
+    Map<String, DartProject> knownProjects = {};
+
+    onProjectsChanged.listen((List<DartProject> projects) {
+      Set<String> current = new Set();
+
+      for (DartProject project in projects) {
+        String path = project.path;
+        current.add(path);
+
+        if (!knownProjects.containsKey(path)) {
+          knownProjects[path] = project;
+          _projectAddController.add(project);
+        }
+      }
+
+      for (String projectPath in knownProjects.keys.toList()) {
+        if (!current.contains(projectPath)) {
+          DartProject project = knownProjects.remove(projectPath);
+          _projectRemoveController.add(project);
+        }
+      }
     });
   }
 }

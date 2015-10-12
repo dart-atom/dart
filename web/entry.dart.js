@@ -4688,6 +4688,28 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.ErrorsView__cvtError_closure0[1];
     ErrorsView__cvtError_closure0.prototype = $desc;
     ErrorsView__cvtError_closure0.$__fields__ = ["_errors$_captured_this_2", "_captured_error_3"];
+    function ErrorsView__cvtError_closure1(_errors$_captured_this_4, _captured_error_5) {
+      this._errors$_captured_this_4 = _errors$_captured_this_4;
+      this._captured_error_5 = _captured_error_5;
+      this.$deferredAction();
+    }
+    ErrorsView__cvtError_closure1.builtin$cls = "ErrorsView__cvtError_closure1";
+    if (!("name" in ErrorsView__cvtError_closure1))
+      ErrorsView__cvtError_closure1.name = "ErrorsView__cvtError_closure1";
+    $desc = $collectedClasses$.ErrorsView__cvtError_closure1[1];
+    ErrorsView__cvtError_closure1.prototype = $desc;
+    ErrorsView__cvtError_closure1.$__fields__ = ["_errors$_captured_this_4", "_captured_error_5"];
+    function ErrorsView__cvtError_closure2(_errors$_captured_this_6, _captured_error_7) {
+      this._errors$_captured_this_6 = _errors$_captured_this_6;
+      this._captured_error_7 = _captured_error_7;
+      this.$deferredAction();
+    }
+    ErrorsView__cvtError_closure2.builtin$cls = "ErrorsView__cvtError_closure2";
+    if (!("name" in ErrorsView__cvtError_closure2))
+      ErrorsView__cvtError_closure2.name = "ErrorsView__cvtError_closure2";
+    $desc = $collectedClasses$.ErrorsView__cvtError_closure2[1];
+    ErrorsView__cvtError_closure2.prototype = $desc;
+    ErrorsView__cvtError_closure2.$__fields__ = ["_errors$_captured_this_6", "_captured_error_7"];
     function ErrorsView__jumpTo_closure(_captured_location_0) {
       this._captured_location_0 = _captured_location_0;
       this.$deferredAction();
@@ -6020,8 +6042,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.ProcessNotifier_watch_closure2[1];
     ProcessNotifier_watch_closure2.prototype = $desc;
     ProcessNotifier_watch_closure2.$__fields__ = ["_captured_this_3"];
-    function ProjectManager(_projects$_controller, _projects$_sub, disposables, _directoryListeners, projects) {
-      this._projects$_controller = _projects$_controller;
+    function ProjectManager(_projectsController, _projectAddController, _projectRemoveController, _projects$_sub, disposables, _directoryListeners, projects) {
+      this._projectsController = _projectsController;
+      this._projectAddController = _projectAddController;
+      this._projectRemoveController = _projectRemoveController;
       this._projects$_sub = _projects$_sub;
       this.disposables = disposables;
       this._directoryListeners = _directoryListeners;
@@ -6033,7 +6057,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       ProjectManager.name = "ProjectManager";
     $desc = $collectedClasses$.ProjectManager[1];
     ProjectManager.prototype = $desc;
-    ProjectManager.$__fields__ = ["_projects$_controller", "_projects$_sub", "disposables", "_directoryListeners", "projects"];
+    ProjectManager.$__fields__ = ["_projectsController", "_projectAddController", "_projectRemoveController", "_projects$_sub", "disposables", "_directoryListeners", "projects"];
     ProjectManager.prototype.get$projects = function() {
       return this.projects;
     };
@@ -6145,6 +6169,17 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.ProjectManager__markDartProject_closure[1];
     ProjectManager__markDartProject_closure.prototype = $desc;
     ProjectManager__markDartProject_closure.$__fields__ = ["_projects$_box_0", "_projects$_captured_this_1"];
+    function ProjectManager__initProjectControllers_closure(_projects$_captured_this_0, _captured_knownProjects_1) {
+      this._projects$_captured_this_0 = _projects$_captured_this_0;
+      this._captured_knownProjects_1 = _captured_knownProjects_1;
+      this.$deferredAction();
+    }
+    ProjectManager__initProjectControllers_closure.builtin$cls = "ProjectManager__initProjectControllers_closure";
+    if (!("name" in ProjectManager__initProjectControllers_closure))
+      ProjectManager__initProjectControllers_closure.name = "ProjectManager__initProjectControllers_closure";
+    $desc = $collectedClasses$.ProjectManager__initProjectControllers_closure[1];
+    ProjectManager__initProjectControllers_closure.prototype = $desc;
+    ProjectManager__initProjectControllers_closure.$__fields__ = ["_projects$_captured_this_0", "_captured_knownProjects_1"];
     function DartProject(directory, _analysisOptions) {
       this.directory = directory;
       this._analysisOptions = _analysisOptions;
@@ -6181,8 +6216,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$._MarkDartProjectContextCommand[1];
     _MarkDartProjectContextCommand.prototype = $desc;
     _MarkDartProjectContextCommand.$__fields__ = ["label", "command"];
-    function PubManager(disposables) {
+    function PubManager(disposables, projectSubscription) {
       this.disposables = disposables;
+      this.projectSubscription = projectSubscription;
       this.$deferredAction();
     }
     PubManager.builtin$cls = "PubManager";
@@ -6190,7 +6226,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       PubManager.name = "PubManager";
     $desc = $collectedClasses$.PubManager[1];
     PubManager.prototype = $desc;
-    PubManager.$__fields__ = ["disposables"];
+    PubManager.$__fields__ = ["disposables", "projectSubscription"];
     function PubManager_closure() {
       this.$deferredAction();
     }
@@ -6472,6 +6508,27 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.PubContextCommand[1];
     PubContextCommand.prototype = $desc;
     PubContextCommand.$__fields__ = ["onlyPubspec", "label", "command"];
+    function _showRunPubDialog_closure0(_pub$_box_0) {
+      this._pub$_box_0 = _pub$_box_0;
+      this.$deferredAction();
+    }
+    _showRunPubDialog_closure0.builtin$cls = "_showRunPubDialog_closure0";
+    if (!("name" in _showRunPubDialog_closure0))
+      _showRunPubDialog_closure0.name = "_showRunPubDialog_closure0";
+    $desc = $collectedClasses$._showRunPubDialog_closure0[1];
+    _showRunPubDialog_closure0.prototype = $desc;
+    _showRunPubDialog_closure0.$__fields__ = ["_pub$_box_0"];
+    function _showRunPubDialog_closure(_pub$_box_0, _captured_project_1) {
+      this._pub$_box_0 = _pub$_box_0;
+      this._captured_project_1 = _captured_project_1;
+      this.$deferredAction();
+    }
+    _showRunPubDialog_closure.builtin$cls = "_showRunPubDialog_closure";
+    if (!("name" in _showRunPubDialog_closure))
+      _showRunPubDialog_closure.name = "_showRunPubDialog_closure";
+    $desc = $collectedClasses$._showRunPubDialog_closure[1];
+    _showRunPubDialog_closure.prototype = $desc;
+    _showRunPubDialog_closure.$__fields__ = ["_pub$_box_0", "_captured_project_1"];
     function QuickFixHelper(disposables) {
       this.disposables = disposables;
       this.$deferredAction();
@@ -15325,7 +15382,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.HtmlPersistentProperties[1];
     HtmlPersistentProperties.prototype = $desc;
     HtmlPersistentProperties.$__fields__ = ["_usage_impl_html$_map", "name"];
-    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, _Serializer, _Deserializer, ConstantMapView, ConstantMap, ConstantStringMap, _ConstantMapKeyIterable, GeneralConstantMap, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, ExceptionAndStackTrace, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, CastErrorImplementation, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, JsLinkedHashMap_addAll_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, _StringAllMatchesIterable, _StringAllMatchesIterator, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, ViewRegistry, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, Config_onDidChange_closure, Config_onDidChange_closure0, ContextMenuManager, ContextMenuManager_add_closure, ContextMenuItem, ContextMenuItem_toJs_closure, _SeparatorMenuItem, NotificationManager, NotificationManager__options_closure, Notification, NotificationButton, NotificationButton_toProxy_closure, NotificationHelper, NotificationHelper_appendText_closure, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextEditor_onDidChangeCursorPosition_closure, TextBuffer, Range, Point, AtomEvent, Shell, ScopeDescriptor, BufferedProcess, BufferedProcess_create_closure, Stats, OrganizeFileManager, OrganizeFileManager__addEditorCommand_closure, OrganizeFileManager__handleSortMembers_closure, OrganizeFileManager__handleOrganizeDirectives_closure, OrganizeFileManager__handleOrganizeDirectives_closure0, AnalysisOptionsManager, AnalysisServer, AnalysisServer_closure, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__syncRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__focusedEditorChanged_closure, AnalysisServer_filterSearchResults_closure, AnalysisServer_filterSearchResults_closure0, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, AnalysisServer__initNewServer_closure5, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_closure, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_setup_closure0, _AnalysisServerWrapper_setup_closure1, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart__closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, RenameRefactoringOptions, AnalysisRequestJob, AnalysisRequestJob_run_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_showDialog_closure, AnalysisServerDialog_showDialog_closure0, AnalysisServerDialog_showDialog_closure1, Server, Domain, ServerDomain, ServerStatus, VersionResult, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, AnalysisOutline, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, SearchResults, SearchResults_parse_closure, FindElementReferencesResult, TypeHierarchyResult, TypeHierarchyResult_parse_closure, EditDomain, FormatResult, FormatResult_parse_closure, AvailableRefactoringsResult, FixesResult, FixesResult_parse_closure, RefactoringResult, RefactoringResult_parse_closure, RefactoringResult_parse_closure0, RefactoringResult_parse_closure1, SortMembersResult, OrganizeDirectivesResult, ExecutionDomain, ExecutionLaunchData, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisOptions, AnalysisStatus, ChangeContentOverlay, CompletionSuggestion, Element0, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Outline, Outline_parse_closure, Position, PubStatus, RefactoringFeedback, RefactoringOptions, RefactoringProblem, RemoveContentOverlay, RequestError, SearchResult, SearchResult_parse_closure, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, TypeHierarchyItem, promptUser_closure, promptUser_closure0, promptUser_closure1, promptUser_closure2, getSystemDescription_closure, getSystemDescription_closure0, PermissiveNodeValidator, TrustedHtmlTreeSanitizer, loadPackageJson_closure, getPackageVersion_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions_closure0, AutocompleteProvider__getSuggestions__closure, AutocompleteOptions, Suggestion, _AutocompleteOverride, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions_closure0, DartAutocompleteProvider_getSuggestions__closure, DartAutocompleteProvider_getSuggestions__closure0, DartAutocompleteProvider_getSuggestions__closure1, DartAutocompleteProvider__handleCompletionResults_closure2, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__handleCompletionResults_closure0, DartAutocompleteProvider__handleCompletionResults_closure1, DartAutocompleteProvider__handleCompletionResults_closure3, DartAutocompleteProvider__handleCompletionResults__closure, DartAutocompleteProvider__handleCompletionResults_closure4, BufferObserverManager, BufferObserverManager_dispose_closure, BufferObserver, BufferFormatter, BufferFormatter_closure, BufferFormatter__closure, BufferFormatter___closure, BufferFormatter_closure0, BufferUpdater, BufferUpdater__logError_closure, BufferUpdater_changedOverlay_closure, ChangelogManager, ChangelogManager_closure, ChangelogManager_closure0, ChangelogManager__handleReleaseNotes_closure, ChangelogManager__handleReleaseNotes_closure0, CliLaunchType, CliLaunchType_performLaunch_closure, CliLaunchType_performLaunch_closure0, CliLaunchType_performLaunch_closure1, CliLaunchType_performLaunch_closure2, ConsoleController, ConsoleController_closure, ConsoleView, _LaunchController, _LaunchController_closure, _LaunchController_closure0, _LaunchController_closure1, _LaunchController__updateButtons_closure, _LaunchController__updateButtons_closure0, _LaunchController__updateButtons_closure1, ConsoleStatusElement, DartdocHelper, DartdocHelper_closure, DartdocHelper__handleDartdoc_closure, DartdocHelper__handleDartdoc__closure, DartdocHelper__render_writeTitle, DartdocHelper__render_closure, DartdocControl, DartdocControl_closure, DartdocControl_closure0, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__activate__closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__getNavigationInfoFor_closure, NavigationHelper__getNavigationInfoFor_closure0, NavigationHelper__processNavInfo_closure, _NavigationPosition, Dependencies, _handleEnterKey_closure, _handleEnterKey_closure0, _handleEnterKey_closure1, _handleEnterKey_closure2, _handleEnterKey_closure3, _handleEnterKey_closure4, _handleEnterKey_closure5, applyEdits_closure, applyEdits__closure, selectEditGroup_closure, _sortEdits_closure, EditorManager, EditorManager_jumpToLocation_closure, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_onClick_closure, CoreElement_click_closure, ProgressElement, CloseButton, TitledModelDialog, TitledModelDialog_closure, TitledModelDialog_closure0, main_closure, ErrorRepository, ErrorsController, ErrorsController_closure, ErrorsController__handleErrorsChanged_closure, ErrorsView, ErrorsView__cvtError_closure, ErrorsView__cvtError__closure, ErrorsView__cvtError_closure0, ErrorsView__jumpTo_closure, ErrorsStatusElement, CreateProjectManager, CreateProjectManager__createProject_closure, CreateProjectManager__createProject_closure0, CreateProjectManager__createProject_closure1, CreateProjectManager__createProject__closure, ToolbarContribution, Toolbar, ToolbarTile, FlutterLaunchType, FlutterLaunchType_performLaunch_closure, FlutterLaunchType_performLaunch_closure0, _LaunchInstance, _LaunchInstance_launch_closure, _LaunchInstance_launch_closure0, _LaunchInstance_launch_closure1, _LaunchInstance_launch_closure2, _LaunchInstance_launch__closure, _LaunchInstance_launch__closure0, _LaunchInstance_launch__closure1, FormattingHelper, FormattingHelper_closure, FormattingHelper_closure0, FormattingHelper_formatFile_closure, FormattingHelper_formatEditor_closure, FormattingHelper_formatEditor_closure0, Job, Status, JobStatus, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager_runningJobs_closure, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, EventListener, EventListener_closure, LaunchManager, LaunchManager_addLaunch_closure, LaunchManager_addLaunch_closure0, LaunchManager__readConfigs_closure, LaunchManager__readConfigs_closure0, LaunchManager_getConfigurationsForPath_closure, LaunchManager_getConfigurationsForProject_closure, LaunchType, LaunchConfiguration, Launch, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintMessage, Rn, Pt, DartLinterConsumer, LinterConsumer_Disposables, DartLinterConsumer_closure, DartLinterConsumer_closure0, DartLinterConsumer__regenErrors_closure, DartLinterConsumer__filter_closure, DartLinterConsumer__emit_closure, DartLinterProvider, OutlineController, OutlineController_closure, OutlineController_closure0, OutlineController_closure1, OutlineView, OutlineView_closure, OutlineView__setupResizer_closure, OutlineView__setupResizer_closure0, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage_closure1, AtomDartPackage_closure2, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated__closure, AtomDartPackage_packageActivated__closure0, AtomDartPackage_packageActivated_closure3, AtomDartPackage__validateSettings_closure, AtomDartPackage__validateSettings_closure0, AtomDartPackage__validateSettings_closure1, AtomDartPackage__showWelcomeToast_closure, AtomDartPackage__handleSendFeedback_closure, AtomDartPackage__registerLinter_closure, AtomDartPackage__registerLinter_closure0, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure2, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure, ProcessRunner_execStreaming_closure0, ProcessRunner_kill_closure, ProcessResult, ProcessNotifier, ProcessNotifier_watch_closure, ProcessNotifier_watch_closure0, ProcessNotifier_watch_closure1, ProcessNotifier_watch_closure2, ProjectManager, ProjectManager_closure, ProjectManager_closure0, ProjectManager_closure1, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, ProjectManager__markDartProject_closure, DartProject, ProjectScanJob, _MarkDartProjectContextCommand, PubManager, PubManager_closure, PubManager_closure0, PubManager_closure1, PubManager_closure2, PubManager_closure3, PubManager_closure4, PubManager_closure5, PubManager_closure6, PubManager_closure7, PubManager__addSdkCmd_closure, PubManager__handleRun_closure, PubManager__handleGlobalRun_closure, PubManager__handleGlobalActivate_closure, PubApp, PubApp_getInstalledVersion_closure, PubApp_installIfUpdateAvailable_closure, PubApp_installIfUpdateAvailable_closure0, PubApp_getMostRecentHostedVersion_closure, PubApp_getMostRecentHostedVersion__closure, PubJob, PubRunJob, PubGlobalActivate, PubGlobalActivate_run_closure, PubGlobalActivate_run_closure0, PubGlobalActivate_run_closure1, PubContextCommand, QuickFixHelper, QuickFixHelper_closure, QuickFixHelper__handleQuickFix_closure, QuickFixHelper__handleQuickFix__closure, QuickFixHelper__handleFixesResult_closure, QuickFixHelper__handleFixesResult__closure, QuickFixHelper__handleFixesResult_closure0, QuickFixHelper__handleFixesResult_closure1, _Change, _applyChange_closure, _applyChange__closure0, _applyChange_closure0, _applyChange__closure, _applyChange_closure1, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RefactoringHelper, RefactoringHelper_closure, RefactoringHelper__handleRenameRefactor_closure, RefactoringHelper__handleRenameRefactor__closure, RefactoringHelper__handleRefactorResult_closure, RefactoringHelper__handleRefactorResult_closure0, RefactoringHelper__handleRefactorResult__closure, RefactoringHelper__handleRefactorResult___closure0, RefactoringHelper__handleRefactorResult__closure0, RefactoringHelper__handleRefactorResult__closure1, RefactoringHelper__handleRefactorResult___closure, RefactoringHelper__handleRefactorResult__closure2, RefactoringHelper__handleRefactorResult__closure3, RefactoringHelper__handleRefactorResult__closure4, RefactoringHelper__apply_closure, RefactoringHelper__apply__closure0, RefactoringHelper__apply_closure0, RefactoringHelper__apply__closure, RefactoringHelper__apply_closure1, FindReferencesHelper, FindReferencesHelper__handleReferencesEditor_closure, FindReferencesHelper__handleReferencesEditor__closure, FindReferencesView, FindReferencesView__showView_closure, FindReferencesView__showView__closure, FindReferencesView__showView__closure0, _MatchParser, RunApplicationManager, RunApplicationManager_closure, RunApplicationManager_closure0, RunApplicationManager_closure1, RunApplicationManager_closure2, RunApplicationManager_closure3, RunApplicationManager__run_closure, RunAppContextCommand, SdkManager, SdkManager_closure, SdkManager_closure0, SdkManager_closure1, SdkManager_tryToAutoConfigure_closure, SdkManager__setSdk_closure, SdkManager__handleShowSdkInfo_closure, SdkManager__handleShowSdkInfo__closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob, ShellLaunchType, ShellLaunchType_performLaunch_closure, ShellLaunchType_performLaunch_closure0, ShellLaunchType_performLaunch_closure1, ShellLaunchType_performLaunch_closure2, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure6, smokeTest_closure7, smokeTest_closure10, smokeTest_closure9, smokeTest_closure8, smokeTest_closure11, smokeTest_closure12, smokeTest_closure13, smokeTest_closure14, smokeTest_closure15, smokeTest_closure16, _TestJob, State, State_onValueChanged_closure, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay_closure0, JobsDialog, StatusBar, Tile, TypeHierarchyHelper, TypeHierarchyHelper__handleHierarchyEditor_closure, TypeHierarchyHelper__handleHierarchyEditor__closure, TypeHierarchyView, TypeHierarchyView__sort_closure, TypeHierarchyView__render_closure, TypeHierarchyView__render_closure0, UsageManager, UsageManager_closure, UsageManager__init_closure, UsageManager__init__closure, UsageManager__init__closure0, Disposable, Disposables, StreamSubscriptions, Edit, ViewResizer, ViewResizer__init_closure0, ViewResizer__init_closure, ViewResizer__init__closure, ViewResizer__init__closure0, ViewResizer__minSize_closure, ViewResizer__targetSize_closure, AtomView, AtomView_closure, AtomView_closure0, AtomView__setupResizer_closure, AtomView__setupResizer_closure0, AtomView__handleCancel_closure, ViewGroupManager, ViewGroup, ListTreeBuilder, ListTreeBuilder__addNode_closure, ListTreeBuilder__addNode_closure0, ListTreeBuilder__addNode_closure1, ListTreeBuilder__addNode_closure2, ListTreeBuilder__addNode_closure3, Node0, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, SkipIterable, EfficientLengthSkipIterable, SkipIterator, EmptyIterator, FixedLengthListMixin, ReversedListIterable, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _awaitOnObject_closure, _awaitOnObject_closure0, _wrapJsFunctionForAsync_closure, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _SyncBroadcastStreamController__sendError_closure, _SyncBroadcastStreamController__sendDone_closure, _AsyncBroadcastStreamController, _AsBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, Future_wait_handleError, Future_wait_closure, Future_forEach_closure, Future_forEach__closure, Future_forEach__closure0, Future_doWhile_closure, TimeoutException, _Completer, _AsyncCompleter, _SyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _Future_timeout_closure, _Future_timeout_closure0, _Future_timeout_closure1, _AsyncCallbackEntry, Stream, Stream_Stream$fromIterable_closure, Stream_Stream$periodic_sendEvent, Stream_Stream$periodic_startPeriodicTimer, Stream_Stream$periodic_startPeriodicTimer_closure, Stream_Stream$periodic_closure0, Stream_Stream$periodic_closure1, Stream_Stream$periodic_closure2, Stream_Stream$periodic__closure, Stream_Stream$periodic_closure, Stream_join_closure, Stream_join_closure1, Stream_join_closure0, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_any_closure, Stream_any__closure, Stream_any__closure0, Stream_any_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_last_closure, Stream_last_closure0, StreamSubscription, EventSink, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _SyncStreamController, _ControllerStream, _ControllerSubscription, _AddStreamState, _AddStreamState_cancel_closure, _StreamControllerAddStreamState, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _GeneratedStreamImpl, _IterablePendingEvents, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _AsBroadcastStream, _BroadcastSubscriptionWrapper, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _TakeStream, _StateStreamSubscription, _EventSinkWrapper, _SinkTransformerStreamSubscription, _BoundSinkStream, Timer, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _HashMap, _HashMap_addAll_closure, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, LinkedHashMap_LinkedHashMap$from_closure, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMap_addAll_closure, _JsonMapKeyIterable, _JsonDecoderSink, ByteConversionSink, ByteConversionSinkBase, _ByteAdapterSink, ChunkedConversionSink, _ConverterStreamEventSink, Codec, Converter, Converter_bind_closure, Encoding, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, _JsonEncoderSink, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, _StringConversionSinkAsStringSinkAdapter, StringConversionSinkBase, StringConversionSinkMixin, _StringSinkConversionSink, _StringAdapterSink, Utf8Codec, Utf8Encoder, _Utf8Encoder, _Utf8EncoderSink, _Utf8Encoder_StringConversionSinkMixin, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _Exception, FormatException, IntegerDivisionByZeroException, Expando, Function, $int, Iterable, Iterator, List, Map, Null, num, Object, Match, RegExp, StackTrace, _StringStackTrace, Stopwatch, String, StringBuffer, Symbol, Uri__uriEncode_byteToHex, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, BaseElement, Blob, BodyElement, ButtonElement, CharacterData, CompositionEvent, CssStyleDeclaration, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, DeviceLightEvent, DivElement, Document0, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, Element_Element$html_closure, ScrollAlignment, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, HtmlDocument, HttpRequest, HttpRequest_getString_closure, HttpRequest_request_closure, HttpRequestEventTarget, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, LinkElement, Location0, MapElement, MediaController, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MediaStream, MenuElement, MenuItemElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, MidiOutput, MidiPort, MouseEvent, Navigator, NavigatorUserMediaError, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, ProgressEvent, PushEvent, Range0, ScriptElement0, SelectElement, ShadowRoot, SourceElement, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesisEvent, Storage, Storage_addAll_closure, Storage_keys_closure, StyleElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, TextAreaElement, TextEvent, TrackElement, UIEvent, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _SpeechRecognitionResultList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, _AttributeMap, _AttributeMap_addAll_closure, _ElementAttributeMap, _MarginCssRect, CssRect, _ElementCssClassSet, Dimension, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, _Html5NodeValidator, ImmutableListMixin, NodeValidatorBuilder, NodeValidatorBuilder_allowsElement_closure, NodeValidatorBuilder_allowsAttribute_closure, _SimpleNodeValidator, _SimpleNodeValidator_closure, _SimpleNodeValidator_closure0, _TemplatingNodeValidator, _TemplatingNodeValidator_closure, _SvgNodeValidator, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, NodeValidator, _SameOriginUriPolicy, _ValidatingTreeSanitizer, _ValidatingTreeSanitizer_sanitizeTree_walk, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement, StyleElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, _JSRandom, Point0, _RectangleBase, Rectangle, MutableRectangle, DefaultEquality, IterableEquality, Uint8List, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, EventStream, EventStream__createControllerForStream_onListen, EventStream__createControllerForStream_onCancel, Property, Property__createControllerForStream_closure, Property__createControllerForStream_onListen, Property__createControllerForStream_onListen_closure, Property__createControllerForStream_onListen_closure0, Property__createControllerForStream_onCancel, Property_listen_closure, Property_operator$gt_closure, Property_operator$ge_closure, Property_operator$lt_closure, Property_operator$le_closure, Property_operator$add_closure, Property_operator$sub_closure, Property_operator$mul_closure, Reactable, Haikunator_haikunate_closure, _AcceptStructuredClone, _AcceptStructuredClone_walk_closure, _AcceptStructuredCloneDart2Js, convertNativePromiseToDartFuture_closure, convertNativePromiseToDartFuture_closure0, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__iterable_closure, FilteredElementList_removeRange_closure, Logger, Logger_Logger_closure, Level, LogRecord, BlockParser, BlockSyntax, BlockSyntax_isAtBlockEnd_closure, EmptyBlockSyntax, SetextHeaderSyntax, HeaderSyntax, BlockquoteSyntax, CodeBlockSyntax, FencedCodeBlockSyntax, HorizontalRuleSyntax, BlockHtmlSyntax, ListItem, ListSyntax, ListSyntax_parse_endItem, ListSyntax_parse_tryMatch, UnorderedListSyntax, OrderedListSyntax, ParagraphSyntax, Node1, Element1, Text, Document, Link, HtmlRenderer, HtmlRenderer_visitElementBefore_closure, InlineParser, InlineSyntax, TextSyntax, AutolinkSyntax, TagSyntax, LinkSyntax, ImageLinkSyntax, ImageLinkSyntax__createElement_closure, CodeSyntax, TagState, Version, Version__splitParts_closure, Combine, Combine_all_closure, Combine_all__closure, Combine_all___closure0, Combine_all__closure0, Combine_all__closure1, Combine_all__closure2, Combine_all___closure, Combine_all__closure3, Combine_bind_closure, Combine_bind__closure, Debounce, Debounce_bind_closure, Debounce_bind__closure, FlatMap, FlatMap_bind_onListen, FlatMap_bind_onListen_closeSinkIfDone, FlatMap_bind_onListen_onData, FlatMap_bind_onListen_onData_closure, FlatMap_bind_onListen_onData_closure0, FlatMap_bind_onListen_closure, FlatMap_bind_onListen_closure0, FlatMap_bind_onCancel, FlatMapLatest, FlatMapLatest_bind_closure, FlatMapLatest_bind_onListen, FlatMapLatest_bind_onListen_closure, FlatMapLatest_bind_onListen_closure1, FlatMapLatest_bind_onListen_closure0, FlatMapLatest_bind_onListen_closure2, FlatMapLatest_bind_onListen_closure3, FlatMapLatest_bind_onListen_closure4, FlatMapLatest_bind_closure0, MergeAll, MergeAll_bind_closure, Scan, Scan_bind_closure, Scan_bind__onData, TakeUntil, TakeUntil_bind_onListen, TakeUntil_bind_onListen_done, TakeUntil_bind_onListen_closure, TakeUntil_bind_onListen_closure0, TakeUntil_bind_onListen_closure1, TakeUntil_bind_closure, _bindStream_closure0, _bindStream_closure1, _bindStream_closure2, _bindStream_closure, _bindStream__closure, _bindStream__closure0, _bindStream__closure1, Analytics, AnalyticsMock, AnalyticsHtml, postEncode_closure, ThrottlingBucket, AnalyticsImpl, AnalyticsImpl__sendPayload_closure, AnalyticsImpl__recordFuture_closure, PersistentProperties, PostHandler, HtmlPostHandler, HtmlPostHandler_sendPost_closure, HtmlPersistentProperties];
+    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, _Serializer, _Deserializer, ConstantMapView, ConstantMap, ConstantStringMap, _ConstantMapKeyIterable, GeneralConstantMap, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, ExceptionAndStackTrace, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, CastErrorImplementation, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, JsLinkedHashMap_addAll_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, _StringAllMatchesIterable, _StringAllMatchesIterator, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, ViewRegistry, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, Config_onDidChange_closure, Config_onDidChange_closure0, ContextMenuManager, ContextMenuManager_add_closure, ContextMenuItem, ContextMenuItem_toJs_closure, _SeparatorMenuItem, NotificationManager, NotificationManager__options_closure, Notification, NotificationButton, NotificationButton_toProxy_closure, NotificationHelper, NotificationHelper_appendText_closure, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextEditor_onDidChangeCursorPosition_closure, TextBuffer, Range, Point, AtomEvent, Shell, ScopeDescriptor, BufferedProcess, BufferedProcess_create_closure, Stats, OrganizeFileManager, OrganizeFileManager__addEditorCommand_closure, OrganizeFileManager__handleSortMembers_closure, OrganizeFileManager__handleOrganizeDirectives_closure, OrganizeFileManager__handleOrganizeDirectives_closure0, AnalysisOptionsManager, AnalysisServer, AnalysisServer_closure, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__syncRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__focusedEditorChanged_closure, AnalysisServer_filterSearchResults_closure, AnalysisServer_filterSearchResults_closure0, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, AnalysisServer__initNewServer_closure5, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_closure, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_setup_closure0, _AnalysisServerWrapper_setup_closure1, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart__closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, RenameRefactoringOptions, AnalysisRequestJob, AnalysisRequestJob_run_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_showDialog_closure, AnalysisServerDialog_showDialog_closure0, AnalysisServerDialog_showDialog_closure1, Server, Domain, ServerDomain, ServerStatus, VersionResult, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, AnalysisOutline, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, SearchResults, SearchResults_parse_closure, FindElementReferencesResult, TypeHierarchyResult, TypeHierarchyResult_parse_closure, EditDomain, FormatResult, FormatResult_parse_closure, AvailableRefactoringsResult, FixesResult, FixesResult_parse_closure, RefactoringResult, RefactoringResult_parse_closure, RefactoringResult_parse_closure0, RefactoringResult_parse_closure1, SortMembersResult, OrganizeDirectivesResult, ExecutionDomain, ExecutionLaunchData, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisOptions, AnalysisStatus, ChangeContentOverlay, CompletionSuggestion, Element0, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Outline, Outline_parse_closure, Position, PubStatus, RefactoringFeedback, RefactoringOptions, RefactoringProblem, RemoveContentOverlay, RequestError, SearchResult, SearchResult_parse_closure, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, TypeHierarchyItem, promptUser_closure, promptUser_closure0, promptUser_closure1, promptUser_closure2, getSystemDescription_closure, getSystemDescription_closure0, PermissiveNodeValidator, TrustedHtmlTreeSanitizer, loadPackageJson_closure, getPackageVersion_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions_closure0, AutocompleteProvider__getSuggestions__closure, AutocompleteOptions, Suggestion, _AutocompleteOverride, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions_closure0, DartAutocompleteProvider_getSuggestions__closure, DartAutocompleteProvider_getSuggestions__closure0, DartAutocompleteProvider_getSuggestions__closure1, DartAutocompleteProvider__handleCompletionResults_closure2, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__handleCompletionResults_closure0, DartAutocompleteProvider__handleCompletionResults_closure1, DartAutocompleteProvider__handleCompletionResults_closure3, DartAutocompleteProvider__handleCompletionResults__closure, DartAutocompleteProvider__handleCompletionResults_closure4, BufferObserverManager, BufferObserverManager_dispose_closure, BufferObserver, BufferFormatter, BufferFormatter_closure, BufferFormatter__closure, BufferFormatter___closure, BufferFormatter_closure0, BufferUpdater, BufferUpdater__logError_closure, BufferUpdater_changedOverlay_closure, ChangelogManager, ChangelogManager_closure, ChangelogManager_closure0, ChangelogManager__handleReleaseNotes_closure, ChangelogManager__handleReleaseNotes_closure0, CliLaunchType, CliLaunchType_performLaunch_closure, CliLaunchType_performLaunch_closure0, CliLaunchType_performLaunch_closure1, CliLaunchType_performLaunch_closure2, ConsoleController, ConsoleController_closure, ConsoleView, _LaunchController, _LaunchController_closure, _LaunchController_closure0, _LaunchController_closure1, _LaunchController__updateButtons_closure, _LaunchController__updateButtons_closure0, _LaunchController__updateButtons_closure1, ConsoleStatusElement, DartdocHelper, DartdocHelper_closure, DartdocHelper__handleDartdoc_closure, DartdocHelper__handleDartdoc__closure, DartdocHelper__render_writeTitle, DartdocHelper__render_closure, DartdocControl, DartdocControl_closure, DartdocControl_closure0, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__activate__closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__getNavigationInfoFor_closure, NavigationHelper__getNavigationInfoFor_closure0, NavigationHelper__processNavInfo_closure, _NavigationPosition, Dependencies, _handleEnterKey_closure, _handleEnterKey_closure0, _handleEnterKey_closure1, _handleEnterKey_closure2, _handleEnterKey_closure3, _handleEnterKey_closure4, _handleEnterKey_closure5, applyEdits_closure, applyEdits__closure, selectEditGroup_closure, _sortEdits_closure, EditorManager, EditorManager_jumpToLocation_closure, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_onClick_closure, CoreElement_click_closure, ProgressElement, CloseButton, TitledModelDialog, TitledModelDialog_closure, TitledModelDialog_closure0, main_closure, ErrorRepository, ErrorsController, ErrorsController_closure, ErrorsController__handleErrorsChanged_closure, ErrorsView, ErrorsView__cvtError_closure, ErrorsView__cvtError__closure, ErrorsView__cvtError_closure0, ErrorsView__cvtError_closure1, ErrorsView__cvtError_closure2, ErrorsView__jumpTo_closure, ErrorsStatusElement, CreateProjectManager, CreateProjectManager__createProject_closure, CreateProjectManager__createProject_closure0, CreateProjectManager__createProject_closure1, CreateProjectManager__createProject__closure, ToolbarContribution, Toolbar, ToolbarTile, FlutterLaunchType, FlutterLaunchType_performLaunch_closure, FlutterLaunchType_performLaunch_closure0, _LaunchInstance, _LaunchInstance_launch_closure, _LaunchInstance_launch_closure0, _LaunchInstance_launch_closure1, _LaunchInstance_launch_closure2, _LaunchInstance_launch__closure, _LaunchInstance_launch__closure0, _LaunchInstance_launch__closure1, FormattingHelper, FormattingHelper_closure, FormattingHelper_closure0, FormattingHelper_formatFile_closure, FormattingHelper_formatEditor_closure, FormattingHelper_formatEditor_closure0, Job, Status, JobStatus, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager_runningJobs_closure, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, EventListener, EventListener_closure, LaunchManager, LaunchManager_addLaunch_closure, LaunchManager_addLaunch_closure0, LaunchManager__readConfigs_closure, LaunchManager__readConfigs_closure0, LaunchManager_getConfigurationsForPath_closure, LaunchManager_getConfigurationsForProject_closure, LaunchType, LaunchConfiguration, Launch, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintMessage, Rn, Pt, DartLinterConsumer, LinterConsumer_Disposables, DartLinterConsumer_closure, DartLinterConsumer_closure0, DartLinterConsumer__regenErrors_closure, DartLinterConsumer__filter_closure, DartLinterConsumer__emit_closure, DartLinterProvider, OutlineController, OutlineController_closure, OutlineController_closure0, OutlineController_closure1, OutlineView, OutlineView_closure, OutlineView__setupResizer_closure, OutlineView__setupResizer_closure0, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage_closure1, AtomDartPackage_closure2, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated__closure, AtomDartPackage_packageActivated__closure0, AtomDartPackage_packageActivated_closure3, AtomDartPackage__validateSettings_closure, AtomDartPackage__validateSettings_closure0, AtomDartPackage__validateSettings_closure1, AtomDartPackage__showWelcomeToast_closure, AtomDartPackage__handleSendFeedback_closure, AtomDartPackage__registerLinter_closure, AtomDartPackage__registerLinter_closure0, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure2, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure, ProcessRunner_execStreaming_closure0, ProcessRunner_kill_closure, ProcessResult, ProcessNotifier, ProcessNotifier_watch_closure, ProcessNotifier_watch_closure0, ProcessNotifier_watch_closure1, ProcessNotifier_watch_closure2, ProjectManager, ProjectManager_closure, ProjectManager_closure0, ProjectManager_closure1, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, ProjectManager__markDartProject_closure, ProjectManager__initProjectControllers_closure, DartProject, ProjectScanJob, _MarkDartProjectContextCommand, PubManager, PubManager_closure, PubManager_closure0, PubManager_closure1, PubManager_closure2, PubManager_closure3, PubManager_closure4, PubManager_closure5, PubManager_closure6, PubManager_closure7, PubManager__addSdkCmd_closure, PubManager__handleRun_closure, PubManager__handleGlobalRun_closure, PubManager__handleGlobalActivate_closure, PubApp, PubApp_getInstalledVersion_closure, PubApp_installIfUpdateAvailable_closure, PubApp_installIfUpdateAvailable_closure0, PubApp_getMostRecentHostedVersion_closure, PubApp_getMostRecentHostedVersion__closure, PubJob, PubRunJob, PubGlobalActivate, PubGlobalActivate_run_closure, PubGlobalActivate_run_closure0, PubGlobalActivate_run_closure1, PubContextCommand, _showRunPubDialog_closure0, _showRunPubDialog_closure, QuickFixHelper, QuickFixHelper_closure, QuickFixHelper__handleQuickFix_closure, QuickFixHelper__handleQuickFix__closure, QuickFixHelper__handleFixesResult_closure, QuickFixHelper__handleFixesResult__closure, QuickFixHelper__handleFixesResult_closure0, QuickFixHelper__handleFixesResult_closure1, _Change, _applyChange_closure, _applyChange__closure0, _applyChange_closure0, _applyChange__closure, _applyChange_closure1, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RefactoringHelper, RefactoringHelper_closure, RefactoringHelper__handleRenameRefactor_closure, RefactoringHelper__handleRenameRefactor__closure, RefactoringHelper__handleRefactorResult_closure, RefactoringHelper__handleRefactorResult_closure0, RefactoringHelper__handleRefactorResult__closure, RefactoringHelper__handleRefactorResult___closure0, RefactoringHelper__handleRefactorResult__closure0, RefactoringHelper__handleRefactorResult__closure1, RefactoringHelper__handleRefactorResult___closure, RefactoringHelper__handleRefactorResult__closure2, RefactoringHelper__handleRefactorResult__closure3, RefactoringHelper__handleRefactorResult__closure4, RefactoringHelper__apply_closure, RefactoringHelper__apply__closure0, RefactoringHelper__apply_closure0, RefactoringHelper__apply__closure, RefactoringHelper__apply_closure1, FindReferencesHelper, FindReferencesHelper__handleReferencesEditor_closure, FindReferencesHelper__handleReferencesEditor__closure, FindReferencesView, FindReferencesView__showView_closure, FindReferencesView__showView__closure, FindReferencesView__showView__closure0, _MatchParser, RunApplicationManager, RunApplicationManager_closure, RunApplicationManager_closure0, RunApplicationManager_closure1, RunApplicationManager_closure2, RunApplicationManager_closure3, RunApplicationManager__run_closure, RunAppContextCommand, SdkManager, SdkManager_closure, SdkManager_closure0, SdkManager_closure1, SdkManager_tryToAutoConfigure_closure, SdkManager__setSdk_closure, SdkManager__handleShowSdkInfo_closure, SdkManager__handleShowSdkInfo__closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob, ShellLaunchType, ShellLaunchType_performLaunch_closure, ShellLaunchType_performLaunch_closure0, ShellLaunchType_performLaunch_closure1, ShellLaunchType_performLaunch_closure2, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure6, smokeTest_closure7, smokeTest_closure10, smokeTest_closure9, smokeTest_closure8, smokeTest_closure11, smokeTest_closure12, smokeTest_closure13, smokeTest_closure14, smokeTest_closure15, smokeTest_closure16, _TestJob, State, State_onValueChanged_closure, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay_closure0, JobsDialog, StatusBar, Tile, TypeHierarchyHelper, TypeHierarchyHelper__handleHierarchyEditor_closure, TypeHierarchyHelper__handleHierarchyEditor__closure, TypeHierarchyView, TypeHierarchyView__sort_closure, TypeHierarchyView__render_closure, TypeHierarchyView__render_closure0, UsageManager, UsageManager_closure, UsageManager__init_closure, UsageManager__init__closure, UsageManager__init__closure0, Disposable, Disposables, StreamSubscriptions, Edit, ViewResizer, ViewResizer__init_closure0, ViewResizer__init_closure, ViewResizer__init__closure, ViewResizer__init__closure0, ViewResizer__minSize_closure, ViewResizer__targetSize_closure, AtomView, AtomView_closure, AtomView_closure0, AtomView__setupResizer_closure, AtomView__setupResizer_closure0, AtomView__handleCancel_closure, ViewGroupManager, ViewGroup, ListTreeBuilder, ListTreeBuilder__addNode_closure, ListTreeBuilder__addNode_closure0, ListTreeBuilder__addNode_closure1, ListTreeBuilder__addNode_closure2, ListTreeBuilder__addNode_closure3, Node0, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, SkipIterable, EfficientLengthSkipIterable, SkipIterator, EmptyIterator, FixedLengthListMixin, ReversedListIterable, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _awaitOnObject_closure, _awaitOnObject_closure0, _wrapJsFunctionForAsync_closure, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _SyncBroadcastStreamController__sendError_closure, _SyncBroadcastStreamController__sendDone_closure, _AsyncBroadcastStreamController, _AsBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, Future_wait_handleError, Future_wait_closure, Future_forEach_closure, Future_forEach__closure, Future_forEach__closure0, Future_doWhile_closure, TimeoutException, _Completer, _AsyncCompleter, _SyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _Future_timeout_closure, _Future_timeout_closure0, _Future_timeout_closure1, _AsyncCallbackEntry, Stream, Stream_Stream$fromIterable_closure, Stream_Stream$periodic_sendEvent, Stream_Stream$periodic_startPeriodicTimer, Stream_Stream$periodic_startPeriodicTimer_closure, Stream_Stream$periodic_closure0, Stream_Stream$periodic_closure1, Stream_Stream$periodic_closure2, Stream_Stream$periodic__closure, Stream_Stream$periodic_closure, Stream_join_closure, Stream_join_closure1, Stream_join_closure0, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_any_closure, Stream_any__closure, Stream_any__closure0, Stream_any_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_last_closure, Stream_last_closure0, StreamSubscription, EventSink, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _SyncStreamController, _ControllerStream, _ControllerSubscription, _AddStreamState, _AddStreamState_cancel_closure, _StreamControllerAddStreamState, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _GeneratedStreamImpl, _IterablePendingEvents, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _AsBroadcastStream, _BroadcastSubscriptionWrapper, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _TakeStream, _StateStreamSubscription, _EventSinkWrapper, _SinkTransformerStreamSubscription, _BoundSinkStream, Timer, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _HashMap, _HashMap_addAll_closure, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, LinkedHashMap_LinkedHashMap$from_closure, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMap_addAll_closure, _JsonMapKeyIterable, _JsonDecoderSink, ByteConversionSink, ByteConversionSinkBase, _ByteAdapterSink, ChunkedConversionSink, _ConverterStreamEventSink, Codec, Converter, Converter_bind_closure, Encoding, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, _JsonEncoderSink, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, _StringConversionSinkAsStringSinkAdapter, StringConversionSinkBase, StringConversionSinkMixin, _StringSinkConversionSink, _StringAdapterSink, Utf8Codec, Utf8Encoder, _Utf8Encoder, _Utf8EncoderSink, _Utf8Encoder_StringConversionSinkMixin, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _Exception, FormatException, IntegerDivisionByZeroException, Expando, Function, $int, Iterable, Iterator, List, Map, Null, num, Object, Match, RegExp, StackTrace, _StringStackTrace, Stopwatch, String, StringBuffer, Symbol, Uri__uriEncode_byteToHex, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, BaseElement, Blob, BodyElement, ButtonElement, CharacterData, CompositionEvent, CssStyleDeclaration, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, DeviceLightEvent, DivElement, Document0, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, Element_Element$html_closure, ScrollAlignment, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, HtmlDocument, HttpRequest, HttpRequest_getString_closure, HttpRequest_request_closure, HttpRequestEventTarget, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, LinkElement, Location0, MapElement, MediaController, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MediaStream, MenuElement, MenuItemElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, MidiOutput, MidiPort, MouseEvent, Navigator, NavigatorUserMediaError, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, ProgressEvent, PushEvent, Range0, ScriptElement0, SelectElement, ShadowRoot, SourceElement, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesisEvent, Storage, Storage_addAll_closure, Storage_keys_closure, StyleElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, TextAreaElement, TextEvent, TrackElement, UIEvent, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _SpeechRecognitionResultList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, _AttributeMap, _AttributeMap_addAll_closure, _ElementAttributeMap, _MarginCssRect, CssRect, _ElementCssClassSet, Dimension, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, _Html5NodeValidator, ImmutableListMixin, NodeValidatorBuilder, NodeValidatorBuilder_allowsElement_closure, NodeValidatorBuilder_allowsAttribute_closure, _SimpleNodeValidator, _SimpleNodeValidator_closure, _SimpleNodeValidator_closure0, _TemplatingNodeValidator, _TemplatingNodeValidator_closure, _SvgNodeValidator, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, NodeValidator, _SameOriginUriPolicy, _ValidatingTreeSanitizer, _ValidatingTreeSanitizer_sanitizeTree_walk, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement, StyleElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, _JSRandom, Point0, _RectangleBase, Rectangle, MutableRectangle, DefaultEquality, IterableEquality, Uint8List, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, EventStream, EventStream__createControllerForStream_onListen, EventStream__createControllerForStream_onCancel, Property, Property__createControllerForStream_closure, Property__createControllerForStream_onListen, Property__createControllerForStream_onListen_closure, Property__createControllerForStream_onListen_closure0, Property__createControllerForStream_onCancel, Property_listen_closure, Property_operator$gt_closure, Property_operator$ge_closure, Property_operator$lt_closure, Property_operator$le_closure, Property_operator$add_closure, Property_operator$sub_closure, Property_operator$mul_closure, Reactable, Haikunator_haikunate_closure, _AcceptStructuredClone, _AcceptStructuredClone_walk_closure, _AcceptStructuredCloneDart2Js, convertNativePromiseToDartFuture_closure, convertNativePromiseToDartFuture_closure0, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__iterable_closure, FilteredElementList_removeRange_closure, Logger, Logger_Logger_closure, Level, LogRecord, BlockParser, BlockSyntax, BlockSyntax_isAtBlockEnd_closure, EmptyBlockSyntax, SetextHeaderSyntax, HeaderSyntax, BlockquoteSyntax, CodeBlockSyntax, FencedCodeBlockSyntax, HorizontalRuleSyntax, BlockHtmlSyntax, ListItem, ListSyntax, ListSyntax_parse_endItem, ListSyntax_parse_tryMatch, UnorderedListSyntax, OrderedListSyntax, ParagraphSyntax, Node1, Element1, Text, Document, Link, HtmlRenderer, HtmlRenderer_visitElementBefore_closure, InlineParser, InlineSyntax, TextSyntax, AutolinkSyntax, TagSyntax, LinkSyntax, ImageLinkSyntax, ImageLinkSyntax__createElement_closure, CodeSyntax, TagState, Version, Version__splitParts_closure, Combine, Combine_all_closure, Combine_all__closure, Combine_all___closure0, Combine_all__closure0, Combine_all__closure1, Combine_all__closure2, Combine_all___closure, Combine_all__closure3, Combine_bind_closure, Combine_bind__closure, Debounce, Debounce_bind_closure, Debounce_bind__closure, FlatMap, FlatMap_bind_onListen, FlatMap_bind_onListen_closeSinkIfDone, FlatMap_bind_onListen_onData, FlatMap_bind_onListen_onData_closure, FlatMap_bind_onListen_onData_closure0, FlatMap_bind_onListen_closure, FlatMap_bind_onListen_closure0, FlatMap_bind_onCancel, FlatMapLatest, FlatMapLatest_bind_closure, FlatMapLatest_bind_onListen, FlatMapLatest_bind_onListen_closure, FlatMapLatest_bind_onListen_closure1, FlatMapLatest_bind_onListen_closure0, FlatMapLatest_bind_onListen_closure2, FlatMapLatest_bind_onListen_closure3, FlatMapLatest_bind_onListen_closure4, FlatMapLatest_bind_closure0, MergeAll, MergeAll_bind_closure, Scan, Scan_bind_closure, Scan_bind__onData, TakeUntil, TakeUntil_bind_onListen, TakeUntil_bind_onListen_done, TakeUntil_bind_onListen_closure, TakeUntil_bind_onListen_closure0, TakeUntil_bind_onListen_closure1, TakeUntil_bind_closure, _bindStream_closure0, _bindStream_closure1, _bindStream_closure2, _bindStream_closure, _bindStream__closure, _bindStream__closure0, _bindStream__closure1, Analytics, AnalyticsMock, AnalyticsHtml, postEncode_closure, ThrottlingBucket, AnalyticsImpl, AnalyticsImpl__sendPayload_closure, AnalyticsImpl__recordFuture_closure, PersistentProperties, PostHandler, HtmlPostHandler, HtmlPostHandler_sendPost_closure, HtmlPersistentProperties];
   };
   function setupProgram(programData, typesOffset) {
     "use strict";
@@ -15850,7 +15907,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }],
       noSuchMethod$1: ["super$Interceptor$noSuchMethod", function(receiver, invocation) {
         throw H.wrapException(P.NoSuchMethodError$(receiver, invocation.get$memberName(), invocation.get$positionalArguments(), invocation.get$namedArguments(), null));
-      }, null, "get$noSuchMethod", 2, 0, null, 39],
+      }, null, "get$noSuchMethod", 2, 0, null, 53],
       get$runtimeType: function(receiver) {
         return new H.TypeImpl(H.getRuntimeTypeString(receiver), null);
       },
@@ -15885,7 +15942,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       },
       noSuchMethod$1: [function(receiver, invocation) {
         return this.super$Interceptor$noSuchMethod(receiver, invocation);
-      }, null, "get$noSuchMethod", 2, 0, null, 39]
+      }, null, "get$noSuchMethod", 2, 0, null, 53]
     },
     JavaScriptObject: {
       "^": "Interceptor;",
@@ -16900,7 +16957,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         case "error":
           throw H.wrapException(t1.$index(msg, "msg"));
       }
-    }, null, null, 4, 0, null, 71, 0],
+    }, null, null, 4, 0, null, 57, 0],
     IsolateNatives__log: function(msg) {
       var trace, t1, t2, exception;
       if (init.globalState.isWorker === true) {
@@ -17572,7 +17629,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (!(x instanceof P.Object))
           this.unsupported$1(x);
         return ["dart", init.classIdExtractor(x), this.serializeArrayInPlace$1(init.classFieldsExtractor(x))];
-      }, "call$1", "get$serialize", 2, 0, 0, 51],
+      }, "call$1", "get$serialize", 2, 0, 0, 39],
       unsupported$2: function(x, message) {
         throw H.wrapException(new P.UnsupportedError(H.S(message == null ? "Can't transmit:" : message) + " " + H.S(x)));
       },
@@ -17729,7 +17786,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           default:
             throw H.wrapException("couldn't deserialize: " + H.S(x));
         }
-      }, "call$1", "get$deserialize", 2, 0, 0, 51],
+      }, "call$1", "get$deserialize", 2, 0, 0, 39],
       deserializeArrayInPlace$1: function(x) {
         var t1, i, t2;
         t1 = J.getInterceptor$asx(x);
@@ -17929,7 +17986,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     },
     Primitives_dateNow: [function() {
       return Date.now();
-    }, "call$0", "_js_helper_Primitives_dateNow$closure", 0, 0, 95],
+    }, "call$0", "_js_helper_Primitives_dateNow$closure", 0, 0, 98],
     Primitives_initTicker: function() {
       var $window, performance;
       if ($.Primitives_timerFrequency != null)
@@ -18233,7 +18290,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return H._callInIsolate(isolate, new H.invokeClosure_closure3(closure, arg1, arg2, arg3, arg4));
       else
         throw H.wrapException(P.Exception_Exception("Unsupported number of arguments for wrapped closure"));
-    }, null, null, 14, 0, null, 74, 89, 108, 113, 55, 57, 62],
+    }, null, null, 14, 0, null, 62, 71, 86, 94, 110, 118, 55],
     convertDartClosureToJS: function(closure, arity) {
       var $function;
       if (closure == null)
@@ -19011,7 +19068,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       parameterName$1: [function(parameter) {
         var metadataIndex = this.data[parameter + this.optionalParameterCount + 3];
         return init.metadata[metadataIndex];
-      }, "call$1", "get$parameterName", 2, 0, 19],
+      }, "call$1", "get$parameterName", 2, 0, 18],
       defaultValue$1: function(_, parameter) {
         var t1 = this.requiredParameterCount;
         if (typeof parameter !== "number")
@@ -19039,7 +19096,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     Primitives_functionNoSuchMethod_closure: {
-      "^": "Closure:80;__js_helper$_box_0,_captured_arguments_1,_captured_namedArgumentList_2",
+      "^": "Closure:83;__js_helper$_box_0,_captured_arguments_1,_captured_namedArgumentList_2",
       call$2: function($name, argument) {
         var t1 = this.__js_helper$_box_0;
         t1._captured_names_1 = t1._captured_names_1 + "$" + H.S($name);
@@ -19531,7 +19588,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return H.computeSignature(function(K, V) {
           return {func: 1, ret: V, args: [P.Object]};
         }, this.$receiver, "JsLinkedHashMap");
-      }, 24],
+      }, 28],
       internalRemove$1: function(key) {
         var rest, bucket, index, cell;
         rest = this._rest;
@@ -19736,7 +19793,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     initHooks_closure0: {
-      "^": "Closure:65;_captured_getUnknownTag_1",
+      "^": "Closure:79;_captured_getUnknownTag_1",
       call$2: function(o, tag) {
         return this._captured_getUnknownTag_1(o, tag);
       }
@@ -19993,7 +20050,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       t1.$indexSet(exports, "activate", $._package.get$packageActivated());
       t1.$indexSet(exports, "deactivate", $._package.get$packageDeactivated());
       $._package.toString;
-      t1.$indexSet(exports, "config", K.jsify(P.LinkedHashMap__makeLiteral(["sdkLocation", P.LinkedHashMap__makeLiteral(["title", "Dart SDK Location", "description", "The location of the Dart SDK.", "type", "string", "default", "", "order", 1]), "useErrorsView", P.LinkedHashMap__makeLiteral(["title", "Show errors view", "description", "Use a custom errors view to display Dart errors and warnings. This will be used in place of the default linter view.", "type", "boolean", "default", true, "order", 2]), "showOutlineView", P.LinkedHashMap__makeLiteral(["title", "Show outline view", "description", "Show an outline view for Dart files.", "type", "boolean", "default", true, "order", 2]), "autoShowConsole", P.LinkedHashMap__makeLiteral(["title", "Auto open console", "description", "Automatically open the console when an application is run.", "type", "boolean", "default", true, "order", 3]), "showInfos", P.LinkedHashMap__makeLiteral(["title", "Show infos", "description", "Show informational level analysis issues.", "type", "boolean", "default", true, "order", 4]), "showTodos", P.LinkedHashMap__makeLiteral(["title", "Show todos", "description", "When showing infos, also show TODO items.", "type", "boolean", "default", false, "order", 4]), "formatOnSave", P.LinkedHashMap__makeLiteral(["title", "Format current file on save", "description", "Format the current editor on save.", "type", "boolean", "default", false, "order", 5]), "noPackageSymlinks", P.LinkedHashMap__makeLiteral(["title", "Run pub with '--no-package-symlinks'", "description", "Run pub with a command-line option to not create packages symlinks. Note: Flutter applications will not currently work with this option enabled.", "type", "boolean", "default", false, "order", 6]), "enableSuperMixins", P.LinkedHashMap__makeLiteral(["title", "Enable super mixins - analysis support for DEP 34", "description", "Enable analysis support for DEP 34 - allowing mixins to have super() calls and superclasses other than object. A restart is required.", "type", "boolean", "default", false, "order", 6]), "sendUsage", P.LinkedHashMap__makeLiteral(["title", "Report usage information to Google Analytics.", "description", "Report anonymized usage information to Google Analytics.", "type", "boolean", "default", true, "order", 7]), "logging", P.LinkedHashMap__makeLiteral(["title", "Log plugin diagnostics to the devtools console.", "description", "This is for plugin development only!", "type", "string", "default", "info", "enum", ["error", "warning", "info", "fine", "finer"], "order", 10]), "debugAnalysisServer", P.LinkedHashMap__makeLiteral(["title", "Start the analysis server with debug flags.", "description", "This is for plugin development only! The analysis server will be started with the observatory port and AS diagnostics ports turned on. A restart is required.", "type", "boolean", "default", false, "order", 11])])));
+      t1.$indexSet(exports, "config", K.jsify(P.LinkedHashMap__makeLiteral(["sdkLocation", P.LinkedHashMap__makeLiteral(["title", "Dart SDK Location", "description", "The location of the Dart SDK.", "type", "string", "default", "", "order", 1]), "useErrorsView", P.LinkedHashMap__makeLiteral(["title", "Show errors view", "description", "Use a custom errors view to display Dart errors and warnings. This will be used in place of the default linter view.", "type", "boolean", "default", true, "order", 2]), "showOutlineView", P.LinkedHashMap__makeLiteral(["title", "Show outline view", "description", "Show an outline view for Dart files.", "type", "boolean", "default", true, "order", 2]), "autoShowConsole", P.LinkedHashMap__makeLiteral(["title", "Auto open console", "description", "Automatically open the console when an application is run.", "type", "boolean", "default", true, "order", 3]), "showInfos", P.LinkedHashMap__makeLiteral(["title", "Show infos", "description", "Show informational level analysis issues.", "type", "boolean", "default", true, "order", 4]), "showTodos", P.LinkedHashMap__makeLiteral(["title", "Show todos", "description", "When showing infos, also show TODO items.", "type", "boolean", "default", false, "order", 4]), "formatOnSave", P.LinkedHashMap__makeLiteral(["title", "Format current file on save", "description", "Format the current editor on save.", "type", "boolean", "default", false, "order", 5]), "noPackageSymlinks", P.LinkedHashMap__makeLiteral(["title", "Run pub with '--no-package-symlinks'", "description", "Run pub with a command-line option to not create packages symlinks. Note: Flutter applications will not currently work with this option enabled.", "type", "boolean", "default", false, "order", 6]), "sendUsage", P.LinkedHashMap__makeLiteral(["title", "Report usage information to Google Analytics.", "description", "Report anonymized usage information to Google Analytics.", "type", "boolean", "default", true, "order", 7]), "logging", P.LinkedHashMap__makeLiteral(["title", "Log plugin diagnostics to the devtools console.", "description", "This is for plugin development only!", "type", "string", "default", "info", "enum", ["error", "warning", "info", "fine", "finer"], "order", 10]), "debugAnalysisServer", P.LinkedHashMap__makeLiteral(["title", "Start the analysis server with debug flags.", "description", "This is for plugin development only! The analysis server will be started with the observatory port and AS diagnostics ports turned on. A restart is required.", "type", "boolean", "default", false, "order", 11])])));
       t1.$indexSet(exports, "serialize", $._package.get$serialize());
       $package._registeredMethods.forEach$1(0, new E.registerPackage_closure(exports));
       $package._registeredMethods = null;
@@ -20039,7 +20096,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return result;
         else
           return;
-      }, null, null, 2, 0, null, 43, "call"]
+      }, null, null, 2, 0, null, 51, "call"]
     },
     Atom: {
       "^": "ProxyHolder;_commands,_config,_contextMenu,_notifications,_packages,_project,_views,_workspace,obj",
@@ -20099,13 +20156,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_atom$_captured_callback_0",
       call$1: [function(ed) {
         return this._atom$_captured_callback_0.call$1(new E.TextEditor(E._cvt(ed)));
-      }, null, null, 2, 0, null, 93, "call"]
+      }, null, null, 2, 0, null, 76, "call"]
     },
     Workspace_observeActivePaneItem_closure: {
       "^": "Closure:0;_atom$_captured_callback_0",
       call$1: [function(item) {
         return this._atom$_captured_callback_0.call$1(item);
-      }, null, null, 2, 0, null, 42, "call"]
+      }, null, null, 2, 0, null, 47, "call"]
     },
     Workspace_open_closure: {
       "^": "Closure:0;_captured_url_0",
@@ -20166,7 +20223,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return H.setRuntimeTypeInfo(new P._BroadcastStream(controller), [H.getTypeArgumentByIndex(controller, 0)]);
       }, function(keyPath) {
         return this.onDidChange$2(keyPath, null);
-      }, "onDidChange$1", "call$2", "call$1", "get$onDidChange", 2, 2, 59, 3]
+      }, "onDidChange$1", "call$2", "call$1", "get$onDidChange", 2, 2, 60, 3]
     },
     Config_onDidChange_closure: {
       "^": "Closure:1;_atom$_box_0",
@@ -20196,7 +20253,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(item) {
         return item.toJs$0();
-      }, null, null, 2, 0, null, 42, "call"]
+      }, null, null, 2, 0, null, 47, "call"]
     },
     ContextMenuItem: {
       "^": "Object;",
@@ -20241,10 +20298,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     NotificationManager__options_closure: {
-      "^": "Closure:66;",
+      "^": "Closure:69;",
       call$1: [function(nb) {
         return nb.toProxy$0();
-      }, null, null, 2, 0, null, 61, "call"]
+      }, null, null, 2, 0, null, 120, "call"]
     },
     Notification: {
       "^": "ProxyHolder;obj",
@@ -20346,7 +20403,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (this._captured_stderr_0)
           t1.get$classes(div).toggle$1(0, "text-error");
         return div;
-      }, null, null, 2, 0, null, 70, "call"]
+      }, null, null, 2, 0, null, 61, "call"]
     },
     PackageManager: {
       "^": "ProxyHolder;obj"
@@ -20364,7 +20421,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(dir) {
         return new E.Directory(dir);
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     Entry: {
       "^": "ProxyHolder;",
@@ -20450,7 +20507,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       call$1: [function(entry) {
         entry = E._cvt(entry);
         return entry.callMethod$1("isFile") === true ? new E.File(entry) : new E.Directory(entry);
-      }, null, null, 2, 0, null, 73, "call"]
+      }, null, null, 2, 0, null, 70, "call"]
     },
     TextEditorView: {
       "^": "ProxyHolder;obj"
@@ -20844,7 +20901,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       _setup$0: [function() {
         var t1, t2;
         t1 = this.subs._subscriptions;
-        t1.push(Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).get$onChanged().listen$1(this.get$_reconcileRoots()));
+        t1.push(Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).get$onProjectsChanged().listen$1(this.get$_reconcileRoots()));
         t1.push(Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$onSdkChange().listen$1(this.get$_handleSdkChange()));
         t1 = Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).get$dartProjectEditors()._activeEditorController;
         H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(this.get$_focusedEditorChanged());
@@ -20905,10 +20962,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (removedProjects._collection$_length !== 0 || addedProjects._collection$_length !== 0)
           this._syncRoots$0();
         this._checkTrigger$0();
-      }, "call$1", "get$_reconcileRoots", 2, 0, 83, 76],
+      }, "call$1", "get$_reconcileRoots", 2, 0, 87, 73],
       _handleSdkChange$1: [function(newSdk) {
         this._checkTrigger$0();
-      }, "call$1", "get$_handleSdkChange", 2, 0, 42, 80],
+      }, "call$1", "get$_handleSdkChange", 2, 0, 42, 74],
       _focusedEditorChanged$1: [function(editor) {
         var t1, path, t2;
         t1 = this._server;
@@ -21075,25 +21132,25 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t1 = $.$get$atom()._notifications;
           t1.invoke$3("addInfo", "Dart analysis server shutting down.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         }
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     AnalysisServer__setup_closure: {
       "^": "Closure:4;",
       call$1: [function(message) {
         return $.$get$_logger7().finer$1("--> " + H.S(message));
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     AnalysisServer__setup_closure0: {
       "^": "Closure:4;",
       call$1: [function(message) {
         return $.$get$_logger7().finer$1("<-- " + H.S(message));
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     AnalysisServer__syncRoots_closure: {
       "^": "Closure:0;",
       call$1: [function(dir) {
         return J.get$path$x(dir);
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     AnalysisServer__reconcileRoots_closure: {
       "^": "Closure:0;",
@@ -21114,7 +21171,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 0, 0, null, "call"]
     },
     AnalysisServer_filterSearchResults_closure0: {
-      "^": "Closure:43;_analysis_server$_box_0,_captured_id_1,_captured_controller_2",
+      "^": "Closure:44;_analysis_server$_box_0,_captured_id_1,_captured_controller_2",
       call$1: [function(result) {
         var t1, t2, r, t3;
         t1 = J.getInterceptor$x(result);
@@ -21144,7 +21201,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(value);
         return;
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     AnalysisServer__initNewServer_closure0: {
       "^": "Closure:0;_analysis_server$_captured_this_1,_captured_server_2",
@@ -21163,7 +21220,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           Q.Dependencies_instance().getDependency$1(C.Type_ErrorRepository_jfx).clearAll$0();
         }
         return;
-      }, null, null, 2, 0, null, 44, "call"]
+      }, null, null, 2, 0, null, 43, "call"]
     },
     AnalysisServer__initNewServer_closure1: {
       "^": "Closure:0;_analysis_server$_captured_this_3",
@@ -21173,7 +21230,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(message);
         return;
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     AnalysisServer__initNewServer_closure2: {
       "^": "Closure:0;_analysis_server$_captured_this_4",
@@ -21183,7 +21240,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(message);
         return;
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     AnalysisServer__initNewServer_closure3: {
       "^": "Closure:0;_analysis_server$_captured_this_5",
@@ -21221,7 +21278,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t1.start$0(0);
           this._captured_this_7._job = t1;
         }
-      }, null, null, 2, 0, null, 116, "call"]
+      }, null, null, 2, 0, null, 115, "call"]
     },
     _AnalyzingJob: {
       "^": "Job;completer,_infoAction,name,schedulingRule",
@@ -21274,9 +21331,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = P.LinkedHashMap__makeLiteral(["subscriptions", ["LAUNCH_DATA"]]);
         t2.server._call$2("execution.setSubscriptions", t1);
         t1 = this._analysis;
-        t2 = $.$get$atom()._config.getValue$1("dartlang.enableSuperMixins");
         t1.toString;
-        t2 = P.LinkedHashMap__makeLiteral(["options", new E.AnalysisOptions(null, null, null, null, t2, null, null, null)]);
+        t2 = P.LinkedHashMap__makeLiteral(["options", new E.AnalysisOptions(null, null, null, null, true, null, null, null)]);
         t1.server._call$2("analysis.updateOptions", t2);
         this._analysis_server_lib$_server.server._call$2("server.getVersion", null).then$1(E.analysis_server_lib_VersionResult_parse$closure()).then$1(new X._AnalysisServerWrapper_setup_closure());
         this._analysis_server_lib$_server._listen$2("server.status", E.analysis_server_lib_ServerStatus_parse$closure())._createSubscription$4(new X._AnalysisServerWrapper_setup_closure0(this), null, null, false);
@@ -21383,10 +21439,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(v) {
         return $.$get$_logger7().info$1("version " + H.S(J.get$version$x(v)));
-      }, null, null, 2, 0, null, 27, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     _AnalysisServerWrapper_setup_closure0: {
-      "^": "Closure:44;_analysis_server$_captured_this_0",
+      "^": "Closure:45;_analysis_server$_captured_this_0",
       call$1: [function($status) {
         var t1, t2;
         if ($status.get$analysis() != null) {
@@ -21398,10 +21454,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             H.throwExpression(t1._addEventError$0());
           t1._sendData$1(t2);
         }
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 40, "call"]
     },
     _AnalysisServerWrapper_setup_closure1: {
-      "^": "Closure:53;_analysis_server$_captured_this_1",
+      "^": "Closure:54;_analysis_server$_captured_this_1",
       call$1: [function(data) {
         var t1 = this._analysis_server$_captured_this_1;
         if (J.$eq$(J.get$kind$x(data), "SERVER"))
@@ -21477,14 +21533,14 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 5, "call"]
     },
     _AnalysisServerWrapper__startProcess_closure1: {
-      "^": "Closure:20;_analysis_server$_captured_completer_1",
+      "^": "Closure:19;_analysis_server$_captured_completer_1",
       call$1: [function(exitCode) {
         var t1;
         $.$get$_logger7().fine$1("exited with code " + H.S(exitCode));
         t1 = this._analysis_server$_captured_completer_1;
         if (t1.future._state === 0)
           t1.complete$1(0, exitCode);
-      }, null, null, 2, 0, null, 44, "call"]
+      }, null, null, 2, 0, null, 43, "call"]
     },
     _AnalysisServerWrapper__messageWriter_closure: {
       "^": "Closure:4;_captured_process_0",
@@ -21629,7 +21685,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t2 = H.S(message);
           J.set$text$x(t1.element, t2);
         }
-      }, "call$1", "get$_logTraffic", 2, 0, 12, 17],
+      }, "call$1", "get$_logTraffic", 2, 0, 12, 16],
       _updateStatus$1$updateTitle: function(updateTitle) {
         var t1, t2;
         if (this._statusElement == null)
@@ -21891,7 +21947,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           e = t1;
           $.$get$_logger8().severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e));
         }
-      }, "call$1", "get$_processMessage", 2, 0, 12, 17],
+      }, "call$1", "get$_processMessage", 2, 0, 12, 16],
       _call$2: function(method, args) {
         var id, t1, m, message, t2;
         id = "" + ++this._id;
@@ -21970,13 +22026,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       static: {ServerStatus_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.ServerStatus(E.AnalysisStatus_parse(t1.$index(m, "analysis")), E.PubStatus_parse(t1.$index(m, "pub")));
-        }, "call$1", "analysis_server_lib_ServerStatus_parse$closure", 2, 0, 96, 6]}
+        }, "call$1", "analysis_server_lib_ServerStatus_parse$closure", 2, 0, 99, 6]}
     },
     VersionResult: {
       "^": "Object;version>",
       static: {VersionResult_parse: [function(m) {
           return new E.VersionResult(J.$index$asx(m, "version"));
-        }, "call$1", "analysis_server_lib_VersionResult_parse$closure", 2, 0, 97, 6]}
+        }, "call$1", "analysis_server_lib_VersionResult_parse$closure", 2, 0, 100, 6]}
     },
     AnalysisDomain: {
       "^": "Domain;server,name,_analysis_server_lib$_controllers,_streams",
@@ -21994,7 +22050,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t1 = J.getInterceptor$asx(m);
           t2 = t1.$index(m, "file");
           return new E.AnalysisErrors(t2, t1.$index(m, "errors") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "errors"), new E.AnalysisErrors_parse_closure())));
-        }, "call$1", "analysis_server_lib_AnalysisErrors_parse$closure", 2, 0, 98, 6]}
+        }, "call$1", "analysis_server_lib_AnalysisErrors_parse$closure", 2, 0, 101, 6]}
     },
     AnalysisErrors_parse_closure: {
       "^": "Closure:0;",
@@ -22006,7 +22062,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Object;files>",
       static: {AnalysisFlushResults_parse: [function(m) {
           return new E.AnalysisFlushResults(J.$index$asx(m, "files"));
-        }, "call$1", "analysis_server_lib_AnalysisFlushResults_parse$closure", 2, 0, 99, 6]}
+        }, "call$1", "analysis_server_lib_AnalysisFlushResults_parse$closure", 2, 0, 102, 6]}
     },
     AnalysisNavigation: {
       "^": "Object;file<,regions<,targets<,files>",
@@ -22017,7 +22073,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t3 = t1.$index(m, "regions") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "regions"), new E.AnalysisNavigation_parse_closure()));
           t4 = t1.$index(m, "targets") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "targets"), new E.AnalysisNavigation_parse_closure0()));
           return new E.AnalysisNavigation(t2, t3, t4, t1.$index(m, "files"));
-        }, "call$1", "analysis_server_lib_AnalysisNavigation_parse$closure", 2, 0, 100, 6]}
+        }, "call$1", "analysis_server_lib_AnalysisNavigation_parse$closure", 2, 0, 103, 6]}
     },
     AnalysisNavigation_parse_closure: {
       "^": "Closure:0;",
@@ -22036,14 +22092,14 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       static: {AnalysisOutline_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.AnalysisOutline(t1.$index(m, "file"), t1.$index(m, "kind"), E.Outline_parse(t1.$index(m, "outline")), t1.$index(m, "libraryName"));
-        }, "call$1", "analysis_server_lib_AnalysisOutline_parse$closure", 2, 0, 101, 6]}
+        }, "call$1", "analysis_server_lib_AnalysisOutline_parse$closure", 2, 0, 104, 6]}
     },
     HoverResult: {
       "^": "Object;hovers<",
       static: {HoverResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.HoverResult(t1.$index(m, "hovers") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "hovers"), new E.HoverResult_parse_closure())));
-        }, "call$1", "analysis_server_lib_HoverResult_parse$closure", 2, 0, 102, 6]}
+        }, "call$1", "analysis_server_lib_HoverResult_parse$closure", 2, 0, 105, 6]}
     },
     HoverResult_parse_closure: {
       "^": "Closure:0;",
@@ -22064,7 +22120,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t4 = t1.$index(m, "replacementLength");
           t5 = t1.$index(m, "results") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "results"), new E.CompletionResults_parse_closure()));
           return new E.CompletionResults(t2, t3, t4, t5, t1.$index(m, "isLast"));
-        }, "call$1", "analysis_server_lib_CompletionResults_parse$closure", 2, 0, 103, 6]}
+        }, "call$1", "analysis_server_lib_CompletionResults_parse$closure", 2, 0, 106, 6]}
     },
     CompletionResults_parse_closure: {
       "^": "Closure:0;",
@@ -22076,7 +22132,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Object;id>",
       static: {SuggestionsResult_parse: [function(m) {
           return new E.SuggestionsResult(J.$index$asx(m, "id"));
-        }, "call$1", "analysis_server_lib_SuggestionsResult_parse$closure", 2, 0, 104, 6]}
+        }, "call$1", "analysis_server_lib_SuggestionsResult_parse$closure", 2, 0, 107, 6]}
     },
     SearchDomain: {
       "^": "Domain;server,name,_analysis_server_lib$_controllers,_streams",
@@ -22099,7 +22155,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t2 = t1.$index(m, "id");
           t3 = t1.$index(m, "results") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "results"), new E.SearchResults_parse_closure()));
           return new E.SearchResults(t2, t3, t1.$index(m, "isLast"));
-        }, "call$1", "analysis_server_lib_SearchResults_parse$closure", 2, 0, 105, 6]}
+        }, "call$1", "analysis_server_lib_SearchResults_parse$closure", 2, 0, 108, 6]}
     },
     SearchResults_parse_closure: {
       "^": "Closure:0;",
@@ -22112,14 +22168,14 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       static: {FindElementReferencesResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.FindElementReferencesResult(t1.$index(m, "id"), E.Element_parse(t1.$index(m, "element")));
-        }, "call$1", "analysis_server_lib_FindElementReferencesResult_parse$closure", 2, 0, 106, 6]}
+        }, "call$1", "analysis_server_lib_FindElementReferencesResult_parse$closure", 2, 0, 109, 6]}
     },
     TypeHierarchyResult: {
       "^": "Object;hierarchyItems<",
       static: {TypeHierarchyResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.TypeHierarchyResult(t1.$index(m, "hierarchyItems") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "hierarchyItems"), new E.TypeHierarchyResult_parse_closure())));
-        }, "call$1", "analysis_server_lib_TypeHierarchyResult_parse$closure", 2, 0, 107, 6]}
+        }, "call$1", "analysis_server_lib_TypeHierarchyResult_parse$closure", 2, 0, 110, 6]}
     },
     TypeHierarchyResult_parse_closure: {
       "^": "Closure:0;",
@@ -22154,7 +22210,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t1 = J.getInterceptor$asx(m);
           t2 = t1.$index(m, "edits") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "edits"), new E.FormatResult_parse_closure()));
           return new E.FormatResult(t2, t1.$index(m, "selectionOffset"), t1.$index(m, "selectionLength"));
-        }, "call$1", "analysis_server_lib_FormatResult_parse$closure", 2, 0, 108, 6]}
+        }, "call$1", "analysis_server_lib_FormatResult_parse$closure", 2, 0, 111, 6]}
     },
     FormatResult_parse_closure: {
       "^": "Closure:0;",
@@ -22166,14 +22222,14 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Object;kinds<",
       static: {AvailableRefactoringsResult_parse: [function(m) {
           return new E.AvailableRefactoringsResult(J.$index$asx(m, "kinds"));
-        }, "call$1", "analysis_server_lib_AvailableRefactoringsResult_parse$closure", 2, 0, 109, 6]}
+        }, "call$1", "analysis_server_lib_AvailableRefactoringsResult_parse$closure", 2, 0, 112, 6]}
     },
     FixesResult: {
       "^": "Object;fixes<",
       static: {FixesResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.FixesResult(t1.$index(m, "fixes") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "fixes"), new E.FixesResult_parse_closure())));
-        }, "call$1", "analysis_server_lib_FixesResult_parse$closure", 2, 0, 110, 6]}
+        }, "call$1", "analysis_server_lib_FixesResult_parse$closure", 2, 0, 113, 6]}
     },
     FixesResult_parse_closure: {
       "^": "Closure:0;",
@@ -22190,7 +22246,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t3 = t1.$index(m, "optionsProblems") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "optionsProblems"), new E.RefactoringResult_parse_closure0()));
           t4 = t1.$index(m, "finalProblems") == null ? null : J.toList$0$ax(J.map$1$ax(t1.$index(m, "finalProblems"), new E.RefactoringResult_parse_closure1()));
           return new E.RefactoringResult(t2, t3, t4, E.RefactoringFeedback_parse(t1.$index(m, "feedback")), E.SourceChange_parse(t1.$index(m, "change")), t1.$index(m, "potentialEdits"));
-        }, "call$1", "analysis_server_lib_RefactoringResult_parse$closure", 2, 0, 111, 6]}
+        }, "call$1", "analysis_server_lib_RefactoringResult_parse$closure", 2, 0, 114, 6]}
     },
     RefactoringResult_parse_closure: {
       "^": "Closure:0;",
@@ -22214,13 +22270,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Object;edit<",
       static: {SortMembersResult_parse: [function(m) {
           return new E.SortMembersResult(E.SourceFileEdit_parse(J.$index$asx(m, "edit")));
-        }, "call$1", "analysis_server_lib_SortMembersResult_parse$closure", 2, 0, 112, 6]}
+        }, "call$1", "analysis_server_lib_SortMembersResult_parse$closure", 2, 0, 115, 6]}
     },
     OrganizeDirectivesResult: {
       "^": "Object;edit<",
       static: {OrganizeDirectivesResult_parse: [function(m) {
           return new E.OrganizeDirectivesResult(E.SourceFileEdit_parse(J.$index$asx(m, "edit")));
-        }, "call$1", "analysis_server_lib_OrganizeDirectivesResult_parse$closure", 2, 0, 113, 6]}
+        }, "call$1", "analysis_server_lib_OrganizeDirectivesResult_parse$closure", 2, 0, 116, 6]}
     },
     ExecutionDomain: {
       "^": "Domain;server,name,_analysis_server_lib$_controllers,_streams"
@@ -22230,7 +22286,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       static: {ExecutionLaunchData_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.ExecutionLaunchData(t1.$index(m, "file"), t1.$index(m, "kind"), t1.$index(m, "referencedFiles"));
-        }, "call$1", "analysis_server_lib_ExecutionLaunchData_parse$closure", 2, 0, 114, 6]}
+        }, "call$1", "analysis_server_lib_ExecutionLaunchData_parse$closure", 2, 0, 117, 6]}
     },
     AddContentOverlay: {
       "^": "Object;type>,content",
@@ -22286,7 +22342,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     AnalysisOptions: {
       "^": "Object;enableAsync,enableDeferredLoading,enableEnums,enableNullAwareOperators,enableSuperMixins,generateDart2jsHints,generateHints,generateLints",
       toMap$0: function() {
-        return E._mapify(P.LinkedHashMap__makeLiteral(["enableAsync", this.enableAsync, "enableDeferredLoading", this.enableDeferredLoading, "enableEnums", this.enableEnums, "enableNullAwareOperators", this.enableNullAwareOperators, "enableSuperMixins", this.enableSuperMixins, "generateDart2jsHints", this.generateDart2jsHints, "generateHints", this.generateHints, "generateLints", this.generateLints]));
+        return E._mapify(P.LinkedHashMap__makeLiteral(["enableAsync", this.enableAsync, "enableDeferredLoading", this.enableDeferredLoading, "enableEnums", this.enableEnums, "enableNullAwareOperators", this.enableNullAwareOperators, "enableSuperMixins", true, "generateDart2jsHints", this.generateDart2jsHints, "generateHints", this.generateHints, "generateLints", this.generateLints]));
       },
       $isJsonable: 1
     },
@@ -22747,7 +22803,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       call$1: [function(ver) {
         this._atom_utils$_box_0._captured_pluginVer_0 = ver;
         return Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$hasSdk() ? Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$sdk().getVersion$0() : null;
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 29, "call"]
     },
     getSystemDescription_closure0: {
       "^": "Closure:0;_atom_utils$_box_0,_captured_sdkPath_1,_captured_atomVer_2,_captured_os_3",
@@ -22763,7 +22819,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (this._captured_sdkPath_1)
           description = Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$hasSdk() ? description + ("\nSDK at " + H.S(J.$index$asx(Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$sdk().directory.obj, "path")) + ".") : description + "\nNo SDK configured.";
         return description;
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 29, "call"]
     },
     PermissiveNodeValidator: {
       "^": "Object;",
@@ -22832,7 +22888,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           f = this.getSuggestions$1(opts).then$1(new X.AutocompleteProvider__getSuggestions_closure0(timer));
         }
         return H.setRuntimeTypeInfo(new K.Promise(K.Promise__jsObjectFromFuture(f)), [null]).obj;
-      }, "call$1", "get$_getSuggestions", 2, 0, 33, 53],
+      }, "call$1", "get$_getSuggestions", 2, 0, 32, 37],
       _onDidInsertSuggestion$1: [function(options) {
         var t1, t2, t3, index;
         t1 = $._override;
@@ -22855,14 +22911,14 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           $._override = null;
         } else
           this.onDidInsertSuggestion$3(new E.TextEditor(E._cvt(t3.$index(options, "editor"))), new E.Point(E._cvt(t3.$index(options, "triggerPosition"))), K.toDartObjectViaWizardy(t3.$index(options, "suggestion")));
-      }, "call$1", "get$_onDidInsertSuggestion", 2, 0, 7, 53],
+      }, "call$1", "get$_onDidInsertSuggestion", 2, 0, 7, 37],
       $isDisposable: 1
     },
     AutocompleteProvider__getSuggestions_closure: {
       "^": "Closure:0;",
       call$1: [function(s) {
         return s._toProxy$0();
-      }, null, null, 2, 0, null, 20, "call"]
+      }, null, null, 2, 0, null, 21, "call"]
     },
     AutocompleteProvider__getSuggestions_closure0: {
       "^": "Closure:0;_captured_timer_0",
@@ -22870,13 +22926,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1 = J.getInterceptor$asx(suggestions);
         $.$get$_logger19().fine$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this._captured_timer_0.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
         return J.toList$0$ax(t1.map$1(suggestions, new X.AutocompleteProvider__getSuggestions__closure()));
-      }, null, null, 2, 0, null, 83, "call"]
+      }, null, null, 2, 0, null, 82, "call"]
     },
     AutocompleteProvider__getSuggestions__closure: {
       "^": "Closure:0;",
       call$1: [function(suggestion) {
         return suggestion._toProxy$0();
-      }, null, null, 2, 0, null, 84, "call"]
+      }, null, null, 2, 0, null, 85, "call"]
     },
     AutocompleteOptions: {
       "^": "Object;editor,bufferPosition,scopeDescriptor,prefix",
@@ -23072,7 +23128,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           if (!J.$eq$(a.get$relevance(), b.get$relevance()))
             return J.$sub$n(b.get$relevance(), a.get$relevance());
           return C.JSString_methods.compareTo$1(J.toLowerCase$0$s(a.get$completion()), J.toLowerCase$0$s(b.get$completion()));
-        }, "call$2", "autocomplete_impl_DartAutocompleteProvider__compareSuggestions$closure", 4, 0, 115]}
+        }, "call$2", "autocomplete_impl_DartAutocompleteProvider__compareSuggestions$closure", 4, 0, 118]}
     },
     DartAutocompleteProvider_getSuggestions_closure: {
       "^": "Closure:0;",
@@ -23095,13 +23151,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_autocomplete_impl$_captured_result_5",
       call$1: [function(cr) {
         return J.$eq$(J.get$id$x(cr), J.get$id$x(this._autocomplete_impl$_captured_result_5));
-      }, null, null, 2, 0, null, 38, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     },
     DartAutocompleteProvider_getSuggestions__closure0: {
       "^": "Closure:0;",
       call$1: [function(cr) {
         return cr.get$isLast();
-      }, null, null, 2, 0, null, 38, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     },
     DartAutocompleteProvider_getSuggestions__closure1: {
       "^": "Closure:0;_autocomplete_impl$_captured_this_6,_captured_text_7,_captured_offset_8,_captured_prefix_9",
@@ -23198,13 +23254,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (selectionOffset != null)
           suggestion.selectionOffset = selectionOffset;
         return suggestion;
-      }, null, null, 2, 0, null, 92, "call"]
+      }, null, null, 2, 0, null, 91, "call"]
     },
     DartAutocompleteProvider__handleCompletionResults__closure: {
       "^": "Closure:0;_autocomplete_impl$_box_0",
       call$1: [function($name) {
         return "${" + ++this._autocomplete_impl$_box_0._captured_count_0 + ":" + H.S($name) + "}";
-      }, null, null, 2, 0, null, 37, "call"]
+      }, null, null, 2, 0, null, 35, "call"]
     },
     DartAutocompleteProvider__handleCompletionResults_closure4: {
       "^": "Closure:0;",
@@ -23302,7 +23358,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (didFormat === true)
           this._captured_editor_3.save$0();
         P.Timer_Timer(P.Duration$(0, 0, 0, 10, 0, 0), new K.BufferFormatter___closure(this._buffer_observer$_captured_this_2));
-      }, null, null, 2, 0, null, 98, "call"]
+      }, null, null, 2, 0, null, 95, "call"]
     },
     BufferFormatter___closure: {
       "^": "Closure:1;_captured_this_4",
@@ -23329,17 +23385,17 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           this.addOverlay$0();
         else
           this.lastSent = null;
-      }, "call$1", "get$serverActive", 2, 0, 39, 100],
+      }, "call$1", "get$serverActive", 2, 0, 39, 102],
       _didChange$1: [function(_) {
         return this.changedOverlay$0();
       }, function() {
         return this._didChange$1(null);
-      }, "_didChange$0", "call$1", "call$0", "get$_didChange", 0, 2, 13, 3, 1],
+      }, "_didChange$0", "call$1", "call$0", "get$_didChange", 0, 2, 20, 3, 1],
       _didDestroy$1: [function(_) {
         return this.dispose$0();
       }, function() {
         return this._didDestroy$1(null);
-      }, "_didDestroy$0", "call$1", "call$0", "get$_didDestroy", 0, 2, 13, 3, 1],
+      }, "_didDestroy$0", "call$1", "call$0", "get$_didDestroy", 0, 2, 20, 3, 1],
       addOverlay$0: function() {
         var t1, t2;
         if (this.lastSent != null)
@@ -23430,7 +23486,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       } else
         $.$get$_logger17().info$1("dartlang version " + H.S(currentVersion));
-    }, "call$1", "changelog___checkChangelog$closure", 2, 0, 12, 101],
+    }, "call$1", "changelog___checkChangelog$closure", 2, 0, 12, 103],
     ChangelogManager: {
       "^": "Object;disposables,_changeLogFile",
       _handleReleaseNotes$0: function() {
@@ -23482,13 +23538,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1._changeLogFile = t2;
         t2.invoke$2("writeSync", contents);
         return t1._changeLogFile;
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 52, "call"]
     },
     ChangelogManager__handleReleaseNotes_closure0: {
-      "^": "Closure:76;",
+      "^": "Closure:84;",
       call$1: [function(file) {
         $.$get$atom()._workspace.open$2$options(0, J.get$path$x(file), P.LinkedHashMap__makeLiteral(["split", "right"]));
-      }, null, null, 2, 0, null, 109, "call"]
+      }, null, null, 2, 0, null, 111, "call"]
     }
   }], ["atom.cli_launch", "package:atom_dartlang/impl/cli_launch.dart",, E, {
     "^": "",
@@ -23651,7 +23707,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._console$_controllers.$indexSet(0, launch, Y._LaunchController$(this, launch));
         if (this._panel.invoke$1("isVisible") !== true && $.$get$atom()._config.getValue$1("dartlang.autoShowConsole") === true)
           this.show$0(0);
-      }, "call$1", "get$_console$_launchAdded", 2, 0, 14, 22],
+      }, "call$1", "get$_console$_launchAdded", 2, 0, 13, 22],
       _console$_launchTerminated$1: [function(launch) {
         var t1, t2, t3;
         t1 = this._console$_controllers.$index(0, launch);
@@ -23667,7 +23723,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1.output.add$1(0, K.CoreElement$("span", null, "badge badge-" + t2, t3));
         if (J.get$parent$x(t1.output.element) != null)
           J.scrollIntoView$1$x(t1.output.element, C.ScrollAlignment_BOTTOM);
-      }, "call$1", "get$_console$_launchTerminated", 2, 0, 14, 22],
+      }, "call$1", "get$_console$_launchTerminated", 2, 0, 13, 22],
       _console$_launchActivated$1: [function(launch) {
         var t1, t2, t3;
         t1 = this._activeController;
@@ -23690,7 +23746,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           else
             J.scrollIntoView$1$x(t3.element, C.ScrollAlignment_BOTTOM);
         }
-      }, "call$1", "get$_console$_launchActivated", 2, 0, 14, 22],
+      }, "call$1", "get$_console$_launchActivated", 2, 0, 13, 22],
       _console$_launchRemoved$1: [function(launch) {
         var t1, controller;
         t1 = this._console$_controllers;
@@ -23702,7 +23758,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           this.hide$0();
           T.AtomView_groupManager().showView$2(this.groupName, this._previousVisibleView);
         }
-      }, "call$1", "get$_console$_launchRemoved", 2, 0, 14, 22]
+      }, "call$1", "get$_console$_launchRemoved", 2, 0, 13, 22]
     },
     _LaunchController: {
       "^": "Object;view>,launch,container,buttons,output,subs,_lastText,_scrollTop",
@@ -23868,7 +23924,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       }, function() {
         return this._handleLaunchesChanged$1(null);
-      }, "_handleLaunchesChanged$0", "call$1", "call$0", "get$_handleLaunchesChanged", 0, 2, 13, 3, 1],
+      }, "_handleLaunchesChanged$0", "call$1", "call$0", "get$_handleLaunchesChanged", 0, 2, 49, 3, 1],
       $isDisposable: 1
     }
   }], ["atom.dartdoc", "package:atom_dartlang/analysis/dartdoc.dart",, T, {
@@ -24002,7 +24058,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     DartdocHelper__handleDartdoc__closure: {
-      "^": "Closure:41;_dartdoc$_captured_this_4,_captured_explicit_5,_dartdoc$_captured_editor_6",
+      "^": "Closure:66;_dartdoc$_captured_this_4,_captured_explicit_5,_dartdoc$_captured_editor_6",
       call$1: [function(result) {
         if (result == null)
           return;
@@ -24010,7 +24066,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 2, "call"]
     },
     DartdocHelper__render_writeTitle: {
-      "^": "Closure:48;_captured_buf_0",
+      "^": "Closure:68;_captured_buf_0",
       call$2: function(title, desc) {
         if (desc != null && J.get$isNotEmpty$asx(desc) === true)
           this._captured_buf_0._contents += "<span class='inline-block highlight'>" + title + "</span> " + H.S(desc) + "<br>\n";
@@ -24020,7 +24076,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:4;",
       call$1: [function($name) {
         return new T.Element1("code", [new T.Text($name)], P.LinkedHashMap__makeEmpty());
-      }, null, null, 2, 0, null, 37, "call"]
+      }, null, null, 2, 0, null, 35, "call"]
     },
     DartdocControl: {
       "^": "CoreElement;_cmdDispose,_dartdoc$_sub,_titleDiv,_bodyDiv,_footerDiv,element",
@@ -24088,10 +24144,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = this._navCompleters;
         if (t1.$index(0, path) != null)
           J.complete$1$x(t1.$index(0, path), navInfo);
-      }, "call$1", "get$_navigationEvent", 2, 0, 63, 35],
+      }, "call$1", "get$_navigationEvent", 2, 0, 76, 34],
       _handleNavigate$1: [function($event) {
         this._handleNavigateEditor$1($event.get$editor());
-      }, "call$1", "get$_handleNavigate", 2, 0, 15],
+      }, "call$1", "get$_handleNavigate", 2, 0, 14],
       _handleNavigateEditor$1: function(editor) {
         var path, range, offset;
         if (Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive()) {
@@ -24203,13 +24259,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     NavigationHelper__handleNavigateEditor_closure: {
-      "^": "Closure:73;_declaration_nav$_captured_this_0,_declaration_nav$_captured_editor_1,_declaration_nav$_captured_offset_2",
+      "^": "Closure:81;_declaration_nav$_captured_this_0,_declaration_nav$_captured_editor_1,_declaration_nav$_captured_offset_2",
       call$1: [function(navInfo) {
         if (navInfo != null)
           return this._declaration_nav$_captured_this_0._processNavInfo$3(this._declaration_nav$_captured_editor_1, this._declaration_nav$_captured_offset_2, navInfo);
         else
           $.$get$atom().invoke$1("beep");
-      }, null, null, 2, 0, null, 35, "call"]
+      }, null, null, 2, 0, null, 34, "call"]
     },
     NavigationHelper__handleNavigateEditor_closure0: {
       "^": "Closure:0;_declaration_nav$_captured_this_3",
@@ -24303,7 +24359,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         $event.invoke$1("abortKeyBinding");
         $.$get$_logger4().severe$2("exception during enter key handling", e);
       }
-    }, "call$1", "editing__handleEnterKey$closure", 2, 0, 15],
+    }, "call$1", "editing__handleEnterKey$closure", 2, 0, 14],
     _handleEnterKey: function(editor, row, col) {
       var t1, line, t2, trimmedText, atEol, t3, leading, inComment, previousLine;
       t1 = {};
@@ -24500,7 +24556,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     selectEditGroup_closure: {
-      "^": "Closure:78;_captured_group_0,_captured_buffer_1",
+      "^": "Closure:85;_captured_group_0,_captured_buffer_1",
       call$1: [function(position) {
         var t1, t2;
         t1 = this._captured_buffer_1;
@@ -24509,7 +24565,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 56, "call"]
     },
     _sortEdits_closure: {
-      "^": "Closure:82;",
+      "^": "Closure:86;",
       call$2: function(a, b) {
         return J.$sub$n(J.get$offset$x(b), J.get$offset$x(a));
       }
@@ -24573,7 +24629,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1._sendData$1(editor);
       }, function() {
         return this._observeActivePaneItem$1(null);
-      }, "_observeActivePaneItem$0", "call$1", "call$0", "get$_observeActivePaneItem", 0, 2, 13, 3],
+      }, "_observeActivePaneItem$0", "call$1", "call$0", "get$_observeActivePaneItem", 0, 2, 20, 3],
       Editors$_allDartEditors$0: function() {
         this._editors$_matches = F.editors_Editors__isDartTypeEditor$closure();
         var t1 = $.$get$atom();
@@ -24592,7 +24648,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           descriptor = t1 == null ? null : new E.ScopeDescriptor(t1);
           scopes = descriptor == null ? null : J.$index$asx(descriptor.obj, "scopes");
           return scopes == null ? false : J.contains$1$asx(scopes, "source.dart");
-        }, "call$1", "editors_Editors__isDartTypeEditor$closure", 2, 0, 116], Editors$_allDartEditors: function() {
+        }, "call$1", "editors_Editors__isDartTypeEditor$closure", 2, 0, 119], Editors$_allDartEditors: function() {
           var t1 = new F.Editors(null, null, null, new G.StreamSubscriptions([]), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), null, []);
           t1.Editors$_allDartEditors$0();
           return t1;
@@ -24712,7 +24768,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_elements$_captured_this_0",
       call$1: [function(c) {
         return this._elements$_captured_this_0.add$1(0, c);
-      }, null, null, 2, 0, null, 34, "call"]
+      }, null, null, 2, 0, null, 44, "call"]
     },
     CoreElement_onClick_closure: {
       "^": "Closure:0;_elements$_captured_this_0",
@@ -24791,7 +24847,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       E.registerPackage(R.AtomDartPackage$());
     }, "call$0", "entry__main$closure", 0, 0, 1],
     main_closure: {
-      "^": "Closure:84;",
+      "^": "Closure:88;",
       call$1: [function(r) {
         var tag, t1;
         tag = J.toLowerCase$0$s(J.get$name$x(r.get$level())) + " \u2022 " + r.get$loggerName() + ":";
@@ -24859,7 +24915,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           }
         } else
           $.$get$_logger6().info$1("received an error event for a non-existent file: " + H.S(path));
-      }, "call$1", "get$_handleAddErrors", 2, 0, 85, 58],
+      }, "call$1", "get$_handleAddErrors", 2, 0, 122, 58],
       _handleFlushErrors$1: [function(analysisFlushResults) {
         var t1 = this.knownErrors;
         J.forEach$1$ax(J.get$files$x(analysisFlushResults), t1.get$remove(t1));
@@ -24867,7 +24923,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(null);
-      }, "call$1", "get$_handleFlushErrors", 2, 0, 119, 59],
+      }, "call$1", "get$_handleFlushErrors", 2, 0, 123, 59],
       $isDisposable: 1
     }
   }], ["atom.errors", "package:atom_dartlang/impl/errors.dart",, G, {
@@ -24908,7 +24964,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = $.$get$atom();
         t1._config.invoke$3("set", "linter.showErrorPanel", this.enabled !== true);
         t1._config.invoke$3("set", "linter.displayLinterInfo", this.enabled !== true);
-      }, "call$1", "get$_togglePrefs", 2, 0, 39, 8],
+      }, "call$1", "get$_togglePrefs", 2, 0, 39, 7],
       _toggleView$0: [function() {
         var t1 = this.view;
         return t1._panel.invoke$1("isVisible") === true ? t1.hide$0() : t1.show$0(0);
@@ -24936,7 +24992,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         shortName = t1 == null ? null : S.basename(t1);
         this.statusElement._handleErrorsChanged$1(filteredErrors);
         this.view._handleErrorsChanged$2$focus(filteredErrors, shortName);
-      }, "call$1", "get$_handleErrorsChanged", 2, 0, 120, 60],
+      }, "call$1", "get$_handleErrorsChanged", 2, 0, 41, 60],
       ErrorsController$0: function() {
         var t1, t2, t3, t4, t5, t6, t7, t8, t9;
         t1 = $.$get$atom();
@@ -24956,6 +25012,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t4.focusElement = t9;
         t7.add$1(0, [t8, t9]);
         t5.add$1(0, [t6, t7]);
+        J.set$tabIndex$x(t4.content.element, 1);
         t5 = $.$get$state();
         if (J.$index$asx(t5._state$_map, "errorViewShowing") == null)
           t5.$indexSet(0, "errorViewShowing", t3);
@@ -24998,7 +25055,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     ErrorsController__handleErrorsChanged_closure: {
-      "^": "Closure:28;_errors$_captured_this_0",
+      "^": "Closure:24;_errors$_captured_this_0",
       call$1: [function(e) {
         return J.startsWith$1$s(J.get$location$x(e).get$file(), this._errors$_captured_this_0._focusedDir);
       }, null, null, 2, 0, null, 0, "call"]
@@ -25071,7 +25128,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       },
       _cvtError$1: [function(error) {
-        var type, t1, $location, item, t2;
+        var type, t1, $location, item, t2, badge, message, ahref;
         if (J.$eq$(error.get$severity(), "ERROR"))
           type = " badge-error";
         else
@@ -25080,13 +25137,18 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         $location = H.S(J.$index$asx($.$get$atom()._project.invoke$2("relativizePath", t1.get$location(error).get$file()), 1)) + ", line " + H.S(t1.get$location(error).get$startLine());
         item = K.CoreElement$("div", null, "errors-item", null);
         t2 = J.toLowerCase$0$s(error.get$severity());
-        item.add$1(0, [K.CoreElement$("span", null, "badge badge-flexible" + type + " error-type", t2)]);
+        badge = K.CoreElement$("span", null, "badge badge-flexible" + type + " error-type", t2);
+        item.add$1(0, [badge]);
         if (error.get$hasFix() != null && error.get$hasFix() === true)
           J.click$1$x(item.add$1(0, K.CoreElement$("div", null, "icon-tools quick-fix", null)), new G.ErrorsView__cvtError_closure(this, error));
-        item.add$1(0, [K.CoreElement$("span", null, null, t1.get$message(error)), K.CoreElement$("a", null, "text-muted", $location)]);
-        item.click$1(0, new G.ErrorsView__cvtError_closure0(this, error));
+        message = K.CoreElement$("span", null, null, t1.get$message(error));
+        ahref = K.CoreElement$("a", null, "text-muted", $location);
+        item.add$1(0, [message, ahref]);
+        badge.click$1(0, new G.ErrorsView__cvtError_closure0(this, error));
+        message.click$1(0, new G.ErrorsView__cvtError_closure1(this, error));
+        ahref.click$1(0, new G.ErrorsView__cvtError_closure2(this, error));
         return item.element;
-      }, "call$1", "get$_cvtError", 2, 0, 62, 7],
+      }, "call$1", "get$_cvtError", 2, 0, 43, 8],
       _errors$_jumpTo$1: function($location) {
         var options, t1, ed;
         options = P.LinkedHashMap__makeLiteral(["initialLine", $location.get$startLine(), "initialColumn", $location.get$startColumn(), "searchAllPanes", true]);
@@ -25120,6 +25182,18 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:1;_errors$_captured_this_2,_captured_error_3",
       call$0: function() {
         return this._errors$_captured_this_2._errors$_jumpTo$1(J.get$location$x(this._captured_error_3));
+      }
+    },
+    ErrorsView__cvtError_closure1: {
+      "^": "Closure:1;_errors$_captured_this_4,_captured_error_5",
+      call$0: function() {
+        return this._errors$_captured_this_4._errors$_jumpTo$1(J.get$location$x(this._captured_error_5));
+      }
+    },
+    ErrorsView__cvtError_closure2: {
+      "^": "Closure:1;_errors$_captured_this_6,_captured_error_7",
+      call$0: function() {
+        return this._errors$_captured_this_6._errors$_jumpTo$1(J.get$location$x(this._captured_error_7));
       }
     },
     ErrorsView__jumpTo_closure: {
@@ -25525,7 +25599,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 2, "call"]
     },
     FormattingHelper_formatEditor_closure: {
-      "^": "Closure:45;_captured_editor_0,_captured_quiet_1,_captured_buffer_2",
+      "^": "Closure:46;_captured_editor_0,_captured_quiet_1,_captured_buffer_2",
       call$1: [function(result) {
         var t1, t2;
         if (J.get$isEmpty$asx(result.get$edits())) {
@@ -25814,7 +25888,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_js0$_captured_completer_1",
       call$1: [function(error) {
         this._js0$_captured_completer_1.completeError$1(error);
-      }, null, null, 2, 0, null, 7, "call"]
+      }, null, null, 2, 0, null, 8, "call"]
     },
     ProxyHolder: {
       "^": "Object;obj<",
@@ -25890,7 +25964,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       },
       error$1: [function(_, errorCallback) {
         return this.invoke$2("catch", errorCallback);
-      }, "call$1", "get$error", 2, 0, 46, 64],
+      }, "call$1", "get$error", 2, 0, 47, 64],
       static: {Promise__jsObjectFromFuture: function(future) {
           return P.JsObject_JsObject(J.$index$asx($.$get$context(), "Promise"), [new K.Promise__jsObjectFromFuture_closure(future)]);
         }}
@@ -26122,7 +26196,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     LaunchManager__readConfigs_closure: {
-      "^": "Closure:47;",
+      "^": "Closure:48;",
       call$1: [function(json) {
         var e, exception, t1;
         try {
@@ -26143,13 +26217,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     LaunchManager_getConfigurationsForPath_closure: {
-      "^": "Closure:29;_captured_path_0",
+      "^": "Closure:28;_captured_path_0",
       call$1: function(config) {
         return J.$eq$(config.get$primaryResource(), this._captured_path_0);
       }
     },
     LaunchManager_getConfigurationsForProject_closure: {
-      "^": "Closure:29;_captured_path_0",
+      "^": "Closure:28;_captured_path_0",
       call$1: function(config) {
         var r = config.get$primaryResource();
         return r != null && J.startsWith$1$s(r, this._captured_path_0);
@@ -26295,7 +26369,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       },
       _lint$1: [function(jsEditor) {
         return K.jsify([]);
-      }, "call$1", "get$_lint", 2, 0, 33, 69]
+      }, "call$1", "get$_lint", 2, 0, 32, 69]
     },
     LinterConsumer: {
       "^": "Object;"
@@ -26356,7 +26430,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       if (!J.$eq$(aloc.get$file(), bloc.get$file()))
         return J.compareTo$1$ns(aloc.get$file(), bloc.get$file());
       return J.$sub$n(J.get$offset$x(aloc), J.get$offset$x(bloc));
-    }, "call$2", "linter_impl___errorComparer$closure", 4, 0, 117],
+    }, "call$2", "linter_impl___errorComparer$closure", 4, 0, 120],
     _sev: function(sev) {
       var t1 = J.getInterceptor(sev);
       if (t1.$eq(sev, "ERROR"))
@@ -26456,7 +26530,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 1, "call"]
     },
     DartLinterConsumer__regenErrors_closure: {
-      "^": "Closure:49;_linter_impl$_box_0,_linter_impl$_captured_this_1",
+      "^": "Closure:50;_linter_impl$_box_0,_linter_impl$_captured_this_1",
       call$2: function(path, issues) {
         var first, t1, t2, t3, t4;
         issues = J.toList$0$ax(issues);
@@ -26476,7 +26550,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     DartLinterConsumer__filter_closure: {
-      "^": "Closure:28;_captured_showInfos_0,_captured_showTodos_1",
+      "^": "Closure:24;_captured_showInfos_0,_captured_showTodos_1",
       call$1: function(issue) {
         if (this._captured_showInfos_0 !== true && J.$eq$(issue.get$severity(), "INFO"))
           return false;
@@ -26679,7 +26753,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           }
           this._cursorChanged$1(new E.Point(E._cvt(t1.invoke$1("getCursorBufferPosition"))));
         }
-      }, "call$1", "get$_handleOutline", 2, 0, 50, 10],
+      }, "call$1", "get$_handleOutline", 2, 0, 51, 10],
       _cursorChanged$1: [function(pos) {
         var offset, selected, t1, t2, _i, sel, e;
         if (pos == null || this.treeBuilder == null)
@@ -26698,7 +26772,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           if (e != null)
             J.scrollIntoView$0$x(e);
         }
-      }, "call$1", "get$_cursorChanged", 2, 0, 51, 32],
+      }, "call$1", "get$_cursorChanged", 2, 0, 52, 33],
       _collectSelected$3: function(node, offset, selected) {
         var t1, o, t2, t3;
         t1 = J.getInterceptor$x(node);
@@ -26801,7 +26875,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t3.set$text(t2, " \u2192 " + H.S(type));
           J.add$1$ax(t1, t2);
         }
-      }, "call$2", "get$_outline$_render", 4, 0, 52],
+      }, "call$2", "get$_outline$_render", 4, 0, 53],
       _outline$_jumpTo$1: [function(node) {
         var outline, $location, t1;
         outline = J.get$data$x(node);
@@ -26809,7 +26883,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4($location.get$file(), J.$sub$n($location.get$startLine(), 1), J.$sub$n($location.get$startColumn(), 1), J.get$length$asx($location));
         t1 = this.editor;
         t1.invoke$2("setCursorBufferPosition", new E.Point(E._cvt(new E.TextBuffer(E._cvt(t1.invoke$1("getBuffer"))).invoke$2("positionForCharacterIndex", J.get$offset$x(outline)))));
-      }, "call$1", "get$_outline$_jumpTo", 2, 0, 16, 21],
+      }, "call$1", "get$_outline$_jumpTo", 2, 0, 15, 20],
       OutlineView$2: function(controller, editor) {
         var t1, t2;
         t1 = this.editor;
@@ -26852,7 +26926,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1._captured__amChanging_0 = true;
         $.$get$state().$indexSet(0, this._outline$_captured_prefName_2, pos);
         t1._captured__amChanging_0 = false;
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     }
   }], ["atom.plugin", "package:atom_dartlang/plugin.dart",, R, {
     "^": "",
@@ -26974,7 +27048,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         P.Timer_Timer(C.Duration_0, this.get$_initPlugin());
       }, function() {
         return this.packageActivated$1(null);
-      }, "packageActivated$0", "call$1", "call$0", "get$packageActivated", 0, 2, 54, 3, 72],
+      }, "packageActivated$0", "call$1", "call$0", "get$packageActivated", 0, 2, 55, 3, 72],
       _initPlugin$0: [function() {
         S.loadPackageJson().then$1(this.get$_verifyPackages());
         this._validateSettings$0();
@@ -27005,7 +27079,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             t1.invoke$3("addWarning", "The emmet package has severe performance issues when editing Dart files. It is recommended to disable emmet until issue https://github.com/emmetio/emmet-atom/issues/319 is fixed.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, true, null));
           }
         }
-      }, "call$1", "get$_verifyPackages", 2, 0, 55, 6],
+      }, "call$1", "get$_verifyPackages", 2, 0, 56, 6],
       _showWelcomeToast$0: function() {
         S.getPackageVersion().then$1(new R.AtomDartPackage__showWelcomeToast_closure());
       },
@@ -27014,7 +27088,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       },
       serialize$0: [function() {
         return $.$get$state()._state$_map;
-      }, "call$0", "get$serialize", 0, 0, 56],
+      }, "call$0", "get$serialize", 0, 0, 57],
       packageDeactivated$0: [function() {
         var e, st, t1, exception, t2;
         t1 = $.$get$_logger();
@@ -27180,7 +27254,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     AtomDartPackage__validateSettings_closure: {
-      "^": "Closure:57;",
+      "^": "Closure:40;",
       call$2: function($name, fn) {
         var t1 = $.$get$atom();
         if (!J.$eq$(t1._config.getValue$2$scope("_dartlang." + $name, null), true)) {
@@ -27207,7 +27281,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       call$1: [function(version) {
         var t1 = $.$get$atom()._notifications;
         t1.invoke$3("addSuccess", "Welcome to the dartlang plugin for Atom!", t1._options$5$buttons$description$detail$dismissable$icon(null, "For help using this plugin, please see our getting started guide, available from the `Packages` > `Dart` > `Getting Started` menu item.\n\nThe Dart plugin anonymously reports feature usage statistics and basic crash reports to improve the tool over time. Please visit the plugin's settings page to configure this behavior.", "v" + H.S(version), true, null));
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     AtomDartPackage__handleSendFeedback_closure: {
       "^": "Closure:4;",
@@ -27217,7 +27291,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t2 = "https://github.com/dart-atom/dartlang/issues/new?body=" + P.Uri__uriEncode(C.List_KIf, description, C.Utf8Codec_false, false);
         t1.toString;
         $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", [t2]);
-      }, null, null, 2, 0, null, 40, "call"]
+      }, null, null, 2, 0, null, 41, "call"]
     },
     AtomDartPackage__registerLinter_closure: {
       "^": "Closure:0;",
@@ -27357,7 +27431,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           H.throwExpression(t1._badEventState$0());
         t1._async$_add$1(s);
         return;
-      }, null, null, 2, 0, null, 20, "call"]
+      }, null, null, 2, 0, null, 21, "call"]
     },
     ProcessRunner_execStreaming_closure1: {
       "^": "Closure:0;_process$_captured_this_1",
@@ -27367,7 +27441,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           H.throwExpression(t1._badEventState$0());
         t1._async$_add$1(s);
         return;
-      }, null, null, 2, 0, null, 20, "call"]
+      }, null, null, 2, 0, null, 21, "call"]
     },
     ProcessRunner_execStreaming_closure: {
       "^": "Closure:0;_process$_captured_this_2",
@@ -27450,7 +27524,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 1, "call"]
     },
     ProcessNotifier_watch_closure2: {
-      "^": "Closure:20;_captured_this_3",
+      "^": "Closure:19;_captured_this_3",
       call$1: [function(result) {
         var t1, t2;
         t1 = this._captured_this_3;
@@ -27482,7 +27556,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     ProjectManager: {
-      "^": "Object;_projects$_controller,_projects$_sub,disposables,_directoryListeners,projects<",
+      "^": "Object;_projectsController,_projectAddController,_projectRemoveController,_projects$_sub,disposables,_directoryListeners,projects<",
       getTreeViewContributions$0: function() {
         return [new L._MarkDartProjectContextCommand("Mark as a Dart Project", "dartlang:mark-as-dart-project")];
       },
@@ -27500,8 +27574,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       rescanForProjects$0: function() {
         return this._fullScanForProjects$0();
       },
-      get$onChanged: function() {
-        var t1 = this._projects$_controller;
+      get$onProjectsChanged: function() {
+        var t1 = this._projectsController;
+        return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
+      },
+      get$onProjectAdd: function() {
+        var t1 = this._projectAddController;
         return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
       },
       dispose$0: [function() {
@@ -27536,7 +27614,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         C.JSArray_methods.addAll$1(t1, H.setRuntimeTypeInfo(new H.EfficientLengthMappedIterable(newDirs, new L.ProjectManager__fullScanForProjects_closure2()), [H.getTypeArgumentByIndex(newDirs, 0), null]));
         if (changed) {
           $.$get$_logger14().fine$1(H.S(t1));
-          t2 = this._projects$_controller;
+          t2 = this._projectsController;
           if (!t2.get$_mayAddEvent())
             H.throwExpression(t2._addEventError$0());
           t2._sendData$1(t1);
@@ -27545,7 +27623,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       _handleProjectPathsChanged$1: [function(allPaths) {
         this._updateChangeListeners$1(allPaths);
         this._fullScanForProjects$0();
-      }, "call$1", "get$_handleProjectPathsChanged", 2, 0, 40, 75],
+      }, "call$1", "get$_handleProjectPathsChanged", 2, 0, 59, 75],
       _updateChangeListeners$1: function(allPaths) {
         var t1, previousPaths, currentPaths, removedPaths, addedPaths, t2, addedPath, dir;
         t1 = this._directoryListeners;
@@ -27611,6 +27689,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       _markDartProject$0: function() {
         return this._markDartProject$1$path(null);
       },
+      _initProjectControllers$0: function() {
+        var knownProjects, t1;
+        knownProjects = P.LinkedHashMap__makeEmpty();
+        t1 = this._projectsController;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new L.ProjectManager__initProjectControllers_closure(this, knownProjects));
+      },
       ProjectManager$0: function() {
         var t1, t2;
         t1 = $.$get$atom();
@@ -27619,6 +27703,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t2 = this.disposables.Disposables__disposables;
         t2.push(t1._commands.add$3(0, "atom-text-editor", "dartlang:mark-as-dart-project", new L.ProjectManager_closure0(this)));
         t2.push(t1._commands.add$3(0, ".tree-view", "dartlang:mark-as-dart-project", new L.ProjectManager_closure1(this)));
+        this._initProjectControllers$0();
       },
       $isDisposable: 1,
       static: {ProjectManager_isDartProject: function(dir) {
@@ -27635,7 +27720,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
               return true;
           return false;
         }, ProjectManager$: function() {
-          var t1 = new L.ProjectManager(P.StreamController_StreamController$broadcast(null, null, false, null), null, new G.Disposables([]), P.LinkedHashMap__makeEmpty(), []);
+          var t1 = new L.ProjectManager(P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), null, new G.Disposables([]), P.LinkedHashMap__makeEmpty(), []);
           t1.ProjectManager$0();
           return t1;
         }}
@@ -27663,7 +27748,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     ProjectManager_dispose_closure: {
-      "^": "Closure:60;",
+      "^": "Closure:61;",
       call$1: function(sub) {
         return sub.cancel$0();
       }
@@ -27672,7 +27757,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(p) {
         return J.get$directory$x(p);
-      }, null, null, 2, 0, null, 41, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     ProjectManager__fullScanForProjects_closure0: {
       "^": "Closure:0;_projects$_captured_dir_0",
@@ -27690,7 +27775,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(dir) {
         return new L.DartProject(dir, null);
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     ProjectManager__updateChangeListeners_closure: {
       "^": "Closure:0;_projects$_captured_this_0,_captured_dir_1",
@@ -27699,7 +27784,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 1, "call"]
     },
     ProjectManager__handleDirectoryChanged_closure: {
-      "^": "Closure:61;_projects$_captured_dir_0",
+      "^": "Closure:62;_projects$_captured_dir_0",
       call$1: function(project) {
         return J.$eq$(J.get$directory$x(project), this._projects$_captured_dir_0);
       }
@@ -27728,6 +27813,33 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t2._workspace.open$1(0, J.$index$asx(t1, "path"));
         this._projects$_captured_this_1._fullScanForProjects$0();
       }, null, null, 2, 0, null, 18, "call"]
+    },
+    ProjectManager__initProjectControllers_closure: {
+      "^": "Closure:63;_projects$_captured_this_0,_captured_knownProjects_1",
+      call$1: [function(projects) {
+        var current, t1, t2, t3, t4, project, path, _i, projectPath;
+        current = P.LinkedHashSet_LinkedHashSet(null, null, null, null);
+        for (t1 = J.get$iterator$ax(projects), t2 = this._captured_knownProjects_1, t3 = this._projects$_captured_this_0, t4 = t3._projectAddController; t1.moveNext$0();) {
+          project = t1.get$current();
+          path = J.get$path$x(project);
+          current.add$1(0, path);
+          if (!t2.containsKey$1(0, path)) {
+            t2.$indexSet(0, path, project);
+            if (!t4.get$_mayAddEvent())
+              H.throwExpression(t4._addEventError$0());
+            t4._sendData$1(project);
+          }
+        }
+        for (t1 = t2.get$keys(t2).toList$0(0), t4 = t1.length, t3 = t3._projectRemoveController, _i = 0; _i < t1.length; t1.length === t4 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
+          projectPath = t1[_i];
+          if (!current.contains$1(0, projectPath)) {
+            project = t2.remove$1(0, projectPath);
+            if (!t3.get$_mayAddEvent())
+              H.throwExpression(t3._addEventError$0());
+            t3._sendData$1(project);
+          }
+        }
+      }, null, null, 2, 0, null, 77, "call"]
     },
     DartProject: {
       "^": "Object;directory>,_analysisOptions",
@@ -27780,14 +27892,28 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   }], ["atom.pub", "package:atom_dartlang/impl/pub.dart",, R, {
     "^": "",
     _locatePubspecDir: function(path) {
-      var project;
+      var t1, project;
       if (path == null)
         return;
+      if (J.endsWith$1$s(path, "pubspec.yaml"))
+        return S.dirname(path);
+      t1 = S.join(path, "pubspec.yaml", null, null);
+      if (new E.Stats($.$get$context().callMethod$2("require", ["fs"]).callMethod$2("statSync", [t1])).invoke$1("isFile") === true)
+        return path;
       project = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
       return project == null ? null : J.get$path$x(project);
     },
+    _showRunPubDialog: function(project, noLockFile) {
+      var t1, t2, desc;
+      t1 = {};
+      t2 = J.getInterceptor$x(project);
+      desc = noLockFile ? "Pub has never been run for project '" + H.S(t2.get$name(project)) + "'. Run `pub get`?" : "The pubspec.yaml file for project '" + H.S(t2.get$name(project)) + "' has been modified since pub was last run. Run `pub get`?";
+      t1._captured_notification_0 = null;
+      t2 = $.$get$atom()._notifications;
+      t1._captured_notification_0 = new E.Notification(t2.invoke$3("addInfo", "Run Pub Get", t2._options$5$buttons$description$detail$dismissable$icon([new E.NotificationButton("Run pub get\u2026", new R._showRunPubDialog_closure(t1, project)), new E.NotificationButton("Ignore", new R._showRunPubDialog_closure0(t1))], desc, null, true, null)));
+    },
     PubManager: {
-      "^": "Object;disposables",
+      "^": "Object;disposables,projectSubscription",
       getTreeViewContributions$0: function() {
         return [new R.PubContextCommand(true, "Pub Get", "dartlang:pub-get"), new R.PubContextCommand(true, "Pub Upgrade", "dartlang:pub-upgrade"), new R.PubContextCommand(false, "Pub Run\u2026", "dartlang:pub-run"), new R.PubContextCommand(false, "Pub Global Run\u2026", "dartlang:pub-global-run")];
       },
@@ -27838,8 +27964,29 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       _handleGlobalActivate$0: function() {
         S.promptUser("pub global activate: pub package to activate.", null, false, false).then$1(new R.PubManager__handleGlobalActivate_closure());
       },
+      _handleProjectAdded$1: [function(project) {
+        return this._validatePubspecCurrent$1(project);
+      }, "call$1", "get$_handleProjectAdded", 2, 0, 64, 78],
+      _validatePubspecCurrent$1: function(project) {
+        var t1, pubspecYaml, pubspecLock, t2, pubspecTime;
+        t1 = J.getInterceptor$x(project);
+        pubspecYaml = t1.get$directory(project).getFile$1("pubspec.yaml");
+        pubspecLock = t1.get$directory(project).getFile$1("pubspec.lock");
+        if (pubspecYaml.invoke$1("existsSync") !== true)
+          return;
+        if (pubspecLock.invoke$1("existsSync") === true) {
+          t1 = J.$index$asx(pubspecYaml.obj, "path");
+          t2 = $.$get$context();
+          pubspecTime = J.$index$asx(t2.callMethod$2("require", ["fs"]).callMethod$2("statSync", [t1]), "mtime");
+          t1 = J.$index$asx(pubspecLock.obj, "path");
+          if (J.compareTo$1$ns(pubspecTime, J.$index$asx(t2.callMethod$2("require", ["fs"]).callMethod$2("statSync", [t1]), "mtime")) > 0)
+            R._showRunPubDialog(project, false);
+        } else
+          R._showRunPubDialog(project, true);
+      },
       dispose$0: [function() {
-        return this.disposables.dispose$0();
+        this.disposables.dispose$0();
+        this.projectSubscription.cancel$0();
       }, "call$0", "get$dispose", 0, 0, 2],
       PubManager$0: function() {
         this._addSdkCmd$3("atom-text-editor", "dartlang:pub-get", new R.PubManager_closure());
@@ -27851,10 +27998,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._addSdkCmd$3(".tree-view", "dartlang:pub-upgrade", new R.PubManager_closure5());
         this._addSdkCmd$3(".tree-view", "dartlang:pub-run", new R.PubManager_closure6(this));
         this._addSdkCmd$3(".tree-view", "dartlang:pub-global-run", new R.PubManager_closure7(this));
+        C.JSArray_methods.forEach$1(Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).get$projects(), this.get$_handleProjectAdded());
+        Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).get$onProjectAdd().listen$1(this.get$_handleProjectAdded());
       },
       $isDisposable: 1,
       static: {PubManager$: function() {
-          var t1 = new R.PubManager(new G.Disposables([]));
+          var t1 = new R.PubManager(new G.Disposables([]), null);
           t1.PubManager$0();
           return t1;
         }}
@@ -28149,13 +28298,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 2, "call"]
     },
     PubApp_installIfUpdateAvailable_closure: {
-      "^": "Closure:124;_pub$_box_0,_pub$_captured_this_1",
+      "^": "Closure:65;_pub$_box_0,_pub$_captured_this_1",
       call$1: [function(hostedVer) {
         var t1 = this._pub$_captured_this_1;
         $.$get$_logger11().fine$1("hosted version for " + t1.name + " is " + H.S(hostedVer));
         if (hostedVer != null && J.$gt$n(hostedVer, this._pub$_box_0._captured_installedVer_0) === true)
           t1.install$0();
-      }, null, null, 2, 0, null, 77, "call"]
+      }, null, null, 2, 0, null, 79, "call"]
     },
     PubApp_installIfUpdateAvailable_closure0: {
       "^": "Closure:0;",
@@ -28164,7 +28313,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 0, "call"]
     },
     PubApp_getMostRecentHostedVersion_closure: {
-      "^": "Closure:30;",
+      "^": "Closure:29;",
       call$1: [function(result) {
         return T.Version_primary(J.toList$0$ax(J.map$1$ax(J.$index$asx(C.JsonCodec_null_null.decode$1(J.get$responseText$x(result)), "versions"), new R.PubApp_getMostRecentHostedVersion__closure())));
       }, null, null, 2, 0, null, 2, "call"]
@@ -28255,7 +28404,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 5, "call"]
     },
     PubGlobalActivate_run_closure1: {
-      "^": "Closure:20;_captured_buf_2",
+      "^": "Closure:19;_captured_buf_2",
       call$1: [function(result) {
         var t1;
         if (!J.$eq$(result, 0)) {
@@ -28280,6 +28429,23 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         else
           return true;
       }
+    },
+    _showRunPubDialog_closure0: {
+      "^": "Closure:1;_pub$_box_0",
+      call$0: [function() {
+        return this._pub$_box_0._captured_notification_0.invoke$1("dismiss");
+      }, null, null, 0, 0, null, "call"]
+    },
+    _showRunPubDialog_closure: {
+      "^": "Closure:1;_pub$_box_0,_captured_project_1",
+      call$0: [function() {
+        var t1, t2;
+        this._pub$_box_0._captured_notification_0.invoke$1("dismiss");
+        t1 = J.get$path$x(this._captured_project_1);
+        t2 = new R.PubJob(t1, "get", null, "Pub get", null);
+        t2._pubspecDir = R._locatePubspecDir(t1);
+        Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(t2);
+      }, null, null, 0, 0, null, "call"]
     }
   }], ["atom.quick_fixes", "package:atom_dartlang/analysis/quick_fixes.dart",, M, {
     "^": "",
@@ -28350,7 +28516,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     QuickFixHelper__handleQuickFix__closure: {
-      "^": "Closure:64;_quick_fixes$_captured_this_5,_quick_fixes$_captured_editor_6,_captured_autoFix_7",
+      "^": "Closure:67;_quick_fixes$_captured_this_5,_quick_fixes$_captured_editor_6,_captured_autoFix_7",
       call$1: [function(result) {
         if (result == null)
           return;
@@ -28367,21 +28533,21 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_captured_fix_1",
       call$1: [function(c) {
         return new M._Change(J.get$error$x(this._captured_fix_1), c);
-      }, null, null, 2, 0, null, 34, "call"]
+      }, null, null, 2, 0, null, 44, "call"]
     },
     QuickFixHelper__handleFixesResult_closure0: {
-      "^": "Closure:31;_quick_fixes$_box_0",
+      "^": "Closure:30;_quick_fixes$_box_0",
       call$1: [function(change) {
         return new X.Suggestion("fix_" + ++this._quick_fixes$_box_0._captured_i_0, null, J.get$message$x(change.get$change()), "", "function", null, null, "quick-fix", null, null, null, J.get$message$x(J.get$error$x(change)), null, null, null, null);
-      }, null, null, 2, 0, null, 118, "call"]
+      }, null, null, 2, 0, null, 100, "call"]
     },
     QuickFixHelper__handleFixesResult_closure1: {
-      "^": "Closure:31;_quick_fixes$_captured_editor_2",
+      "^": "Closure:30;_quick_fixes$_captured_editor_2",
       call$1: [function(choice) {
         var t1 = this._quick_fixes$_captured_editor_2;
         t1.undo$0();
         M._applyChange(t1, choice.get$change());
-      }, null, null, 2, 0, null, 79, "call"]
+      }, null, null, 2, 0, null, 81, "call"]
     },
     _Change: {
       "^": "Object;error>,change<",
@@ -28390,7 +28556,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     _applyChange_closure: {
-      "^": "Closure:17;_captured_sourceFileEdits_0,_captured_linkedEditGroups_1",
+      "^": "Closure:16;_captured_sourceFileEdits_0,_captured_linkedEditGroups_1",
       call$1: function(edit) {
         return $.$get$atom()._workspace.open$2$options(0, edit.get$file(), P.LinkedHashMap__makeLiteral(["searchAllPanes", true])).then$1(new M._applyChange__closure0(this._captured_sourceFileEdits_0, this._captured_linkedEditGroups_1, edit));
       }
@@ -28423,7 +28589,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(edit) {
         return edit.get$file();
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     _applyChange_closure1: {
       "^": "Closure:0;",
@@ -28478,11 +28644,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     RebuildJob_run_closure2: {
-      "^": "Closure:67;",
+      "^": "Closure:70;",
       call$1: [function($status) {
         if ($status.get$isOk() && J.$eq$(J.get$result$x($status), 0))
           P.Future_Future$delayed(P.Duration$(0, 0, 0, 0, 0, 2), null, null).then$1(new Z.RebuildJob_run__closure());
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 40, "call"]
     },
     RebuildJob_run__closure: {
       "^": "Closure:0;",
@@ -28581,7 +28747,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     RefactoringHelper__handleRenameRefactor__closure: {
-      "^": "Closure:68;_refactor$_captured_this_5,_captured_path_6,_captured_offset_7,_captured_end_8,_captured_oldName_9",
+      "^": "Closure:71;_refactor$_captured_this_5,_captured_path_6,_captured_offset_7,_captured_end_8,_captured_oldName_9",
       call$1: [function(result) {
         if (result == null)
           return;
@@ -28597,10 +28763,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t1 = this._captured_offset_3;
           return Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).getRefactoring$6$options("RENAME", this._captured_path_2, t1, J.$sub$n(this._captured_end_4, t1), false, new X.RenameRefactoringOptions(_newName));
         }
-      }, null, null, 2, 0, null, 81, "call"]
+      }, null, null, 2, 0, null, 83, "call"]
     },
     RefactoringHelper__handleRefactorResult_closure0: {
-      "^": "Closure:69;_refactor$_box_1,_refactor$_captured_this_5,_captured_path_6,_captured_oldName_7",
+      "^": "Closure:72;_refactor$_box_1,_refactor$_captured_this_5,_captured_path_6,_captured_oldName_7",
       call$1: [function(result) {
         var t1, t2, sourceFileEdits, t3, apply, project, fileSummary;
         t1 = {};
@@ -28636,7 +28802,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 2, "call"]
     },
     RefactoringHelper__handleRefactorResult__closure: {
-      "^": "Closure:17;",
+      "^": "Closure:16;",
       call$1: function(fileEdit) {
         J.removeWhere$1$ax(fileEdit.get$edits(), new F.RefactoringHelper__handleRefactorResult___closure0());
       }
@@ -28648,7 +28814,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     RefactoringHelper__handleRefactorResult__closure0: {
-      "^": "Closure:17;",
+      "^": "Closure:16;",
       call$1: function(fileEdit) {
         return J.get$isEmpty$asx(fileEdit.get$edits());
       }
@@ -28676,7 +28842,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return J.$add$ns(J.get$name$x(this._captured_project_13), t2.substring$1(filePath, J.get$length$asx(t1)));
         else
           return filePath;
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     RefactoringHelper__handleRefactorResult__closure3: {
       "^": "Closure:1;_refactor$_box_0,_captured_apply_15",
@@ -28692,7 +28858,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 0, 0, null, "call"]
     },
     RefactoringHelper__apply_closure: {
-      "^": "Closure:17;",
+      "^": "Closure:16;",
       call$1: function(edit) {
         return $.$get$atom()._workspace.open$2$options(0, edit.get$file(), P.LinkedHashMap__makeLiteral(["searchAllPanes", true])).then$1(new F.RefactoringHelper__apply__closure0(edit));
       }
@@ -28720,7 +28886,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(edit) {
         return edit.get$file();
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     RefactoringHelper__apply_closure1: {
       "^": "Closure:0;",
@@ -28741,7 +28907,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, "call$0", "get$dispose", 0, 0, 2],
       _handleReferences$1: [function($event) {
         return this._handleReferencesEditor$1($event.get$editor());
-      }, "call$1", "get$_handleReferences", 2, 0, 15],
+      }, "call$1", "get$_handleReferences", 2, 0, 14],
       _handleReferencesEditor$1: function(editor) {
         var path, t1, range, offset;
         path = editor.invoke$1("getPath");
@@ -28849,7 +29015,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             J.add$1$ax(t1, t2);
           }
         }
-      }, "call$2", "get$_references$_render", 4, 0, 70],
+      }, "call$2", "get$_references$_render", 4, 0, 73],
       _references$_jumpTo$1: [function(node) {
         var t1, l;
         t1 = J.getInterceptor$x(node);
@@ -28858,7 +29024,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           l = H.interceptedTypeCast(t1.get$data(node), "$isSearchResult").location;
           Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4(l.file, J.$sub$n(l.startLine, 1), J.$sub$n(l.startColumn, 1), l.length);
         }
-      }, "call$1", "get$_references$_jumpTo", 2, 0, 16, 21],
+      }, "call$1", "get$_references$_jumpTo", 2, 0, 15, 20],
       _doubleClick$1: [function(node) {
         var t1, t2, path;
         t1 = J.getInterceptor$x(node);
@@ -28867,7 +29033,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           path = t1.get$data(node);
           $.$get$atom()._workspace.open$2$options(0, path, P.LinkedHashMap__makeLiteral(["searchAllPanes", true]));
         }
-      }, "call$1", "get$_doubleClick", 2, 0, 16, 21],
+      }, "call$1", "get$_doubleClick", 2, 0, 15, 20],
       hide$0: function() {
         this.super$AtomView$hide();
       },
@@ -28902,7 +29068,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     FindReferencesView__showView_closure: {
-      "^": "Closure:71;_references$_captured_this_0",
+      "^": "Closure:74;_references$_captured_this_0",
       call$1: [function(l) {
         var t1, t2, results, r, path, node, fileResults, t3;
         t1 = this._references$_captured_this_0;
@@ -28926,10 +29092,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t3.forEach$1(fileResults, new V.FindReferencesView__showView__closure0(node));
           t1.treeBuilder.addNode$1(node);
         }
-      }, null, null, 2, 0, null, 82, "call"]
+      }, null, null, 2, 0, null, 84, "call"]
     },
     FindReferencesView__showView__closure: {
-      "^": "Closure:72;",
+      "^": "Closure:75;",
       call$2: [function(a, b) {
         return J.$sub$n(J.get$offset$x(J.get$location$x(a)), J.get$offset$x(J.get$location$x(b)));
       }, null, null, 4, 0, null, 12, 13, "call"]
@@ -29245,7 +29411,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1 = value == null ? null : new V.Sdk(new E.Directory(E._create("Directory", value, null)));
         this._sdk$_captured_this_0._setSdk$2$verbose(t1, true);
         return;
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     SdkManager_closure0: {
       "^": "Closure:0;",
@@ -29274,7 +29440,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           }
           return false;
         }
-      }, null, null, 2, 0, null, 85, "call"]
+      }, null, null, 2, 0, null, 87, "call"]
     },
     SdkManager__setSdk_closure: {
       "^": "Closure:4;_sdk$_box_0,_sdk$_captured_this_1,_captured_verbose_2",
@@ -29287,7 +29453,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = this._sdk$_captured_this_1;
         $.$get$_logger15().info$1("version " + H.S(version) + " (" + H.S(J.$index$asx(t1._sdk.directory.obj, "path")) + ")");
         t1._verifyMinVersion$1(version);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     SdkManager__handleShowSdkInfo_closure: {
       "^": "Closure:4;",
@@ -29297,7 +29463,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1._captured_notification_0 = null;
         t2 = $.$get$atom()._notifications;
         t1._captured_notification_0 = new E.Notification(t2.invoke$3("addInfo", "SDK and Plugin info", t2._options$5$buttons$description$detail$dismissable$icon([new E.NotificationButton("Configure SDK\u2026", new V.SdkManager__handleShowSdkInfo__closure(t1))], null, description, true, null)));
-      }, null, null, 2, 0, null, 40, "call"]
+      }, null, null, 2, 0, null, 41, "call"]
     },
     SdkManager__handleShowSdkInfo__closure: {
       "^": "Closure:1;_sdk$_box_0",
@@ -29618,7 +29784,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(p) {
         return P.print("panel was destroyed");
-      }, null, null, 2, 0, null, 41, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     smokeTest_closure0: {
       "^": "Closure:0;",
@@ -29630,7 +29796,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_captured_childFile_1",
       call$1: [function(contents) {
         return P.print("read " + H.S(this._captured_childFile_1) + " contents");
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 52, "call"]
     },
     smokeTest_closure2: {
       "^": "Closure:0;",
@@ -29706,13 +29872,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(ver) {
         return P.print("sdk version " + H.S(ver));
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 29, "call"]
     },
     smokeTest_closure14: {
       "^": "Closure:4;",
       call$1: [function(foundSdk) {
         P.print("discoverSdk: " + H.S(foundSdk));
-      }, null, null, 2, 0, null, 86, "call"]
+      }, null, null, 2, 0, null, 88, "call"]
     },
     smokeTest_closure15: {
       "^": "Closure:1;",
@@ -29722,7 +29888,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     smokeTest_closure16: {
-      "^": "Closure:32;_smoketest$_box_0",
+      "^": "Closure:31;_smoketest$_box_0",
       call$1: function(timer) {
         var t1 = this._smoketest$_box_0;
         P.print("timer " + t1._captured_timerCount_0++);
@@ -29975,7 +30141,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, "call$0", "get$dispose", 0, 0, 2],
       _handleHierarchy$1: [function($event) {
         return this._handleHierarchyEditor$1($event.get$editor());
-      }, "call$1", "get$_handleHierarchy", 2, 0, 15],
+      }, "call$1", "get$_handleHierarchy", 2, 0, 14],
       _handleHierarchyEditor$1: function(editor) {
         var path, t1, range, offset;
         path = editor.invoke$1("getPath");
@@ -30070,7 +30236,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4($location.file, J.$sub$n($location.startLine, 1), J.$sub$n($location.startColumn, 1), $location.length);
         else
           $.$get$atom().invoke$1("beep");
-      }, "call$1", "get$_jumpTo", 2, 0, 16, 21],
+      }, "call$1", "get$_jumpTo", 2, 0, 15, 20],
       _render$2: [function(item, intoElement) {
         var t1, t2, span, t3, t4;
         t1 = J.$and$n(item.get$classElement().flags, 1);
@@ -30095,10 +30261,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t3.get$classes(span).add$1(0, "hierarchy-muted");
           J.add$1$ax(t1.get$children(intoElement), span);
         }
-      }, "call$2", "get$_render", 4, 0, 74]
+      }, "call$2", "get$_render", 4, 0, 77]
     },
     TypeHierarchyView__sort_closure: {
-      "^": "Closure:75;_captured_items_0",
+      "^": "Closure:78;_captured_items_0",
       call$2: [function(aIndex, bIndex) {
         var t1, t2, a, b, aName;
         t1 = this._captured_items_0;
@@ -30107,19 +30273,19 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         b = t2.$index(t1, bIndex);
         aName = a.get$displayName() != null ? a.get$displayName() : a.get$classElement().name;
         return J.compareTo$1$ns(aName, b.get$displayName() != null ? b.get$displayName() : b.get$classElement().name);
-      }, null, null, 4, 0, null, 87, 88, "call"]
+      }, null, null, 4, 0, null, 89, 90, "call"]
     },
     TypeHierarchyView__render_closure: {
       "^": "Closure:0;_type_hierarchy$_captured_this_0",
       call$1: [function(i) {
         return J.$index$asx(this._type_hierarchy$_captured_this_0._items, i).get$classElement().name;
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     TypeHierarchyView__render_closure0: {
       "^": "Closure:0;_type_hierarchy$_captured_this_1",
       call$1: [function(i) {
         return J.$index$asx(this._type_hierarchy$_captured_this_1._items, i).get$classElement().name;
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     }
   }], ["atom.usage", "package:atom_dartlang/usage.dart",, E, {
     "^": "",
@@ -30136,7 +30302,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       if (J.$eq$(command, "newline"))
         return;
       $.$get$_ga().sendEvent$2(category, command);
-    }, "call$1", "usage__trackCommand$closure", 2, 0, 12, 90],
+    }, "call$1", "usage__trackCommand$closure", 2, 0, 12, 92],
     _activePaneItemChanged: [function(_) {
       var editor, path, t1, index, extension;
       editor = $.$get$atom()._workspace.getActiveTextEditor$0();
@@ -30166,7 +30332,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           desc += "," + F.sanitizeStacktrace(log.get$stackTrace(), true);
         $.$get$_ga().sendException$2$fatal(desc, fatal);
       }
-    }, "call$1", "usage___handleLogRecord$closure", 2, 0, 118, 91],
+    }, "call$1", "usage___handleLogRecord$closure", 2, 0, 121, 93],
     UsageManager: {
       "^": "Object;_usage$_subs,_editorObserve",
       _init$0: function() {
@@ -30208,7 +30374,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t3.push(H.setRuntimeTypeInfo(new P._BroadcastStream(t4), [H.getTypeArgumentByIndex(t4, 0)]).listen$1(E.usage__trackCommand$closure()));
         t2._editorObserve = t1._workspace.observeActivePaneItem$1(E.usage___activePaneItemChanged$closure());
         Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActiveProperty().listen$1(new E.UsageManager__init__closure0());
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     UsageManager__init__closure: {
       "^": "Closure:0;_captured_version_1",
@@ -30238,7 +30404,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           $.$get$_ga().sendScreenView$1("editor");
         } else
           $._ga = new F.AnalyticsMock(false, false, true);
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     UsageManager__init__closure0: {
       "^": "Closure:0;",
@@ -30634,7 +30800,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1._captured__amChanging_0 = true;
         $.$get$state().$indexSet(0, this._captured_prefName_2, pos);
         t1._captured__amChanging_0 = false;
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     AtomView__handleCancel_closure: {
       "^": "Closure:1;_views$_captured_this_0",
@@ -30820,7 +30986,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             H.throwExpression(t1._addEventError$0());
           t1._sendData$1(this._captured_node_7);
         }
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     ListTreeBuilder__addNode_closure3: {
       "^": "Closure:22;_captured_element_8",
@@ -31662,14 +31828,14 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     _AsyncRun__scheduleImmediateJsOverride: [function(callback) {
       ++init.globalState.topEventLoop._activeJsAsyncCount;
       self.scheduleImmediate(H.convertDartClosureToJS(new P._AsyncRun__scheduleImmediateJsOverride_internalCallback(callback), 0));
-    }, "call$1", "async__AsyncRun__scheduleImmediateJsOverride$closure", 2, 0, 18],
+    }, "call$1", "async__AsyncRun__scheduleImmediateJsOverride$closure", 2, 0, 17],
     _AsyncRun__scheduleImmediateWithSetImmediate: [function(callback) {
       ++init.globalState.topEventLoop._activeJsAsyncCount;
       self.setImmediate(H.convertDartClosureToJS(new P._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback(callback), 0));
-    }, "call$1", "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", 2, 0, 18],
+    }, "call$1", "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", 2, 0, 17],
     _AsyncRun__scheduleImmediateWithTimer: [function(callback) {
       P.Timer__createTimer(C.Duration_0, callback);
-    }, "call$1", "async__AsyncRun__scheduleImmediateWithTimer$closure", 2, 0, 18],
+    }, "call$1", "async__AsyncRun__scheduleImmediateWithTimer$closure", 2, 0, 17],
     _asyncHelper: function(object, bodyFunctionOrErrorCode, completer) {
       if (bodyFunctionOrErrorCode === 0) {
         J.complete$1$x(completer, object);
@@ -31925,7 +32091,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       P._rootHandleUncaughtError(null, null, t1, error, stackTrace);
     }, function(error) {
       return P._nullErrorHandler(error, null);
-    }, "call$2", "call$1", "async___nullErrorHandler$closure", 2, 2, 37, 3, 7, 9],
+    }, "call$2", "call$1", "async___nullErrorHandler$closure", 2, 2, 37, 3, 8, 9],
     _nullDoneHandler: [function() {
     }, "call$0", "async___nullDoneHandler$closure", 0, 0, 2],
     _runUserCode: function(userCode, onSuccess, onError) {
@@ -32086,7 +32252,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 1, "call"]
     },
     _AsyncRun__initializeScheduleImmediate_closure: {
-      "^": "Closure:77;_async$_box_0,_captured_div_1,_captured_span_2",
+      "^": "Closure:80;_async$_box_0,_captured_div_1,_captured_span_2",
       call$1: function(callback) {
         var t1, t2;
         ++init.globalState.topEventLoop._activeJsAsyncCount;
@@ -32117,16 +32283,16 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 2, "call"]
     },
     _awaitOnObject_closure0: {
-      "^": "Closure:34;_captured_bodyFunction_1",
+      "^": "Closure:33;_captured_bodyFunction_1",
       call$2: [function(error, stackTrace) {
         this._captured_bodyFunction_1.call$2(1, new H.ExceptionAndStackTrace(error, stackTrace));
-      }, null, null, 4, 0, null, 7, 9, "call"]
+      }, null, null, 4, 0, null, 8, 9, "call"]
     },
     _wrapJsFunctionForAsync_closure: {
-      "^": "Closure:79;_captured_protected_0",
+      "^": "Closure:82;_captured_protected_0",
       call$2: [function(errorCode, result) {
         this._captured_protected_0(errorCode, result);
-      }, null, null, 4, 0, null, 94, 2, "call"]
+      }, null, null, 4, 0, null, 96, 2, "call"]
     },
     _BroadcastStream: {
       "^": "_ControllerStream;_async$_controller",
@@ -32270,7 +32436,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._sendError$2(error, stackTrace);
       }, function(error) {
         return this.addError$2(error, null);
-      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 11, 3, 7, 9],
+      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 11, 3, 8, 9],
       close$0: ["super$_BroadcastStreamController$close", function(_) {
         var doneFuture;
         if ((this._state & 4) !== 0)
@@ -32290,7 +32456,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, "get$_async$_add", 2, 0, null, 10],
       _addError$2: [function(error, stackTrace) {
         this._sendError$2(error, stackTrace);
-      }, null, "get$_addError", 4, 0, null, 7, 9],
+      }, null, "get$_addError", 4, 0, null, 8, 9],
       _close$0: [function() {
         var addState = this._addStreamState;
         this._addStreamState = null;
@@ -32484,7 +32650,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       }, function(error) {
         return this.addError$2(error, null);
-      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 11, 3, 7, 9],
+      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 11, 3, 8, 9],
       close$0: [function(_) {
         var t1 = this._state;
         if ((t1 & 4) === 0 && (t1 & 2) !== 0) {
@@ -32554,7 +32720,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     Future_wait_handleError: {
-      "^": "Closure:81;_async$_box_0,_captured_eagerError_1,_captured_cleanUp_2,_captured_result_3",
+      "^": "Closure:127;_async$_box_0,_captured_eagerError_1,_captured_cleanUp_2,_captured_result_3",
       call$2: [function(theError, theStackTrace) {
         var t1, t2;
         t1 = this._async$_box_0;
@@ -32569,10 +32735,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           }
         } else if (t2 === 0 && !this._captured_eagerError_1)
           this._captured_result_3._completeError$2(t1._captured_error_2, t1._captured_stackTrace_3);
-      }, null, null, 4, 0, null, 95, 96, "call"]
+      }, null, null, 4, 0, null, 97, 98, "call"]
     },
     Future_wait_closure: {
-      "^": "Closure:24;_async$_box_0,_captured_eagerError_6,_captured_cleanUp_7,_captured_result_8,_captured_pos_9",
+      "^": "Closure:35;_async$_box_0,_captured_eagerError_6,_captured_cleanUp_7,_captured_result_8,_captured_pos_9",
       call$1: [function(value) {
         var t1, t2, t3;
         t1 = this._async$_box_0;
@@ -32587,7 +32753,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
             this._captured_result_8._completeWithValue$1(t3);
         } else if (t1._captured_remaining_1 === 0 && !this._captured_eagerError_6)
           this._captured_result_8._completeError$2(t1._captured_error_2, t1._captured_stackTrace_3);
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     Future_forEach_closure: {
       "^": "Closure:1;_captured_f_0,_captured_iterator_1",
@@ -32637,7 +32803,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._completeError$2(error, stackTrace);
       }, function(error) {
         return this.completeError$2(error, null);
-      }, "completeError$1", "call$2", "call$1", "get$completeError", 2, 2, 11, 3, 7, 9]
+      }, "completeError$1", "call$2", "call$1", "get$completeError", 2, 2, 11, 3, 8, 9]
     },
     _AsyncCompleter: {
       "^": "_Completer;future",
@@ -32815,7 +32981,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         P._Future__propagateToListeners(this, listeners);
       }, function(error) {
         return this._completeError$2(error, null);
-      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 37, 3, 7, 9],
+      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 37, 3, 8, 9],
       _asyncComplete$1: function(value) {
         var t1;
         if (value == null)
@@ -32999,7 +33165,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_captured_target_0",
       call$1: [function(value) {
         this._captured_target_0._completeWithValue$1(value);
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     _Future__chainForeignFuture_closure0: {
       "^": "Closure:38;_captured_target_1",
@@ -33007,7 +33173,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._captured_target_1._completeError$2(error, stackTrace);
       }, function(error) {
         return this.call$2(error, null);
-      }, "call$1", null, null, null, 2, 2, null, 3, 7, 9, "call"]
+      }, "call$1", null, null, null, 2, 2, null, 3, 8, 9, "call"]
     },
     _Future__chainForeignFuture_closure1: {
       "^": "Closure:1;_captured_target_2,_captured_e_3,_captured_s_4",
@@ -33146,7 +33312,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_box_2,_captured_result_11",
       call$1: [function(ignored) {
         P._Future__propagateToListeners(this._box_2._captured_source_4, new P._FutureListener(null, this._captured_result_11, 0, null, null));
-      }, null, null, 2, 0, null, 97, "call"]
+      }, null, null, 2, 0, null, 99, "call"]
     },
     _Future__propagateToListeners_handleWhenCompleteCallback_closure0: {
       "^": "Closure:38;_async$_box_0,_captured_result_12",
@@ -33161,7 +33327,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         P._Future__propagateToListeners(t1._captured_completeResult_0, new P._FutureListener(null, this._captured_result_12, 0, null, null));
       }, function(error) {
         return this.call$2(error, null);
-      }, "call$1", null, null, null, 2, 2, null, 3, 7, 9, "call"]
+      }, "call$1", null, null, null, 2, 2, null, 3, 8, 9, "call"]
     },
     _Future_timeout_closure: {
       "^": "Closure:1;_async$_box_0,_captured_result_3,_captured_zone_4",
@@ -33185,7 +33351,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t1.cancel$0();
           this._captured_result_6._completeWithValue$1(v);
         }
-      }, null, null, 2, 0, null, 27, "call"],
+      }, null, null, 2, 0, null, 32, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -33200,7 +33366,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           t1.cancel$0();
           this._captured_result_7._completeError$2(e, s);
         }
-      }, null, null, 4, 0, null, 0, 20, "call"]
+      }, null, null, 4, 0, null, 0, 21, "call"]
     },
     _AsyncCallbackEntry: {
       "^": "Object;callback,zone<,next@",
@@ -33341,7 +33507,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     Stream_Stream$periodic_startPeriodicTimer_closure: {
-      "^": "Closure:32;_captured_sendEvent_4",
+      "^": "Closure:31;_captured_sendEvent_4",
       call$1: function(timer) {
         this._captured_sendEvent_4.call$0();
       }
@@ -33408,7 +33574,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           s = H.getTraceFromException(exception);
           P._cancelAndErrorWithReplacement(t1._captured_subscription_0, this._captured_result_3, e, s);
         }
-      }, null, null, 2, 0, null, 16, "call"],
+      }, null, null, 2, 0, null, 17, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -33435,7 +33601,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = this._async$_box_0;
         t2 = this._captured_future_3;
         P._runUserCode(new P.Stream_contains__closure(this._captured_needle_2, element), new P.Stream_contains__closure0(t1, t2), P._cancelAndErrorClosure(t1._captured_subscription_0, t2));
-      }, null, null, 2, 0, null, 16, "call"],
+      }, null, null, 2, 0, null, 17, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -33465,7 +33631,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure;_async$_box_0,_async$_captured_this_1,_captured_action_2,_captured_future_3",
       call$1: [function(element) {
         P._runUserCode(new P.Stream_forEach__closure(this._captured_action_2, element), new P.Stream_forEach__closure0(), P._cancelAndErrorClosure(this._async$_box_0._captured_subscription_0, this._captured_future_3));
-      }, null, null, 2, 0, null, 16, "call"],
+      }, null, null, 2, 0, null, 17, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -33496,7 +33662,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = this._async$_box_0;
         t2 = this._captured_future_3;
         P._runUserCode(new P.Stream_any__closure(this._captured_test_2, element), new P.Stream_any__closure0(t1, t2), P._cancelAndErrorClosure(t1._captured_subscription_0, t2));
-      }, null, null, 2, 0, null, 16, "call"],
+      }, null, null, 2, 0, null, 17, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -33567,7 +33733,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure;_async$_box_0,_async$_captured_this_1,_captured_future_2",
       call$1: [function(value) {
         P._cancelAndValue(this._async$_box_0._captured_subscription_0, this._captured_future_2, value);
-      }, null, null, 2, 0, null, 8, "call"],
+      }, null, null, 2, 0, null, 7, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -33595,7 +33761,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1 = this._async$_box_0;
         t1._captured_foundResult_1 = true;
         t1._captured_result_0 = value;
-      }, null, null, 2, 0, null, 8, "call"],
+      }, null, null, 2, 0, null, 7, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -33710,7 +33876,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return H.computeSignature(function(T) {
           return {func: 1, v: true, args: [T]};
         }, this.$receiver, "_StreamController");
-      }, 8],
+      }, 7],
       addError$2: [function(error, stackTrace) {
         if (this._state >= 4)
           throw H.wrapException(this._badEventState$0());
@@ -33719,7 +33885,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._addError$2(error, stackTrace);
       }, function(error) {
         return this.addError$2(error, null);
-      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 11, 3, 7, 9],
+      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 11, 3, 8, 9],
       close$0: [function(_) {
         var t1 = this._state;
         if ((t1 & 4) !== 0)
@@ -33749,14 +33915,14 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return H.computeSignature(function(T) {
           return {func: 1, v: true, args: [T]};
         }, this.$receiver, "_StreamController");
-      }, 8],
+      }, 7],
       _addError$2: [function(error, stackTrace) {
         var t1 = this._state;
         if ((t1 & 1) !== 0)
           this._sendError$2(error, stackTrace);
         else if ((t1 & 3) === 0)
           this._ensurePendingEvents$0().add$1(0, new P._DelayedError(error, stackTrace, null));
-      }, "call$2", "get$_addError", 4, 0, 86, 7, 9],
+      }, "call$2", "get$_addError", 4, 0, 89, 8, 9],
       _close$0: [function() {
         var addState = this._varData;
         this._varData = addState.get$varData();
@@ -34517,7 +34683,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._state = 4;
       }, function(error) {
         return this._onError$2(error, null);
-      }, "_onError$1", "call$2", "call$1", "get$_onError", 2, 2, 11, 3, 7, 9],
+      }, "_onError$1", "call$2", "call$1", "get$_onError", 2, 2, 11, 3, 8, 9],
       _onDone$0: [function() {
         if (this._state === 2) {
           var hasNext = this._futureOrPrefetch;
@@ -34537,7 +34703,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 0, 0, null, "call"]
     },
     _cancelAndErrorClosure_closure: {
-      "^": "Closure:34;_captured_subscription_0,_captured_future_1",
+      "^": "Closure:33;_captured_subscription_0,_captured_future_1",
       call$2: function(error, stackTrace) {
         return P._cancelAndError(this._captured_subscription_0, this._captured_future_1, error, stackTrace);
       }
@@ -34616,7 +34782,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, 10],
       _handleError$2: [function(error, stackTrace) {
         this._addError$2(error, stackTrace);
-      }, "call$2", "get$_handleError", 4, 0, 87, 7, 9],
+      }, "call$2", "get$_handleError", 4, 0, 90, 8, 9],
       _handleDone$0: [function() {
         this._close$0();
       }, "call$0", "get$_handleDone", 0, 0, 2],
@@ -34747,7 +34913,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if ((t1._state & 2) !== 0)
           H.throwExpression(new P.StateError("Stream is already closed"));
         t1.super$_BufferingStreamSubscription$_addError(error, stackTrace);
-      }, null, "get$addError", 2, 2, null, 3, 7, 9],
+      }, null, "get$addError", 2, 2, null, 3, 8, 9],
       close$0: [function(_) {
         this._async$_sink._close$0();
       }, null, "get$close", 0, 0, null]
@@ -34821,7 +34987,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       }, function(error) {
         return this._handleError$2(error, null);
-      }, "_handleError$1", "call$2", "call$1", "get$_handleError", 2, 2, 88, 3, 7, 9],
+      }, "_handleError$1", "call$2", "call$1", "get$_handleError", 2, 2, 91, 3, 8, 9],
       _handleDone$0: [function() {
         var e, s, exception, t1;
         try {
@@ -34998,7 +35164,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_async$_captured_this_0,_async$_captured_f_1",
       call$1: [function(arg) {
         return this._async$_captured_this_0.runUnaryGuarded$2(this._async$_captured_f_1, arg);
-      }, null, null, 2, 0, null, 43, "call"]
+      }, null, null, 2, 0, null, 51, "call"]
     }
   }], ["dart.collection", "dart:collection",, P, {
     "^": "",
@@ -35791,7 +35957,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:3;_captured_result_0",
       call$2: [function(k, v) {
         this._captured_result_0.$indexSet(0, k, v);
-      }, null, null, 4, 0, null, 99, 27, "call"]
+      }, null, null, 4, 0, null, 101, 32, "call"]
     },
     ListBase: {
       "^": "Object_ListMixin;"
@@ -36547,7 +36713,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (this._processed != null && !this.containsKey$1(0, key))
           return;
         return this._upgrade$0().remove$1(0, key);
-      }, "call$1", "get$remove", 2, 0, 24, 24],
+      }, "call$1", "get$remove", 2, 0, 35, 28],
       clear$0: function(_) {
         var t1;
         if (this._processed == null)
@@ -36724,7 +36890,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if ((t1._state & 2) !== 0)
           H.throwExpression(new P.StateError("Stream is already closed"));
         t1.super$_BufferingStreamSubscription$_addError(error, stackTrace);
-      }, null, "get$addError", 2, 2, null, 3, 7, 9],
+      }, null, "get$addError", 2, 2, null, 3, 8, 9],
       close$0: [function(_) {
         return this._chunkedSink.close$0(0);
       }, null, "get$close", 0, 0, null]
@@ -36742,7 +36908,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }]
     },
     Converter_bind_closure: {
-      "^": "Closure:89;_convert$_captured_this_0",
+      "^": "Closure:126;_convert$_captured_this_0",
       call$1: function(sink) {
         return H.setRuntimeTypeInfo(new P._ConverterStreamEventSink(sink, this._convert$_captured_this_0.startChunkedConversion$1(sink)), [null, null]);
       }
@@ -37374,7 +37540,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     "^": "",
     Comparable_compare: [function(a, b) {
       return J.compareTo$1$ns(a, b);
-    }, "call$2", "core_Comparable_compare$closure", 4, 0, 121],
+    }, "call$2", "core_Comparable_compare$closure", 4, 0, 124],
     Error_safeToString: function(object) {
       if (typeof object === "number" || typeof object === "boolean" || null == object)
         return J.toString$0$(object);
@@ -37418,7 +37584,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     print: [function(object) {
       var line = H.S(object);
       H.printString(line);
-    }, "call$1", "core__print$closure", 2, 0, 122, 26],
+    }, "call$1", "core__print$closure", 2, 0, 125, 26],
     RegExp_RegExp: function(source, caseSensitive, multiLine) {
       return new H.JSSyntaxRegExp(source, H.JSSyntaxRegExp_makeNative(source, multiLine, true, false), null, null);
     },
@@ -37447,7 +37613,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       return t1.charCodeAt(0) == 0 ? t1 : t1;
     },
     NoSuchMethodError_toString_closure: {
-      "^": "Closure:123;_core$_box_0,_captured_sb_1",
+      "^": "Closure:93;_core$_box_0,_captured_sb_1",
       call$2: function(key, value) {
         var t1, t2, t3;
         t1 = this._captured_sb_1;
@@ -37610,7 +37776,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }}
     },
     Duration_toString_sixDigits: {
-      "^": "Closure:19;",
+      "^": "Closure:18;",
       call$1: function(n) {
         if (n >= 100000)
           return H.S(n);
@@ -37626,7 +37792,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     Duration_toString_twoDigits: {
-      "^": "Closure:19;",
+      "^": "Closure:18;",
       call$1: function(n) {
         if (n >= 10)
           return "" + n;
@@ -38236,7 +38402,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       return W.HttpRequest_request(url, null, null, null, null, null, null, null);
     }, function(url, method, sendData) {
       return W.HttpRequest_request(url, method, null, null, null, null, sendData, null);
-    }, "call$8$method$mimeType$onProgress$requestHeaders$responseType$sendData$withCredentials", "call$1", "call$3$method$sendData", "html_HttpRequest_request$closure", 2, 15, 90, 3, 3, 3, 3, 3, 3, 3],
+    }, "call$8$method$mimeType$onProgress$requestHeaders$responseType$sendData$withCredentials", "call$1", "call$3$method$sendData", "html_HttpRequest_request$closure", 2, 15, 92, 3, 3, 3, 3, 3, 3, 3],
     _JenkinsSmiHash_combine: function(hash, value) {
       hash = 536870911 & hash + value;
       hash = 536870911 & hash + ((524287 & hash) << 10 >>> 0);
@@ -38975,10 +39141,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "%": "XMLHttpRequest"
     },
     HttpRequest_getString_closure: {
-      "^": "Closure:30;",
+      "^": "Closure:29;",
       call$1: [function(xhr) {
         return J.get$responseText$x(xhr);
-      }, null, null, 2, 0, null, 102, "call"]
+      }, null, null, 2, 0, null, 104, "call"]
     },
     HttpRequest_request_closure: {
       "^": "Closure:0;_captured_completer_1,_captured_xhr_2",
@@ -40210,7 +40376,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return t1;
         }, _Html5NodeValidator__standardAttributeValidator: [function(element, attributeName, value, context) {
           return true;
-        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 35, 16, 49, 8, 50], _Html5NodeValidator__uriAttributeValidator: [function(element, attributeName, value, context) {
+        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 34, 17, 49, 7, 50], _Html5NodeValidator__uriAttributeValidator: [function(element, attributeName, value, context) {
           var t1, t2, t3, t4, t5;
           t1 = context.get$uriPolicy();
           t2 = t1._hiddenAnchor;
@@ -40241,7 +40407,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           else
             t1 = true;
           return t1;
-        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 35, 16, 49, 8, 50]}
+        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 34, 17, 49, 7, 50]}
     },
     ImmutableListMixin: {
       "^": "Object;",
@@ -40368,7 +40534,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(attr) {
         return "TEMPLATE::" + H.S(attr);
-      }, null, null, 2, 0, null, 103, "call"]
+      }, null, null, 2, 0, null, 105, "call"]
     },
     _SvgNodeValidator: {
       "^": "Object;",
@@ -40557,7 +40723,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     _ValidatingTreeSanitizer_sanitizeTree_walk: {
-      "^": "Closure:91;_html$_captured_this_0",
+      "^": "Closure:94;_html$_captured_this_0",
       call$2: function(node, $parent) {
         var t1, child, nextChild;
         t1 = this._html$_captured_this_0;
@@ -40920,7 +41086,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
       dartArgs = P.List_List$from(J.map$1$ax($arguments, P.js___convertToDart$closure()), true, null);
       return P._convertToJS(H.Primitives_applyFunctionWithPositionalArguments(callback, dartArgs));
-    }, null, null, 8, 0, null, 104, 105, 106, 107],
+    }, null, null, 8, 0, null, 106, 107, 108, 109],
     _defineProperty: function(o, $name, value) {
       var exception;
       try {
@@ -40952,7 +41118,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       if (!!t1.$isFunction)
         return P._getJsProxy(o, "$dart_jsFunction", new P._convertToJS_closure());
       return P._getJsProxy(o, "_$dart_jsObject", new P._convertToJS_closure0($.$get$_dartProxyCtor()));
-    }, "call$1", "js___convertToJS$closure", 2, 0, 0, 23],
+    }, "call$1", "js___convertToJS$closure", 2, 0, 0, 24],
     _getJsProxy: function(o, propertyName, createProxy) {
       var jsProxy = P._getOwnProperty(o, propertyName);
       if (jsProxy == null) {
@@ -40980,7 +41146,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         else
           return P._wrapToDart(o);
       }
-    }, "call$1", "js___convertToDart$closure", 2, 0, 25, 23],
+    }, "call$1", "js___convertToDart$closure", 2, 0, 25, 24],
     _wrapToDart: function(o) {
       if (typeof o == "function")
         return P._getDartProxy(o, $.$get$_DART_CLOSURE_PROPERTY_NAME(), new P._wrapToDart_closure());
@@ -41087,7 +41253,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return convertedList;
         } else
           return P._convertToJS(o);
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 24, "call"]
     },
     JsFunction: {
       "^": "JsObject;_jsObject",
@@ -42048,7 +42214,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(subscription) {
         return subscription.cancel$0();
-      }, null, null, 2, 0, null, 52, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     },
     Property__createControllerForStream_onListen: {
       "^": "Closure:2;_frappe$_box_0,_frappe$_captured_this_1,_frappe$_captured_input_2",
@@ -42071,7 +42237,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(value);
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     Property__createControllerForStream_onListen_closure0: {
       "^": "Closure:1;_frappe$_captured_this_4",
@@ -42340,7 +42506,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if ($.$get$CssClassSetImpl__validTokenRE()._nativeRegExp.test(H.checkString(value)))
           return value;
         throw H.wrapException(P.ArgumentError$value(value, "value", "Not a valid class token"));
-      }, "call$1", "get$_validateToken", 2, 0, 92, 8],
+      }, "call$1", "get$_validateToken", 2, 0, 95, 7],
       toString$0: function(_) {
         return this.readClasses$0().join$1(0, " ");
       },
@@ -43176,7 +43342,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     ListSyntax_parse_tryMatch: {
-      "^": "Closure:93;_block_parser$_box_0,_captured_parser_2",
+      "^": "Closure:96;_block_parser$_box_0,_captured_parser_2",
       call$1: function(pattern) {
         var t1, t2, match;
         t1 = this._captured_parser_2;
@@ -43721,7 +43887,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           parser.advanceBy$1(J.get$length$asx(t1.$index(endMatch, 0)));
         }
         return;
-      }, null, "get$close", 4, 0, null, 110, 111]
+      }, null, "get$close", 4, 0, null, 112, 113]
     }
   }], ["pub_semver.src.patterns", "package:pub_semver/src/patterns.dart",, Z, {}], ["pub_semver.src.version", "package:pub_semver/src/version.dart",, T, {
     "^": "",
@@ -43902,7 +44068,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           else
             throw exception;
         }
-      }, null, null, 2, 0, null, 112, "call"]
+      }, null, null, 2, 0, null, 114, "call"]
     }
   }], ["stream_transformers", "package:stream_transformers/stream_transformers.dart",, K, {
     "^": "",
@@ -43934,7 +44100,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }}
     },
     Combine_all_closure: {
-      "^": "Closure:94;_captured_streams_0",
+      "^": "Closure:97;_captured_streams_0",
       call$1: function(sink) {
         var t1, t2;
         t1 = this._captured_streams_0;
@@ -43948,13 +44114,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(stream) {
         return J.map$1$ax(stream, new K.Combine_all___closure0(stream));
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     Combine_all___closure0: {
       "^": "Closure:0;_captured_stream_1",
       call$1: [function($event) {
         return [this._captured_stream_1, $event];
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     Combine_all__closure0: {
       "^": "Closure:3;",
@@ -43964,7 +44130,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = J.getInterceptor$ax(current);
         values.$indexSet(0, t1.get$first(current), t1.get$last(current));
         return values;
-      }, null, null, 4, 0, null, 114, 115, "call"]
+      }, null, null, 4, 0, null, 116, 117, "call"]
     },
     Combine_all__closure1: {
       "^": "Closure:0;_captured_streams_2",
@@ -43976,19 +44142,19 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_captured_streams_3",
       call$1: [function(values) {
         return H.setRuntimeTypeInfo(new H.MappedListIterable(this._captured_streams_3, new K.Combine_all___closure(values)), [null, null]).toList$1$growable(0, false);
-      }, null, null, 2, 0, null, 47, "call"]
+      }, null, null, 2, 0, null, 45, "call"]
     },
     Combine_all___closure: {
       "^": "Closure:0;_captured_values_4",
       call$1: [function(stream) {
         return J.$index$asx(this._captured_values_4, stream);
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     Combine_all__closure3: {
       "^": "Closure:0;_captured_sink_5",
       call$1: [function(combined) {
         return this._captured_sink_5.add$1(0, combined);
-      }, null, null, 2, 0, null, 117, "call"]
+      }, null, null, 2, 0, null, 119, "call"]
     },
     Combine_bind_closure: {
       "^": "Closure;_stream_transformers$_captured_this_0,_captured_stream_1",
@@ -44010,7 +44176,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       call$1: [function(values) {
         var t1 = J.getInterceptor$ax(values);
         return this._captured_sink_3.add$1(0, this._stream_transformers$_captured_this_2._combiner$2(t1.get$first(values), t1.get$last(values)));
-      }, null, null, 2, 0, null, 47, "call"]
+      }, null, null, 2, 0, null, 45, "call"]
     },
     Debounce: {
       "^": "Object;_stream_transformers$_duration",
@@ -44079,7 +44245,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_captured_sink_11",
       call$1: [function($event) {
         return this._captured_sink_11.add$1(0, $event);
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     FlatMap_bind_onListen_onData_closure0: {
       "^": "Closure:1;_captured_openStreams_12,_captured_closeSinkIfDone_13,_captured_mappedStream_14",
@@ -44099,7 +44265,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:3;_captured_sink_16",
       call$2: [function(error, stackTrace) {
         return this._captured_sink_16.addError$2(error, stackTrace);
-      }, null, null, 4, 0, null, 7, 9, "call"]
+      }, null, null, 4, 0, null, 8, 9, "call"]
     },
     FlatMap_bind_onCancel: {
       "^": "Closure:2;_captured_subscriptions_17",
@@ -44125,7 +44291,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(subscription) {
         return subscription.cancel$0();
-      }, null, null, 2, 0, null, 52, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     },
     FlatMapLatest_bind_onListen: {
       "^": "Closure;_stream_transformers$_box_0,_captured_this_1,_captured_input_2",
@@ -44150,7 +44316,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(true);
         return;
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     FlatMapLatest_bind_onListen_closure1: {
       "^": "Closure:0;",
@@ -44168,13 +44334,13 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       call$1: [function(value) {
         var t1 = this._captured_done_6;
         return J.transform$1$x(this._stream_transformers$_captured_this_5._convert$1(value), H.setRuntimeTypeInfo(new K.TakeUntil(H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)])), [null]));
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     FlatMapLatest_bind_onListen_closure3: {
       "^": "Closure:0;_captured_sink_7",
       call$1: [function(value) {
         return this._captured_sink_7.add$1(0, value);
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     FlatMapLatest_bind_onListen_closure4: {
       "^": "Closure:1;_captured_sink_8",
@@ -44198,7 +44364,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function(stream) {
         return stream;
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     Scan: {
       "^": "Object;_initialValue,_combine",
@@ -44286,7 +44452,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;_captured_sink_6",
       call$1: [function(value) {
         return this._captured_sink_6.add$1(0, value);
-      }, null, null, 2, 0, null, 8, "call"]
+      }, null, null, 2, 0, null, 7, "call"]
     },
     TakeUntil_bind_onListen_closure1: {
       "^": "Closure:1;_captured_done_7",
@@ -44341,7 +44507,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       "^": "Closure:0;",
       call$1: [function($function) {
         return $function.call$0();
-      }, null, null, 2, 0, null, 78, "call"]
+      }, null, null, 2, 0, null, 80, "call"]
     },
     _bindStream__closure1: {
       "^": "Closure:0;",
@@ -44409,7 +44575,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       call$1: [function(key) {
         var value = H.S(this._captured_map_0.$index(0, key));
         return H.S(key) + "=" + P.Uri__uriEncode(C.List_KIf, value, C.Utf8Codec_false, false);
-      }, null, null, 2, 0, null, 24, "call"]
+      }, null, null, 2, 0, null, 28, "call"]
     },
     ThrottlingBucket: {
       "^": "Object;startingCount,drops,_lastReplenish",
@@ -45586,8 +45752,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   }]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
-  init.metadata = ["e", "_", "result", null, "obj", "str", "m", "error", "value", "stackTrace", "data", "editor", "a", "b", "val", "code", "element", "message", "response", "r", "s", "node", "launch", "o", "key", "dir", "object", "v", "event", "edit", "ver", "version", "pos", "stream", "c", "navInfo", "contents", "name", "cr", "invocation", "description", "p", "item", "arg", "exitCode", "i", "status", "values", "each", "attributeName", "context", "x", "subscription", "options", "map", "arg2", "position", "arg3", "analysisErrors", "analysisFlushResults", "errors", "nb", "arg4", "evt", "errorCallback", "resolve", "reject", "_this", "json", "jsEditor", "line", "sender", "inState", "entry", "closure", "allPaths", "currentProjects", "hostedVer", "function", "choice", "newSdk", "_newName", "l", "suggestions", "suggestion", "sdkPath", "foundSdk", "aIndex", "bIndex", "isolate", "command", "log", "cs", "ed", "errorCode", "theError", "theStackTrace", "ignored", "didFormat", "k", "active", "currentVersion", "xhr", "attr", "callback", "captureThis", "self", "arguments", "numberOfArguments", "file", "parser", "endMatch", "part", "arg1", "previous", "current", "busy", "combined", "change"];
-  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [,,]}, {func: 1, args: [P.String]}, {func: 1, ret: P.Future}, {func: 1, v: true, args: [E.TextEditor]}, {func: 1, v: true, args: [,]}, {func: 1, args: [E.TextEditor]}, {func: 1, args: [E.AtomEvent]}, {func: 1, ret: P.bool}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, v: true, args: [P.String]}, {func: 1, v: true, opt: [,]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, v: true, args: [E.AtomEvent]}, {func: 1, v: true, args: [T.Node0]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, args: [P.$int]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, args: [W.MouseEvent]}, {func: 1, args: [P.bool]}, {func: 1, args: [P.Object]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, args: [P.JsObject]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [E.AnalysisError]}, {func: 1, args: [X.LaunchConfiguration]}, {func: 1, args: [W.HttpRequest]}, {func: 1, args: [M._Change]}, {func: 1, args: [P.Timer]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, args: [, P.StackTrace]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [E.CompletionSuggestion]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [P.bool]}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, args: [E.HoverResult]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [E.ServerStatus]}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [P.Map]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, args: [E.Point]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, args: [E.ExecutionLaunchData]}, {func: 1, v: true, opt: [P.Map]}, {func: 1, v: true, args: [P.Map]}, {func: 1, ret: P.Map}, {func: 1, args: [P.String, P.Function]}, {func: 1, args: [E.Range]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [L.DartProject]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, args: [E.FixesResult]}, {func: 1, args: [, P.String]}, {func: 1, args: [E.NotificationButton]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, args: [[P.List, E.SearchResult]]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.$int, P.$int]}, {func: 1, args: [E.File]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [E.Position]}, {func: 1, args: [P.$int,,]}, {func: 1, args: [P.String,,]}, {func: 1, v: true, args: [,,]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, args: [N.LogRecord]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, v: true, args: [P.Object, P.StackTrace]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, v: true, args: [,], opt: [,]}, {func: 1, args: [P.EventSink]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, args: [P.RegExp]}, {func: 1, args: [[P.EventSink, P.List]]}, {func: 1, ret: P.num}, {func: 1, ret: E.ServerStatus, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.ExecutionLaunchData, args: [P.Map]}, {func: 1, ret: P.$int, args: [E.CompletionSuggestion, E.CompletionSuggestion]}, {func: 1, ret: P.bool, args: [E.TextEditor]}, {func: 1, ret: P.$int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, v: true, args: [P.Object]}, {func: 1, args: [P.Symbol,,]}, {func: 1, args: [T.Version]}];
+  init.metadata = ["e", "_", "result", null, "obj", "str", "m", "value", "error", "stackTrace", "data", "editor", "a", "b", "val", "code", "message", "element", "response", "r", "node", "s", "launch", "edit", "o", "version", "object", "event", "key", "ver", "dir", "stream", "v", "pos", "navInfo", "name", "cr", "options", "subscription", "x", "status", "description", "p", "exitCode", "c", "values", "i", "item", "each", "attributeName", "context", "arg", "contents", "invocation", "map", "arg4", "position", "sender", "analysisErrors", "analysisFlushResults", "errors", "line", "closure", "evt", "errorCallback", "resolve", "reject", "_this", "json", "jsEditor", "entry", "isolate", "inState", "currentProjects", "newSdk", "allPaths", "ed", "projects", "project", "hostedVer", "function", "choice", "suggestions", "_newName", "l", "suggestion", "numberOfArguments", "sdkPath", "foundSdk", "aIndex", "bIndex", "cs", "command", "log", "arg1", "didFormat", "errorCode", "theError", "theStackTrace", "ignored", "change", "k", "active", "currentVersion", "xhr", "attr", "callback", "captureThis", "self", "arguments", "arg2", "file", "parser", "endMatch", "part", "busy", "previous", "current", "arg3", "combined", "nb"];
+  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [,,]}, {func: 1, args: [P.String]}, {func: 1, ret: P.Future}, {func: 1, v: true, args: [E.TextEditor]}, {func: 1, v: true, args: [,]}, {func: 1, args: [E.TextEditor]}, {func: 1, args: [E.AtomEvent]}, {func: 1, ret: P.bool}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, v: true, args: [P.String]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, v: true, args: [E.AtomEvent]}, {func: 1, v: true, args: [T.Node0]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, args: [P.$int]}, {func: 1, v: true, opt: [,]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, args: [W.MouseEvent]}, {func: 1, args: [P.bool]}, {func: 1, args: [E.AnalysisError]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, args: [P.JsObject]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [X.LaunchConfiguration]}, {func: 1, args: [W.HttpRequest]}, {func: 1, args: [M._Change]}, {func: 1, args: [P.Timer]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, args: [, P.StackTrace]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [P.Object]}, {func: 1, args: [E.CompletionSuggestion]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [P.bool]}, {func: 1, args: [P.String, P.Function]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [E.ServerStatus]}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [P.Map]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, args: [E.Point]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, args: [E.ExecutionLaunchData]}, {func: 1, v: true, opt: [P.Map]}, {func: 1, v: true, args: [P.Map]}, {func: 1, ret: P.Map}, {func: 1, args: [E.Range]}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, args: [T.Version]}, {func: 1, args: [E.HoverResult]}, {func: 1, args: [E.FixesResult]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, args: [E.NotificationButton]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, args: [[P.List, E.SearchResult]]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.$int, P.$int]}, {func: 1, args: [, P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, args: [P.$int,,]}, {func: 1, args: [P.String,,]}, {func: 1, args: [E.File]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, args: [N.LogRecord]}, {func: 1, v: true, args: [P.Object, P.StackTrace]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, v: true, args: [,], opt: [,]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, args: [P.Symbol,,]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, args: [P.RegExp]}, {func: 1, args: [[P.EventSink, P.List]]}, {func: 1, ret: P.num}, {func: 1, ret: E.ServerStatus, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.ExecutionLaunchData, args: [P.Map]}, {func: 1, ret: P.$int, args: [E.CompletionSuggestion, E.CompletionSuggestion]}, {func: 1, ret: P.bool, args: [E.TextEditor]}, {func: 1, ret: P.$int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, v: true, args: [P.Object]}, {func: 1, args: [P.EventSink]}, {func: 1, v: true, args: [,,]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }

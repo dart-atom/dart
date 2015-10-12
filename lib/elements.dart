@@ -174,6 +174,14 @@ class CoreElement {
     });
   }
 
+  /// Subscribe to the [onDoubleClick] event stream with a no-arg handler.
+  StreamSubscription<Event> dblclick(void handle()) {
+    return element.onDoubleClick.listen((e) {
+      e.stopImmediatePropagation();
+      handle();
+    });
+  }
+
   void clear() => element.children.clear();
 
   void dispose() {

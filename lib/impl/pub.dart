@@ -23,10 +23,13 @@ import '../utils.dart';
 const String pubspecFileName = 'pubspec.yaml';
 const String dotPackagesFileName = '.packages';
 
+const String _pubspecLockFileName = 'pubspec.lock';
+
 final Logger _logger = new Logger('atom.pub');
 
 class PubManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
+  StreamSubscription projectSubscription;
 
   PubManager() {
     // get, update, run
@@ -60,6 +63,9 @@ class PubManager implements Disposable, ContextMenuContributor {
     _addSdkCmd('.tree-view', 'dartlang:pub-global-run', (AtomEvent event) {
       _handleGlobalRun(path: event.targetFilePath);
     });
+
+    projectManager.projects.forEach(_handleProjectAdded);
+    projectManager.onProjectAdd.listen(_handleProjectAdded);
   }
 
   List<ContextMenuItem> getTreeViewContributions() {
@@ -136,7 +142,28 @@ class PubManager implements Disposable, ContextMenuContributor {
     });
   }
 
-  void dispose() => disposables.dispose();
+  void _handleProjectAdded(DartProject project) => _validatePubspecCurrent(project);
+
+  void _validatePubspecCurrent(DartProject project) {
+    File pubspecYaml = project.directory.getFile(pubspecFileName);
+    File pubspecLock = project.directory.getFile(_pubspecLockFileName);
+
+    if (!pubspecYaml.existsSync()) return;
+
+    if (pubspecLock.existsSync()) {
+      var pubspecTime = statSync(pubspecYaml.path).mtime;
+      var lockTime = statSync(pubspecLock.path).mtime;
+      bool dirty = pubspecTime.compareTo(lockTime) > 0;
+      if (dirty) _showRunPubDialog(project);
+    } else {
+      _showRunPubDialog(project, noLockFile: true);
+    }
+  }
+
+  void dispose() {
+    disposables.dispose();
+    projectSubscription.cancel();
+  }
 }
 
 /// A Dart app installed via pub.
@@ -309,6 +336,8 @@ class PubRunJob extends Job {
 
 String _locatePubspecDir(String path) {
   if (path == null) return null;
+  if (path.endsWith(pubspecFileName)) return dirname(path);
+  if (statSync(join(path, pubspecFileName)).isFile()) return path;
   DartProject project = projectManager.getProjectFor(path);
   return project == null ? null : project.path;
 }
@@ -364,4 +393,33 @@ class PubContextCommand extends ContextMenuItem {
       return true;
     }
   }
+}
+
+void _showRunPubDialog(DartProject project, {bool noLockFile: false}) {
+  String desc;
+
+  if (noLockFile) {
+    desc = "Pub has never been run for project '${project.name}'. Run `pub get`?";
+  } else {
+    desc =
+        "The pubspec.yaml file for project '${project.name}' has been modified "
+        "since pub was last run. Run `pub get`?";
+  }
+
+  Notification notification;
+
+  var dismiss = () => notification.dismiss();
+  var runPub = () {
+    notification.dismiss();
+    new PubJob.get(project.path).schedule();
+  };
+
+  notification = atom.notifications.addInfo('Run Pub Get',
+      description: desc,
+      dismissable: true,
+      buttons: [
+        new NotificationButton('Run pub get…', runPub),
+        new NotificationButton('Ignore', dismiss)
+      ]
+  );
 }

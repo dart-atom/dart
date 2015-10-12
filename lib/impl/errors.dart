@@ -137,12 +137,17 @@ class ErrorsView extends AtomView {
       ])
     ]);
 
+    content.element.tabIndex = 1;
+
     if (state['errorViewShowing'] == null) {
       state['errorViewShowing'] = enabled;
     }
 
     bool hidden = state['errorViewShowing'] == false;
     hidden ? hide() : show();
+
+    // disposables.add(
+    //     atom.commands.add('div.errors-view', 'core:copy', (_) => _copy()));
   }
 
   void show() {
@@ -154,6 +159,10 @@ class ErrorsView extends AtomView {
     super.hide();
     state['errorViewShowing'] = false;
   }
+
+  // void _copy() {
+  //   //body.element.document.execCommand('copy');
+  // }
 
   void _handleErrorsChanged(List<AnalysisError> errors, {String focus}) {
     // Update the main view.
@@ -212,8 +221,10 @@ class ErrorsView extends AtomView {
     String location = '${atom.project.relativizePath(error.location.file)[1]}'
         ', line ${error.location.startLine}';
 
+    CoreElement badge;
+
     CoreElement item = div(c: 'errors-item')..add([
-      span(text: error.severity.toLowerCase(),
+      badge = span(text: error.severity.toLowerCase(),
           c: 'badge badge-flexible${type} error-type')
     ]);
 
@@ -235,12 +246,17 @@ class ErrorsView extends AtomView {
       });
     }
 
+    CoreElement message;
+    CoreElement ahref;
+
     item.add([
-      span(text: error.message),
-      new CoreElement('a', text: location, classes: 'text-muted')
+      message = span(text: error.message),
+      ahref = new CoreElement('a', text: location, classes: 'text-muted')
     ]);
 
-    item.click(() => _jumpTo(error.location));
+    badge.click(() => _jumpTo(error.location));
+    message.click(() => _jumpTo(error.location));
+    ahref.click(() => _jumpTo(error.location));
 
     return item.element;
   }
