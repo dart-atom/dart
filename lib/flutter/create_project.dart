@@ -31,10 +31,10 @@ class CreateProjectManager implements Disposable {
     String projectPath = "${root}${separator}${Haikunator.haikunate(delimiter: '_')}";
     String _response;
 
-    PubApp skyTools = new PubApp.global('sky_tools');
+    PubApp flutter = new PubApp.global('flutter');
 
-    // Install `sky_tools` if it is not installed or there is an update available.
-    Future f = skyTools.installIfUpdateAvailable();
+    // Install `flutter` if it is not installed or there is an update available.
+    Future f = flutter.installIfUpdateAvailable();
 
     promptUser('Enter the path to the project to create:',
         defaultText: projectPath,
@@ -43,7 +43,7 @@ class CreateProjectManager implements Disposable {
       if (_response != null) return f;
     }).then((_) {
       if (_response != null) {
-        return skyTools.run(
+        return flutter.run(
             args: ['init', '--out', _response],
             title: 'Creating Flutter Project');
       }
