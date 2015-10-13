@@ -16,7 +16,7 @@ import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
 import '../utils.dart';
-import 'cli_launch.dart';
+import '../launch/cli_launch.dart';
 
 void smokeTest() {
   // panels
