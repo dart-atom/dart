@@ -30,6 +30,11 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 
 [tracker]: https://github.com/dart-atom/dartlang/issues
 
+## Get notified of news
+
+Follow [@dartpluginatom](https://twitter.com/dartpluginatom) for
+news and accouncements.
+
 ## Terms and Privacy
 
 The Dart plugin for Atom (the "Plugin") is an open-source project, contributed
