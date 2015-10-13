@@ -16,6 +16,8 @@ enum PublishType {
 }
 
 _publish(PublishType type) {
+  throw 'revisit this publish task';
+
   // Comment out the if statements while developing this task.
   var diffResult = Process.runSync("git", ["diff", "--shortstat"]);
   if (diffResult.stdout.toString().isNotEmpty)
