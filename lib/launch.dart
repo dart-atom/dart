@@ -195,6 +195,11 @@ class LaunchConfiguration {
 
   LaunchConfiguration.from(this._config);
 
+  bool get debug => _config['debug'];
+  set debug(bool value) {
+    _config['debug'] = value;
+  }
+
   String get launchType => _config['launchType'];
 
   String get cwd => _config['cwd'];
@@ -249,7 +254,10 @@ class Launch implements Disposable {
 
   int _exitCode;
 
-  Launch(this.launchType, this.title, this.manager, {this.killHandler});
+  Launch(this.launchType, this.title, this.manager, {
+    this.killHandler,
+    this.servicePort
+  });
 
   int get exitCode => _exitCode;
   bool get errored => _exitCode != null && _exitCode != 0;

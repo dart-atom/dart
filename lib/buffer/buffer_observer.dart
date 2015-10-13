@@ -134,7 +134,7 @@ class BufferUpdater extends BufferObserver {
 
     if (analysisServer.isActive && dartProject) {
       lastSent = editor.getText();
-      _logger.fine("addOverlayContent('${_path}')");
+      _logger.finer("addOverlayContent('${_path}')");
       _logError(server.analysis.updateContent(
           {_path: new AddContentOverlay('add', lastSent)}));
     }
@@ -162,15 +162,15 @@ class BufferUpdater extends BufferObserver {
           .map((e) => new SourceEdit(e.offset, e.length, e.replacement, id: '${count++}'))
           .toList();
 
-      _logger.fine("changedOverlayContent('${_path}')");
+      _logger.finer("changedOverlayContent('${_path}')");
       _logError(server.analysis.updateContent(
           {_path: new ChangeContentOverlay('change', diffs)}));
 
-      // _logger.fine("removeOverlayContent('${_path}')");
+      // _logger.finer("removeOverlayContent('${_path}')");
       // server.analysis.updateContent(
       //     {_path: new RemoveContentOverlay('remove')});
       //
-      // _logger.fine("addOverlayContent('${_path}')");
+      // _logger.finer("addOverlayContent('${_path}')");
       // server.analysis.updateContent(
       //     {_path: new AddContentOverlay('add', contents)});
 
@@ -182,7 +182,7 @@ class BufferUpdater extends BufferObserver {
     if (!hasOverlay) return;
 
     if (analysisServer.isActive && dartProject) {
-      _logger.fine("removeOverlayContent('${_path}')");
+      _logger.finer("removeOverlayContent('${_path}')");
       _logError(server.analysis.updateContent(
           {_path: new RemoveContentOverlay('remove')}));
     }
