@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.10
 - improved the UI for running Pub commands and applications
 - fixed an issue when traversing new projects on Windows
 - check for new versions of the `sky_tools` package when creating Flutter apps
