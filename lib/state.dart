@@ -7,6 +7,7 @@ library atom.state;
 import 'dart:async';
 
 import 'analysis_server.dart';
+import 'debug/debug.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
@@ -24,6 +25,7 @@ EditorManager get editorManager => deps[EditorManager];
 ErrorRepository get errorRepository => deps[ErrorRepository];
 JobManager get jobs => deps[JobManager];
 LaunchManager get launchManager => deps[LaunchManager];
+DebugManager get debugManager => deps[DebugManager];
 ProjectManager get projectManager => deps[ProjectManager];
 SdkManager get sdkManager => deps[SdkManager];
 final State state = new State();

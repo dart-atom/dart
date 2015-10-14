@@ -10,6 +10,7 @@ import 'atom_utils.dart';
 import 'projects.dart';
 import 'state.dart';
 import 'utils.dart';
+import 'debug/debug.dart';
 
 final Logger _logger = new Logger('atom.launch');
 
@@ -107,7 +108,10 @@ class LaunchManager implements Disposable {
   }
 
   void _readConfigs() {
-    var savedConfigs = state['launchConfigs'];
+    state['launchConfigs'] = null;
+
+    // TODO: Restore this.
+    var savedConfigs = []; //state['launchConfigs'];
 
     // TODO: This is not being restored as a List.
     if (savedConfigs is List) {
@@ -122,14 +126,18 @@ class LaunchManager implements Disposable {
 
       _logger.info('Restored ${_configs} launch configurations.');
     } else {
-      state['launchConfigs'] = [];
+      // TODO: Restore this.
+      //state['launchConfigs'] = [];
+
       _configs = [];
     }
   }
 
   void createConfiguration(LaunchConfiguration config) {
     _configs.add(config);
-    (state['launchConfigs'] as List).add(config.getStorableMap());
+
+    // TODO: Restore this.
+    //(state['launchConfigs'] as List).add(config.getStorableMap());
   }
 
   List<LaunchConfiguration> getAllConfigurations() => _configs;
@@ -151,7 +159,8 @@ class LaunchManager implements Disposable {
 
   void deleteConfiguration(LaunchConfiguration config) {
     if (_configs.remove(config)) {
-      (state['launchConfigs'] as List).remove(config.getStorableMap());
+      // TODO: Restore this.
+      //(state['launchConfigs'] as List).remove(config.getStorableMap());
     }
   }
 
@@ -253,6 +262,7 @@ class Launch implements Disposable {
   StreamController<String> _stderr = new StreamController.broadcast();
 
   int _exitCode;
+  DebugConnection _connection;
 
   Launch(this.launchType, this.title, this.manager, {
     this.killHandler,
@@ -261,6 +271,8 @@ class Launch implements Disposable {
 
   int get exitCode => _exitCode;
   bool get errored => _exitCode != null && _exitCode != 0;
+
+  DebugConnection get connection => _connection;
 
   bool get isRunning => _exitCode == null;
   bool get isTerminated => _exitCode != null;
@@ -290,6 +302,8 @@ class Launch implements Disposable {
     if (_exitCode != null) return;
     _exitCode = exitCode;
 
+    if (_connection != null) debugManager.removeConnection(_connection);
+
     if (errored) {
       atom.notifications.addError('${this} exited with error code ${exitCode}.');
     } else {
@@ -306,4 +320,9 @@ class Launch implements Disposable {
   }
 
   String toString() => '${launchType}: ${title}';
+
+  void addDebugConnection(DebugConnection connection) {
+    this._connection = connection;
+    debugManager.addConnection(connection);
+  }
 }

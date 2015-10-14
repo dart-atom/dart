@@ -2,7 +2,7 @@ library atom.breakpoints;
 
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
+//import '../atom.dart';
 import '../utils.dart';
 
 final Logger _logger = new Logger('atom.breakpoints');

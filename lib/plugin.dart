@@ -25,6 +25,7 @@ import 'atom_statusbar.dart';
 import 'atom_utils.dart';
 import 'autocomplete.dart';
 import 'buffer/buffer_observer.dart';
+import 'debug/debug.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
@@ -114,6 +115,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[EditorManager] = new EditorManager());
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
     disposables.add(deps[LaunchManager] = new LaunchManager());
+    disposables.add(deps[DebugManager] = new DebugManager());
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
     PubManager pubManager = new PubManager();

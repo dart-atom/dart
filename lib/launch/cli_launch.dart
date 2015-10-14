@@ -8,6 +8,7 @@ import 'package:vm_service_lib/vm_service_lib.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
+import '../debug/debug.dart';
 import '../launch.dart';
 import '../process.dart';
 import '../projects.dart';
@@ -98,6 +99,7 @@ class CliLaunchType extends LaunchType {
       // TODO: Find an open port.
       //http://127.0.0.1:8181/
       // todo: --pause_isolates_on_start=true
+      _args.insert(0, '--pause_isolates_on_start=true');
       _args.insert(0, '--enable-vm-service=${_observePort}');
     }
 
@@ -133,35 +135,101 @@ class CliLaunchType extends LaunchType {
     String url = 'ws://${host}:${port}/ws';
     WebSocket ws = new WebSocket(url);
 
-    Completer completer = new Completer();
+    Completer connectedCompleter = new Completer();
+    Completer finishedCompleter = new Completer();
 
     ws.onOpen.listen((_) {
-      completer.complete();
+      connectedCompleter.complete();
 
       VmService service = new VmService(
         ws.onMessage.map((MessageEvent e) => e.data as String),
         (String message) => ws.send(message),
         log: new _Log()
       );
-      _handleVMConnected(url, service);
+      _handleVMConnected(launch, url, service, finishedCompleter, isolatesPaused: true);
     });
 
     ws.onError.listen((e) {
-      if (!completer.isCompleted) completer.completeError(e);
+      if (!connectedCompleter.isCompleted) connectedCompleter.completeError(e);
     });
 
-    return completer.future;
+    ws.onClose.listen((_) => finishedCompleter.complete());
+
+    return connectedCompleter.future;
   }
 
-  void _handleVMConnected(String url, VmService service) {
+  void _handleVMConnected(Launch launch, String url, VmService service, Completer completer, {
+    bool isolatesPaused: true
+  }) {
     _logger.fine('Connected to observatory on ${url}.');
 
-    service.onSend.listen((str) => _logger.finer('==> ${str}'));
-    service.onReceive.listen((str) => _logger.finer('<== ${str}'));
+    launch.addDebugConnection(new _ObservatoryDebugConnection(launch, service, completer));
+  }
+}
+
+class _ObservatoryDebugConnection extends DebugConnection {
+  final VmService service;
+  Completer completer;
+
+  IsolateRef _currentIsolate;
+
+  _ObservatoryDebugConnection(Launch launch, this.service, this.completer) : super(launch) {
+    _init();
+  }
+
+  pause() => service.pause(_currentIsolate.id);
+  resume() => service.resume(_currentIsolate.id);
+  stepIn() => service.resume(_currentIsolate.id, StepOption.Into);
+  stepOver() => service.resume(_currentIsolate.id, StepOption.Over);
+  stepOut() => service.resume(_currentIsolate.id, StepOption.Out);
+  terminate() => launch.kill();
+
+  Future get onTerminated => completer.future;
+
+  void _init() {
+    // TODO: init breakpoints as isolates are created
+    // TODO: resume each isolate after creation
+
+    service.onSend.listen((str) => _logger.fine('==> ${str}'));
+    service.onReceive.listen((str) => _logger.fine('<== ${str}'));
 
     service.getVersion().then((Version ver) {
       _logger.fine('Observatory version ${ver.major}.${ver.minor}.');
     });
+
+    service.streamListen('Isolate');
+    service.streamListen('Debug');
+    service.streamListen('Stdout');
+    service.streamListen('Stderr');
+
+    service.onIsolateEvent.listen(_handleIsolateEvent);
+    service.onDebugEvent.listen(_handleDebugEvent);
+    //service.onStdoutEvent.listen((Event e) => _stdio(e, 'stdout'));
+    //service.onStderrEvent.listen((Event e) => _stdio(e, 'stderr'));
+  }
+
+  // void _stdio(Event e, String prefix) {
+  //   print('[stdio: ${decodeBase64(e.bytes).trim()}]');
+  // }
+
+  void _handleIsolateEvent(Event e) {
+    // TODO:
+    launch.pipeStdout('${e}\n');
+
+    // IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
+    if (e.kind == EventKind.IsolateRunnable) {
+      print('-- runnable --');
+      _currentIsolate = e.isolate;
+    } else if (e.kind == EventKind.IsolateExit) {
+      _currentIsolate = null;
+    }
+  }
+
+  void _handleDebugEvent(Event e) {
+    // TODO:
+    if (e.topFrame != null) {
+      launch.pipeStdout('${e.topFrame.location}\n');
+    }
   }
 }
 
