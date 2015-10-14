@@ -186,12 +186,13 @@ div.linter-tab.active {
   right: 8px;
   left: inherit;
   bottom: inherit;
-  width: 450px;
+  width: 500px;
   padding: 0;
   color: @text-color;
   border-radius: 2px;
   z-index: 100;
   font-size: 110%;
+  border: none;
 
   .dartdoc-title {
     color: @text-color-highlight;
@@ -213,7 +214,7 @@ div.linter-tab.active {
   .dartdoc-body {
     padding: 0 8px;
     min-height: 100px;
-    max-height: 350px;
+    max-height: 300px;
     overflow-y: scroll;
     position: relative;
 
@@ -231,6 +232,11 @@ div.linter-tab.active {
 
     h1, h2, h3 {
       margin-bottom: 0;
+    }
+
+    pre code {
+      word-wrap: normal;
+      white-space: pre;
     }
   }
 }
@@ -602,7 +608,6 @@ atom-notification.dartlang {
   }
 
   .console-line {
-    word-wrap: normal;
     padding: 6px;
     background-color: inherit;
     -webkit-user-select: text;
@@ -620,5 +625,25 @@ atom-notification.dartlang {
 .process-status-bar {
   .badge {
     color: @text-color;
+  }
+}
+
+.debug-ui {
+  position: absolute;
+  display: inline-flex;
+  top: @component-padding;
+  right: @component-padding;
+
+  background-color: @overlay-background-color;
+  border: 1px solid @overlay-border-color;
+  border-radius: 4px;
+  padding: 6px;
+
+  box-shadow: 0 0 2px @overlay-background-color;
+
+  z-index: 20;
+
+  .no-left {
+    margin-left: 0;
   }
 }

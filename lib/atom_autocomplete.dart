@@ -97,7 +97,7 @@ abstract class AutocompleteProvider implements Disposable {
     } else {
       Stopwatch timer = new Stopwatch()..start();
       f = getSuggestions(opts).then((suggestions) {
-        _logger.fine('code completion in ${timer.elapsedMilliseconds}ms, ${suggestions.length} results');
+        _logger.finer('code completion in ${timer.elapsedMilliseconds}ms, ${suggestions.length} results');
         return suggestions.map((suggestion) => suggestion._toProxy()).toList();
       });
     }
