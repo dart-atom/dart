@@ -258,8 +258,7 @@ class Launch implements Disposable {
 
   int servicePort;
 
-  StreamController<String> _stdout = new StreamController.broadcast();
-  StreamController<String> _stderr = new StreamController.broadcast();
+  StreamController<TextFragment> _stdio = new StreamController.broadcast();
 
   int _exitCode;
   DebugConnection _connection;
@@ -279,11 +278,11 @@ class Launch implements Disposable {
 
   bool get isActive => manager.activeLaunch == this;
 
-  Stream<String> get onStdout => _stdout.stream;
-  Stream<String> get onStderr => _stderr.stream;
+  Stream<TextFragment> get onStdio => _stdio.stream;
 
-  void pipeStdout(String str) => _stdout.add(str);
-  void pipeStderr(String str) => _stderr.add(str);
+  void pipeStdio(String str, {bool error: false, bool subtle: false, bool highlight: false}) {
+    _stdio.add(new TextFragment(str, error: error, subtle: subtle, highlight: highlight));
+  }
 
   bool canDebug() => isRunning && servicePort != null;
 
@@ -325,4 +324,17 @@ class Launch implements Disposable {
     this._connection = connection;
     debugManager.addConnection(connection);
   }
+}
+
+class TextFragment {
+  final String text;
+  final bool error;
+  final bool subtle;
+  final bool highlight;
+
+  TextFragment(this.text, {
+    this.error: false, this.subtle: false, this.highlight: false
+  });
+
+  String toString() => text;
 }

@@ -10,8 +10,6 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('atom.run_app');
 
-// TODO: auto-show console; auto-hide problems
-
 // cmd-R, on exact match:
 // -get existing launch config
 // -create new one

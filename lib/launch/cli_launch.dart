@@ -20,6 +20,8 @@ final Logger _logger = new Logger('atom.cli_launch');
 const bool _debugDefault = true;
 const int _observePort = 16161;
 
+// TODO: key bindings for the debugger
+
 class CliLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
       manager.registerLaunchType(new CliLaunchType());
@@ -118,14 +120,14 @@ class CliLaunchType extends LaunchType {
       // Observatory listening on http://127.0.0.1:16161
       if (str.startsWith('Observatory listening on ')) {
         _connectDebugger(launch, 'localhost', _observePort).catchError((e) {
-          launch.pipeStderr('Error connecting debugger: ${e}\n');
+          launch.pipeStdio('Error connecting debugger: ${e}\n', error: true);
         });
       } else {
-        launch.pipeStdout(str);
+        launch.pipeStdio(str);
       }
     });
-    runner.onStderr.listen((str) => launch.pipeStderr(str));
-    launch.pipeStdout(desc);
+    runner.onStderr.listen((str) => launch.pipeStdio(str, error: true));
+    launch.pipeStdio(desc, highlight: true);
     runner.onExit.then((code) => launch.launchTerminated(code));
 
     return new Future.value(launch);
@@ -178,7 +180,7 @@ class _ObservatoryDebugConnection extends DebugConnection {
   }
 
   pause() => service.pause(_currentIsolate.id);
-  resume() => service.resume(_currentIsolate.id);
+  Future resume() => service.resume(_currentIsolate.id);
   stepIn() => service.resume(_currentIsolate.id, StepOption.Into);
   stepOver() => service.resume(_currentIsolate.id, StepOption.Over);
   stepOut() => service.resume(_currentIsolate.id, StepOption.Out);
@@ -214,23 +216,107 @@ class _ObservatoryDebugConnection extends DebugConnection {
 
   void _handleIsolateEvent(Event e) {
     // TODO:
-    launch.pipeStdout('${e}\n');
+    launch.pipeStdio('${e}\n', subtle: true);
 
     // IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
     if (e.kind == EventKind.IsolateRunnable) {
-      print('-- runnable --');
       _currentIsolate = e.isolate;
+      // TODO: Handle Future exceptions.
+      service.addBreakpointWithScriptUri(
+          _currentIsolate.id, 'file:///Users/devoncarew/projects/atom-dartlang/tool/test.dart', 3);
+      resume();
     } else if (e.kind == EventKind.IsolateExit) {
       _currentIsolate = null;
     }
   }
 
   void _handleDebugEvent(Event e) {
-    // TODO:
-    if (e.topFrame != null) {
-      launch.pipeStdout('${e.topFrame.location}\n');
+    IsolateRef isolate = e.isolate;
+    // bool paused = e.kind == EventKind.PauseBreakpoint ||
+    //     e.kind == EventKind.PauseInterrupted || e.kind == EventKind.PauseException;
+
+    if (e.kind == EventKind.Resume || e.kind == EventKind.IsolateExit) {
+      // TODO: isolate is resumed
+
+    }
+
+    if (e.kind != EventKind.Resume) {
+      if (e.topFrame != null) {
+        launch.pipeStdio('[${isolate.name}] ${printFunctionName(e.topFrame.function)}', subtle: true);
+        ScriptRef scriptRef = e.topFrame.location.script;
+
+        _resolveScript(isolate, scriptRef).then((Script script) {
+          int tokenPos = e.topFrame.location.tokenPos;
+          // int endTokenPos = e.topFrame.location.endTokenPos;
+          // if (endTokenPos != null) launch.pipeStdio(' ${endTokenPos - tokenPos} chars');
+          Point pos = calcPos(script, tokenPos);
+          String uri = script.uri;
+
+          if (pos != null) {
+            launch.pipeStdio(' [${uri}, ${pos.row}]\n', subtle: true);
+
+            if (uri.startsWith('file://')) {
+              uri = uri.substring(7);
+              if (statSync(uri).isFile()) {
+                // TODO: length?
+                editorManager.jumpToLocation(uri, pos.row - 1, pos.column - 1).then(
+                    (TextEditor editor) {
+                  //editor.
+                });
+              }
+            }
+          } else {
+            launch.pipeStdio(' [${uri}]\n', subtle: true);
+          }
+        });
+      }
     }
   }
+
+  Map<String, Script> _scripts = {};
+
+  Future<Script> _resolveScript(IsolateRef isolate, ScriptRef scriptRef) {
+    String id = scriptRef.id;
+
+    if (_scripts[id] != null) return new Future.value(_scripts[id]);
+
+    return service.getObject(isolate.id, id).then((result) {
+      if (result is Script) {
+        _scripts[id] = result;
+        return result;
+      }
+      throw result;
+    });
+  }
+}
+
+String printFunctionName(FuncRef ref, {bool terse: false}) {
+  String name = terse ? ref.name : '${ref.name}()';
+
+  if (ref.owner is ClassRef) {
+    return '${ref.owner.name}.${name}';
+  } else if (ref.owner is FuncRef) {
+    return '${printFunctionName(ref.owner, terse: true)}.${name}';
+  } else {
+    return name;
+  }
+}
+
+Point calcPos(Script script, int tokenPos) {
+  List<List<int>> table = script.tokenPosTable;
+
+  for (List<int> row in table) {
+    int line = row[0];
+
+    int index = 1;
+
+    while (index < row.length - 1) {
+      if (row[index] == tokenPos) return new Point.coords(line, row[index + 1]);
+      index += 2;
+    }
+  }
+
+  return null;
 }
 
 class _Log extends Log {

@@ -83,10 +83,10 @@ class _LaunchInstance {
     launchManager.addLaunch(_launch);
 
     _runner.execStreaming();
-    _runner.onStdout.listen((str) => _launch.pipeStdout(str));
-    _runner.onStderr.listen((str) => _launch.pipeStderr(str));
+    _runner.onStdout.listen((str) => _launch.pipeStdio(str));
+    _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
 
-    _launch.pipeStdout('[${_runner.cwd}] ${_runner.getDescription()}\n');
+    _launch.pipeStdio('[${_runner.cwd}] ${_runner.getDescription()}\n', highlight: true);
 
     // TODO: Hack - `sky_tool start` is not terminating when launched from Atom.
     Future f = _runner.onExit.timeout(new Duration(seconds: 2), onTimeout: () => 0);
@@ -97,8 +97,8 @@ class _LaunchInstance {
         // Chain 'sky_tool logs'.
         _runner = _skyTool(project, ['logs', '--clear']);
         _runner.execStreaming();
-        _runner.onStdout.listen((str) => _launch.pipeStdout(str));
-        _runner.onStderr.listen((str) => _launch.pipeStderr(str));
+        _runner.onStdout.listen((str) => _launch.pipeStdio(str));
+        _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
 
         // Don't return the future here.
         _runner.onExit.then((code) => _launch.launchTerminated(code));
