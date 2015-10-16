@@ -96,7 +96,7 @@ void smokeTest() {
   // });
 
   // launches
-  Launch launch = new Launch(new CliLaunchType(), 'launch_test.sh', launchManager);
+  Launch launch = new Launch(launchManager, new CliLaunchType(), null, 'launch_test.sh');
   launchManager.addLaunch(launch);
   new Timer(new Duration(seconds: 12), () => launch.launchTerminated(0));
 

@@ -129,8 +129,8 @@ class _LaunchController implements Disposable {
     // Allow the text in the console to be selected.
     output.element.tabIndex = -1;
 
-    subs.add(launch.onStdout.listen((str) => _emitText(str)));
-    subs.add(launch.onStderr.listen((str) => _emitText(str, true)));
+    subs.add(launch.onStdio.listen((text) => _emitText(
+        text.text, error: text.error, subtle: text.subtle, highlight: text.highlight)));
   }
 
   void activate() {
@@ -152,7 +152,8 @@ class _LaunchController implements Disposable {
     container.toggleClass('launch-terminated', true);
 
     if (!_lastText.endsWith('\n')) _emitText('\n');
-    _emitBadge('exit ${launch.exitCode}', launch.errored ? 'error' : 'info');
+    _emitText('• exited with code ${launch.exitCode} •', highlight: true);
+    //_emitBadge('exit ${launch.exitCode}', launch.errored ? 'error' : 'info');
   }
 
   void deactivate() {
@@ -206,21 +207,23 @@ class _LaunchController implements Disposable {
     subs.cancel();
   }
 
-  void _emitBadge(String text, String type) {
-    _scrollTop = null;
-    output.add(span(text: text, c: 'badge badge-${type}'));
+  // void _emitBadge(String text, String type) {
+  //   _scrollTop = null;
+  //   output.add(span(text: text, c: 'badge badge-${type}'));
+  //
+  //   if (output.element.parent != null) {
+  //     output.element.scrollIntoView(ScrollAlignment.BOTTOM);
+  //   }
+  // }
 
-    if (output.element.parent != null) {
-      output.element.scrollIntoView(ScrollAlignment.BOTTOM);
-    }
-  }
-
-  void _emitText(String str, [bool error = false]) {
+  void _emitText(String str, {bool error: false, bool subtle: false, bool highlight: false}) {
     _scrollTop = null;
     _lastText = str;
 
     CoreElement e = output.add(span(text: str));
+    if (highlight) e.toggleClass('text-highlight');
     if (error) e.toggleClass('console-error');
+    if (subtle) e.toggleClass('text-subtle');
 
     List children = output.element.children;
     if (children.length > _max_lines) {

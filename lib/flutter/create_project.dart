@@ -53,8 +53,8 @@ class CreateProjectManager implements Disposable {
         String path = join(_response, 'lib', 'main.dart');
         atom.workspace.open(path).then((TextEditor editor) {
           // Focus the file in the files view 'tree-view:reveal-active-file'.
-          var target = atom.views.getView(editor);
-          atom.commands.dispatch(target, 'tree-view:reveal-active-file');
+          atom.commands.dispatch(
+              atom.views.getView(editor), 'tree-view:reveal-active-file');
         });
       }
     });

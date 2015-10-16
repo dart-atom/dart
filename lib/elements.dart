@@ -129,6 +129,9 @@ class CoreElement {
   bool get disabled => hasAttribute('disabled');
   set disabled(bool value) => attribute('disabled', value);
 
+  bool get enabled => !disabled;
+  set enabled(bool value) => attribute('disabled', !value);
+
   // Layout types.
   void layout() => attribute('layout');
   void horizontal() => attribute('horizontal');

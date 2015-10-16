@@ -235,17 +235,14 @@ class OutlineView implements Disposable {
     if (e.kind == 'CLASS') {
       intoElement.children.add(new html.SpanElement()
           ..classes.add('keyword')
-          //..classes.add('comment')
           ..text = 'class ');
     } else if (e.kind == 'ENUM') {
       intoElement.children.add(new html.SpanElement()
-          //..classes.addAll(['keyword', 'declaration'])
-          ..classes.add('comment')
+          ..classes.add('keyword')
           ..text = 'enum ');
     } else if (e.kind == 'FUNCTION_TYPE_ALIAS') {
       intoElement.children.add(new html.SpanElement()
-          //..classes.addAll(['keyword', 'declaration'])
-          ..classes.add('comment')
+          ..classes.add('keyword')
           ..text = 'typedef ');
     }
 
@@ -257,12 +254,10 @@ class OutlineView implements Disposable {
 
     if (e.kind == 'GETTER') {
       intoElement.children.add(new html.SpanElement()
-          //..classes.addAll(['keyword', 'declaration'])
           ..classes.add('comment')
           ..text = 'get ');
     } else if (e.kind == 'SETTER') {
       intoElement.children.add(new html.SpanElement()
-          //..classes.addAll(['keyword', 'declaration'])
           ..classes.add('comment')
           ..text = 'set ');
     }

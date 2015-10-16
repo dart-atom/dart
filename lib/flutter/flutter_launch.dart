@@ -55,7 +55,7 @@ class FlutterLaunchType extends LaunchType {
       Launch launch = _lastLaunch._launch;
       return launch.isTerminated ? null : launch.kill();
     }).then((_) {
-      _lastLaunch = new _LaunchInstance(project, this);
+      _lastLaunch = new _LaunchInstance(project, configuration, this);
       return _lastLaunch.launch();
     });
   }
@@ -67,11 +67,12 @@ class _LaunchInstance {
   Launch _launch;
   ProcessRunner _runner;
 
-  _LaunchInstance(this.project, LaunchType launchType) {
+  _LaunchInstance(this.project, LaunchConfiguration configuration, LaunchType launchType) {
     _launch = new Launch(
-        launchType,
-        'lib${separator}main.dart',
         launchManager,
+        launchType,
+        configuration,
+        'lib${separator}main.dart',
         killHandler: _kill);
     _launch.servicePort = 8181;
   }
@@ -83,10 +84,10 @@ class _LaunchInstance {
     launchManager.addLaunch(_launch);
 
     _runner.execStreaming();
-    _runner.onStdout.listen((str) => _launch.pipeStdout(str));
-    _runner.onStderr.listen((str) => _launch.pipeStderr(str));
+    _runner.onStdout.listen((str) => _launch.pipeStdio(str));
+    _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
 
-    _launch.pipeStdout('[${_runner.cwd}] ${_runner.getDescription()}\n');
+    _launch.pipeStdio('[${_runner.cwd}] ${_runner.getDescription()}\n', highlight: true);
 
     // TODO: Hack - `sky_tool start` is not terminating when launched from Atom.
     Future f = _runner.onExit.timeout(new Duration(seconds: 2), onTimeout: () => 0);
@@ -97,8 +98,8 @@ class _LaunchInstance {
         // Chain 'sky_tool logs'.
         _runner = _skyTool(project, ['logs', '--clear']);
         _runner.execStreaming();
-        _runner.onStdout.listen((str) => _launch.pipeStdout(str));
-        _runner.onStderr.listen((str) => _launch.pipeStderr(str));
+        _runner.onStdout.listen((str) => _launch.pipeStdio(str));
+        _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
 
         // Don't return the future here.
         _runner.onExit.then((code) => _launch.launchTerminated(code));

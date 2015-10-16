@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue when running `pub get` in a directory without a pubspec.yaml
+- adjusted the highlighting in the outline view
+
 ## 0.4.10
 - improved the UI for running Pub commands and applications
 - fixed an issue when traversing new projects on Windows

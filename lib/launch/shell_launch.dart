@@ -38,16 +38,16 @@ class ShellLaunchType extends LaunchType {
 
     ProcessRunner runner = new ProcessRunner(script, args: args, cwd: cwd);
 
-    Launch launch = new Launch(this, launchName, manager,
+    Launch launch = new Launch(manager, this, configuration, launchName,
         killHandler: () => runner.kill());
     manager.addLaunch(launch);
 
     runner.execStreaming();
-    runner.onStdout.listen((str) => launch.pipeStdout(str));
-    runner.onStderr.listen((str) => launch.pipeStderr(str));
+    runner.onStdout.listen((str) => launch.pipeStdio(str));
+    runner.onStderr.listen((str) => launch.pipeStdio(str, error: true));
 
     String desc = args == null ? launchName : '${launchName} ${args.join(' ')}';
-    launch.pipeStdout(runner.cwd == null ? '${desc}\n' : '[${runner.cwd}] ${desc}\n');
+    launch.pipeStdio(runner.cwd == null ? '${desc}\n' : '[${runner.cwd}] ${desc}\n', subtle: true);
 
     runner.onExit.then((code) => launch.launchTerminated(code));
 

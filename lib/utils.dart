@@ -115,6 +115,11 @@ class Edit {
   String toString() => '[Edit offset: ${offset}, length: ${length}]';
 }
 
+// TODO: Create a manager / notifier class.
+// TODO: manages a set of items
+// TODO: fires notifications when the set changes
+// TODO: has a notion of a 'selected' or active item
+
 bool listIdentical(List a, List b) {
   if (a.length != b.length) return false;
 

@@ -94,7 +94,7 @@ class EditorManager implements Disposable {
 
   EditorManager();
 
-  void jumpToLocation(String path, int line, int column, [int length]) {
+  Future<TextEditor> jumpToLocation(String path, int line, int column, [int length]) {
     Map options = {
       'initialLine': line,
       'initialColumn': column,
@@ -105,8 +105,9 @@ class EditorManager implements Disposable {
     var ed = atom.workspace.getActiveTextEditor();
     if (ed != null && ed.getPath() == path) options['searchAllPanes'] = false;
 
-    atom.workspace.open(path, options: options).then((TextEditor editor) {
+    return atom.workspace.open(path, options: options).then((TextEditor editor) {
       if (length != null) editor.selectRight(length);
+      return editor;
     });
   }
 
