@@ -55,7 +55,7 @@ class FlutterLaunchType extends LaunchType {
       Launch launch = _lastLaunch._launch;
       return launch.isTerminated ? null : launch.kill();
     }).then((_) {
-      _lastLaunch = new _LaunchInstance(project, this);
+      _lastLaunch = new _LaunchInstance(project, configuration, this);
       return _lastLaunch.launch();
     });
   }
@@ -67,11 +67,12 @@ class _LaunchInstance {
   Launch _launch;
   ProcessRunner _runner;
 
-  _LaunchInstance(this.project, LaunchType launchType) {
+  _LaunchInstance(this.project, LaunchConfiguration configuration, LaunchType launchType) {
     _launch = new Launch(
-        launchType,
-        'lib${separator}main.dart',
         launchManager,
+        launchType,
+        configuration,
+        'lib${separator}main.dart',
         killHandler: _kill);
     _launch.servicePort = 8181;
   }

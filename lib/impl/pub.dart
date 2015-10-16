@@ -337,7 +337,10 @@ class PubRunJob extends Job {
 String _locatePubspecDir(String path) {
   if (path == null) return null;
   if (path.endsWith(pubspecFileName)) return dirname(path);
-  if (statSync(join(path, pubspecFileName)).isFile()) return path;
+
+  File f = new File.fromPath(join(path, pubspecFileName));
+  if (f.existsSync()) return path;
+
   DartProject project = projectManager.getProjectFor(path);
   return project == null ? null : project.path;
 }

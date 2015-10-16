@@ -8,19 +8,19 @@ import 'package:vm_service_lib/vm_service_lib.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
+import '../debug/breakpoints.dart';
 import '../debug/debug.dart';
 import '../launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
+import '../utils.dart';
 
 final Logger _logger = new Logger('atom.cli_launch');
 
 const bool _debugDefault = true;
 const int _observePort = 16161;
-
-// TODO: key bindings for the debugger
 
 class CliLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -110,7 +110,7 @@ class CliLaunchType extends LaunchType {
         args: _args,
         cwd: cwd);
 
-    Launch launch = new Launch(this, path, manager,
+    Launch launch = new Launch(manager, this, configuration, path,
         killHandler: () => runner.kill());
     if (withDebug) launch.servicePort = _observePort;
     manager.addLaunch(launch);
@@ -171,19 +171,33 @@ class CliLaunchType extends LaunchType {
 
 class _ObservatoryDebugConnection extends DebugConnection {
   final VmService service;
-  Completer completer;
+  final Completer completer;
 
   IsolateRef _currentIsolate;
+  StreamSubscriptions subs = new StreamSubscriptions();
+  UriResolver uriResolver;
+
+  bool isSuspended = true;
+  StreamController<bool> _suspendController = new StreamController.broadcast();
 
   _ObservatoryDebugConnection(Launch launch, this.service, this.completer) : super(launch) {
+    uriResolver = new UriResolver(launch.launchConfiguration.primaryResource);
     _init();
+    completer.future.whenComplete(() => dispose());
   }
+
+  bool get isAlive => !completer.isCompleted;
+
+  Stream<bool> get onSuspendChanged => _suspendController.stream;
 
   pause() => service.pause(_currentIsolate.id);
   Future resume() => service.resume(_currentIsolate.id);
-  stepIn() => service.resume(_currentIsolate.id, StepOption.Into);
-  stepOver() => service.resume(_currentIsolate.id, StepOption.Over);
-  stepOut() => service.resume(_currentIsolate.id, StepOption.Out);
+
+  // TODO: only on suspend.
+  stepIn() => service.resume(_currentIsolate.id, step: StepOption.Into);
+  stepOver() => service.resume(_currentIsolate.id, step: StepOption.Over);
+  stepOut() => service.resume(_currentIsolate.id, step: StepOption.Out);
+
   terminate() => launch.kill();
 
   Future get onTerminated => completer.future;
@@ -215,16 +229,49 @@ class _ObservatoryDebugConnection extends DebugConnection {
   // }
 
   void _handleIsolateEvent(Event e) {
-    // TODO:
+    // TODO: isolate handler
+
     launch.pipeStdio('${e}\n', subtle: true);
 
     // IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
     if (e.kind == EventKind.IsolateRunnable) {
       _currentIsolate = e.isolate;
-      // TODO: Handle Future exceptions.
-      service.addBreakpointWithScriptUri(
-          _currentIsolate.id, 'file:///Users/devoncarew/projects/atom-dartlang/tool/test.dart', 3);
-      resume();
+
+      Map<AtomBreakpoint, Breakpoint> _bps = {};
+
+      // TODO: Run these in parallel.
+      Future.forEach(breakpointManager.breakpoints, (AtomBreakpoint bp) {
+        Future f = service.addBreakpointWithScriptUri(
+          _currentIsolate.id, bp.asUrl, bp.line, column: bp.column);
+        return f.then((Breakpoint vmBreakpoint) {
+          _bps[bp] = vmBreakpoint;
+          print(vmBreakpoint);
+        }).catchError((e) {
+          // ignore
+        });
+      }).then((_) {
+        return service.setExceptionPauseMode(
+          _currentIsolate.id, ExceptionPauseMode.Unhandled);
+      }).then((_) {
+        return resume();
+      });
+
+      subs.add(breakpointManager.onAdd.listen((bp) {
+        Future f = service.addBreakpointWithScriptUri(
+          _currentIsolate.id, bp.asUrl, bp.line, column: bp.column);
+        f.then((Breakpoint vmBreakpoint) {
+          _bps[bp] = vmBreakpoint;
+        }).catchError((e) {
+          // ignore
+        });
+      }));
+
+      subs.add(breakpointManager.onRemove.listen((bp) {
+        Breakpoint vmBreakpoint = _bps[bp];
+        if (vmBreakpoint != null) {
+          service.removeBreakpoint(_currentIsolate.id, vmBreakpoint.id);
+        }
+      }));
     } else if (e.kind == EventKind.IsolateExit) {
       _currentIsolate = null;
     }
@@ -235,9 +282,15 @@ class _ObservatoryDebugConnection extends DebugConnection {
     // bool paused = e.kind == EventKind.PauseBreakpoint ||
     //     e.kind == EventKind.PauseInterrupted || e.kind == EventKind.PauseException;
 
+    if (e.kind == EventKind.Resume) {
+      _suspend(false);
+    } else if (e.kind == EventKind.PauseBreakpoint || e.kind == EventKind.PauseInterrupted ||
+        e.kind == EventKind.PauseException) {
+      _suspend(true);
+    }
+
     if (e.kind == EventKind.Resume || e.kind == EventKind.IsolateExit) {
       // TODO: isolate is resumed
-
     }
 
     if (e.kind != EventKind.Resume) {
@@ -247,24 +300,26 @@ class _ObservatoryDebugConnection extends DebugConnection {
 
         _resolveScript(isolate, scriptRef).then((Script script) {
           int tokenPos = e.topFrame.location.tokenPos;
-          // int endTokenPos = e.topFrame.location.endTokenPos;
-          // if (endTokenPos != null) launch.pipeStdio(' ${endTokenPos - tokenPos} chars');
           Point pos = calcPos(script, tokenPos);
           String uri = script.uri;
 
           if (pos != null) {
             launch.pipeStdio(' [${uri}, ${pos.row}]\n', subtle: true);
 
-            if (uri.startsWith('file://')) {
-              uri = uri.substring(7);
-              if (statSync(uri).isFile()) {
-                // TODO: length?
-                editorManager.jumpToLocation(uri, pos.row - 1, pos.column - 1).then(
+            uriResolver.resolveToPath(uri).then((String path) {
+              if (statSync(path).isFile()) {
+                editorManager.jumpToLocation(path, pos.row - 1, pos.column - 1).then(
                     (TextEditor editor) {
-                  //editor.
+                  // TODO: update the execution location markers
+
                 });
+              } else {
+                atom.notifications.addWarning("Cannot file file '${path}'.");
               }
-            }
+            }).catchError((e) {
+              atom.notifications.addWarning(
+                  "Unable to resolve '${uri}' (${pos.row}:${pos.column}).");
+            });
           } else {
             launch.pipeStdio(' [${uri}]\n', subtle: true);
           }
@@ -287,6 +342,19 @@ class _ObservatoryDebugConnection extends DebugConnection {
       }
       throw result;
     });
+  }
+
+  void _suspend(bool value) {
+    if (value != isSuspended) {
+      isSuspended = value;
+      _suspendController.add(value);
+    }
+  }
+
+  void dispose() {
+    subs.cancel();
+    if (isAlive) terminate();
+    uriResolver.dispose();
   }
 }
 

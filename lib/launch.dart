@@ -251,6 +251,7 @@ class Launch implements Disposable {
   static int _id = 0;
 
   final LaunchType launchType;
+  final LaunchConfiguration launchConfiguration;
   final String title;
   final LaunchManager manager;
   final int id = ++_id;
@@ -263,7 +264,7 @@ class Launch implements Disposable {
   int _exitCode;
   DebugConnection _connection;
 
-  Launch(this.launchType, this.title, this.manager, {
+  Launch(this.manager, this.launchType, this.launchConfiguration, this.title, {
     this.killHandler,
     this.servicePort
   });

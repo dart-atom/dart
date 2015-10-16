@@ -628,11 +628,14 @@ atom-notification.dartlang {
   }
 }
 
-.debug-ui {
+/* debug ui */
+
+.debugger-ui {
   position: absolute;
   display: inline-flex;
-  top: @component-padding;
+  top: 75px;
   right: @component-padding;
+  opacity: 0;
 
   background-color: @overlay-background-color;
   border: 1px solid @overlay-border-color;
@@ -641,9 +644,37 @@ atom-notification.dartlang {
 
   box-shadow: 0 0 2px @overlay-background-color;
 
-  z-index: 20;
+  transition: opacity 300ms;
+
+  z-index: 1010;
 
   .no-left {
     margin-left: 0;
   }
+}
+
+.debugger-ui.debugger-show {
+  opacity: 1;
+}
+
+atom-text-editor::shadow .debugger-breakpoint {
+
+}
+
+atom-text-editor::shadow .debugger-breakpoint::before {
+  /*background-color: rgb(41, 44, 47);*/
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  content: "\f052";
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  -webkit-font-smoothing: antialiased;
 }

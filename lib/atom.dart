@@ -761,6 +761,32 @@ class TextEditor extends ProxyHolder {
   String lineTextForBufferRow(int bufferRow) =>
       invoke('lineTextForBufferRow', bufferRow);
 
+  /// Create a marker with the given range in buffer coordinates. This marker
+  /// will maintain its logical location as the buffer is changed, so if you
+  /// mark a particular word, the marker will remain over that word even if the
+  /// word's location in the buffer changes.
+  Marker markBufferRange(Range range, {
+    Map<String, dynamic> properties, bool persistent
+  }) {
+    if (properties == null && persistent != null) {
+      properties = {'persistent': persistent};
+    } else if (persistent != null) {
+      properties['persistent'] = persistent;
+    }
+
+    return new Marker(invoke('markBufferRange', range, properties));
+  }
+
+  /// Adds a decoration that tracks a Marker. When the marker moves, is
+  /// invalidated, or is destroyed, the decoration will be updated to reflect
+  /// the marker's state.
+  ///
+  /// [decorationParams] is an object representing the decoration e.g.
+  /// `{type: 'line-number', class: 'linter-error'}`.
+  Decoration decorateMarker(Marker marker, Map<String, dynamic> decorationParams) {
+    return new Decoration(invoke('decorateMarker', marker, decorationParams));
+  }
+
   void undo() => invoke('undo');
   void redo() => invoke('redo');
 
@@ -903,6 +929,60 @@ class TextBuffer extends ProxyHolder {
 
   /// Invoke the given callback before the buffer is saved to disk.
   Stream get onWillSave => eventStream('onWillSave');
+}
+
+/// Represents a buffer annotation that remains logically stationary even as the
+/// buffer changes. This is used to represent cursors, folds, snippet targets,
+/// misspelled words, and anything else that needs to track a logical location
+/// in the buffer over time.
+class Marker extends ProxyHolder {
+  Marker(JsObject object) : super(_cvt(object));
+
+  /// Invoke the given callback when the state of the marker changes.
+  Stream<dynamic> get onDidChange => eventStream('onDidChange');
+
+  /// Invoke the given callback when the marker is destroyed.
+  Stream get onDidDestroy => eventStream('onDidDestroy');
+
+  /// Returns a Boolean indicating whether the marker is valid. Markers can be
+  /// invalidated when a region surrounding them in the buffer is changed.
+  void isValid() => invoke('isValid');
+
+  /// Returns a Boolean indicating whether the marker has been destroyed. A
+  /// marker can be invalid without being destroyed, in which case undoing the
+  /// invalidating operation would restore the marker. Once a marker is
+  /// destroyed by calling Marker::destroy, no undo/redo operation can ever
+  /// bring it back.
+  void isDestroyed() => invoke('isDestroyed');
+
+  /// Returns an Object containing any custom properties associated with the marker.
+  Map<String, dynamic> getProperties() => invoke('getProperties');
+
+  /// Gets the buffer range of the display marker.
+  Range getBufferRange() => new Range(invoke('getBufferRange'));
+
+  /// Destroys the marker, causing it to emit the 'destroyed' event. Once
+  /// destroyed, a marker cannot be restored by undo/redo operations.
+  void destroy() => invoke('destroy');
+}
+
+/// Represents a decoration that follows a Marker. A decoration is basically a
+/// visual representation of a marker. It allows you to add CSS classes to line
+/// numbers in the gutter, lines, and add selection-line regions around marked
+/// ranges of text.
+class Decoration extends ProxyHolder {
+  Decoration(JsObject object) : super(_cvt(object));
+
+  /// An id unique across all Decoration objects
+  num getId() => invoke('getId');
+
+  /// Returns the Decoration's properties.
+  Map<String, dynamic> getProperties() => invoke('getProperties');
+
+  /// Update the marker with new Properties. Allows you to change the
+  /// decoration's class. E.g. `{type: 'line-number', class: 'my-new-class'}`.
+  void setProperties(Map<String, dynamic> properties) =>
+      invoke('setProperties', properties);
 }
 
 class Grammar extends ProxyHolder {

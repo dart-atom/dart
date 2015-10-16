@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../launch.dart';
+import '../state.dart';
 import '../utils.dart';
 import 'debug_ui.dart';
 
@@ -76,13 +77,19 @@ class DebugManager implements Disposable {
     }
   }
 
-  void dispose() => disposables.dispose();
+  void dispose() {
+    disposables.dispose();
+    connections.toList().forEach((c) => c.dispose());
+  }
 }
 
 abstract class DebugConnection {
   final Launch launch;
 
   DebugConnection(this.launch);
+
+  bool get isAlive;
+  bool get isSuspended;
 
   pause();
   Future resume();
@@ -91,5 +98,59 @@ abstract class DebugConnection {
   stepOut();
   terminate();
 
+  Stream<bool> get onSuspendChanged;
+
   Future get onTerminated;
+
+  void dispose();
+}
+
+class UriResolver implements Disposable {
+  final String entryPoint;
+  final Map<String, String> _cache = {};
+
+  Completer _completer = new Completer();
+  String _contextId;
+
+  UriResolver(this.entryPoint) {
+    if (analysisServer.isActive) {
+      analysisServer.server.execution.createContext(entryPoint).then((var result) {
+        _contextId = result.id;
+        _completer.complete(_contextId);
+      }).catchError((e) {
+        _completer.completeError(e);
+      });
+    } else {
+      _completer.completeError('analysis server not available');
+    }
+  }
+
+  Future<String> resolveToPath(String uri) {
+    if (uri.startsWith('file:///')) {
+      return new Future.value(uri.substring(7));
+    }
+
+    if (uri.startsWith('file:/')) {
+      return new Future.value(uri.substring(5));
+    }
+
+    if (_cache.containsKey(uri)) {
+      return new Future.value(_cache[uri]);
+    }
+
+    return _completer.future.then((String contextId) {
+      return analysisServer.server.execution.mapUri(contextId, uri: uri);
+    }).then((result) {
+      String path = result.file;
+      return _cache[uri] = path;
+    });
+  }
+
+  void dispose() {
+    if (analysisServer.isActive) {
+      analysisServer.server.execution.deleteContext(_contextId).catchError((_) {
+        return null;
+      });
+    }
+  }
 }

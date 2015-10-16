@@ -1,12 +1,14 @@
 library atom.debug_ui;
 
+import 'dart:async';
 import 'dart:html' show document;
-
-//import 'package:frappe/frappe.dart';
 
 import '../elements.dart';
 import '../utils.dart';
 import 'debug.dart';
+
+// TODO: feedback when an operation is in progress (like pause, which can take
+// a long time depending on the running app)
 
 class DebugUIController implements Disposable {
   final DebugConnection connection;
@@ -14,15 +16,18 @@ class DebugUIController implements Disposable {
   CoreElement ui;
 
   DebugUIController(this.connection) {
-    ui = div(c: 'debug-ui btn-toolbar')..add([
+    CoreElement resume = button(c: 'btn icon-playback-play')..click(_resume);
+    CoreElement pause = button(c: 'btn icon-playback-pause')..click(_pause);
+    CoreElement stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
+    CoreElement stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
+    CoreElement stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
+
+    ui = div(c: 'debugger-ui btn-toolbar')..add([
       div(c: 'btn-group no-left')..add([
-        button(c: 'btn icon-playback-pause')..click(_pause),
-        button(c: 'btn icon-playback-play')..click(_resume)
+        resume, pause
       ]),
       div(c: 'btn-group')..add([
-        button(c: 'btn icon-chevron-down')..click(_stepIn),
-        button(c: 'btn icon-chevron-right')..click(_stepOver),
-        button(c: 'btn icon-chevron-up')..click(_stepOut),
+        stepIn, stepOver, stepOut
       ]),
       div(c: 'btn-group')..add([
         button(c: 'btn icon-primitive-square')..click(_terminate)
@@ -30,6 +35,30 @@ class DebugUIController implements Disposable {
     ]);
 
     document.body.children.add(ui.element);
+
+    void updateUi(bool suspended) {
+      resume.enabled = suspended;
+      pause.enabled = !suspended;
+      stepIn.enabled = suspended;
+      stepOut.enabled = suspended;
+      stepOver.enabled = suspended;
+    }
+
+    updateUi(connection.isSuspended);
+    connection.onSuspendChanged.listen(updateUi);
+
+    _show();
+  }
+
+  void _show() {
+    new Future.delayed(Duration.ZERO).then((_) {
+      ui.toggleClass('debugger-show');
+    });
+  }
+
+  Future _hide() {
+    ui.toggleClass('debugger-show');
+    return ui.element.onTransitionEnd.first;
   }
 
   // TODO: This is all temporary.
@@ -41,6 +70,8 @@ class DebugUIController implements Disposable {
   _terminate() => connection.terminate();
 
   void dispose() {
-    ui.dispose();
+    _hide().then((_) {
+      ui.dispose();
+    });
   }
 }

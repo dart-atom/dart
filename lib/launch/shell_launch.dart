@@ -38,7 +38,7 @@ class ShellLaunchType extends LaunchType {
 
     ProcessRunner runner = new ProcessRunner(script, args: args, cwd: cwd);
 
-    Launch launch = new Launch(this, launchName, manager,
+    Launch launch = new Launch(manager, this, configuration, launchName,
         killHandler: () => runner.kill());
     manager.addLaunch(launch);
 
