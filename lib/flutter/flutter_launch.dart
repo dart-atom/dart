@@ -1,13 +1,16 @@
-library atom.flutter_launch;
+library atom.flutter.flutter_launch;
 
 import 'dart:async';
 
 import '../atom.dart';
 import '../atom_utils.dart';
+import '../impl/pub.dart';
 import '../launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../state.dart';
+
+const String _toolName = 'flutter';
 
 class FlutterLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -21,9 +24,8 @@ class FlutterLaunchType extends LaunchType {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
 
-    File skyTool = new File.fromPath(
-        join(project.directory, 'packages', 'flutter', 'sky_tool'));
-    if (!skyTool.existsSync()) return false;
+    PubAppLocal flutter = new PubApp.local(_toolName, project.path);
+    if (!flutter.isInstalledSync()) return false;
 
     String relPath = relativize(project.path, path);
     return relPath == 'lib${separator}main.dart';
@@ -39,25 +41,24 @@ class FlutterLaunchType extends LaunchType {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return new Future.error("File not in a Dart project.");
 
-    String sky_tool = join(project.directory, 'packages', 'flutter', 'sky_tool');
-    bool exists = new File.fromPath(sky_tool).existsSync();
+    PubAppLocal flutter = new PubApp.local(_toolName, project.path);
+    bool exists = flutter.isInstalledSync();
 
     if (!exists) {
-      return new Future.error("Unable to locate 'packages/flutter/sky_tool'; "
-          "did you import the 'sky' package into your project?");
+      return new Future.error("Unable to locate the '${_toolName}' package; "
+          "did you import it into your project?");
     }
 
-    // Ensure that the sky server isn't already running and potentially serving
-    // an older (or different) app.
-    return _skyToolStop(project).then((_) {
-      if (_lastLaunch == null) return null;
-
-      Launch launch = _lastLaunch._launch;
-      return launch.isTerminated ? null : launch.kill();
-    }).then((_) {
+    return _killLastLaunch().then((_) {
       _lastLaunch = new _LaunchInstance(project, configuration, this);
       return _lastLaunch.launch();
     });
+  }
+
+  Future _killLastLaunch() {
+    if (_lastLaunch == null) return new Future.value();
+    Launch launch = _lastLaunch._launch;
+    return launch.isTerminated ? new Future.value() : launch.kill();
   }
 }
 
@@ -74,60 +75,62 @@ class _LaunchInstance {
         configuration,
         'lib${separator}main.dart',
         killHandler: _kill);
+    // TODO: Only set this value on successful connect.
+    // TODO: Fire events on value change.
     _launch.servicePort = 8181;
+    launchManager.addLaunch(_launch);
+    _launch.pipeStdio('[${project.path}] pub run ${_toolName} start\n', highlight: true);
   }
 
-  Future<Launch> launch() {
-    // Chain together both 'sky_tool start' and 'sky_tool logs'.
-    _runner = _skyTool(project, ['start']); //, '--poke']);
+  Future<Launch> launch() async {
+    PubAppLocal flutter = new PubApp.local(_toolName, project.path);
 
-    launchManager.addLaunch(_launch);
-
+    // Ensure that the sky server isn't already running and potentially serving
+    // an older (or different) app.
+    _runner = _flutter(flutter, ['stop']);
     _runner.execStreaming();
     _runner.onStdout.listen((str) => _launch.pipeStdio(str));
     _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
 
-    _launch.pipeStdio('[${_runner.cwd}] ${_runner.getDescription()}\n', highlight: true);
+    Future f = _runner.onExit.timeout(new Duration(seconds: 4), onTimeout: () => 0);
+    await f;
 
-    // TODO: Hack - `sky_tool start` is not terminating when launched from Atom.
-    Future f = _runner.onExit.timeout(new Duration(seconds: 2), onTimeout: () => 0);
-    return f.then((code) {
-      _runner = null;
+    // Chain together both 'flutter start' and 'flutter logs'.
+    // TODO: Add a user option for `--checked`.
+    _runner = _flutter(flutter, ['start']); //, '--poke']);
+    _runner.execStreaming();
+    _runner.onStdout.listen((str) => _launch.pipeStdio(str));
+    _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
 
-      if (code == 0) {
-        // Chain 'sky_tool logs'.
-        _runner = _skyTool(project, ['logs', '--clear']);
-        _runner.execStreaming();
-        _runner.onStdout.listen((str) => _launch.pipeStdio(str));
-        _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
+    int code = await _runner.onExit;
+    if (code == 0) {
+      // Chain 'flutter logs'.
+      _runner = _flutter(flutter, ['logs', '--clear']);
+      _runner.execStreaming();
+      _runner.onStdout.listen((str) => _launch.pipeStdio(str));
+      _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
 
-        // Don't return the future here.
-        _runner.onExit.then((code) => _launch.launchTerminated(code));
-      } else {
-        _launch.launchTerminated(code);
-      }
-    });
+      // Don't return the future here.
+      _runner.onExit.then((code) => _launch.launchTerminated(code));
+    } else {
+      _launch.launchTerminated(code);
+    }
+
+    return _launch;
   }
 
-  Future _kill() => _runner.kill();
-}
-
-ProcessRunner _skyTool(DartProject project, List<String> args) {
-  final String skyToolPath = 'packages${separator}flutter${separator}sky_tool';
-
-  if (isMac) {
-    // On the mac, run under bash.
-    return new ProcessRunner('/bin/bash',
-        args: ['-l', '-c', '${skyToolPath} ${args.join(' ')}'], cwd: project.path);
-  } else {
-    args.insert(0, skyToolPath);
-    return new ProcessRunner('python', args: args, cwd: project.path);
+  Future _kill() {
+    if (_runner == null) {
+      _launch.launchTerminated(1);
+      return new Future.value();
+    } else {
+      return _runner.kill();
+    }
   }
 }
 
-/// Run `sky_tool stop` and ignore any error conditions that may occur.
-Future _skyToolStop(DartProject project) {
-  return _skyTool(project, ['stop']).execSimple();
+ProcessRunner _flutter(PubAppLocal flutter, List<String> args) {
+  return flutter.runRaw(args, startProcess: false);
 }
 
 // Future<bool> hasFswatchInstalled() {
