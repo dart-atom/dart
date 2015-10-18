@@ -1,4 +1,4 @@
-library atom.shell_launch;
+library atom.launch_shell;
 
 import 'dart:async';
 

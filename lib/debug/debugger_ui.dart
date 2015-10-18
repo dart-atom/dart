@@ -1,4 +1,4 @@
-library atom.debug_ui;
+library atom.debugger_ui;
 
 import 'dart:async';
 import 'dart:html' show document;

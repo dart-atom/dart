@@ -1,4 +1,4 @@
-library atom.debug;
+library atom.debugger;
 
 import 'dart:async';
 
@@ -10,7 +10,7 @@ import '../state.dart';
 import '../utils.dart';
 import 'debugger_ui.dart';
 
-final Logger _logger = new Logger('atom.debug');
+final Logger _logger = new Logger('atom.debugger');
 
 void _displayError(dynamic error) {
   atom.notifications.addError('${error}');

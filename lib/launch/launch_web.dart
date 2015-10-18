@@ -1,4 +1,4 @@
-library atom.web_launch;
+library atom.launch_web;
 
 import 'dart:async';
 

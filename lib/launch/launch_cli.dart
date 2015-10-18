@@ -1,4 +1,4 @@
-library atom.cli_launch;
+library atom.launch_cli;
 
 import 'dart:async';
 import 'dart:html' show WebSocket, MessageEvent;
@@ -18,7 +18,7 @@ import '../state.dart';
 import '../utils.dart';
 import 'launch.dart';
 
-final Logger _logger = new Logger('atom.cli_launch');
+final Logger _logger = new Logger('atom.launch_cli');
 
 const bool _debugDefault = true;
 const int _observePort = 16161;

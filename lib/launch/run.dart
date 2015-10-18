@@ -1,4 +1,4 @@
-library atom.run_app;
+library atom.run;
 
 import 'package:logging/logging.dart';
 
@@ -8,7 +8,7 @@ import '../state.dart';
 import '../utils.dart';
 import 'launch.dart';
 
-final Logger _logger = new Logger('atom.run_app');
+final Logger _logger = new Logger('atom.run');
 
 // cmd-R, on exact match:
 // -get existing launch config
