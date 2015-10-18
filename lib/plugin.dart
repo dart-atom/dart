@@ -26,7 +26,7 @@ import 'atom_utils.dart';
 import 'autocomplete.dart';
 import 'buffer/buffer_observer.dart';
 import 'debug/breakpoints.dart';
-import 'debug/debug.dart';
+import 'debug/debugger.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';

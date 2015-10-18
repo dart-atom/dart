@@ -9,7 +9,8 @@ import 'package:vm_service_lib/vm_service_lib.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../debug/breakpoints.dart';
-import '../debug/debug.dart';
+import '../debug/debugger.dart';
+import '../debug/observatory_debugger.dart';
 import '../launch.dart';
 import '../process.dart';
 import '../projects.dart';
@@ -146,7 +147,7 @@ class CliLaunchType extends LaunchType {
       VmService service = new VmService(
         ws.onMessage.map((MessageEvent e) => e.data as String),
         (String message) => ws.send(message),
-        log: new _Log()
+        log: new ObserveLog(_logger)
       );
       _handleVMConnected(launch, url, service, finishedCompleter, isolatesPaused: true);
     });
@@ -356,38 +357,4 @@ class _ObservatoryDebugConnection extends DebugConnection {
     if (isAlive) terminate();
     uriResolver.dispose();
   }
-}
-
-String printFunctionName(FuncRef ref, {bool terse: false}) {
-  String name = terse ? ref.name : '${ref.name}()';
-
-  if (ref.owner is ClassRef) {
-    return '${ref.owner.name}.${name}';
-  } else if (ref.owner is FuncRef) {
-    return '${printFunctionName(ref.owner, terse: true)}.${name}';
-  } else {
-    return name;
-  }
-}
-
-Point calcPos(Script script, int tokenPos) {
-  List<List<int>> table = script.tokenPosTable;
-
-  for (List<int> row in table) {
-    int line = row[0];
-
-    int index = 1;
-
-    while (index < row.length - 1) {
-      if (row[index] == tokenPos) return new Point.coords(line, row[index + 1]);
-      index += 2;
-    }
-  }
-
-  return null;
-}
-
-class _Log extends Log {
-  void warning(String message) => _logger.warning(message);
-  void severe(String message) => _logger.severe(message);
 }

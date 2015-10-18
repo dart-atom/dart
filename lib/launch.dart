@@ -10,7 +10,7 @@ import 'atom_utils.dart';
 import 'projects.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'debug/debug.dart';
+import 'debug/debugger.dart';
 
 final Logger _logger = new Logger('atom.launch');
 

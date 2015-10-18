@@ -8,7 +8,7 @@ import '../atom.dart';
 import '../launch.dart';
 import '../state.dart';
 import '../utils.dart';
-import 'debug_ui.dart';
+import 'debugger_ui.dart';
 
 final Logger _logger = new Logger('atom.debug');
 

@@ -8,7 +8,7 @@ import 'dart:async';
 
 import 'analysis_server.dart';
 import 'debug/breakpoints.dart';
-import 'debug/debug.dart';
+import 'debug/debugger.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
