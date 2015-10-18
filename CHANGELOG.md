@@ -3,6 +3,9 @@
 ## unreleased
 - fixed an issue when running `pub get` in a directory without a pubspec.yaml
 - adjusted the highlighting in the outline view
+- fixed an issue with restoring atom preferences
+- switched to using the `flutter` command to launch flutter apps, instead of the
+  `sky_tool` script
 
 ## 0.4.10
 - improved the UI for running Pub commands and applications

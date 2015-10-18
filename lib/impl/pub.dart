@@ -167,11 +167,46 @@ class PubManager implements Disposable, ContextMenuContributor {
 }
 
 /// A Dart app installed via pub.
-class PubApp {
+abstract class PubApp {
   final String name;
-  final bool isGlobal;
 
-  PubApp.global(this.name) : isGlobal = true;
+  PubApp._(this.name);
+
+  factory PubApp.local(String name, String cwd) {
+    return new PubAppLocal(name, cwd);
+  }
+
+  factory PubApp.global(String name) {
+    return new PubAppGlobal(name);
+  }
+
+  bool get isLocal;
+  bool get isGlobal;
+
+  Future run({List<String> args, String cwd, String title});
+
+  Future<bool> isInstalled();
+
+  Future<Version> getInstalledVersion();
+
+  Future<Version> getMostRecentHostedVersion() {
+    // https://pub.dartlang.org/packages/flutter.json
+    // {"name":"flutter","versions":["0.0.6","0.0.5","0.0.4"]}
+
+    return HttpRequest.request('https://pub.dartlang.org/packages/${name}.json').then(
+        (HttpRequest result) {
+      Map packageInfo = JSON.decode(result.responseText);
+      Iterable<String> vers = packageInfo['versions'];
+      return Version.primary(vers.map((str) => new Version.parse(str)).toList());
+    });
+  }
+}
+
+class PubAppGlobal extends PubApp {
+  PubAppGlobal(String name) : super._(name);
+
+  bool get isLocal => false;
+  bool get isGlobal => true;
 
   Future<bool> isInstalled() {
     return getInstalledVersion()
@@ -181,7 +216,6 @@ class PubApp {
 
   Future<Version> getInstalledVersion() {
     if (!sdkManager.hasSdk) return new Future.value();
-    if (!isGlobal) return new Future.value(Version.none);
 
     return sdkManager.sdk.execBinSimple('pub', ['global', 'list']).then(
         (ProcessResult result) {
@@ -205,21 +239,14 @@ class PubApp {
 
   Future install({bool quiet: true}) {
     if (!sdkManager.hasSdk) return new Future.value();
-
-    if (isGlobal) {
-      Job job = new PubGlobalActivate(name, runQuiet: quiet);
-      return job.schedule();
-    } else {
-      return new Future.value();
-    }
+    Job job = new PubGlobalActivate(name, runQuiet: quiet);
+    return job.schedule();
   }
 
   /// If this package is not installed, then install. If it is installed but the
   /// hosted version is newer, then re-install. Otherwise, this method does not
   /// re-install the package.
   Future installIfUpdateAvailable({bool quiet: true}) async {
-    if (!isGlobal) return new Future.value();
-
     Version installedVer;
 
     try {
@@ -246,18 +273,6 @@ class PubApp {
     });
   }
 
-  Future<Version> getMostRecentHostedVersion() {
-    // https://pub.dartlang.org/packages/sky_tools.json
-    // {"name":"sky_tools","versions":["0.0.15","0.0.16","0.0.17"]}
-
-    return HttpRequest.request('https://pub.dartlang.org/packages/${name}.json').then(
-        (HttpRequest result) {
-      Map packageInfo = JSON.decode(result.responseText);
-      Iterable<String> vers = packageInfo['versions'];
-      return Version.primary(vers.map((str) => new Version.parse(str)).toList());
-    });
-  }
-
   Future run({List<String> args, String cwd, String title}) {
     if (!sdkManager.hasSdk) return new Future.error('no sdk installed');
 
@@ -265,6 +280,47 @@ class PubApp {
     if (args != null) list.addAll(args);
     Job job = new PubRunJob.global(list, path: cwd, title: title);
     return job.schedule();
+  }
+}
+
+class PubAppLocal extends PubApp {
+  final String cwd;
+
+  PubAppLocal(String name, this.cwd) : super._(name);
+
+  bool get isLocal => true;
+  bool get isGlobal => false;
+
+  Future<bool> isInstalled() => new Future.value(isInstalledSync());
+
+  /// Returns whether this pub app is installed.
+  bool isInstalledSync() {
+    File packagesFile = new File.fromPath(join(cwd, dotPackagesFileName));
+    if (!packagesFile.existsSync()) return false;
+    String contents = packagesFile.readSync();
+    return contents.split('\n').any((String line) => line.startsWith('${name}:'));
+  }
+
+  Future<Version> getInstalledVersion() {
+    // TODO:
+    return new Future.error('todo');
+  }
+
+  /// Note: `PubAppLocal.run()` ignores the cwd parameter, and takes its cwd
+  /// from the object constructor.
+  Future run({List<String> args, String cwd, String title}) {
+    if (!sdkManager.hasSdk) return new Future.error('no sdk installed');
+
+    List list = ['run', name];
+    if (args != null) list.addAll(args);
+    Job job = new PubRunJob.local(this.cwd, list, title: title);
+    return job.schedule();
+  }
+
+  ProcessRunner runRaw(List<String> args, {bool startProcess: true}) {
+    List<String> _args = ['run', name];
+    if (args != null) _args.addAll(args);
+    return sdkManager.sdk.execBin('pub', _args, cwd: cwd, startProcess: startProcess);
   }
 }
 
