@@ -11,12 +11,12 @@ import '../atom_utils.dart';
 import '../debug/breakpoints.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart';
-import '../launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
 import '../utils.dart';
+import 'launch.dart';
 
 final Logger _logger = new Logger('atom.cli_launch');
 

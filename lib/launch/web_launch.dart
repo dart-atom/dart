@@ -2,8 +2,8 @@ library atom.web_launch;
 
 import 'dart:async';
 
-import '../launch.dart';
 import '../projects.dart';
+import 'launch.dart';
 
 class WebLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>

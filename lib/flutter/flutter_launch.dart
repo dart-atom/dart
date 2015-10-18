@@ -5,7 +5,7 @@ import 'dart:async';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../impl/pub.dart';
-import '../launch.dart';
+import '../launch/launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../state.dart';

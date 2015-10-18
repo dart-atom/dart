@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
-import '../launch.dart';
+import '../launch/launch.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'debugger_ui.dart';

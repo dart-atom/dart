@@ -3,10 +3,10 @@ library atom.run_app;
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
-import '../launch.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
+import 'launch.dart';
 
 final Logger _logger = new Logger('atom.run_app');
 

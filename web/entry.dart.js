@@ -29052,7 +29052,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return this._captured_fn_0.call$1(P.JsObject_JsObject$fromBrowserObject(e));
       }, null, null, 4, 0, null, 75, 0, "call"]
     }
-  }], ["atom.launch", "package:atom_dartlang/launch.dart",, X, {
+  }], ["atom.launch", "package:atom_dartlang/launch/launch.dart",, X, {
     "^": "",
     LaunchManager: {
       "^": "Object;_launchAdded,_launchActivated,_launchTerminated<,_launchRemoved,launchTypes,_activeLaunch,_launches,_configs",

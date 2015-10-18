@@ -4,9 +4,9 @@ import 'dart:async';
 
 import '../atom.dart';
 import '../atom_utils.dart';
-import '../launch.dart';
 import '../process.dart';
 import '../projects.dart';
+import 'launch.dart';
 
 class ShellLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>

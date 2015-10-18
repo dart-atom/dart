@@ -13,7 +13,7 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'jobs.dart';
-import 'launch.dart';
+import 'launch/launch.dart';
 import 'projects.dart';
 import 'sdk.dart';
 

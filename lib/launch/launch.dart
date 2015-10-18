@@ -5,12 +5,12 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import 'atom.dart';
-import 'atom_utils.dart';
-import 'projects.dart';
-import 'state.dart';
-import 'utils.dart';
-import 'debug/debugger.dart';
+import '../atom.dart';
+import '../atom_utils.dart';
+import '../debug/debugger.dart';
+import '../projects.dart';
+import '../state.dart';
+import '../utils.dart';
 
 final Logger _logger = new Logger('atom.launch');
 

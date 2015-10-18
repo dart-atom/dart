@@ -10,13 +10,13 @@ import 'dart:html' show DivElement;
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../jobs.dart';
-import '../launch.dart';
+import '../launch/cli_launch.dart';
+import '../launch/launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
 import '../utils.dart';
-import '../launch/cli_launch.dart';
 
 void smokeTest() {
   // panels

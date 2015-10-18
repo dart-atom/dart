@@ -7,10 +7,10 @@ import 'dart:html' show ScrollAlignment;
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../elements.dart';
-import '../launch.dart';
 import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
+import 'launch.dart';
 
 class ConsoleController implements Disposable {
   ConsoleView view;
