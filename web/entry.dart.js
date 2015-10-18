@@ -5710,17 +5710,17 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.LaunchConfiguration[1];
     LaunchConfiguration.prototype = $desc;
     LaunchConfiguration.$__fields__ = ["_launch$_config"];
-    function Launch(launchType, launchConfiguration, title, manager, id, killHandler, servicePort, _stdio, _exitCode, _connection) {
+    function Launch(launchType, launchConfiguration, title, manager, id, killHandler, _stdio, exitCode, servicePort, _debugConnection) {
       this.launchType = launchType;
       this.launchConfiguration = launchConfiguration;
       this.title = title;
       this.manager = manager;
       this.id = id;
       this.killHandler = killHandler;
-      this.servicePort = servicePort;
       this._stdio = _stdio;
-      this._exitCode = _exitCode;
-      this._connection = _connection;
+      this.exitCode = exitCode;
+      this.servicePort = servicePort;
+      this._debugConnection = _debugConnection;
       this.$deferredAction();
     }
     Launch.builtin$cls = "Launch";
@@ -5728,7 +5728,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       Launch.name = "Launch";
     $desc = $collectedClasses$.Launch[1];
     Launch.prototype = $desc;
-    Launch.$__fields__ = ["launchType", "launchConfiguration", "title", "manager", "id", "killHandler", "servicePort", "_stdio", "_exitCode", "_connection"];
+    Launch.$__fields__ = ["launchType", "launchConfiguration", "title", "manager", "id", "killHandler", "_stdio", "exitCode", "servicePort", "_debugConnection"];
     Launch.prototype.get$launchType = function() {
       return this.launchType;
     };
@@ -5740,6 +5740,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     };
     Launch.prototype.get$id = function(receiver) {
       return this.id;
+    };
+    Launch.prototype.get$exitCode = function() {
+      return this.exitCode;
     };
     Launch.prototype.get$servicePort = function() {
       return this.servicePort;
@@ -5789,9 +5792,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.CliLaunchType_performLaunch_closure[1];
     CliLaunchType_performLaunch_closure.prototype = $desc;
     CliLaunchType_performLaunch_closure.$__fields__ = ["_launch_cli$_captured_runner_0"];
-    function CliLaunchType_performLaunch_closure0(_launch_cli$_captured_this_1, _launch_cli$_captured_launch_2) {
-      this._launch_cli$_captured_this_1 = _launch_cli$_captured_this_1;
-      this._launch_cli$_captured_launch_2 = _launch_cli$_captured_launch_2;
+    function CliLaunchType_performLaunch_closure0(_launch_cli$_captured_launch_1) {
+      this._launch_cli$_captured_launch_1 = _launch_cli$_captured_launch_1;
       this.$deferredAction();
     }
     CliLaunchType_performLaunch_closure0.builtin$cls = "CliLaunchType_performLaunch_closure0";
@@ -5799,9 +5801,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       CliLaunchType_performLaunch_closure0.name = "CliLaunchType_performLaunch_closure0";
     $desc = $collectedClasses$.CliLaunchType_performLaunch_closure0[1];
     CliLaunchType_performLaunch_closure0.prototype = $desc;
-    CliLaunchType_performLaunch_closure0.$__fields__ = ["_launch_cli$_captured_this_1", "_launch_cli$_captured_launch_2"];
-    function CliLaunchType_performLaunch__closure(_launch_cli$_captured_launch_3) {
-      this._launch_cli$_captured_launch_3 = _launch_cli$_captured_launch_3;
+    CliLaunchType_performLaunch_closure0.$__fields__ = ["_launch_cli$_captured_launch_1"];
+    function CliLaunchType_performLaunch__closure(_launch_cli$_captured_launch_2) {
+      this._launch_cli$_captured_launch_2 = _launch_cli$_captured_launch_2;
       this.$deferredAction();
     }
     CliLaunchType_performLaunch__closure.builtin$cls = "CliLaunchType_performLaunch__closure";
@@ -5809,9 +5811,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       CliLaunchType_performLaunch__closure.name = "CliLaunchType_performLaunch__closure";
     $desc = $collectedClasses$.CliLaunchType_performLaunch__closure[1];
     CliLaunchType_performLaunch__closure.prototype = $desc;
-    CliLaunchType_performLaunch__closure.$__fields__ = ["_launch_cli$_captured_launch_3"];
-    function CliLaunchType_performLaunch_closure1(_launch_cli$_captured_launch_4) {
-      this._launch_cli$_captured_launch_4 = _launch_cli$_captured_launch_4;
+    CliLaunchType_performLaunch__closure.$__fields__ = ["_launch_cli$_captured_launch_2"];
+    function CliLaunchType_performLaunch_closure1(_launch_cli$_captured_launch_3) {
+      this._launch_cli$_captured_launch_3 = _launch_cli$_captured_launch_3;
       this.$deferredAction();
     }
     CliLaunchType_performLaunch_closure1.builtin$cls = "CliLaunchType_performLaunch_closure1";
@@ -5819,9 +5821,9 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       CliLaunchType_performLaunch_closure1.name = "CliLaunchType_performLaunch_closure1";
     $desc = $collectedClasses$.CliLaunchType_performLaunch_closure1[1];
     CliLaunchType_performLaunch_closure1.prototype = $desc;
-    CliLaunchType_performLaunch_closure1.$__fields__ = ["_launch_cli$_captured_launch_4"];
-    function CliLaunchType_performLaunch_closure2(_captured_launch_5) {
-      this._captured_launch_5 = _captured_launch_5;
+    CliLaunchType_performLaunch_closure1.$__fields__ = ["_launch_cli$_captured_launch_3"];
+    function CliLaunchType_performLaunch_closure2(_launch_cli$_captured_launch_4) {
+      this._launch_cli$_captured_launch_4 = _launch_cli$_captured_launch_4;
       this.$deferredAction();
     }
     CliLaunchType_performLaunch_closure2.builtin$cls = "CliLaunchType_performLaunch_closure2";
@@ -5829,264 +5831,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       CliLaunchType_performLaunch_closure2.name = "CliLaunchType_performLaunch_closure2";
     $desc = $collectedClasses$.CliLaunchType_performLaunch_closure2[1];
     CliLaunchType_performLaunch_closure2.prototype = $desc;
-    CliLaunchType_performLaunch_closure2.$__fields__ = ["_captured_launch_5"];
-    function CliLaunchType__connectDebugger_closure(_launch_cli$_captured_this_0, _launch_cli$_captured_launch_1, _captured_url_2, _captured_ws_3, _captured_connectedCompleter_4, _captured_finishedCompleter_5) {
-      this._launch_cli$_captured_this_0 = _launch_cli$_captured_this_0;
-      this._launch_cli$_captured_launch_1 = _launch_cli$_captured_launch_1;
-      this._captured_url_2 = _captured_url_2;
-      this._captured_ws_3 = _captured_ws_3;
-      this._captured_connectedCompleter_4 = _captured_connectedCompleter_4;
-      this._captured_finishedCompleter_5 = _captured_finishedCompleter_5;
-      this.$deferredAction();
-    }
-    CliLaunchType__connectDebugger_closure.builtin$cls = "CliLaunchType__connectDebugger_closure";
-    if (!("name" in CliLaunchType__connectDebugger_closure))
-      CliLaunchType__connectDebugger_closure.name = "CliLaunchType__connectDebugger_closure";
-    $desc = $collectedClasses$.CliLaunchType__connectDebugger_closure[1];
-    CliLaunchType__connectDebugger_closure.prototype = $desc;
-    CliLaunchType__connectDebugger_closure.$__fields__ = ["_launch_cli$_captured_this_0", "_launch_cli$_captured_launch_1", "_captured_url_2", "_captured_ws_3", "_captured_connectedCompleter_4", "_captured_finishedCompleter_5"];
-    function CliLaunchType__connectDebugger__closure() {
-      this.$deferredAction();
-    }
-    CliLaunchType__connectDebugger__closure.builtin$cls = "CliLaunchType__connectDebugger__closure";
-    if (!("name" in CliLaunchType__connectDebugger__closure))
-      CliLaunchType__connectDebugger__closure.name = "CliLaunchType__connectDebugger__closure";
-    $desc = $collectedClasses$.CliLaunchType__connectDebugger__closure[1];
-    CliLaunchType__connectDebugger__closure.prototype = $desc;
-    CliLaunchType__connectDebugger__closure.$__fields__ = [];
-    function CliLaunchType__connectDebugger__closure0(_captured_ws_6) {
-      this._captured_ws_6 = _captured_ws_6;
-      this.$deferredAction();
-    }
-    CliLaunchType__connectDebugger__closure0.builtin$cls = "CliLaunchType__connectDebugger__closure0";
-    if (!("name" in CliLaunchType__connectDebugger__closure0))
-      CliLaunchType__connectDebugger__closure0.name = "CliLaunchType__connectDebugger__closure0";
-    $desc = $collectedClasses$.CliLaunchType__connectDebugger__closure0[1];
-    CliLaunchType__connectDebugger__closure0.prototype = $desc;
-    CliLaunchType__connectDebugger__closure0.$__fields__ = ["_captured_ws_6"];
-    function CliLaunchType__connectDebugger_closure0(_captured_connectedCompleter_7) {
-      this._captured_connectedCompleter_7 = _captured_connectedCompleter_7;
-      this.$deferredAction();
-    }
-    CliLaunchType__connectDebugger_closure0.builtin$cls = "CliLaunchType__connectDebugger_closure0";
-    if (!("name" in CliLaunchType__connectDebugger_closure0))
-      CliLaunchType__connectDebugger_closure0.name = "CliLaunchType__connectDebugger_closure0";
-    $desc = $collectedClasses$.CliLaunchType__connectDebugger_closure0[1];
-    CliLaunchType__connectDebugger_closure0.prototype = $desc;
-    CliLaunchType__connectDebugger_closure0.$__fields__ = ["_captured_connectedCompleter_7"];
-    function CliLaunchType__connectDebugger_closure1(_captured_finishedCompleter_8) {
-      this._captured_finishedCompleter_8 = _captured_finishedCompleter_8;
-      this.$deferredAction();
-    }
-    CliLaunchType__connectDebugger_closure1.builtin$cls = "CliLaunchType__connectDebugger_closure1";
-    if (!("name" in CliLaunchType__connectDebugger_closure1))
-      CliLaunchType__connectDebugger_closure1.name = "CliLaunchType__connectDebugger_closure1";
-    $desc = $collectedClasses$.CliLaunchType__connectDebugger_closure1[1];
-    CliLaunchType__connectDebugger_closure1.prototype = $desc;
-    CliLaunchType__connectDebugger_closure1.$__fields__ = ["_captured_finishedCompleter_8"];
-    function _ObservatoryDebugConnection(service, completer, _currentIsolate, subs, uriResolver, isSuspended, _suspendController, _scripts, launch) {
-      this.service = service;
-      this.completer = completer;
-      this._currentIsolate = _currentIsolate;
-      this.subs = subs;
-      this.uriResolver = uriResolver;
-      this.isSuspended = isSuspended;
-      this._suspendController = _suspendController;
-      this._scripts = _scripts;
-      this.launch = launch;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection.builtin$cls = "_ObservatoryDebugConnection";
-    if (!("name" in _ObservatoryDebugConnection))
-      _ObservatoryDebugConnection.name = "_ObservatoryDebugConnection";
-    $desc = $collectedClasses$._ObservatoryDebugConnection[1];
-    _ObservatoryDebugConnection.prototype = $desc;
-    _ObservatoryDebugConnection.$__fields__ = ["service", "completer", "_currentIsolate", "subs", "uriResolver", "isSuspended", "_suspendController", "_scripts", "launch"];
-    _ObservatoryDebugConnection.prototype.get$isSuspended = function() {
-      return this.isSuspended;
-    };
-    function _ObservatoryDebugConnection_closure(_launch_cli$_captured_this_0) {
-      this._launch_cli$_captured_this_0 = _launch_cli$_captured_this_0;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection_closure.builtin$cls = "_ObservatoryDebugConnection_closure";
-    if (!("name" in _ObservatoryDebugConnection_closure))
-      _ObservatoryDebugConnection_closure.name = "_ObservatoryDebugConnection_closure";
-    $desc = $collectedClasses$._ObservatoryDebugConnection_closure[1];
-    _ObservatoryDebugConnection_closure.prototype = $desc;
-    _ObservatoryDebugConnection_closure.$__fields__ = ["_launch_cli$_captured_this_0"];
-    function _ObservatoryDebugConnection__init_closure() {
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__init_closure.builtin$cls = "_ObservatoryDebugConnection__init_closure";
-    if (!("name" in _ObservatoryDebugConnection__init_closure))
-      _ObservatoryDebugConnection__init_closure.name = "_ObservatoryDebugConnection__init_closure";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__init_closure[1];
-    _ObservatoryDebugConnection__init_closure.prototype = $desc;
-    _ObservatoryDebugConnection__init_closure.$__fields__ = [];
-    function _ObservatoryDebugConnection__init_closure0() {
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__init_closure0.builtin$cls = "_ObservatoryDebugConnection__init_closure0";
-    if (!("name" in _ObservatoryDebugConnection__init_closure0))
-      _ObservatoryDebugConnection__init_closure0.name = "_ObservatoryDebugConnection__init_closure0";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__init_closure0[1];
-    _ObservatoryDebugConnection__init_closure0.prototype = $desc;
-    _ObservatoryDebugConnection__init_closure0.$__fields__ = [];
-    function _ObservatoryDebugConnection__init_closure1() {
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__init_closure1.builtin$cls = "_ObservatoryDebugConnection__init_closure1";
-    if (!("name" in _ObservatoryDebugConnection__init_closure1))
-      _ObservatoryDebugConnection__init_closure1.name = "_ObservatoryDebugConnection__init_closure1";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__init_closure1[1];
-    _ObservatoryDebugConnection__init_closure1.prototype = $desc;
-    _ObservatoryDebugConnection__init_closure1.$__fields__ = [];
-    function _ObservatoryDebugConnection__handleIsolateEvent_closure(_launch_cli$_captured_this_0, _captured__bps_1) {
-      this._launch_cli$_captured_this_0 = _launch_cli$_captured_this_0;
-      this._captured__bps_1 = _captured__bps_1;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleIsolateEvent_closure.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure";
-    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure))
-      _ObservatoryDebugConnection__handleIsolateEvent_closure.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure[1];
-    _ObservatoryDebugConnection__handleIsolateEvent_closure.prototype = $desc;
-    _ObservatoryDebugConnection__handleIsolateEvent_closure.$__fields__ = ["_launch_cli$_captured_this_0", "_captured__bps_1"];
-    function _ObservatoryDebugConnection__handleIsolateEvent__closure1(_captured__bps_2, _captured_bp_3) {
-      this._captured__bps_2 = _captured__bps_2;
-      this._captured_bp_3 = _captured_bp_3;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleIsolateEvent__closure1.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent__closure1";
-    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent__closure1))
-      _ObservatoryDebugConnection__handleIsolateEvent__closure1.name = "_ObservatoryDebugConnection__handleIsolateEvent__closure1";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent__closure1[1];
-    _ObservatoryDebugConnection__handleIsolateEvent__closure1.prototype = $desc;
-    _ObservatoryDebugConnection__handleIsolateEvent__closure1.$__fields__ = ["_captured__bps_2", "_captured_bp_3"];
-    function _ObservatoryDebugConnection__handleIsolateEvent__closure2() {
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleIsolateEvent__closure2.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent__closure2";
-    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent__closure2))
-      _ObservatoryDebugConnection__handleIsolateEvent__closure2.name = "_ObservatoryDebugConnection__handleIsolateEvent__closure2";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent__closure2[1];
-    _ObservatoryDebugConnection__handleIsolateEvent__closure2.prototype = $desc;
-    _ObservatoryDebugConnection__handleIsolateEvent__closure2.$__fields__ = [];
-    function _ObservatoryDebugConnection__handleIsolateEvent_closure0(_launch_cli$_captured_this_4) {
-      this._launch_cli$_captured_this_4 = _launch_cli$_captured_this_4;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleIsolateEvent_closure0.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure0";
-    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure0))
-      _ObservatoryDebugConnection__handleIsolateEvent_closure0.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure0";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure0[1];
-    _ObservatoryDebugConnection__handleIsolateEvent_closure0.prototype = $desc;
-    _ObservatoryDebugConnection__handleIsolateEvent_closure0.$__fields__ = ["_launch_cli$_captured_this_4"];
-    function _ObservatoryDebugConnection__handleIsolateEvent_closure1(_launch_cli$_captured_this_5) {
-      this._launch_cli$_captured_this_5 = _launch_cli$_captured_this_5;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleIsolateEvent_closure1.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure1";
-    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure1))
-      _ObservatoryDebugConnection__handleIsolateEvent_closure1.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure1";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure1[1];
-    _ObservatoryDebugConnection__handleIsolateEvent_closure1.prototype = $desc;
-    _ObservatoryDebugConnection__handleIsolateEvent_closure1.$__fields__ = ["_launch_cli$_captured_this_5"];
-    function _ObservatoryDebugConnection__handleIsolateEvent_closure2(_launch_cli$_captured_this_6, _captured__bps_7) {
-      this._launch_cli$_captured_this_6 = _launch_cli$_captured_this_6;
-      this._captured__bps_7 = _captured__bps_7;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleIsolateEvent_closure2.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure2";
-    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure2))
-      _ObservatoryDebugConnection__handleIsolateEvent_closure2.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure2";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure2[1];
-    _ObservatoryDebugConnection__handleIsolateEvent_closure2.prototype = $desc;
-    _ObservatoryDebugConnection__handleIsolateEvent_closure2.$__fields__ = ["_launch_cli$_captured_this_6", "_captured__bps_7"];
-    function _ObservatoryDebugConnection__handleIsolateEvent__closure(_captured__bps_8, _captured_bp_9) {
-      this._captured__bps_8 = _captured__bps_8;
-      this._captured_bp_9 = _captured_bp_9;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleIsolateEvent__closure.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent__closure";
-    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent__closure))
-      _ObservatoryDebugConnection__handleIsolateEvent__closure.name = "_ObservatoryDebugConnection__handleIsolateEvent__closure";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent__closure[1];
-    _ObservatoryDebugConnection__handleIsolateEvent__closure.prototype = $desc;
-    _ObservatoryDebugConnection__handleIsolateEvent__closure.$__fields__ = ["_captured__bps_8", "_captured_bp_9"];
-    function _ObservatoryDebugConnection__handleIsolateEvent__closure0() {
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleIsolateEvent__closure0.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent__closure0";
-    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent__closure0))
-      _ObservatoryDebugConnection__handleIsolateEvent__closure0.name = "_ObservatoryDebugConnection__handleIsolateEvent__closure0";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent__closure0[1];
-    _ObservatoryDebugConnection__handleIsolateEvent__closure0.prototype = $desc;
-    _ObservatoryDebugConnection__handleIsolateEvent__closure0.$__fields__ = [];
-    function _ObservatoryDebugConnection__handleIsolateEvent_closure3(_captured_this_10, _captured__bps_11) {
-      this._captured_this_10 = _captured_this_10;
-      this._captured__bps_11 = _captured__bps_11;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleIsolateEvent_closure3.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure3";
-    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure3))
-      _ObservatoryDebugConnection__handleIsolateEvent_closure3.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure3";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure3[1];
-    _ObservatoryDebugConnection__handleIsolateEvent_closure3.prototype = $desc;
-    _ObservatoryDebugConnection__handleIsolateEvent_closure3.$__fields__ = ["_captured_this_10", "_captured__bps_11"];
-    function _ObservatoryDebugConnection__handleDebugEvent_closure(_launch_cli$_captured_this_0, _captured_e_1) {
-      this._launch_cli$_captured_this_0 = _launch_cli$_captured_this_0;
-      this._captured_e_1 = _captured_e_1;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleDebugEvent_closure.builtin$cls = "_ObservatoryDebugConnection__handleDebugEvent_closure";
-    if (!("name" in _ObservatoryDebugConnection__handleDebugEvent_closure))
-      _ObservatoryDebugConnection__handleDebugEvent_closure.name = "_ObservatoryDebugConnection__handleDebugEvent_closure";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleDebugEvent_closure[1];
-    _ObservatoryDebugConnection__handleDebugEvent_closure.prototype = $desc;
-    _ObservatoryDebugConnection__handleDebugEvent_closure.$__fields__ = ["_launch_cli$_captured_this_0", "_captured_e_1"];
-    function _ObservatoryDebugConnection__handleDebugEvent__closure(_captured_pos_2) {
-      this._captured_pos_2 = _captured_pos_2;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleDebugEvent__closure.builtin$cls = "_ObservatoryDebugConnection__handleDebugEvent__closure";
-    if (!("name" in _ObservatoryDebugConnection__handleDebugEvent__closure))
-      _ObservatoryDebugConnection__handleDebugEvent__closure.name = "_ObservatoryDebugConnection__handleDebugEvent__closure";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleDebugEvent__closure[1];
-    _ObservatoryDebugConnection__handleDebugEvent__closure.prototype = $desc;
-    _ObservatoryDebugConnection__handleDebugEvent__closure.$__fields__ = ["_captured_pos_2"];
-    function _ObservatoryDebugConnection__handleDebugEvent___closure() {
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleDebugEvent___closure.builtin$cls = "_ObservatoryDebugConnection__handleDebugEvent___closure";
-    if (!("name" in _ObservatoryDebugConnection__handleDebugEvent___closure))
-      _ObservatoryDebugConnection__handleDebugEvent___closure.name = "_ObservatoryDebugConnection__handleDebugEvent___closure";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleDebugEvent___closure[1];
-    _ObservatoryDebugConnection__handleDebugEvent___closure.prototype = $desc;
-    _ObservatoryDebugConnection__handleDebugEvent___closure.$__fields__ = [];
-    function _ObservatoryDebugConnection__handleDebugEvent__closure0(_captured_pos_3, _captured_uri_4) {
-      this._captured_pos_3 = _captured_pos_3;
-      this._captured_uri_4 = _captured_uri_4;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__handleDebugEvent__closure0.builtin$cls = "_ObservatoryDebugConnection__handleDebugEvent__closure0";
-    if (!("name" in _ObservatoryDebugConnection__handleDebugEvent__closure0))
-      _ObservatoryDebugConnection__handleDebugEvent__closure0.name = "_ObservatoryDebugConnection__handleDebugEvent__closure0";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__handleDebugEvent__closure0[1];
-    _ObservatoryDebugConnection__handleDebugEvent__closure0.prototype = $desc;
-    _ObservatoryDebugConnection__handleDebugEvent__closure0.$__fields__ = ["_captured_pos_3", "_captured_uri_4"];
-    function _ObservatoryDebugConnection__resolveScript_closure(_launch_cli$_captured_this_0, _launch_cli$_captured_id_1) {
-      this._launch_cli$_captured_this_0 = _launch_cli$_captured_this_0;
-      this._launch_cli$_captured_id_1 = _launch_cli$_captured_id_1;
-      this.$deferredAction();
-    }
-    _ObservatoryDebugConnection__resolveScript_closure.builtin$cls = "_ObservatoryDebugConnection__resolveScript_closure";
-    if (!("name" in _ObservatoryDebugConnection__resolveScript_closure))
-      _ObservatoryDebugConnection__resolveScript_closure.name = "_ObservatoryDebugConnection__resolveScript_closure";
-    $desc = $collectedClasses$._ObservatoryDebugConnection__resolveScript_closure[1];
-    _ObservatoryDebugConnection__resolveScript_closure.prototype = $desc;
-    _ObservatoryDebugConnection__resolveScript_closure.$__fields__ = ["_launch_cli$_captured_this_0", "_launch_cli$_captured_id_1"];
+    CliLaunchType_performLaunch_closure2.$__fields__ = ["_launch_cli$_captured_launch_4"];
     function ShellLaunchType(type) {
       this.type = type;
       this.$deferredAction();
@@ -6314,16 +6059,272 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.DartLinterProvider[1];
     DartLinterProvider.prototype = $desc;
     DartLinterProvider.$__fields__ = ["grammarScopes", "scope", "lintOnFly", "_key"];
-    function ObserveLog(logger) {
+    function ObservatoryDebugger_connectDebugger_closure(_captured_launch_0, _captured_url_1, _captured_ws_2, _captured_connectedCompleter_3, _captured_finishedCompleter_4) {
+      this._captured_launch_0 = _captured_launch_0;
+      this._captured_url_1 = _captured_url_1;
+      this._captured_ws_2 = _captured_ws_2;
+      this._captured_connectedCompleter_3 = _captured_connectedCompleter_3;
+      this._captured_finishedCompleter_4 = _captured_finishedCompleter_4;
+      this.$deferredAction();
+    }
+    ObservatoryDebugger_connectDebugger_closure.builtin$cls = "ObservatoryDebugger_connectDebugger_closure";
+    if (!("name" in ObservatoryDebugger_connectDebugger_closure))
+      ObservatoryDebugger_connectDebugger_closure.name = "ObservatoryDebugger_connectDebugger_closure";
+    $desc = $collectedClasses$.ObservatoryDebugger_connectDebugger_closure[1];
+    ObservatoryDebugger_connectDebugger_closure.prototype = $desc;
+    ObservatoryDebugger_connectDebugger_closure.$__fields__ = ["_captured_launch_0", "_captured_url_1", "_captured_ws_2", "_captured_connectedCompleter_3", "_captured_finishedCompleter_4"];
+    function ObservatoryDebugger_connectDebugger__closure() {
+      this.$deferredAction();
+    }
+    ObservatoryDebugger_connectDebugger__closure.builtin$cls = "ObservatoryDebugger_connectDebugger__closure";
+    if (!("name" in ObservatoryDebugger_connectDebugger__closure))
+      ObservatoryDebugger_connectDebugger__closure.name = "ObservatoryDebugger_connectDebugger__closure";
+    $desc = $collectedClasses$.ObservatoryDebugger_connectDebugger__closure[1];
+    ObservatoryDebugger_connectDebugger__closure.prototype = $desc;
+    ObservatoryDebugger_connectDebugger__closure.$__fields__ = [];
+    function ObservatoryDebugger_connectDebugger__closure0(_captured_ws_5) {
+      this._captured_ws_5 = _captured_ws_5;
+      this.$deferredAction();
+    }
+    ObservatoryDebugger_connectDebugger__closure0.builtin$cls = "ObservatoryDebugger_connectDebugger__closure0";
+    if (!("name" in ObservatoryDebugger_connectDebugger__closure0))
+      ObservatoryDebugger_connectDebugger__closure0.name = "ObservatoryDebugger_connectDebugger__closure0";
+    $desc = $collectedClasses$.ObservatoryDebugger_connectDebugger__closure0[1];
+    ObservatoryDebugger_connectDebugger__closure0.prototype = $desc;
+    ObservatoryDebugger_connectDebugger__closure0.$__fields__ = ["_captured_ws_5"];
+    function ObservatoryDebugger_connectDebugger_closure0(_captured_connectedCompleter_6) {
+      this._captured_connectedCompleter_6 = _captured_connectedCompleter_6;
+      this.$deferredAction();
+    }
+    ObservatoryDebugger_connectDebugger_closure0.builtin$cls = "ObservatoryDebugger_connectDebugger_closure0";
+    if (!("name" in ObservatoryDebugger_connectDebugger_closure0))
+      ObservatoryDebugger_connectDebugger_closure0.name = "ObservatoryDebugger_connectDebugger_closure0";
+    $desc = $collectedClasses$.ObservatoryDebugger_connectDebugger_closure0[1];
+    ObservatoryDebugger_connectDebugger_closure0.prototype = $desc;
+    ObservatoryDebugger_connectDebugger_closure0.$__fields__ = ["_captured_connectedCompleter_6"];
+    function ObservatoryDebugger_connectDebugger_closure1(_captured_finishedCompleter_7) {
+      this._captured_finishedCompleter_7 = _captured_finishedCompleter_7;
+      this.$deferredAction();
+    }
+    ObservatoryDebugger_connectDebugger_closure1.builtin$cls = "ObservatoryDebugger_connectDebugger_closure1";
+    if (!("name" in ObservatoryDebugger_connectDebugger_closure1))
+      ObservatoryDebugger_connectDebugger_closure1.name = "ObservatoryDebugger_connectDebugger_closure1";
+    $desc = $collectedClasses$.ObservatoryDebugger_connectDebugger_closure1[1];
+    ObservatoryDebugger_connectDebugger_closure1.prototype = $desc;
+    ObservatoryDebugger_connectDebugger_closure1.$__fields__ = ["_captured_finishedCompleter_7"];
+    function _ObservatoryDebugConnection(service, completer, _currentIsolate, subs, uriResolver, isSuspended, _suspendController, _scripts, launch) {
+      this.service = service;
+      this.completer = completer;
+      this._currentIsolate = _currentIsolate;
+      this.subs = subs;
+      this.uriResolver = uriResolver;
+      this.isSuspended = isSuspended;
+      this._suspendController = _suspendController;
+      this._scripts = _scripts;
+      this.launch = launch;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection.builtin$cls = "_ObservatoryDebugConnection";
+    if (!("name" in _ObservatoryDebugConnection))
+      _ObservatoryDebugConnection.name = "_ObservatoryDebugConnection";
+    $desc = $collectedClasses$._ObservatoryDebugConnection[1];
+    _ObservatoryDebugConnection.prototype = $desc;
+    _ObservatoryDebugConnection.$__fields__ = ["service", "completer", "_currentIsolate", "subs", "uriResolver", "isSuspended", "_suspendController", "_scripts", "launch"];
+    _ObservatoryDebugConnection.prototype.get$isSuspended = function() {
+      return this.isSuspended;
+    };
+    function _ObservatoryDebugConnection_closure(_observatory_debugger$_captured_this_0) {
+      this._observatory_debugger$_captured_this_0 = _observatory_debugger$_captured_this_0;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection_closure.builtin$cls = "_ObservatoryDebugConnection_closure";
+    if (!("name" in _ObservatoryDebugConnection_closure))
+      _ObservatoryDebugConnection_closure.name = "_ObservatoryDebugConnection_closure";
+    $desc = $collectedClasses$._ObservatoryDebugConnection_closure[1];
+    _ObservatoryDebugConnection_closure.prototype = $desc;
+    _ObservatoryDebugConnection_closure.$__fields__ = ["_observatory_debugger$_captured_this_0"];
+    function _ObservatoryDebugConnection__init_closure() {
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__init_closure.builtin$cls = "_ObservatoryDebugConnection__init_closure";
+    if (!("name" in _ObservatoryDebugConnection__init_closure))
+      _ObservatoryDebugConnection__init_closure.name = "_ObservatoryDebugConnection__init_closure";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__init_closure[1];
+    _ObservatoryDebugConnection__init_closure.prototype = $desc;
+    _ObservatoryDebugConnection__init_closure.$__fields__ = [];
+    function _ObservatoryDebugConnection__init_closure0() {
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__init_closure0.builtin$cls = "_ObservatoryDebugConnection__init_closure0";
+    if (!("name" in _ObservatoryDebugConnection__init_closure0))
+      _ObservatoryDebugConnection__init_closure0.name = "_ObservatoryDebugConnection__init_closure0";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__init_closure0[1];
+    _ObservatoryDebugConnection__init_closure0.prototype = $desc;
+    _ObservatoryDebugConnection__init_closure0.$__fields__ = [];
+    function _ObservatoryDebugConnection__init_closure1() {
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__init_closure1.builtin$cls = "_ObservatoryDebugConnection__init_closure1";
+    if (!("name" in _ObservatoryDebugConnection__init_closure1))
+      _ObservatoryDebugConnection__init_closure1.name = "_ObservatoryDebugConnection__init_closure1";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__init_closure1[1];
+    _ObservatoryDebugConnection__init_closure1.prototype = $desc;
+    _ObservatoryDebugConnection__init_closure1.$__fields__ = [];
+    function _ObservatoryDebugConnection__handleIsolateEvent_closure(_observatory_debugger$_captured_this_0, _captured__bps_1) {
+      this._observatory_debugger$_captured_this_0 = _observatory_debugger$_captured_this_0;
+      this._captured__bps_1 = _captured__bps_1;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleIsolateEvent_closure.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure";
+    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure))
+      _ObservatoryDebugConnection__handleIsolateEvent_closure.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure[1];
+    _ObservatoryDebugConnection__handleIsolateEvent_closure.prototype = $desc;
+    _ObservatoryDebugConnection__handleIsolateEvent_closure.$__fields__ = ["_observatory_debugger$_captured_this_0", "_captured__bps_1"];
+    function _ObservatoryDebugConnection__handleIsolateEvent__closure1(_captured__bps_2, _captured_bp_3) {
+      this._captured__bps_2 = _captured__bps_2;
+      this._captured_bp_3 = _captured_bp_3;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleIsolateEvent__closure1.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent__closure1";
+    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent__closure1))
+      _ObservatoryDebugConnection__handleIsolateEvent__closure1.name = "_ObservatoryDebugConnection__handleIsolateEvent__closure1";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent__closure1[1];
+    _ObservatoryDebugConnection__handleIsolateEvent__closure1.prototype = $desc;
+    _ObservatoryDebugConnection__handleIsolateEvent__closure1.$__fields__ = ["_captured__bps_2", "_captured_bp_3"];
+    function _ObservatoryDebugConnection__handleIsolateEvent__closure2() {
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleIsolateEvent__closure2.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent__closure2";
+    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent__closure2))
+      _ObservatoryDebugConnection__handleIsolateEvent__closure2.name = "_ObservatoryDebugConnection__handleIsolateEvent__closure2";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent__closure2[1];
+    _ObservatoryDebugConnection__handleIsolateEvent__closure2.prototype = $desc;
+    _ObservatoryDebugConnection__handleIsolateEvent__closure2.$__fields__ = [];
+    function _ObservatoryDebugConnection__handleIsolateEvent_closure0(_observatory_debugger$_captured_this_4) {
+      this._observatory_debugger$_captured_this_4 = _observatory_debugger$_captured_this_4;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleIsolateEvent_closure0.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure0";
+    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure0))
+      _ObservatoryDebugConnection__handleIsolateEvent_closure0.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure0";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure0[1];
+    _ObservatoryDebugConnection__handleIsolateEvent_closure0.prototype = $desc;
+    _ObservatoryDebugConnection__handleIsolateEvent_closure0.$__fields__ = ["_observatory_debugger$_captured_this_4"];
+    function _ObservatoryDebugConnection__handleIsolateEvent_closure1(_observatory_debugger$_captured_this_5) {
+      this._observatory_debugger$_captured_this_5 = _observatory_debugger$_captured_this_5;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleIsolateEvent_closure1.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure1";
+    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure1))
+      _ObservatoryDebugConnection__handleIsolateEvent_closure1.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure1";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure1[1];
+    _ObservatoryDebugConnection__handleIsolateEvent_closure1.prototype = $desc;
+    _ObservatoryDebugConnection__handleIsolateEvent_closure1.$__fields__ = ["_observatory_debugger$_captured_this_5"];
+    function _ObservatoryDebugConnection__handleIsolateEvent_closure2(_observatory_debugger$_captured_this_6, _captured__bps_7) {
+      this._observatory_debugger$_captured_this_6 = _observatory_debugger$_captured_this_6;
+      this._captured__bps_7 = _captured__bps_7;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleIsolateEvent_closure2.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure2";
+    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure2))
+      _ObservatoryDebugConnection__handleIsolateEvent_closure2.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure2";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure2[1];
+    _ObservatoryDebugConnection__handleIsolateEvent_closure2.prototype = $desc;
+    _ObservatoryDebugConnection__handleIsolateEvent_closure2.$__fields__ = ["_observatory_debugger$_captured_this_6", "_captured__bps_7"];
+    function _ObservatoryDebugConnection__handleIsolateEvent__closure(_captured__bps_8, _captured_bp_9) {
+      this._captured__bps_8 = _captured__bps_8;
+      this._captured_bp_9 = _captured_bp_9;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleIsolateEvent__closure.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent__closure";
+    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent__closure))
+      _ObservatoryDebugConnection__handleIsolateEvent__closure.name = "_ObservatoryDebugConnection__handleIsolateEvent__closure";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent__closure[1];
+    _ObservatoryDebugConnection__handleIsolateEvent__closure.prototype = $desc;
+    _ObservatoryDebugConnection__handleIsolateEvent__closure.$__fields__ = ["_captured__bps_8", "_captured_bp_9"];
+    function _ObservatoryDebugConnection__handleIsolateEvent__closure0() {
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleIsolateEvent__closure0.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent__closure0";
+    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent__closure0))
+      _ObservatoryDebugConnection__handleIsolateEvent__closure0.name = "_ObservatoryDebugConnection__handleIsolateEvent__closure0";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent__closure0[1];
+    _ObservatoryDebugConnection__handleIsolateEvent__closure0.prototype = $desc;
+    _ObservatoryDebugConnection__handleIsolateEvent__closure0.$__fields__ = [];
+    function _ObservatoryDebugConnection__handleIsolateEvent_closure3(_captured_this_10, _captured__bps_11) {
+      this._captured_this_10 = _captured_this_10;
+      this._captured__bps_11 = _captured__bps_11;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleIsolateEvent_closure3.builtin$cls = "_ObservatoryDebugConnection__handleIsolateEvent_closure3";
+    if (!("name" in _ObservatoryDebugConnection__handleIsolateEvent_closure3))
+      _ObservatoryDebugConnection__handleIsolateEvent_closure3.name = "_ObservatoryDebugConnection__handleIsolateEvent_closure3";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleIsolateEvent_closure3[1];
+    _ObservatoryDebugConnection__handleIsolateEvent_closure3.prototype = $desc;
+    _ObservatoryDebugConnection__handleIsolateEvent_closure3.$__fields__ = ["_captured_this_10", "_captured__bps_11"];
+    function _ObservatoryDebugConnection__handleDebugEvent_closure(_observatory_debugger$_captured_this_0, _captured_e_1) {
+      this._observatory_debugger$_captured_this_0 = _observatory_debugger$_captured_this_0;
+      this._captured_e_1 = _captured_e_1;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleDebugEvent_closure.builtin$cls = "_ObservatoryDebugConnection__handleDebugEvent_closure";
+    if (!("name" in _ObservatoryDebugConnection__handleDebugEvent_closure))
+      _ObservatoryDebugConnection__handleDebugEvent_closure.name = "_ObservatoryDebugConnection__handleDebugEvent_closure";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleDebugEvent_closure[1];
+    _ObservatoryDebugConnection__handleDebugEvent_closure.prototype = $desc;
+    _ObservatoryDebugConnection__handleDebugEvent_closure.$__fields__ = ["_observatory_debugger$_captured_this_0", "_captured_e_1"];
+    function _ObservatoryDebugConnection__handleDebugEvent__closure(_captured_pos_2) {
+      this._captured_pos_2 = _captured_pos_2;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleDebugEvent__closure.builtin$cls = "_ObservatoryDebugConnection__handleDebugEvent__closure";
+    if (!("name" in _ObservatoryDebugConnection__handleDebugEvent__closure))
+      _ObservatoryDebugConnection__handleDebugEvent__closure.name = "_ObservatoryDebugConnection__handleDebugEvent__closure";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleDebugEvent__closure[1];
+    _ObservatoryDebugConnection__handleDebugEvent__closure.prototype = $desc;
+    _ObservatoryDebugConnection__handleDebugEvent__closure.$__fields__ = ["_captured_pos_2"];
+    function _ObservatoryDebugConnection__handleDebugEvent___closure() {
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleDebugEvent___closure.builtin$cls = "_ObservatoryDebugConnection__handleDebugEvent___closure";
+    if (!("name" in _ObservatoryDebugConnection__handleDebugEvent___closure))
+      _ObservatoryDebugConnection__handleDebugEvent___closure.name = "_ObservatoryDebugConnection__handleDebugEvent___closure";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleDebugEvent___closure[1];
+    _ObservatoryDebugConnection__handleDebugEvent___closure.prototype = $desc;
+    _ObservatoryDebugConnection__handleDebugEvent___closure.$__fields__ = [];
+    function _ObservatoryDebugConnection__handleDebugEvent__closure0(_captured_pos_3, _captured_uri_4) {
+      this._captured_pos_3 = _captured_pos_3;
+      this._captured_uri_4 = _captured_uri_4;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__handleDebugEvent__closure0.builtin$cls = "_ObservatoryDebugConnection__handleDebugEvent__closure0";
+    if (!("name" in _ObservatoryDebugConnection__handleDebugEvent__closure0))
+      _ObservatoryDebugConnection__handleDebugEvent__closure0.name = "_ObservatoryDebugConnection__handleDebugEvent__closure0";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__handleDebugEvent__closure0[1];
+    _ObservatoryDebugConnection__handleDebugEvent__closure0.prototype = $desc;
+    _ObservatoryDebugConnection__handleDebugEvent__closure0.$__fields__ = ["_captured_pos_3", "_captured_uri_4"];
+    function _ObservatoryDebugConnection__resolveScript_closure(_observatory_debugger$_captured_this_0, _observatory_debugger$_captured_id_1) {
+      this._observatory_debugger$_captured_this_0 = _observatory_debugger$_captured_this_0;
+      this._observatory_debugger$_captured_id_1 = _observatory_debugger$_captured_id_1;
+      this.$deferredAction();
+    }
+    _ObservatoryDebugConnection__resolveScript_closure.builtin$cls = "_ObservatoryDebugConnection__resolveScript_closure";
+    if (!("name" in _ObservatoryDebugConnection__resolveScript_closure))
+      _ObservatoryDebugConnection__resolveScript_closure.name = "_ObservatoryDebugConnection__resolveScript_closure";
+    $desc = $collectedClasses$._ObservatoryDebugConnection__resolveScript_closure[1];
+    _ObservatoryDebugConnection__resolveScript_closure.prototype = $desc;
+    _ObservatoryDebugConnection__resolveScript_closure.$__fields__ = ["_observatory_debugger$_captured_this_0", "_observatory_debugger$_captured_id_1"];
+    function ObservatoryLog(logger) {
       this.logger = logger;
       this.$deferredAction();
     }
-    ObserveLog.builtin$cls = "ObserveLog";
-    if (!("name" in ObserveLog))
-      ObserveLog.name = "ObserveLog";
-    $desc = $collectedClasses$.ObserveLog[1];
-    ObserveLog.prototype = $desc;
-    ObserveLog.$__fields__ = ["logger"];
+    ObservatoryLog.builtin$cls = "ObservatoryLog";
+    if (!("name" in ObservatoryLog))
+      ObservatoryLog.name = "ObservatoryLog";
+    $desc = $collectedClasses$.ObservatoryLog[1];
+    ObservatoryLog.prototype = $desc;
+    ObservatoryLog.$__fields__ = ["logger"];
     function OutlineController(disposables, showView, views) {
       this.disposables = disposables;
       this.showView = showView;
@@ -8569,6 +8570,17 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     Edit.prototype.get$replacement = function() {
       return this.replacement;
     };
+    function Property(_utils$_value, _utils$_controller) {
+      this._utils$_value = _utils$_value;
+      this._utils$_controller = _utils$_controller;
+      this.$deferredAction();
+    }
+    Property.builtin$cls = "Property";
+    if (!("name" in Property))
+      Property.name = "Property";
+    $desc = $collectedClasses$.Property[1];
+    Property.prototype = $desc;
+    Property.$__fields__ = ["_utils$_value", "_utils$_controller"];
     function ViewResizer(_views$_controller, _views$_offset, _moveSub, _upSub, element) {
       this._views$_controller = _views$_controller;
       this._views$_offset = _views$_offset;
@@ -14713,18 +14725,18 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     $desc = $collectedClasses$.EventStream__createControllerForStream_onCancel[1];
     EventStream__createControllerForStream_onCancel.prototype = $desc;
     EventStream__createControllerForStream_onCancel.$__fields__ = ["_frappe$_box_0"];
-    function Property(_frappe$_controller, _hasCurrentValue, _currentValue) {
+    function Property0(_frappe$_controller, _hasCurrentValue, _currentValue) {
       this._frappe$_controller = _frappe$_controller;
       this._hasCurrentValue = _hasCurrentValue;
       this._currentValue = _currentValue;
       this.$deferredAction();
     }
-    Property.builtin$cls = "Property";
-    if (!("name" in Property))
-      Property.name = "Property";
-    $desc = $collectedClasses$.Property[1];
-    Property.prototype = $desc;
-    Property.$__fields__ = ["_frappe$_controller", "_hasCurrentValue", "_currentValue"];
+    Property0.builtin$cls = "Property0";
+    if (!("name" in Property0))
+      Property0.name = "Property0";
+    $desc = $collectedClasses$.Property0[1];
+    Property0.prototype = $desc;
+    Property0.$__fields__ = ["_frappe$_controller", "_hasCurrentValue", "_currentValue"];
     function Property__createControllerForStream_closure() {
       this.$deferredAction();
     }
@@ -17322,7 +17334,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     VM.prototype.get$version = function(receiver) {
       return this.version;
     };
-    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JavaScriptFunction, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, _Serializer, _Deserializer, ConstantMapView, ConstantMap, ConstantStringMap, _ConstantMapKeyIterable, GeneralConstantMap, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, ExceptionAndStackTrace, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, CastErrorImplementation, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, JsLinkedHashMap_addAll_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, _StringAllMatchesIterable, _StringAllMatchesIterator, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, ViewRegistry, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, Config_onDidChange_closure, Config_onDidChange_closure0, ContextMenuManager, ContextMenuManager_add_closure, ContextMenuItem, ContextMenuItem_toJs_closure, _SeparatorMenuItem, NotificationManager, NotificationManager__options_closure, Notification, NotificationButton, NotificationButton_toProxy_closure, NotificationHelper, NotificationHelper_appendText_closure, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextEditor_onDidChangeCursorPosition_closure, TextBuffer, Marker, Decoration, Range, Point, AtomEvent, Shell, ScopeDescriptor, BufferedProcess, BufferedProcess_create_closure, Stats, OrganizeFileManager, OrganizeFileManager__addEditorCommand_closure, OrganizeFileManager__handleSortMembers_closure, OrganizeFileManager__handleOrganizeDirectives_closure, OrganizeFileManager__handleOrganizeDirectives_closure0, AnalysisOptionsManager, AnalysisServer, AnalysisServer_closure, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__syncRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__focusedEditorChanged_closure, AnalysisServer_filterSearchResults_closure, AnalysisServer_filterSearchResults_closure0, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, AnalysisServer__initNewServer_closure5, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_closure, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_setup_closure0, _AnalysisServerWrapper_setup_closure1, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart__closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, RenameRefactoringOptions, AnalysisRequestJob, AnalysisRequestJob_run_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_showDialog_closure, AnalysisServerDialog_showDialog_closure0, AnalysisServerDialog_showDialog_closure1, Server, Domain, ServerDomain, ServerStatus, VersionResult, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, AnalysisOutline, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, SearchResults, SearchResults_parse_closure, FindElementReferencesResult, TypeHierarchyResult, TypeHierarchyResult_parse_closure, EditDomain, FormatResult, FormatResult_parse_closure, AvailableRefactoringsResult, FixesResult, FixesResult_parse_closure, RefactoringResult, RefactoringResult_parse_closure, RefactoringResult_parse_closure0, RefactoringResult_parse_closure1, SortMembersResult, OrganizeDirectivesResult, ExecutionDomain, ExecutionLaunchData, CreateContextResult, MapUriResult, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisOptions, AnalysisStatus, ChangeContentOverlay, CompletionSuggestion, Element0, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Outline, Outline_parse_closure, Position, PubStatus, RefactoringFeedback, RefactoringOptions, RefactoringProblem, RemoveContentOverlay, RequestError, SearchResult, SearchResult_parse_closure, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, TypeHierarchyItem, promptUser_closure, promptUser_closure0, promptUser_closure1, promptUser_closure2, getSystemDescription_closure, getSystemDescription_closure0, PermissiveNodeValidator, TrustedHtmlTreeSanitizer, loadPackageJson_closure, getPackageVersion_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions_closure0, AutocompleteProvider__getSuggestions__closure, AutocompleteOptions, Suggestion, _AutocompleteOverride, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions_closure0, DartAutocompleteProvider_getSuggestions__closure, DartAutocompleteProvider_getSuggestions__closure0, DartAutocompleteProvider_getSuggestions__closure1, DartAutocompleteProvider__handleCompletionResults_closure2, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__handleCompletionResults_closure0, DartAutocompleteProvider__handleCompletionResults_closure1, DartAutocompleteProvider__handleCompletionResults_closure3, DartAutocompleteProvider__handleCompletionResults__closure, DartAutocompleteProvider__handleCompletionResults_closure4, BreakpointManager, BreakpointManager_closure, BreakpointManager_getBreakpontsFor_closure, BreakpointManager__processEditor_closure, BreakpointManager__findSimilar_closure, BreakpointManager__findSimilar_closure0, AtomBreakpoint, _EditorBreakpoint, _EditorBreakpoint_closure, BufferObserverManager, BufferObserverManager_dispose_closure, BufferObserver, BufferFormatter, BufferFormatter_closure, BufferFormatter__closure, BufferFormatter___closure, BufferFormatter_closure0, BufferUpdater, BufferUpdater__logError_closure, BufferUpdater_changedOverlay_closure, ChangelogManager, ChangelogManager_closure, ChangelogManager_closure0, ChangelogManager__handleReleaseNotes_closure, ChangelogManager__handleReleaseNotes_closure0, ConsoleController, ConsoleController_closure, ConsoleView, _LaunchController, _LaunchController_closure, _LaunchController_closure0, _LaunchController__updateButtons_closure, _LaunchController__updateButtons_closure0, _LaunchController__updateButtons_closure1, ConsoleStatusElement, DartdocHelper, DartdocHelper_closure, DartdocHelper__handleDartdoc_closure, DartdocHelper__handleDartdoc__closure, DartdocHelper__render_writeTitle, DartdocHelper__render_closure, DartdocControl, DartdocControl_closure, DartdocControl_closure0, DebugManager, DebugManager_closure, DebugManager__closure0, DebugManager_closure0, DebugManager__closure, DebugManager_closure1, DebugManager_closure2, DebugManager_closure3, DebugManager_closure4, DebugManager_dispose_closure, DebugConnection, UriResolver, UriResolver_closure, UriResolver_closure0, UriResolver_resolveToPath_closure, UriResolver_resolveToPath_closure0, UriResolver_dispose_closure, DebugUIController, DebugUIController_updateUi, DebugUIController__show_closure, DebugUIController_dispose_closure, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__activate__closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__getNavigationInfoFor_closure, NavigationHelper__getNavigationInfoFor_closure0, NavigationHelper__processNavInfo_closure, _NavigationPosition, Dependencies, _handleEnterKey_closure, _handleEnterKey_closure0, _handleEnterKey_closure1, _handleEnterKey_closure2, _handleEnterKey_closure3, _handleEnterKey_closure4, _handleEnterKey_closure5, applyEdits_closure, applyEdits__closure, selectEditGroup_closure, _sortEdits_closure, EditorManager, EditorManager_jumpToLocation_closure, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_onClick_closure, CoreElement_click_closure, ProgressElement, CloseButton, TitledModelDialog, TitledModelDialog_closure, TitledModelDialog_closure0, main_closure, ErrorRepository, ErrorsController, ErrorsController_closure, ErrorsController__handleErrorsChanged_closure, ErrorsView, ErrorsView__cvtError_closure, ErrorsView__cvtError__closure, ErrorsView__cvtError_closure0, ErrorsView__cvtError_closure1, ErrorsView__cvtError_closure2, ErrorsView__jumpTo_closure, ErrorsStatusElement, CreateProjectManager, CreateProjectManager__createProject_closure, CreateProjectManager__createProject_closure0, CreateProjectManager__createProject_closure1, CreateProjectManager__createProject__closure, FlutterLaunchType, FlutterLaunchType_performLaunch_closure, _LaunchInstance, _LaunchInstance_launch_closure, _LaunchInstance_launch_closure0, _LaunchInstance_launch_closure1, _LaunchInstance_launch_closure2, _LaunchInstance_launch_closure3, _LaunchInstance_launch_closure4, _LaunchInstance_launch_closure5, _LaunchInstance_launch_closure6, ToolbarContribution, Toolbar, ToolbarTile, FormattingHelper, FormattingHelper_closure, FormattingHelper_closure0, FormattingHelper_formatFile_closure, FormattingHelper_formatEditor_closure, FormattingHelper_formatEditor_closure0, Job, Status, JobStatus, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager_runningJobs_closure, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, EventListener, EventListener_closure, LaunchManager, LaunchManager_addLaunch_closure, LaunchManager_addLaunch_closure0, LaunchManager__readConfigs_closure, LaunchManager__readConfigs_closure0, LaunchManager_getConfigurationsForPath_closure, LaunchManager_getConfigurationsForProject_closure, LaunchType, LaunchConfiguration, Launch, TextFragment, CliLaunchType, CliLaunchType_performLaunch_closure, CliLaunchType_performLaunch_closure0, CliLaunchType_performLaunch__closure, CliLaunchType_performLaunch_closure1, CliLaunchType_performLaunch_closure2, CliLaunchType__connectDebugger_closure, CliLaunchType__connectDebugger__closure, CliLaunchType__connectDebugger__closure0, CliLaunchType__connectDebugger_closure0, CliLaunchType__connectDebugger_closure1, _ObservatoryDebugConnection, _ObservatoryDebugConnection_closure, _ObservatoryDebugConnection__init_closure, _ObservatoryDebugConnection__init_closure0, _ObservatoryDebugConnection__init_closure1, _ObservatoryDebugConnection__handleIsolateEvent_closure, _ObservatoryDebugConnection__handleIsolateEvent__closure1, _ObservatoryDebugConnection__handleIsolateEvent__closure2, _ObservatoryDebugConnection__handleIsolateEvent_closure0, _ObservatoryDebugConnection__handleIsolateEvent_closure1, _ObservatoryDebugConnection__handleIsolateEvent_closure2, _ObservatoryDebugConnection__handleIsolateEvent__closure, _ObservatoryDebugConnection__handleIsolateEvent__closure0, _ObservatoryDebugConnection__handleIsolateEvent_closure3, _ObservatoryDebugConnection__handleDebugEvent_closure, _ObservatoryDebugConnection__handleDebugEvent__closure, _ObservatoryDebugConnection__handleDebugEvent___closure, _ObservatoryDebugConnection__handleDebugEvent__closure0, _ObservatoryDebugConnection__resolveScript_closure, ShellLaunchType, ShellLaunchType_performLaunch_closure, ShellLaunchType_performLaunch_closure0, ShellLaunchType_performLaunch_closure1, ShellLaunchType_performLaunch_closure2, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintMessage, Rn, Pt, DartLinterConsumer, LinterConsumer_Disposables, DartLinterConsumer_closure, DartLinterConsumer_closure0, DartLinterConsumer__regenErrors_closure, DartLinterConsumer__filter_closure, DartLinterConsumer__emit_closure, DartLinterProvider, ObserveLog, OutlineController, OutlineController_closure, OutlineController_closure0, OutlineController_closure1, OutlineView, OutlineView_closure, OutlineView__setupResizer_closure, OutlineView__setupResizer_closure0, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage_closure1, AtomDartPackage_closure2, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated__closure, AtomDartPackage_packageActivated__closure0, AtomDartPackage_packageActivated_closure3, AtomDartPackage__validateSettings_closure, AtomDartPackage__validateSettings_closure0, AtomDartPackage__validateSettings_closure1, AtomDartPackage__showWelcomeToast_closure, AtomDartPackage__handleSendFeedback_closure, AtomDartPackage__registerLinter_closure, AtomDartPackage__registerLinter_closure0, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure2, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure, ProcessRunner_execStreaming_closure0, ProcessRunner_kill_closure, ProcessResult, ProcessNotifier, ProcessNotifier_watch_closure, ProcessNotifier_watch_closure0, ProcessNotifier_watch_closure1, ProcessNotifier_watch_closure2, ProjectManager, ProjectManager_closure, ProjectManager_closure0, ProjectManager_closure1, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, ProjectManager__markDartProject_closure, ProjectManager__initProjectControllers_closure, DartProject, ProjectScanJob, _MarkDartProjectContextCommand, PubManager, PubManager_closure, PubManager_closure0, PubManager_closure1, PubManager_closure2, PubManager_closure3, PubManager_closure4, PubManager_closure5, PubManager_closure6, PubManager_closure7, PubManager__addSdkCmd_closure, PubManager__handleRun_closure, PubManager__handleGlobalRun_closure, PubManager__handleGlobalActivate_closure, PubApp, PubApp_getMostRecentHostedVersion_closure, PubApp_getMostRecentHostedVersion__closure, PubAppGlobal, PubAppGlobal_getInstalledVersion_closure, PubAppGlobal_installIfUpdateAvailable_closure, PubAppGlobal_installIfUpdateAvailable_closure0, PubAppLocal, PubAppLocal_isInstalledSync_closure, PubJob, PubRunJob, PubGlobalActivate, PubGlobalActivate_run_closure, PubGlobalActivate_run_closure0, PubGlobalActivate_run_closure1, PubContextCommand, _showRunPubDialog_closure0, _showRunPubDialog_closure, QuickFixHelper, QuickFixHelper_closure, QuickFixHelper__handleQuickFix_closure, QuickFixHelper__handleQuickFix__closure, QuickFixHelper__handleFixesResult_closure, QuickFixHelper__handleFixesResult__closure, QuickFixHelper__handleFixesResult_closure0, QuickFixHelper__handleFixesResult_closure1, _Change, _applyChange_closure, _applyChange__closure0, _applyChange_closure0, _applyChange__closure, _applyChange_closure1, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RefactoringHelper, RefactoringHelper_closure, RefactoringHelper__handleRenameRefactor_closure, RefactoringHelper__handleRenameRefactor__closure, RefactoringHelper__handleRefactorResult_closure, RefactoringHelper__handleRefactorResult_closure0, RefactoringHelper__handleRefactorResult__closure, RefactoringHelper__handleRefactorResult___closure0, RefactoringHelper__handleRefactorResult__closure0, RefactoringHelper__handleRefactorResult__closure1, RefactoringHelper__handleRefactorResult___closure, RefactoringHelper__handleRefactorResult__closure2, RefactoringHelper__handleRefactorResult__closure3, RefactoringHelper__handleRefactorResult__closure4, RefactoringHelper__apply_closure, RefactoringHelper__apply__closure0, RefactoringHelper__apply_closure0, RefactoringHelper__apply__closure, RefactoringHelper__apply_closure1, FindReferencesHelper, FindReferencesHelper__handleReferencesEditor_closure, FindReferencesHelper__handleReferencesEditor__closure, FindReferencesView, FindReferencesView__showView_closure, FindReferencesView__showView__closure, FindReferencesView__showView__closure0, _MatchParser, RunApplicationManager, RunApplicationManager_closure, RunApplicationManager_closure0, RunApplicationManager_closure1, RunApplicationManager_closure2, RunApplicationManager_closure3, RunApplicationManager__run_closure, RunAppContextCommand, SdkManager, SdkManager_closure, SdkManager_closure0, SdkManager_closure1, SdkManager_tryToAutoConfigure_closure, SdkManager__setSdk_closure, SdkManager__handleShowSdkInfo_closure, SdkManager__handleShowSdkInfo__closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure6, smokeTest_closure7, smokeTest_closure10, smokeTest_closure9, smokeTest_closure8, smokeTest_closure11, smokeTest_closure12, smokeTest_closure13, smokeTest_closure14, smokeTest_closure15, smokeTest_closure16, _TestJob, State, State_onValueChanged_closure, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay_closure0, JobsDialog, StatusBar, Tile, TypeHierarchyHelper, TypeHierarchyHelper__handleHierarchyEditor_closure, TypeHierarchyHelper__handleHierarchyEditor__closure, TypeHierarchyView, TypeHierarchyView__sort_closure, TypeHierarchyView__render_closure, TypeHierarchyView__render_closure0, UsageManager, UsageManager_closure, UsageManager__init_closure, UsageManager__init__closure, UsageManager__init__closure0, Disposable, Disposables, StreamSubscriptions, Edit, ViewResizer, ViewResizer__init_closure0, ViewResizer__init_closure, ViewResizer__init__closure, ViewResizer__init__closure0, ViewResizer__minSize_closure, ViewResizer__targetSize_closure, AtomView, AtomView_closure, AtomView_closure0, AtomView__setupResizer_closure, AtomView__setupResizer_closure0, AtomView__handleCancel_closure, ViewGroupManager, ViewGroup, ListTreeBuilder, ListTreeBuilder__addNode_closure, ListTreeBuilder__addNode_closure0, ListTreeBuilder__addNode_closure1, ListTreeBuilder__addNode_closure2, ListTreeBuilder__addNode_closure3, Node0, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, SkipIterable, EfficientLengthSkipIterable, SkipIterator, EmptyIterator, FixedLengthListMixin, ReversedListIterable, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _awaitOnObject_closure, _awaitOnObject_closure0, _wrapJsFunctionForAsync_closure, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _SyncBroadcastStreamController__sendError_closure, _SyncBroadcastStreamController__sendDone_closure, _AsyncBroadcastStreamController, _AsBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, Future_wait_handleError, Future_wait_closure, Future_forEach_closure, Future_forEach__closure, Future_forEach__closure0, Future_doWhile_closure, TimeoutException, _Completer, _AsyncCompleter, _SyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _Future_timeout_closure, _Future_timeout_closure0, _Future_timeout_closure1, _AsyncCallbackEntry, Stream, Stream_Stream$fromIterable_closure, Stream_Stream$periodic_sendEvent, Stream_Stream$periodic_startPeriodicTimer, Stream_Stream$periodic_startPeriodicTimer_closure, Stream_Stream$periodic_closure0, Stream_Stream$periodic_closure1, Stream_Stream$periodic_closure2, Stream_Stream$periodic__closure, Stream_Stream$periodic_closure, Stream_join_closure, Stream_join_closure1, Stream_join_closure0, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_any_closure, Stream_any__closure, Stream_any__closure0, Stream_any_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_last_closure, Stream_last_closure0, StreamSubscription, EventSink, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _SyncStreamController, _ControllerStream, _ControllerSubscription, _AddStreamState, _AddStreamState_cancel_closure, _StreamControllerAddStreamState, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _GeneratedStreamImpl, _IterablePendingEvents, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _AsBroadcastStream, _BroadcastSubscriptionWrapper, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _TakeStream, _StateStreamSubscription, _EventSinkWrapper, _SinkTransformerStreamSubscription, _BoundSinkStream, Timer, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _HashMap, _HashMap_addAll_closure, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, LinkedHashMap_LinkedHashMap$from_closure, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMap_addAll_closure, _JsonMapKeyIterable, _JsonDecoderSink, ByteConversionSink, ByteConversionSinkBase, _ByteAdapterSink, ChunkedConversionSink, _ConverterStreamEventSink, Codec, Converter, Converter_bind_closure, Encoding, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, _JsonEncoderSink, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, _StringConversionSinkAsStringSinkAdapter, StringConversionSinkBase, StringConversionSinkMixin, _StringSinkConversionSink, _StringAdapterSink, Utf8Codec, Utf8Encoder, _Utf8Encoder, _Utf8EncoderSink, _Utf8Encoder_StringConversionSinkMixin, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _Exception, FormatException, IntegerDivisionByZeroException, Expando, Function, $int, Iterable, Iterator, List, Map, Null0, num, Object, Match, RegExp, StackTrace, _StringStackTrace, Stopwatch, String, StringBuffer, Symbol, Uri__uriEncode_byteToHex, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, BaseElement, Blob, BodyElement, ButtonElement, CharacterData, CloseEvent, CompositionEvent, CssStyleDeclaration, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, DeviceLightEvent, DivElement, Document0, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, Element_Element$html_closure, ScrollAlignment, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, HtmlDocument, HttpRequest, HttpRequest_getString_closure, HttpRequest_request_closure, HttpRequestEventTarget, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, LinkElement, Location0, MapElement, MediaController, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MediaStream, MenuElement, MenuItemElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, MidiOutput, MidiPort, MouseEvent, Navigator, NavigatorUserMediaError, NetworkInformation, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, ProgressEvent, PushEvent, Range0, ScriptElement0, SelectElement, ShadowRoot, SourceElement, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesisEvent, Storage, Storage_addAll_closure, Storage_keys_closure, StyleElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, TextAreaElement, TextEvent, TrackElement, TransitionEvent, UIEvent, WebSocket, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _SpeechRecognitionResultList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, _AttributeMap, _AttributeMap_addAll_closure, _ElementAttributeMap, _MarginCssRect, CssRect, _ElementCssClassSet, Dimension, EventStreamProvider, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, _CustomEventStreamProvider, _Html5NodeValidator, ImmutableListMixin, NodeValidatorBuilder, NodeValidatorBuilder_allowsElement_closure, NodeValidatorBuilder_allowsAttribute_closure, _SimpleNodeValidator, _SimpleNodeValidator_closure, _SimpleNodeValidator_closure0, _TemplatingNodeValidator, _TemplatingNodeValidator_closure, _SvgNodeValidator, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, NodeValidator, _SameOriginUriPolicy, _ValidatingTreeSanitizer, _ValidatingTreeSanitizer_sanitizeTree_walk, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement, StyleElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, _JSRandom, Point0, _RectangleBase, Rectangle, MutableRectangle, DefaultEquality, IterableEquality, Uint8List, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, EventStream, EventStream__createControllerForStream_onListen, EventStream__createControllerForStream_onCancel, Property, Property__createControllerForStream_closure, Property__createControllerForStream_onListen, Property__createControllerForStream_onListen_closure, Property__createControllerForStream_onListen_closure0, Property__createControllerForStream_onCancel, Property_listen_closure, Property_operator$gt_closure, Property_operator$ge_closure, Property_operator$lt_closure, Property_operator$le_closure, Property_operator$add_closure, Property_operator$sub_closure, Property_operator$mul_closure, Reactable, Haikunator_haikunate_closure, _AcceptStructuredClone, _AcceptStructuredClone_walk_closure, _AcceptStructuredCloneDart2Js, convertNativePromiseToDartFuture_closure, convertNativePromiseToDartFuture_closure0, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__iterable_closure, FilteredElementList_removeRange_closure, Logger, Logger_Logger_closure, Level, LogRecord, BlockParser, BlockSyntax, BlockSyntax_isAtBlockEnd_closure, EmptyBlockSyntax, SetextHeaderSyntax, HeaderSyntax, BlockquoteSyntax, CodeBlockSyntax, FencedCodeBlockSyntax, HorizontalRuleSyntax, BlockHtmlSyntax, ListItem, ListSyntax, ListSyntax_parse_endItem, ListSyntax_parse_tryMatch, UnorderedListSyntax, OrderedListSyntax, ParagraphSyntax, Node1, Element1, Text, Document, Link, HtmlRenderer, HtmlRenderer_visitElementBefore_closure, InlineParser, InlineSyntax, TextSyntax, AutolinkSyntax, TagSyntax, LinkSyntax, ImageLinkSyntax, ImageLinkSyntax__createElement_closure, CodeSyntax, TagState, Version, Version__splitParts_closure, Combine, Combine_all_closure, Combine_all__closure, Combine_all___closure0, Combine_all__closure0, Combine_all__closure1, Combine_all__closure2, Combine_all___closure, Combine_all__closure3, Combine_bind_closure, Combine_bind__closure, Debounce, Debounce_bind_closure, Debounce_bind__closure, FlatMap, FlatMap_bind_onListen, FlatMap_bind_onListen_closeSinkIfDone, FlatMap_bind_onListen_onData, FlatMap_bind_onListen_onData_closure, FlatMap_bind_onListen_onData_closure0, FlatMap_bind_onListen_closure, FlatMap_bind_onListen_closure0, FlatMap_bind_onCancel, FlatMapLatest, FlatMapLatest_bind_closure, FlatMapLatest_bind_onListen, FlatMapLatest_bind_onListen_closure, FlatMapLatest_bind_onListen_closure1, FlatMapLatest_bind_onListen_closure0, FlatMapLatest_bind_onListen_closure2, FlatMapLatest_bind_onListen_closure3, FlatMapLatest_bind_onListen_closure4, FlatMapLatest_bind_closure0, MergeAll, MergeAll_bind_closure, Scan, Scan_bind_closure, Scan_bind__onData, TakeUntil, TakeUntil_bind_onListen, TakeUntil_bind_onListen_done, TakeUntil_bind_onListen_closure, TakeUntil_bind_onListen_closure0, TakeUntil_bind_onListen_closure1, TakeUntil_bind_closure, _bindStream_closure0, _bindStream_closure1, _bindStream_closure2, _bindStream_closure, _bindStream__closure, _bindStream__closure0, _bindStream__closure1, Analytics, AnalyticsMock, AnalyticsHtml, postEncode_closure, ThrottlingBucket, AnalyticsImpl, AnalyticsImpl__sendPayload_closure, AnalyticsImpl__recordFuture_closure, PersistentProperties, PostHandler, HtmlPostHandler, HtmlPostHandler_sendPost_closure, HtmlPersistentProperties, _createObject_closure, VmService, VmService_dispose_closure, RPCError, Log, CodeKind, ErrorKind, EventKind, InstanceKind, SentinelKind, ExceptionPauseMode, StepOption, BoundField, BoundVariable, Breakpoint, ClassRef, Class, ClassList, CodeRef, Code, ContextRef, Context, ContextElement, ErrorRef, Error0, Event0, FieldRef, Field, Flag, FlagList, Frame, FuncRef, Func, InstanceRef, Instance, IsolateRef, Isolate, LibraryRef, Library, LibraryDependency, MapAssociation, Message, NullRef, Null, ObjRef, Obj, Response, Sentinel, ScriptRef, Script, SourceLocation, Stack, Success, TypeArgumentsRef, TypeArguments, UnresolvedSourceLocation, Version0, VMRef, VM];
+    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JavaScriptFunction, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, _Serializer, _Deserializer, ConstantMapView, ConstantMap, ConstantStringMap, _ConstantMapKeyIterable, GeneralConstantMap, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, ExceptionAndStackTrace, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, CastErrorImplementation, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, JsLinkedHashMap_addAll_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, _StringAllMatchesIterable, _StringAllMatchesIterator, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, ViewRegistry, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, Config_onDidChange_closure, Config_onDidChange_closure0, ContextMenuManager, ContextMenuManager_add_closure, ContextMenuItem, ContextMenuItem_toJs_closure, _SeparatorMenuItem, NotificationManager, NotificationManager__options_closure, Notification, NotificationButton, NotificationButton_toProxy_closure, NotificationHelper, NotificationHelper_appendText_closure, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextEditor_onDidChangeCursorPosition_closure, TextBuffer, Marker, Decoration, Range, Point, AtomEvent, Shell, ScopeDescriptor, BufferedProcess, BufferedProcess_create_closure, Stats, OrganizeFileManager, OrganizeFileManager__addEditorCommand_closure, OrganizeFileManager__handleSortMembers_closure, OrganizeFileManager__handleOrganizeDirectives_closure, OrganizeFileManager__handleOrganizeDirectives_closure0, AnalysisOptionsManager, AnalysisServer, AnalysisServer_closure, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__syncRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__focusedEditorChanged_closure, AnalysisServer_filterSearchResults_closure, AnalysisServer_filterSearchResults_closure0, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, AnalysisServer__initNewServer_closure5, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_closure, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_setup_closure0, _AnalysisServerWrapper_setup_closure1, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart__closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, RenameRefactoringOptions, AnalysisRequestJob, AnalysisRequestJob_run_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_showDialog_closure, AnalysisServerDialog_showDialog_closure0, AnalysisServerDialog_showDialog_closure1, Server, Domain, ServerDomain, ServerStatus, VersionResult, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, AnalysisOutline, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, SearchResults, SearchResults_parse_closure, FindElementReferencesResult, TypeHierarchyResult, TypeHierarchyResult_parse_closure, EditDomain, FormatResult, FormatResult_parse_closure, AvailableRefactoringsResult, FixesResult, FixesResult_parse_closure, RefactoringResult, RefactoringResult_parse_closure, RefactoringResult_parse_closure0, RefactoringResult_parse_closure1, SortMembersResult, OrganizeDirectivesResult, ExecutionDomain, ExecutionLaunchData, CreateContextResult, MapUriResult, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisOptions, AnalysisStatus, ChangeContentOverlay, CompletionSuggestion, Element0, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Outline, Outline_parse_closure, Position, PubStatus, RefactoringFeedback, RefactoringOptions, RefactoringProblem, RemoveContentOverlay, RequestError, SearchResult, SearchResult_parse_closure, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, TypeHierarchyItem, promptUser_closure, promptUser_closure0, promptUser_closure1, promptUser_closure2, getSystemDescription_closure, getSystemDescription_closure0, PermissiveNodeValidator, TrustedHtmlTreeSanitizer, loadPackageJson_closure, getPackageVersion_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions_closure0, AutocompleteProvider__getSuggestions__closure, AutocompleteOptions, Suggestion, _AutocompleteOverride, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions_closure0, DartAutocompleteProvider_getSuggestions__closure, DartAutocompleteProvider_getSuggestions__closure0, DartAutocompleteProvider_getSuggestions__closure1, DartAutocompleteProvider__handleCompletionResults_closure2, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__handleCompletionResults_closure0, DartAutocompleteProvider__handleCompletionResults_closure1, DartAutocompleteProvider__handleCompletionResults_closure3, DartAutocompleteProvider__handleCompletionResults__closure, DartAutocompleteProvider__handleCompletionResults_closure4, BreakpointManager, BreakpointManager_closure, BreakpointManager_getBreakpontsFor_closure, BreakpointManager__processEditor_closure, BreakpointManager__findSimilar_closure, BreakpointManager__findSimilar_closure0, AtomBreakpoint, _EditorBreakpoint, _EditorBreakpoint_closure, BufferObserverManager, BufferObserverManager_dispose_closure, BufferObserver, BufferFormatter, BufferFormatter_closure, BufferFormatter__closure, BufferFormatter___closure, BufferFormatter_closure0, BufferUpdater, BufferUpdater__logError_closure, BufferUpdater_changedOverlay_closure, ChangelogManager, ChangelogManager_closure, ChangelogManager_closure0, ChangelogManager__handleReleaseNotes_closure, ChangelogManager__handleReleaseNotes_closure0, ConsoleController, ConsoleController_closure, ConsoleView, _LaunchController, _LaunchController_closure, _LaunchController_closure0, _LaunchController__updateButtons_closure, _LaunchController__updateButtons_closure0, _LaunchController__updateButtons_closure1, ConsoleStatusElement, DartdocHelper, DartdocHelper_closure, DartdocHelper__handleDartdoc_closure, DartdocHelper__handleDartdoc__closure, DartdocHelper__render_writeTitle, DartdocHelper__render_closure, DartdocControl, DartdocControl_closure, DartdocControl_closure0, DebugManager, DebugManager_closure, DebugManager__closure0, DebugManager_closure0, DebugManager__closure, DebugManager_closure1, DebugManager_closure2, DebugManager_closure3, DebugManager_closure4, DebugManager_dispose_closure, DebugConnection, UriResolver, UriResolver_closure, UriResolver_closure0, UriResolver_resolveToPath_closure, UriResolver_resolveToPath_closure0, UriResolver_dispose_closure, DebugUIController, DebugUIController_updateUi, DebugUIController__show_closure, DebugUIController_dispose_closure, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__activate__closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__getNavigationInfoFor_closure, NavigationHelper__getNavigationInfoFor_closure0, NavigationHelper__processNavInfo_closure, _NavigationPosition, Dependencies, _handleEnterKey_closure, _handleEnterKey_closure0, _handleEnterKey_closure1, _handleEnterKey_closure2, _handleEnterKey_closure3, _handleEnterKey_closure4, _handleEnterKey_closure5, applyEdits_closure, applyEdits__closure, selectEditGroup_closure, _sortEdits_closure, EditorManager, EditorManager_jumpToLocation_closure, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_onClick_closure, CoreElement_click_closure, ProgressElement, CloseButton, TitledModelDialog, TitledModelDialog_closure, TitledModelDialog_closure0, main_closure, ErrorRepository, ErrorsController, ErrorsController_closure, ErrorsController__handleErrorsChanged_closure, ErrorsView, ErrorsView__cvtError_closure, ErrorsView__cvtError__closure, ErrorsView__cvtError_closure0, ErrorsView__cvtError_closure1, ErrorsView__cvtError_closure2, ErrorsView__jumpTo_closure, ErrorsStatusElement, CreateProjectManager, CreateProjectManager__createProject_closure, CreateProjectManager__createProject_closure0, CreateProjectManager__createProject_closure1, CreateProjectManager__createProject__closure, FlutterLaunchType, FlutterLaunchType_performLaunch_closure, _LaunchInstance, _LaunchInstance_launch_closure, _LaunchInstance_launch_closure0, _LaunchInstance_launch_closure1, _LaunchInstance_launch_closure2, _LaunchInstance_launch_closure3, _LaunchInstance_launch_closure4, _LaunchInstance_launch_closure5, _LaunchInstance_launch_closure6, ToolbarContribution, Toolbar, ToolbarTile, FormattingHelper, FormattingHelper_closure, FormattingHelper_closure0, FormattingHelper_formatFile_closure, FormattingHelper_formatEditor_closure, FormattingHelper_formatEditor_closure0, Job, Status, JobStatus, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager_runningJobs_closure, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, EventListener, EventListener_closure, LaunchManager, LaunchManager_addLaunch_closure, LaunchManager_addLaunch_closure0, LaunchManager__readConfigs_closure, LaunchManager__readConfigs_closure0, LaunchManager_getConfigurationsForPath_closure, LaunchManager_getConfigurationsForProject_closure, LaunchType, LaunchConfiguration, Launch, TextFragment, CliLaunchType, CliLaunchType_performLaunch_closure, CliLaunchType_performLaunch_closure0, CliLaunchType_performLaunch__closure, CliLaunchType_performLaunch_closure1, CliLaunchType_performLaunch_closure2, ShellLaunchType, ShellLaunchType_performLaunch_closure, ShellLaunchType_performLaunch_closure0, ShellLaunchType_performLaunch_closure1, ShellLaunchType_performLaunch_closure2, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintMessage, Rn, Pt, DartLinterConsumer, LinterConsumer_Disposables, DartLinterConsumer_closure, DartLinterConsumer_closure0, DartLinterConsumer__regenErrors_closure, DartLinterConsumer__filter_closure, DartLinterConsumer__emit_closure, DartLinterProvider, ObservatoryDebugger_connectDebugger_closure, ObservatoryDebugger_connectDebugger__closure, ObservatoryDebugger_connectDebugger__closure0, ObservatoryDebugger_connectDebugger_closure0, ObservatoryDebugger_connectDebugger_closure1, _ObservatoryDebugConnection, _ObservatoryDebugConnection_closure, _ObservatoryDebugConnection__init_closure, _ObservatoryDebugConnection__init_closure0, _ObservatoryDebugConnection__init_closure1, _ObservatoryDebugConnection__handleIsolateEvent_closure, _ObservatoryDebugConnection__handleIsolateEvent__closure1, _ObservatoryDebugConnection__handleIsolateEvent__closure2, _ObservatoryDebugConnection__handleIsolateEvent_closure0, _ObservatoryDebugConnection__handleIsolateEvent_closure1, _ObservatoryDebugConnection__handleIsolateEvent_closure2, _ObservatoryDebugConnection__handleIsolateEvent__closure, _ObservatoryDebugConnection__handleIsolateEvent__closure0, _ObservatoryDebugConnection__handleIsolateEvent_closure3, _ObservatoryDebugConnection__handleDebugEvent_closure, _ObservatoryDebugConnection__handleDebugEvent__closure, _ObservatoryDebugConnection__handleDebugEvent___closure, _ObservatoryDebugConnection__handleDebugEvent__closure0, _ObservatoryDebugConnection__resolveScript_closure, ObservatoryLog, OutlineController, OutlineController_closure, OutlineController_closure0, OutlineController_closure1, OutlineView, OutlineView_closure, OutlineView__setupResizer_closure, OutlineView__setupResizer_closure0, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage_closure1, AtomDartPackage_closure2, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage_packageActivated_closure2, AtomDartPackage_packageActivated__closure, AtomDartPackage_packageActivated__closure0, AtomDartPackage_packageActivated_closure3, AtomDartPackage__validateSettings_closure, AtomDartPackage__validateSettings_closure0, AtomDartPackage__validateSettings_closure1, AtomDartPackage__showWelcomeToast_closure, AtomDartPackage__handleSendFeedback_closure, AtomDartPackage__registerLinter_closure, AtomDartPackage__registerLinter_closure0, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure2, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure, ProcessRunner_execStreaming_closure0, ProcessRunner_kill_closure, ProcessResult, ProcessNotifier, ProcessNotifier_watch_closure, ProcessNotifier_watch_closure0, ProcessNotifier_watch_closure1, ProcessNotifier_watch_closure2, ProjectManager, ProjectManager_closure, ProjectManager_closure0, ProjectManager_closure1, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, ProjectManager__markDartProject_closure, ProjectManager__initProjectControllers_closure, DartProject, ProjectScanJob, _MarkDartProjectContextCommand, PubManager, PubManager_closure, PubManager_closure0, PubManager_closure1, PubManager_closure2, PubManager_closure3, PubManager_closure4, PubManager_closure5, PubManager_closure6, PubManager_closure7, PubManager__addSdkCmd_closure, PubManager__handleRun_closure, PubManager__handleGlobalRun_closure, PubManager__handleGlobalActivate_closure, PubApp, PubApp_getMostRecentHostedVersion_closure, PubApp_getMostRecentHostedVersion__closure, PubAppGlobal, PubAppGlobal_getInstalledVersion_closure, PubAppGlobal_installIfUpdateAvailable_closure, PubAppGlobal_installIfUpdateAvailable_closure0, PubAppLocal, PubAppLocal_isInstalledSync_closure, PubJob, PubRunJob, PubGlobalActivate, PubGlobalActivate_run_closure, PubGlobalActivate_run_closure0, PubGlobalActivate_run_closure1, PubContextCommand, _showRunPubDialog_closure0, _showRunPubDialog_closure, QuickFixHelper, QuickFixHelper_closure, QuickFixHelper__handleQuickFix_closure, QuickFixHelper__handleQuickFix__closure, QuickFixHelper__handleFixesResult_closure, QuickFixHelper__handleFixesResult__closure, QuickFixHelper__handleFixesResult_closure0, QuickFixHelper__handleFixesResult_closure1, _Change, _applyChange_closure, _applyChange__closure0, _applyChange_closure0, _applyChange__closure, _applyChange_closure1, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RefactoringHelper, RefactoringHelper_closure, RefactoringHelper__handleRenameRefactor_closure, RefactoringHelper__handleRenameRefactor__closure, RefactoringHelper__handleRefactorResult_closure, RefactoringHelper__handleRefactorResult_closure0, RefactoringHelper__handleRefactorResult__closure, RefactoringHelper__handleRefactorResult___closure0, RefactoringHelper__handleRefactorResult__closure0, RefactoringHelper__handleRefactorResult__closure1, RefactoringHelper__handleRefactorResult___closure, RefactoringHelper__handleRefactorResult__closure2, RefactoringHelper__handleRefactorResult__closure3, RefactoringHelper__handleRefactorResult__closure4, RefactoringHelper__apply_closure, RefactoringHelper__apply__closure0, RefactoringHelper__apply_closure0, RefactoringHelper__apply__closure, RefactoringHelper__apply_closure1, FindReferencesHelper, FindReferencesHelper__handleReferencesEditor_closure, FindReferencesHelper__handleReferencesEditor__closure, FindReferencesView, FindReferencesView__showView_closure, FindReferencesView__showView__closure, FindReferencesView__showView__closure0, _MatchParser, RunApplicationManager, RunApplicationManager_closure, RunApplicationManager_closure0, RunApplicationManager_closure1, RunApplicationManager_closure2, RunApplicationManager_closure3, RunApplicationManager__run_closure, RunAppContextCommand, SdkManager, SdkManager_closure, SdkManager_closure0, SdkManager_closure1, SdkManager_tryToAutoConfigure_closure, SdkManager__setSdk_closure, SdkManager__handleShowSdkInfo_closure, SdkManager__handleShowSdkInfo__closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob, smokeTest_closure, smokeTest_closure0, smokeTest_closure1, smokeTest_closure2, smokeTest_closure3, smokeTest_closure4, smokeTest_closure5, smokeTest_closure6, smokeTest_closure7, smokeTest_closure10, smokeTest_closure9, smokeTest_closure8, smokeTest_closure11, smokeTest_closure12, smokeTest_closure13, smokeTest_closure14, smokeTest_closure15, smokeTest_closure16, _TestJob, State, State_onValueChanged_closure, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay_closure0, JobsDialog, StatusBar, Tile, TypeHierarchyHelper, TypeHierarchyHelper__handleHierarchyEditor_closure, TypeHierarchyHelper__handleHierarchyEditor__closure, TypeHierarchyView, TypeHierarchyView__sort_closure, TypeHierarchyView__render_closure, TypeHierarchyView__render_closure0, UsageManager, UsageManager_closure, UsageManager__init_closure, UsageManager__init__closure, UsageManager__init__closure0, Disposable, Disposables, StreamSubscriptions, Edit, Property, ViewResizer, ViewResizer__init_closure0, ViewResizer__init_closure, ViewResizer__init__closure, ViewResizer__init__closure0, ViewResizer__minSize_closure, ViewResizer__targetSize_closure, AtomView, AtomView_closure, AtomView_closure0, AtomView__setupResizer_closure, AtomView__setupResizer_closure0, AtomView__handleCancel_closure, ViewGroupManager, ViewGroup, ListTreeBuilder, ListTreeBuilder__addNode_closure, ListTreeBuilder__addNode_closure0, ListTreeBuilder__addNode_closure1, ListTreeBuilder__addNode_closure2, ListTreeBuilder__addNode_closure3, Node0, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, SkipIterable, EfficientLengthSkipIterable, SkipIterator, EmptyIterator, FixedLengthListMixin, ReversedListIterable, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _awaitOnObject_closure, _awaitOnObject_closure0, _wrapJsFunctionForAsync_closure, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _SyncBroadcastStreamController__sendError_closure, _SyncBroadcastStreamController__sendDone_closure, _AsyncBroadcastStreamController, _AsBroadcastStreamController, Future, Future_Future_closure, Future_Future$microtask_closure, Future_Future$delayed_closure, Future_wait_handleError, Future_wait_closure, Future_forEach_closure, Future_forEach__closure, Future_forEach__closure0, Future_doWhile_closure, TimeoutException, _Completer, _AsyncCompleter, _SyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _Future_timeout_closure, _Future_timeout_closure0, _Future_timeout_closure1, _AsyncCallbackEntry, Stream, Stream_Stream$fromIterable_closure, Stream_Stream$periodic_sendEvent, Stream_Stream$periodic_startPeriodicTimer, Stream_Stream$periodic_startPeriodicTimer_closure, Stream_Stream$periodic_closure0, Stream_Stream$periodic_closure1, Stream_Stream$periodic_closure2, Stream_Stream$periodic__closure, Stream_Stream$periodic_closure, Stream_join_closure, Stream_join_closure1, Stream_join_closure0, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_any_closure, Stream_any__closure, Stream_any__closure0, Stream_any_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_last_closure, Stream_last_closure0, StreamSubscription, EventSink, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _SyncStreamController, _ControllerStream, _ControllerSubscription, _AddStreamState, _AddStreamState_cancel_closure, _StreamControllerAddStreamState, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _GeneratedStreamImpl, _IterablePendingEvents, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _AsBroadcastStream, _BroadcastSubscriptionWrapper, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _TakeStream, _StateStreamSubscription, _EventSinkWrapper, _SinkTransformerStreamSubscription, _BoundSinkStream, Timer, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _HashMap, _HashMap_addAll_closure, _IdentityHashMap, HashMapKeyIterable, HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, LinkedHashMap_LinkedHashMap$from_closure, ListBase, Object_ListMixin, ListMixin, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMap_addAll_closure, _JsonMapKeyIterable, _JsonDecoderSink, ByteConversionSink, ByteConversionSinkBase, _ByteAdapterSink, ChunkedConversionSink, _ConverterStreamEventSink, Codec, Converter, Converter_bind_closure, Encoding, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, _JsonEncoderSink, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, _StringConversionSinkAsStringSinkAdapter, StringConversionSinkBase, StringConversionSinkMixin, _StringSinkConversionSink, _StringAdapterSink, Utf8Codec, Utf8Encoder, _Utf8Encoder, _Utf8EncoderSink, _Utf8Encoder_StringConversionSinkMixin, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _Exception, FormatException, IntegerDivisionByZeroException, Expando, Function, $int, Iterable, Iterator, List, Map, Null0, num, Object, Match, RegExp, StackTrace, _StringStackTrace, Stopwatch, String, StringBuffer, Symbol, Uri__uriEncode_byteToHex, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, BaseElement, Blob, BodyElement, ButtonElement, CharacterData, CloseEvent, CompositionEvent, CssStyleDeclaration, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, DeviceLightEvent, DivElement, Document0, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, Element_Element$html_closure, ScrollAlignment, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, HtmlDocument, HttpRequest, HttpRequest_getString_closure, HttpRequest_request_closure, HttpRequestEventTarget, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, LinkElement, Location0, MapElement, MediaController, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MediaStream, MenuElement, MenuItemElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, MidiOutput, MidiPort, MouseEvent, Navigator, NavigatorUserMediaError, NetworkInformation, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, ProgressEvent, PushEvent, Range0, ScriptElement0, SelectElement, ShadowRoot, SourceElement, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesisEvent, Storage, Storage_addAll_closure, Storage_keys_closure, StyleElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, TextAreaElement, TextEvent, TrackElement, TransitionEvent, UIEvent, WebSocket, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _SpeechRecognitionResultList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, _AttributeMap, _AttributeMap_addAll_closure, _ElementAttributeMap, _MarginCssRect, CssRect, _ElementCssClassSet, Dimension, EventStreamProvider, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, _CustomEventStreamProvider, _Html5NodeValidator, ImmutableListMixin, NodeValidatorBuilder, NodeValidatorBuilder_allowsElement_closure, NodeValidatorBuilder_allowsAttribute_closure, _SimpleNodeValidator, _SimpleNodeValidator_closure, _SimpleNodeValidator_closure0, _TemplatingNodeValidator, _TemplatingNodeValidator_closure, _SvgNodeValidator, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, NodeValidator, _SameOriginUriPolicy, _ValidatingTreeSanitizer, _ValidatingTreeSanitizer_sanitizeTree_walk, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement, StyleElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, _JSRandom, Point0, _RectangleBase, Rectangle, MutableRectangle, DefaultEquality, IterableEquality, Uint8List, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, EventStream, EventStream__createControllerForStream_onListen, EventStream__createControllerForStream_onCancel, Property0, Property__createControllerForStream_closure, Property__createControllerForStream_onListen, Property__createControllerForStream_onListen_closure, Property__createControllerForStream_onListen_closure0, Property__createControllerForStream_onCancel, Property_listen_closure, Property_operator$gt_closure, Property_operator$ge_closure, Property_operator$lt_closure, Property_operator$le_closure, Property_operator$add_closure, Property_operator$sub_closure, Property_operator$mul_closure, Reactable, Haikunator_haikunate_closure, _AcceptStructuredClone, _AcceptStructuredClone_walk_closure, _AcceptStructuredCloneDart2Js, convertNativePromiseToDartFuture_closure, convertNativePromiseToDartFuture_closure0, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__iterable_closure, FilteredElementList_removeRange_closure, Logger, Logger_Logger_closure, Level, LogRecord, BlockParser, BlockSyntax, BlockSyntax_isAtBlockEnd_closure, EmptyBlockSyntax, SetextHeaderSyntax, HeaderSyntax, BlockquoteSyntax, CodeBlockSyntax, FencedCodeBlockSyntax, HorizontalRuleSyntax, BlockHtmlSyntax, ListItem, ListSyntax, ListSyntax_parse_endItem, ListSyntax_parse_tryMatch, UnorderedListSyntax, OrderedListSyntax, ParagraphSyntax, Node1, Element1, Text, Document, Link, HtmlRenderer, HtmlRenderer_visitElementBefore_closure, InlineParser, InlineSyntax, TextSyntax, AutolinkSyntax, TagSyntax, LinkSyntax, ImageLinkSyntax, ImageLinkSyntax__createElement_closure, CodeSyntax, TagState, Version, Version__splitParts_closure, Combine, Combine_all_closure, Combine_all__closure, Combine_all___closure0, Combine_all__closure0, Combine_all__closure1, Combine_all__closure2, Combine_all___closure, Combine_all__closure3, Combine_bind_closure, Combine_bind__closure, Debounce, Debounce_bind_closure, Debounce_bind__closure, FlatMap, FlatMap_bind_onListen, FlatMap_bind_onListen_closeSinkIfDone, FlatMap_bind_onListen_onData, FlatMap_bind_onListen_onData_closure, FlatMap_bind_onListen_onData_closure0, FlatMap_bind_onListen_closure, FlatMap_bind_onListen_closure0, FlatMap_bind_onCancel, FlatMapLatest, FlatMapLatest_bind_closure, FlatMapLatest_bind_onListen, FlatMapLatest_bind_onListen_closure, FlatMapLatest_bind_onListen_closure1, FlatMapLatest_bind_onListen_closure0, FlatMapLatest_bind_onListen_closure2, FlatMapLatest_bind_onListen_closure3, FlatMapLatest_bind_onListen_closure4, FlatMapLatest_bind_closure0, MergeAll, MergeAll_bind_closure, Scan, Scan_bind_closure, Scan_bind__onData, TakeUntil, TakeUntil_bind_onListen, TakeUntil_bind_onListen_done, TakeUntil_bind_onListen_closure, TakeUntil_bind_onListen_closure0, TakeUntil_bind_onListen_closure1, TakeUntil_bind_closure, _bindStream_closure0, _bindStream_closure1, _bindStream_closure2, _bindStream_closure, _bindStream__closure, _bindStream__closure0, _bindStream__closure1, Analytics, AnalyticsMock, AnalyticsHtml, postEncode_closure, ThrottlingBucket, AnalyticsImpl, AnalyticsImpl__sendPayload_closure, AnalyticsImpl__recordFuture_closure, PersistentProperties, PostHandler, HtmlPostHandler, HtmlPostHandler_sendPost_closure, HtmlPersistentProperties, _createObject_closure, VmService, VmService_dispose_closure, RPCError, Log, CodeKind, ErrorKind, EventKind, InstanceKind, SentinelKind, ExceptionPauseMode, StepOption, BoundField, BoundVariable, Breakpoint, ClassRef, Class, ClassList, CodeRef, Code, ContextRef, Context, ContextElement, ErrorRef, Error0, Event0, FieldRef, Field, Flag, FlagList, Frame, FuncRef, Func, InstanceRef, Instance, IsolateRef, Isolate, LibraryRef, Library, LibraryDependency, MapAssociation, Message, NullRef, Null, ObjRef, Obj, Response, Sentinel, ScriptRef, Script, SourceLocation, Stack, Success, TypeArgumentsRef, TypeArguments, UnresolvedSourceLocation, Version0, VMRef, VM];
   };
   function setupProgram(programData, typesOffset) {
     "use strict";
@@ -23074,7 +23086,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         var t1, t2, t3;
         t1 = this._serverActiveController;
         t2 = H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
-        t3 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t3 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t3._hasCurrentValue = true;
         t3._currentValue = false;
         t3._frappe$_controller = t3._createControllerForStream$1(t2);
@@ -23147,7 +23159,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 0, 0, null, "call"]
     },
     AnalysisServer_filterSearchResults_closure0: {
-      "^": "Closure:56;_analysis_server$_box_0,_captured_id_1,_captured_controller_2",
+      "^": "Closure:57;_analysis_server$_box_0,_captured_id_1,_captured_controller_2",
       call$1: [function(result) {
         var t1, t2, r, t3;
         t1 = J.getInterceptor$x(result);
@@ -25246,7 +25258,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (selectionOffset != null)
           suggestion.selectionOffset = selectionOffset;
         return suggestion;
-      }, null, null, 2, 0, null, 74, "call"]
+      }, null, null, 2, 0, null, 75, "call"]
     },
     DartAutocompleteProvider__handleCompletionResults__closure: {
       "^": "Closure:0;_autocomplete_impl$_box_0",
@@ -25555,7 +25567,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         if (didFormat === true)
           this._captured_editor_3.save$0();
         P.Timer_Timer(P.Duration$(0, 0, 0, 10, 0, 0), new K.BufferFormatter___closure(this._buffer_observer$_captured_this_2));
-      }, null, null, 2, 0, null, 73, "call"]
+      }, null, null, 2, 0, null, 74, "call"]
     },
     BufferFormatter___closure: {
       "^": "Closure:1;_captured_this_4",
@@ -25811,7 +25823,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         J.toggle$2$x(J.get$classes$x(t1.container.element), "launch-terminated", true);
         if (!J.endsWith$1$s(t1._lastText, "\n"))
           t1._emitText$1("\n");
-        t1._emitText$2$highlight("\u2022 exited with code " + H.S(t1.launch.get$exitCode()) + " \u2022", true);
+        t1._emitText$2$highlight("\u2022 exited with code " + H.S(t1.launch.get$exitCode()._utils$_value) + " \u2022", true);
       }, "call$1", "get$_console$_launchTerminated", 2, 0, 13, 19],
       _console$_launchActivated$1: [function(launch) {
         var t1, t2, t3;
@@ -25965,7 +25977,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       call$0: function() {
         var t1, t2;
         t1 = $.$get$shell();
-        t2 = "http://localhost:" + H.S(this._console$_captured_this_0.launch.get$servicePort()) + "/";
+        t2 = "http://localhost:" + H.S(this._console$_captured_this_0.launch.get$servicePort()._utils$_value) + "/";
         t1.toString;
         $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", [t2]);
       }
@@ -27262,7 +27274,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       E.registerPackage(R.AtomDartPackage$());
     }, "call$0", "entry__main$closure", 0, 0, 1],
     main_closure: {
-      "^": "Closure:54;",
+      "^": "Closure:55;",
       call$1: [function(r) {
         var tag, t1;
         tag = J.toLowerCase$0$s(J.get$name$x(r.get$level())) + " \u2022 " + r.get$loggerName() + ":";
@@ -27783,7 +27795,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return t1;
         }
         launch = t1._launch;
-        if (launch._exitCode != null) {
+        if (launch.exitCode._utils$_value != null) {
           t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
           t1._asyncComplete$1(null);
         } else
@@ -27794,7 +27806,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     FlutterLaunchType_performLaunch_closure: {
       "^": "Closure:0;_launch_flutter$_captured_this_0,_captured_configuration_1,_captured_project_2",
       call$1: [function(_) {
-        var t1, t2, t3, t4, t5, t6, t7;
+        var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10;
         t1 = this._launch_flutter$_captured_this_0;
         t2 = this._captured_project_2;
         t3 = new L._LaunchInstance(t2, null, null);
@@ -27803,16 +27815,24 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t6 = t3.get$_kill();
         t7 = $.Launch__id + 1;
         $.Launch__id = t7;
-        t6 = new X.Launch(t1, this._captured_configuration_1, t5, t4, t7, t6, null, P.StreamController_StreamController$broadcast(null, null, false, null), null, null);
-        t3._launch = t6;
-        t6.servicePort = 8181;
+        t8 = P.StreamController_StreamController$broadcast(null, null, false, null);
+        t9 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+        t9._utils$_value = null;
+        t10 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+        t10._utils$_value = null;
+        t3._launch = new X.Launch(t1, this._captured_configuration_1, t5, t4, t7, t6, t8, t9, t10, null);
+        t10._utils$_value = 8181;
+        t4 = t10._utils$_controller;
+        if (!t4.get$_mayAddEvent())
+          H.throwExpression(t4._addEventError$0());
+        t4._sendData$1(8181);
         Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).addLaunch$1(t3._launch);
-        t6 = t3._launch;
+        t4 = t3._launch;
         t2 = "[" + H.S(J.get$path$x(t2)) + "] pub run flutter start\n";
-        t6 = t6._stdio;
-        if (!t6.get$_mayAddEvent())
-          H.throwExpression(t6._addEventError$0());
-        t6._sendData$1(new X.TextFragment(t2, false, false, true));
+        t4 = t4._stdio;
+        if (!t4.get$_mayAddEvent())
+          H.throwExpression(t4._addEventError$0());
+        t4._sendData$1(new X.TextFragment(t2, false, false, true));
         t1._lastLaunch = t3;
         return t3.launch$0();
       }, null, null, 2, 0, null, 1, "call"]
@@ -28844,19 +28864,16 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
     },
     Launch: {
-      "^": "Object;launchType<,launchConfiguration,title>,manager<,id>,killHandler,servicePort<,_stdio,_exitCode,_connection",
-      get$exitCode: function() {
-        return this._exitCode;
-      },
+      "^": "Object;launchType<,launchConfiguration,title>,manager<,id>,killHandler,_stdio,exitCode<,servicePort<,_debugConnection",
       get$errored: function() {
-        var t1 = this._exitCode;
+        var t1 = this.exitCode._utils$_value;
         return t1 != null && !J.$eq$(t1, 0);
       },
       get$isRunning: function() {
-        return this._exitCode == null;
+        return this.exitCode._utils$_value == null;
       },
       get$isTerminated: function() {
-        return this._exitCode != null;
+        return this.exitCode._utils$_value != null;
       },
       get$isActive: function() {
         return J.$eq$(this.manager.get$activeLaunch(), this);
@@ -28866,7 +28883,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
       },
       canDebug$0: function() {
-        return this._exitCode == null && this.servicePort != null;
+        return this.exitCode._utils$_value == null && this.servicePort._utils$_value != null;
       },
       canKill$0: function() {
         return this.killHandler != null;
@@ -28888,23 +28905,28 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
           return t1;
         }
       },
-      launchTerminated$1: function(exitCode) {
-        var t1, t2, t3;
-        if (this._exitCode != null)
+      launchTerminated$1: function(code) {
+        var t1, t2, t3, t4;
+        t1 = this.exitCode;
+        if (t1._utils$_value != null)
           return;
-        this._exitCode = exitCode;
-        if (this._connection != null)
-          Q.Dependencies_instance().getDependency$1(C.Type_DebugManager_QDz).removeConnection$1(this._connection);
-        t1 = this._exitCode;
-        t1 = t1 != null && !J.$eq$(t1, 0);
-        t2 = this.launchType;
-        t3 = this.title;
-        if (t1) {
-          t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addError", t2.type + ": " + H.S(t3) + " exited with error code " + H.S(exitCode) + ".", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+        t1._utils$_value = code;
+        t2 = t1._utils$_controller;
+        if (!t2.get$_mayAddEvent())
+          H.throwExpression(t2._addEventError$0());
+        t2._sendData$1(code);
+        if (this._debugConnection != null)
+          Q.Dependencies_instance().getDependency$1(C.Type_DebugManager_QDz).removeConnection$1(this._debugConnection);
+        t2 = t1._utils$_value;
+        t2 = t2 != null && !J.$eq$(t2, 0);
+        t3 = this.launchType;
+        t4 = this.title;
+        if (t2) {
+          t2 = $.$get$atom()._notifications;
+          t2.invoke$3("addError", t3.type + ": " + H.S(t4) + " exited with error code " + H.S(t1._utils$_value) + ".", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         } else {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addSuccess", t2.type + ": " + H.S(t3) + " finished.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+          t1.invoke$3("addSuccess", t3.type + ": " + H.S(t4) + " finished.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         }
         t1 = this.manager.get$_launchTerminated();
         if (!t1.get$_mayAddEvent())
@@ -28912,7 +28934,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1._sendData$1(this);
       },
       dispose$0: [function() {
-        if (this.killHandler != null && this._exitCode != null)
+        if (this.killHandler != null && this.exitCode._utils$_value != null)
           this.kill$0();
       }, "call$0", "get$dispose", 0, 0, 2],
       toString$0: function(_) {
@@ -28950,7 +28972,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         }
       },
       performLaunch$2: function(manager, configuration) {
-        var sdk, withDebug, t1, path, cwd, args, project, paths, _args, desc, t2, t3, t4, t5, runner, t6, launch;
+        var sdk, withDebug, t1, path, cwd, args, project, paths, _args, desc, t2, t3, t4, t5, runner, t6, t7, t8, launch;
         sdk = Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$sdk();
         if (sdk == null)
           P.Future_Future$error("No Dart SDK configured", null, null);
@@ -28995,12 +29017,21 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t2 = $.Launch__id + 1;
         $.Launch__id = t2;
         t6 = P.StreamController_StreamController$broadcast(null, null, false, null);
-        launch = new X.Launch(this, configuration, path, manager, t2, new Z.CliLaunchType_performLaunch_closure(runner), null, t6, null, null);
-        if (t1)
-          launch.servicePort = 16161;
+        t7 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+        t7._utils$_value = null;
+        t8 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+        t8._utils$_value = null;
+        launch = new X.Launch(this, configuration, path, manager, t2, new Z.CliLaunchType_performLaunch_closure(runner), t6, t7, t8, null);
+        if (t1) {
+          t8._utils$_value = 16161;
+          t1 = t8._utils$_controller;
+          if (!t1.get$_mayAddEvent())
+            H.throwExpression(t1._addEventError$0());
+          t1._sendData$1(16161);
+        }
         manager.addLaunch$1(launch);
         runner.execStreaming$0();
-        H.setRuntimeTypeInfo(new P._ControllerStream(t4), [H.getTypeArgumentByIndex(t4, 0)]).listen$1(new Z.CliLaunchType_performLaunch_closure0(this, launch));
+        H.setRuntimeTypeInfo(new P._ControllerStream(t4), [H.getTypeArgumentByIndex(t4, 0)]).listen$1(new Z.CliLaunchType_performLaunch_closure0(launch));
         H.setRuntimeTypeInfo(new P._ControllerStream(t5), [H.getTypeArgumentByIndex(t5, 0)]).listen$1(new Z.CliLaunchType_performLaunch_closure1(launch));
         if (!t6.get$_mayAddEvent())
           H.throwExpression(t6._addEventError$0());
@@ -29009,20 +29040,6 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
         t1._asyncComplete$1(launch);
         return t1;
-      },
-      _connectDebugger$3: function(launch, host, port) {
-        var url, ws, connectedCompleter, finishedCompleter, t1;
-        url = "ws://" + host + ":" + port + "/ws";
-        ws = W.WebSocket_WebSocket(url, null);
-        connectedCompleter = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
-        finishedCompleter = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
-        t1 = C.EventStreamProvider_open.forTarget$1(ws);
-        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._html$_target, t1._eventType, W._wrapZone(new Z.CliLaunchType__connectDebugger_closure(this, launch, url, ws, connectedCompleter, finishedCompleter)), false), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
-        t1 = C.EventStreamProvider_error0.forTarget$1(ws);
-        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._html$_target, t1._eventType, W._wrapZone(new Z.CliLaunchType__connectDebugger_closure0(connectedCompleter)), false), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
-        t1 = C.EventStreamProvider_close.forTarget$1(ws);
-        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._html$_target, t1._eventType, W._wrapZone(new Z.CliLaunchType__connectDebugger_closure1(finishedCompleter)), false), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
-        return connectedCompleter.future;
       }
     },
     CliLaunchType_performLaunch_closure: {
@@ -29032,11 +29049,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 0, 0, null, "call"]
     },
     CliLaunchType_performLaunch_closure0: {
-      "^": "Closure:0;_launch_cli$_captured_this_1,_launch_cli$_captured_launch_2",
+      "^": "Closure:0;_launch_cli$_captured_launch_1",
       call$1: [function(str) {
-        var t1 = this._launch_cli$_captured_launch_2;
+        var t1 = this._launch_cli$_captured_launch_1;
         if (J.startsWith$1$s(str, "Observatory listening on "))
-          this._launch_cli$_captured_this_1._connectDebugger$3(t1, "localhost", 16161).catchError$1(new Z.CliLaunchType_performLaunch__closure(t1));
+          D.ObservatoryDebugger_connectDebugger(t1, "localhost", 16161).catchError$1(new Z.CliLaunchType_performLaunch__closure(t1));
         else {
           t1 = t1._stdio;
           if (!t1.get$_mayAddEvent())
@@ -29046,20 +29063,20 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 5, "call"]
     },
     CliLaunchType_performLaunch__closure: {
-      "^": "Closure:0;_launch_cli$_captured_launch_3",
+      "^": "Closure:0;_launch_cli$_captured_launch_2",
       call$1: [function(e) {
         var t1, t2;
         t1 = "Error connecting debugger: " + H.S(e) + "\n";
-        t2 = this._launch_cli$_captured_launch_3._stdio;
+        t2 = this._launch_cli$_captured_launch_2._stdio;
         if (!t2.get$_mayAddEvent())
           H.throwExpression(t2._addEventError$0());
         t2._sendData$1(new X.TextFragment(t1, true, false, false));
       }, null, null, 2, 0, null, 0, "call"]
     },
     CliLaunchType_performLaunch_closure1: {
-      "^": "Closure:0;_launch_cli$_captured_launch_4",
+      "^": "Closure:0;_launch_cli$_captured_launch_3",
       call$1: [function(str) {
-        var t1 = this._launch_cli$_captured_launch_4._stdio;
+        var t1 = this._launch_cli$_captured_launch_3._stdio;
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(new X.TextFragment(str, true, false, false));
@@ -29067,326 +29084,10 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 5, "call"]
     },
     CliLaunchType_performLaunch_closure2: {
-      "^": "Closure:0;_captured_launch_5",
+      "^": "Closure:0;_launch_cli$_captured_launch_4",
       call$1: [function(code) {
-        return this._captured_launch_5.launchTerminated$1(code);
+        return this._launch_cli$_captured_launch_4.launchTerminated$1(code);
       }, null, null, 2, 0, null, 16, "call"]
-    },
-    CliLaunchType__connectDebugger_closure: {
-      "^": "Closure:0;_launch_cli$_captured_this_0,_launch_cli$_captured_launch_1,_captured_url_2,_captured_ws_3,_captured_connectedCompleter_4,_captured_finishedCompleter_5",
-      call$1: [function(_) {
-        var t1, t2, t3, service;
-        this._captured_connectedCompleter_4.complete$0(0);
-        t1 = this._captured_ws_3;
-        t2 = C.EventStreamProvider_message.forTarget$1(t1);
-        t2 = H.setRuntimeTypeInfo(new P._MapStream(new Z.CliLaunchType__connectDebugger__closure(), t2), [H.getRuntimeTypeArgument(t2, "Stream", 0), null]);
-        t3 = $.$get$_logger13();
-        service = new S.VmService(null, null, 0, P.LinkedHashMap__makeEmpty(), null, P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null));
-        service._vm_service_lib$_streamSub = t2._createSubscription$4(service.get$_vm_service_lib$_processMessage(), null, null, false);
-        service._vm_service_lib$_writeMessage = new Z.CliLaunchType__connectDebugger__closure0(t1);
-        service._vm_service_lib$_log = new D.ObserveLog(t3);
-        t1 = this._launch_cli$_captured_launch_1;
-        t3.fine$1("Connected to observatory on " + this._captured_url_2 + ".");
-        t3 = Z._ObservatoryDebugConnection$(t1, service, this._captured_finishedCompleter_5);
-        t1._connection = t3;
-        Q.Dependencies_instance().getDependency$1(C.Type_DebugManager_QDz).addConnection$1(t3);
-      }, null, null, 2, 0, null, 1, "call"]
-    },
-    CliLaunchType__connectDebugger__closure: {
-      "^": "Closure:53;",
-      call$1: [function(e) {
-        return H.stringTypeCast(J.get$data$x(e));
-      }, null, null, 2, 0, null, 0, "call"]
-    },
-    CliLaunchType__connectDebugger__closure0: {
-      "^": "Closure:3;_captured_ws_6",
-      call$1: function(message) {
-        return this._captured_ws_6.send(message);
-      }
-    },
-    CliLaunchType__connectDebugger_closure0: {
-      "^": "Closure:0;_captured_connectedCompleter_7",
-      call$1: [function(e) {
-        var t1 = this._captured_connectedCompleter_7;
-        if (t1.future._state === 0)
-          t1.completeError$1(e);
-      }, null, null, 2, 0, null, 0, "call"]
-    },
-    CliLaunchType__connectDebugger_closure1: {
-      "^": "Closure:0;_captured_finishedCompleter_8",
-      call$1: [function(_) {
-        return this._captured_finishedCompleter_8.complete$0(0);
-      }, null, null, 2, 0, null, 1, "call"]
-    },
-    _ObservatoryDebugConnection: {
-      "^": "DebugConnection;service,completer,_currentIsolate,subs,uriResolver,isSuspended<,_suspendController,_scripts,launch",
-      get$onSuspendChanged: function() {
-        var t1 = this._suspendController;
-        return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
-      },
-      pause$0: function(_) {
-        return this.service._vm_service_lib$_call$2("pause", P.LinkedHashMap__makeLiteral(["isolateId", J.get$id$x(this._currentIsolate)]));
-      },
-      resume$0: function() {
-        return this.service.resume$1(J.get$id$x(this._currentIsolate));
-      },
-      stepIn$0: function() {
-        return this.service.resume$2$step(J.get$id$x(this._currentIsolate), C.StepOption_0);
-      },
-      stepOver$0: function() {
-        return this.service.resume$2$step(J.get$id$x(this._currentIsolate), C.StepOption_1);
-      },
-      stepOut$0: function() {
-        return this.service.resume$2$step(J.get$id$x(this._currentIsolate), C.StepOption_2);
-      },
-      terminate$0: function() {
-        return this.launch.kill$0();
-      },
-      get$onTerminated: function() {
-        return this.completer.future;
-      },
-      _launch_cli$_init$0: function() {
-        var t1, t2;
-        t1 = this.service;
-        t2 = t1._vm_service_lib$_onSend;
-        H.setRuntimeTypeInfo(new P._BroadcastStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(new Z._ObservatoryDebugConnection__init_closure());
-        t2 = t1._vm_service_lib$_onReceive;
-        H.setRuntimeTypeInfo(new P._BroadcastStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(new Z._ObservatoryDebugConnection__init_closure0());
-        t1._vm_service_lib$_call$1("getVersion").then$1(new Z._ObservatoryDebugConnection__init_closure1());
-        t1._vm_service_lib$_call$2("streamListen", P.LinkedHashMap__makeLiteral(["streamId", "Isolate"]));
-        t1._vm_service_lib$_call$2("streamListen", P.LinkedHashMap__makeLiteral(["streamId", "Debug"]));
-        t1._vm_service_lib$_call$2("streamListen", P.LinkedHashMap__makeLiteral(["streamId", "Stdout"]));
-        t1._vm_service_lib$_call$2("streamListen", P.LinkedHashMap__makeLiteral(["streamId", "Stderr"]));
-        t2 = t1._isolateController;
-        H.setRuntimeTypeInfo(new P._BroadcastStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(this.get$_handleIsolateEvent());
-        t1 = t1._debugController;
-        H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(this.get$_handleDebugEvent());
-      },
-      _handleIsolateEvent$1: [function(e) {
-        var t1, t2, _bps;
-        t1 = H.S(e) + "\n";
-        t2 = this.launch._stdio;
-        if (!t2.get$_mayAddEvent())
-          H.throwExpression(t2._addEventError$0());
-        t2._sendData$1(new X.TextFragment(t1, false, true, false));
-        t1 = J.getInterceptor$x(e);
-        if (J.$eq$(t1.get$kind(e), C.EventKind_2)) {
-          this._currentIsolate = e.get$isolate();
-          _bps = P.LinkedHashMap__makeEmpty();
-          P.Future_forEach(Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$breakpoints(), new Z._ObservatoryDebugConnection__handleIsolateEvent_closure(this, _bps)).then$1(new Z._ObservatoryDebugConnection__handleIsolateEvent_closure0(this)).then$1(new Z._ObservatoryDebugConnection__handleIsolateEvent_closure1(this));
-          t1 = this.subs._subscriptions;
-          t1.push(Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$onAdd().listen$1(new Z._ObservatoryDebugConnection__handleIsolateEvent_closure2(this, _bps)));
-          t1.push(Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$onRemove().listen$1(new Z._ObservatoryDebugConnection__handleIsolateEvent_closure3(this, _bps)));
-        } else if (J.$eq$(t1.get$kind(e), C.EventKind_3))
-          this._currentIsolate = null;
-      }, "call$1", "get$_handleIsolateEvent", 2, 0, 41, 0],
-      _handleDebugEvent$1: [function(e) {
-        var isolate, t1, t2;
-        isolate = e.get$isolate();
-        t1 = J.getInterceptor$x(e);
-        if (J.$eq$(t1.get$kind(e), C.EventKind_10))
-          this._suspend$1(false);
-        else if (J.$eq$(t1.get$kind(e), C.EventKind_7) || J.$eq$(t1.get$kind(e), C.EventKind_8) || J.$eq$(t1.get$kind(e), C.EventKind_9))
-          this._suspend$1(true);
-        if (J.$eq$(t1.get$kind(e), C.EventKind_10) || J.$eq$(t1.get$kind(e), C.EventKind_3))
-          ;
-        if (!J.$eq$(t1.get$kind(e), C.EventKind_10))
-          if (e.get$topFrame() != null) {
-            t1 = "[" + H.S(J.get$name$x(isolate)) + "] " + H.S(D.printFunctionName(e.get$topFrame().get$$function(), false));
-            t2 = this.launch._stdio;
-            if (!t2.get$_mayAddEvent())
-              H.throwExpression(t2._addEventError$0());
-            t2._sendData$1(new X.TextFragment(t1, false, true, false));
-            this._resolveScript$2(isolate, J.get$location$x(e.get$topFrame()).get$script()).then$1(new Z._ObservatoryDebugConnection__handleDebugEvent_closure(this, e));
-          }
-      }, "call$1", "get$_handleDebugEvent", 2, 0, 41, 0],
-      _resolveScript$2: function(isolate, scriptRef) {
-        var id, t1, t2, m;
-        id = J.get$id$x(scriptRef);
-        t1 = this._scripts;
-        if (t1.$index(0, id) != null) {
-          t1 = t1.$index(0, id);
-          t2 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
-          t2._asyncComplete$1(t1);
-          return t2;
-        }
-        m = P.LinkedHashMap__makeLiteral(["isolateId", J.get$id$x(isolate), "objectId", id]);
-        return this.service._vm_service_lib$_call$2("getObject", m).then$1(new Z._ObservatoryDebugConnection__resolveScript_closure(this, id));
-      },
-      _suspend$1: function(value) {
-        var t1;
-        if (value !== this.isSuspended) {
-          this.isSuspended = value;
-          t1 = this._suspendController;
-          if (!t1.get$_mayAddEvent())
-            H.throwExpression(t1._addEventError$0());
-          t1._sendData$1(value);
-        }
-      },
-      dispose$0: function() {
-        this.subs.cancel$0();
-        if (this.completer.future._state === 0)
-          this.launch.kill$0();
-        this.uriResolver.dispose$0();
-      },
-      _ObservatoryDebugConnection$3: function(launch, service, completer) {
-        this.uriResolver = Z.UriResolver$(launch.launchConfiguration.get$primaryResource());
-        this._launch_cli$_init$0();
-        this.completer.future.whenComplete$1(new Z._ObservatoryDebugConnection_closure(this));
-      },
-      static: {_ObservatoryDebugConnection$: function(launch, service, completer) {
-          var t1 = new Z._ObservatoryDebugConnection(service, completer, null, new G.StreamSubscriptions([]), null, true, P.StreamController_StreamController$broadcast(null, null, false, null), P.LinkedHashMap__makeEmpty(), launch);
-          t1._ObservatoryDebugConnection$3(launch, service, completer);
-          return t1;
-        }}
-    },
-    _ObservatoryDebugConnection_closure: {
-      "^": "Closure:1;_launch_cli$_captured_this_0",
-      call$0: [function() {
-        return this._launch_cli$_captured_this_0.dispose$0();
-      }, null, null, 0, 0, null, "call"]
-    },
-    _ObservatoryDebugConnection__init_closure: {
-      "^": "Closure:0;",
-      call$1: [function(str) {
-        return $.$get$_logger13().fine$1("==> " + H.S(str));
-      }, null, null, 2, 0, null, 5, "call"]
-    },
-    _ObservatoryDebugConnection__init_closure0: {
-      "^": "Closure:0;",
-      call$1: [function(str) {
-        return $.$get$_logger13().fine$1("<== " + H.S(str));
-      }, null, null, 2, 0, null, 5, "call"]
-    },
-    _ObservatoryDebugConnection__init_closure1: {
-      "^": "Closure:55;",
-      call$1: [function(ver) {
-        $.$get$_logger13().fine$1("Observatory version " + H.S(ver.get$major()) + "." + H.S(ver.get$minor()) + ".");
-      }, null, null, 2, 0, null, 22, "call"]
-    },
-    _ObservatoryDebugConnection__handleIsolateEvent_closure: {
-      "^": "Closure:31;_launch_cli$_captured_this_0,_captured__bps_1",
-      call$1: function(bp) {
-        var t1 = this._launch_cli$_captured_this_0;
-        return t1.service.addBreakpointWithScriptUri$4$column(J.get$id$x(t1._currentIsolate), bp.get$asUrl(), bp.get$line(), bp.get$column()).then$1(new Z._ObservatoryDebugConnection__handleIsolateEvent__closure1(this._captured__bps_1, bp)).catchError$1(new Z._ObservatoryDebugConnection__handleIsolateEvent__closure2());
-      }
-    },
-    _ObservatoryDebugConnection__handleIsolateEvent__closure1: {
-      "^": "Closure:40;_captured__bps_2,_captured_bp_3",
-      call$1: [function(vmBreakpoint) {
-        this._captured__bps_2.$indexSet(0, this._captured_bp_3, vmBreakpoint);
-        P.print(vmBreakpoint);
-      }, null, null, 2, 0, null, 49, "call"]
-    },
-    _ObservatoryDebugConnection__handleIsolateEvent__closure2: {
-      "^": "Closure:0;",
-      call$1: [function(e) {
-      }, null, null, 2, 0, null, 0, "call"]
-    },
-    _ObservatoryDebugConnection__handleIsolateEvent_closure0: {
-      "^": "Closure:0;_launch_cli$_captured_this_4",
-      call$1: [function(_) {
-        var t1 = this._launch_cli$_captured_this_4;
-        return t1.service._vm_service_lib$_call$2("setExceptionPauseMode", P.LinkedHashMap__makeLiteral(["isolateId", J.get$id$x(t1._currentIsolate), "mode", S._printEnum(C.ExceptionPauseMode_1)]));
-      }, null, null, 2, 0, null, 1, "call"]
-    },
-    _ObservatoryDebugConnection__handleIsolateEvent_closure1: {
-      "^": "Closure:0;_launch_cli$_captured_this_5",
-      call$1: [function(_) {
-        var t1 = this._launch_cli$_captured_this_5;
-        return t1.service.resume$1(J.get$id$x(t1._currentIsolate));
-      }, null, null, 2, 0, null, 1, "call"]
-    },
-    _ObservatoryDebugConnection__handleIsolateEvent_closure2: {
-      "^": "Closure:0;_launch_cli$_captured_this_6,_captured__bps_7",
-      call$1: [function(bp) {
-        var t1 = this._launch_cli$_captured_this_6;
-        t1.service.addBreakpointWithScriptUri$4$column(J.get$id$x(t1._currentIsolate), bp.get$asUrl(), bp.get$line(), bp.get$column()).then$1(new Z._ObservatoryDebugConnection__handleIsolateEvent__closure(this._captured__bps_7, bp)).catchError$1(new Z._ObservatoryDebugConnection__handleIsolateEvent__closure0());
-      }, null, null, 2, 0, null, 47, "call"]
-    },
-    _ObservatoryDebugConnection__handleIsolateEvent__closure: {
-      "^": "Closure:40;_captured__bps_8,_captured_bp_9",
-      call$1: [function(vmBreakpoint) {
-        this._captured__bps_8.$indexSet(0, this._captured_bp_9, vmBreakpoint);
-      }, null, null, 2, 0, null, 49, "call"]
-    },
-    _ObservatoryDebugConnection__handleIsolateEvent__closure0: {
-      "^": "Closure:0;",
-      call$1: [function(e) {
-      }, null, null, 2, 0, null, 0, "call"]
-    },
-    _ObservatoryDebugConnection__handleIsolateEvent_closure3: {
-      "^": "Closure:0;_captured_this_10,_captured__bps_11",
-      call$1: [function(bp) {
-        var vmBreakpoint, t1;
-        vmBreakpoint = this._captured__bps_11.$index(0, bp);
-        if (vmBreakpoint != null) {
-          t1 = this._captured_this_10;
-          t1.service._vm_service_lib$_call$2("removeBreakpoint", P.LinkedHashMap__makeLiteral(["isolateId", J.get$id$x(t1._currentIsolate), "breakpointId", J.get$id$x(vmBreakpoint)]));
-        }
-      }, null, null, 2, 0, null, 47, "call"]
-    },
-    _ObservatoryDebugConnection__handleDebugEvent_closure: {
-      "^": "Closure:57;_launch_cli$_captured_this_0,_captured_e_1",
-      call$1: [function(script) {
-        var pos, uri, t1, t2, t3;
-        pos = D.calcPos(script, J.get$location$x(this._captured_e_1.get$topFrame()).get$tokenPos());
-        uri = script.get$uri();
-        t1 = this._launch_cli$_captured_this_0;
-        if (pos != null) {
-          t2 = " [" + H.S(uri) + ", " + H.S(J.$index$asx(pos.obj, "row")) + "]\n";
-          t3 = t1.launch._stdio;
-          if (!t3.get$_mayAddEvent())
-            H.throwExpression(t3._addEventError$0());
-          t3._sendData$1(new X.TextFragment(t2, false, true, false));
-          t1.uriResolver.resolveToPath$1(uri).then$1(new Z._ObservatoryDebugConnection__handleDebugEvent__closure(pos)).catchError$1(new Z._ObservatoryDebugConnection__handleDebugEvent__closure0(pos, uri));
-        } else {
-          t2 = " [" + H.S(uri) + "]\n";
-          t1 = t1.launch._stdio;
-          if (!t1.get$_mayAddEvent())
-            H.throwExpression(t1._addEventError$0());
-          t1._sendData$1(new X.TextFragment(t2, false, true, false));
-        }
-      }, null, null, 2, 0, null, 75, "call"]
-    },
-    _ObservatoryDebugConnection__handleDebugEvent__closure: {
-      "^": "Closure:3;_captured_pos_2",
-      call$1: [function(path) {
-        var t1, t2;
-        if (new E.Stats($.$get$context().callMethod$2("require", ["fs"]).callMethod$2("statSync", [path])).invoke$1("isFile") === true) {
-          t1 = this._captured_pos_2.obj;
-          t2 = J.getInterceptor$asx(t1);
-          Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$3(path, J.$sub$n(t2.$index(t1, "row"), 1), J.$sub$n(t2.$index(t1, "column"), 1)).then$1(new Z._ObservatoryDebugConnection__handleDebugEvent___closure());
-        } else {
-          t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addWarning", "Cannot file file '" + H.S(path) + "'.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
-        }
-      }, null, null, 2, 0, null, 76, "call"]
-    },
-    _ObservatoryDebugConnection__handleDebugEvent___closure: {
-      "^": "Closure:8;",
-      call$1: [function(editor) {
-      }, null, null, 2, 0, null, 10, "call"]
-    },
-    _ObservatoryDebugConnection__handleDebugEvent__closure0: {
-      "^": "Closure:0;_captured_pos_3,_captured_uri_4",
-      call$1: [function(e) {
-        var t1, t2, t3;
-        t1 = $.$get$atom()._notifications;
-        t2 = this._captured_pos_3.obj;
-        t3 = J.getInterceptor$asx(t2);
-        t1.invoke$3("addWarning", "Unable to resolve '" + H.S(this._captured_uri_4) + "' (" + H.S(t3.$index(t2, "row")) + ":" + H.S(t3.$index(t2, "column")) + ").", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
-      }, null, null, 2, 0, null, 0, "call"]
-    },
-    _ObservatoryDebugConnection__resolveScript_closure: {
-      "^": "Closure:0;_launch_cli$_captured_this_0,_launch_cli$_captured_id_1",
-      call$1: [function(result) {
-        if (result instanceof S.Script) {
-          this._launch_cli$_captured_this_0._scripts.$indexSet(0, this._launch_cli$_captured_id_1, result);
-          return result;
-        }
-        throw H.wrapException(result);
-      }, null, null, 2, 0, null, 2, "call"]
     }
   }], ["atom.launch_shell", "package:atom_dartlang/launch/launch_shell.dart",, S, {
     "^": "",
@@ -29397,7 +29098,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         return t1.endsWith$1(path, ".sh") || t1.endsWith$1(path, ".bat");
       },
       performLaunch$2: function(manager, configuration) {
-        var script, cwd, args, paths, t1, launchName, t2, t3, runner, t4, t5, launch, desc;
+        var script, cwd, args, paths, t1, launchName, t2, t3, runner, t4, t5, t6, t7, launch, desc;
         script = configuration.get$primaryResource();
         cwd = configuration.get$cwd();
         args = configuration.get$argsAsList();
@@ -29418,7 +29119,11 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         t4 = $.Launch__id + 1;
         $.Launch__id = t4;
         t5 = P.StreamController_StreamController$broadcast(null, null, false, null);
-        launch = new X.Launch(this, configuration, launchName, manager, t4, new S.ShellLaunchType_performLaunch_closure(runner), null, t5, null, null);
+        t6 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+        t6._utils$_value = null;
+        t7 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+        t7._utils$_value = null;
+        launch = new X.Launch(this, configuration, launchName, manager, t4, new S.ShellLaunchType_performLaunch_closure(runner), t5, t6, t7, null);
         manager.addLaunch$1(launch);
         runner.execStreaming$0();
         H.setRuntimeTypeInfo(new P._ControllerStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(new S.ShellLaunchType_performLaunch_closure0(launch));
@@ -29475,7 +29180,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       },
       _lint$1: [function(jsEditor) {
         return K.jsify([]);
-      }, "call$1", "get$_lint", 2, 0, 36, 77]
+      }, "call$1", "get$_lint", 2, 0, 36, 73]
     },
     LinterConsumer: {
       "^": "Object;"
@@ -29636,7 +29341,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }, null, null, 2, 0, null, 1, "call"]
     },
     DartLinterConsumer__regenErrors_closure: {
-      "^": "Closure:58;_linter_impl$_box_0,_linter_impl$_captured_this_1",
+      "^": "Closure:53;_linter_impl$_box_0,_linter_impl$_captured_this_1",
       call$2: function(path, issues) {
         var first, t1, t2, t3, t4;
         issues = J.toList$0$ax(issues);
@@ -29684,6 +29389,20 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     }
   }], ["atom.observatory_debugger", "package:atom_dartlang/debug/observatory_debugger.dart",, D, {
     "^": "",
+    ObservatoryDebugger_connectDebugger: function(launch, host, port) {
+      var url, ws, connectedCompleter, finishedCompleter, t1;
+      url = "ws://" + host + ":" + port + "/ws";
+      ws = W.WebSocket_WebSocket(url, null);
+      connectedCompleter = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
+      finishedCompleter = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
+      t1 = C.EventStreamProvider_open.forTarget$1(ws);
+      H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._html$_target, t1._eventType, W._wrapZone(new D.ObservatoryDebugger_connectDebugger_closure(launch, url, ws, connectedCompleter, finishedCompleter)), false), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
+      t1 = C.EventStreamProvider_error0.forTarget$1(ws);
+      H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._html$_target, t1._eventType, W._wrapZone(new D.ObservatoryDebugger_connectDebugger_closure0(connectedCompleter)), false), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
+      t1 = C.EventStreamProvider_close.forTarget$1(ws);
+      H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._html$_target, t1._eventType, W._wrapZone(new D.ObservatoryDebugger_connectDebugger_closure1(finishedCompleter)), false), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
+      return connectedCompleter.future;
+    },
     printFunctionName: function(ref, terse) {
       var t1, $name;
       t1 = J.getInterceptor$x(ref);
@@ -29695,7 +29414,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       else
         return $name;
     },
-    calcPos: function(script, tokenPos) {
+    _calcPos: function(script, tokenPos) {
       var t1, row, t2, line, index, t3;
       for (t1 = J.get$iterator$ax(script.get$tokenPosTable()); t1.moveNext$0();) {
         row = t1.get$current();
@@ -29715,7 +29434,323 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       }
       return;
     },
-    ObserveLog: {
+    ObservatoryDebugger_connectDebugger_closure: {
+      "^": "Closure:0;_captured_launch_0,_captured_url_1,_captured_ws_2,_captured_connectedCompleter_3,_captured_finishedCompleter_4",
+      call$1: [function(_) {
+        var t1, t2, t3, service;
+        this._captured_connectedCompleter_3.complete$0(0);
+        t1 = this._captured_ws_2;
+        t2 = C.EventStreamProvider_message.forTarget$1(t1);
+        t2 = H.setRuntimeTypeInfo(new P._MapStream(new D.ObservatoryDebugger_connectDebugger__closure(), t2), [H.getRuntimeTypeArgument(t2, "Stream", 0), null]);
+        t3 = $.$get$_logger13();
+        service = new S.VmService(null, null, 0, P.LinkedHashMap__makeEmpty(), null, P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null));
+        service._vm_service_lib$_streamSub = t2._createSubscription$4(service.get$_vm_service_lib$_processMessage(), null, null, false);
+        service._vm_service_lib$_writeMessage = new D.ObservatoryDebugger_connectDebugger__closure0(t1);
+        service._vm_service_lib$_log = new D.ObservatoryLog(t3);
+        t3.info$1("Connected to observatory on " + this._captured_url_1 + ".");
+        t1 = this._captured_launch_0;
+        t2 = D._ObservatoryDebugConnection$(t1, service, this._captured_finishedCompleter_4);
+        t1._debugConnection = t2;
+        Q.Dependencies_instance().getDependency$1(C.Type_DebugManager_QDz).addConnection$1(t2);
+      }, null, null, 2, 0, null, 1, "call"]
+    },
+    ObservatoryDebugger_connectDebugger__closure: {
+      "^": "Closure:54;",
+      call$1: [function(e) {
+        return H.stringTypeCast(J.get$data$x(e));
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    ObservatoryDebugger_connectDebugger__closure0: {
+      "^": "Closure:3;_captured_ws_5",
+      call$1: function(message) {
+        return this._captured_ws_5.send(message);
+      }
+    },
+    ObservatoryDebugger_connectDebugger_closure0: {
+      "^": "Closure:0;_captured_connectedCompleter_6",
+      call$1: [function(e) {
+        var t1 = this._captured_connectedCompleter_6;
+        if (t1.future._state === 0)
+          t1.completeError$1(e);
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    ObservatoryDebugger_connectDebugger_closure1: {
+      "^": "Closure:0;_captured_finishedCompleter_7",
+      call$1: [function(_) {
+        return this._captured_finishedCompleter_7.complete$0(0);
+      }, null, null, 2, 0, null, 1, "call"]
+    },
+    _ObservatoryDebugConnection: {
+      "^": "DebugConnection;service,completer,_currentIsolate,subs,uriResolver,isSuspended<,_suspendController,_scripts,launch",
+      get$onSuspendChanged: function() {
+        var t1 = this._suspendController;
+        return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
+      },
+      pause$0: function(_) {
+        return this.service._vm_service_lib$_call$2("pause", P.LinkedHashMap__makeLiteral(["isolateId", J.get$id$x(this._currentIsolate)]));
+      },
+      resume$0: function() {
+        return this.service.resume$1(J.get$id$x(this._currentIsolate));
+      },
+      stepIn$0: function() {
+        return this.service.resume$2$step(J.get$id$x(this._currentIsolate), C.StepOption_0);
+      },
+      stepOver$0: function() {
+        return this.service.resume$2$step(J.get$id$x(this._currentIsolate), C.StepOption_1);
+      },
+      stepOut$0: function() {
+        return this.service.resume$2$step(J.get$id$x(this._currentIsolate), C.StepOption_2);
+      },
+      terminate$0: function() {
+        return this.launch.kill$0();
+      },
+      get$onTerminated: function() {
+        return this.completer.future;
+      },
+      _observatory_debugger$_init$0: function() {
+        var t1, t2;
+        t1 = this.service;
+        t2 = t1._vm_service_lib$_onSend;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(new D._ObservatoryDebugConnection__init_closure());
+        t2 = t1._vm_service_lib$_onReceive;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(new D._ObservatoryDebugConnection__init_closure0());
+        t1._vm_service_lib$_call$1("getVersion").then$1(new D._ObservatoryDebugConnection__init_closure1());
+        t1._vm_service_lib$_call$2("streamListen", P.LinkedHashMap__makeLiteral(["streamId", "Isolate"]));
+        t1._vm_service_lib$_call$2("streamListen", P.LinkedHashMap__makeLiteral(["streamId", "Debug"]));
+        t1._vm_service_lib$_call$2("streamListen", P.LinkedHashMap__makeLiteral(["streamId", "Stdout"]));
+        t1._vm_service_lib$_call$2("streamListen", P.LinkedHashMap__makeLiteral(["streamId", "Stderr"]));
+        t2 = t1._isolateController;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(this.get$_handleIsolateEvent());
+        t1 = t1._debugController;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(this.get$_handleDebugEvent());
+      },
+      _handleIsolateEvent$1: [function(e) {
+        var t1, t2, _bps;
+        t1 = H.S(e) + "\n";
+        t2 = this.launch._stdio;
+        if (!t2.get$_mayAddEvent())
+          H.throwExpression(t2._addEventError$0());
+        t2._sendData$1(new X.TextFragment(t1, false, true, false));
+        t1 = J.getInterceptor$x(e);
+        if (J.$eq$(t1.get$kind(e), C.EventKind_2)) {
+          this._currentIsolate = e.get$isolate();
+          _bps = P.LinkedHashMap__makeEmpty();
+          P.Future_forEach(Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$breakpoints(), new D._ObservatoryDebugConnection__handleIsolateEvent_closure(this, _bps)).then$1(new D._ObservatoryDebugConnection__handleIsolateEvent_closure0(this)).then$1(new D._ObservatoryDebugConnection__handleIsolateEvent_closure1(this));
+          t1 = this.subs._subscriptions;
+          t1.push(Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$onAdd().listen$1(new D._ObservatoryDebugConnection__handleIsolateEvent_closure2(this, _bps)));
+          t1.push(Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$onRemove().listen$1(new D._ObservatoryDebugConnection__handleIsolateEvent_closure3(this, _bps)));
+        } else if (J.$eq$(t1.get$kind(e), C.EventKind_3))
+          this._currentIsolate = null;
+      }, "call$1", "get$_handleIsolateEvent", 2, 0, 41, 0],
+      _handleDebugEvent$1: [function(e) {
+        var isolate, t1, t2;
+        isolate = e.get$isolate();
+        t1 = J.getInterceptor$x(e);
+        if (J.$eq$(t1.get$kind(e), C.EventKind_10))
+          this._suspend$1(false);
+        else if (J.$eq$(t1.get$kind(e), C.EventKind_7) || J.$eq$(t1.get$kind(e), C.EventKind_8) || J.$eq$(t1.get$kind(e), C.EventKind_9))
+          this._suspend$1(true);
+        if (J.$eq$(t1.get$kind(e), C.EventKind_10) || J.$eq$(t1.get$kind(e), C.EventKind_3))
+          ;
+        if (!J.$eq$(t1.get$kind(e), C.EventKind_10))
+          if (e.get$topFrame() != null) {
+            t1 = "[" + H.S(J.get$name$x(isolate)) + "] " + H.S(D.printFunctionName(e.get$topFrame().get$$function(), false));
+            t2 = this.launch._stdio;
+            if (!t2.get$_mayAddEvent())
+              H.throwExpression(t2._addEventError$0());
+            t2._sendData$1(new X.TextFragment(t1, false, true, false));
+            this._resolveScript$2(isolate, J.get$location$x(e.get$topFrame()).get$script()).then$1(new D._ObservatoryDebugConnection__handleDebugEvent_closure(this, e));
+          }
+      }, "call$1", "get$_handleDebugEvent", 2, 0, 41, 0],
+      _resolveScript$2: function(isolate, scriptRef) {
+        var id, t1, t2, m;
+        id = J.get$id$x(scriptRef);
+        t1 = this._scripts;
+        if (t1.$index(0, id) != null) {
+          t1 = t1.$index(0, id);
+          t2 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
+          t2._asyncComplete$1(t1);
+          return t2;
+        }
+        m = P.LinkedHashMap__makeLiteral(["isolateId", J.get$id$x(isolate), "objectId", id]);
+        return this.service._vm_service_lib$_call$2("getObject", m).then$1(new D._ObservatoryDebugConnection__resolveScript_closure(this, id));
+      },
+      _suspend$1: function(value) {
+        var t1;
+        if (value !== this.isSuspended) {
+          this.isSuspended = value;
+          t1 = this._suspendController;
+          if (!t1.get$_mayAddEvent())
+            H.throwExpression(t1._addEventError$0());
+          t1._sendData$1(value);
+        }
+      },
+      dispose$0: function() {
+        this.subs.cancel$0();
+        if (this.completer.future._state === 0)
+          this.launch.kill$0();
+        this.uriResolver.dispose$0();
+      },
+      _ObservatoryDebugConnection$3: function(launch, service, completer) {
+        this.uriResolver = Z.UriResolver$(launch.launchConfiguration.get$primaryResource());
+        this._observatory_debugger$_init$0();
+        this.completer.future.whenComplete$1(new D._ObservatoryDebugConnection_closure(this));
+      },
+      static: {_ObservatoryDebugConnection$: function(launch, service, completer) {
+          var t1 = new D._ObservatoryDebugConnection(service, completer, null, new G.StreamSubscriptions([]), null, true, P.StreamController_StreamController$broadcast(null, null, false, null), P.LinkedHashMap__makeEmpty(), launch);
+          t1._ObservatoryDebugConnection$3(launch, service, completer);
+          return t1;
+        }}
+    },
+    _ObservatoryDebugConnection_closure: {
+      "^": "Closure:1;_observatory_debugger$_captured_this_0",
+      call$0: [function() {
+        return this._observatory_debugger$_captured_this_0.dispose$0();
+      }, null, null, 0, 0, null, "call"]
+    },
+    _ObservatoryDebugConnection__init_closure: {
+      "^": "Closure:0;",
+      call$1: [function(str) {
+        return $.$get$_logger13().fine$1("==> " + H.S(str));
+      }, null, null, 2, 0, null, 5, "call"]
+    },
+    _ObservatoryDebugConnection__init_closure0: {
+      "^": "Closure:0;",
+      call$1: [function(str) {
+        return $.$get$_logger13().fine$1("<== " + H.S(str));
+      }, null, null, 2, 0, null, 5, "call"]
+    },
+    _ObservatoryDebugConnection__init_closure1: {
+      "^": "Closure:56;",
+      call$1: [function(ver) {
+        $.$get$_logger13().fine$1("Observatory version " + H.S(ver.get$major()) + "." + H.S(ver.get$minor()) + ".");
+      }, null, null, 2, 0, null, 22, "call"]
+    },
+    _ObservatoryDebugConnection__handleIsolateEvent_closure: {
+      "^": "Closure:31;_observatory_debugger$_captured_this_0,_captured__bps_1",
+      call$1: function(bp) {
+        var t1 = this._observatory_debugger$_captured_this_0;
+        return t1.service.addBreakpointWithScriptUri$4$column(J.get$id$x(t1._currentIsolate), bp.get$asUrl(), bp.get$line(), bp.get$column()).then$1(new D._ObservatoryDebugConnection__handleIsolateEvent__closure1(this._captured__bps_1, bp)).catchError$1(new D._ObservatoryDebugConnection__handleIsolateEvent__closure2());
+      }
+    },
+    _ObservatoryDebugConnection__handleIsolateEvent__closure1: {
+      "^": "Closure:40;_captured__bps_2,_captured_bp_3",
+      call$1: [function(vmBreakpoint) {
+        this._captured__bps_2.$indexSet(0, this._captured_bp_3, vmBreakpoint);
+        P.print(vmBreakpoint);
+      }, null, null, 2, 0, null, 49, "call"]
+    },
+    _ObservatoryDebugConnection__handleIsolateEvent__closure2: {
+      "^": "Closure:0;",
+      call$1: [function(e) {
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    _ObservatoryDebugConnection__handleIsolateEvent_closure0: {
+      "^": "Closure:0;_observatory_debugger$_captured_this_4",
+      call$1: [function(_) {
+        var t1 = this._observatory_debugger$_captured_this_4;
+        return t1.service._vm_service_lib$_call$2("setExceptionPauseMode", P.LinkedHashMap__makeLiteral(["isolateId", J.get$id$x(t1._currentIsolate), "mode", S._printEnum(C.ExceptionPauseMode_1)]));
+      }, null, null, 2, 0, null, 1, "call"]
+    },
+    _ObservatoryDebugConnection__handleIsolateEvent_closure1: {
+      "^": "Closure:0;_observatory_debugger$_captured_this_5",
+      call$1: [function(_) {
+        var t1 = this._observatory_debugger$_captured_this_5;
+        return t1.service.resume$1(J.get$id$x(t1._currentIsolate));
+      }, null, null, 2, 0, null, 1, "call"]
+    },
+    _ObservatoryDebugConnection__handleIsolateEvent_closure2: {
+      "^": "Closure:0;_observatory_debugger$_captured_this_6,_captured__bps_7",
+      call$1: [function(bp) {
+        var t1 = this._observatory_debugger$_captured_this_6;
+        t1.service.addBreakpointWithScriptUri$4$column(J.get$id$x(t1._currentIsolate), bp.get$asUrl(), bp.get$line(), bp.get$column()).then$1(new D._ObservatoryDebugConnection__handleIsolateEvent__closure(this._captured__bps_7, bp)).catchError$1(new D._ObservatoryDebugConnection__handleIsolateEvent__closure0());
+      }, null, null, 2, 0, null, 47, "call"]
+    },
+    _ObservatoryDebugConnection__handleIsolateEvent__closure: {
+      "^": "Closure:40;_captured__bps_8,_captured_bp_9",
+      call$1: [function(vmBreakpoint) {
+        this._captured__bps_8.$indexSet(0, this._captured_bp_9, vmBreakpoint);
+      }, null, null, 2, 0, null, 49, "call"]
+    },
+    _ObservatoryDebugConnection__handleIsolateEvent__closure0: {
+      "^": "Closure:0;",
+      call$1: [function(e) {
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    _ObservatoryDebugConnection__handleIsolateEvent_closure3: {
+      "^": "Closure:0;_captured_this_10,_captured__bps_11",
+      call$1: [function(bp) {
+        var vmBreakpoint, t1;
+        vmBreakpoint = this._captured__bps_11.$index(0, bp);
+        if (vmBreakpoint != null) {
+          t1 = this._captured_this_10;
+          t1.service._vm_service_lib$_call$2("removeBreakpoint", P.LinkedHashMap__makeLiteral(["isolateId", J.get$id$x(t1._currentIsolate), "breakpointId", J.get$id$x(vmBreakpoint)]));
+        }
+      }, null, null, 2, 0, null, 47, "call"]
+    },
+    _ObservatoryDebugConnection__handleDebugEvent_closure: {
+      "^": "Closure:58;_observatory_debugger$_captured_this_0,_captured_e_1",
+      call$1: [function(script) {
+        var pos, uri, t1, t2, t3;
+        pos = D._calcPos(script, J.get$location$x(this._captured_e_1.get$topFrame()).get$tokenPos());
+        uri = script.get$uri();
+        t1 = this._observatory_debugger$_captured_this_0;
+        if (pos != null) {
+          t2 = " [" + H.S(uri) + ", " + H.S(J.$index$asx(pos.obj, "row")) + "]\n";
+          t3 = t1.launch._stdio;
+          if (!t3.get$_mayAddEvent())
+            H.throwExpression(t3._addEventError$0());
+          t3._sendData$1(new X.TextFragment(t2, false, true, false));
+          t1.uriResolver.resolveToPath$1(uri).then$1(new D._ObservatoryDebugConnection__handleDebugEvent__closure(pos)).catchError$1(new D._ObservatoryDebugConnection__handleDebugEvent__closure0(pos, uri));
+        } else {
+          t2 = " [" + H.S(uri) + "]\n";
+          t1 = t1.launch._stdio;
+          if (!t1.get$_mayAddEvent())
+            H.throwExpression(t1._addEventError$0());
+          t1._sendData$1(new X.TextFragment(t2, false, true, false));
+        }
+      }, null, null, 2, 0, null, 76, "call"]
+    },
+    _ObservatoryDebugConnection__handleDebugEvent__closure: {
+      "^": "Closure:3;_captured_pos_2",
+      call$1: [function(path) {
+        var t1, t2;
+        if (new E.Stats($.$get$context().callMethod$2("require", ["fs"]).callMethod$2("statSync", [path])).invoke$1("isFile") === true) {
+          t1 = this._captured_pos_2.obj;
+          t2 = J.getInterceptor$asx(t1);
+          Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$3(path, J.$sub$n(t2.$index(t1, "row"), 1), J.$sub$n(t2.$index(t1, "column"), 1)).then$1(new D._ObservatoryDebugConnection__handleDebugEvent___closure());
+        } else {
+          t1 = $.$get$atom()._notifications;
+          t1.invoke$3("addWarning", "Cannot file file '" + H.S(path) + "'.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+        }
+      }, null, null, 2, 0, null, 77, "call"]
+    },
+    _ObservatoryDebugConnection__handleDebugEvent___closure: {
+      "^": "Closure:8;",
+      call$1: [function(editor) {
+      }, null, null, 2, 0, null, 10, "call"]
+    },
+    _ObservatoryDebugConnection__handleDebugEvent__closure0: {
+      "^": "Closure:0;_captured_pos_3,_captured_uri_4",
+      call$1: [function(e) {
+        var t1, t2, t3;
+        t1 = $.$get$atom()._notifications;
+        t2 = this._captured_pos_3.obj;
+        t3 = J.getInterceptor$asx(t2);
+        t1.invoke$3("addWarning", "Unable to resolve '" + H.S(this._captured_uri_4) + "' (" + H.S(t3.$index(t2, "row")) + ":" + H.S(t3.$index(t2, "column")) + ").", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    _ObservatoryDebugConnection__resolveScript_closure: {
+      "^": "Closure:0;_observatory_debugger$_captured_this_0,_observatory_debugger$_captured_id_1",
+      call$1: [function(result) {
+        if (result instanceof S.Script) {
+          this._observatory_debugger$_captured_this_0._scripts.$indexSet(0, this._observatory_debugger$_captured_id_1, result);
+          return result;
+        }
+        throw H.wrapException(result);
+      }, null, null, 2, 0, null, 2, "call"]
+    },
+    ObservatoryLog: {
       "^": "Log;logger",
       warning$1: function(message) {
         return this.logger.warning$1(message);
@@ -30267,7 +30302,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._consumer = D.DartLinterConsumer$(Q.Dependencies_instance().getDependency$1(C.Type_ErrorRepository_jfx));
         t1 = Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActiveProperty();
         t1 = t1.super$Stream$where(t1, new R.AtomDartPackage__registerLinter_closure());
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -32781,7 +32816,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   }], ["atom.smoketest", "package:atom_dartlang/impl/smoketest.dart",, E, {
     "^": "",
     smokeTest: function() {
-      var t1, element, t2, t3, panel, dirs, dir, children, childFile, childDir, t4, helper, launch, sdk, vm, projects;
+      var t1, element, t2, t3, panel, dirs, dir, children, childFile, childDir, t4, helper, t5, t6, launch, sdk, vm, projects;
       t1 = {};
       element = C.HtmlDocument_methods.createElement$1(document, "div");
       J.set$text$x(element, "Hello world.");
@@ -32825,7 +32860,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       t3 = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK);
       t2 = $.Launch__id + 1;
       $.Launch__id = t2;
-      launch = new X.Launch(new Z.CliLaunchType("cli"), null, "launch_test.sh", t3, t2, null, null, P.StreamController_StreamController$broadcast(null, null, false, null), null, null);
+      t4 = P.StreamController_StreamController$broadcast(null, null, false, null);
+      t5 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+      t5._utils$_value = null;
+      t6 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+      t6._utils$_value = null;
+      launch = new X.Launch(new Z.CliLaunchType("cli"), null, "launch_test.sh", t3, t2, null, t4, t5, t6, null);
       Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).addLaunch$1(launch);
       P.Timer_Timer(P.Duration$(0, 0, 0, 0, 0, 12), new E.smokeTest_closure12(launch));
       sdk = Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$sdk();
@@ -33608,6 +33648,19 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       },
       toString$0: function(_) {
         return "[Edit offset: " + this.offset + ", length: " + H.S(this.length) + "]";
+      }
+    },
+    Property: {
+      "^": "Object;_utils$_value,_utils$_controller",
+      get$value: function(_) {
+        return this._utils$_value;
+      },
+      get$onChange: function(_) {
+        var t1 = this._utils$_controller;
+        return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
+      },
+      toString$0: function(_) {
+        return H.S(this._utils$_value);
       }
     }
   }], ["atom.views", "package:atom_dartlang/views.dart",, T, {
@@ -45246,7 +45299,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
         this._frappe$_box_0._captured_subscription_0.cancel$0();
       }, null, null, 0, 0, null, "call"]
     },
-    Property: {
+    Property0: {
       "^": "Reactable;_frappe$_controller,_hasCurrentValue,_currentValue",
       get$isBroadcast: function() {
         var t1 = this._frappe$_controller;
@@ -45264,7 +45317,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       asBroadcastStream$2$onCancel$onListen: function(onCancel, onListen) {
         var t1, t2;
         t1 = this.super$Stream$asBroadcastStream(onCancel, onListen);
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45299,7 +45352,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       map$1: function(_, convert) {
         var t1, t2;
         t1 = this.super$Stream$map(this, convert);
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45308,7 +45361,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       take$1: function(_, count) {
         var t1, t2;
         t1 = this.super$Stream$take(this, count);
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45317,7 +45370,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       transform$1: function(_, streamTransformer) {
         var t1, t2;
         t1 = this.super$Stream$transform(this, streamTransformer);
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45326,7 +45379,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       where$1: function(_, test) {
         var t1, t2;
         t1 = this.super$Stream$where(this, test);
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45335,7 +45388,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       $gt: function(_, other) {
         var t1, t2;
         t1 = this.super$Stream$transform(this, H.setRuntimeTypeInfo(new K.Combine(other, new Z.Property_operator$gt_closure()), [null, null, null]));
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45344,7 +45397,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       $ge: function(_, other) {
         var t1, t2;
         t1 = this.super$Stream$transform(this, H.setRuntimeTypeInfo(new K.Combine(other, new Z.Property_operator$ge_closure()), [null, null, null]));
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45353,7 +45406,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       $lt: function(_, other) {
         var t1, t2;
         t1 = this.super$Stream$transform(this, H.setRuntimeTypeInfo(new K.Combine(other, new Z.Property_operator$lt_closure()), [null, null, null]));
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45362,7 +45415,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       $le: function(_, other) {
         var t1, t2;
         t1 = this.super$Stream$transform(this, H.setRuntimeTypeInfo(new K.Combine(other, new Z.Property_operator$le_closure()), [null, null, null]));
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45371,7 +45424,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       $add: function(_, other) {
         var t1, t2;
         t1 = this.super$Stream$transform(this, H.setRuntimeTypeInfo(new K.Combine(other, new Z.Property_operator$add_closure()), [null, null, null]));
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45380,7 +45433,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       $sub: function(_, other) {
         var t1, t2;
         t1 = this.super$Stream$transform(this, H.setRuntimeTypeInfo(new K.Combine(other, new Z.Property_operator$sub_closure()), [null, null, null]));
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -45389,7 +45442,7 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
       $mul: function(_, other) {
         var t1, t2;
         t1 = this.super$Stream$transform(this, H.setRuntimeTypeInfo(new K.Combine(other, new Z.Property_operator$mul_closure()), [null, null, null]));
-        t2 = H.setRuntimeTypeInfo(new Z.Property(null, false, null), [null]);
+        t2 = H.setRuntimeTypeInfo(new Z.Property0(null, false, null), [null]);
         t2._hasCurrentValue = false;
         t2._currentValue = null;
         t2._frappe$_controller = t2._createControllerForStream$1(t1);
@@ -49992,12 +50045,12 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
     return N.Logger_Logger("js");
   }, "_logger15", "$get$_logger15", "_logger", function() {
     return N.Logger_Logger("atom.launch");
-  }, "_logger13", "$get$_logger13", "_logger", function() {
-    return N.Logger_Logger("atom.launch_cli");
   }, "_severityMap", "$get$_severityMap", "_severityMap", function() {
     return P.LinkedHashMap__makeLiteral(["ERROR", "Error", "WARNING", "Warning", "INFO", "Info"]);
   }, "_processedErrorsController", "$get$_processedErrorsController", "_processedErrorsController", function() {
     return P.StreamController_StreamController$broadcast(null, null, false, null);
+  }, "_logger13", "$get$_logger13", "_logger", function() {
+    return N.Logger_Logger("atom.observatory");
   }, "_logger", "$get$_logger", "_logger", function() {
     return N.Logger_Logger("plugin");
   }, "_logger5", "$get$_logger5", "_logger", function() {
@@ -50106,8 +50159,8 @@ self.getTextEditorForElement = function(element) { return element.o.getModel(); 
   }]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
-  init.metadata = ["e", "_", "result", null, "obj", "str", "m", "error", "value", "stackTrace", "editor", "data", "a", "b", "message", "val", "code", "element", "response", "launch", "s", "r", "ver", "node", "o", "event", "object", "edit", "v", "version", "key", "stream", "pos", "dir", "values", "context", "attributeName", "i", "exitCode", "status", "p", "item", "subscription", "options", "each", "invocation", "cr", "bp", "name", "vmBreakpoint", "arg", "contents", "c", "x", "navInfo", "description", "connection", "contextId", "suspended", "text", "position", "file", "analysisErrors", "analysisFlushResults", "suggestions", "currentVersion", "active", "evt", "errorCallback", "resolve", "reject", "_this", "json", "didFormat", "cs", "script", "path", "jsEditor", "suggestion", "map", "inState", "arg4", "arg3", "allPaths", "arg2", "function", "project", "hostedVer", "change", "choice", "busy", "_newName", "l", "ed", "arg1", "sdkPath", "foundSdk", "aIndex", "bIndex", "numberOfArguments", "command", "log", "isolate", "sender", "errorCode", "theError", "theStackTrace", "ignored", "projects", "k", "newSdk", "currentProjects", "xhr", "reason", "attr", "callback", "captureThis", "self", "arguments", "entry", "line", "parser", "endMatch", "part", "closure", "previous", "current", "nb", "combined", "errors"];
-  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [P.String]}, {func: 1, args: [,,]}, {func: 1, ret: P.Future}, {func: 1, v: true, args: [E.TextEditor]}, {func: 1, v: true, args: [,]}, {func: 1, args: [E.TextEditor]}, {func: 1, args: [E.AtomEvent]}, {func: 1, ret: P.bool}, {func: 1, v: true, args: [P.String]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, v: true, args: [T.Node0]}, {func: 1, v: true, args: [E.AtomEvent]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, args: [P.$int]}, {func: 1, v: true, args: [P.bool]}, {func: 1, v: true, opt: [,]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, args: [W.MouseEvent]}, {func: 1, args: [P.bool]}, {func: 1, args: [P.Object]}, {func: 1, args: [P.JsObject]}, {func: 1, args: [P.String, P.Function]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [A.AtomBreakpoint]}, {func: 1, args: [E.CompletionSuggestion]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.StackTrace]}, {func: 1, args: [P.Timer]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, args: [M._Change]}, {func: 1, args: [W.HttpRequest]}, {func: 1, args: [S.Breakpoint]}, {func: 1, v: true, args: [S.Event0]}, {func: 1, args: [X.LaunchConfiguration]}, {func: 1, args: [E.AnalysisError]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, args: [E.ServerStatus]}, {func: 1, args: [E.ExecutionLaunchData]}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [P.Map]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, args: [W.MessageEvent]}, {func: 1, args: [N.LogRecord]}, {func: 1, args: [S.Version0]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [S.Script]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, args: [E.Point]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, v: true, opt: [P.Map]}, {func: 1, v: true, args: [P.Map]}, {func: 1, ret: P.Map}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, args: [E.NotificationButton]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, args: [T.Version]}, {func: 1, args: [E.FixesResult]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, args: [[P.List, E.SearchResult]]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.$int, P.$int]}, {func: 1, args: [P.String,,]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, args: [P.$int,,]}, {func: 1, args: [Z.DebugConnection]}, {func: 1, v: true, args: [,,]}, {func: 1, args: [E.HoverResult]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, v: true, args: [P.Object, P.StackTrace]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, v: true, args: [,], opt: [,]}, {func: 1, args: [P.EventSink]}, {func: 1, args: [P.Symbol,,]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, args: [P.RegExp]}, {func: 1, args: [[P.EventSink, P.List]]}, {func: 1, ret: P.num}, {func: 1, ret: E.ServerStatus, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: S.VM, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.ExecutionLaunchData, args: [P.Map]}, {func: 1, ret: E.CreateContextResult, args: [P.Map]}, {func: 1, ret: E.MapUriResult, args: [P.Map]}, {func: 1, ret: P.$int, args: [E.CompletionSuggestion, E.CompletionSuggestion]}, {func: 1, ret: P.bool, args: [E.TextEditor]}, {func: 1, ret: P.$int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, args: [E.Range]}, {func: 1, args: [, P.String]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, v: true, args: [P.Object]}, {func: 1, ret: P.String, args: [W.EventTarget]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, args: [E.File]}, {func: 1, ret: S.BoundField, args: [P.Map]}, {func: 1, ret: S.BoundVariable, args: [P.Map]}, {func: 1, ret: S.Breakpoint, args: [P.Map]}, {func: 1, ret: S.ClassRef, args: [P.Map]}, {func: 1, ret: S.Class, args: [P.Map]}, {func: 1, ret: S.ClassList, args: [P.Map]}, {func: 1, ret: S.CodeRef, args: [P.Map]}, {func: 1, ret: S.Code, args: [P.Map]}, {func: 1, ret: S.ContextRef, args: [P.Map]}, {func: 1, ret: S.Context, args: [P.Map]}, {func: 1, ret: S.ContextElement, args: [P.Map]}, {func: 1, ret: S.ErrorRef, args: [P.Map]}, {func: 1, ret: S.Error0, args: [P.Map]}, {func: 1, ret: S.Event0, args: [P.Map]}, {func: 1, ret: S.FieldRef, args: [P.Map]}, {func: 1, ret: S.Field, args: [P.Map]}, {func: 1, ret: S.Flag, args: [P.Map]}, {func: 1, ret: S.FlagList, args: [P.Map]}, {func: 1, ret: S.Frame, args: [P.Map]}, {func: 1, ret: S.FuncRef, args: [P.Map]}, {func: 1, ret: S.Func, args: [P.Map]}, {func: 1, ret: S.InstanceRef, args: [P.Map]}, {func: 1, ret: S.Instance, args: [P.Map]}, {func: 1, ret: S.IsolateRef, args: [P.Map]}, {func: 1, ret: S.Isolate, args: [P.Map]}, {func: 1, ret: S.LibraryRef, args: [P.Map]}, {func: 1, ret: S.Library, args: [P.Map]}, {func: 1, ret: S.LibraryDependency, args: [P.Map]}, {func: 1, ret: S.MapAssociation, args: [P.Map]}, {func: 1, ret: S.Message, args: [P.Map]}, {func: 1, ret: S.NullRef, args: [P.Map]}, {func: 1, ret: S.Null, args: [P.Map]}, {func: 1, ret: S.ObjRef, args: [P.Map]}, {func: 1, ret: S.Obj, args: [P.Map]}, {func: 1, ret: S.Response, args: [P.Map]}, {func: 1, ret: S.Sentinel, args: [P.Map]}, {func: 1, ret: S.ScriptRef, args: [P.Map]}, {func: 1, ret: S.Script, args: [P.Map]}, {func: 1, ret: S.SourceLocation, args: [P.Map]}, {func: 1, ret: S.Stack, args: [P.Map]}, {func: 1, ret: S.Success, args: [P.Map]}, {func: 1, ret: S.TypeArgumentsRef, args: [P.Map]}, {func: 1, ret: S.TypeArguments, args: [P.Map]}, {func: 1, ret: S.UnresolvedSourceLocation, args: [P.Map]}, {func: 1, ret: S.Version0, args: [P.Map]}, {func: 1, ret: S.VMRef, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}];
+  init.metadata = ["e", "_", "result", null, "obj", "str", "m", "error", "value", "stackTrace", "editor", "data", "a", "b", "message", "val", "code", "element", "response", "launch", "s", "r", "ver", "node", "o", "event", "object", "edit", "v", "version", "key", "stream", "pos", "dir", "values", "context", "attributeName", "i", "exitCode", "status", "p", "item", "subscription", "options", "each", "invocation", "cr", "bp", "name", "vmBreakpoint", "arg", "contents", "c", "x", "navInfo", "description", "connection", "contextId", "suspended", "text", "position", "file", "analysisErrors", "analysisFlushResults", "suggestions", "currentVersion", "active", "evt", "errorCallback", "resolve", "reject", "_this", "json", "jsEditor", "didFormat", "cs", "script", "path", "suggestion", "map", "inState", "arg4", "arg3", "allPaths", "arg2", "function", "project", "hostedVer", "change", "choice", "busy", "_newName", "l", "ed", "arg1", "sdkPath", "foundSdk", "aIndex", "bIndex", "numberOfArguments", "command", "log", "isolate", "sender", "errorCode", "theError", "theStackTrace", "ignored", "projects", "k", "newSdk", "currentProjects", "xhr", "reason", "attr", "callback", "captureThis", "self", "arguments", "entry", "line", "parser", "endMatch", "part", "closure", "previous", "current", "nb", "combined", "errors"];
+  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [P.String]}, {func: 1, args: [,,]}, {func: 1, ret: P.Future}, {func: 1, v: true, args: [E.TextEditor]}, {func: 1, v: true, args: [,]}, {func: 1, args: [E.TextEditor]}, {func: 1, args: [E.AtomEvent]}, {func: 1, ret: P.bool}, {func: 1, v: true, args: [P.String]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, v: true, args: [T.Node0]}, {func: 1, v: true, args: [E.AtomEvent]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, args: [P.$int]}, {func: 1, v: true, args: [P.bool]}, {func: 1, v: true, opt: [,]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, args: [W.MouseEvent]}, {func: 1, args: [P.bool]}, {func: 1, args: [P.Object]}, {func: 1, args: [P.JsObject]}, {func: 1, args: [P.String, P.Function]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [A.AtomBreakpoint]}, {func: 1, args: [E.CompletionSuggestion]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.StackTrace]}, {func: 1, args: [P.Timer]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, args: [M._Change]}, {func: 1, args: [W.HttpRequest]}, {func: 1, args: [S.Breakpoint]}, {func: 1, v: true, args: [S.Event0]}, {func: 1, args: [X.LaunchConfiguration]}, {func: 1, args: [E.AnalysisError]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, args: [E.ServerStatus]}, {func: 1, args: [E.ExecutionLaunchData]}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [P.Map]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, args: [W.MessageEvent]}, {func: 1, args: [N.LogRecord]}, {func: 1, args: [S.Version0]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [S.Script]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, args: [E.Point]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, v: true, opt: [P.Map]}, {func: 1, v: true, args: [P.Map]}, {func: 1, ret: P.Map}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, args: [E.NotificationButton]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, args: [T.Version]}, {func: 1, args: [E.FixesResult]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, args: [[P.List, E.SearchResult]]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.$int, P.$int]}, {func: 1, args: [P.String,,]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, args: [P.$int,,]}, {func: 1, args: [Z.DebugConnection]}, {func: 1, v: true, args: [,,]}, {func: 1, args: [E.HoverResult]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, v: true, args: [P.Object, P.StackTrace]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, v: true, args: [,], opt: [,]}, {func: 1, args: [P.EventSink]}, {func: 1, args: [P.Symbol,,]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, args: [P.RegExp]}, {func: 1, args: [[P.EventSink, P.List]]}, {func: 1, ret: P.num}, {func: 1, ret: E.ServerStatus, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: S.VM, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.ExecutionLaunchData, args: [P.Map]}, {func: 1, ret: E.CreateContextResult, args: [P.Map]}, {func: 1, ret: E.MapUriResult, args: [P.Map]}, {func: 1, ret: P.$int, args: [E.CompletionSuggestion, E.CompletionSuggestion]}, {func: 1, ret: P.bool, args: [E.TextEditor]}, {func: 1, ret: P.$int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, args: [E.Range]}, {func: 1, args: [, P.String]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, v: true, args: [P.Object]}, {func: 1, ret: P.String, args: [W.EventTarget]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, args: [E.File]}, {func: 1, ret: S.BoundField, args: [P.Map]}, {func: 1, ret: S.BoundVariable, args: [P.Map]}, {func: 1, ret: S.Breakpoint, args: [P.Map]}, {func: 1, ret: S.ClassRef, args: [P.Map]}, {func: 1, ret: S.Class, args: [P.Map]}, {func: 1, ret: S.ClassList, args: [P.Map]}, {func: 1, ret: S.CodeRef, args: [P.Map]}, {func: 1, ret: S.Code, args: [P.Map]}, {func: 1, ret: S.ContextRef, args: [P.Map]}, {func: 1, ret: S.Context, args: [P.Map]}, {func: 1, ret: S.ContextElement, args: [P.Map]}, {func: 1, ret: S.ErrorRef, args: [P.Map]}, {func: 1, ret: S.Error0, args: [P.Map]}, {func: 1, ret: S.Event0, args: [P.Map]}, {func: 1, ret: S.FieldRef, args: [P.Map]}, {func: 1, ret: S.Field, args: [P.Map]}, {func: 1, ret: S.Flag, args: [P.Map]}, {func: 1, ret: S.FlagList, args: [P.Map]}, {func: 1, ret: S.Frame, args: [P.Map]}, {func: 1, ret: S.FuncRef, args: [P.Map]}, {func: 1, ret: S.Func, args: [P.Map]}, {func: 1, ret: S.InstanceRef, args: [P.Map]}, {func: 1, ret: S.Instance, args: [P.Map]}, {func: 1, ret: S.IsolateRef, args: [P.Map]}, {func: 1, ret: S.Isolate, args: [P.Map]}, {func: 1, ret: S.LibraryRef, args: [P.Map]}, {func: 1, ret: S.Library, args: [P.Map]}, {func: 1, ret: S.LibraryDependency, args: [P.Map]}, {func: 1, ret: S.MapAssociation, args: [P.Map]}, {func: 1, ret: S.Message, args: [P.Map]}, {func: 1, ret: S.NullRef, args: [P.Map]}, {func: 1, ret: S.Null, args: [P.Map]}, {func: 1, ret: S.ObjRef, args: [P.Map]}, {func: 1, ret: S.Obj, args: [P.Map]}, {func: 1, ret: S.Response, args: [P.Map]}, {func: 1, ret: S.Sentinel, args: [P.Map]}, {func: 1, ret: S.ScriptRef, args: [P.Map]}, {func: 1, ret: S.Script, args: [P.Map]}, {func: 1, ret: S.SourceLocation, args: [P.Map]}, {func: 1, ret: S.Stack, args: [P.Map]}, {func: 1, ret: S.Success, args: [P.Map]}, {func: 1, ret: S.TypeArgumentsRef, args: [P.Map]}, {func: 1, ret: S.TypeArguments, args: [P.Map]}, {func: 1, ret: S.UnresolvedSourceLocation, args: [P.Map]}, {func: 1, ret: S.Version0, args: [P.Map]}, {func: 1, ret: S.VMRef, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }

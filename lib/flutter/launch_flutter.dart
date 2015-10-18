@@ -76,8 +76,7 @@ class _LaunchInstance {
         'lib${separator}main.dart',
         killHandler: _kill);
     // TODO: Only set this value on successful connect.
-    // TODO: Fire events on value change.
-    _launch.servicePort = 8181;
+    _launch.servicePort.value = 8181;
     launchManager.addLaunch(_launch);
     _launch.pipeStdio('[${project.path}] pub run ${_toolName} start\n', highlight: true);
   }
