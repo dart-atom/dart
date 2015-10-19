@@ -281,6 +281,10 @@ class Launch implements Disposable {
 
   Stream<TextFragment> get onStdio => _stdio.stream;
 
+  String get primaryResource => launchConfiguration.primaryResource;
+
+  DartProject get project => projectManager.getProjectFor(primaryResource);
+
   void pipeStdio(String str, {bool error: false, bool subtle: false, bool highlight: false}) {
     _stdio.add(new TextFragment(str, error: error, subtle: subtle, highlight: highlight));
   }

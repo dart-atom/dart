@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
+import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart';
 import '../process.dart';
 import '../projects.dart';
@@ -15,7 +16,6 @@ import 'launch.dart';
 
 final Logger _logger = new Logger('atom.launch_cli');
 
-const bool _debugDefault = true;
 const int _observePort = 16161;
 
 class CliLaunchType extends LaunchType {
@@ -60,8 +60,7 @@ class CliLaunchType extends LaunchType {
 
     if (sdk == null) new Future.error('No Dart SDK configured');
 
-    bool withDebug = configuration.debug;
-    if (withDebug == null) withDebug = _debugDefault;
+    bool withDebug = configuration.debug ?? debugDefault;
     if (!atom.config.getBoolValue('${pluginId}.enableDebugging')) {
       withDebug = false;
     }
@@ -115,9 +114,12 @@ class CliLaunchType extends LaunchType {
     runner.onStdout.listen((str) {
       // Observatory listening on http://127.0.0.1:16161
       if (str.startsWith('Observatory listening on ')) {
-        ObservatoryDebugger.connectDebugger(
-            launch, 'localhost', _observePort).catchError((e) {
-          launch.pipeStdio('Error connecting debugger: ${e}\n', error: true);
+        Future f = ObservatoryDebugger.connect(
+            launch, 'localhost', _observePort, isolatesStartPaused: true);
+        f.catchError((e) {
+          launch.pipeStdio(
+              'Unable to connect to the observatory (port ${_observePort}).\n',
+              error: true);
         });
       } else {
         launch.pipeStdio(str);

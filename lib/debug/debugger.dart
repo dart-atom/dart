@@ -10,6 +10,8 @@ import '../state.dart';
 import '../utils.dart';
 import 'debugger_ui.dart';
 
+const bool debugDefault = true;
+
 final Logger _logger = new Logger('atom.debugger');
 
 void _displayError(dynamic error) {
@@ -105,16 +107,50 @@ abstract class DebugConnection {
   void dispose();
 }
 
+/// A class to translate from one name-space to another.
+class UriTranslator {
+  /// Convert urls like:
+  /// - `http://localhost:9888/packages/flutter/src/material/dialog.dart`
+  /// - `http://localhost:9888/lib/main.dart`
+  ///
+  /// To urls like:
+  /// - `package:flutter/src/material/dialog.dart`
+  /// - `file:///foo/projects/my_project/lib/main.dart`
+  ///
+  /// This call does not translate `dart:` urls.
+  String targetToClient(String str) => str;
+
+  /// Convert urls from:
+  /// - `package:flutter/src/material/dialog.dart`
+  /// - `file:///foo/projects/my_project/lib/main.dart`
+  ///
+  /// To urls like:
+  /// - `http://localhost:9888/packages/flutter/src/material/dialog.dart`
+  /// - `http://localhost:9888/lib/main.dart`
+  ///
+  /// This call does not translate `dart:` urls.
+  String clientToTarget(String str) => str;
+}
+
 class UriResolver implements Disposable {
-  final String entryPoint;
-  final Map<String, String> _cache = {};
+  final String root;
+  final String selfRefName;
+
+  UriTranslator _translator;
+  String _selfRefPrefix;
+
+  final Map<String, String> _uriToPath = {};
+  final Map<String, List<String>> _pathToUri = {};
 
   Completer _completer = new Completer();
   String _contextId;
 
-  UriResolver(this.entryPoint) {
+  UriResolver(this.root, {UriTranslator translator, this.selfRefName}) {
+    this._translator = translator ?? new UriTranslator();
+    if (selfRefName != null) _selfRefPrefix = 'package:${selfRefName}/';
+
     if (analysisServer.isActive) {
-      analysisServer.server.execution.createContext(entryPoint).then((var result) {
+      analysisServer.server.execution.createContext(root).then((var result) {
         _contextId = result.id;
         _completer.complete(_contextId);
       }).catchError((e) {
@@ -125,24 +161,60 @@ class UriResolver implements Disposable {
     }
   }
 
-  Future<String> resolveToPath(String uri) {
-    if (uri.startsWith('file:///')) {
-      return new Future.value(uri.substring(7));
-    }
+  Future<String> resolveUriToPath(String uri) {
+    return _resolveUriToPath(uri).then((result) {
+      _logger.finer('resolve ${uri} <== ${result}');
+      return result;
+    });
+  }
 
-    if (uri.startsWith('file:/')) {
-      return new Future.value(uri.substring(5));
-    }
+  Future<String> _resolveUriToPath(String uri) {
+    uri = _translator.targetToClient(uri);
 
-    if (_cache.containsKey(uri)) {
-      return new Future.value(_cache[uri]);
-    }
+    if (uri.startsWith('file:///')) return new Future.value(uri.substring(7));
+    if (uri.startsWith('file:/')) return new Future.value(uri.substring(5));
+
+    if (_uriToPath.containsKey(uri)) return new Future.value(_uriToPath[uri]);
 
     return _completer.future.then((String contextId) {
       return analysisServer.server.execution.mapUri(contextId, uri: uri);
     }).then((result) {
       String path = result.file;
-      return _cache[uri] = path;
+      _uriToPath[uri] = path;
+      return path;
+    });
+  }
+
+  /// This can return one or two results.
+  Future<List<String>> resolvePathToUri(String path) {
+    return _resolvePathToUri(path).then((result) {
+      _logger.finer('resolve ${path} ==> ${result}');
+      return result;
+    });
+  }
+
+  Future<String> _resolvePathToUri(String path) {
+    // if (uri.startsWith('file:///')) return new Future.value(uri.substring(7));
+    // if (uri.startsWith('file:/')) return new Future.value(uri.substring(5));
+    if (_pathToUri.containsKey(path)) return new Future.value(_pathToUri[path]);
+
+    return _completer.future.then((String contextId) {
+      return analysisServer.server.execution.mapUri(contextId, file: path);
+    }).then((result) {
+      List<String> uris = [result.uri];
+
+      if (result.uri.startsWith(_selfRefPrefix)) {
+        String filePath = root.startsWith('/') ? 'file://${root}' : 'file:///${root}';
+        filePath += '/lib/${result.uri.substring(_selfRefPrefix.length)}';
+        uris.insert(0, filePath);
+      }
+
+      for (int i = 0; i < uris.length; i++) {
+        uris[i] = _translator.clientToTarget(uris[i]);
+      }
+
+      _pathToUri[path] = uris;
+      return uris;
     });
   }
 
@@ -153,4 +225,6 @@ class UriResolver implements Disposable {
       });
     }
   }
+
+  String toString() => '[UriResolver for ${root}]';
 }

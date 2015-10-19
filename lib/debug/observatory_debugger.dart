@@ -8,15 +8,18 @@ import 'package:vm_service_lib/vm_service_lib.dart';
 
 import '../atom.dart';
 import '../launch/launch.dart';
-import '../utils.dart';
 import '../state.dart';
+import '../utils.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
 
 final Logger _logger = new Logger('atom.observatory');
 
 class ObservatoryDebugger {
-  static Future<DebugConnection> connectDebugger(Launch launch, String host, int port) {
+  static Future<DebugConnection> connect(Launch launch, String host, int port, {
+    bool isolatesStartPaused: false,
+    UriTranslator uriTranslator
+  }) {
     String url = 'ws://${host}:${port}/ws';
     WebSocket ws = new WebSocket(url);
 
@@ -33,12 +36,16 @@ class ObservatoryDebugger {
       );
 
       _logger.info('Connected to observatory on ${url}.');
-
-      launch.addDebugConnection(
-          new _ObservatoryDebugConnection(launch, service, finishedCompleter));
+      launch.addDebugConnection(new _ObservatoryDebugConnection(
+          launch,
+          service,
+          finishedCompleter,
+          isolatesStartPaused: isolatesStartPaused,
+          uriTranslator: uriTranslator));
     });
 
     ws.onError.listen((e) {
+      _logger.fine('Unable to connect to observatory, port ${port}', e);
       if (!connectedCompleter.isCompleted) connectedCompleter.completeError(e);
     });
 
@@ -51,16 +58,29 @@ class ObservatoryDebugger {
 class _ObservatoryDebugConnection extends DebugConnection {
   final VmService service;
   final Completer completer;
+  final bool pipeStdio;
+  final bool isolatesStartPaused;
 
   IsolateRef _currentIsolate;
   StreamSubscriptions subs = new StreamSubscriptions();
   UriResolver uriResolver;
 
+  bool stdoutSupported = true;
+  bool stderrSupported = true;
+
   bool isSuspended = true;
   StreamController<bool> _suspendController = new StreamController.broadcast();
 
-  _ObservatoryDebugConnection(Launch launch, this.service, this.completer) : super(launch) {
-    uriResolver = new UriResolver(launch.launchConfiguration.primaryResource);
+  _ObservatoryDebugConnection(Launch launch, this.service, this.completer, {
+    this.pipeStdio: false,
+    this.isolatesStartPaused: false,
+    UriTranslator uriTranslator
+  }) : super(launch) {
+    String root = launch.primaryResource;
+    if (launch.project != null) root = launch.project.path;
+    uriResolver = new UriResolver(root,
+        translator: uriTranslator,
+        selfRefName: launch.project?.getSelfRefName());
     _init();
     completer.future.whenComplete(() => dispose());
   }
@@ -82,9 +102,6 @@ class _ObservatoryDebugConnection extends DebugConnection {
   Future get onTerminated => completer.future;
 
   void _init() {
-    // TODO: init breakpoints as isolates are created
-    // TODO: resume each isolate after creation
-
     service.onSend.listen((str) => _logger.fine('==> ${str}'));
     service.onReceive.listen((str) => _logger.fine('<== ${str}'));
 
@@ -92,20 +109,85 @@ class _ObservatoryDebugConnection extends DebugConnection {
       _logger.fine('Observatory version ${ver.major}.${ver.minor}.');
     });
 
-    service.streamListen('Isolate');
-    service.streamListen('Debug');
-    service.streamListen('Stdout');
-    service.streamListen('Stderr');
-
     service.onIsolateEvent.listen(_handleIsolateEvent);
+    service.streamListen('Isolate');
+
     service.onDebugEvent.listen(_handleDebugEvent);
-    //service.onStdoutEvent.listen((Event e) => _stdio(e, 'stdout'));
-    //service.onStderrEvent.listen((Event e) => _stdio(e, 'stderr'));
+    service.streamListen('Debug');
+
+    if (pipeStdio) {
+      service.onStdoutEvent.listen((Event e) {
+        launch.pipeStdio(decodeBase64(e.bytes));
+      });
+      service.streamListen('Stdout').catchError((_) => stdoutSupported = false);
+
+      service.onStderrEvent.listen((Event e) {
+        launch.pipeStdio(decodeBase64(e.bytes), error: true);
+      });
+      service.streamListen('Stderr').catchError((_) => stderrSupported = false);
+    }
+
+    service.getVM().then((VM vm) {
+      _logger.info('Connected to ${vm.architectureBits}/${vm.targetCPU}/'
+          '${vm.hostCPU}/${vm.version}');
+      if (!isolatesStartPaused && vm.isolates.isNotEmpty) {
+        _currentIsolate = vm.isolates.first;
+        _installInto(_currentIsolate).then((_) {
+          _suspend(false);
+        });
+
+        // service.getIsolate(_currentIsolate.id).then((Isolate i) {
+        //   print('root lib = ${i.rootLib}');
+        // });
+      } else if (isolatesStartPaused && vm.isolates.isNotEmpty) {
+        _currentIsolate = vm.isolates.first;
+        _installInto(_currentIsolate).then((_) {
+          service.resume(_currentIsolate.id);
+        });
+      }
+    });
   }
 
-  // void _stdio(Event e, String prefix) {
-  //   print('[stdio: ${decodeBase64(e.bytes).trim()}]');
-  // }
+  Future _installInto(IsolateRef isolate) {
+    Map<AtomBreakpoint, Breakpoint> _bps = {};
+
+    subs.add(breakpointManager.onAdd.listen((bp) {
+      uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
+        // TODO: Use both returned values.
+        return service.addBreakpointWithScriptUri(
+            _currentIsolate.id, uris.first, bp.line, column: bp.column);
+      }).then((Breakpoint vmBreakpoint) {
+        _bps[bp] = vmBreakpoint;
+      }).catchError((e) {
+        // ignore
+      });
+    }));
+
+    subs.add(breakpointManager.onRemove.listen((bp) {
+      Breakpoint vmBreakpoint = _bps[bp];
+      if (vmBreakpoint != null) {
+        service.removeBreakpoint(_currentIsolate.id, vmBreakpoint.id);
+      }
+    }));
+
+    // TODO: Run these in parallel.
+    // TODO: Need to handle self-references and editor breakpoints multiplexed
+    // over several VM breakpoints.
+    return Future.forEach(breakpointManager.breakpoints, (AtomBreakpoint bp) {
+      return uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
+        // TODO: Use both returned values.
+        return service.addBreakpointWithScriptUri(
+            _currentIsolate.id, uris.first, bp.line, column: bp.column);
+      }).then((Breakpoint vmBreakpoint) {
+        _bps[bp] = vmBreakpoint;
+      }).catchError((e) {
+        // ignore
+      });
+    }).then((_) {
+      return service.setExceptionPauseMode(
+        _currentIsolate.id, ExceptionPauseMode.Unhandled);
+    });
+  }
 
   void _handleIsolateEvent(Event e) {
     // TODO: isolate handler
@@ -114,43 +196,11 @@ class _ObservatoryDebugConnection extends DebugConnection {
 
     // IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
     if (e.kind == EventKind.IsolateRunnable) {
+      // TODO: Don't re-init if it is already inited.
       _currentIsolate = e.isolate;
-
-      Map<AtomBreakpoint, Breakpoint> _bps = {};
-
-      // TODO: Run these in parallel.
-      Future.forEach(breakpointManager.breakpoints, (AtomBreakpoint bp) {
-        Future f = service.addBreakpointWithScriptUri(
-          _currentIsolate.id, bp.asUrl, bp.line, column: bp.column);
-        return f.then((Breakpoint vmBreakpoint) {
-          _bps[bp] = vmBreakpoint;
-          print(vmBreakpoint);
-        }).catchError((e) {
-          // ignore
-        });
-      }).then((_) {
-        return service.setExceptionPauseMode(
-          _currentIsolate.id, ExceptionPauseMode.Unhandled);
-      }).then((_) {
-        return resume();
+      _installInto(_currentIsolate).then((_) {
+        if (isolatesStartPaused) resume();
       });
-
-      subs.add(breakpointManager.onAdd.listen((bp) {
-        Future f = service.addBreakpointWithScriptUri(
-          _currentIsolate.id, bp.asUrl, bp.line, column: bp.column);
-        f.then((Breakpoint vmBreakpoint) {
-          _bps[bp] = vmBreakpoint;
-        }).catchError((e) {
-          // ignore
-        });
-      }));
-
-      subs.add(breakpointManager.onRemove.listen((bp) {
-        Breakpoint vmBreakpoint = _bps[bp];
-        if (vmBreakpoint != null) {
-          service.removeBreakpoint(_currentIsolate.id, vmBreakpoint.id);
-        }
-      }));
     } else if (e.kind == EventKind.IsolateExit) {
       _currentIsolate = null;
     }
@@ -158,8 +208,6 @@ class _ObservatoryDebugConnection extends DebugConnection {
 
   void _handleDebugEvent(Event e) {
     IsolateRef isolate = e.isolate;
-    // bool paused = e.kind == EventKind.PauseBreakpoint ||
-    //     e.kind == EventKind.PauseInterrupted || e.kind == EventKind.PauseException;
 
     if (e.kind == EventKind.Resume) {
       _suspend(false);
@@ -170,6 +218,7 @@ class _ObservatoryDebugConnection extends DebugConnection {
 
     if (e.kind == EventKind.Resume || e.kind == EventKind.IsolateExit) {
       // TODO: isolate is resumed
+
     }
 
     if (e.kind != EventKind.Resume) {
@@ -185,7 +234,7 @@ class _ObservatoryDebugConnection extends DebugConnection {
           if (pos != null) {
             launch.pipeStdio(' [${uri}, ${pos.row}]\n', subtle: true);
 
-            uriResolver.resolveToPath(uri).then((String path) {
+            uriResolver.resolveUriToPath(uri).then((String path) {
               if (statSync(path).isFile()) {
                 editorManager.jumpToLocation(path, pos.row - 1, pos.column - 1).then(
                     (TextEditor editor) {
