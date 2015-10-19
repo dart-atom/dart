@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.11
 - fixed an issue when running `pub get` in a directory without a pubspec.yaml
 - adjusted the highlighting in the outline view
 - fixed an issue with restoring atom preferences
