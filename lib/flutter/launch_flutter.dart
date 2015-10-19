@@ -2,15 +2,21 @@ library atom.flutter.flutter_launch;
 
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import '../atom.dart';
 import '../atom_utils.dart';
+import '../debug/debugger.dart';
+import '../debug/observatory_debugger.dart';
 import '../impl/pub.dart';
-import '../launch.dart';
+import '../launch/launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../state.dart';
 
 const String _toolName = 'flutter';
+
+final Logger _logger = new Logger('atom.flutter_launch');
 
 class FlutterLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -67,6 +73,7 @@ class _LaunchInstance {
 
   Launch _launch;
   ProcessRunner _runner;
+  bool _withDebug;
 
   _LaunchInstance(this.project, LaunchConfiguration configuration, LaunchType launchType) {
     _launch = new Launch(
@@ -75,11 +82,13 @@ class _LaunchInstance {
         configuration,
         'lib${separator}main.dart',
         killHandler: _kill);
-    // TODO: Only set this value on successful connect.
-    // TODO: Fire events on value change.
-    _launch.servicePort = 8181;
     launchManager.addLaunch(_launch);
     _launch.pipeStdio('[${project.path}] pub run ${_toolName} start\n', highlight: true);
+
+    _withDebug = configuration.debug ?? debugDefault;
+    if (!atom.config.getBoolValue('${pluginId}.enableDebugging')) {
+      _withDebug = false;
+    }
   }
 
   Future<Launch> launch() async {
@@ -104,6 +113,25 @@ class _LaunchInstance {
 
     int code = await _runner.onExit;
     if (code == 0) {
+      int port = 8181;
+      _launch.servicePort.value = port;
+
+      if (_withDebug) {
+        // TODO: Figure out this timing (https://github.com/flutter/tools/issues/110).
+        new Future.delayed(new Duration(seconds: 4), () {
+          FlutterUriTranslator translator =
+              new FlutterUriTranslator(_launch.project?.path);
+          Future f = ObservatoryDebugger.connect(_launch, 'localhost', port,
+              isolatesStartPaused: false,
+              uriTranslator: translator);
+          f.catchError((e) {
+            _launch.pipeStdio(
+                'Unable to connect to the observatory (port ${port}).\n',
+                error: true);
+          });
+        });
+      }
+
       // Chain 'flutter logs'.
       _runner = _flutter(flutter, ['logs', '--clear']);
       _runner.execStreaming();
@@ -131,6 +159,64 @@ class _LaunchInstance {
 
 ProcessRunner _flutter(PubAppLocal flutter, List<String> args) {
   return flutter.runRaw(args, startProcess: false);
+}
+
+class FlutterUriTranslator implements UriTranslator {
+  static const _packagesPrefix = 'packages/';
+  static const _packagePrefix = 'package:';
+
+  final String root;
+  final String prefix;
+
+  String _rootPrefix;
+
+  FlutterUriTranslator(this.root, {this.prefix: 'http://localhost:9888/'}) {
+    if (root.startsWith('/')) {
+      _rootPrefix = 'file://${root}/';
+    } else {
+      _rootPrefix = 'file:///${root}/';
+    }
+  }
+
+  String targetToClient(String str) {
+    String result = _targetToClient(str);
+    _logger.finer('${str} ==> ${result}');
+    return result;
+  }
+
+  String _targetToClient(String str) {
+    if (str.startsWith(prefix)) {
+      str = str.substring(prefix.length);
+
+      if (str.startsWith(_packagesPrefix)) {
+        // Convert packages/ prefix to package: one.
+        return _packagePrefix + str.substring(_packagesPrefix.length);
+      } else {
+        // Return files relative to the starting project.
+        return '${_rootPrefix}${str}';
+      }
+    } else {
+      return str;
+    }
+  }
+
+  String clientToTarget(String str) {
+    String result = _clientToTarget(str);
+    _logger.finer('${str} ==> ${result}');
+    return result;
+  }
+
+  String _clientToTarget(String str) {
+    if (str.startsWith(_packagePrefix)) {
+      // Convert package: prefix to packages/ one.
+      return prefix + _packagesPrefix + str.substring(_packagePrefix.length);
+    } else if (str.startsWith(_rootPrefix)) {
+      // Convert file:///foo/bar/lib/main.dart to http://.../lib/main.dart.
+      return prefix + str.substring(_rootPrefix.length);
+    } else {
+      return str;
+    }
+  }
 }
 
 // Future<bool> hasFswatchInstalled() {

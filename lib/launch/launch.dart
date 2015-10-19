@@ -1,16 +1,16 @@
-/// A library to manage launching application.
+/// A library to manage launching applications.
 library atom.launch;
 
 import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import 'atom.dart';
-import 'atom_utils.dart';
-import 'projects.dart';
-import 'state.dart';
-import 'utils.dart';
-import 'debug/debug.dart';
+import '../atom.dart';
+import '../atom_utils.dart';
+import '../debug/debugger.dart';
+import '../projects.dart';
+import '../state.dart';
+import '../utils.dart';
 
 final Logger _logger = new Logger('atom.launch');
 
@@ -257,35 +257,39 @@ class Launch implements Disposable {
   final int id = ++_id;
   final Function killHandler;
 
-  int servicePort;
-
   StreamController<TextFragment> _stdio = new StreamController.broadcast();
+  final Property<int> exitCode = new Property();
 
-  int _exitCode;
-  DebugConnection _connection;
+  final Property<int> servicePort = new Property();
+  DebugConnection _debugConnection;
 
   Launch(this.manager, this.launchType, this.launchConfiguration, this.title, {
     this.killHandler,
-    this.servicePort
-  });
+    int servicePort
+  }) {
+    if (servicePort != null) this.servicePort.value = servicePort;
+  }
 
-  int get exitCode => _exitCode;
-  bool get errored => _exitCode != null && _exitCode != 0;
+  bool get errored => exitCode.hasValue && exitCode.value != 0;
 
-  DebugConnection get connection => _connection;
+  DebugConnection get debugConnection => _debugConnection;
 
-  bool get isRunning => _exitCode == null;
-  bool get isTerminated => _exitCode != null;
+  bool get isRunning => exitCode.value == null;
+  bool get isTerminated => exitCode.hasValue;
 
   bool get isActive => manager.activeLaunch == this;
 
   Stream<TextFragment> get onStdio => _stdio.stream;
 
+  String get primaryResource => launchConfiguration.primaryResource;
+
+  DartProject get project => projectManager.getProjectFor(primaryResource);
+
   void pipeStdio(String str, {bool error: false, bool subtle: false, bool highlight: false}) {
     _stdio.add(new TextFragment(str, error: error, subtle: subtle, highlight: highlight));
   }
 
-  bool canDebug() => isRunning && servicePort != null;
+  bool canDebug() => isRunning && servicePort.hasValue;
 
   bool canKill() => killHandler != null;
 
@@ -298,11 +302,13 @@ class Launch implements Disposable {
     }
   }
 
-  void launchTerminated(int exitCode) {
-    if (_exitCode != null) return;
-    _exitCode = exitCode;
+  void launchTerminated(int code) {
+    if (isTerminated) return;
+    exitCode.value = code;
 
-    if (_connection != null) debugManager.removeConnection(_connection);
+    if (_debugConnection != null) {
+      debugManager.removeConnection(_debugConnection);
+    }
 
     if (errored) {
       atom.notifications.addError('${this} exited with error code ${exitCode}.');
@@ -322,7 +328,7 @@ class Launch implements Disposable {
   String toString() => '${launchType}: ${title}';
 
   void addDebugConnection(DebugConnection connection) {
-    this._connection = connection;
+    this._debugConnection = connection;
     debugManager.addConnection(connection);
   }
 }

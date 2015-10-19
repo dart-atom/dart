@@ -1,11 +1,11 @@
-library atom.debug_ui;
+library atom.debugger_ui;
 
 import 'dart:async';
 import 'dart:html' show document;
 
 import '../elements.dart';
 import '../utils.dart';
-import 'debug.dart';
+import 'debugger.dart';
 
 // TODO: feedback when an operation is in progress (like pause, which can take
 // a long time depending on the running app)

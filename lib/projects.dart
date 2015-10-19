@@ -8,6 +8,7 @@ library atom.projects;
 import 'dart:async';
 
 import 'package:logging/logging.dart';
+import 'package:yaml/yaml.dart' as yaml;
 
 import 'analysis/analysis_options.dart';
 import 'atom.dart';
@@ -86,6 +87,8 @@ class ProjectManager implements Disposable, ContextMenuContributor {
   /// Return the dart project that contains the given path, or `null` if there
   /// is no such project.
   DartProject getProjectFor(String path) {
+    if (path == null) return null;
+
     for (DartProject project in projects) {
       Directory dir = project.directory;
       if (dir.path == path || dir.contains(path)) return project;
@@ -333,6 +336,22 @@ class DartProject {
   String get path => directory.path;
 
   String get name => directory.getBaseName();
+
+  String getSelfRefName() {
+    File pubspec = directory.getFile(pub.pubspecFileName);
+
+    if (pubspec.existsSync()) {
+      try {
+        String contents = pubspec.readSync();
+        var data = yaml.loadYaml(contents);
+        return data['name'];
+      } catch (_) {
+        return null;
+      }
+    }
+
+    return null;
+  }
 
   int get hashCode => directory.hashCode;
 

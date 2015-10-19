@@ -115,6 +115,28 @@ class Edit {
   String toString() => '[Edit offset: ${offset}, length: ${length}]';
 }
 
+/// A value that fires events when it changes.
+class Property<T> {
+  T _value;
+  StreamController<T> _controller = new StreamController.broadcast();
+
+  Property([T initialValue]) {
+    _value = initialValue;
+  }
+
+  T get value => _value;
+  set value(T v) {
+    _value = v;
+    _controller.add(_value);
+  }
+
+  bool get hasValue => _value != null;
+
+  Stream<T> get onChange => _controller.stream;
+
+  String toString() => '${_value}';
+}
+
 // TODO: Create a manager / notifier class.
 // TODO: manages a set of items
 // TODO: fires notifications when the set changes
