@@ -11,6 +11,9 @@ pubspec.lock
 npm-debug.log
 node_modules
 
+spec/all-spec.js
+spec/all-spec.js.map
+
 *.dart.js
 *.dart.js.deps
 *.dart.js.map

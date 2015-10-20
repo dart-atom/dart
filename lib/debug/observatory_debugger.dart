@@ -105,6 +105,13 @@ class _ObservatoryDebugConnection extends DebugConnection {
     service.onSend.listen((str) => _logger.fine('==> ${str}'));
     service.onReceive.listen((str) => _logger.fine('<== ${str}'));
 
+    // TODO: Recommended boot-up sequence (done synchronously):
+    // 1) getVersion.
+    // 2) streamListen(Debug)
+    // 3) streamListen(Isolate)
+    // 4) getVM()
+    // 5) getIsolate(id)
+
     service.getVersion().then((Version ver) {
       _logger.fine('Observatory version ${ver.major}.${ver.minor}.');
     });

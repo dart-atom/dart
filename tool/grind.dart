@@ -9,6 +9,7 @@ import 'dart:io';
 
 import 'package:grinder/grinder.dart';
 import 'package:pub_semver/pub_semver.dart';
+import 'package:which/which.dart';
 
 part 'publish.dart';
 
@@ -39,6 +40,29 @@ build() {
   }
 }
 
+@Task('Build the Atom tests')
+buildAtomTests() {
+  final String base = 'spec/all-spec';
+  File inputFile = getFile('${base}.dart');
+
+  Dart2js.compile(inputFile, csp: true);
+  delete(getFile('${base}.dart.js.deps'));
+  getFile('${base}.dart.js').renameSync('spec/all-spec.js');
+  getFile('${base}.dart.js.map').renameSync('spec/all-spec.js.map');
+}
+
+@Task('Run the Atom tests')
+@Depends(buildAtomTests)
+runAtomTests() {
+  String apmPath = whichSync('apm', orElse: () => null);
+
+  if (apmPath != null) {
+    run('apm', arguments: ['test']);
+  } else {
+    log("warning: command 'apm' not found");
+  }
+}
+
 @Task('Analyze the source code with the ddc compiler')
 ddc() {
   PubApp ddc = new PubApp.global('dev_compiler');
@@ -48,8 +72,8 @@ ddc() {
 @Task()
 test() => new PubApp.local('test').run(['-rexpanded']);
 
-// TODO: remove the `ddc` dep task for now - stream transformers make it unhappy.
-@Task() @Depends(analyze, build, test)
+// TODO: Removed the `ddc` dep task for now.
+@Task() @Depends(analyze, build, test, runAtomTests)
 bot() => null;
 
 @Task()
