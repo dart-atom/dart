@@ -20,8 +20,10 @@ main(List<String> args) {
   List<Element> domains = document.body.getElementsByTagName('domain');
   List<Element> typedefs = document.body.getElementsByTagName('types')
       .first.getElementsByTagName('type');
+  List<Element> refactorings = document.body.getElementsByTagName('refactorings')
+      .first.getElementsByTagName('refactoring');
   api = new Api(ver.text);
-  api.parse(domains, typedefs);
+  api.parse(domains, typedefs, refactorings);
 
   // Generate code from the model.
   File outputFile = new File('lib/analysis/analysis_server_lib.dart');
@@ -36,13 +38,17 @@ class Api {
 
   List<Domain> domains;
   List<TypeDef> typedefs;
+  List<Refactoring> refactorings;
 
   Api(this.version);
 
-  void parse(List<Element> domainElements, List<Element> typeElements) {
+  void parse(List<Element> domainElements, List<Element> typeElements,
+      List<Element> refactoringElements) {
     typedefs = typeElements.map((element) => new TypeDef(element)).toList();
     domains = domainElements.map((element) => new Domain(element)).toList();
+    refactorings = refactoringElements.map((e) => new Refactoring(e)).toList();
 
+    // Mark some types as jsonable - we can send them back over the wire.
     findRef('SourceEdit').setCallParam();
     typedefs
         .where((def) => def.name.endsWith('ContentOverlay'))
@@ -54,7 +60,7 @@ class Api {
 
   void generate(DartGenerator gen) {
     gen.out(_headerCode);
-    gen.writeln("const String _version = '${version}';");
+    gen.writeln("const String generatedProtocolVersion = '${version}';");
     gen.writeln();
     gen.writeStatement('class Server {');
     gen.writeStatement('StreamSubscription _streamSub;');
@@ -98,6 +104,17 @@ class Api {
     typedefs
         .where((t) => t.isObject)
         .forEach((TypeDef def) => def.generate(gen));
+
+    // TODO: Handle the refactorings items.
+    gen.writeln();
+    gen.writeln('// refactorings');
+    gen.writeln();
+    gen.writeStatement('class Refactorings {');
+    refactorings.forEach((Refactoring refactor) {
+      print('todo: handle the ${refactor.kind} refactoring');
+      gen.writeStatement("static const String ${refactor.kind} = '${refactor.kind}';");
+    });
+    gen.writeStatement('}');
   }
 
   String toString() => domains.toString();
@@ -368,6 +385,17 @@ class Field implements Comparable {
   }
 }
 
+class Refactoring {
+  String kind;
+
+  Refactoring(Element element) {
+    kind = element.attributes['kind'];
+
+    // TODO: parse feedback and options
+
+  }
+}
+
 class TypeDef {
   static final Set<String> _shouldHaveToString = new Set.from([
     'RequestError',
@@ -431,6 +459,8 @@ class TypeDef {
 
   bool get isObject => fields != null;
 
+  bool get isAbstract => name == 'RefactoringFeedback' || name == 'RefactoringOptions';
+
   bool get callParam => _callParam;
 
   void setCallParam() {
@@ -439,7 +469,8 @@ class TypeDef {
 
   void generate(DartGenerator gen) {
     gen.writeln();
-    gen.writeln('class ${name} ${callParam ? "implements Jsonable " : ""}{');
+    String abs = isAbstract ? '/*abstract*/ ' : '';
+    gen.writeln('${abs}class ${name} ${callParam ? "implements Jsonable " : ""}{');
     gen.writeln('static ${name} parse(Map m) {');
     gen.writeln('if (m == null) return null;');
     gen.write('return new ${name}(');

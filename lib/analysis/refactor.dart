@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart'
-    show SourceChange, SourceEdit, SourceFileEdit;
+    show Refactorings, SourceChange, SourceEdit, SourceFileEdit;
 import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
@@ -63,7 +63,7 @@ class RefactoringHelper implements Disposable {
     String newName;
     List refactorings = result.kinds;
 
-    bool canRefactor = refactorings.contains('RENAME');
+    bool canRefactor = refactorings.contains(Refactorings.RENAME);
 
     if (!canRefactor) {
       atom.beep();
@@ -79,7 +79,7 @@ class RefactoringHelper implements Disposable {
         // Perform the refactoring.
         RefactoringOptions option = new RenameRefactoringOptions(newName);
         return analysisServer.getRefactoring(
-            'RENAME', path, offset, end - offset, false, options: option);
+            Refactorings.RENAME, path, offset, end - offset, false, options: option);
       }
     }).then((RefactoringResult result) {
       if (result != null) {
