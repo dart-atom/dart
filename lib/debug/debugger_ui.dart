@@ -14,6 +14,8 @@ class DebugUIController implements Disposable {
   final DebugConnection connection;
 
   CoreElement ui;
+  CoreElement frameTitle;
+  CoreElement frameVars;
 
   DebugUIController(this.connection) {
     CoreElement resume = button(c: 'btn icon-playback-play')..click(_resume);
@@ -22,8 +24,8 @@ class DebugUIController implements Disposable {
     CoreElement stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
     CoreElement stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
 
-    ui = div(c: 'debugger-ui btn-toolbar')..add([
-      div(c: 'btn-group no-left')..add([
+    CoreElement toolbar = div(c: 'btn-toolbar')..add([
+      div(c: 'btn-group')..add([
         resume, pause
       ]),
       div(c: 'btn-group')..add([
@@ -34,6 +36,26 @@ class DebugUIController implements Disposable {
       ])
     ]);
 
+    CoreElement frameContent = div(c: 'select-list')..add([
+      frameVars = ul(c: 'debugger-vars list-group')..add([
+        li(text: 'this', c: 'selected'),
+        li(text: 'foo'),
+        li(text: 'bar'),
+      ])
+    ]);
+
+    CoreElement footer = div()..add([
+      // atom-text-editor mini
+      div(text: 'Evaluate:')
+    ]);
+
+    ui = div(c: 'debugger-ui')..layoutVertical()..add([
+      toolbar,
+      frameTitle = div(text: 'foo.bar()', c: 'text-highlight'),
+      frameContent,
+      footer
+    ]);
+
     document.body.children.add(ui.element);
 
     void updateUi(bool suspended) {
@@ -42,6 +64,13 @@ class DebugUIController implements Disposable {
       stepIn.enabled = suspended;
       stepOut.enabled = suspended;
       stepOver.enabled = suspended;
+
+      if (suspended) {
+        //frameTitle.text = connection.frame.title;
+        frameTitle.text = 'Suspended at foo.bar()';
+      } else {
+        frameTitle.text = '';
+      }
     }
 
     updateUi(connection.isSuspended);

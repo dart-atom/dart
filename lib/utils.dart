@@ -137,10 +137,55 @@ class Property<T> {
   String toString() => '${_value}';
 }
 
-// TODO: Create a manager / notifier class.
-// TODO: manages a set of items
-// TODO: fires notifications when the set changes
-// TODO: has a notion of a 'selected' or active item
+/// A SelectionGroup:
+/// - manages a set of items
+/// - fires notifications when the set changes
+/// - has a notion of a 'selected' or active item
+class SelectionGroup<T> {
+  T _selection;
+  List<T> _items = [];
+
+  StreamController<T> _addedController = new StreamController.broadcast();
+  StreamController<T> _selectionChangedController = new StreamController.broadcast();
+  StreamController<T> _removedController = new StreamController.broadcast();
+
+  SelectionGroup();
+
+  T get selection => _selection;
+
+  List<T> get items => _items;
+
+  Stream<T> get onAdded => _addedController.stream;
+  Stream<T> get onSelectionChanged => _selectionChangedController.stream;
+  Stream<T> get onRemoved => _removedController.stream;
+
+  void add(T item) {
+    _items.add(item);
+    _addedController.add(item);
+
+    if (_selection == null) {
+      _selection = item;
+      _selectionChangedController.add(selection);
+    }
+  }
+
+  void setSelection(T sel) {
+    if (_selection != sel) {
+      _selection = sel;
+      _selectionChangedController.add(selection);
+    }
+  }
+  
+  void remove(T item) {
+    _items.remove(item);
+    _removedController.add(item);
+
+    if (_selection == item) {
+      _selection = null;
+      _selectionChangedController.add(selection);
+    }
+  }
+}
 
 bool listIdentical(List a, List b) {
   if (a.length != b.length) return false;

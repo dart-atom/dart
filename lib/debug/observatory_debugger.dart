@@ -231,6 +231,7 @@ class _ObservatoryDebugConnection extends DebugConnection {
     if (e.kind != EventKind.Resume) {
       if (e.topFrame != null) {
         launch.pipeStdio('[${isolate.name}] ${printFunctionName(e.topFrame.function)}', subtle: true);
+
         ScriptRef scriptRef = e.topFrame.location.script;
 
         _resolveScript(isolate, scriptRef).then((Script script) {
@@ -258,8 +259,37 @@ class _ObservatoryDebugConnection extends DebugConnection {
           } else {
             launch.pipeStdio(' [${uri}]\n', subtle: true);
           }
+
+          _printLocals(e.topFrame);
+          if (e.exception != null) {
+            _printException(e.exception);
+          }
         });
       }
+    }
+  }
+
+  void _printLocals(Frame frame) {
+    for (BoundVariable local in frame.vars) {
+      String valueText = _refToString(local.value);
+      launch.pipeStdio('  - ${local.name}: ${valueText}\n', subtle: true);
+    }
+  }
+
+  void _printException(InstanceRef exception) {
+    launch.pipeStdio('exception: ${_refToString(exception)}\n', error: true);
+  }
+
+  String _refToString(dynamic value) {
+    if (value is InstanceRef) {
+      InstanceRef ref = value as InstanceRef;
+      if (ref.valueAsString != null) {
+        return ref.valueAsString;
+      } else {
+        return '[${ref.classRef.name} ${ref.id}]';
+      }
+    } else {
+      return '${value}';
     }
   }
 
