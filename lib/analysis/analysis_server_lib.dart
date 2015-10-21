@@ -13,7 +13,7 @@ const String optional = 'optional';
 
 final Logger _logger = new Logger('analysis_server_lib');
 
-const String _version = '1.11.0';
+const String generatedProtocolVersion = '1.12.0';
 
 class Server {
   StreamSubscription _streamSub;
@@ -1405,7 +1405,7 @@ class RefactoringMethodParameter {
       {this.id, this.parameters});
 }
 
-class RefactoringFeedback {
+/*abstract*/ class RefactoringFeedback {
   static RefactoringFeedback parse(Map m) {
     if (m == null) return null;
     return new RefactoringFeedback();
@@ -1414,7 +1414,7 @@ class RefactoringFeedback {
   RefactoringFeedback();
 }
 
-class RefactoringOptions implements Jsonable {
+/*abstract*/ class RefactoringOptions implements Jsonable {
   static RefactoringOptions parse(Map m) {
     if (m == null) return null;
     return new RefactoringOptions();
@@ -1586,4 +1586,17 @@ class TypeHierarchyItem {
   TypeHierarchyItem(
       this.classElement, this.interfaces, this.mixins, this.subclasses,
       {this.displayName, this.memberElement, this.superclass});
+}
+
+// refactorings
+
+class Refactorings {
+  static const String CONVERT_GETTER_TO_METHOD = 'CONVERT_GETTER_TO_METHOD';
+  static const String CONVERT_METHOD_TO_GETTER = 'CONVERT_METHOD_TO_GETTER';
+  static const String EXTRACT_LOCAL_VARIABLE = 'EXTRACT_LOCAL_VARIABLE';
+  static const String EXTRACT_METHOD = 'EXTRACT_METHOD';
+  static const String INLINE_LOCAL_VARIABLE = 'INLINE_LOCAL_VARIABLE';
+  static const String INLINE_METHOD = 'INLINE_METHOD';
+  static const String MOVE_FILE = 'MOVE_FILE';
+  static const String RENAME = 'RENAME';
 }
