@@ -107,6 +107,11 @@ abstract class DebugConnection {
   void dispose();
 }
 
+/// A representation of a VM Isolate.
+abstract class DebugIsolate {
+
+}
+
 /// A class to translate from one name-space to another.
 class UriTranslator {
   /// Convert urls like:

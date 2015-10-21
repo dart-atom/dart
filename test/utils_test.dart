@@ -4,6 +4,8 @@
 
 library atom.utils_test;
 
+import 'dart:async';
+
 import 'package:atom_dartlang/utils.dart';
 import 'package:test/test.dart';
 
@@ -21,6 +23,27 @@ defineTests() {
 
     test('simpleDiff', () {
       _checkDiff(simpleDiff('aabcc', 'aacc'), new Edit(0, 5, 'aacc'));
+    });
+  });
+
+  group('SelectionGroup', () {
+    test('adding changes selection', () {
+      SelectionGroup<String> group = new SelectionGroup();
+      Future f = group.onSelectionChanged.first.then((sel) {
+        expect(sel, 'foo');
+      });
+      group.add('foo');
+      return f;
+    });
+
+    test('removing changes selection', () {
+      SelectionGroup<String> group = new SelectionGroup();
+      group.add('foo');
+      Future f = group.onSelectionChanged.first.then((sel) {
+        expect(sel, null);
+      });
+      group.remove('foo');
+      return f;
     });
   });
 }
