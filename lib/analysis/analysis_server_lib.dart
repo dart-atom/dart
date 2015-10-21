@@ -297,8 +297,8 @@ class AnalysisDomain extends Domain {
 }
 
 class AnalysisAnalyzedFiles {
-  static AnalysisAnalyzedFiles parse(Map m) =>
-      new AnalysisAnalyzedFiles(m['directories']);
+  static AnalysisAnalyzedFiles parse(Map m) => new AnalysisAnalyzedFiles(
+      m['directories'] == null ? null : new List.from(m['directories']));
 
   final List<String> directories;
 
@@ -319,8 +319,8 @@ class AnalysisErrors {
 }
 
 class AnalysisFlushResults {
-  static AnalysisFlushResults parse(Map m) =>
-      new AnalysisFlushResults(m['files']);
+  static AnalysisFlushResults parse(Map m) => new AnalysisFlushResults(
+      m['files'] == null ? null : new List.from(m['files']));
 
   final List<String> files;
 
@@ -391,7 +391,7 @@ class AnalysisNavigation {
       m['targets'] == null
           ? null
           : m['targets'].map((obj) => NavigationTarget.parse(obj)).toList(),
-      m['files']);
+      m['files'] == null ? null : new List.from(m['files']));
 
   final String file;
   final List<NavigationRegion> regions;
@@ -462,7 +462,9 @@ class HoverResult {
 
 class LibraryDependenciesResult {
   static LibraryDependenciesResult parse(Map m) =>
-      new LibraryDependenciesResult(m['libraries'], m['packageMap']);
+      new LibraryDependenciesResult(
+          m['libraries'] == null ? null : new List.from(m['libraries']),
+          m['packageMap']);
 
   final List<String> libraries;
   final Map<String, Map<String, List<String>>> packageMap;
@@ -472,7 +474,7 @@ class LibraryDependenciesResult {
 
 class NavigationResult {
   static NavigationResult parse(Map m) => new NavigationResult(
-      m['files'],
+      m['files'] == null ? null : new List.from(m['files']),
       m['targets'] == null
           ? null
           : m['targets'].map((obj) => NavigationTarget.parse(obj)).toList(),
@@ -728,7 +730,8 @@ class AssistsResult {
 
 class AvailableRefactoringsResult {
   static AvailableRefactoringsResult parse(Map m) =>
-      new AvailableRefactoringsResult(m['kinds']);
+      new AvailableRefactoringsResult(
+          m['kinds'] == null ? null : new List.from(m['kinds']));
 
   final List<String> kinds;
 
@@ -764,7 +767,9 @@ class RefactoringResult {
               .toList(),
       feedback: RefactoringFeedback.parse(m['feedback']),
       change: SourceChange.parse(m['change']),
-      potentialEdits: m['potentialEdits']);
+      potentialEdits: m['potentialEdits'] == null
+          ? null
+          : new List.from(m['potentialEdits']));
 
   final List<RefactoringProblem> initialProblems;
   final List<RefactoringProblem> optionsProblems;
@@ -825,7 +830,10 @@ class ExecutionDomain extends Domain {
 
 class ExecutionLaunchData {
   static ExecutionLaunchData parse(Map m) => new ExecutionLaunchData(m['file'],
-      kind: m['kind'], referencedFiles: m['referencedFiles']);
+      kind: m['kind'],
+      referencedFiles: m['referencedFiles'] == null
+          ? null
+          : new List.from(m['referencedFiles']));
 
   final String file;
   @optional final String kind;
@@ -1009,8 +1017,12 @@ class CompletionSuggestion {
         declaringType: m['declaringType'],
         element: Element.parse(m['element']),
         returnType: m['returnType'],
-        parameterNames: m['parameterNames'],
-        parameterTypes: m['parameterTypes'],
+        parameterNames: m['parameterNames'] == null
+            ? null
+            : new List.from(m['parameterNames']),
+        parameterTypes: m['parameterTypes'] == null
+            ? null
+            : new List.from(m['parameterTypes']),
         requiredParameterCount: m['requiredParameterCount'],
         hasNamedParameters: m['hasNamedParameters'],
         parameterName: m['parameterName'],
@@ -1262,7 +1274,8 @@ class Location {
 class NavigationRegion {
   static NavigationRegion parse(Map m) {
     if (m == null) return null;
-    return new NavigationRegion(m['offset'], m['length'], m['targets']);
+    return new NavigationRegion(m['offset'], m['length'],
+        m['targets'] == null ? null : new List.from(m['targets']));
   }
 
   final int offset;
@@ -1299,8 +1312,8 @@ class NavigationTarget {
 class Occurrences {
   static Occurrences parse(Map m) {
     if (m == null) return null;
-    return new Occurrences(
-        Element.parse(m['element']), m['offsets'], m['length']);
+    return new Occurrences(Element.parse(m['element']),
+        m['offsets'] == null ? null : new List.from(m['offsets']), m['length']);
   }
 
   final Element element;
@@ -1568,8 +1581,11 @@ class SourceFileEdit {
 class TypeHierarchyItem {
   static TypeHierarchyItem parse(Map m) {
     if (m == null) return null;
-    return new TypeHierarchyItem(Element.parse(m['classElement']),
-        m['interfaces'], m['mixins'], m['subclasses'],
+    return new TypeHierarchyItem(
+        Element.parse(m['classElement']),
+        m['interfaces'] == null ? null : new List.from(m['interfaces']),
+        m['mixins'] == null ? null : new List.from(m['mixins']),
+        m['subclasses'] == null ? null : new List.from(m['subclasses']),
         displayName: m['displayName'],
         memberElement: Element.parse(m['memberElement']),
         superclass: m['superclass']);

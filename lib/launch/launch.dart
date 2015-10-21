@@ -187,7 +187,7 @@ abstract class LaunchType {
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration);
 
-  operator== (obj) => obj is LaunchType && obj.type == type;
+  bool operator== (obj) => obj is LaunchType && obj.type == type;
   int get hashCode => type.hashCode;
   String toString() => type;
 }

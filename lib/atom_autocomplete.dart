@@ -249,7 +249,7 @@ class _AutocompleteOverride {
   _AutocompleteOverride(this.items, this.renderer);
 
   List<Suggestion> renderSuggestions() {
-    List result = [];
+    List<Suggestion> result = [];
     for (int i = 0; i < items.length; i++) {
       Suggestion suggestion = renderer(items[i]);
       suggestion.itemIndex = i;

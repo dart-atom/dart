@@ -134,7 +134,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
     results.sort(_compareSuggestions);
 
-    var suggestions = results.map((CompletionSuggestion cs) {
+    Iterable<Suggestion> suggestions = results.map((CompletionSuggestion cs) {
       String text = cs.completion;
       String snippet = null;
 
@@ -198,9 +198,9 @@ class DartAutocompleteProvider extends AutocompleteProvider {
       if (_prefix != null) suggestion.replacementPrefix = _prefix;
       if (selectionOffset != null) suggestion.selectionOffset = selectionOffset;
       return suggestion;
-    }).where((suggestion) => suggestion != null).toList();
+    }).where((suggestion) => suggestion != null);
 
-    return suggestions;
+    return new List.from(suggestions);
   }
 
   String _sanitizeReturnType(CompletionSuggestion cs) {

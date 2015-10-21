@@ -30,7 +30,7 @@ class FlutterLaunchType extends LaunchType {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
 
-    PubAppLocal flutter = new PubApp.local(_toolName, project.path);
+    PubAppLocal flutter = new PubApp.local(_toolName, project.path) as PubAppLocal;
     if (!flutter.isInstalledSync()) return false;
 
     String relPath = relativize(project.path, path);
@@ -47,7 +47,7 @@ class FlutterLaunchType extends LaunchType {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return new Future.error("File not in a Dart project.");
 
-    PubAppLocal flutter = new PubApp.local(_toolName, project.path);
+    PubAppLocal flutter = new PubApp.local(_toolName, project.path) as PubAppLocal;
     bool exists = flutter.isInstalledSync();
 
     if (!exists) {
@@ -92,7 +92,7 @@ class _LaunchInstance {
   }
 
   Future<Launch> launch() async {
-    PubAppLocal flutter = new PubApp.local(_toolName, project.path);
+    PubAppLocal flutter = new PubApp.local(_toolName, project.path) as PubAppLocal;
 
     // Ensure that the sky server isn't already running and potentially serving
     // an older (or different) app.

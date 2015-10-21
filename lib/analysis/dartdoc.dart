@@ -91,7 +91,8 @@ class DartdocHelper implements Disposable {
 
     void writeTitle(String title, String desc) {
       if (desc != null && desc.isNotEmpty) {
-        buf.write("<span class='inline-block highlight'>${title}</span> ${desc}<br>\n");
+        buf.write(
+            "<span class='inline-block highlight'>${title}</span> ${desc}<br>\n");
       }
     };
 
@@ -99,15 +100,17 @@ class DartdocHelper implements Disposable {
 
     if (hover.dartdoc != null) {
       if (buf.isNotEmpty) buf.write('<br>');
-
-      String html = markdown.markdownToHtml(hover.dartdoc, linkResolver: (String name) {
-        // TODO: Resolve these to linkable elements?
-        return new markdown.Element.text('code', name);
-      });
+      String html = markdown.markdownToHtml(
+          hover.dartdoc, linkResolver: _resolve);
       buf.write('\n${html}\n');
     }
 
     return buf.toString();
+  }
+
+  static markdown.Node _resolve(String name) {
+    // TODO: Resolve these to linkable elements?
+    return new markdown.Element.text('code', name);
   }
 
   static String _getLibraryName(HoverInformation hover) {

@@ -221,7 +221,7 @@ class PubAppGlobal extends PubApp {
         (ProcessResult result) {
       if (result.exit != 0) throw '${result.stdout}\n${result.stderr}';
 
-      List lines = result.stdout.trim().split('\n');
+      List<String> lines = result.stdout.trim().split('\n');
 
       for (String line in lines) {
         if (line.startsWith('${name} ')) {
@@ -276,7 +276,7 @@ class PubAppGlobal extends PubApp {
   Future run({List<String> args, String cwd, String title}) {
     if (!sdkManager.hasSdk) return new Future.error('no sdk installed');
 
-    List list = [name];
+    List<String> list = [name];
     if (args != null) list.addAll(args);
     Job job = new PubRunJob.global(list, path: cwd, title: title);
     return job.schedule();
@@ -311,7 +311,7 @@ class PubAppLocal extends PubApp {
   Future run({List<String> args, String cwd, String title}) {
     if (!sdkManager.hasSdk) return new Future.error('no sdk installed');
 
-    List list = ['run', name];
+    List<String> list = ['run', name];
     if (args != null) list.addAll(args);
     Job job = new PubRunJob.local(this.cwd, list, title: title);
     return job.schedule();

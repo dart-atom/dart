@@ -64,7 +64,7 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
     _emit(allIssues);
   }
 
-  List _filter(List<AnalysisError> issues) {
+  List<AnalysisError> _filter(List<AnalysisError> issues) {
     bool showInfos = _shouldShowInfoMessages();
     bool showTodos = _shouldShowTodosMessages();
 
@@ -77,14 +77,14 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
     }).toList();
   }
 
-  void _warnMaxCap(List issues) {
+  void _warnMaxCap(List<AnalysisError> issues) {
     if (_displayedWarning) return;
     _displayedWarning = true;
     atom.notifications.addWarning(
         'Warning: displaying ${maxTotalIssues} issues of ${issues.length} total.');
   }
 
-  void _emit(List newIssues) {
+  void _emit(List<AnalysisError> newIssues) {
     if (!listIdentical(_oldIssues, newIssues)) {
       _oldIssues = newIssues;
 

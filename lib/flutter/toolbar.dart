@@ -54,9 +54,10 @@ class Toolbar extends ProxyHolder {
   }
 
   List<ToolbarTile> getLeftTiles() =>
-      invoke('getLeftTiles').map((t) => new ToolbarTile(t)).toList();
+      new List.from(invoke('getLeftTiles').map((t) => new ToolbarTile(t)));
+
   List<ToolbarTile> getRightTiles() =>
-      invoke('getRightTiles').map((t) => new ToolbarTile(t)).toList();
+      new List.from(invoke('getRightTiles').map((t) => new ToolbarTile(t)));
 }
 
 class ToolbarTile extends ProxyHolder {

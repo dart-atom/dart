@@ -163,7 +163,7 @@ class AtomBreakpoint {
   }
 
   int get hashCode => id.hashCode;
-  operator==(other) => other is AtomBreakpoint && id == other.id;
+  bool operator==(other) => other is AtomBreakpoint && id == other.id;
 
   String toString() => id;
 }

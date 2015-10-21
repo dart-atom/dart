@@ -178,7 +178,7 @@ class JobManager implements Disposable {
 
     // Look for a rule that has no scheduling rule or that has one that does not
     // match any currently running rules.
-    List jobsCopy = new List.from(_jobs);
+    List<JobInstance> jobsCopy = new List.from(_jobs);
     for (JobInstance jobInstance in jobsCopy) {
       if (jobInstance.isRunning) {
         rules.add(jobInstance.job.schedulingRule);

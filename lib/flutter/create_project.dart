@@ -18,7 +18,7 @@ class CreateProjectManager implements Disposable {
         .add('atom-workspace', 'dartlang:create-flutter-project', _createProject));
   }
 
-  void _createProject(_) {
+  void _createProject(AtomEvent _) {
     if (!sdkManager.hasSdk) {
       sdkManager.showNoSdkMessage(messagePrefix: 'Unable to create project');
       return;
@@ -31,7 +31,7 @@ class CreateProjectManager implements Disposable {
     String projectPath = "${root}${separator}${Haikunator.haikunate(delimiter: '_')}";
     String _response;
 
-    PubAppGlobal flutter = new PubApp.global('flutter');
+    PubAppGlobal flutter = new PubApp.global('flutter') as PubAppGlobal;
 
     // Install `flutter` if it is not installed or there is an update available.
     Future f = flutter.installIfUpdateAvailable();

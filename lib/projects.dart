@@ -390,7 +390,7 @@ class DartProject {
     _analysisOptions.dirty = false;
   }
 
-  operator==(other) => other is DartProject && directory == other.directory;
+  bool operator==(other) => other is DartProject && directory == other.directory;
 
   String toString() => '[Project ${directory.getBaseName()}]';
 }
