@@ -100,7 +100,7 @@ class NavigationHelper implements Disposable {
     }
   }
 
-  void _handleNavigateReturn(_) {
+  void _handleNavigateReturn(AtomEvent _) {
     trackCommand('return-from-declaration');
 
     if (_history.isEmpty) {

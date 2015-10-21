@@ -53,9 +53,8 @@ class QuickFixHelper implements Disposable {
       return;
     }
 
-    List<_Change> changes = fixes
-      .expand((fix) => fix.fixes.map((c) => new _Change(fix.error, c)))
-      .toList();
+    List<_Change> changes = new List.from(fixes
+        .expand((fix) => fix.fixes.map((c) => new _Change(fix.error, c))));
 
     if (autoFix && changes.length == 1) {
       // Apply the fix.

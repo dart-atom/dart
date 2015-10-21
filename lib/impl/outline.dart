@@ -179,7 +179,7 @@ class OutlineView implements Disposable {
 
       treeBuilder.clear();
 
-      List nodes = data.outline.children ?? [];
+      List<Outline> nodes = data.outline.children ?? [];
       for (Outline node in nodes) {
         treeBuilder.addNode(_toNode(node));
       }

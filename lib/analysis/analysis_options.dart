@@ -112,10 +112,9 @@ class AnalysisOptions {
 
   /// Return the list of exclutions that end in `/**`, with the suffix removed.
   List<String> getIgnoredDirectories() {
-    return getIgnoredRules()
+    return new List.from(getIgnoredRules()
         .where((str) => str.endsWith('/**') || str.endsWith(r'\**'))
-        .map((str) => str.substring(0, str.length - 3))
-        .toList();
+        .map((str) => str.substring(0, str.length - 3)));
   }
 
   void addIgnoredDirectory(String path) {

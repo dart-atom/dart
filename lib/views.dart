@@ -15,7 +15,7 @@ import 'utils.dart';
 class ViewResizer extends CoreElement {
   StreamController<num> _controller = new StreamController.broadcast();
 
-  Point _offset = new Point(0, 0);
+  Point<num> _offset = new Point(0, 0);
 
   StreamSubscription _moveSub;
   StreamSubscription _upSub;
@@ -63,13 +63,14 @@ class ViewResizer extends CoreElement {
       if (e.which != 1) return;
 
       e.preventDefault();
-      _offset = e.offset;
+      _offset = e.offset as Point<num>;
 
       _moveSub = document.onMouseMove.listen((MouseEvent e) {
         if (e.which != 1) {
           cancel();
         } else {
-          Point current = _target.marginEdge.bottomRight - e.client + _offset;
+          Point<num> current =
+              _target.marginEdge.bottomRight - (e.client  as Point<num>) + _offset;
           _handleDrag(current);
         }
       });

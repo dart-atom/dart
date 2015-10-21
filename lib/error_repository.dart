@@ -16,7 +16,7 @@ final Logger _logger = new Logger('error_repository');
 /// One-stop shop for getting the status of errors the analyzer has reported.
 /// Source agonostic.
 class ErrorRepository implements Disposable {
-  static const _empty = const [];
+  static const List<AnalysisError> _emptyErrors = const [];
 
   /// A collection of all known errors that the analysis_server has provided us,
   /// organized by filename.
@@ -74,8 +74,8 @@ class ErrorRepository implements Disposable {
       var oldErrors = knownErrors[path];
       var newErrors = analysisErrors.errors;
 
-      if (oldErrors == null) oldErrors = _empty;
-      if (newErrors == null) newErrors = _empty;
+      if (oldErrors == null) oldErrors = _emptyErrors;
+      if (newErrors == null) newErrors = _emptyErrors;
 
       knownErrors[path] = analysisErrors.errors;
 

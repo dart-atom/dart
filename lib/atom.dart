@@ -164,7 +164,7 @@ class Workspace extends ProxyHolder {
 
   /// Returns a list of [TextEditor]s.
   List<TextEditor> getTextEditors() =>
-      invoke('getTextEditors').map((e) => new TextEditor(e)).toList();
+      new List.from(invoke('getTextEditors').map((e) => new TextEditor(e)));
 
   /// Get the active item if it is a [TextEditor].
   TextEditor getActiveTextEditor() {
@@ -389,7 +389,7 @@ class NotificationManager extends ProxyHolder {
 
   /// Get all the notifications.
   List<Notification> getNotifications() =>
-      invoke('getNotifications').map((n) => new Notification(n)).toList();
+      new List.from(invoke('getNotifications').map((n) => new Notification(n)));
 
   Map _options({String detail, String description, bool dismissable, String icon,
       List<NotificationButton> buttons}) {
@@ -533,7 +533,7 @@ class PackageManager extends ProxyHolder {
   String getApmPath() => invoke('getApmPath');
 
   /// Get the paths being used to look for packages.
-  List<String> getPackageDirPaths() => invoke('getPackageDirPaths');
+  List<String> getPackageDirPaths() => new List.from(invoke('getPackageDirPaths'));
 
   /// Is the package with the given name bundled with Atom?
   bool isBundledPackage(name) => invoke('isBundledPackage', name);
@@ -544,7 +544,8 @@ class PackageManager extends ProxyHolder {
 
   bool isPackageActive(String name) => invoke('isPackageActive', name);
 
-  List<String> getAvailablePackageNames() => invoke('getAvailablePackageNames');
+  List<String> getAvailablePackageNames() =>
+      new List.from(invoke('getAvailablePackageNames'));
 }
 
 /// Represents a project that's opened in Atom.
@@ -555,10 +556,10 @@ class Project extends ProxyHolder {
   /// project paths.
   Stream<List<String>> get onDidChangePaths => eventStream('onDidChangePaths');
 
-  List<String> getPaths() => invoke('getPaths');
+  List<String> getPaths() => new List.from(invoke('getPaths'));
 
   List<Directory> getDirectories() {
-    return invoke('getDirectories').map((dir) => new Directory(dir)).toList();
+    return new List.from(invoke('getDirectories').map((dir) => new Directory(dir)));
   }
 
   /// Add a path to the project's list of root paths.
@@ -574,7 +575,7 @@ class Project extends ProxyHolder {
   /// `relativePath` - the relative path from the project directory to the given
   /// path.
   List<String> relativizePath(String fullPath) =>
-      invoke('relativizePath', fullPath);
+      new List.from(invoke('relativizePath', fullPath));
 
   /// Determines whether the given path (real or symbolic) is inside the
   /// project's directory. This method does not actually check if the path
@@ -1103,9 +1104,9 @@ class ScopeDescriptor extends ProxyHolder {
   }
   ScopeDescriptor._(JsObject object) : super(object);
 
-  List<String> get scopes => obj['scopes'];
+  List<String> get scopes => new List.from(obj['scopes']);
 
-  List<String> getScopesArray() => invoke('getScopesArray');
+  List<String> getScopesArray() => new List.from(invoke('getScopesArray'));
 }
 
 class BufferedProcess extends ProxyHolder {

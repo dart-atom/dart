@@ -155,7 +155,7 @@ table {
 				<span class="menu-heading">Application</span>
 				<a href="#package_atom_dartlang" class="menu-item">
 					<span>atom_dartlang</span>
-					<span class="counter warning">141</span>
+					<span class="counter warning">98</span>
 				</a>
 				<span class="menu-heading">Packages</span>
 				<a href="#package_collection" class="menu-item">
@@ -175,10 +175,6 @@ table {
 					<span>stream_transformers</span>
 					<span class="counter warning">66</span>
 				</a>
-				<a href="#package_usage" class="menu-item">
-					<span>usage</span>
-					<span class="counter warning">1</span>
-				</a>
 				<a href="#package_vm_service_lib" class="menu-item">
 					<span>vm_service_lib</span>
 					<span class="counter warning">42</span>
@@ -191,41 +187,9 @@ table {
 		</div>
 		<div class="column three-fourths">
 			<h1 class="page-title">web/entry.dart</h1>
-			<p>Found 6 errors, 325 warnings compiling web/entry.dart.</p>
+			<p>Found 6 errors, 281 warnings compiling web/entry.dart.</p>
 			<h2 id=package_atom_dartlang>package:atom_dartlang</h2>
-			<span class="counter warning">141 warnings</span>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_options.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">115</td>
-								<td class="blob-code blob-code-inner">    return getIgnoredRules()</td>
-							</tr>
-							<tr>
-								<td class="blob-num">116</td>
-								<td class="blob-code blob-code-inner">        .where((str) =&gt; str.endsWith(&#39;&#47;**&#39;) || str.endsWith(r&#39;\**&#39;))</td>
-							</tr>
-							<tr>
-								<td class="blob-num">117</td>
-								<td class="blob-code blob-code-inner">        .map((str) =&gt; str.substring(0, str.length - 3))</td>
-							</tr>
-							<tr>
-								<td class="blob-num">118</td>
-								<td class="blob-code blob-code-inner">        .toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">getIgnoredRules().where((str) =&gt; str.endsWith(&#39;&#47;**&#39;) || str.endsWith(r&#39;\**&#39;)).map((str) =&gt; str.substring(0, str.length - 3)).toList() (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+			<span class="counter warning">98 warnings</span>
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DownCastComposite</span>
@@ -555,88 +519,8 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">301</td>
-								<td class="blob-code blob-code-inner">      new AnalysisAnalyzedFiles(m[&#39;directories&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;directories&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">323</td>
-								<td class="blob-code blob-code-inner">      new AnalysisFlushResults(m[&#39;files&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;files&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">394</td>
-								<td class="blob-code blob-code-inner">      m[&#39;files&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;files&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">465</td>
-								<td class="blob-code blob-code-inner">      new LibraryDependenciesResult(m[&#39;libraries&#39;], m[&#39;packageMap&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;libraries&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">465</td>
-								<td class="blob-code blob-code-inner">      new LibraryDependenciesResult(m[&#39;libraries&#39;], m[&#39;packageMap&#39;]);</td>
+								<td class="blob-num">467</td>
+								<td class="blob-code blob-code-inner">          m[&#39;packageMap&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
@@ -655,27 +539,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">475</td>
-								<td class="blob-code blob-code-inner">      m[&#39;files&#39;],</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;files&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">496</td>
+								<td class="blob-num">498</td>
 								<td class="blob-code blob-code-inner">      _listen(&#39;completion.results&#39;, CompletionResults.parse);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -695,7 +559,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">538</td>
+								<td class="blob-num">540</td>
 								<td class="blob-code blob-code-inner">      _listen(&#39;search.results&#39;, SearchResults.parse);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -715,284 +579,12 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">731</td>
-								<td class="blob-code blob-code-inner">      new AvailableRefactoringsResult(m[&#39;kinds&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;kinds&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">767</td>
-								<td class="blob-code blob-code-inner">      potentialEdits: m[&#39;potentialEdits&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;potentialEdits&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">805</td>
+								<td class="blob-num">810</td>
 								<td class="blob-code blob-code-inner">      _listen(&#39;execution.launchData&#39;, ExecutionLaunchData.parse);</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">_listen(&#39;execution.launchData&#39;, ExecutionLaunchData.parse) (Stream&lt;dynamic&gt;) will need runtime check to cast to type Stream&lt;ExecutionLaunchData&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">828</td>
-								<td class="blob-code blob-code-inner">      kind: m[&#39;kind&#39;], referencedFiles: m[&#39;referencedFiles&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;referencedFiles&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1012</td>
-								<td class="blob-code blob-code-inner">        parameterNames: m[&#39;parameterNames&#39;],</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;parameterNames&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1013</td>
-								<td class="blob-code blob-code-inner">        parameterTypes: m[&#39;parameterTypes&#39;],</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;parameterTypes&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1265</td>
-								<td class="blob-code blob-code-inner">    return new NavigationRegion(m[&#39;offset&#39;], m[&#39;length&#39;], m[&#39;targets&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;targets&#39;] (dynamic) will need runtime check to cast to type List&lt;int&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1303</td>
-								<td class="blob-code blob-code-inner">        Element.parse(m[&#39;element&#39;]), m[&#39;offsets&#39;], m[&#39;length&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;offsets&#39;] (dynamic) will need runtime check to cast to type List&lt;int&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1572</td>
-								<td class="blob-code blob-code-inner">        m[&#39;interfaces&#39;], m[&#39;mixins&#39;], m[&#39;subclasses&#39;],</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;interfaces&#39;] (dynamic) will need runtime check to cast to type List&lt;int&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1572</td>
-								<td class="blob-code blob-code-inner">        m[&#39;interfaces&#39;], m[&#39;mixins&#39;], m[&#39;subclasses&#39;],</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;mixins&#39;] (dynamic) will need runtime check to cast to type List&lt;int&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1572</td>
-								<td class="blob-code blob-code-inner">        m[&#39;interfaces&#39;], m[&#39;mixins&#39;], m[&#39;subclasses&#39;],</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">m[&#39;subclasses&#39;] (dynamic) will need runtime check to cast to type List&lt;int&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">UninferredClosure</span>
-					<span class="file-info">package:atom_dartlang/analysis/dartdoc.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">103</td>
-								<td class="blob-code blob-code-inner">      String html = markdown.markdownToHtml(hover.dartdoc, linkResolver: (String name) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">104</td>
-								<td class="blob-code blob-code-inner">        &#47;&#47; TODO: Resolve these to linkable elements?</td>
-							</tr>
-							<tr>
-								<td class="blob-num">105</td>
-								<td class="blob-code blob-code-inner">        return new markdown.Element.text(&#39;code&#39;, name);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">106</td>
-								<td class="blob-code blob-code-inner">      });</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">(String name) {return new markdown.Element.text(&#39;code&#39;, name);} ((String) → dynamic) will need runtime check to cast to type (String) → Node</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/declaration_nav.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">32</td>
-								<td class="blob-code blob-code-inner">        &#39;dartlang:return-from-declaration&#39;, _handleNavigateReturn));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_handleNavigateReturn ((dynamic) → void) will need runtime check to cast to type (AtomEvent) → void</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/declaration_nav.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">37</td>
-								<td class="blob-code blob-code-inner">        &#39;symbols-view:return-from-declaration&#39;, _handleNavigateReturn));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_handleNavigateReturn ((dynamic) → void) will need runtime check to cast to type (AtomEvent) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -1171,35 +763,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">56</td>
-								<td class="blob-code blob-code-inner">    List&lt;_Change&gt; changes = fixes</td>
-							</tr>
-							<tr>
-								<td class="blob-num">57</td>
-								<td class="blob-code blob-code-inner">      .expand((fix) =&gt; fix.fixes.map((c) =&gt; new _Change(fix.error, c)))</td>
-							</tr>
-							<tr>
-								<td class="blob-num">58</td>
-								<td class="blob-code blob-code-inner">      .toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">fixes.expand((fix) =&gt; fix.fixes.map((c) =&gt; new _Change(fix.error, c))).toList() (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;_Change&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis/quick_fixes.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">78</td>
+								<td class="blob-num">77</td>
 								<td class="blob-code blob-code-inner">      chooseItemUsingCompletions(editor, changes, renderer).then((_Change choice) {</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1333,26 +897,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">(int aIndex, int bIndex) {TypeHierarchyItem a = items[aIndex]; TypeHierarchyItem b = items[bIndex]; String aName = a.displayName != null ? a.displayName : a.classElement.name; String bName = b.displayName != null ? b.displayName : b.classElement.name; return aName.compareTo(bName);} ((int, int) → dynamic) will need runtime check to cast to type (int, int) → int</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/analysis_server.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">136</td>
-								<td class="blob-code blob-code-inner">      List&lt;String&gt; roots = knownRoots.map((dir) =&gt; dir.path).toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">knownRoots.map((dir) =&gt; dir.path).toList() (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;String&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -1527,26 +1071,6 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">167</td>
-								<td class="blob-code blob-code-inner">      invoke(&#39;getTextEditors&#39;).map((e) =&gt; new TextEditor(e)).toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getTextEditors&#39;).map((e) =&gt; new TextEditor(e)).toList() (dynamic) will need runtime check to cast to type List&lt;TextEditor&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
 								<td class="blob-num">212</td>
 								<td class="blob-code blob-code-inner">    return future.then((result) {</td>
 							</tr>
@@ -1623,26 +1147,6 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">392</td>
-								<td class="blob-code blob-code-inner">      invoke(&#39;getNotifications&#39;).map((n) =&gt; new Notification(n)).toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getNotifications&#39;).map((n) =&gt; new Notification(n)).toList() (dynamic) will need runtime check to cast to type List&lt;Notification&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
 								<td class="blob-num">491</td>
 								<td class="blob-code blob-code-inner">    List&lt;Element&gt; elements = text.split(&#39;\n&#39;).map((line) {</td>
 							</tr>
@@ -1683,47 +1187,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">536</td>
-								<td class="blob-code blob-code-inner">  List&lt;String&gt; getPackageDirPaths() =&gt; invoke(&#39;getPackageDirPaths&#39;);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getPackageDirPaths&#39;) (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">547</td>
-								<td class="blob-code blob-code-inner">  List&lt;String&gt; getAvailablePackageNames() =&gt; invoke(&#39;getAvailablePackageNames&#39;);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getAvailablePackageNames&#39;) (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">556</td>
+								<td class="blob-num">557</td>
 								<td class="blob-code blob-code-inner">  Stream&lt;List&lt;String&gt;&gt; get onDidChangePaths =&gt; eventStream(&#39;onDidChangePaths&#39;);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1743,67 +1207,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">558</td>
-								<td class="blob-code blob-code-inner">  List&lt;String&gt; getPaths() =&gt; invoke(&#39;getPaths&#39;);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getPaths&#39;) (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">561</td>
-								<td class="blob-code blob-code-inner">    return invoke(&#39;getDirectories&#39;).map((dir) =&gt; new Directory(dir)).toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getDirectories&#39;).map((dir) =&gt; new Directory(dir)).toList() (dynamic) will need runtime check to cast to type List&lt;Directory&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">577</td>
-								<td class="blob-code blob-code-inner">      invoke(&#39;relativizePath&#39;, fullPath);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;relativizePath&#39;, fullPath) (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">622</td>
+								<td class="blob-num">623</td>
 								<td class="blob-code blob-code-inner">      promiseToFuture(invoke(&#39;read&#39;, flushCache));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1823,19 +1227,19 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">652</td>
+								<td class="blob-num">653</td>
 								<td class="blob-code blob-code-inner">    return invoke(&#39;getEntriesSync&#39;).map((entry) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">653</td>
+								<td class="blob-num">654</td>
 								<td class="blob-code blob-code-inner">      entry = _cvt(entry);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">654</td>
+								<td class="blob-num">655</td>
 								<td class="blob-code blob-code-inner">      return entry.callMethod(&#39;isFile&#39;) ? new File(entry) : new Directory(entry);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">655</td>
+								<td class="blob-num">656</td>
 								<td class="blob-code blob-code-inner">    }).toList();</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1855,7 +1259,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">959</td>
+								<td class="blob-num">960</td>
 								<td class="blob-code blob-code-inner">  Map&lt;String, dynamic&gt; getProperties() =&gt; invoke(&#39;getProperties&#39;);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1875,52 +1279,12 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">980</td>
+								<td class="blob-num">981</td>
 								<td class="blob-code blob-code-inner">  Map&lt;String, dynamic&gt; getProperties() =&gt; invoke(&#39;getProperties&#39;);</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">invoke(&#39;getProperties&#39;) (dynamic) will need runtime check to cast to type Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1106</td>
-								<td class="blob-code blob-code-inner">  List&lt;String&gt; get scopes =&gt; obj[&#39;scopes&#39;];</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">obj[&#39;scopes&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1108</td>
-								<td class="blob-code blob-code-inner">  List&lt;String&gt; getScopesArray() =&gt; invoke(&#39;getScopesArray&#39;);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getScopesArray&#39;) (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -1973,66 +1337,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">options[&#39;scopeDescriptor&#39;] (dynamic) will need runtime check to cast to type List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom_autocomplete.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">258</td>
-								<td class="blob-code blob-code-inner">    return result;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">result (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;Suggestion&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom_statusbar.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">37</td>
-								<td class="blob-code blob-code-inner">  List&lt;Tile&gt; getLeftTiles() =&gt; invoke(&#39;getLeftTiles&#39;).map((t) =&gt; new Tile(t)).toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getLeftTiles&#39;).map((t) =&gt; new Tile(t)).toList() (dynamic) will need runtime check to cast to type List&lt;Tile&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/atom_statusbar.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">40</td>
-								<td class="blob-code blob-code-inner">  List&lt;Tile&gt; getRightTiles() =&gt; invoke(&#39;getRightTiles&#39;).map((t) =&gt; new Tile(t)).toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getRightTiles&#39;).map((t) =&gt; new Tile(t)).toList() (dynamic) will need runtime check to cast to type List&lt;Tile&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2271,12 +1575,268 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">203</td>
-								<td class="blob-code blob-code-inner">    return suggestions;</td>
+								<td class="blob-num">137</td>
+								<td class="blob-code blob-code-inner">    Iterable&lt;Suggestion&gt; suggestions = results.map((CompletionSuggestion cs) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">138</td>
+								<td class="blob-code blob-code-inner">      String text = cs.completion;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">139</td>
+								<td class="blob-code blob-code-inner">      String snippet = null;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">140</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">141</td>
+								<td class="blob-code blob-code-inner">      &#47;&#47; We have something that might take params.</td>
+							</tr>
+							<tr>
+								<td class="blob-num">142</td>
+								<td class="blob-code blob-code-inner">      if (cs.parameterNames != null) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">143</td>
+								<td class="blob-code blob-code-inner">        &#47;&#47; If it takes none, then just append `()`.</td>
+							</tr>
+							<tr>
+								<td class="blob-num">144</td>
+								<td class="blob-code blob-code-inner">        if (cs.parameterNames.isEmpty) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">145</td>
+								<td class="blob-code blob-code-inner">          text += &#39;()&#39;;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">146</td>
+								<td class="blob-code blob-code-inner">        } else if (cs.requiredParameterCount != null &amp;&amp; cs.requiredParameterCount &gt; 0) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">147</td>
+								<td class="blob-code blob-code-inner">          &#47;&#47; TODO: (dynamic) → dynamic? and () -&gt; dynamic</td>
+							</tr>
+							<tr>
+								<td class="blob-num">148</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">149</td>
+								<td class="blob-code blob-code-inner">          &#47;&#47; If it has required params, then use a snippet: func(${1:arg}).</td>
+							</tr>
+							<tr>
+								<td class="blob-num">150</td>
+								<td class="blob-code blob-code-inner">          int count = 0;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">151</td>
+								<td class="blob-code blob-code-inner">          String names = cs.parameterNames.take(cs.requiredParameterCount).map(</td>
+							</tr>
+							<tr>
+								<td class="blob-num">152</td>
+								<td class="blob-code blob-code-inner">              (name) =&gt; &#39;\${${++count}:${name}}&#39;).join(&#39;, &#39;);</td>
+							</tr>
+							<tr>
+								<td class="blob-num">153</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">154</td>
+								<td class="blob-code blob-code-inner">          &#47;&#47;bool hasOptional = cs.requiredParameterCount != cs.parameterNames.length;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">155</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">156</td>
+								<td class="blob-code blob-code-inner">          text = null;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">157</td>
+								<td class="blob-code blob-code-inner">          &#47;&#47;snippet = &#39;${cs.completion}(${names}, \${${count + 1}:…})\$${count + 2}&#39;;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">158</td>
+								<td class="blob-code blob-code-inner">          snippet = &#39;${cs.completion}(${names})\$${++count}&#39;;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">159</td>
+								<td class="blob-code blob-code-inner">        } else {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">160</td>
+								<td class="blob-code blob-code-inner">          &#47;&#47; Else, leave the cursor within the parans.</td>
+							</tr>
+							<tr>
+								<td class="blob-num">161</td>
+								<td class="blob-code blob-code-inner">          text = null;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">162</td>
+								<td class="blob-code blob-code-inner">          snippet = &#39;${cs.completion}(\$1)\$2&#39;;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">163</td>
+								<td class="blob-code blob-code-inner">        }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">164</td>
+								<td class="blob-code blob-code-inner">      }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">165</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">166</td>
+								<td class="blob-code blob-code-inner">      &#47;&#47; Filter out completions where the suggestions.tolowercase != the prefix.</td>
+							</tr>
+							<tr>
+								<td class="blob-num">167</td>
+								<td class="blob-code blob-code-inner">      String completionPrefix = _prefix != null  ? _prefix.toLowerCase() : prefixLower;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">168</td>
+								<td class="blob-code blob-code-inner">      if (completionPrefix.isNotEmpty &amp;&amp; idRegex.hasMatch(completionPrefix[0])) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">169</td>
+								<td class="blob-code blob-code-inner">        if (text != null &amp;&amp; !text.toLowerCase().startsWith(completionPrefix)) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">170</td>
+								<td class="blob-code blob-code-inner">          return null;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">171</td>
+								<td class="blob-code blob-code-inner">        }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">172</td>
+								<td class="blob-code blob-code-inner">        if (snippet != null &amp;&amp; !snippet.toLowerCase().startsWith(completionPrefix)) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">173</td>
+								<td class="blob-code blob-code-inner">          return null;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">174</td>
+								<td class="blob-code blob-code-inner">        }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">175</td>
+								<td class="blob-code blob-code-inner">      }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">176</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">177</td>
+								<td class="blob-code blob-code-inner">      &#47;&#47; Calculate the selectionOffset.</td>
+							</tr>
+							<tr>
+								<td class="blob-num">178</td>
+								<td class="blob-code blob-code-inner">      int selectionOffset;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">179</td>
+								<td class="blob-code blob-code-inner">      if (cs.selectionOffset != cs.completion.length) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">180</td>
+								<td class="blob-code blob-code-inner">        selectionOffset =</td>
+							</tr>
+							<tr>
+								<td class="blob-num">181</td>
+								<td class="blob-code blob-code-inner">            replacementOffset - completionPrefix.length + cs.selectionOffset;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">182</td>
+								<td class="blob-code blob-code-inner">      }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">183</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">184</td>
+								<td class="blob-code blob-code-inner">      bool potential = cs.isPotential || cs.importUri != null;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">185</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">186</td>
+								<td class="blob-code blob-code-inner">      Suggestion suggestion = new Suggestion(</td>
+							</tr>
+							<tr>
+								<td class="blob-num">187</td>
+								<td class="blob-code blob-code-inner">        type: _mapType(cs),</td>
+							</tr>
+							<tr>
+								<td class="blob-num">188</td>
+								<td class="blob-code blob-code-inner">        leftLabel: _sanitizeReturnType(cs),</td>
+							</tr>
+							<tr>
+								<td class="blob-num">189</td>
+								<td class="blob-code blob-code-inner">        rightLabel: _rightLabel(cs.element != null ? cs.element.kind : cs.kind),</td>
+							</tr>
+							<tr>
+								<td class="blob-num">190</td>
+								<td class="blob-code blob-code-inner">        className:</td>
+							</tr>
+							<tr>
+								<td class="blob-num">191</td>
+								<td class="blob-code blob-code-inner">            cs.isDeprecated ? &#39;suggestion-deprecated&#39; :</td>
+							</tr>
+							<tr>
+								<td class="blob-num">192</td>
+								<td class="blob-code blob-code-inner">                potential ? &#39;suggestion-potential&#39; : null,</td>
+							</tr>
+							<tr>
+								<td class="blob-num">193</td>
+								<td class="blob-code blob-code-inner">        description: _describe(cs),</td>
+							</tr>
+							<tr>
+								<td class="blob-num">194</td>
+								<td class="blob-code blob-code-inner">        requiredImport: cs.importUri</td>
+							</tr>
+							<tr>
+								<td class="blob-num">195</td>
+								<td class="blob-code blob-code-inner">      );</td>
+							</tr>
+							<tr>
+								<td class="blob-num">196</td>
+								<td class="blob-code blob-code-inner">      if (text != null) suggestion.text = text;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">197</td>
+								<td class="blob-code blob-code-inner">      if (snippet != null) suggestion.snippet = snippet;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">198</td>
+								<td class="blob-code blob-code-inner">      if (_prefix != null) suggestion.replacementPrefix = _prefix;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">199</td>
+								<td class="blob-code blob-code-inner">      if (selectionOffset != null) suggestion.selectionOffset = selectionOffset;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">200</td>
+								<td class="blob-code blob-code-inner">      return suggestion;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">201</td>
+								<td class="blob-code blob-code-inner">    }).where((suggestion) =&gt; suggestion != null);</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">suggestions (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;Suggestion&gt;</td>
+								<td class="blob-code blob-code-expandable">results.map((CompletionSuggestion cs) {String text = cs.completion; String snippet = null; if (cs.parameterNames != null) {if (cs.parameterNames.isEmpty) {text += &#39;()&#39;;} else if (cs.requiredParameterCount != null &amp;&amp; cs.requiredParameterCount &gt; 0) {int count = 0; String names = cs.parameterNames.take(cs.requiredParameterCount).map((name) =&gt; &#39;\${${++count}:${name}}&#39;).join(&#39;, &#39;); text = null; snippet = &#39;${cs.completion}(${names})\$${++count}&#39;;} else {text = null; snippet = &#39;${cs.completion}(\$1)\$2&#39;;}} String completionPrefix = _prefix != null ? _prefix.toLowerCase() : prefixLower; if (completionPrefix.isNotEmpty &amp;&amp; idRegex.hasMatch(completionPrefix[0])) {if (text != null &amp;&amp; !text.toLowerCase().startsWith(completionPrefix)) {return null;} if (snippet != null &amp;&amp; !snippet.toLowerCase().startsWith(completionPrefix)) {return null;}} int selectionOffset; if (cs.selectionOffset != cs.completion.length) {selectionOffset = replacementOffset - completionPrefix.length + cs.selectionOffset;} bool potential = cs.isPotential || cs.importUri != null; Suggestion suggestion = new Suggestion(type: _mapType(cs), leftLabel: _sanitizeReturnType(cs), rightLabel: _rightLabel(cs.element != null ? cs.element.kind : cs.kind), className: cs.isDeprecated ? &#39;suggestion-deprecated&#39; : potential ? &#39;suggestion-potential&#39; : null, description: _describe(cs), requiredImport: cs.importUri); if (text != null) suggestion.text = text; if (snippet != null) suggestion.snippet = snippet; if (_prefix != null) suggestion.replacementPrefix = _prefix; if (selectionOffset != null) suggestion.selectionOffset = selectionOffset; return suggestion;}).where((suggestion) =&gt; suggestion != null) (Iterable&lt;dynamic&gt;) will need runtime check to cast to type Iterable&lt;Suggestion&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2313,38 +1873,278 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/debug/debug.dart</span>
+					<span class="file-info">package:atom_dartlang/debug/debugger.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">141</td>
-								<td class="blob-code blob-code-inner">    return _completer.future.then((String contextId) {</td>
+								<td class="blob-num">170</td>
+								<td class="blob-code blob-code-inner">    return _resolveUriToPath(uri).then((result) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">142</td>
-								<td class="blob-code blob-code-inner">      return analysisServer.server.execution.mapUri(contextId, uri: uri);</td>
+								<td class="blob-num">171</td>
+								<td class="blob-code blob-code-inner">      _logger.finer(&#39;resolve ${uri} &lt;== ${result}&#39;);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">143</td>
-								<td class="blob-code blob-code-inner">    }).then((result) {</td>
+								<td class="blob-num">172</td>
+								<td class="blob-code blob-code-inner">      return result;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">144</td>
-								<td class="blob-code blob-code-inner">      String path = result.file;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">145</td>
-								<td class="blob-code blob-code-inner">      return _cache[uri] = path;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">146</td>
+								<td class="blob-num">173</td>
 								<td class="blob-code blob-code-inner">    });</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_completer.future.then((String contextId) {return analysisServer.server.execution.mapUri(contextId, uri: uri);}).then((result) {String path = result.file; return _cache[uri] = path;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;String&gt;</td>
+								<td class="blob-code blob-code-expandable">_resolveUriToPath(uri).then((result) {_logger.finer(&#39;resolve ${uri} &lt;== ${result}&#39;); return result;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;String&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:atom_dartlang/debug/debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">184</td>
+								<td class="blob-code blob-code-inner">    return _completer.future.then((String contextId) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">185</td>
+								<td class="blob-code blob-code-inner">      return analysisServer.server.execution.mapUri(contextId, uri: uri);</td>
+							</tr>
+							<tr>
+								<td class="blob-num">186</td>
+								<td class="blob-code blob-code-inner">    }).then((result) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">187</td>
+								<td class="blob-code blob-code-inner">      String path = result.file;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">188</td>
+								<td class="blob-code blob-code-inner">      _uriToPath[uri] = path;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">189</td>
+								<td class="blob-code blob-code-inner">      return path;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">190</td>
+								<td class="blob-code blob-code-inner">    });</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">_completer.future.then((String contextId) {return analysisServer.server.execution.mapUri(contextId, uri: uri);}).then((result) {String path = result.file; _uriToPath[uri] = path; return path;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;String&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:atom_dartlang/debug/debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">195</td>
+								<td class="blob-code blob-code-inner">    return _resolvePathToUri(path).then((result) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">196</td>
+								<td class="blob-code blob-code-inner">      _logger.finer(&#39;resolve ${path} ==&gt; ${result}&#39;);</td>
+							</tr>
+							<tr>
+								<td class="blob-num">197</td>
+								<td class="blob-code blob-code-inner">      return result;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">198</td>
+								<td class="blob-code blob-code-inner">    });</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">_resolvePathToUri(path).then((result) {_logger.finer(&#39;resolve ${path} ==&gt; ${result}&#39;); return result;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;List&lt;String&gt;&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:atom_dartlang/debug/debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">206</td>
+								<td class="blob-code blob-code-inner">    return _completer.future.then((String contextId) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">207</td>
+								<td class="blob-code blob-code-inner">      return analysisServer.server.execution.mapUri(contextId, file: path);</td>
+							</tr>
+							<tr>
+								<td class="blob-num">208</td>
+								<td class="blob-code blob-code-inner">    }).then((result) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">209</td>
+								<td class="blob-code blob-code-inner">      List&lt;String&gt; uris = [result.uri];</td>
+							</tr>
+							<tr>
+								<td class="blob-num">210</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">211</td>
+								<td class="blob-code blob-code-inner">      if (result.uri.startsWith(_selfRefPrefix)) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">212</td>
+								<td class="blob-code blob-code-inner">        String filePath = root.startsWith(&#39;&#47;&#39;) ? &#39;file:&#47;&#47;${root}&#39; : &#39;file:&#47;&#47;&#47;${root}&#39;;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">213</td>
+								<td class="blob-code blob-code-inner">        filePath += &#39;&#47;lib&#47;${result.uri.substring(_selfRefPrefix.length)}&#39;;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">214</td>
+								<td class="blob-code blob-code-inner">        uris.insert(0, filePath);</td>
+							</tr>
+							<tr>
+								<td class="blob-num">215</td>
+								<td class="blob-code blob-code-inner">      }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">216</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">217</td>
+								<td class="blob-code blob-code-inner">      for (int i = 0; i &lt; uris.length; i++) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">218</td>
+								<td class="blob-code blob-code-inner">        uris[i] = _translator.clientToTarget(uris[i]);</td>
+							</tr>
+							<tr>
+								<td class="blob-num">219</td>
+								<td class="blob-code blob-code-inner">      }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">220</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">221</td>
+								<td class="blob-code blob-code-inner">      _pathToUri[path] = uris;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">222</td>
+								<td class="blob-code blob-code-inner">      return uris;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">223</td>
+								<td class="blob-code blob-code-inner">    });</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">_completer.future.then((String contextId) {return analysisServer.server.execution.mapUri(contextId, file: path);}).then((result) {List&lt;String&gt; uris = [result.uri]; if (result.uri.startsWith(_selfRefPrefix)) {String filePath = root.startsWith(&#39;&#47;&#39;) ? &#39;file:&#47;&#47;${root}&#39; : &#39;file:&#47;&#47;&#47;${root}&#39;; filePath += &#39;&#47;lib&#47;${result.uri.substring(_selfRefPrefix.length)}&#39;; uris.insert(0, filePath);} for (int i = 0; i &lt; uris.length; i++) {uris[i] = _translator.clientToTarget(uris[i]);} _pathToUri[path] = uris; return uris;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;String&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">33</td>
+								<td class="blob-code blob-code-inner">        ws.onMessage.map((MessageEvent e) =&gt; e.data as String),</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">ws.onMessage.map((MessageEvent e) =&gt; e.data as String) (Stream&lt;dynamic&gt;) will need runtime check to cast to type Stream&lt;String&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">54</td>
+								<td class="blob-code blob-code-inner">    return connectedCompleter.future;</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">connectedCompleter.future (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;DebugConnection&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">303</td>
+								<td class="blob-code blob-code-inner">    return service.getObject(isolate.id, id).then((result) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">304</td>
+								<td class="blob-code blob-code-inner">      if (result is Script) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">305</td>
+								<td class="blob-code blob-code-inner">        _scripts[id] = result;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">306</td>
+								<td class="blob-code blob-code-inner">        return result;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">307</td>
+								<td class="blob-code blob-code-inner">      }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">308</td>
+								<td class="blob-code blob-code-inner">      throw result;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">309</td>
+								<td class="blob-code blob-code-inner">    });</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">service.getObject(isolate.id, id).then((result) {if (result is Script) {_scripts[id] = result; return result;} throw result;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Script&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2457,230 +2257,30 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/error_repository.dart</span>
+					<span class="file-info">package:atom_dartlang/flutter/launch_flutter.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
 						<tbody>
-							<tr>
-								<td class="blob-num">77</td>
-								<td class="blob-code blob-code-inner">      if (oldErrors == null) oldErrors = _empty;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_empty (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;AnalysisError&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/error_repository.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">78</td>
-								<td class="blob-code blob-code-inner">      if (newErrors == null) newErrors = _empty;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_empty (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;AnalysisError&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/flutter/create_project.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">18</td>
-								<td class="blob-code blob-code-inner">        .add(&#39;atom-workspace&#39;, &#39;dartlang:create-flutter-project&#39;, _createProject));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_createProject ((dynamic) → void) will need runtime check to cast to type (AtomEvent) → void</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/flutter/flutter_launch.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">52</td>
-								<td class="blob-code blob-code-inner">    return _skyToolStop(project).then((_) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">53</td>
-								<td class="blob-code blob-code-inner">      if (_lastLaunch == null) return null;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">54</td>
-								<td class="blob-code blob-code-inner"></td>
-							</tr>
-							<tr>
-								<td class="blob-num">55</td>
-								<td class="blob-code blob-code-inner">      Launch launch = _lastLaunch._launch;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">56</td>
-								<td class="blob-code blob-code-inner">      return launch.isTerminated ? null : launch.kill();</td>
-							</tr>
-							<tr>
-								<td class="blob-num">57</td>
-								<td class="blob-code blob-code-inner">    }).then((_) {</td>
-							</tr>
 							<tr>
 								<td class="blob-num">58</td>
+								<td class="blob-code blob-code-inner">    return _killLastLaunch().then((_) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">59</td>
 								<td class="blob-code blob-code-inner">      _lastLaunch = new _LaunchInstance(project, configuration, this);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">59</td>
+								<td class="blob-num">60</td>
 								<td class="blob-code blob-code-inner">      return _lastLaunch.launch();</td>
 							</tr>
 							<tr>
-								<td class="blob-num">60</td>
+								<td class="blob-num">61</td>
 								<td class="blob-code blob-code-inner">    });</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_skyToolStop(project).then((_) {if (_lastLaunch == null) return null; Launch launch = _lastLaunch._launch; return launch.isTerminated ? null : launch.kill();}).then((_) {_lastLaunch = new _LaunchInstance(project, configuration, this); return _lastLaunch.launch();}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Launch&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/flutter/flutter_launch.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">94</td>
-								<td class="blob-code blob-code-inner">    return f.then((code) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">95</td>
-								<td class="blob-code blob-code-inner">      _runner = null;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">96</td>
-								<td class="blob-code blob-code-inner"></td>
-							</tr>
-							<tr>
-								<td class="blob-num">97</td>
-								<td class="blob-code blob-code-inner">      if (code == 0) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">98</td>
-								<td class="blob-code blob-code-inner">        &#47;&#47; Chain &#39;sky_tool logs&#39;.</td>
-							</tr>
-							<tr>
-								<td class="blob-num">99</td>
-								<td class="blob-code blob-code-inner">        _runner = _skyTool(project, [&#39;logs&#39;, &#39;--clear&#39;]);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">100</td>
-								<td class="blob-code blob-code-inner">        _runner.execStreaming();</td>
-							</tr>
-							<tr>
-								<td class="blob-num">101</td>
-								<td class="blob-code blob-code-inner">        _runner.onStdout.listen((str) =&gt; _launch.pipeStdio(str));</td>
-							</tr>
-							<tr>
-								<td class="blob-num">102</td>
-								<td class="blob-code blob-code-inner">        _runner.onStderr.listen((str) =&gt; _launch.pipeStdio(str, error: true));</td>
-							</tr>
-							<tr>
-								<td class="blob-num">103</td>
-								<td class="blob-code blob-code-inner"></td>
-							</tr>
-							<tr>
-								<td class="blob-num">104</td>
-								<td class="blob-code blob-code-inner">        &#47;&#47; Don&#39;t return the future here.</td>
-							</tr>
-							<tr>
-								<td class="blob-num">105</td>
-								<td class="blob-code blob-code-inner">        _runner.onExit.then((code) =&gt; _launch.launchTerminated(code));</td>
-							</tr>
-							<tr>
-								<td class="blob-num">106</td>
-								<td class="blob-code blob-code-inner">      } else {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">107</td>
-								<td class="blob-code blob-code-inner">        _launch.launchTerminated(code);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">108</td>
-								<td class="blob-code blob-code-inner">      }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">109</td>
-								<td class="blob-code blob-code-inner">    });</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">f.then((code) {_runner = null; if (code == 0) {_runner = _skyTool(project, [&#39;logs&#39;, &#39;--clear&#39;]); _runner.execStreaming(); _runner.onStdout.listen((str) =&gt; _launch.pipeStdio(str)); _runner.onStderr.listen((str) =&gt; _launch.pipeStdio(str, error: true)); _runner.onExit.then((code) =&gt; _launch.launchTerminated(code));} else {_launch.launchTerminated(code);}}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Launch&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/flutter/toolbar.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">57</td>
-								<td class="blob-code blob-code-inner">      invoke(&#39;getLeftTiles&#39;).map((t) =&gt; new ToolbarTile(t)).toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getLeftTiles&#39;).map((t) =&gt; new ToolbarTile(t)).toList() (dynamic) will need runtime check to cast to type List&lt;ToolbarTile&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/flutter/toolbar.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">59</td>
-								<td class="blob-code blob-code-inner">      invoke(&#39;getRightTiles&#39;).map((t) =&gt; new ToolbarTile(t)).toList();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">invoke(&#39;getRightTiles&#39;).map((t) =&gt; new ToolbarTile(t)).toList() (dynamic) will need runtime check to cast to type List&lt;ToolbarTile&gt;</td>
+								<td class="blob-code blob-code-expandable">_killLastLaunch().then((_) {_lastLaunch = new _LaunchInstance(project, configuration, this); return _lastLaunch.launch();}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Launch&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2799,12 +2399,12 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">183</td>
-								<td class="blob-code blob-code-inner">      for (Outline node in nodes) {</td>
+								<td class="blob-num">182</td>
+								<td class="blob-code blob-code-inner">      List&lt;Outline&gt; nodes = data.outline.children ?? [];</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">nodes (List&lt;dynamic&gt;) will need runtime check to cast to type Iterable&lt;Outline&gt;</td>
+								<td class="blob-code blob-code-expandable">data.outline.children ?? [] (EfficientLength) will need runtime check to cast to type List&lt;Outline&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2818,164 +2418,28 @@ table {
 				<div class="blob-wrapper">
 					<table>
 						<tbody>
-							<tr>
-								<td class="blob-num">177</td>
-								<td class="blob-code blob-code-inner">    return getInstalledVersion()</td>
-							</tr>
-							<tr>
-								<td class="blob-num">178</td>
-								<td class="blob-code blob-code-inner">      .then((ver) =&gt; ver != null)</td>
-							</tr>
-							<tr>
-								<td class="blob-num">179</td>
-								<td class="blob-code blob-code-inner">      .catchError((e) =&gt; false);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">getInstalledVersion().then((ver) =&gt; ver != null).catchError((e) =&gt; false) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;bool&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/impl/pub.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">186</td>
-								<td class="blob-code blob-code-inner">    return sdkManager.sdk.execBinSimple(&#39;pub&#39;, [&#39;global&#39;, &#39;list&#39;]).then(</td>
-							</tr>
-							<tr>
-								<td class="blob-num">187</td>
-								<td class="blob-code blob-code-inner">        (ProcessResult result) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">188</td>
-								<td class="blob-code blob-code-inner">      if (result.exit != 0) throw &#39;${result.stdout}\n${result.stderr}&#39;;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">189</td>
-								<td class="blob-code blob-code-inner"></td>
-							</tr>
-							<tr>
-								<td class="blob-num">190</td>
-								<td class="blob-code blob-code-inner">      List lines = result.stdout.trim().split(&#39;\n&#39;);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">191</td>
-								<td class="blob-code blob-code-inner"></td>
-							</tr>
-							<tr>
-								<td class="blob-num">192</td>
-								<td class="blob-code blob-code-inner">      for (String line in lines) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">193</td>
-								<td class="blob-code blob-code-inner">        if (line.startsWith(&#39;${name} &#39;)) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">194</td>
-								<td class="blob-code blob-code-inner">          List&lt;String&gt; strs = line.split(&#39; &#39;);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">195</td>
-								<td class="blob-code blob-code-inner">          if (strs.length &gt; 1) {</td>
-							</tr>
 							<tr>
 								<td class="blob-num">196</td>
-								<td class="blob-code blob-code-inner">            try { return new Version.parse(strs[1]); }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">197</td>
-								<td class="blob-code blob-code-inner">            catch (_) { }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">198</td>
-								<td class="blob-code blob-code-inner">          }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">199</td>
-								<td class="blob-code blob-code-inner">        }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">200</td>
-								<td class="blob-code blob-code-inner">      }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">201</td>
-								<td class="blob-code blob-code-inner"></td>
-							</tr>
-							<tr>
-								<td class="blob-num">202</td>
-								<td class="blob-code blob-code-inner">      return null;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">203</td>
-								<td class="blob-code blob-code-inner">    });</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">sdkManager.sdk.execBinSimple(&#39;pub&#39;, [&#39;global&#39;, &#39;list&#39;]).then((ProcessResult result) {if (result.exit != 0) throw &#39;${result.stdout}\n${result.stderr}&#39;; List lines = result.stdout.trim().split(&#39;\n&#39;); for (String line in lines) {if (line.startsWith(&#39;${name} &#39;)) {List&lt;String&gt; strs = line.split(&#39; &#39;); if (strs.length &gt; 1) {try {return new Version.parse(strs[1]);} catch (_) {}}}} return null;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Version&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/impl/pub.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">192</td>
-								<td class="blob-code blob-code-inner">      for (String line in lines) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">lines (List&lt;dynamic&gt;) will need runtime check to cast to type Iterable&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/impl/pub.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">253</td>
 								<td class="blob-code blob-code-inner">    return HttpRequest.request(&#39;https:&#47;&#47;pub.dartlang.org&#47;packages&#47;${name}.json&#39;).then(</td>
 							</tr>
 							<tr>
-								<td class="blob-num">254</td>
+								<td class="blob-num">197</td>
 								<td class="blob-code blob-code-inner">        (HttpRequest result) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">255</td>
+								<td class="blob-num">198</td>
 								<td class="blob-code blob-code-inner">      Map packageInfo = JSON.decode(result.responseText);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">256</td>
+								<td class="blob-num">199</td>
 								<td class="blob-code blob-code-inner">      Iterable&lt;String&gt; vers = packageInfo[&#39;versions&#39;];</td>
 							</tr>
 							<tr>
-								<td class="blob-num">257</td>
+								<td class="blob-num">200</td>
 								<td class="blob-code blob-code-inner">      return Version.primary(vers.map((str) =&gt; new Version.parse(str)).toList());</td>
 							</tr>
 							<tr>
-								<td class="blob-num">258</td>
+								<td class="blob-num">201</td>
 								<td class="blob-code blob-code-inner">    });</td>
 							</tr>
 							<tr class="row-expandable">
@@ -2995,7 +2459,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">256</td>
+								<td class="blob-num">199</td>
 								<td class="blob-code blob-code-inner">      Iterable&lt;String&gt; vers = packageInfo[&#39;versions&#39;];</td>
 							</tr>
 							<tr class="row-expandable">
@@ -3015,12 +2479,108 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">266</td>
-								<td class="blob-code blob-code-inner">    Job job = new PubRunJob.global(list, path: cwd, title: title);</td>
+								<td class="blob-num">212</td>
+								<td class="blob-code blob-code-inner">    return getInstalledVersion()</td>
+							</tr>
+							<tr>
+								<td class="blob-num">213</td>
+								<td class="blob-code blob-code-inner">      .then((ver) =&gt; ver != null)</td>
+							</tr>
+							<tr>
+								<td class="blob-num">214</td>
+								<td class="blob-code blob-code-inner">      .catchError((e) =&gt; false);</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">list (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;String&gt;</td>
+								<td class="blob-code blob-code-expandable">getInstalledVersion().then((ver) =&gt; ver != null).catchError((e) =&gt; false) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;bool&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:atom_dartlang/impl/pub.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">220</td>
+								<td class="blob-code blob-code-inner">    return sdkManager.sdk.execBinSimple(&#39;pub&#39;, [&#39;global&#39;, &#39;list&#39;]).then(</td>
+							</tr>
+							<tr>
+								<td class="blob-num">221</td>
+								<td class="blob-code blob-code-inner">        (ProcessResult result) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">222</td>
+								<td class="blob-code blob-code-inner">      if (result.exit != 0) throw &#39;${result.stdout}\n${result.stderr}&#39;;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">223</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">224</td>
+								<td class="blob-code blob-code-inner">      List&lt;String&gt; lines = result.stdout.trim().split(&#39;\n&#39;);</td>
+							</tr>
+							<tr>
+								<td class="blob-num">225</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">226</td>
+								<td class="blob-code blob-code-inner">      for (String line in lines) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">227</td>
+								<td class="blob-code blob-code-inner">        if (line.startsWith(&#39;${name} &#39;)) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">228</td>
+								<td class="blob-code blob-code-inner">          List&lt;String&gt; strs = line.split(&#39; &#39;);</td>
+							</tr>
+							<tr>
+								<td class="blob-num">229</td>
+								<td class="blob-code blob-code-inner">          if (strs.length &gt; 1) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">230</td>
+								<td class="blob-code blob-code-inner">            try { return new Version.parse(strs[1]); }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">231</td>
+								<td class="blob-code blob-code-inner">            catch (_) { }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">232</td>
+								<td class="blob-code blob-code-inner">          }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">233</td>
+								<td class="blob-code blob-code-inner">        }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">234</td>
+								<td class="blob-code blob-code-inner">      }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">235</td>
+								<td class="blob-code blob-code-inner"></td>
+							</tr>
+							<tr>
+								<td class="blob-num">236</td>
+								<td class="blob-code blob-code-inner">      return null;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">237</td>
+								<td class="blob-code blob-code-inner">    });</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">sdkManager.sdk.execBinSimple(&#39;pub&#39;, [&#39;global&#39;, &#39;list&#39;]).then((ProcessResult result) {if (result.exit != 0) throw &#39;${result.stdout}\n${result.stderr}&#39;; List&lt;String&gt; lines = result.stdout.trim().split(&#39;\n&#39;); for (String line in lines) {if (line.startsWith(&#39;${name} &#39;)) {List&lt;String&gt; strs = line.split(&#39; &#39;); if (strs.length &gt; 1) {try {return new Version.parse(strs[1]);} catch (_) {}}}} return null;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Version&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -3049,26 +2609,6 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/jobs.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">182</td>
-								<td class="blob-code blob-code-inner">    for (JobInstance jobInstance in jobsCopy) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">jobsCopy (List&lt;dynamic&gt;) will need runtime check to cast to type Iterable&lt;JobInstance&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
 					<span class="file-info">package:atom_dartlang/js.dart</span>
 				</div>
 				<div class="blob-wrapper">
@@ -3089,7 +2629,7 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">UninferredClosure</span>
-					<span class="file-info">package:atom_dartlang/launch.dart</span>
+					<span class="file-info">package:atom_dartlang/launch/launch.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
@@ -3133,7 +2673,7 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/launch.dart</span>
+					<span class="file-info">package:atom_dartlang/launch/launch.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
@@ -3153,7 +2693,7 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/launch.dart</span>
+					<span class="file-info">package:atom_dartlang/launch/launch.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
@@ -3201,7 +2741,7 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/launch.dart</span>
+					<span class="file-info">package:atom_dartlang/launch/launch.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
@@ -3221,7 +2761,7 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">UninferredClosure</span>
-					<span class="file-info">package:atom_dartlang/launch.dart</span>
+					<span class="file-info">package:atom_dartlang/launch/launch.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
@@ -3249,7 +2789,7 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">UninferredClosure</span>
-					<span class="file-info">package:atom_dartlang/launch.dart</span>
+					<span class="file-info">package:atom_dartlang/launch/launch.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
@@ -3281,122 +2821,38 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">UninferredClosure</span>
-					<span class="file-info">package:atom_dartlang/launch/cli_launch.dart</span>
+					<span class="file-info">package:atom_dartlang/launch/launch_cli.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">54</td>
+								<td class="blob-num">50</td>
 								<td class="blob-code blob-code-inner">    return analysisServer.getExecutablesFor(project.path).where((path) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">55</td>
+								<td class="blob-num">51</td>
 								<td class="blob-code blob-code-inner">      &#47;&#47; Check that the file is not in lib&#47;.</td>
 							</tr>
 							<tr>
-								<td class="blob-num">56</td>
+								<td class="blob-num">52</td>
 								<td class="blob-code blob-code-inner">      String relativePath = relativize(project.path, path);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">57</td>
+								<td class="blob-num">53</td>
 								<td class="blob-code blob-code-inner">      if (relativePath.startsWith(libSuffix)) return false;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">58</td>
+								<td class="blob-num">54</td>
 								<td class="blob-code blob-code-inner">      return true;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">59</td>
+								<td class="blob-num">55</td>
 								<td class="blob-code blob-code-inner">    }).toList();</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">(path) {String relativePath = relativize(project.path, path); if (relativePath.startsWith(libSuffix)) return false; return true;} ((dynamic) → dynamic) will need runtime check to cast to type (String) → bool</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/launch/cli_launch.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">147</td>
-								<td class="blob-code blob-code-inner">        ws.onMessage.map((MessageEvent e) =&gt; e.data as String),</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">ws.onMessage.map((MessageEvent e) =&gt; e.data as String) (Stream&lt;dynamic&gt;) will need runtime check to cast to type Stream&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/launch/cli_launch.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">338</td>
-								<td class="blob-code blob-code-inner">    return service.getObject(isolate.id, id).then((result) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">339</td>
-								<td class="blob-code blob-code-inner">      if (result is Script) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">340</td>
-								<td class="blob-code blob-code-inner">        _scripts[id] = result;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">341</td>
-								<td class="blob-code blob-code-inner">        return result;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">342</td>
-								<td class="blob-code blob-code-inner">      }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">343</td>
-								<td class="blob-code blob-code-inner">      throw result;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">344</td>
-								<td class="blob-code blob-code-inner">    });</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">service.getObject(isolate.id, id).then((result) {if (result is Script) {_scripts[id] = result; return result;} throw result;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Script&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/linter/dart_linter_consumer.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">44</td>
-								<td class="blob-code blob-code-inner">      issues = _filter(issues);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_filter(issues) (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;AnalysisError&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -3441,46 +2897,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">(AnalysisError issue) {if (!showInfos &amp;&amp; issue.severity == &#39;INFO&#39;) return false; if (!showTodos &amp;&amp; issue.type == &#39;TODO&#39;) return false; if (issue.message.endsWith(&#39;cannot both be unnamed&#39;)) return false; return true;} ((AnalysisError) → dynamic) will need runtime check to cast to type (AnalysisError) → bool</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/linter/dart_linter_consumer.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">89</td>
-								<td class="blob-code blob-code-inner">      _oldIssues = newIssues;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">newIssues (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;AnalysisError&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/linter/dart_linter_consumer.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">91</td>
-								<td class="blob-code blob-code-inner">      _processedErrorsController.add(newIssues);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">newIssues (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;AnalysisError&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -3927,59 +3343,59 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">287</td>
+								<td class="blob-num">289</td>
 								<td class="blob-code blob-code-inner">      return exec(&#39;&#47;bin&#47;bash&#39;, [&#39;-l&#39;, &#39;-c&#39;, &#39;which dart&#39;]).then((result) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">288</td>
+								<td class="blob-num">290</td>
 								<td class="blob-code blob-code-inner">        result = _resolveSdkFromVm(result);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">289</td>
+								<td class="blob-num">291</td>
 								<td class="blob-code blob-code-inner">        if (result != null) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">290</td>
+								<td class="blob-num">292</td>
 								<td class="blob-code blob-code-inner">          &#47;&#47; On mac, special case for homebrew. Replace the version specific</td>
 							</tr>
 							<tr>
-								<td class="blob-num">291</td>
+								<td class="blob-num">293</td>
 								<td class="blob-code blob-code-inner">          &#47;&#47; path with the version independent one.</td>
 							</tr>
 							<tr>
-								<td class="blob-num">292</td>
+								<td class="blob-num">294</td>
 								<td class="blob-code blob-code-inner">          int index = result.indexOf(&#39;&#47;Cellar&#47;dart&#47;&#39;);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">293</td>
+								<td class="blob-num">295</td>
 								<td class="blob-code blob-code-inner">          if (index != -1 &amp;&amp; result.endsWith(&#39;&#47;libexec&#39;)) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">294</td>
+								<td class="blob-num">296</td>
 								<td class="blob-code blob-code-inner">            result = result.substring(0, index) + &#39;&#47;opt&#47;dart&#47;libexec&#39;;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">295</td>
+								<td class="blob-num">297</td>
 								<td class="blob-code blob-code-inner">          }</td>
 							</tr>
 							<tr>
-								<td class="blob-num">296</td>
+								<td class="blob-num">298</td>
 								<td class="blob-code blob-code-inner">        }</td>
 							</tr>
 							<tr>
-								<td class="blob-num">297</td>
+								<td class="blob-num">299</td>
 								<td class="blob-code blob-code-inner">        return result;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">298</td>
+								<td class="blob-num">300</td>
 								<td class="blob-code blob-code-inner">      }).catchError((e) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">299</td>
+								<td class="blob-num">301</td>
 								<td class="blob-code blob-code-inner">        return null;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">300</td>
+								<td class="blob-num">302</td>
 								<td class="blob-code blob-code-inner">      });</td>
 							</tr>
 							<tr class="row-expandable">
@@ -3999,35 +3415,35 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">303</td>
+								<td class="blob-num">305</td>
 								<td class="blob-code blob-code-inner">      return exec(&#39;where&#39;, [&#39;dart.exe&#39;]).then((result) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">304</td>
+								<td class="blob-num">306</td>
 								<td class="blob-code blob-code-inner">        if (result != null &amp;&amp; !result.isEmpty) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">305</td>
+								<td class="blob-num">307</td>
 								<td class="blob-code blob-code-inner">          if (result.contains(&#39;\n&#39;)) result = result.split(&#39;\n&#39;).first.trim();</td>
 							</tr>
 							<tr>
-								<td class="blob-num">306</td>
+								<td class="blob-num">308</td>
 								<td class="blob-code blob-code-inner">          return _resolveSdkFromVm(result);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">307</td>
+								<td class="blob-num">309</td>
 								<td class="blob-code blob-code-inner">        }</td>
 							</tr>
 							<tr>
-								<td class="blob-num">308</td>
+								<td class="blob-num">310</td>
 								<td class="blob-code blob-code-inner">      }).catchError((e) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">309</td>
+								<td class="blob-num">311</td>
 								<td class="blob-code blob-code-inner">        return null;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">310</td>
+								<td class="blob-num">312</td>
 								<td class="blob-code blob-code-inner">      });</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4047,68 +3463,28 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">312</td>
+								<td class="blob-num">314</td>
 								<td class="blob-code blob-code-inner">      return exec(&#39;which&#39;, [&#39;dart&#39;]).then((String result) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">313</td>
+								<td class="blob-num">315</td>
 								<td class="blob-code blob-code-inner">        return _resolveSdkFromVm(result);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">314</td>
+								<td class="blob-num">316</td>
 								<td class="blob-code blob-code-inner">      }).catchError((e) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">315</td>
+								<td class="blob-num">317</td>
 								<td class="blob-code blob-code-inner">        return null;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">316</td>
+								<td class="blob-num">318</td>
 								<td class="blob-code blob-code-inner">      });</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">exec(&#39;which&#39;, [&#39;dart&#39;]).then((String result) {return _resolveSdkFromVm(result);}).catchError((e) {return null;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/views.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">72</td>
-								<td class="blob-code blob-code-inner">          Point current = _target.marginEdge.bottomRight - e.client + _offset;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">e.client (Point&lt;dynamic&gt;) will need runtime check to cast to type Point&lt;num&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/views.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">72</td>
-								<td class="blob-code blob-code-inner">          Point current = _target.marginEdge.bottomRight - e.client + _offset;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_offset (Point&lt;dynamic&gt;) will need runtime check to cast to type Point&lt;num&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -4123,15 +3499,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">370</td>
+								<td class="blob-num">371</td>
 								<td class="blob-code blob-code-inner">      e.onDoubleClick.listen((MouseEvent event) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">371</td>
+								<td class="blob-num">372</td>
 								<td class="blob-code blob-code-inner">        if (!event.defaultPrevented) _doubleClickController.add(node);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">372</td>
+								<td class="blob-num">373</td>
 								<td class="blob-code blob-code-inner">      });</td>
 							</tr>
 							<tr class="row-expandable">
@@ -7799,28 +7175,6 @@ table {
 					</table>
 				</div>
 			</div>
-			<h2 id=package_usage>package:usage</h2>
-			<span class="counter warning">1 warning</span>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:usage/src/usage_impl.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">192</td>
-								<td class="blob-code blob-code-inner">      return _recordFuture(postHandler.sendPost(_GA_URL, args));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">args (Map&lt;dynamic, dynamic&gt;) will need runtime check to cast to type Map&lt;String, String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
 			<h2 id=package_vm_service_lib>package:vm_service_lib</h2>
 			<span class="counter warning">42 warnings</span>
 			<div class="file">
@@ -7832,7 +7186,47 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">159</td>
+								<td class="blob-num">47</td>
+								<td class="blob-code blob-code-inner">    return json.map(BoundVariable._parse).toList();</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">json.map(BoundVariable._parse).toList() (dynamic) will need runtime check to cast to type List&lt;BoundVariable&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">55</td>
+								<td class="blob-code blob-code-inner">    return json.map(BoundField._parse).toList();</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">json.map(BoundField._parse).toList() (dynamic) will need runtime check to cast to type List&lt;BoundField&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">175</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;addBreakpoint&#39;, m);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -7852,7 +7246,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">191</td>
+								<td class="blob-num">207</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;addBreakpointWithScriptUri&#39;, m);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -7872,11 +7266,11 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">204</td>
+								<td class="blob-num">220</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;addBreakpointAtEntry&#39;,</td>
 							</tr>
 							<tr>
-								<td class="blob-num">205</td>
+								<td class="blob-num">221</td>
 								<td class="blob-code blob-code-inner">        {&#39;isolateId&#39;: isolateId, &#39;functionId&#39;: functionId});</td>
 							</tr>
 							<tr class="row-expandable">
@@ -7896,7 +7290,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">259</td>
+								<td class="blob-num">275</td>
 								<td class="blob-code blob-code-inner">  Future&lt;FlagList&gt; getFlagList() =&gt; _call(&#39;getFlagList&#39;);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -7916,7 +7310,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">308</td>
+								<td class="blob-num">324</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;getStack&#39;, {&#39;isolateId&#39;: isolateId});</td>
 							</tr>
 							<tr class="row-expandable">
@@ -7936,7 +7330,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">315</td>
+								<td class="blob-num">331</td>
 								<td class="blob-code blob-code-inner">  Future&lt;Version&gt; getVersion() =&gt; _call(&#39;getVersion&#39;);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -7956,7 +7350,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">320</td>
+								<td class="blob-num">336</td>
 								<td class="blob-code blob-code-inner">  Future&lt;VM&gt; getVM() =&gt; _call(&#39;getVM&#39;);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -7976,7 +7370,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">330</td>
+								<td class="blob-num">346</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;pause&#39;, {&#39;isolateId&#39;: isolateId});</td>
 							</tr>
 							<tr class="row-expandable">
@@ -7996,11 +7390,11 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">339</td>
+								<td class="blob-num">355</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;removeBreakpoint&#39;,</td>
 							</tr>
 							<tr>
-								<td class="blob-num">340</td>
+								<td class="blob-num">356</td>
 								<td class="blob-code blob-code-inner">        {&#39;isolateId&#39;: isolateId, &#39;breakpointId&#39;: breakpointId});</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8020,7 +7414,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">361</td>
+								<td class="blob-num">377</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;resume&#39;, m);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8040,11 +7434,11 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">374</td>
+								<td class="blob-num">390</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;setExceptionPauseMode&#39;,</td>
 							</tr>
 							<tr>
-								<td class="blob-num">375</td>
+								<td class="blob-num">391</td>
 								<td class="blob-code blob-code-inner">        {&#39;isolateId&#39;: isolateId, &#39;mode&#39;: _printEnum(mode)});</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8064,23 +7458,23 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">384</td>
+								<td class="blob-num">400</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;setLibraryDebuggable&#39;, {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">385</td>
+								<td class="blob-num">401</td>
 								<td class="blob-code blob-code-inner">      &#39;isolateId&#39;: isolateId,</td>
 							</tr>
 							<tr>
-								<td class="blob-num">386</td>
+								<td class="blob-num">402</td>
 								<td class="blob-code blob-code-inner">      &#39;libraryId&#39;: libraryId,</td>
 							</tr>
 							<tr>
-								<td class="blob-num">387</td>
+								<td class="blob-num">403</td>
 								<td class="blob-code blob-code-inner">      &#39;isDebuggable&#39;: isDebuggable</td>
 							</tr>
 							<tr>
-								<td class="blob-num">388</td>
+								<td class="blob-num">404</td>
 								<td class="blob-code blob-code-inner">    });</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8100,7 +7494,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">395</td>
+								<td class="blob-num">411</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;setName&#39;, {&#39;isolateId&#39;: isolateId, &#39;name&#39;: name});</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8120,7 +7514,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">402</td>
+								<td class="blob-num">418</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;setVMName&#39;, {&#39;name&#39;: name});</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8140,7 +7534,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">412</td>
+								<td class="blob-num">428</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;streamCancel&#39;, {&#39;streamId&#39;: streamId});</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8160,7 +7554,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">447</td>
+								<td class="blob-num">463</td>
 								<td class="blob-code blob-code-inner">    return _call(&#39;streamListen&#39;, {&#39;streamId&#39;: streamId});</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8180,7 +7574,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">450</td>
+								<td class="blob-num">466</td>
 								<td class="blob-code blob-code-inner">  Stream&lt;String&gt; get onSend =&gt; _onSend.stream;</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8200,7 +7594,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">452</td>
+								<td class="blob-num">468</td>
 								<td class="blob-code blob-code-inner">  Stream&lt;String&gt; get onReceive =&gt; _onReceive.stream;</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8220,7 +7614,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">468</td>
+								<td class="blob-num">484</td>
 								<td class="blob-code blob-code-inner">    return _completers[id].future;</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8240,7 +7634,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">946</td>
+								<td class="blob-num">970</td>
 								<td class="blob-code blob-code-inner">    interfaces = _createObject(json[&#39;interfaces&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8260,7 +7654,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">947</td>
+								<td class="blob-num">971</td>
 								<td class="blob-code blob-code-inner">    fields = _createObject(json[&#39;fields&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8280,7 +7674,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">948</td>
+								<td class="blob-num">972</td>
 								<td class="blob-code blob-code-inner">    functions = _createObject(json[&#39;functions&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8300,7 +7694,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">949</td>
+								<td class="blob-num">973</td>
 								<td class="blob-code blob-code-inner">    subclasses = _createObject(json[&#39;subclasses&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8320,7 +7714,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">996</td>
+								<td class="blob-num">1024</td>
 								<td class="blob-code blob-code-inner">    classes = _createObject(json[&#39;classes&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8340,7 +7734,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1068</td>
+								<td class="blob-num">1108</td>
 								<td class="blob-code blob-code-inner">    variables = _createObject(json[&#39;variables&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8360,7 +7754,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1164</td>
+								<td class="blob-num">1216</td>
 								<td class="blob-code blob-code-inner">    pauseBreakpoints = _createObject(json[&#39;pauseBreakpoints&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8380,7 +7774,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1361</td>
+								<td class="blob-num">1421</td>
 								<td class="blob-code blob-code-inner">    flags = _createObject(json[&#39;flags&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8400,47 +7794,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1379</td>
-								<td class="blob-code blob-code-inner">    vars = _createObject(json[&#39;vars&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_createObject(json[&#39;vars&#39;]) (Object) will need runtime check to cast to type List&lt;BoundVariable&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1566</td>
-								<td class="blob-code blob-code-inner">    fields = _createObject(json[&#39;fields&#39;]);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_createObject(json[&#39;fields&#39;]) (Object) will need runtime check to cast to type List&lt;BoundField&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1568</td>
+								<td class="blob-num">1640</td>
 								<td class="blob-code blob-code-inner">    associations = _createObject(json[&#39;associations&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8460,7 +7814,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1845</td>
+								<td class="blob-num">1925</td>
 								<td class="blob-code blob-code-inner">    libraries = _createObject(json[&#39;libraries&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8480,7 +7834,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1846</td>
+								<td class="blob-num">1926</td>
 								<td class="blob-code blob-code-inner">    breakpoints = _createObject(json[&#39;breakpoints&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8500,7 +7854,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1924</td>
+								<td class="blob-num">2016</td>
 								<td class="blob-code blob-code-inner">    dependencies = _createObject(json[&#39;dependencies&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8520,7 +7874,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1925</td>
+								<td class="blob-num">2017</td>
 								<td class="blob-code blob-code-inner">    scripts = _createObject(json[&#39;scripts&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8540,7 +7894,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1926</td>
+								<td class="blob-num">2018</td>
 								<td class="blob-code blob-code-inner">    variables = _createObject(json[&#39;variables&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8560,7 +7914,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1927</td>
+								<td class="blob-num">2019</td>
 								<td class="blob-code blob-code-inner">    functions = _createObject(json[&#39;functions&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8580,7 +7934,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1928</td>
+								<td class="blob-num">2020</td>
 								<td class="blob-code blob-code-inner">    classes = _createObject(json[&#39;classes&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8600,7 +7954,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">2221</td>
+								<td class="blob-num">2337</td>
 								<td class="blob-code blob-code-inner">    tokenPosTable = json[&#39;tokenPosTable&#39;];</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8620,7 +7974,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">2272</td>
+								<td class="blob-num">2392</td>
 								<td class="blob-code blob-code-inner">    frames = _createObject(json[&#39;frames&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8640,7 +7994,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">2273</td>
+								<td class="blob-num">2393</td>
 								<td class="blob-code blob-code-inner">    messages = _createObject(json[&#39;messages&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8660,7 +8014,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">2320</td>
+								<td class="blob-num">2444</td>
 								<td class="blob-code blob-code-inner">    types = _createObject(json[&#39;types&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -8680,7 +8034,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">2429</td>
+								<td class="blob-num">2557</td>
 								<td class="blob-code blob-code-inner">    isolates = _createObject(json[&#39;isolates&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">

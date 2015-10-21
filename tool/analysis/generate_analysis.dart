@@ -211,18 +211,16 @@ class Request {
 
     List paramsList = element.getElementsByTagName('params');
     if (paramsList.isNotEmpty) {
-      args = paramsList.first
+      args = new List.from(paramsList.first
           .getElementsByTagName('field')
-          .map((field) => new Field(field))
-          .toList();
+          .map((field) => new Field(field)));
     }
 
     List resultsList = element.getElementsByTagName('result');
     if (resultsList.isNotEmpty) {
-      results = resultsList.first
+      results = new List.from(resultsList.first
           .getElementsByTagName('field')
-          .map((field) => new Field(field))
-          .toList();
+          .map((field) => new Field(field)));
     }
   }
 
@@ -578,8 +576,14 @@ class ListType extends Type {
   String get typeName => 'List<${subType.typeName}>';
 
   String jsonConvert(String ref) {
-    if (subType is PrimitiveType) return ref;
-    if (subType is RefType && (subType as RefType).isString) return ref;
+    if (subType is PrimitiveType) {
+      return "${ref} == null ? null : new List.from(${ref})";
+    }
+
+    if (subType is RefType && (subType as RefType).isString) {
+      return "${ref} == null ? null : new List.from(${ref})";
+    }
+
     return "${ref} == null ? null : ${ref}.map((obj) => ${subType.jsonConvert('obj')}).toList()";
   }
 

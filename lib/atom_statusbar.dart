@@ -34,10 +34,10 @@ class StatusBar extends ProxyHolder {
   }
 
   /// Retrieve all of the tiles on the left side of the status bar.
-  List<Tile> getLeftTiles() => invoke('getLeftTiles').map((t) => new Tile(t)).toList();
+  List<Tile> getLeftTiles() => new List.from(invoke('getLeftTiles').map((t) => new Tile(t)));
 
   /// Retrieve all of the tiles on the right side of the status bar.
-  List<Tile> getRightTiles() => invoke('getRightTiles').map((t) => new Tile(t)).toList();
+  List<Tile> getRightTiles() => new List.from(invoke('getRightTiles').map((t) => new Tile(t)));
 }
 
 class Tile extends ProxyHolder {

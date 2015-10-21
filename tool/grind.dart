@@ -13,7 +13,7 @@ import 'package:which/which.dart';
 
 part 'publish.dart';
 
-main(List args) => grind(args);
+main(List<String> args) => grind(args);
 
 @Task()
 analyze() => new PubApp.global('tuneup').run(['check']);

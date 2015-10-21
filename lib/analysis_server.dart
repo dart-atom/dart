@@ -133,7 +133,7 @@ class AnalysisServer implements Disposable {
 
   void _syncRoots() {
     if (isActive) {
-      List<String> roots = knownRoots.map((dir) => dir.path).toList();
+      List<String> roots = new List.from(knownRoots.map((dir) => dir.path));
       _logger.fine("setAnalysisRoots(${roots})");
       _server.analysis.setAnalysisRoots(roots, []);
     }
