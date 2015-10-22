@@ -132,7 +132,7 @@ class Property<T> {
 
   bool get hasValue => _value != null;
 
-  Stream<T> get onChange => _controller.stream;
+  Stream<T> get onChanged => _controller.stream;
 
   String toString() => '${_value}';
 }
@@ -175,7 +175,7 @@ class SelectionGroup<T> {
       _selectionChangedController.add(selection);
     }
   }
-  
+
   void remove(T item) {
     _items.remove(item);
     _removedController.add(item);
@@ -200,6 +200,8 @@ bool listIdentical(List a, List b) {
 
   return true;
 }
+
+// TODO: Implement this.
 
 /// Diff the two strings and return the list of edits to convert [oldText] to
 /// [newText].

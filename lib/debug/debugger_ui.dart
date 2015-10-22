@@ -1,20 +1,30 @@
 library atom.debugger_ui;
 
 import 'dart:async';
-import 'dart:html' show document;
+import 'dart:html' show DivElement, querySelector;
+import 'dart:js' as js;
 
+import 'package:logging/logging.dart';
+
+import '../atom.dart';
+import '../atom_utils.dart';
+import '../editors.dart';
 import '../elements.dart';
 import '../utils.dart';
 import 'debugger.dart';
+
+final Logger _logger = new Logger('atom.debugger_ui');
 
 // TODO: feedback when an operation is in progress (like pause, which can take
 // a long time depending on the running app)
 
 class DebugUIController implements Disposable {
+  final Disposables disposables = new Disposables();
   final DebugConnection connection;
 
   CoreElement ui;
   CoreElement frameTitle;
+  //CoreElement frameLocation;
   CoreElement frameVars;
 
   DebugUIController(this.connection) {
@@ -26,7 +36,7 @@ class DebugUIController implements Disposable {
 
     CoreElement toolbar = div(c: 'btn-toolbar')..add([
       div(c: 'btn-group')..add([
-        resume, pause
+        pause, resume
       ]),
       div(c: 'btn-group')..add([
         stepIn, stepOver, stepOut
@@ -36,27 +46,52 @@ class DebugUIController implements Disposable {
       ])
     ]);
 
-    CoreElement frameContent = div(c: 'select-list')..add([
-      frameVars = ul(c: 'debugger-vars list-group')..add([
-        li(text: 'this', c: 'selected'),
-        li(text: 'foo'),
-        li(text: 'bar'),
+    CoreElement frameContent = div(c: 'debug-vars')..add([
+      div(c: 'debug-title')..layoutHorizontal()..add([
+        frameTitle = span(text: ' ', c: 'title')..flex()
+        //frameLocation = span(c: 'badge')
+      ]),
+      div(c: 'select-list')..add([
+        frameVars = ul(c: 'list-group')
       ])
     ]);
 
-    CoreElement footer = div()..add([
-      // atom-text-editor mini
-      div(text: 'Evaluate:')
+    var temp = new DivElement();
+    temp.setInnerHtml(
+        '<atom-text-editor mini placeholder-text="evaluate:" data-grammar="source dart">'
+        '</atom-text-editor>',
+        treeSanitizer: new TrustedHtmlTreeSanitizer());
+    var editorElement = temp.querySelector('atom-text-editor');
+    js.JsFunction editorConverter = js.context['getTextEditorForElement'];
+    TextEditor editor = new TextEditor(editorConverter.apply([editorElement]));
+    editor.setGrammar(atom.grammars.grammarForScopeName('source.dart'));
+
+    CoreElement footer = div(c: 'debug-footer')..add([
+      temp
     ]);
 
     ui = div(c: 'debugger-ui')..layoutVertical()..add([
-      toolbar,
-      frameTitle = div(text: 'foo.bar()', c: 'text-highlight'),
+      div(c: 'debug-header')..add([
+        toolbar
+      ]),
       frameContent,
       footer
     ]);
 
-    document.body.children.add(ui.element);
+    // debugger-ui atom-text-editor? atom-workspace
+    disposables.add(atom.commands.add(footer.element, 'core:confirm', (_) {
+      String text = editor.getText();
+      flashSelection(editor, new Range.fromPoints(
+          new Point.coords(0, 0),
+          new Point.coords(0, text.length)
+      ));
+      _eval(text);
+    }));
+
+    // Oh, the travesty.
+    //document.body.children.add(ui.element);
+    //querySelector('atom-workspace').children.add(ui.element);
+    js.context.callMethod('_domHoist', [ui.element, 'atom-workspace']);
 
     void updateUi(bool suspended) {
       resume.enabled = suspended;
@@ -65,18 +100,55 @@ class DebugUIController implements Disposable {
       stepOut.enabled = suspended;
       stepOver.enabled = suspended;
 
+      frameVars.clear();
+
       if (suspended) {
-        //frameTitle.text = connection.frame.title;
-        frameTitle.text = 'Suspended at foo.bar()';
+        if (connection.topFrame != null) {
+          frameTitle.text = connection.topFrame.title;
+          // frameLocation.text = connection.topFrame.cursorDescription;
+          // frameLocation.hidden(false);
+
+          List<DebugVariable> locals = connection.topFrame.locals;
+
+          if (locals.isEmpty) {
+            frameVars.add(em(text: '<no local variables>', c: 'text-muted'));
+          } else {
+            for (DebugVariable v in locals) {
+              frameVars.add(li()..add([
+                span(text: v.name, c: 'var-name'),
+                span(text: v.valueDescription, c: 'var-value'),
+              ]));
+            }
+          }
+        } else {
+          frameTitle.text = ' ';
+          // frameLocation.hidden(true);
+        }
       } else {
-        frameTitle.text = '';
+        // frameLocation.hidden(true);
+        if (connection.isolate != null) {
+          frameTitle.text = "Isolate '${connection.isolate.name}' running…";
+        } else {
+          frameTitle.text = ' ';
+        }
       }
     }
 
     updateUi(connection.isSuspended);
-    connection.onSuspendChanged.listen(updateUi);
-
     _show();
+    connection.onSuspendChanged.listen(updateUi);
+  }
+
+  void _eval(String expression) {
+    if (connection.topFrame == null) {
+      atom.beep();
+    } else {
+      connection.topFrame.eval(expression).then((String result) {
+        connection.launch.pipeStdio('${expression}: ${result}\n', subtle: true);
+      }).catchError((e) {
+        connection.launch.pipeStdio('${expression}: ${e}\n', error: true);
+      });
+    }
   }
 
   void _show() {
@@ -99,8 +171,13 @@ class DebugUIController implements Disposable {
   _terminate() => connection.terminate();
 
   void dispose() {
+    disposables.dispose();
     _hide().then((_) {
-      ui.dispose();
+      // So sad.
+      js.context.callMethod('_domRemove', [ui.element]);
+      //ui.dispose();
+    }).catchError((e) {
+      _logger.warning('error when closing debugger ui', e);
     });
   }
 }

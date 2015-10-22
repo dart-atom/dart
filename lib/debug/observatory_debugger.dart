@@ -36,7 +36,7 @@ class ObservatoryDebugger {
       );
 
       _logger.info('Connected to observatory on ${url}.');
-      launch.addDebugConnection(new _ObservatoryDebugConnection(
+      launch.addDebugConnection(new ObservatoryDebugConnection(
           launch,
           service,
           finishedCompleter,
@@ -55,7 +55,7 @@ class ObservatoryDebugger {
   }
 }
 
-class _ObservatoryDebugConnection extends DebugConnection {
+class ObservatoryDebugConnection extends DebugConnection {
   final VmService service;
   final Completer completer;
   final bool pipeStdio;
@@ -68,10 +68,10 @@ class _ObservatoryDebugConnection extends DebugConnection {
   bool stdoutSupported = true;
   bool stderrSupported = true;
 
-  bool isSuspended = true;
-  StreamController<bool> _suspendController = new StreamController.broadcast();
+  Property<bool> _suspended = new Property();
+  ObservatoryDebugFrame topFrame;
 
-  _ObservatoryDebugConnection(Launch launch, this.service, this.completer, {
+  ObservatoryDebugConnection(Launch launch, this.service, this.completer, {
     this.pipeStdio: false,
     this.isolatesStartPaused: false,
     UriTranslator uriTranslator
@@ -86,8 +86,15 @@ class _ObservatoryDebugConnection extends DebugConnection {
   }
 
   bool get isAlive => !completer.isCompleted;
+  bool get isSuspended => _suspended.value;
 
-  Stream<bool> get onSuspendChanged => _suspendController.stream;
+  // TODO: Temp.
+  DebugIsolate get isolate {
+    if (_currentIsolate == null) return null;
+    return new ObservatoryDebugIsolate(_currentIsolate);
+  }
+
+  Stream<bool> get onSuspendChanged => _suspended.onChanged;
 
   pause() => service.pause(_currentIsolate.id);
   Future resume() => service.resume(_currentIsolate.id);
@@ -147,10 +154,12 @@ class _ObservatoryDebugConnection extends DebugConnection {
         //   print('root lib = ${i.rootLib}');
         // });
       } else if (isolatesStartPaused && vm.isolates.isNotEmpty) {
-        _currentIsolate = vm.isolates.first;
-        _installInto(_currentIsolate).then((_) {
-          service.resume(_currentIsolate.id);
-        });
+        if (_currentIsolate == null) {
+          _currentIsolate = vm.isolates.first;
+          _installInto(_currentIsolate).then((_) {
+            service.resume(_currentIsolate.id);
+          });
+        }
       }
     });
   }
@@ -197,17 +206,19 @@ class _ObservatoryDebugConnection extends DebugConnection {
   }
 
   void _handleIsolateEvent(Event e) {
-    // TODO: isolate handler
+    // TODO: Create an isolate handler.
 
     launch.pipeStdio('${e}\n', subtle: true);
 
     // IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
     if (e.kind == EventKind.IsolateRunnable) {
-      // TODO: Don't re-init if it is already inited.
-      _currentIsolate = e.isolate;
-      _installInto(_currentIsolate).then((_) {
-        if (isolatesStartPaused) resume();
-      });
+      // Don't re-init if it is already inited.
+      if (_currentIsolate == null) {
+        _currentIsolate = e.isolate;
+        _installInto(_currentIsolate).then((_) {
+          if (isolatesStartPaused) resume();
+        });
+      }
     } else if (e.kind == EventKind.IsolateExit) {
       _currentIsolate = null;
     }
@@ -218,7 +229,8 @@ class _ObservatoryDebugConnection extends DebugConnection {
 
     if (e.kind == EventKind.Resume) {
       _suspend(false);
-    } else if (e.kind == EventKind.PauseBreakpoint || e.kind == EventKind.PauseInterrupted ||
+    } else if (e.kind == EventKind.PauseStart || e.kind == EventKind.PauseExit ||
+        e.kind == EventKind.PauseBreakpoint || e.kind == EventKind.PauseInterrupted ||
         e.kind == EventKind.PauseException) {
       _suspend(true);
     }
@@ -228,69 +240,62 @@ class _ObservatoryDebugConnection extends DebugConnection {
 
     }
 
-    if (e.kind != EventKind.Resume) {
-      if (e.topFrame != null) {
-        launch.pipeStdio('[${isolate.name}] ${printFunctionName(e.topFrame.function)}', subtle: true);
+    if (e.kind != EventKind.Resume && e.topFrame != null) {
+      topFrame = new ObservatoryDebugFrame(service, isolate, e.topFrame);
+      topFrame.locals = new List.from(
+          e.topFrame.vars.map((v) => new ObservatoryDebugVariable(v)));
+      topFrame.tokenPos = e.topFrame.location.tokenPos;
+    }
 
-        ScriptRef scriptRef = e.topFrame.location.script;
+    if (e.kind != EventKind.Resume && e.topFrame != null) {
+      // launch.pipeStdio(
+      //     '[${isolate.name}] ${printFunctionName(e.topFrame.function)}', subtle: true);
 
-        _resolveScript(isolate, scriptRef).then((Script script) {
-          int tokenPos = e.topFrame.location.tokenPos;
-          Point pos = _calcPos(script, tokenPos);
-          String uri = script.uri;
+      ScriptRef scriptRef = e.topFrame.location.script;
 
-          if (pos != null) {
-            launch.pipeStdio(' [${uri}, ${pos.row}]\n', subtle: true);
+      _resolveScript(isolate, scriptRef).then((Script script) {
+        int tokenPos = e.topFrame.location.tokenPos;
+        Point pos = _calcPos(script, tokenPos);
+        String uri = script.uri;
 
-            uriResolver.resolveUriToPath(uri).then((String path) {
-              if (statSync(path).isFile()) {
-                editorManager.jumpToLocation(path, pos.row - 1, pos.column - 1).then(
-                    (TextEditor editor) {
-                  // TODO: update the execution location markers
+        if (pos != null) {
+          //launch.pipeStdio(' [${uri}, ${pos.row}]\n', subtle: true);
+          uriResolver.resolveUriToPath(uri).then((String path) {
+            if (statSync(path).isFile()) {
+              editorManager.jumpToLocation(path, pos.row - 1, pos.column - 1).then(
+                  (TextEditor editor) {
+                // TODO: update the execution location markers
 
-                });
-              } else {
-                atom.notifications.addWarning("Cannot file file '${path}'.");
-              }
-            }).catchError((e) {
-              atom.notifications.addWarning(
-                  "Unable to resolve '${uri}' (${pos.row}:${pos.column}).");
-            });
-          } else {
-            launch.pipeStdio(' [${uri}]\n', subtle: true);
-          }
+              });
+            } else {
+              atom.notifications.addWarning("Cannot file file '${path}'.");
+            }
+          }).catchError((e) {
+            atom.notifications.addWarning(
+                "Unable to resolve '${uri}' (${pos.row}:${pos.column}).");
+          });
+        } else {
+          //launch.pipeStdio(' [${uri}]\n', subtle: true);
+        }
 
-          _printLocals(e.topFrame);
-          if (e.exception != null) {
-            _printException(e.exception);
-          }
-        });
-      }
+        //_printLocals(e.topFrame);
+
+        if (e.exception != null) {
+          _printException(e.exception);
+        }
+      });
     }
   }
 
-  void _printLocals(Frame frame) {
-    for (BoundVariable local in frame.vars) {
-      String valueText = _refToString(local.value);
-      launch.pipeStdio('  - ${local.name}: ${valueText}\n', subtle: true);
-    }
-  }
+  // void _printLocals(Frame frame) {
+  //   for (BoundVariable local in frame.vars) {
+  //     String valueText = _refToString(local.value);
+  //     launch.pipeStdio('  - ${local.name}: ${valueText}\n', subtle: true);
+  //   }
+  // }
 
   void _printException(InstanceRef exception) {
     launch.pipeStdio('exception: ${_refToString(exception)}\n', error: true);
-  }
-
-  String _refToString(dynamic value) {
-    if (value is InstanceRef) {
-      InstanceRef ref = value as InstanceRef;
-      if (ref.valueAsString != null) {
-        return ref.valueAsString;
-      } else {
-        return '[${ref.classRef.name} ${ref.id}]';
-      }
-    } else {
-      return '${value}';
-    }
   }
 
   Map<String, Script> _scripts = {};
@@ -310,10 +315,8 @@ class _ObservatoryDebugConnection extends DebugConnection {
   }
 
   void _suspend(bool value) {
-    if (value != isSuspended) {
-      isSuspended = value;
-      _suspendController.add(value);
-    }
+    if (!value) topFrame = null;
+    _suspended.value = value;
   }
 
   void dispose() {
@@ -332,6 +335,22 @@ String printFunctionName(FuncRef ref, {bool terse: false}) {
     return '${printFunctionName(ref.owner, terse: true)}.${name}';
   } else {
     return name;
+  }
+}
+
+String _refToString(dynamic value) {
+  if (value is InstanceRef) {
+    InstanceRef ref = value as InstanceRef;
+    if (ref.kind == InstanceKind.String) {
+      // TODO: escape string chars
+      return "'${ref.valueAsString}'";
+    } else if (ref.valueAsString != null) {
+      return ref.valueAsString;
+    } else {
+      return '[${ref.classRef.name} ${ref.id}]';
+    }
+  } else {
+    return '${value}';
   }
 }
 
@@ -359,4 +378,53 @@ class ObservatoryLog extends Log {
 
   void warning(String message) => logger.warning(message);
   void severe(String message) => logger.severe(message);
+}
+
+class ObservatoryDebugIsolate extends DebugIsolate {
+  final IsolateRef isolateRef;
+
+  ObservatoryDebugIsolate(this.isolateRef);
+
+  String get name => isolateRef.name;
+}
+
+class ObservatoryDebugFrame extends DebugFrame {
+  final VmService service;
+  final IsolateRef isolate;
+  final Frame frame;
+
+  // TODO: Resolve to line:col.
+  int tokenPos;
+
+  List<DebugVariable> locals;
+
+  ObservatoryDebugFrame(this.service, this.isolate, this.frame);
+
+  String get title => printFunctionName(frame.function);
+
+  String get cursorDescription {
+    return 'token ${tokenPos}';
+  }
+
+  @override
+  Future<String> eval(String expression) {
+    return service.evaluateInFrame(isolate.id, frame.index, expression).then((result) {
+      // [InstanceRef] or [ErrorRef]
+      if (result is ErrorRef) {
+        throw result.message;
+      } else {
+        return _refToString(result);
+      }
+    });
+  }
+}
+
+class ObservatoryDebugVariable extends DebugVariable {
+  final BoundVariable variable;
+
+  ObservatoryDebugVariable(this.variable);
+
+  String get name => variable.name;
+
+  String get valueDescription => _refToString(variable.value);
 }

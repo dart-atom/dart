@@ -111,6 +111,14 @@ self.clearInterval = function(id) { window.clearInterval(id); };
 // Work around interop issues.
 self.getTextEditorForElement = function(element) { return element.o.getModel(); };
 
+self._domHoist = function(element, targetQuery) {
+  var target = document.querySelector(targetQuery);
+  target.appendChild(element);
+};
+
+self._domRemove = function(element) {
+  element.parentNode.removeChild(element);
+};
 """;
 
 String _patchJSFile(String input) {

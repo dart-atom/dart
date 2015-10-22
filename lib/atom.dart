@@ -98,6 +98,7 @@ class Atom extends ProxyHolder {
   CommandRegistry _commands;
   Config _config;
   ContextMenuManager _contextMenu;
+  GrammarRegistry _grammars;
   NotificationManager _notifications;
   PackageManager _packages;
   Project _project;
@@ -108,6 +109,7 @@ class Atom extends ProxyHolder {
     _commands = new CommandRegistry(obj['commands']);
     _config = new Config(obj['config']);
     _contextMenu = new ContextMenuManager(obj['contextMenu']);
+    _grammars = new GrammarRegistry(obj['grammars']);
     _notifications = new NotificationManager(obj['notifications']);
     _packages = new PackageManager(obj['packages']);
     _project = new Project(obj['project']);
@@ -118,6 +120,7 @@ class Atom extends ProxyHolder {
   CommandRegistry get commands => _commands;
   Config get config => _config;
   ContextMenuManager get contextMenu => _contextMenu;
+  GrammarRegistry get grammars => _grammars;
   NotificationManager get notifications => _notifications;
   PackageManager get packages => _packages;
   Project get project => _project;
@@ -254,7 +257,10 @@ class CommandRegistry extends ProxyHolder {
 
   Stream<String> get onDidDispatch => _dispatchedController.stream;
 
-  Disposable add(String target, String commandName, void callback(AtomEvent event)) {
+  /// Add one or more command listeners associated with a selector.
+  ///
+  /// [target] can be a String - a css selector - or an Html Element.
+  Disposable add(dynamic target, String commandName, void callback(AtomEvent event)) {
     return new JsDisposable(invoke('add', target, commandName, (e) {
       _dispatchedController.add(commandName);
       callback(new AtomEvent(e));
@@ -788,6 +794,17 @@ class TextEditor extends ProxyHolder {
     return new Decoration(invoke('decorateMarker', marker, decorationParams));
   }
 
+  /// Get the current Grammar of this editor.
+  Grammar getGrammar() => new Grammar(invoke('getGrammar'));
+
+  /// Set the current Grammar of this editor.
+  ///
+  /// Assigning a grammar will cause the editor to re-tokenize based on the new
+  /// grammar.
+  void setGrammar(Grammar grammar) {
+    invoke('setGrammar', grammar);
+  }
+
   void undo() => invoke('undo');
   void redo() => invoke('redo');
 
@@ -810,8 +827,8 @@ class TextEditor extends ProxyHolder {
   void save() => invoke('save');
 
   /// Calls your callback when the grammar that interprets and colorizes the
-  /// text has been changed.
-  /// Immediately calls your callback with the current grammar.
+  /// text has been changed. Immediately calls your callback with the current
+  /// grammar.
   Disposable observeGrammar(void callback(Grammar grammar)) {
     var disposable = invoke('observeGrammar', (g) => callback(new Grammar(g)));
     return new JsDisposable(disposable);
@@ -986,8 +1003,21 @@ class Decoration extends ProxyHolder {
       invoke('setProperties', properties);
 }
 
+/// Grammar that tokenizes lines of text.
 class Grammar extends ProxyHolder {
-  Grammar(JsObject object) : super(_cvt(object));
+  factory Grammar(JsObject object) => object == null ? null : new Grammar._(object);
+  Grammar._(JsObject object) : super(_cvt(object));
+}
+
+/// Registry containing one or more grammars.
+class GrammarRegistry extends ProxyHolder {
+  GrammarRegistry(JsObject object) : super(_cvt(object));
+
+  /// Get a grammar with the given scope name. [scopeName] should be a string
+  /// such as "source.js".
+  Grammar grammarForScopeName(String scopeName) {
+    return new Grammar(invoke('grammarForScopeName', scopeName));
+  }
 }
 
 /// Represents a region in a buffer in row / column coordinates.

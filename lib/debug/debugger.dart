@@ -93,6 +93,11 @@ abstract class DebugConnection {
   bool get isAlive;
   bool get isSuspended;
 
+  // TODO: temporary
+  DebugIsolate get isolate;
+
+  DebugFrame get topFrame;
+
   pause();
   Future resume();
   stepIn();
@@ -109,7 +114,32 @@ abstract class DebugConnection {
 
 /// A representation of a VM Isolate.
 abstract class DebugIsolate {
+  DebugIsolate();
 
+  String get name;
+}
+
+abstract class DebugFrame {
+  DebugFrame();
+
+  String get title;
+
+  String get cursorDescription;
+
+  List<DebugVariable> get locals;
+
+  Future<String> eval(String expression);
+
+  String toString() => title;
+}
+
+abstract class DebugVariable {
+  DebugVariable();
+
+  String get name;
+  String get valueDescription;
+
+  String toString() => name;
 }
 
 /// A class to translate from one name-space to another.
