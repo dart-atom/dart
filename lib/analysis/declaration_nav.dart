@@ -130,8 +130,7 @@ class NavigationHelper implements Disposable {
     return completer.future;
   }
 
-  Future _processNavInfo(TextEditor editor, int offset,
-      AnalysisNavigation navInfo) {
+  Future _processNavInfo(TextEditor editor, int offset, AnalysisNavigation navInfo) {
     List<String> files = navInfo.files;
     List<NavigationTarget> targets = navInfo.targets;
     List<NavigationRegion> regions = navInfo.regions;
@@ -182,5 +181,5 @@ class _NavigationPosition {
 
   _NavigationPosition(this.path, this.line, this.column, [this.length]);
 
-  //String toString() => '[${path},${position}]';
+  String toString() => '[${path} ${line}:${column}]';
 }
