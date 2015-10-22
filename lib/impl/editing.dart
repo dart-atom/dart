@@ -104,7 +104,8 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
   if (trimmedText.endsWith('*/') && atEol) {
     editor.atomic(() {
       editor.insertNewline();
-      editor.backspace();
+      // Only back up if we had some indentation on the current line.
+      if (line != trimmedText) editor.backspace();
     });
     return true;
   }
