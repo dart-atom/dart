@@ -26,6 +26,24 @@ defineTests() {
     });
   });
 
+  group('Property', () {
+    test('mutate value', () {
+      Property<int> p = new Property();
+      expect(p.value, null);
+      p.value = 123;
+      expect(p.value, 123);
+    });
+
+    test('mutation fires event', () {
+      Property<String> p = new Property();
+      expect(p.value, null);
+      Future f = p.onChanged.first;
+      p.value = '123';
+      expect(p.value, '123');
+      return f.then((val) => expect(val, '123'));
+    });
+  });
+
   group('SelectionGroup', () {
     test('adding changes selection', () {
       SelectionGroup<String> group = new SelectionGroup();
