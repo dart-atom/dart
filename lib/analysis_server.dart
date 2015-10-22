@@ -424,6 +424,15 @@ class _AnalysisServerWrapper extends Server {
         _analyzingController.add(analyzing);
       }
     });
+    server.onError.listen((ServerError error) {
+      if (error.isFatal) {
+        _logger.severe(error.message);
+        if (error.stackTrace != null) _logger.severe(error.stackTrace);
+      } else {
+        _logger.warning(error.message);
+        if (error.stackTrace != null) _logger.warning(error.stackTrace);
+      }
+    });
     execution.onLaunchData.listen((ExecutionLaunchData data) {
       if (data.kind == 'SERVER') {
         _executables.add(data.file);
