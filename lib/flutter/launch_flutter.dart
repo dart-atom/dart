@@ -7,7 +7,7 @@ import 'package:logging/logging.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../debug/debugger.dart';
-import '../debug/observatory_debugger.dart';
+import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../impl/pub.dart';
 import '../launch/launch.dart';
 import '../process.dart';
