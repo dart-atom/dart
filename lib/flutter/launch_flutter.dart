@@ -75,7 +75,8 @@ class _LaunchInstance {
   ProcessRunner _runner;
   bool _withDebug;
 
-  _LaunchInstance(this.project, LaunchConfiguration configuration, LaunchType launchType) {
+  _LaunchInstance(this.project, LaunchConfiguration configuration,
+      LaunchType launchType) {
     _launch = new Launch(
         launchManager,
         launchType,
@@ -171,16 +172,12 @@ class FlutterUriTranslator implements UriTranslator {
   String _rootPrefix;
 
   FlutterUriTranslator(this.root, {this.prefix: 'http://localhost:9888/'}) {
-    if (root.startsWith('/')) {
-      _rootPrefix = 'file://${root}/';
-    } else {
-      _rootPrefix = 'file:///${root}/';
-    }
+    _rootPrefix = new Uri.directory(root, windows: isWindows).toString();
   }
 
   String targetToClient(String str) {
     String result = _targetToClient(str);
-    _logger.finer('${str} ==> ${result}');
+    _logger.finer('targetToClient ${str} ==> ${result}');
     return result;
   }
 
@@ -202,7 +199,7 @@ class FlutterUriTranslator implements UriTranslator {
 
   String clientToTarget(String str) {
     String result = _clientToTarget(str);
-    _logger.finer('${str} ==> ${result}');
+    _logger.finer('clientToTarget ${str} ==> ${result}');
     return result;
   }
 

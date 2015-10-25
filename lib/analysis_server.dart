@@ -46,7 +46,8 @@ class AnalysisServer implements Disposable {
   StreamController<bool> _serverBusyController = new StreamController.broadcast();
   StreamController<String> _onSendController = new StreamController.broadcast();
   StreamController<String> _onReceiveController = new StreamController.broadcast();
-  StreamController<AnalysisNavigation> _onNavigatonController = new StreamController.broadcast();
+  StreamController<AnalysisNavigation> _onNavigatonController =
+    new StreamController.broadcast();
   StreamController<AnalysisOutline> _onOutlineController = new StreamController.broadcast();
 
   _AnalysisServerWrapper _server;
@@ -399,7 +400,8 @@ class _AnalysisServerWrapper extends Server {
   Set<String> _executables = new Set();
 
   _AnalysisServerWrapper(this.process, this._processCompleter,
-      Stream<String> inStream, void writeMessage(String message)) : super(inStream, writeMessage) {
+      Stream<String> inStream, void writeMessage(String message)) :
+        super(inStream, writeMessage) {
     _processCompleter.future.then((result) {
       _disposedController.add(result);
       process = null;
@@ -427,10 +429,24 @@ class _AnalysisServerWrapper extends Server {
     server.onError.listen((ServerError error) {
       if (error.isFatal) {
         _logger.severe(error.message);
-        if (error.stackTrace != null) _logger.severe(error.stackTrace);
+        if (error.stackTrace != null) {
+          _logger.severe(error.stackTrace);
+        }
+        if (AnalysisServer.startWithDebugging) {
+          atom.notifications.addError(
+            'Error from the analysis server: ${error.message}',
+            detail: error.stackTrace);
+        }
       } else {
         _logger.warning(error.message);
-        if (error.stackTrace != null) _logger.warning(error.stackTrace);
+        if (error.stackTrace != null) {
+          _logger.warning(error.stackTrace);
+        }
+        if (AnalysisServer.startWithDebugging) {
+          atom.notifications.addWarning(
+            'Error from the analysis server: ${error.message}',
+            detail: error.stackTrace);
+        }
       }
     });
     execution.onLaunchData.listen((ExecutionLaunchData data) {
@@ -502,10 +518,12 @@ class _AnalysisServerWrapper extends Server {
 
     if (AnalysisServer.startWithDebugging) {
       arguments.insert(0, '--observe=${AnalysisServer.OBSERVATORY_PORT}');
-      _logger.info('observatory on analysis server available at ${AnalysisServer.observatoryUrl}.');
+      _logger.info('observatory on analysis server available at '
+          '${AnalysisServer.observatoryUrl}.');
 
       arguments.add('--port=${AnalysisServer.DIAGNOSTICS_PORT}');
-      _logger.info('analysis server diagnostics available at ${AnalysisServer.diagnosticsUrl}.');
+      _logger.info('analysis server diagnostics available at '
+          '${AnalysisServer.diagnosticsUrl}.');
     }
 
     return new ProcessRunner(sdk.dartVm.path, args: arguments);
