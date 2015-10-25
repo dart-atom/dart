@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
+import '../atom_utils.dart';
 import '../launch/launch.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -19,14 +20,17 @@ void _displayError(dynamic error) {
 }
 
 // TODO: Track current debug target - fire when it changes.
+// Use SelectionGroup.
 
 class DebugManager implements Disposable {
   Disposables disposables = new Disposables();
 
   List<DebugConnection> connections = [];
 
-  StreamController<DebugConnection> _addedController = new StreamController.broadcast();
-  StreamController<DebugConnection> _removedController = new StreamController.broadcast();
+  StreamController<DebugConnection> _addedController
+      = new StreamController.broadcast();
+  StreamController<DebugConnection> _removedController
+      = new StreamController.broadcast();
 
   DebugManager() {
     onAdded.listen((DebugConnection connection) {
@@ -206,8 +210,7 @@ class UriResolver implements Disposable {
   Future<String> _resolveUriToPath(String uri) {
     uri = _translator.targetToClient(uri);
 
-    if (uri.startsWith('file:///')) return new Future.value(uri.substring(7));
-    if (uri.startsWith('file:/')) return new Future.value(uri.substring(5));
+    if (uri.startsWith('file:')) return new Future.value(_fileUriToPath(uri));
 
     if (_uriToPath.containsKey(uri)) return new Future.value(_uriToPath[uri]);
 
@@ -229,8 +232,6 @@ class UriResolver implements Disposable {
   }
 
   Future<String> _resolvePathToUri(String path) {
-    // if (uri.startsWith('file:///')) return new Future.value(uri.substring(7));
-    // if (uri.startsWith('file:/')) return new Future.value(uri.substring(5));
     if (_pathToUri.containsKey(path)) return new Future.value(_pathToUri[path]);
 
     return _completer.future.then((String contextId) {
@@ -239,7 +240,7 @@ class UriResolver implements Disposable {
       List<String> uris = [result.uri];
 
       if (result.uri.startsWith(_selfRefPrefix)) {
-        String filePath = root.startsWith('/') ? 'file://${root}' : 'file:///${root}';
+        String filePath = new Uri.file(root, windows: isWindows).toString();
         filePath += '/lib/${result.uri.substring(_selfRefPrefix.length)}';
         uris.insert(0, filePath);
       }
@@ -262,4 +263,23 @@ class UriResolver implements Disposable {
   }
 
   String toString() => '[UriResolver for ${root}]';
+}
+
+const List<String> _fileUriPrefixes = const ['file:///', 'file:/'];
+
+String _fileUriToPath(String uriStr) {
+  try {
+    Uri uri = Uri.parse(uriStr);
+    return uri.toFilePath(windows: isWindows);
+  } catch (_) {
+    for (String prefix in _fileUriPrefixes) {
+      if (uriStr.startsWith(prefix)) {
+        return isWindows
+          ? uriStr.substring(prefix.length)
+          : uriStr.substring(prefix.length - 1);
+      }
+    }
+
+    return uriStr.substring(5);
+  }
 }
