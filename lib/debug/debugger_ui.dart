@@ -58,7 +58,8 @@ class DebugUIController implements Disposable {
 
     var temp = new DivElement();
     temp.setInnerHtml(
-        '<atom-text-editor mini placeholder-text="evaluate:" data-grammar="source dart">'
+        '<atom-text-editor mini placeholder-text="evaluate:" '
+          'data-grammar="source dart">'
         '</atom-text-editor>',
         treeSanitizer: new TrustedHtmlTreeSanitizer());
     var editorElement = temp.querySelector('atom-text-editor');
@@ -93,6 +94,7 @@ class DebugUIController implements Disposable {
     //querySelector('atom-workspace').children.add(ui.element);
     js.context.callMethod('_domHoist', [ui.element, 'atom-workspace']);
 
+    // TODO: Put a brief debounce delay here when stepping to reduce flashing.
     void updateUi(bool suspended) {
       resume.enabled = suspended;
       pause.enabled = !suspended;

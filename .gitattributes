@@ -1,1 +1,9 @@
+# Line endings: enforce LF in GitHub, convert to native on checkout.
+* text=auto
+*.dart text
+*.md text
+*.sh text
+*.yaml text
+*.png binary
+
 web/entry.dart.js linguist-vendored
