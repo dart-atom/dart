@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Compilation Report</title>
+	<title>DDC web/entry.dart</title>
 	<link href="http://primercss.io/docs.css" rel="stylesheet">
 	<style>
 		h2 {
@@ -19,6 +19,10 @@
 
 .error {
   background-color: #bf1515;
+}
+
+.menu-item .counter {
+  margin-bottom: 0;
 }
 
 .counter.error {
@@ -34,9 +38,21 @@
   color: #777;
 }
 
+.counter.error,
+.counter.warning,
+.counter.info {
+  margin-bottom: 0;
+}
+
+nav.menu .menu-item {
+  overflow-x: auto;
+}
+
 .info {
   background-color: #eee;
 }
+
+/* code snippets styles */
 
 .file {
   position: relative;
@@ -59,13 +75,15 @@
   font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
 
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 0;
+}
+
 .blob-wrapper {
   overflow-x: auto;
   overflow-y: hidden;
-}
-
-.message-info {
-  font-size: 14px;
 }
 
 .blob-num {
@@ -90,7 +108,6 @@
 }
 
 .blob-code {
-  /*position: relative;*/
   padding-left: 10px;
   padding-right: 10px;
   vertical-align: top;
@@ -105,30 +122,25 @@
   word-wrap: normal;
 }
 
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  margin-bottom: 0;
-}
-
 .row-expandable {
   border-top: 1px solid #d8d8d8;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
 }
 
-.blob-num-expandable, .blob-code-expandable {
+.blob-num-expandable,
+.blob-code-expandable {
   vertical-align: middle;
   font-size: 14px;
   border-color: #d2dff0;
 }
 
-.blob-num-hunk, .blob-num-expandable {
+.blob-num-expandable {
   background-color: #edf2f9;
   border-bottom-left-radius: 3px;
 }
 
-.blob-code-hunk, .blob-code-expandable {
+.blob-code-expandable {
   padding-top: 4px;
   padding-bottom: 4px;
   background-color: #f4f7fb;
@@ -142,7 +154,7 @@ table {
 <body>
 <header class="masthead">
 	<div class="container">
-		<a class="masthead-logo">Compilation Report</a>
+		<a class="masthead-logo">web/entry.dart</a>
 		<nav class="masthead-nav">
 			<a href="https://github.com/dart-lang/dev_compiler/blob/master/STRONG_MODE.md">Strong mode</a>
 		</nav>
@@ -152,12 +164,13 @@ table {
 	<div class="columns docs-layout">
 		<div class="column one-fourth">
 			<nav class="menu docs-menu">
-				<span class="menu-heading">Application</span>
+				<span class="menu-heading">Target application</span>
 				<a href="#package_atom_dartlang" class="menu-item">
 					<span>atom_dartlang</span>
 					<span class="counter warning">99</span>
 				</a>
 				<span class="menu-heading">Packages</span>
+				<div class="menu-item">charcode</div>
 				<a href="#package_collection" class="menu-item">
 					<span>collection</span>
 					<span class="counter warning">31</span>
@@ -167,14 +180,21 @@ table {
 					<span>frappe</span>
 					<span class="counter warning">39</span>
 				</a>
+				<div class="menu-item">haikunator</div>
+				<div class="menu-item">logging</div>
+				<div class="menu-item">markdown</div>
+				<div class="menu-item">path</div>
 				<a href="#package_pub_semver" class="menu-item">
 					<span>pub_semver</span>
 					<span class="counter warning">4</span>
 				</a>
+				<div class="menu-item">source_span</div>
 				<a href="#package_stream_transformers" class="menu-item">
 					<span>stream_transformers</span>
 					<span class="counter warning">66</span>
 				</a>
+				<div class="menu-item">string_scanner</div>
+				<div class="menu-item">usage</div>
 				<a href="#package_vm_service_lib" class="menu-item">
 					<span>vm_service_lib</span>
 					<span class="counter warning">42</span>
@@ -186,7 +206,7 @@ table {
 			</nav>
 		</div>
 		<div class="column three-fourths">
-			<h1 class="page-title">web/entry.dart</h1>
+			<h1 class="page-title">DDC compilation report for web/entry.dart</h1>
 			<p>Found 6 errors, 282 warnings compiling web/entry.dart.</p>
 			<h2 id=package_atom_dartlang>package:atom_dartlang</h2>
 			<span class="counter warning">99 warnings</span>
@@ -8118,7 +8138,7 @@ table {
 		</div>
 	</div>
 	<footer class="footer">
-		Compilation report from web/entry.dart • DDC version 0.1.9
+		Compilation report for web/entry.dart • DDC version 0.1.9
 	</footer>
 </div>
 </body>

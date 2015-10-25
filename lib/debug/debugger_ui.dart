@@ -27,6 +27,8 @@ class DebugUIController implements Disposable {
   //CoreElement frameLocation;
   CoreElement frameVars;
 
+  Timer _debounceTimer;
+
   DebugUIController(this.connection) {
     CoreElement resume = button(c: 'btn icon-playback-play')..click(_resume);
     CoreElement pause = button(c: 'btn icon-playback-pause')..click(_pause);
@@ -94,7 +96,6 @@ class DebugUIController implements Disposable {
     //querySelector('atom-workspace').children.add(ui.element);
     js.context.callMethod('_domHoist', [ui.element, 'atom-workspace']);
 
-    // TODO: Put a brief debounce delay here when stepping to reduce flashing.
     void updateUi(bool suspended) {
       resume.enabled = suspended;
       pause.enabled = !suspended;
@@ -102,43 +103,64 @@ class DebugUIController implements Disposable {
       stepOut.enabled = suspended;
       stepOver.enabled = suspended;
 
-      frameVars.clear();
+      if (_debounceTimer != null) {
+        _debounceTimer.cancel();
+        _debounceTimer = null;
+      }
 
-      if (suspended) {
-        if (connection.topFrame != null) {
-          frameTitle.text = connection.topFrame.title;
-          // frameLocation.text = connection.topFrame.cursorDescription;
-          // frameLocation.hidden(false);
-
-          List<DebugVariable> locals = connection.topFrame.locals;
-
-          if (locals.isEmpty) {
-            frameVars.add(em(text: '<no local variables>', c: 'text-muted'));
-          } else {
-            for (DebugVariable v in locals) {
-              frameVars.add(li()..add([
-                span(text: v.name, c: 'var-name'),
-                span(text: v.valueDescription, c: 'var-value'),
-              ]));
-            }
-          }
-        } else {
-          frameTitle.text = ' ';
-          // frameLocation.hidden(true);
-        }
+      if (!suspended) {
+        // Put a brief debounce delay here when stepping to reduce flashing.
+        _debounceTimer = new Timer(
+            new Duration(milliseconds: 40),
+            () => _updateVariables(suspended));
       } else {
-        // frameLocation.hidden(true);
-        if (connection.isolate != null) {
-          frameTitle.text = "Isolate '${connection.isolate.name}' running…";
-        } else {
-          frameTitle.text = ' ';
-        }
+        _updateVariables(suspended);
       }
     }
 
     updateUi(connection.isSuspended);
     _show();
     connection.onSuspendChanged.listen(updateUi);
+  }
+
+  void _updateVariables(bool suspended) {
+    if (_debounceTimer != null) {
+      _debounceTimer.cancel();
+      _debounceTimer = null;
+    }
+
+    frameVars.clear();
+
+    if (suspended) {
+      if (connection.topFrame != null) {
+        frameTitle.text = connection.topFrame.title;
+        // frameLocation.text = connection.topFrame.cursorDescription;
+        // frameLocation.hidden(false);
+
+        List<DebugVariable> locals = connection.topFrame.locals;
+
+        if (locals.isEmpty) {
+          frameVars.add(em(text: '<no local variables>', c: 'text-muted'));
+        } else {
+          for (DebugVariable v in locals) {
+            frameVars.add(li()..add([
+              span(text: v.name, c: 'var-name'),
+              span(text: v.valueDescription, c: 'var-value'),
+            ]));
+          }
+        }
+      } else {
+        frameTitle.text = ' ';
+        // frameLocation.hidden(true);
+      }
+    } else {
+      // frameLocation.hidden(true);
+      if (connection.isolate != null) {
+        frameTitle.text = "Isolate '${connection.isolate.name}' running…";
+      } else {
+        frameTitle.text = ' ';
+      }
+    }
   }
 
   void _eval(String expression) {
