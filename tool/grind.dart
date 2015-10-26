@@ -16,15 +16,15 @@ part 'publish.dart';
 main(List<String> args) => grind(args);
 
 @Task()
-analyze() => new PubApp.global('tuneup').run(['check']);
+analyze() => new PubApp.global('tuneup').runAsync(['check']);
 
 @DefaultTask()
-build() {
+build() async {
   File inputFile = getFile('web/entry.dart');
   File outputFile = getFile('web/entry.dart.js');
 
   // --trust-type-annotations? --trust-primitives?
-  Dart2js.compile(inputFile, csp: true);
+  await Dart2js.compileAsync(inputFile, csp: true);
   outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
 
   // Patch in the GA UA code; replace "UA-000000-0" with a valid code.
@@ -41,23 +41,23 @@ build() {
 }
 
 @Task('Build the Atom tests')
-buildAtomTests() {
+buildAtomTests() async {
   final String base = 'spec/all-spec';
   File inputFile = getFile('${base}.dart');
-
-  Dart2js.compile(inputFile, csp: true);
-  delete(getFile('${base}.dart.js.deps'));
-  getFile('${base}.dart.js').renameSync('spec/all-spec.js');
-  getFile('${base}.dart.js.map').renameSync('spec/all-spec.js.map');
+  await Dart2js.compileAsync(inputFile,
+      csp: true,
+      enableExperimentalMirrors: true,
+      outFile: getFile('${base}.js'));
+  delete(getFile('${base}.js.deps'));
 }
 
 @Task('Run the Atom tests')
 @Depends(buildAtomTests)
-runAtomTests() {
+runAtomTests() async {
   String apmPath = whichSync('apm', orElse: () => null);
 
   if (apmPath != null) {
-    run('apm', arguments: ['test']);
+    await runAsync('apm', arguments: ['test']);
   } else {
     log("warning: command 'apm' not found");
   }
@@ -65,15 +65,16 @@ runAtomTests() {
 
 @Task('Analyze the source code with the ddc compiler')
 ddc() {
-  PubApp ddc = new PubApp.global('dev_compiler');
-  ddc.run(['web/entry.dart'], script: 'dartdevc');
+  // TODO: Support --html-report.
+  return new DevCompiler().analyzeAsync(getFile('web/entry.dart'));
 }
 
 @Task()
-test() => new PubApp.local('test').run(['-rexpanded']);
+test() => new PubApp.local('test').runAsync(['-rexpanded']);
 
 // TODO: Removed the `ddc` dep task for now.
-@Task() @Depends(analyze, build, test, runAtomTests)
+@Task()
+@Depends(analyze, build, test, runAtomTests)
 bot() => null;
 
 @Task()
@@ -128,10 +129,12 @@ String _patchJSFile(String input) {
 
   int index = input.lastIndexOf(from_1);
   if (index != -1) {
-    input = input.substring(0, index) + to + input.substring(index + from_1.length);
+    input =
+        input.substring(0, index) + to + input.substring(index + from_1.length);
   } else {
     index = input.lastIndexOf(from_2);
-    input = input.substring(0, index) + to + input.substring(index + from_2.length);
+    input =
+        input.substring(0, index) + to + input.substring(index + from_2.length);
   }
   return _jsPrefix + input;
 }
