@@ -1,6 +1,9 @@
 // The ui-variables file is provided by base themes provided by Atom.
 @import "ui-variables";
 
+// The variables for syntax themes.
+@import "syntax-variables";
+
 .job-status-bar {
   display: none;
 }
@@ -742,7 +745,6 @@ atom-text-editor::shadow .debugger-breakpoint {
 }
 
 atom-text-editor::shadow .debugger-breakpoint::before {
-  /*background-color: rgb(41, 44, 47);*/
   font-family: 'Octicons Regular';
   font-weight: normal;
   font-style: normal;
@@ -753,6 +755,52 @@ atom-text-editor::shadow .debugger-breakpoint::before {
   width: 16px;
   height: 16px;
   content: "\f052";
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  -webkit-font-smoothing: antialiased;
+}
+
+atom-text-editor::shadow .debugger-executionpoint-line {
+  background-color: @syntax-selection-color;
+}
+
+atom-text-editor::shadow .debugger-executionpoint-highlight div.region {
+  z-index: 1;
+}
+
+atom-text-editor::shadow .debugger-executionpoint-highlight div.region::before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  font-size: 12px;
+  width: 16px;
+  height: 16px;
+  content: "\f0aa";
+  position: absolute;
+  top: 16px;
+  right: -4px;
+  -webkit-font-smoothing: antialiased;
+}
+
+atom-text-editor::shadow .debugger-executionpoint-linenumber {
+
+}
+
+atom-text-editor::shadow .debugger-executionpoint-linenumber::before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  content: "\f03e";
   position: absolute;
   top: 3px;
   right: 5px;

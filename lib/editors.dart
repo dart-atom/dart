@@ -94,12 +94,11 @@ class EditorManager implements Disposable {
 
   EditorManager();
 
-  Future<TextEditor> jumpToLocation(String path, int line, int column, [int length]) {
-    Map options = {
-      'initialLine': line,
-      'initialColumn': column,
-      'searchAllPanes': true
-    };
+  Future<TextEditor> jumpToLocation(String path, [int line, int column, int length]) {
+    Map options = { 'searchAllPanes': true };
+
+    if (line != null) options['initialLine'] = line;
+    if (column != null) options['initialColumn'] = column;
 
     // If we're editing the target file, then use the current editor.
     var ed = atom.workspace.getActiveTextEditor();

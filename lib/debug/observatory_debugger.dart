@@ -241,49 +241,14 @@ class ObservatoryDebugConnection extends DebugConnection {
     }
 
     if (e.kind != EventKind.Resume && e.topFrame != null) {
-      topFrame = new ObservatoryDebugFrame(service, isolate, e.topFrame);
+      topFrame = new ObservatoryDebugFrame(this, service, isolate, e.topFrame);
       topFrame.locals = new List.from(
           e.topFrame.vars.map((v) => new ObservatoryDebugVariable(v)));
       topFrame.tokenPos = e.topFrame.location.tokenPos;
     }
 
     if (e.kind != EventKind.Resume && e.topFrame != null) {
-      // launch.pipeStdio(
-      //     '[${isolate.name}] ${printFunctionName(e.topFrame.function)}', subtle: true);
-
-      ScriptRef scriptRef = e.topFrame.location.script;
-
-      _resolveScript(isolate, scriptRef).then((Script script) {
-        int tokenPos = e.topFrame.location.tokenPos;
-        Point pos = _calcPos(script, tokenPos);
-        String uri = script.uri;
-
-        if (pos != null) {
-          //launch.pipeStdio(' [${uri}, ${pos.row}]\n', subtle: true);
-          uriResolver.resolveUriToPath(uri).then((String path) {
-            if (statSync(path).isFile()) {
-              editorManager.jumpToLocation(path, pos.row - 1, pos.column - 1).then(
-                  (TextEditor editor) {
-                // TODO: update the execution location markers
-
-              });
-            } else {
-              atom.notifications.addWarning("Cannot file file '${path}'.");
-            }
-          }).catchError((e) {
-            atom.notifications.addWarning(
-                "Unable to resolve '${uri}' (${pos.row}:${pos.column}).");
-          });
-        } else {
-          //launch.pipeStdio(' [${uri}]\n', subtle: true);
-        }
-
-        //_printLocals(e.topFrame);
-
-        if (e.exception != null) {
-          _printException(e.exception);
-        }
-      });
+      if (e.exception != null) _printException(e.exception);
     }
   }
 
@@ -389,6 +354,7 @@ class ObservatoryDebugIsolate extends DebugIsolate {
 }
 
 class ObservatoryDebugFrame extends DebugFrame {
+  final ObservatoryDebugConnection connection;
   final VmService service;
   final IsolateRef isolate;
   final Frame frame;
@@ -398,12 +364,31 @@ class ObservatoryDebugFrame extends DebugFrame {
 
   List<DebugVariable> locals;
 
-  ObservatoryDebugFrame(this.service, this.isolate, this.frame);
+  ObservatoryDebugFrame(this.connection, this.service, this.isolate, this.frame);
 
   String get title => printFunctionName(frame.function);
 
   String get cursorDescription {
     return 'token ${tokenPos}';
+  }
+
+  Future<DebugLocation> getLocation() {
+    ScriptRef scriptRef = frame.location.script;
+
+    return connection._resolveScript(isolate, scriptRef).then((Script script) {
+      int tokenPos = frame.location.tokenPos;
+      Point pos = _calcPos(script, tokenPos);
+      String uri = script.uri;
+
+      if (pos != null) {
+        return connection.uriResolver.resolveUriToPath(uri).then((String path) {
+          return new DebugLocation(path, pos.row, pos.column);
+        }).catchError((e) {
+          atom.notifications.addWarning(
+              "Unable to resolve '${uri}' (${pos.row}:${pos.column}).");
+        });
+      }
+    });
   }
 
   @override
