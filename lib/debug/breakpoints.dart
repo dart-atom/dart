@@ -8,6 +8,7 @@ import '../atom.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
+import 'utils.dart';
 
 final Logger _logger = new Logger('atom.breakpoints');
 
@@ -86,7 +87,9 @@ class BreakpointManager implements Disposable {
 
   void _createEditorBreakpoint(TextEditor editor, AtomBreakpoint bp) {
     _logger.fine('creating editor breakpoint: ${bp}');
-    Marker marker = editor.markBufferRange(_bpToEditorRange(bp), persistent: false);
+    Marker marker = editor.markBufferRange(
+        debuggerCoordsToEditorRange(bp.line, bp.column),
+        persistent: false);
     _editorBreakpoints.add(new _EditorBreakpoint(this, editor, bp, marker));
   }
 
@@ -133,14 +136,6 @@ class BreakpointManager implements Disposable {
   }
 
   void dispose() => disposables.dispose();
-}
-
-Range _bpToEditorRange(AtomBreakpoint bp) {
-  int line = bp.line - 1;
-  int column = bp.column == null ? 0 : bp.column - 1;
-  return new Range.fromPoints(
-      new Point.coords(line, column),
-      new Point.coords(line, column + 1));
 }
 
 class AtomBreakpoint {

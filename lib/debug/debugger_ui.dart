@@ -10,8 +10,10 @@ import '../atom.dart';
 import '../atom_utils.dart';
 import '../editors.dart';
 import '../elements.dart';
+import '../state.dart';
 import '../utils.dart';
 import 'debugger.dart';
+import 'utils.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui');
 
@@ -28,6 +30,7 @@ class DebugUIController implements Disposable {
   CoreElement frameVars;
 
   Timer _debounceTimer;
+  Marker _execMarker;
 
   DebugUIController(this.connection) {
     CoreElement resume = button(c: 'btn icon-playback-play')..click(_resume);
@@ -116,6 +119,19 @@ class DebugUIController implements Disposable {
       } else {
         _updateVariables(suspended);
       }
+
+      // Update the execution point.
+      _removeExecutionMarker();
+
+      if (suspended) {
+        if (connection.topFrame != null) {
+          connection.topFrame.getLocation().then((DebugLocation location) {
+            if (location != null) {
+              _jumpToLocation(location, addExecMarker: true);
+            }
+          });
+        }
+      }
     }
 
     updateUi(connection.isSuspended);
@@ -186,6 +202,50 @@ class DebugUIController implements Disposable {
     return ui.element.onTransitionEnd.first;
   }
 
+  void _jumpToLocation(DebugLocation location, {bool addExecMarker: false}) {
+    if (statSync(location.path).isFile()) {
+      // TODO: Do we also want to adjust the cursor position?
+      editorManager.jumpToLocation(location.path).then((TextEditor editor) {
+        // Ensure that the execution point is visible.
+        editor.scrollToBufferPosition(
+            new Point.coords(location.line - 1, location.column - 1), center: true);
+
+        if (addExecMarker) {
+          _execMarker?.destroy();
+
+          // Update the execution location markers.
+          _execMarker = editor.markBufferRange(
+              debuggerCoordsToEditorRange(location.line, location.column),
+              persistent: false);
+
+          // The executing line color.
+          editor.decorateMarker(_execMarker, {
+            'type': 'line', 'class': 'debugger-executionpoint-line'
+          });
+
+          // The right-arrow.
+          editor.decorateMarker(_execMarker, {
+            'type': 'line-number', 'class': 'debugger-executionpoint-linenumber'
+          });
+
+          // The column marker.
+          editor.decorateMarker(_execMarker, {
+            'type': 'highlight', 'class': 'debugger-executionpoint-highlight'
+          });
+        }
+      });
+    } else {
+      atom.notifications.addWarning("Cannot find file '${location.path}'.");
+    }
+  }
+
+  void _removeExecutionMarker() {
+    if (_execMarker != null) {
+      _execMarker.destroy();
+      _execMarker = null;
+    }
+  }
+
   // TODO: This is all temporary.
   _pause() => connection.pause();
   _resume() => connection.resume();
@@ -196,6 +256,7 @@ class DebugUIController implements Disposable {
 
   void dispose() {
     disposables.dispose();
+    _removeExecutionMarker();
     _hide().then((_) {
       // So sad.
       js.context.callMethod('_domRemove', [ui.element]);

@@ -852,6 +852,13 @@ class TextEditor extends ProxyHolder {
   Point bufferPositionForScreenPosition(position) =>
       invoke('bufferPositionForScreenPosition', position);
 
+  /// Scrolls the editor to the given buffer position.
+  void scrollToBufferPosition(Point bufferPosition, {bool center}) {
+    Map options;
+    if (center != null) options = {'center': center};
+    invoke('scrollToBufferPosition', bufferPosition, options);
+  }
+
   /// Invoke the given callback synchronously when the content of the buffer
   /// changes. Because observers are invoked synchronously, it's important not
   /// to perform any expensive operations via this method. Consider
