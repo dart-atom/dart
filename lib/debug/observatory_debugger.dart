@@ -149,15 +149,17 @@ class ObservatoryDebugConnection extends DebugConnection {
         _installInto(_currentIsolate).then((_) {
           _suspend(false);
         });
-
-        // service.getIsolate(_currentIsolate.id).then((Isolate i) {
-        //   print('root lib = ${i.rootLib}');
-        // });
       } else if (isolatesStartPaused && vm.isolates.isNotEmpty) {
         if (_currentIsolate == null) {
           _currentIsolate = vm.isolates.first;
           _installInto(_currentIsolate).then((_) {
-            service.resume(_currentIsolate.id);
+            service.getIsolate(_currentIsolate.id).then((Isolate isolate) {
+              if (isolate.pauseEvent.kind == EventKind.PauseStart) {
+                resume();
+              } else {
+                _startIt = true;
+              }
+            });
           });
         }
       }
@@ -205,6 +207,8 @@ class ObservatoryDebugConnection extends DebugConnection {
     });
   }
 
+  bool _startIt = false;
+
   void _handleIsolateEvent(Event e) {
     // TODO: Create an isolate handler.
 
@@ -216,8 +220,13 @@ class ObservatoryDebugConnection extends DebugConnection {
       if (_currentIsolate == null) {
         _currentIsolate = e.isolate;
         _installInto(_currentIsolate).then((_) {
-          if (isolatesStartPaused) resume();
+          if (isolatesStartPaused) {
+            resume();
+          }
         });
+      } else if (_startIt) {
+        _startIt = false;
+        resume();
       }
     } else if (e.kind == EventKind.IsolateExit) {
       _currentIsolate = null;
