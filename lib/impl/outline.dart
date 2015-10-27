@@ -53,10 +53,7 @@ class OutlineController implements Disposable {
 
   void _handleEditor(TextEditor editor) {
     String path = editor.getPath();
-    if (path == null) return;
     if (!isDartFile(path)) return;
-    DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return;
 
     _installInto(editor);
   }
@@ -179,9 +176,13 @@ class OutlineView implements Disposable {
 
       treeBuilder.clear();
 
-      List<Outline> nodes = data.outline.children ?? [];
-      for (Outline node in nodes) {
-        treeBuilder.addNode(_toNode(node));
+      if (data.outline == null) {
+        treeBuilder.add(div(text: 'outline not available', c: 'comment'));
+      } else {
+        List<Outline> nodes = data.outline.children ?? [];
+        for (Outline node in nodes) {
+          treeBuilder.addNode(_toNode(node));
+        }
       }
 
       _cursorChanged(editor.getCursorBufferPosition());
