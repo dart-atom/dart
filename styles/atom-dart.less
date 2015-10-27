@@ -189,7 +189,7 @@ div.linter-tab.active {
   right: 8px;
   left: inherit;
   bottom: inherit;
-  width: 500px;
+  width: 445px;
   padding: 0;
   color: @text-color;
   border-radius: 2px;
@@ -220,6 +220,7 @@ div.linter-tab.active {
     max-height: 300px;
     overflow-y: scroll;
     position: relative;
+    background-color: @tree-view-background-color;
 
     p {
       margin: 8px 0;
@@ -235,6 +236,12 @@ div.linter-tab.active {
 
     h1, h2, h3 {
       margin-bottom: 0;
+    }
+
+    pre {
+      color: @syntax-text-color;
+      background-color: @syntax-background-color;
+      text-shadow: none;
     }
 
     pre code {
@@ -695,11 +702,13 @@ atom-notification.dartlang {
       overflow-y: auto;
 
       li::before {
-        content: '• ';
+        /*content: '• ';*/
       }
 
       .var-name {
-
+        width: 60px;
+        display: inline-block;
+        text-align: right;
       }
 
       .var-value {
