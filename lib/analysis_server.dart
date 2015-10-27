@@ -24,7 +24,8 @@ import 'utils.dart' hide Property;
 
 export 'analysis/analysis_server_lib.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
-    RefactoringOptions, SourceFileEdit, AnalysisOutline, Outline;
+    RefactoringOptions, SourceEdit, SourceFileEdit, AnalysisOutline, Outline,
+    AddContentOverlay, ChangeContentOverlay, RemoveContentOverlay;
 export 'jobs.dart' show Job;
 
 final Logger _logger = new Logger('analysis-server');
@@ -286,6 +287,12 @@ class AnalysisServer implements Disposable {
     return _server._executables
         .where((path) => path.startsWith(projectPath))
         .toList();
+  }
+
+  /// Update the given file with a new overlay. [contentOverlay] can be one of
+  /// [AddContentOverlay], [ChangeContentOverlay], or [RemoveContentOverlay].
+  Future updateContent(String path, Jsonable contentOverlay) {
+    return server.analysis.updateContent({path: contentOverlay});
   }
 
   /// If an analysis server is running, terminate it.
