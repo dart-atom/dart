@@ -20,7 +20,7 @@ final Logger _logger = new Logger('declaration_nav');
 class NavigationHelper implements Disposable {
   Disposables _commands = new Disposables();
   AnalysisNavigation _lastNavInfo;
-  Map<String, Completer> _navCompleters = {};
+  Map<String, Completer<AnalysisNavigation>> _navCompleters = {};
   Disposable _eventListener = new Disposables();
 
   List<_NavigationPosition> _history = [];
@@ -121,7 +121,7 @@ class NavigationHelper implements Disposable {
 
     if (_navCompleters[path] != null) return _navCompleters[path].future;
 
-    Completer completer = new Completer();
+    Completer<AnalysisNavigation> completer = new Completer();
     _navCompleters[path] = completer;
     new Timer(new Duration(milliseconds: 350), () {
       if (!completer.isCompleted) completer.complete(null);

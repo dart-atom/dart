@@ -215,7 +215,7 @@ class AtomDartPackage extends AtomPackage {
 
   // Verify that our dependencies are satisfied.
   void _verifyPackages(Map m) {
-    List<String> deps = m['packages'];
+    List<String> deps = m['packages'] as List<String>;
     if (deps == null) deps = [];
 
     List<String> packages = atom.packages.getAvailablePackageNames();

@@ -70,8 +70,8 @@ class Api {
     gen.writeln(
         'JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);');
     gen.writeStatement('Map<String, Domain> _domains = {};');
-    gen.writeln("StreamController _onSend = new StreamController.broadcast();");
-    gen.writeln("StreamController _onReceive = new StreamController.broadcast();");
+    gen.writeln("StreamController<String> _onSend = new StreamController.broadcast();");
+    gen.writeln("StreamController<String> _onReceive = new StreamController.broadcast();");
     gen.writeln();
     domains.forEach(
         (Domain domain) => gen.writeln('${domain.className} _${domain.name};'));
@@ -319,8 +319,10 @@ class Notification {
   String get className => '${titleCase(domain.name)}${titleCase(event)}';
 
   void generate(DartGenerator gen) {
-    gen.writeln(
-        "Stream<${className}> get ${onName} => _listen('${title}', ${className}.parse);");
+    gen.writeln("Stream<${className}> get ${onName} {");
+    // TODO: I don't really like having to do this cast.
+    gen.writeln("return _listen('${title}', ${className}.parse) as Stream<${className}>;");
+    gen.writeln("}");
   }
 
   void generateClass(DartGenerator gen) {

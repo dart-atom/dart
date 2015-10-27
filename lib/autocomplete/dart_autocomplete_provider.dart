@@ -126,11 +126,10 @@ class DartAutocompleteProvider extends AutocompleteProvider {
       return suggestion;
     };
 
-    results = results
+    results = new List.from(results
         .where((result) => result.relevance > 500)
         .where((result) => !_elided.contains(result.completion))
-        .map((result) => adjustRelavance(result))
-        .toList();
+        .map((result) => adjustRelavance(result)));
 
     results.sort(_compareSuggestions);
 
