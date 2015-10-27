@@ -4,6 +4,7 @@
 - exposed quick fixes - `ctrl-1`; these are common source refactorings
 - tweaked the css for the dartdoc tooltip
 - tweaked the display of debugger variables
+- fixed a NPE when listening for file changes (#458)
 
 ## 0.4.12
 - fixed an issue when editing in c-style comments

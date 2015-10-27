@@ -30,9 +30,9 @@ class BufferObserverManager implements Disposable {
     Timer.run(() {
       disposables.add(atom.workspace.observeTextEditors((editor) {
         String path = editor.getPath();
+        if (path == null || !path.endsWith(analysisOptionsFileName)) return;
 
-        if (path.endsWith(analysisOptionsFileName) &&
-            basename(path) == analysisOptionsFileName &&
+        if (basename(path) == analysisOptionsFileName &&
             projectManager.getProjectFor(path) != null) {
           _newEditor(editor);
         }
