@@ -47,7 +47,7 @@ class AnalysisServer implements Disposable {
   StreamController<String> _onSendController = new StreamController.broadcast();
   StreamController<String> _onReceiveController = new StreamController.broadcast();
   StreamController<AnalysisNavigation> _onNavigatonController =
-    new StreamController.broadcast();
+      new StreamController.broadcast();
   StreamController<AnalysisOutline> _onOutlineController = new StreamController.broadcast();
 
   _AnalysisServerWrapper _server;
@@ -94,7 +94,7 @@ class AnalysisServer implements Disposable {
   Stream<AnalysisErrors> get onAnalysisErrors =>
       analysisServer._server.analysis.onErrors;
   Stream<AnalysisFlushResults> get onAnalysisFlushResults =>
-    analysisServer._server.analysis.onFlushResults;
+      analysisServer._server.analysis.onFlushResults;
 
   Server get server => _server;
 
@@ -163,7 +163,7 @@ class AnalysisServer implements Disposable {
     if (removedProjects.isNotEmpty) {
       _logger.fine("removed: ${removedProjects}");
       removedProjects.forEach(
-        (project) => errorRepository.clearForDirectory(project.directory));
+          (project) => errorRepository.clearForDirectory(project.directory));
     }
 
     if (addedProjects.isNotEmpty) _logger.fine("added: ${addedProjects}");
@@ -185,18 +185,19 @@ class AnalysisServer implements Disposable {
     String path = editor.getPath();
 
     if (path != null) {
-      // TODO: Only use OUTLINE if required.
       _server.analysis.setSubscriptions({
         'NAVIGATION': [path],
         'OUTLINE': [path]
       });
 
-      // Ensure that the path is in a Dart project.
-      if (projectManager.getProjectFor(path) != null) {
-        server.analysis.setPriorityFiles([path]).catchError((e) {
+      server.analysis.setPriorityFiles([path]).catchError((e) {
+        if (e is RequestError && e.code == 'UNANALYZED_PRIORITY_FILES') {
+          AnalysisOutline outline = new AnalysisOutline(path, null, null);
+          _onOutlineController.add(outline);
+        } else {
           _logger.warning('Error from setPriorityFiles()', e);
-        });
-      }
+        }
+      });
     }
   }
 
