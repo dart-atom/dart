@@ -265,6 +265,10 @@ class AnalysisServer implements Disposable {
     return server.edit.getFixes(path, offset);
   }
 
+  Future<AssistsResult> getAssists(String path, int offset, int length) {
+    return server.edit.getAssists(path, offset, length);
+  }
+
   Future<HoverResult> getHover(String file, int offset) =>
       server.analysis.getHover(file, offset);
 

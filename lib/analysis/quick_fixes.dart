@@ -34,29 +34,39 @@ class QuickFixHelper implements Disposable {
     String path = editor.getPath();
     Range range = editor.getSelectedBufferRange();
     int offset = editor.getBuffer().characterIndexForPosition(range.start);
+    int length = editor.getBuffer().characterIndexForPosition(range.end) - offset;
 
     Job job = new AnalysisRequestJob('quick fix', () {
+      Future<AssistsResult> f = analysisServer.getAssists(path, offset, length);
+      FixesResult fixes;
+
       return analysisServer.getFixes(path, offset).then((FixesResult result) {
-        if (result == null) return;
-        _handleFixesResult(result, editor, autoFix: autoFix);
+        fixes = result;
+        return f;
+      }).then((AssistsResult assists) {
+        _handleFixesResult(fixes, assists, editor, autoFix: autoFix);
       });
     });
     job.schedule();
   }
 
-  void _handleFixesResult(FixesResult result, TextEditor editor,
-      {bool autoFix: true}) {
+  void _handleFixesResult(FixesResult result, AssistsResult assists,
+      TextEditor editor, {bool autoFix: true}) {
     List<AnalysisErrorFixes> fixes = result.fixes;
 
-    if (fixes.isEmpty) {
+    if (fixes.isEmpty && assists.assists.isEmpty) {
       atom.beep();
       return;
     }
 
-    List<_Change> changes = new List.from(fixes
-        .expand((fix) => fix.fixes.map((c) => new _Change(fix.error, c))));
+    List<_Change> changes = new List.from(
+        fixes.expand((fix) => fix.fixes.map(
+          (SourceChange change) => new _Change(change, fix.error))));
 
-    if (autoFix && changes.length == 1) {
+    changes.addAll(
+        assists.assists.map((SourceChange change) => new _Change(change)));
+
+    if (autoFix && changes.length == 1 && assists.assists.isEmpty) {
       // Apply the fix.
       _applyChange(editor, changes.first.change);
     } else {
@@ -67,9 +77,9 @@ class QuickFixHelper implements Disposable {
           text: 'fix_${++i}',
           replacementPrefix: '',
           displayText: change.change.message,
-          rightLabel: 'quick-fix',
-          description: change.error.message,
-          type: 'function'
+          rightLabel: change.isAssist ? 'assist' : 'quick-fix',
+          description: change.isAssist ? null : change.error.message,
+          type: change.isAssist ? 'attribute' : 'function'
         );
       };
 
@@ -83,12 +93,16 @@ class QuickFixHelper implements Disposable {
 }
 
 class _Change {
-  final AnalysisError error;
   final SourceChange change;
+  final AnalysisError error;
 
-  _Change(this.error, this.change);
+  _Change(this.change, [this.error]);
 
-  String toString() => '${error.message}: ${change.message}';
+  bool get isAssist => error == null;
+
+  String toString() {
+    return error == null ? change.message : '${error.message}: ${change.message}';
+  }
 }
 
 void _applyChange(TextEditor currentEditor, SourceChange change) {
