@@ -119,19 +119,6 @@ class DebugUIController implements Disposable {
       } else {
         _updateVariables(suspended);
       }
-
-      // Update the execution point.
-      _removeExecutionMarker();
-
-      if (suspended) {
-        if (connection.topFrame != null) {
-          connection.topFrame.getLocation().then((DebugLocation location) {
-            if (location != null) {
-              _jumpToLocation(location, addExecMarker: true);
-            }
-          });
-        }
-      }
     }
 
     updateUi(connection.isSuspended);
@@ -143,6 +130,19 @@ class DebugUIController implements Disposable {
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
       _debounceTimer = null;
+    }
+
+    // Update the execution point.
+    if (suspended && connection.topFrame != null) {
+      connection.topFrame.getLocation().then((DebugLocation location) {
+        _removeExecutionMarker();
+
+        if (location != null) {
+          _jumpToLocation(location, addExecMarker: true);
+        }
+      });
+    } else {
+      _removeExecutionMarker();
     }
 
     frameVars.clear();
