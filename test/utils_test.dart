@@ -21,9 +21,17 @@ defineTests() {
       expect(toStartingLowerCase('abc'), 'abc');
     });
 
-    test('simpleDiff', () {
+    test('simpleDiff 1', () {
       _checkDiff(simpleDiff('aabcc', 'aacc'), new Edit(0, 5, 'aacc'));
     });
+
+    // test('simpleDiff 2', () {
+    //   _checkDiff(simpleDiff('aaa', 'bbb'), new Edit(0, 3, 'bbb'));
+    // });
+    //
+    // test('simpleDiff 3', () {
+    //   _checkDiff(simpleDiff('aabb', 'aabbc'), new Edit(4, 0, 'c'));
+    // });
   });
 
   group('Property', () {

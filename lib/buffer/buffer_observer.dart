@@ -5,9 +5,12 @@ import 'dart:async';
 import 'package:frappe/frappe.dart';
 import 'package:logging/logging.dart';
 
+import '../analysis/analysis_options.dart';
 import '../analysis/formatting.dart';
 import '../analysis_server.dart';
 import '../atom.dart';
+import '../atom_utils.dart';
+import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
 
@@ -15,20 +18,37 @@ final Logger _logger = new Logger('atom.buffer_observer');
 
 class BufferObserverManager implements Disposable {
   List<BufferObserver> observers = [];
+  Disposables disposables = new Disposables();
   OverlayManager overlayManager = new OverlayManager();
 
   BufferObserverManager() {
     // TODO: Fix editorManager.dartProjectEditors.
     editorManager.dartProjectEditors.openEditors.forEach(_newEditor);
     editorManager.dartProjectEditors.onEditorOpened.listen(_newEditor);
+
+    // Create overlays for `.analysis_options` files.
+    Timer.run(() {
+      disposables.add(atom.workspace.observeTextEditors((editor) {
+        String path = editor.getPath();
+
+        if (path.endsWith(analysisOptionsFileName) &&
+            basename(path) == analysisOptionsFileName &&
+            projectManager.getProjectFor(path) != null) {
+          _newEditor(editor);
+        }
+      }));
+    });
   }
 
   void _newEditor(TextEditor editor) {
     observers.add(new BufferUpdater(this, editor));
-    observers.add(new BufferFormatter(this, editor));
+    if (isDartFile(editor.getPath())) {
+      observers.add(new BufferFormatter(this, editor));
+    }
   }
 
   void dispose() {
+    disposables.dispose();
     observers.toList().forEach((obs) => obs.dispose());
     observers.clear();
     overlayManager.dispose();
@@ -86,11 +106,6 @@ class BufferFormatter extends BufferObserver {
 
 /// Observe a TextEditor and notifies the analysis_server of any content changes
 /// it should care about.
-///
-/// Although this class should use the "ChangeContentOverlay" route,
-/// Atom doesn't provide us with diffs, so it is more expensive to calculate
-/// the diffs than just remove the existing overlay and add a new one with
-/// the changed content.
 class BufferUpdater extends BufferObserver {
   final StreamSubscriptions _subs = new StreamSubscriptions();
 
@@ -162,7 +177,7 @@ class OverlayManager implements Disposable {
     if (overlay == null) {
       overlay = overlays[path] = new OverlayInfo(path, data);
       if (analysisServer.isActive) {
-        _logger.fine("addContentOverlay('${path}')");
+        _logger.finer("addContentOverlay('${path}')");
         _log(analysisServer.updateContent(
           path, new AddContentOverlay('add', data)
         ));
@@ -189,7 +204,7 @@ class OverlayManager implements Disposable {
 
       overlay.data = newData;
 
-      _logger.fine("changedOverlayContent('${path}')");
+      _logger.finer("changedOverlayContent('${path}')");
       _log(analysisServer.updateContent(
           path, new ChangeContentOverlay('change', diffs)
       ));
@@ -205,7 +220,7 @@ class OverlayManager implements Disposable {
     if (overlay.count == 0) {
       overlays.remove(path);
 
-      _logger.fine("removeContentOverlay('${path}')");
+      _logger.finer("removeContentOverlay('${path}')");
       _log(analysisServer.updateContent(
         path, new RemoveContentOverlay('remove')
       ));

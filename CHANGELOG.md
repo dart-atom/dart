@@ -4,6 +4,7 @@
 - fixed an issue when editing in c-style comments
 - we now log fatal analysis server errors (this should be useful in diagnosing
   issues when they happen)
+- added syntax highlighting for `.analysis_options` files
 - fixed issues with having the same file open in multiple editors
 - we now show analysis information for more Dart files (for package: files, as
   well as files in the user's project)
