@@ -102,6 +102,10 @@ class ProxyHolder {
   //
   //   return controller.stream;
   // }
+
+  int get hashCode => obj.hashCode;
+
+  bool operator==(other) => other is ProxyHolder && obj == other.obj;
 }
 
 class Promise<T> extends ProxyHolder {
