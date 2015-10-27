@@ -6,8 +6,8 @@ import 'package:frappe/frappe.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_options.dart';
-import '../analysis/analysis_server_lib.dart';
 import '../analysis/formatting.dart';
+import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../projects.dart';
@@ -19,6 +19,7 @@ final Logger _logger = new Logger('atom.buffer_observer');
 class BufferObserverManager implements Disposable {
   List<BufferObserver> observers = [];
   Disposables disposables = new Disposables();
+  OverlayManager overlayManager = new OverlayManager();
 
   BufferObserverManager() {
     // TODO: Fix editorManager.dartProjectEditors.
@@ -50,6 +51,7 @@ class BufferObserverManager implements Disposable {
     disposables.dispose();
     observers.toList().forEach((obs) => obs.dispose());
     observers.clear();
+    overlayManager.dispose();
   }
 
   bool remove(BufferObserver observer) => observers.remove(observer);
@@ -93,14 +95,13 @@ class BufferFormatter extends BufferObserver {
     }));
   }
 
+  // TODO: Remove once we only watch Dart files that are in a Dart project.
+  bool get dartProject => projectManager.getProjectFor(editor.getPath()) != null;
+
   void dispose() {
     _subs.cancel();
     manager.remove(this);
   }
-
-  // TODO: Remove once we only watch Dart files that are in a Dart project.
-  bool get dartProject =>
-      projectManager.getProjectFor(editor.getPath()) != null;
 }
 
 /// Observe a TextEditor and notifies the analysis_server of any content changes
@@ -108,13 +109,11 @@ class BufferFormatter extends BufferObserver {
 class BufferUpdater extends BufferObserver {
   final StreamSubscriptions _subs = new StreamSubscriptions();
 
-  String _path;
-  String lastSent;
+  String path;
 
   BufferUpdater(manager, editor) : super(manager, editor) {
-    _path = editor.getPath();
+    path = editor.getPath();
 
-    _subs.add(analysisServer.isActiveProperty.listen(serverActive));
     // Debounce atom onDidChange events; atom sends us several events as a file
     // is opening. The number of events is proportional to the file size. For
     // a file like dart:html, this is on the order of 800 onDidChange events.
@@ -128,82 +127,132 @@ class BufferUpdater extends BufferObserver {
     addOverlay();
   }
 
-  bool get hasOverlay => lastSent != null;
+  OverlayManager get overlayManager => manager.overlayManager;
 
-  Server get server => analysisServer.server;
-
-  void serverActive(bool active) {
-    if (active) {
-      addOverlay();
-    } else {
-      lastSent = null;
-    }
-  }
+  // TODO: Remove once we only watch Dart files that are in a Dart project.
+  bool get dartProject => projectManager.getProjectFor(path) != null;
 
   void _didChange([_]) => changedOverlay();
 
   void _didDestroy([_]) => dispose();
 
   void addOverlay() {
-    if (hasOverlay) return;
-
-    if (analysisServer.isActive && dartProject) {
-      lastSent = editor.getText();
-      _logger.finer("addOverlayContent('${_path}')");
-      _logError(server.analysis.updateContent(
-          {_path: new AddContentOverlay('add', lastSent)}));
-    }
-  }
-
-  void _logError(Future f) {
-    f.catchError((e) {
-      _logger.warning('overlay call error; ${e}');
-    });
+    if (!dartProject) return;
+    overlayManager.addOverlay(path, editor.getText());
   }
 
   void changedOverlay() {
-    if (analysisServer.isActive && dartProject) {
-      if (lastSent == null) {
-        addOverlay();
-        return;
+    if (!dartProject) return;
+    overlayManager.updateOverlay(path, editor.getText());
+  }
+
+  void removeOverlay() {
+    if (!dartProject) return;
+    overlayManager.removeOverlay(path);
+  }
+
+  void dispose() {
+    super.dispose();
+
+    removeOverlay();
+    manager.remove(this);
+
+    _subs.cancel();
+  }
+}
+
+/// A class to manage the open overlays for Atom, and making sure that we're
+/// reporting the correct overlay information to the analysis server.
+class OverlayManager implements Disposable {
+  final Map<String, OverlayInfo> overlays = {};
+  StreamSubscription sub;
+
+  OverlayManager() {
+    sub = analysisServer.isActiveProperty.listen(_serverActive);
+  }
+
+  void addOverlay(String path, String data) {
+    OverlayInfo overlay = overlays[path];
+
+    if (overlay == null) {
+      overlay = overlays[path] = new OverlayInfo(path, data);
+      if (analysisServer.isActive) {
+        _logger.finer("addContentOverlay('${path}')");
+        _log(analysisServer.updateContent(
+          path, new AddContentOverlay('add', data)
+        ));
       }
+    } else {
+      overlay.count++;
+    }
+  }
 
-      final String contents = editor.getText();
-      if (contents == lastSent) return;
+  void updateOverlay(String path, String newData) {
+    OverlayInfo overlay = overlays[path];
 
-      List<Edit> edits = simpleDiff(lastSent, contents);
+    if (overlay == null) {
+      addOverlay(path, newData);
+      return;
+    }
+
+    if (overlay.data != newData) {
+      List<Edit> edits = simpleDiff(overlay.data, newData);
       int count = 1;
       List<SourceEdit> diffs = edits
           .map((e) => new SourceEdit(e.offset, e.length, e.replacement, id: '${count++}'))
           .toList();
 
-      _logger.finer("changedOverlayContent('${_path}')");
-      _logError(server.analysis.updateContent(
-          {_path: new ChangeContentOverlay('change', diffs)}));
+      overlay.data = newData;
 
-      lastSent = contents;
+      _logger.finer("changedOverlayContent('${path}')");
+      _log(analysisServer.updateContent(
+          path, new ChangeContentOverlay('change', diffs)
+      ));
     }
   }
 
-  void removeOverlay() {
-    if (!hasOverlay) return;
+  void removeOverlay(String path) {
+    OverlayInfo overlay = overlays[path];
+    if (overlay == null) return;
 
-    if (analysisServer.isActive && dartProject) {
-      _logger.finer("removeOverlayContent('${_path}')");
-      _logError(server.analysis.updateContent(
-          {_path: new RemoveContentOverlay('remove')}));
+    overlay.count--;
+
+    if (overlay.count == 0) {
+      overlays.remove(path);
+
+      _logger.finer("removeContentOverlay('${path}')");
+      _log(analysisServer.updateContent(
+        path, new RemoveContentOverlay('remove')
+      ));
     }
-
-    lastSent = null;
   }
 
-  // TODO: Remove once we only watch Dart files that are in a Dart project.
-  bool get dartProject => projectManager.getProjectFor(_path) != null;
-
-  dispose() {
-    removeOverlay();
-    super.dispose();
-    _subs.cancel();
-    manager.remove(this);
+  void _serverActive(bool active) {
+    if (overlays.isNotEmpty) {
+      Map<String, dynamic> toSend = {};
+      overlays.forEach((key, OverlayInfo info) {
+        toSend[key] = new AddContentOverlay('add', info.data);
+      });
+      _log(analysisServer.server.analysis.updateContent(toSend));
+    }
   }
+
+  void dispose() {
+    sub.cancel();
+  }
+}
+
+/// Store information about the number iof overlays we have for an open file.
+/// Each file can be open in multiple editors.
+class OverlayInfo {
+  final String path;
+  int count = 1;
+  String data;
+
+  OverlayInfo(this.path, [this.data]);
+
+}
+
+void _log(Future f) {
+  f.catchError((e) => _logger.warning('overlay call error; ${e}'));
 }
