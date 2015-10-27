@@ -224,7 +224,7 @@ class AnalysisServer implements Disposable {
 
   Stream<SearchResult> filterSearchResults(String id) {
     StreamSubscription sub;
-    StreamController controller = new StreamController(
+    StreamController<SearchResult> controller = new StreamController(
         onCancel: () => sub.cancel());
 
     sub = server.search.onResults.listen((SearchResults result) {
@@ -386,13 +386,13 @@ class _AnalyzingJob extends Job {
   }
 }
 
-typedef void _AnalysisServerWriter(String);
+typedef void _AnalysisServerWriter(String message);
 
 class _AnalysisServerWrapper extends Server {
   static _AnalysisServerWrapper create(Sdk sdk) {
-    StreamController controller = new StreamController();
+    StreamController<String> controller = new StreamController();
     ProcessRunner process = _createProcess(sdk);
-    Completer completer = _startProcess(process, controller);
+    Completer<int> completer = _startProcess(process, controller);
 
     _AnalysisServerWrapper wrapper = new _AnalysisServerWrapper(
         process, completer, controller.stream, _messageWriter(process));
@@ -403,7 +403,7 @@ class _AnalysisServerWrapper extends Server {
   ProcessRunner process;
   Completer<int> _processCompleter;
   bool analyzing = false;
-  StreamController _analyzingController = new StreamController.broadcast();
+  StreamController<bool> _analyzingController = new StreamController.broadcast();
   StreamController<int> _disposedController = new StreamController.broadcast();
   Set<String> _executables = new Set();
 
@@ -475,7 +475,7 @@ class _AnalysisServerWrapper extends Server {
   /// Restarts, or starts, the analysis server process.
   void restart(Sdk sdk) {
     var startServer = () {
-      var controller = new StreamController();
+      StreamController<String> controller = new StreamController();
       process = _createProcess(sdk);
       _processCompleter = _startProcess(process, controller);
       _processCompleter.future.then((result) {
@@ -540,7 +540,7 @@ class _AnalysisServerWrapper extends Server {
   /// Starts a process, and returns a [Completer] that completes when the
   /// process is no longer running.
   static Completer<int> _startProcess(ProcessRunner process, StreamController sc) {
-    Completer completer = new Completer();
+    Completer<int> completer = new Completer();
     process.onStderr.listen((String str) => _logger.severe(str.trim()));
 
     process.onStdout.listen((String str) {

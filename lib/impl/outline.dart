@@ -179,7 +179,7 @@ class OutlineView implements Disposable {
       if (data.outline == null) {
         treeBuilder.add(div(text: 'outline not available', c: 'comment'));
       } else {
-        List<Outline> nodes = data.outline.children ?? [];
+        List<Outline> nodes = data.outline.children ?? <Outline>[];
         for (Outline node in nodes) {
           treeBuilder.addNode(_toNode(node));
         }

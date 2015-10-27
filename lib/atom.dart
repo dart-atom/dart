@@ -240,9 +240,9 @@ class Workspace extends ProxyHolder {
 class Panel extends ProxyHolder {
   Panel(JsObject object) : super(object);
 
-  Stream<bool> get onDidChangeVisible => eventStream('onDidChangeVisible');
+  Stream<bool> get onDidChangeVisible => eventStream('onDidChangeVisible') as Stream<bool>;
   Stream<Panel> get onDidDestroy =>
-      eventStream('onDidDestroy').map((obj) => new Panel(obj));
+      eventStream('onDidDestroy').map((obj) => new Panel(obj)) as Stream<Panel>;
 
   bool isVisible() => invoke('isVisible');
   void show() => invoke('show');
@@ -560,7 +560,8 @@ class Project extends ProxyHolder {
 
   /// Fire an event when the project paths change. Each event is an list of
   /// project paths.
-  Stream<List<String>> get onDidChangePaths => eventStream('onDidChangePaths');
+  Stream<List<String>> get onDidChangePaths => eventStream('onDidChangePaths')
+      as Stream<List<String>>;
 
   List<String> getPaths() => new List.from(invoke('getPaths'));
 
@@ -981,7 +982,7 @@ class Marker extends ProxyHolder {
   void isDestroyed() => invoke('isDestroyed');
 
   /// Returns an Object containing any custom properties associated with the marker.
-  Map<String, dynamic> getProperties() => invoke('getProperties');
+  Map<String, dynamic> getProperties() => invoke('getProperties') as Map<String, dynamic>;
 
   /// Gets the buffer range of the display marker.
   Range getBufferRange() => new Range(invoke('getBufferRange'));
@@ -1002,7 +1003,7 @@ class Decoration extends ProxyHolder {
   num getId() => invoke('getId');
 
   /// Returns the Decoration's properties.
-  Map<String, dynamic> getProperties() => invoke('getProperties');
+  Map<String, dynamic> getProperties() => invoke('getProperties') as Map<String, dynamic>;
 
   /// Update the marker with new Properties. Allows you to change the
   /// decoration's class. E.g. `{type: 'line-number', class: 'my-new-class'}`.

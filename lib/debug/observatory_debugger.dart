@@ -23,7 +23,7 @@ class ObservatoryDebugger {
     String url = 'ws://${host}:${port}/ws';
     WebSocket ws = new WebSocket(url);
 
-    Completer connectedCompleter = new Completer();
+    Completer<DebugConnection> connectedCompleter = new Completer();
     Completer finishedCompleter = new Completer();
 
     ws.onOpen.listen((_) {

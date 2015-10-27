@@ -22,8 +22,8 @@ class Server {
   Map<String, Completer> _completers = {};
   JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);
   Map<String, Domain> _domains = {};
-  StreamController _onSend = new StreamController.broadcast();
-  StreamController _onReceive = new StreamController.broadcast();
+  StreamController<String> _onSend = new StreamController.broadcast();
+  StreamController<String> _onReceive = new StreamController.broadcast();
 
   ServerDomain _server;
   AnalysisDomain _analysis;
@@ -167,11 +167,18 @@ Map _mapify(Map m) {
 class ServerDomain extends Domain {
   ServerDomain(Server server) : super(server, 'server');
 
-  Stream<ServerConnected> get onConnected =>
-      _listen('server.connected', ServerConnected.parse);
-  Stream<ServerError> get onError => _listen('server.error', ServerError.parse);
-  Stream<ServerStatus> get onStatus =>
-      _listen('server.status', ServerStatus.parse);
+  Stream<ServerConnected> get onConnected {
+    return _listen('server.connected', ServerConnected.parse)
+        as Stream<ServerConnected>;
+  }
+
+  Stream<ServerError> get onError {
+    return _listen('server.error', ServerError.parse) as Stream<ServerError>;
+  }
+
+  Stream<ServerStatus> get onStatus {
+    return _listen('server.status', ServerStatus.parse) as Stream<ServerStatus>;
+  }
 
   Future<VersionResult> getVersion() =>
       _call('server.getVersion').then(VersionResult.parse);
@@ -225,28 +232,60 @@ class VersionResult {
 class AnalysisDomain extends Domain {
   AnalysisDomain(Server server) : super(server, 'analysis');
 
-  Stream<AnalysisAnalyzedFiles> get onAnalyzedFiles =>
-      _listen('analysis.analyzedFiles', AnalysisAnalyzedFiles.parse);
-  Stream<AnalysisErrors> get onErrors =>
-      _listen('analysis.errors', AnalysisErrors.parse);
-  Stream<AnalysisFlushResults> get onFlushResults =>
-      _listen('analysis.flushResults', AnalysisFlushResults.parse);
-  Stream<AnalysisFolding> get onFolding =>
-      _listen('analysis.folding', AnalysisFolding.parse);
-  Stream<AnalysisHighlights> get onHighlights =>
-      _listen('analysis.highlights', AnalysisHighlights.parse);
-  Stream<AnalysisImplemented> get onImplemented =>
-      _listen('analysis.implemented', AnalysisImplemented.parse);
-  Stream<AnalysisInvalidate> get onInvalidate =>
-      _listen('analysis.invalidate', AnalysisInvalidate.parse);
-  Stream<AnalysisNavigation> get onNavigation =>
-      _listen('analysis.navigation', AnalysisNavigation.parse);
-  Stream<AnalysisOccurrences> get onOccurrences =>
-      _listen('analysis.occurrences', AnalysisOccurrences.parse);
-  Stream<AnalysisOutline> get onOutline =>
-      _listen('analysis.outline', AnalysisOutline.parse);
-  Stream<AnalysisOverrides> get onOverrides =>
-      _listen('analysis.overrides', AnalysisOverrides.parse);
+  Stream<AnalysisAnalyzedFiles> get onAnalyzedFiles {
+    return _listen('analysis.analyzedFiles', AnalysisAnalyzedFiles.parse)
+        as Stream<AnalysisAnalyzedFiles>;
+  }
+
+  Stream<AnalysisErrors> get onErrors {
+    return _listen('analysis.errors', AnalysisErrors.parse)
+        as Stream<AnalysisErrors>;
+  }
+
+  Stream<AnalysisFlushResults> get onFlushResults {
+    return _listen('analysis.flushResults', AnalysisFlushResults.parse)
+        as Stream<AnalysisFlushResults>;
+  }
+
+  Stream<AnalysisFolding> get onFolding {
+    return _listen('analysis.folding', AnalysisFolding.parse)
+        as Stream<AnalysisFolding>;
+  }
+
+  Stream<AnalysisHighlights> get onHighlights {
+    return _listen('analysis.highlights', AnalysisHighlights.parse)
+        as Stream<AnalysisHighlights>;
+  }
+
+  Stream<AnalysisImplemented> get onImplemented {
+    return _listen('analysis.implemented', AnalysisImplemented.parse)
+        as Stream<AnalysisImplemented>;
+  }
+
+  Stream<AnalysisInvalidate> get onInvalidate {
+    return _listen('analysis.invalidate', AnalysisInvalidate.parse)
+        as Stream<AnalysisInvalidate>;
+  }
+
+  Stream<AnalysisNavigation> get onNavigation {
+    return _listen('analysis.navigation', AnalysisNavigation.parse)
+        as Stream<AnalysisNavigation>;
+  }
+
+  Stream<AnalysisOccurrences> get onOccurrences {
+    return _listen('analysis.occurrences', AnalysisOccurrences.parse)
+        as Stream<AnalysisOccurrences>;
+  }
+
+  Stream<AnalysisOutline> get onOutline {
+    return _listen('analysis.outline', AnalysisOutline.parse)
+        as Stream<AnalysisOutline>;
+  }
+
+  Stream<AnalysisOverrides> get onOverrides {
+    return _listen('analysis.overrides', AnalysisOverrides.parse)
+        as Stream<AnalysisOverrides>;
+  }
 
   Future<ErrorsResult> getErrors(String file) {
     Map m = {'file': file};
@@ -494,8 +533,10 @@ class NavigationResult {
 class CompletionDomain extends Domain {
   CompletionDomain(Server server) : super(server, 'completion');
 
-  Stream<CompletionResults> get onResults =>
-      _listen('completion.results', CompletionResults.parse);
+  Stream<CompletionResults> get onResults {
+    return _listen('completion.results', CompletionResults.parse)
+        as Stream<CompletionResults>;
+  }
 
   Future<SuggestionsResult> getSuggestions(String file, int offset) {
     Map m = {'file': file, 'offset': offset};
@@ -536,8 +577,10 @@ class SuggestionsResult {
 class SearchDomain extends Domain {
   SearchDomain(Server server) : super(server, 'search');
 
-  Stream<SearchResults> get onResults =>
-      _listen('search.results', SearchResults.parse);
+  Stream<SearchResults> get onResults {
+    return _listen('search.results', SearchResults.parse)
+        as Stream<SearchResults>;
+  }
 
   Future<FindElementReferencesResult> findElementReferences(
       String file, int offset, bool includePotential) {
@@ -806,8 +849,10 @@ class OrganizeDirectivesResult {
 class ExecutionDomain extends Domain {
   ExecutionDomain(Server server) : super(server, 'execution');
 
-  Stream<ExecutionLaunchData> get onLaunchData =>
-      _listen('execution.launchData', ExecutionLaunchData.parse);
+  Stream<ExecutionLaunchData> get onLaunchData {
+    return _listen('execution.launchData', ExecutionLaunchData.parse)
+        as Stream<ExecutionLaunchData>;
+  }
 
   Future<CreateContextResult> createContext(String contextRoot) {
     Map m = {'contextRoot': contextRoot};

@@ -115,14 +115,14 @@ class LaunchManager implements Disposable {
 
     // TODO: This is not being restored as a List.
     if (savedConfigs is List) {
-      _configs = savedConfigs.map((Map json) {
+      _configs = new List.from(savedConfigs.map((Map json) {
         try {
           return new LaunchConfiguration.from(json);
         } catch (e) {
           _logger.warning('Error restoring launch config', e);
           return null;
         }
-      }).where((config) => config != null).toList();
+      }).where((config) => config != null));
 
       _logger.info('Restored ${_configs} launch configurations.');
     } else {
@@ -143,9 +143,9 @@ class LaunchManager implements Disposable {
   List<LaunchConfiguration> getAllConfigurations() => _configs;
 
   List<LaunchConfiguration> getConfigurationsForPath(String path) {
-    return _configs.where((LaunchConfiguration config) {
+    return new List.from(_configs.where((LaunchConfiguration config) {
       return config.primaryResource == path;
-    }).toList();
+    }));
   }
 
   List<LaunchConfiguration> getConfigurationsForProject(DartProject project) {
