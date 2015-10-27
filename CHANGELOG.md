@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.12
 - fixed an issue when editing in c-style comments
 - we now log fatal analysis server errors (this should be useful in diagnosing
   issues when they happen)
