@@ -4,6 +4,7 @@
 - fixed an issue when editing in c-style comments
 - we now log fatal analysis server errors (this should be useful in diagnosing
   issues when they happen)
+- added syntax highlighting for `.analysis_options` files
 
 ## 0.4.11
 - fixed an issue when running `pub get` in a directory without a pubspec.yaml

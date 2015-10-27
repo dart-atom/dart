@@ -5,9 +5,12 @@ import 'dart:async';
 import 'package:frappe/frappe.dart';
 import 'package:logging/logging.dart';
 
+import '../analysis/analysis_options.dart';
 import '../analysis/analysis_server_lib.dart';
 import '../analysis/formatting.dart';
 import '../atom.dart';
+import '../atom_utils.dart';
+import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
 
@@ -15,24 +18,41 @@ final Logger _logger = new Logger('atom.buffer_observer');
 
 class BufferObserverManager implements Disposable {
   List<BufferObserver> observers = [];
+  Disposables disposables = new Disposables();
 
   BufferObserverManager() {
     // TODO: Fix editorManager.dartProjectEditors.
     editorManager.dartProjectEditors.openEditors.forEach(_newEditor);
     editorManager.dartProjectEditors.onEditorOpened.listen(_newEditor);
+
+    // Create overlays for `.analysis_options` files.
+    Timer.run(() {
+      disposables.add(atom.workspace.observeTextEditors((editor) {
+        String path = editor.getPath();
+
+        if (path.endsWith(analysisOptionsFileName) &&
+            basename(path) == analysisOptionsFileName &&
+            projectManager.getProjectFor(path) != null) {
+          _newEditor(editor);
+        }
+      }));
+    });
   }
 
   void _newEditor(TextEditor editor) {
     observers.add(new BufferUpdater(this, editor));
-    observers.add(new BufferFormatter(this, editor));
+    if (isDartFile(editor.getPath())) {
+      observers.add(new BufferFormatter(this, editor));
+    }
   }
 
   void dispose() {
+    disposables.dispose();
     observers.toList().forEach((obs) => obs.dispose());
     observers.clear();
   }
 
-  remove(BufferObserver observer) => observers.remove(observer);
+  bool remove(BufferObserver observer) => observers.remove(observer);
 }
 
 class BufferObserver extends Disposables {
@@ -85,11 +105,6 @@ class BufferFormatter extends BufferObserver {
 
 /// Observe a TextEditor and notifies the analysis_server of any content changes
 /// it should care about.
-///
-/// Although this class should use the "ChangeContentOverlay" route,
-/// Atom doesn't provide us with diffs, so it is more expensive to calculate
-/// the diffs than just remove the existing overlay and add a new one with
-/// the changed content.
 class BufferUpdater extends BufferObserver {
   final StreamSubscriptions _subs = new StreamSubscriptions();
 
@@ -165,14 +180,6 @@ class BufferUpdater extends BufferObserver {
       _logger.finer("changedOverlayContent('${_path}')");
       _logError(server.analysis.updateContent(
           {_path: new ChangeContentOverlay('change', diffs)}));
-
-      // _logger.finer("removeOverlayContent('${_path}')");
-      // server.analysis.updateContent(
-      //     {_path: new RemoveContentOverlay('remove')});
-      //
-      // _logger.finer("addOverlayContent('${_path}')");
-      // server.analysis.updateContent(
-      //     {_path: new AddContentOverlay('add', contents)});
 
       lastSent = contents;
     }
