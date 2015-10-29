@@ -100,7 +100,14 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
   }
 
+  void _preLaunch() {
+    // Save all dirty editors.
+    atom.workspace.saveAll();
+  }
+
   void _run(LaunchConfiguration config) {
+    _preLaunch();
+
     _logger.info("Launching '${config}'.");
     config.touch();
 
