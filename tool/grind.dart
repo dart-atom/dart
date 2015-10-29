@@ -63,10 +63,10 @@ runAtomTests() async {
   }
 }
 
-@Task('Analyze the source code with the ddc compiler')
+@Task('Analyze the source code with ddc')
 ddc() {
-  // TODO: Support --html-report.
-  return new DevCompiler().analyzeAsync(getFile('web/entry.dart'));
+  return new DevCompiler().analyzeAsync(
+    getFile('web/entry.dart'), htmlOutput: true);
 }
 
 @Task()
@@ -91,7 +91,7 @@ analysisApi() {
   DartFmt.format('lib/analysis/analysis_server_lib.dart');
 }
 
-@Task('generate both the analysis API')
+@Task()
 @Depends(analysisApi)
 generate() => null;
 
