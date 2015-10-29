@@ -229,6 +229,15 @@ class Workspace extends ProxyHolder {
     }));
   }
 
+  /// Save all dirty editors.
+  void saveAll() {
+    try {
+      invoke('saveAll');
+    } catch (e) {
+      _logger.info('exception calling saveAll', e);
+    }
+  }
+
   Map _panelOptions(dynamic item, bool visible, int priority) {
     Map options = {'item': item};
     if (visible != null) options['visible'] = visible;

@@ -5,6 +5,9 @@
 - tweaked the css for the dartdoc tooltip
 - tweaked the display of debugger variables
 - fixed a NPE when listening for file changes (#458)
+- improved the error messages and progress display when performing a rename
+  refactoring
+- we now save all files before running an application
 
 ## 0.4.12
 - fixed an issue when editing in c-style comments

@@ -24432,6 +24432,16 @@ self._domRemove = function(element) {
       open$1: function($receiver, url) {
         return this.open$2$options($receiver, url, null);
       },
+      saveAll$0: function() {
+        var e, exception, t1;
+        try {
+          this.invoke$1("saveAll");
+        } catch (exception) {
+          t1 = H.unwrapException(exception);
+          e = t1;
+          $.$get$_logger0().info$2("exception calling saveAll", e);
+        }
+      },
       _panelOptions$3: function(item, visible, priority) {
         var options = P.LinkedHashMap__makeLiteral(["item", item]);
         if (visible != null)
@@ -35515,6 +35525,7 @@ self._domRemove = function(element) {
         t1.invoke$3("addWarning", "Unable to locate a suitable execution handler for file " + H.S(displayPath) + ".", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
       },
       _run$1: function(config) {
+        $.$get$atom()._workspace.saveAll$0();
         $.$get$_logger12().info$1("Launching '" + H.S(config) + "'.");
         config.touch$0();
         Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getLaunchType$1(config.get$launchType()).performLaunch$2(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK), config).catchError$1(new L.RunApplicationManager__run_closure(config));
