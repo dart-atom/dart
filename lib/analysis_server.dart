@@ -578,6 +578,9 @@ class RenameRefactoringOptions extends RefactoringOptions {
   Map toMap() => {'newName': newName};
 }
 
+// TODO: We need more visible progress for this job - it should put up a toast
+// after a ~400ms delay.
+
 /// A [Job] implementation to wrap calls to the analysis server. It will not run
 /// if the analysis server is not active. If the call results in an error from
 /// the analysis server, the error will be displayed in a toast and will not be
