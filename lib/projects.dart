@@ -337,6 +337,14 @@ class DartProject {
 
   String get name => directory.getBaseName();
 
+  /// Return the path from the workspace root to this project, inclusive of the
+  /// project name.
+  String get workspaceRelativeName {
+    List<String> relPaths = atom.project.relativizePath(directory.path);
+    if (relPaths[0] == null) return name;
+    return join(basename(relPaths[0]), relPaths[1]);
+  }
+
   String getSelfRefName() {
     File pubspec = directory.getFile(pub.pubspecFileName);
 
