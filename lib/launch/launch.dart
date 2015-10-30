@@ -133,7 +133,10 @@ class LaunchManager implements Disposable {
     }
   }
 
-  void createConfiguration(LaunchConfiguration config) {
+  void createConfiguration(LaunchConfiguration config, {bool quiet: false}) {
+    atom.notifications.addInfo('Created a ${config.launchType} launch '
+        'configuration for `${config.shortResourceName}`.');
+
     _configs.add(config);
 
     // TODO: Restore this.
@@ -155,6 +158,18 @@ class LaunchManager implements Disposable {
       String r = config.primaryResource;
       return r != null && r.startsWith(path);
     }).toList();
+  }
+
+  List<LaunchConfiguration> getAllRunnables(DartProject project) {
+    List<LaunchConfiguration> results = [];
+
+    for (LaunchType type in launchTypes) {
+      results.addAll(type
+          .getLaunchablesFor(project)
+          .map((path) => type.createConfiguration(path)));
+    }
+
+    return results;
   }
 
   void deleteConfiguration(LaunchConfiguration config) {
@@ -242,6 +257,13 @@ class LaunchConfiguration {
 
   /// Get the last launch time.
   int get timestamp => _config['timestamp'];
+
+  String get shortResourceName {
+    String resource = primaryResource;
+    if (resource == null) return null;
+
+    return atom.project.relativizePath(resource)[1];
+  }
 
   String toString() => primaryResource;
 }
