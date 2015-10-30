@@ -8,6 +8,7 @@
 - improved the error messages and progress display when performing a rename
   refactoring
 - we now save all files before running an application
+- improved the algorithm to determine which app to run on a `cmd-R`
 
 ## 0.4.12
 - fixed an issue when editing in c-style comments

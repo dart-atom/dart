@@ -92,12 +92,24 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
       }
     }
 
-    String displayPath = project == null ? path : project.getRelative(path);
-    atom.notifications.addWarning(
-        'Unable to locate a suitable execution handler for file ${displayPath}.');
+    // Gather all potential runnables for this project.
+    List<LaunchConfiguration> runnables = launchManager.getAllRunnables(project);
 
-    // TODO: Else, open the config editing dialog?
+    if (runnables.isEmpty) {
+      String displayPath = project == null ? path : project.getRelative(path);
+      atom.notifications.addWarning(
+          'Unable to locate a suitable execution handler for file ${displayPath}.');
+    } else if (runnables.length == 1) {
+      config = runnables.first;
+      launchManager.createConfiguration(config);
+      _logger.fine("Found one runnable in project: '${config}'.");
+      _run(config);
+    } else {
+      // TODO: Show a selection dialog.
 
+      atom.notifications.addWarning('This project contains more than one '
+          'potentially runnable file; please select a specific file.');
+    }
   }
 
   void _preLaunch() {
