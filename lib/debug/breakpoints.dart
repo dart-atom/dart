@@ -125,7 +125,7 @@ class BreakpointManager implements Disposable {
 
   /// Find a breakpoint on the same file and line.
   AtomBreakpoint _findSimilar(AtomBreakpoint other) {
-    return _breakpoints.firstWhere((bp) {
+    return _breakpoints.firstWhere((AtomBreakpoint bp) {
       return other.path == bp.path && other.line == bp.line;
     }, orElse: () => null);
   }

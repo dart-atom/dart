@@ -40,8 +40,8 @@ class LaunchManager implements Disposable {
     bool activated = false;
 
     // Automatically remove all dead launches.
-    List removed = [];
-    _launches.removeWhere((l) {
+    List<Launch> removed = [];
+    _launches.removeWhere((Launch l) {
       if (l.isTerminated) {
         if (_activeLaunch == l) _activeLaunch = null;
         removed.add(l);

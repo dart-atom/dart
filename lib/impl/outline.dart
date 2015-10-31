@@ -157,36 +157,36 @@ class OutlineView implements Disposable {
   }
 
   void _handleOutline(AnalysisOutline data) {
+    if (data.file != editor.getPath()) return;
+
     lastOutline = data;
 
     if (treeBuilder == null) return;
 
-    if (data.file == editor.getPath()) {
-      // Update the title.
-      if (data.libraryName == null) {
-        fileType.text = '';
-        title.text = basename(editor.getPath());
-      } else if (data.kind == 'PART') {
-        fileType.text = 'part of ';
-        title.text = data.libraryName;
-      } else {
-        fileType.text = 'library ';
-        title.text = data.libraryName;
-      }
-
-      treeBuilder.clear();
-
-      if (data.outline == null) {
-        treeBuilder.add(div(text: 'outline not available', c: 'comment'));
-      } else {
-        List<Outline> nodes = data.outline.children ?? <Outline>[];
-        for (Outline node in nodes) {
-          treeBuilder.addNode(_toNode(node));
-        }
-      }
-
-      _cursorChanged(editor.getCursorBufferPosition());
+    // Update the title.
+    if (data.libraryName == null) {
+      fileType.text = '';
+      title.text = basename(editor.getPath());
+    } else if (data.kind == 'PART') {
+      fileType.text = 'part of ';
+      title.text = data.libraryName;
+    } else {
+      fileType.text = 'library ';
+      title.text = data.libraryName;
     }
+
+    treeBuilder.clear();
+
+    if (data.outline == null) {
+      treeBuilder.add(div(text: 'outline not available', c: 'comment'));
+    } else {
+      List<Outline> nodes = data.outline.children ?? <Outline>[];
+      for (Outline node in nodes) {
+        treeBuilder.addNode(_toNode(node));
+      }
+    }
+
+    _cursorChanged(editor.getCursorBufferPosition());
   }
 
   // TODO: handle multiple cursors

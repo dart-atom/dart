@@ -368,7 +368,7 @@ class ListTreeBuilder extends CoreElement {
       render(node.data, e);
       _nodeToElementMap[node] = e;
       e.onClick.listen((_) => _clickController.add(node));
-      e.onDoubleClick.listen((MouseEvent event) {
+      e.onDoubleClick.listen((Event event) {
         if (!event.defaultPrevented) _doubleClickController.add(node);
       });
       element.add(d);

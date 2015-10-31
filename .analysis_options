@@ -1,4 +1,2 @@
 analyzer:
-  exclude:
-    - 'doc/api/**'
 #  strong-mode: true

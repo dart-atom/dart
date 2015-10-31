@@ -68,7 +68,7 @@ class AtomDartPackage extends AtomPackage {
 
   AtomDartPackage() {
     // Register a method to consume the `status-bar` service API.
-    registerServiceConsumer('consumeStatusBar', (obj) {
+    registerServiceConsumer('consumeStatusBar', (JsObject obj) {
       StatusBar statusBar = new StatusBar(obj);
 
       if (errorsController != null) errorsController.initStatusBar(statusBar);
@@ -80,14 +80,14 @@ class AtomDartPackage extends AtomPackage {
     });
 
     // Register a method to consume the `atom-toolbar` service API.
-    registerServiceConsumer('consumeToolbar', (obj) {
+    registerServiceConsumer('consumeToolbar', (JsObject obj) {
       ToolbarContribution toolbar = new ToolbarContribution(new Toolbar(obj));
       disposables.add(toolbar);
       return toolbar;
     });
 
     // Register a method to consume the `linter-plus-self` service API.
-    registerServiceConsumer('consumeLinter', (obj) {
+    registerServiceConsumer('consumeLinter', (JsObject obj) {
       _consumer.consume(new LinterService(obj));
       return _consumer;
     });
@@ -396,8 +396,8 @@ class AtomDartPackage extends AtomPackage {
     // This hoopla allows us to construct an object with Disposable and return
     // it without having to create a new class that just does the same thing,
     // but in another file.
-    var errorController = new StreamController.broadcast();
-    var flushController = new StreamController.broadcast();
+    var errorController = new StreamController<AnalysisErrors>.broadcast();
+    var flushController = new StreamController<AnalysisFlushResults>.broadcast();
     errorRepository.initStreams(errorController.stream, flushController.stream);
     _consumer = new DartLinterConsumer(errorRepository);
 

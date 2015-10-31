@@ -168,18 +168,18 @@ table {
 				<span class="menu-heading">Application code</span>
 				<a href="#package_atom_dartlang" class="menu-item">
 					<span>atom_dartlang</span>
-					<span class="counter warning">59</span>
+					<span class="counter warning">52</span>
 				</a>
 				<span class="menu-heading">Package: code</span>
 				<div class="menu-item">charcode</div>
 				<a href="#package_collection" class="menu-item">
 					<span>collection</span>
-					<span class="counter warning">31</span>
+					<span class="counter warning">30</span>
 					<span class="counter error">6</span>
 				</a>
 				<a href="#package_frappe" class="menu-item">
 					<span>frappe</span>
-					<span class="counter warning">39</span>
+					<span class="counter warning">37</span>
 				</a>
 				<div class="menu-item">haikunator</div>
 				<div class="menu-item">logging</div>
@@ -196,10 +196,7 @@ table {
 				</a>
 				<div class="menu-item">string_scanner</div>
 				<div class="menu-item">usage</div>
-				<a href="#package_vm_service_lib" class="menu-item">
-					<span>vm_service_lib</span>
-					<span class="counter warning">16</span>
-				</a>
+				<div class="menu-item">vm_service_lib</div>
 				<a href="#package_yaml" class="menu-item">
 					<span>yaml</span>
 					<span class="counter warning">1</span>
@@ -208,9 +205,9 @@ table {
 		</div>
 		<div class="column three-fourths">
 			<h1 class="page-title">DDC compilation report for web/entry.dart</h1>
-			<p>Found 6 errors and 216 warnings.</p>
+			<p>Found 6 errors and 190 warnings.</p>
 			<h2 id=package_atom_dartlang>package:atom_dartlang</h2>
-			<span class="counter warning">59 warnings</span>
+			<span class="counter warning">52 warnings</span>
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DownCastComposite</span>
@@ -220,8 +217,8 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">422</td>
-								<td class="blob-code blob-code-inner">  static LibraryDependenciesResult parse(Map m) =&gt; new LibraryDependenciesResult(m[&#39;libraries&#39;] == null ? null : new List.from(m[&#39;libraries&#39;]), m[&#39;packageMap&#39;]);</td>
+								<td class="blob-num">506</td>
+								<td class="blob-code blob-code-inner">          m[&#39;packageMap&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
@@ -364,7 +361,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">77</td>
+								<td class="blob-num">87</td>
 								<td class="blob-code blob-code-inner">      chooseItemUsingCompletions(editor, changes, renderer).then((_Change choice) {</td>
 							</tr>
 							<tr class="row-expandable">
@@ -384,36 +381,36 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">121</td>
-								<td class="blob-code blob-code-inner">            Iterable&lt;String&gt; paths = sourceFileEdits.map((edit) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">122</td>
-								<td class="blob-code blob-code-inner">              String filePath = edit.file;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">123</td>
-								<td class="blob-code blob-code-inner">              if (filePath.startsWith(projectPrefix)) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">124</td>
-								<td class="blob-code blob-code-inner">                return project.name + filePath.substring(projectPrefix.length);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">125</td>
-								<td class="blob-code blob-code-inner">              } else {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">126</td>
-								<td class="blob-code blob-code-inner">                return filePath;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">127</td>
-								<td class="blob-code blob-code-inner">              }</td>
-							</tr>
-							<tr>
 								<td class="blob-num">128</td>
-								<td class="blob-code blob-code-inner">            });</td>
+								<td class="blob-code blob-code-inner">        Iterable&lt;String&gt; paths = sourceFileEdits.map((edit) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">129</td>
+								<td class="blob-code blob-code-inner">          String filePath = edit.file;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">130</td>
+								<td class="blob-code blob-code-inner">          if (filePath.startsWith(projectPrefix)) {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">131</td>
+								<td class="blob-code blob-code-inner">            return project.name + filePath.substring(projectPrefix.length);</td>
+							</tr>
+							<tr>
+								<td class="blob-num">132</td>
+								<td class="blob-code blob-code-inner">          } else {</td>
+							</tr>
+							<tr>
+								<td class="blob-num">133</td>
+								<td class="blob-code blob-code-inner">            return filePath;</td>
+							</tr>
+							<tr>
+								<td class="blob-num">134</td>
+								<td class="blob-code blob-code-inner">          }</td>
+							</tr>
+							<tr>
+								<td class="blob-num">135</td>
+								<td class="blob-code blob-code-inner">        });</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
@@ -548,27 +545,27 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">497</td>
+								<td class="blob-num">506</td>
 								<td class="blob-code blob-code-inner">    List&lt;Element&gt; elements = text.split(&#39;\n&#39;).map((line) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">498</td>
+								<td class="blob-num">507</td>
 								<td class="blob-code blob-code-inner">      DivElement div = new DivElement()..text = line;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">499</td>
+								<td class="blob-num">508</td>
 								<td class="blob-code blob-code-inner">      div.classes.toggle(&#39;line&#39;);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">500</td>
+								<td class="blob-num">509</td>
 								<td class="blob-code blob-code-inner">      if (stderr) div.classes.toggle(&#39;text-error&#39;);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">501</td>
+								<td class="blob-num">510</td>
 								<td class="blob-code blob-code-inner">      return div;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">502</td>
+								<td class="blob-num">511</td>
 								<td class="blob-code blob-code-inner">    }).toList();</td>
 							</tr>
 							<tr class="row-expandable">
@@ -588,7 +585,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">630</td>
+								<td class="blob-num">639</td>
 								<td class="blob-code blob-code-inner">      promiseToFuture(invoke(&#39;read&#39;, flushCache));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -608,19 +605,19 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">660</td>
+								<td class="blob-num">669</td>
 								<td class="blob-code blob-code-inner">    return invoke(&#39;getEntriesSync&#39;).map((entry) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">661</td>
+								<td class="blob-num">670</td>
 								<td class="blob-code blob-code-inner">      entry = _cvt(entry);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">662</td>
+								<td class="blob-num">671</td>
 								<td class="blob-code blob-code-inner">      return entry.callMethod(&#39;isFile&#39;) ? new File(entry) : new Directory(entry);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">663</td>
+								<td class="blob-num">672</td>
 								<td class="blob-code blob-code-inner">    }).toList();</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1157,7 +1154,7 @@ table {
 						<tbody>
 							<tr>
 								<td class="blob-num">128</td>
-								<td class="blob-code blob-code-inner">    return _breakpoints.firstWhere((bp) {</td>
+								<td class="blob-code blob-code-inner">    return _breakpoints.firstWhere((AtomBreakpoint bp) {</td>
 							</tr>
 							<tr>
 								<td class="blob-num">129</td>
@@ -1169,7 +1166,7 @@ table {
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">(bp) {return other.path == bp.path &amp;&amp; other.line == bp.line;} ((dynamic) → dynamic) will need runtime check to cast to type (AtomBreakpoint) → bool</td>
+								<td class="blob-code blob-code-expandable">(AtomBreakpoint bp) {return other.path == bp.path &amp;&amp; other.line == bp.line;} ((AtomBreakpoint) → dynamic) will need runtime check to cast to type (AtomBreakpoint) → bool</td>
 							</tr>
 						</tbody>
 					</table>
@@ -1732,32 +1729,32 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">196</td>
+								<td class="blob-num">224</td>
 								<td class="blob-code blob-code-inner">    return HttpRequest.request(&#39;https:&#47;&#47;pub.dartlang.org&#47;packages&#47;${name}.json&#39;).then(</td>
 							</tr>
 							<tr>
-								<td class="blob-num">197</td>
+								<td class="blob-num">225</td>
 								<td class="blob-code blob-code-inner">        (HttpRequest result) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">198</td>
+								<td class="blob-num">226</td>
 								<td class="blob-code blob-code-inner">      Map packageInfo = JSON.decode(result.responseText);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">199</td>
-								<td class="blob-code blob-code-inner">      Iterable&lt;String&gt; vers = packageInfo[&#39;versions&#39;];</td>
+								<td class="blob-num">227</td>
+								<td class="blob-code blob-code-inner">      Iterable&lt;String&gt; vers = packageInfo[&#39;versions&#39;] as Iterable&lt;String&gt;;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">200</td>
+								<td class="blob-num">228</td>
 								<td class="blob-code blob-code-inner">      return Version.primary(vers.map((str) =&gt; new Version.parse(str)).toList());</td>
 							</tr>
 							<tr>
-								<td class="blob-num">201</td>
+								<td class="blob-num">229</td>
 								<td class="blob-code blob-code-inner">    });</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">HttpRequest.request(&#39;https:&#47;&#47;pub.dartlang.org&#47;packages&#47;${name}.json&#39;).then((HttpRequest result) {Map packageInfo = JSON.decode(result.responseText); Iterable&lt;String&gt; vers = packageInfo[&#39;versions&#39;]; return Version.primary(vers.map((str) =&gt; new Version.parse(str)).toList());}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Version&gt;</td>
+								<td class="blob-code blob-code-expandable">HttpRequest.request(&#39;https:&#47;&#47;pub.dartlang.org&#47;packages&#47;${name}.json&#39;).then((HttpRequest result) {Map packageInfo = JSON.decode(result.responseText); Iterable&lt;String&gt; vers = packageInfo[&#39;versions&#39;] as Iterable&lt;String&gt;; return Version.primary(vers.map((str) =&gt; new Version.parse(str)).toList());}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Version&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -1772,35 +1769,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">199</td>
-								<td class="blob-code blob-code-inner">      Iterable&lt;String&gt; vers = packageInfo[&#39;versions&#39;];</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">packageInfo[&#39;versions&#39;] (dynamic) will need runtime check to cast to type Iterable&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/impl/pub.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">212</td>
+								<td class="blob-num">240</td>
 								<td class="blob-code blob-code-inner">    return getInstalledVersion()</td>
 							</tr>
 							<tr>
-								<td class="blob-num">213</td>
+								<td class="blob-num">241</td>
 								<td class="blob-code blob-code-inner">      .then((ver) =&gt; ver != null)</td>
 							</tr>
 							<tr>
-								<td class="blob-num">214</td>
+								<td class="blob-num">242</td>
 								<td class="blob-code blob-code-inner">      .catchError((e) =&gt; false);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1820,100 +1797,80 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">220</td>
+								<td class="blob-num">248</td>
 								<td class="blob-code blob-code-inner">    return sdkManager.sdk.execBinSimple(&#39;pub&#39;, [&#39;global&#39;, &#39;list&#39;]).then(</td>
 							</tr>
 							<tr>
-								<td class="blob-num">221</td>
+								<td class="blob-num">249</td>
 								<td class="blob-code blob-code-inner">        (ProcessResult result) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">222</td>
+								<td class="blob-num">250</td>
 								<td class="blob-code blob-code-inner">      if (result.exit != 0) throw &#39;${result.stdout}\n${result.stderr}&#39;;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">223</td>
+								<td class="blob-num">251</td>
 								<td class="blob-code blob-code-inner"></td>
 							</tr>
 							<tr>
-								<td class="blob-num">224</td>
+								<td class="blob-num">252</td>
 								<td class="blob-code blob-code-inner">      List&lt;String&gt; lines = result.stdout.trim().split(&#39;\n&#39;);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">225</td>
+								<td class="blob-num">253</td>
 								<td class="blob-code blob-code-inner"></td>
 							</tr>
 							<tr>
-								<td class="blob-num">226</td>
+								<td class="blob-num">254</td>
 								<td class="blob-code blob-code-inner">      for (String line in lines) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">227</td>
+								<td class="blob-num">255</td>
 								<td class="blob-code blob-code-inner">        if (line.startsWith(&#39;${name} &#39;)) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">228</td>
+								<td class="blob-num">256</td>
 								<td class="blob-code blob-code-inner">          List&lt;String&gt; strs = line.split(&#39; &#39;);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">229</td>
+								<td class="blob-num">257</td>
 								<td class="blob-code blob-code-inner">          if (strs.length &gt; 1) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">230</td>
+								<td class="blob-num">258</td>
 								<td class="blob-code blob-code-inner">            try { return new Version.parse(strs[1]); }</td>
 							</tr>
 							<tr>
-								<td class="blob-num">231</td>
+								<td class="blob-num">259</td>
 								<td class="blob-code blob-code-inner">            catch (_) { }</td>
 							</tr>
 							<tr>
-								<td class="blob-num">232</td>
+								<td class="blob-num">260</td>
 								<td class="blob-code blob-code-inner">          }</td>
 							</tr>
 							<tr>
-								<td class="blob-num">233</td>
+								<td class="blob-num">261</td>
 								<td class="blob-code blob-code-inner">        }</td>
 							</tr>
 							<tr>
-								<td class="blob-num">234</td>
+								<td class="blob-num">262</td>
 								<td class="blob-code blob-code-inner">      }</td>
 							</tr>
 							<tr>
-								<td class="blob-num">235</td>
+								<td class="blob-num">263</td>
 								<td class="blob-code blob-code-inner"></td>
 							</tr>
 							<tr>
-								<td class="blob-num">236</td>
+								<td class="blob-num">264</td>
 								<td class="blob-code blob-code-inner">      return null;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">237</td>
+								<td class="blob-num">265</td>
 								<td class="blob-code blob-code-inner">    });</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">sdkManager.sdk.execBinSimple(&#39;pub&#39;, [&#39;global&#39;, &#39;list&#39;]).then((ProcessResult result) {if (result.exit != 0) throw &#39;${result.stdout}\n${result.stderr}&#39;; List&lt;String&gt; lines = result.stdout.trim().split(&#39;\n&#39;); for (String line in lines) {if (line.startsWith(&#39;${name} &#39;)) {List&lt;String&gt; strs = line.split(&#39; &#39;); if (strs.length &gt; 1) {try {return new Version.parse(strs[1]);} catch (_) {}}}} return null;}) (Future&lt;dynamic&gt;) will need runtime check to cast to type Future&lt;Version&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/impl/status_display.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">137</td>
-								<td class="blob-code blob-code-inner">            ..click(job.infoAction)</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">job.infoAction (Function) will need runtime check to cast to type () → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -1949,7 +1906,7 @@ table {
 						<tbody>
 							<tr>
 								<td class="blob-num">44</td>
-								<td class="blob-code blob-code-inner">    _launches.removeWhere((l) {</td>
+								<td class="blob-code blob-code-inner">    _launches.removeWhere((Launch l) {</td>
 							</tr>
 							<tr>
 								<td class="blob-num">45</td>
@@ -1977,7 +1934,7 @@ table {
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">(l) {if (l.isTerminated) {if (_activeLaunch == l) _activeLaunch = null; removed.add(l);} return l.isTerminated;} ((dynamic) → dynamic) will need runtime check to cast to type (Launch) → bool</td>
+								<td class="blob-code blob-code-expandable">(Launch l) {if (l.isTerminated) {if (_activeLaunch == l) _activeLaunch = null; removed.add(l);} return l.isTerminated;} ((Launch) → dynamic) will need runtime check to cast to type (Launch) → bool</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2032,15 +1989,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">146</td>
+								<td class="blob-num">149</td>
 								<td class="blob-code blob-code-inner">    return new List.from(_configs.where((LaunchConfiguration config) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">147</td>
+								<td class="blob-num">150</td>
 								<td class="blob-code blob-code-inner">      return config.primaryResource == path;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">148</td>
+								<td class="blob-num">151</td>
 								<td class="blob-code blob-code-inner">    }));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -2060,19 +2017,19 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">154</td>
+								<td class="blob-num">157</td>
 								<td class="blob-code blob-code-inner">    return _configs.where((LaunchConfiguration config) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">155</td>
+								<td class="blob-num">158</td>
 								<td class="blob-code blob-code-inner">      String r = config.primaryResource;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">156</td>
+								<td class="blob-num">159</td>
 								<td class="blob-code blob-code-inner">      return r != null &amp;&amp; r.startsWith(path);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">157</td>
+								<td class="blob-num">160</td>
 								<td class="blob-code blob-code-inner">    }).toList();</td>
 							</tr>
 							<tr class="row-expandable">
@@ -2093,7 +2050,7 @@ table {
 						<tbody>
 							<tr>
 								<td class="blob-num">50</td>
-								<td class="blob-code blob-code-inner">    return analysisServer.getExecutablesFor(project.path).where((path) {</td>
+								<td class="blob-code blob-code-inner">    return analysisServer.getExecutablesFor(project.path).where((String path) {</td>
 							</tr>
 							<tr>
 								<td class="blob-num">51</td>
@@ -2117,7 +2074,7 @@ table {
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">(path) {String relativePath = relativize(project.path, path); if (relativePath.startsWith(libSuffix)) return false; return true;} ((dynamic) → dynamic) will need runtime check to cast to type (String) → bool</td>
+								<td class="blob-code blob-code-expandable">(String path) {String relativePath = relativize(project.path, path); if (relativePath.startsWith(libSuffix)) return false; return true;} ((String) → dynamic) will need runtime check to cast to type (String) → bool</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2132,31 +2089,31 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">71</td>
+								<td class="blob-num">72</td>
 								<td class="blob-code blob-code-inner">    return issues.where((AnalysisError issue) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">72</td>
+								<td class="blob-num">73</td>
 								<td class="blob-code blob-code-inner">      if (!showInfos &amp;&amp; issue.severity == &#39;INFO&#39;) return false;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">73</td>
+								<td class="blob-num">74</td>
 								<td class="blob-code blob-code-inner">      if (!showTodos &amp;&amp; issue.type == &#39;TODO&#39;) return false;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">74</td>
+								<td class="blob-num">75</td>
 								<td class="blob-code blob-code-inner">      if (issue.message.endsWith(&#39;cannot both be unnamed&#39;)) return false;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">75</td>
+								<td class="blob-num">76</td>
 								<td class="blob-code blob-code-inner"></td>
 							</tr>
 							<tr>
-								<td class="blob-num">76</td>
+								<td class="blob-num">77</td>
 								<td class="blob-code blob-code-inner">      return true;</td>
 							</tr>
 							<tr>
-								<td class="blob-num">77</td>
+								<td class="blob-num">78</td>
 								<td class="blob-code blob-code-inner">    }).toList();</td>
 							</tr>
 							<tr class="row-expandable">
@@ -2177,7 +2134,7 @@ table {
 						<tbody>
 							<tr>
 								<td class="blob-num">71</td>
-								<td class="blob-code blob-code-inner">    registerServiceConsumer(&#39;consumeStatusBar&#39;, (obj) {</td>
+								<td class="blob-code blob-code-inner">    registerServiceConsumer(&#39;consumeStatusBar&#39;, (JsObject obj) {</td>
 							</tr>
 							<tr>
 								<td class="blob-num">72</td>
@@ -2217,7 +2174,7 @@ table {
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">(obj) {StatusBar statusBar = new StatusBar(obj); if (errorsController != null) errorsController.initStatusBar(statusBar); if (consoleController != null) consoleController.initStatusBar(statusBar); StatusDisplay statusDisplay = new StatusDisplay(statusBar); disposables.add(statusDisplay); return statusDisplay;} ((dynamic) → dynamic) will need runtime check to cast to type (JsObject) → Disposable</td>
+								<td class="blob-code blob-code-expandable">(JsObject obj) {StatusBar statusBar = new StatusBar(obj); if (errorsController != null) errorsController.initStatusBar(statusBar); if (consoleController != null) consoleController.initStatusBar(statusBar); StatusDisplay statusDisplay = new StatusDisplay(statusBar); disposables.add(statusDisplay); return statusDisplay;} ((JsObject) → dynamic) will need runtime check to cast to type (JsObject) → Disposable</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2233,7 +2190,7 @@ table {
 						<tbody>
 							<tr>
 								<td class="blob-num">83</td>
-								<td class="blob-code blob-code-inner">    registerServiceConsumer(&#39;consumeToolbar&#39;, (obj) {</td>
+								<td class="blob-code blob-code-inner">    registerServiceConsumer(&#39;consumeToolbar&#39;, (JsObject obj) {</td>
 							</tr>
 							<tr>
 								<td class="blob-num">84</td>
@@ -2253,7 +2210,7 @@ table {
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">(obj) {ToolbarContribution toolbar = new ToolbarContribution(new Toolbar(obj)); disposables.add(toolbar); return toolbar;} ((dynamic) → dynamic) will need runtime check to cast to type (JsObject) → Disposable</td>
+								<td class="blob-code blob-code-expandable">(JsObject obj) {ToolbarContribution toolbar = new ToolbarContribution(new Toolbar(obj)); disposables.add(toolbar); return toolbar;} ((JsObject) → dynamic) will need runtime check to cast to type (JsObject) → Disposable</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2269,7 +2226,7 @@ table {
 						<tbody>
 							<tr>
 								<td class="blob-num">90</td>
-								<td class="blob-code blob-code-inner">    registerServiceConsumer(&#39;consumeLinter&#39;, (obj) {</td>
+								<td class="blob-code blob-code-inner">    registerServiceConsumer(&#39;consumeLinter&#39;, (JsObject obj) {</td>
 							</tr>
 							<tr>
 								<td class="blob-num">91</td>
@@ -2285,87 +2242,7 @@ table {
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">(obj) {_consumer.consume(new LinterService(obj)); return _consumer;} ((dynamic) → dynamic) will need runtime check to cast to type (JsObject) → Disposable</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/plugin.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">401</td>
-								<td class="blob-code blob-code-inner">    errorRepository.initStreams(errorController.stream, flushController.stream);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">errorController.stream (Stream&lt;dynamic&gt;) will need runtime check to cast to type Stream&lt;AnalysisErrors&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/plugin.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">401</td>
-								<td class="blob-code blob-code-inner">    errorRepository.initStreams(errorController.stream, flushController.stream);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">flushController.stream (Stream&lt;dynamic&gt;) will need runtime check to cast to type Stream&lt;AnalysisFlushResults&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/plugin.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">408</td>
-								<td class="blob-code blob-code-inner">      analysisServer.onAnalysisErrors.listen(errorController.add);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">errorController.add ((dynamic) → void) will need runtime check to cast to type (AnalysisErrors) → void</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:atom_dartlang/plugin.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">409</td>
-								<td class="blob-code blob-code-inner">      analysisServer.onAnalysisFlushResults.listen(flushController.add);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">flushController.add ((dynamic) → void) will need runtime check to cast to type (AnalysisFlushResults) → void</td>
+								<td class="blob-code blob-code-expandable">(JsObject obj) {_consumer.consume(new LinterService(obj)); return _consumer;} ((JsObject) → dynamic) will need runtime check to cast to type (JsObject) → Disposable</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2735,37 +2612,9 @@ table {
 					</table>
 				</div>
 			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">UninferredClosure</span>
-					<span class="file-info">package:atom_dartlang/views.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">371</td>
-								<td class="blob-code blob-code-inner">      e.onDoubleClick.listen((MouseEvent event) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">372</td>
-								<td class="blob-code blob-code-inner">        if (!event.defaultPrevented) _doubleClickController.add(node);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">373</td>
-								<td class="blob-code blob-code-inner">      });</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">(MouseEvent event) {if (!event.defaultPrevented) _doubleClickController.add(node);} ((MouseEvent) → dynamic) will need runtime check to cast to type (Event) → void</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
 			<h2 id=package_collection>package:collection</h2>
 			<span class="counter error">6 errors</span>
-			<span class="counter warning">31 warnings</span>
+			<span class="counter warning">30 warnings</span>
 			<div class="file">
 				<div class="file-header">
 					<span class="counter error">StaticTypeError</span>
@@ -3195,12 +3044,52 @@ table {
 					<table>
 						<tbody>
 							<tr>
+								<td class="blob-num">44</td>
+								<td class="blob-code blob-code-inner">      List sourceList = source;</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">source (Iterable&lt;E&gt;) will need runtime check to cast to type List&lt;dynamic&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:collection/src/queue_list.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
 								<td class="blob-num">45</td>
 								<td class="blob-code blob-code-inner">      queue._table.setRange(0, length, sourceList, 0);</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">sourceList (List&lt;dynamic&gt;) will need runtime check to cast to type Iterable&lt;E&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DownCastComposite</span>
+					<span class="file-info">package:collection/src/queue_list.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">61</td>
+								<td class="blob-code blob-code-inner">      List list = elements;</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">elements (Iterable&lt;E&gt;) will need runtime check to cast to type List&lt;dynamic&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -3375,66 +3264,6 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">120</td>
-								<td class="blob-code blob-code-inner">  List&lt;E&gt; get _listBase =&gt; _base;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_base (Iterable&lt;E&gt;) will need runtime check to cast to type List&lt;E&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:collection/wrappers.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">219</td>
-								<td class="blob-code blob-code-inner">  Set&lt;E&gt; get _setBase =&gt; _base;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_base (Iterable&lt;E&gt;) will need runtime check to cast to type Set&lt;E&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:collection/wrappers.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">272</td>
-								<td class="blob-code blob-code-inner">  Queue&lt;E&gt; get _baseQueue =&gt; _base;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_base (Iterable&lt;E&gt;) will need runtime check to cast to type Queue&lt;E&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:collection/wrappers.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
 								<td class="blob-num">483</td>
 								<td class="blob-code blob-code-inner">    K key = _keyForValue(value);</td>
 							</tr>
@@ -3519,7 +3348,7 @@ table {
 				</div>
 			</div>
 			<h2 id=package_frappe>package:frappe</h2>
-			<span class="counter warning">39 warnings</span>
+			<span class="counter warning">37 warnings</span>
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DownCastComposite</span>
@@ -3615,26 +3444,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">transform(new DoAction(onData, onError: onError, onDone: onDone)) (EventStream&lt;dynamic&gt;) will need runtime check to cast to type EventStream&lt;T&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:frappe/src/event_stream.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">130</td>
-								<td class="blob-code blob-code-inner">  EventStream&lt;bool&gt; not() =&gt; super.not();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">super.not() (Reactable&lt;bool&gt;) will need runtime check to cast to type EventStream&lt;bool&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -3975,26 +3784,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">controller.stream.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError) (StreamSubscription&lt;dynamic&gt;) will need runtime check to cast to type StreamSubscription&lt;T&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:frappe/src/property.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">149</td>
-								<td class="blob-code blob-code-inner">  Property&lt;bool&gt; not() =&gt; super.not();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">super.not() (Reactable&lt;bool&gt;) will need runtime check to cast to type Property&lt;bool&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -6420,356 +6209,6 @@ table {
 					</table>
 				</div>
 			</div>
-			<h2 id=package_vm_service_lib>package:vm_service_lib</h2>
-			<span class="counter warning">16 warnings</span>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">160</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;addBreakpoint&#39;, m);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;addBreakpoint&#39;, m) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Breakpoint&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">192</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;addBreakpointWithScriptUri&#39;, m);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;addBreakpointWithScriptUri&#39;, m) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Breakpoint&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">205</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;addBreakpointAtEntry&#39;,</td>
-							</tr>
-							<tr>
-								<td class="blob-num">206</td>
-								<td class="blob-code blob-code-inner">        {&#39;isolateId&#39;: isolateId, &#39;functionId&#39;: functionId});</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;addBreakpointAtEntry&#39;, {&#39;isolateId&#39; : isolateId, &#39;functionId&#39; : functionId}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Breakpoint&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">260</td>
-								<td class="blob-code blob-code-inner">  Future&lt;FlagList&gt; getFlagList() =&gt; _call(&#39;getFlagList&#39;);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;getFlagList&#39;) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;FlagList&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">309</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;getStack&#39;, {&#39;isolateId&#39;: isolateId});</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;getStack&#39;, {&#39;isolateId&#39; : isolateId}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Stack&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">316</td>
-								<td class="blob-code blob-code-inner">  Future&lt;Version&gt; getVersion() =&gt; _call(&#39;getVersion&#39;);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;getVersion&#39;) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Version&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">321</td>
-								<td class="blob-code blob-code-inner">  Future&lt;VM&gt; getVM() =&gt; _call(&#39;getVM&#39;);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;getVM&#39;) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;VM&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">331</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;pause&#39;, {&#39;isolateId&#39;: isolateId});</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;pause&#39;, {&#39;isolateId&#39; : isolateId}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Success&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">340</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;removeBreakpoint&#39;,</td>
-							</tr>
-							<tr>
-								<td class="blob-num">341</td>
-								<td class="blob-code blob-code-inner">        {&#39;isolateId&#39;: isolateId, &#39;breakpointId&#39;: breakpointId});</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;removeBreakpoint&#39;, {&#39;isolateId&#39; : isolateId, &#39;breakpointId&#39; : breakpointId}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Success&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">362</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;resume&#39;, m);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;resume&#39;, m) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Success&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">375</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;setExceptionPauseMode&#39;,</td>
-							</tr>
-							<tr>
-								<td class="blob-num">376</td>
-								<td class="blob-code blob-code-inner">        {&#39;isolateId&#39;: isolateId, &#39;mode&#39;: _printEnum(mode)});</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;setExceptionPauseMode&#39;, {&#39;isolateId&#39; : isolateId, &#39;mode&#39; : _printEnum(mode)}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Success&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">385</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;setLibraryDebuggable&#39;, {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">386</td>
-								<td class="blob-code blob-code-inner">      &#39;isolateId&#39;: isolateId,</td>
-							</tr>
-							<tr>
-								<td class="blob-num">387</td>
-								<td class="blob-code blob-code-inner">      &#39;libraryId&#39;: libraryId,</td>
-							</tr>
-							<tr>
-								<td class="blob-num">388</td>
-								<td class="blob-code blob-code-inner">      &#39;isDebuggable&#39;: isDebuggable</td>
-							</tr>
-							<tr>
-								<td class="blob-num">389</td>
-								<td class="blob-code blob-code-inner">    });</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;setLibraryDebuggable&#39;, {&#39;isolateId&#39; : isolateId, &#39;libraryId&#39; : libraryId, &#39;isDebuggable&#39; : isDebuggable}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Success&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">396</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;setName&#39;, {&#39;isolateId&#39;: isolateId, &#39;name&#39;: name});</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;setName&#39;, {&#39;isolateId&#39; : isolateId, &#39;name&#39; : name}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Success&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">403</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;setVMName&#39;, {&#39;name&#39;: name});</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;setVMName&#39;, {&#39;name&#39; : name}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Success&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">413</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;streamCancel&#39;, {&#39;streamId&#39;: streamId});</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;streamCancel&#39;, {&#39;streamId&#39; : streamId}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Success&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">448</td>
-								<td class="blob-code blob-code-inner">    return _call(&#39;streamListen&#39;, {&#39;streamId&#39;: streamId});</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">_call(&#39;streamListen&#39;, {&#39;streamId&#39; : streamId}) (Future&lt;Response&gt;) will need runtime check to cast to type Future&lt;Success&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
 			<h2 id=package_yaml>package:yaml</h2>
 			<span class="counter warning">1 warning</span>
 			<div class="file">
@@ -6795,7 +6234,7 @@ table {
 		</div>
 	</div>
 	<footer class="footer">
-		web/entry.dart • DDC version 0.1.9
+		web/entry.dart • DDC version 0.1.10
 	</footer>
 </div>
 </body>

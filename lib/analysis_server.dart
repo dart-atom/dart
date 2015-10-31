@@ -25,7 +25,8 @@ import 'utils.dart' hide Property;
 export 'analysis/analysis_server_lib.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
     RefactoringOptions, SourceEdit, SourceFileEdit, AnalysisOutline, Outline,
-    AddContentOverlay, ChangeContentOverlay, RemoveContentOverlay;
+    AddContentOverlay, ChangeContentOverlay, RemoveContentOverlay,
+    AnalysisErrors, AnalysisFlushResults;
 export 'jobs.dart' show Job;
 
 final Logger _logger = new Logger('analysis-server');
@@ -361,10 +362,10 @@ class AnalysisServer implements Disposable {
 }
 
 class _AnalyzingJob extends Job {
-  static const Duration _debounceDelay = const Duration(milliseconds: 250);
+  static const Duration _debounceDelay = const Duration(milliseconds: 400);
 
   Completer completer = new Completer();
-  Function _infoAction;
+  VoidHandler _infoAction;
 
   _AnalyzingJob() : super('Analyzing source') {
     _infoAction = () {
@@ -374,7 +375,7 @@ class _AnalyzingJob extends Job {
 
   bool get quiet => true;
 
-  Function get infoAction => _infoAction;
+  VoidHandler get infoAction => _infoAction;
 
   Future run() => completer.future;
 
