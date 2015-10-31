@@ -10,11 +10,12 @@ const int maxTotalIssues = 500;
 StreamController<List<AnalysisError>> _processedErrorsController = new StreamController.broadcast();
 
 /// Consumes the atomlinter/linter self-service API.
-class DartLinterConsumer extends LinterConsumer with Disposables {
+class DartLinterConsumer extends LinterConsumer implements Disposable {
   ErrorRepository _errorRepository;
   Duration _reportingDelay = new Duration(milliseconds: 750);
   DartLinterProvider _provider = new DartLinterProvider();
   LinterService _service;
+  Disposables _disposables = new Disposables();
 
   List<AnalysisError> _oldIssues = [];
   bool _displayedWarning = false;
@@ -22,12 +23,15 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
   DartLinterConsumer(this._errorRepository) {
     var regen = (_) => _regenErrors();
 
-    add(atom.config.observe(_infosPrefPath, null, regen));
-    add(atom.config.observe(_todosPrefPath, null, regen));
+    _disposables.add(atom.config.observe(_infosPrefPath, null, regen));
+    _disposables.add(atom.config.observe(_todosPrefPath, null, regen));
 
-    EventStream errorStream = new EventStream(
-        _errorRepository.onChange).debounce(_reportingDelay);
+    Stream errorStream = _errorRepository.onChange.transform(
+       new Debounce(_reportingDelay));
     errorStream.listen((_) => _regenErrors());
+    // EventStream errorStream = new EventStream(
+    //     _errorRepository.onChange).debounce(_reportingDelay);
+    // errorStream.listen((_) => _regenErrors());
   }
 
   void consume(LinterService service) {
@@ -97,4 +101,6 @@ class DartLinterConsumer extends LinterConsumer with Disposables {
       }
     }
   }
+
+  void dispose() => _disposables.dispose();
 }

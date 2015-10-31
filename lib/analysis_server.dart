@@ -8,7 +8,6 @@ library atom.analysis_server;
 
 import 'dart:async';
 
-import 'package:frappe/frappe.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_dialog.dart';
@@ -20,12 +19,13 @@ import 'process.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
-import 'utils.dart' hide Property;
+import 'utils.dart';
 
 export 'analysis/analysis_server_lib.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
     RefactoringOptions, SourceEdit, SourceFileEdit, AnalysisOutline, Outline,
-    AddContentOverlay, ChangeContentOverlay, RemoveContentOverlay;
+    AddContentOverlay, ChangeContentOverlay, RemoveContentOverlay,
+    AnalysisErrors, AnalysisFlushResults;
 export 'jobs.dart' show Job;
 
 final Logger _logger = new Logger('analysis-server');
@@ -56,10 +56,7 @@ class AnalysisServer implements Disposable {
 
   List<DartProject> knownRoots = [];
 
-  Property<bool> isActiveProperty;
-
   AnalysisServer() {
-    isActiveProperty = new Property.fromStreamWithInitialValue(false, onActive);
     Timer.run(_setup);
 
     bool firstNotification = true;
@@ -361,10 +358,10 @@ class AnalysisServer implements Disposable {
 }
 
 class _AnalyzingJob extends Job {
-  static const Duration _debounceDelay = const Duration(milliseconds: 250);
+  static const Duration _debounceDelay = const Duration(milliseconds: 400);
 
   Completer completer = new Completer();
-  Function _infoAction;
+  VoidHandler _infoAction;
 
   _AnalyzingJob() : super('Analyzing source') {
     _infoAction = () {
@@ -374,7 +371,7 @@ class _AnalyzingJob extends Job {
 
   bool get quiet => true;
 
-  Function get infoAction => _infoAction;
+  VoidHandler get infoAction => _infoAction;
 
   Future run() => completer.future;
 

@@ -144,9 +144,9 @@ void smokeTest() {
 
 class _TestJob extends Job {
   final int seconds;
-  final Function _infoAction;
+  final VoidHandler _infoAction;
   _TestJob(String title, this.seconds, [this._infoAction]) : super(title, _TestJob);
-  Function get infoAction => _infoAction;
+  VoidHandler get infoAction => _infoAction;
   Future run() => new Future.delayed(new Duration(seconds: seconds));
 }
 

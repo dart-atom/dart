@@ -8,6 +8,8 @@ import '../utils.dart';
 
 // TODO: Run in an AnalysisRequestJob job.
 
+// TODO: Report errors better (like from trying to organize parts).
+
 class OrganizeFileManager implements Disposable {
   Disposables disposables = new Disposables();
 

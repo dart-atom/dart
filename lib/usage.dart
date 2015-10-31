@@ -44,7 +44,7 @@ class UsageManager implements Disposable {
 
       _editorObserve = atom.workspace.observeActivePaneItem(_activePaneItemChanged);
 
-      analysisServer.isActiveProperty.listen((val) {
+      analysisServer.onActive.listen((val) {
         trackCommand(val ? 'auto-analysis-server-start' : 'auto-analysis-server-stop');
       });
     });

@@ -40,8 +40,8 @@ class LaunchManager implements Disposable {
     bool activated = false;
 
     // Automatically remove all dead launches.
-    List removed = [];
-    _launches.removeWhere((l) {
+    List<Launch> removed = [];
+    _launches.removeWhere((Launch l) {
       if (l.isTerminated) {
         if (_activeLaunch == l) _activeLaunch = null;
         removed.add(l);
@@ -89,7 +89,8 @@ class LaunchManager implements Disposable {
     launchTypes.add(type);
   }
 
-  List<String> getLaunchTypes() => launchTypes.map((l) => l.type).toList()..sort();
+  List<String> getLaunchTypes() =>
+      launchTypes.map((LaunchType l) => l.type).toList()..sort();
 
   /// Get the best launch handler for the given resource; return `null`
   /// otherwise.
@@ -154,10 +155,10 @@ class LaunchManager implements Disposable {
   List<LaunchConfiguration> getConfigurationsForProject(DartProject project) {
     String path = '${project.path}${separator}';
 
-    return _configs.where((LaunchConfiguration config) {
+    return new List.from(_configs.where((LaunchConfiguration config) {
       String r = config.primaryResource;
       return r != null && r.startsWith(path);
-    }).toList();
+    }));
   }
 
   List<LaunchConfiguration> getAllRunnables(DartProject project) {

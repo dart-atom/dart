@@ -224,7 +224,7 @@ abstract class PubApp {
     return HttpRequest.request('https://pub.dartlang.org/packages/${name}.json').then(
         (HttpRequest result) {
       Map packageInfo = JSON.decode(result.responseText);
-      Iterable<String> vers = packageInfo['versions'];
+      Iterable<String> vers = packageInfo['versions'] as Iterable<String>;
       return Version.primary(vers.map((str) => new Version.parse(str)).toList());
     });
   }

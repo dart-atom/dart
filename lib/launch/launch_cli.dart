@@ -47,7 +47,7 @@ class CliLaunchType extends LaunchType {
   List<String> getLaunchablesFor(DartProject project) {
     final String libSuffix = 'lib${separator}';
 
-    return analysisServer.getExecutablesFor(project.path).where((path) {
+    return analysisServer.getExecutablesFor(project.path).where((String path) {
       // Check that the file is not in lib/.
       String relativePath = relativize(project.path, path);
       if (relativePath.startsWith(libSuffix)) return false;

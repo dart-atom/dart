@@ -74,7 +74,7 @@ class ProxyHolder {
 
   Stream eventStream(String eventName) {
     Disposable disposable;
-    StreamController<List<String>> controller = new StreamController.broadcast(
+    StreamController controller = new StreamController.broadcast(
         onCancel: () => disposable.dispose());
 
     try {

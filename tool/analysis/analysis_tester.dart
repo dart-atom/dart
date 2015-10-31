@@ -27,7 +27,8 @@ void main(List<String> args) {
   Process.start('dart', [snapshot, '--sdk', sdk]).then((process) {
     process.exitCode.then((code) => print('analysis server exited: ${code}'));
 
-    Stream inStream = process.stdout.transform(UTF8.decoder).transform(const LineSplitter());
+    Stream<String> inStream =
+        process.stdout.transform(UTF8.decoder).transform(const LineSplitter());
 
     client = new Server(inStream, (String message) {
       print('[--> ${message}]');

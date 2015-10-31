@@ -2,12 +2,11 @@ library atom.linter_impl;
 
 import 'dart:async';
 
-import 'package:frappe/frappe.dart';
-
 import 'analysis/analysis_server_lib.dart' show AnalysisError, Location;
 import 'atom.dart';
 import 'atom_linter.dart';
 import 'error_repository.dart';
+import 'impl/debounce.dart';
 import 'state.dart' show pluginId;
 import 'utils.dart';
 

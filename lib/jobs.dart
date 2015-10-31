@@ -21,6 +21,8 @@ import 'utils.dart';
 
 final Logger _logger = new Logger('jobs');
 
+typedef void VoidHandler();
+
 /// An abstract representation of a long running task.
 abstract class Job implements Disposable {
   final String name;
@@ -37,7 +39,7 @@ abstract class Job implements Disposable {
 
   /// An action that when called will provide some additional information about
   /// the job.
-  Function get infoAction => null;
+  VoidHandler get infoAction => null;
 
   /// Schedule the [Job] for execution.
   Future<JobStatus> schedule() => jobs.schedule(this);
