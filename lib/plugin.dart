@@ -403,10 +403,14 @@ class AtomDartPackage extends AtomPackage {
 
     // Proxy error messages from analysis server to ErrorRepository when the
     // analysis server becomes active.
-    analysisServer.isActiveProperty.where((active) => active).listen((_) {
-      // TODO: does this keep adding listeners?
+    var registerListeners = () {
       analysisServer.onAnalysisErrors.listen(errorController.add);
       analysisServer.onAnalysisFlushResults.listen(flushController.add);
+    };
+
+    if (analysisServer.isActive) registerListeners();
+    analysisServer.onActive.where((active) => active).listen((_) {
+      registerListeners();
     });
   }
 

@@ -26,9 +26,12 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
     _disposables.add(atom.config.observe(_infosPrefPath, null, regen));
     _disposables.add(atom.config.observe(_todosPrefPath, null, regen));
 
-    EventStream errorStream = new EventStream(
-        _errorRepository.onChange).debounce(_reportingDelay);
+    Stream errorStream = _errorRepository.onChange.transform(
+       new Debounce(_reportingDelay));
     errorStream.listen((_) => _regenErrors());
+    // EventStream errorStream = new EventStream(
+    //     _errorRepository.onChange).debounce(_reportingDelay);
+    // errorStream.listen((_) => _regenErrors());
   }
 
   void consume(LinterService service) {

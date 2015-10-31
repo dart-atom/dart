@@ -8,7 +8,6 @@ library atom.analysis_server;
 
 import 'dart:async';
 
-import 'package:frappe/frappe.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_dialog.dart';
@@ -20,7 +19,7 @@ import 'process.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
-import 'utils.dart' hide Property;
+import 'utils.dart';
 
 export 'analysis/analysis_server_lib.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
@@ -57,10 +56,7 @@ class AnalysisServer implements Disposable {
 
   List<DartProject> knownRoots = [];
 
-  Property<bool> isActiveProperty;
-
   AnalysisServer() {
-    isActiveProperty = new Property.fromStreamWithInitialValue(false, onActive);
     Timer.run(_setup);
 
     bool firstNotification = true;

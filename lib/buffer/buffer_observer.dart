@@ -2,7 +2,6 @@ library atom.buffer_observer;
 
 import 'dart:async';
 
-import 'package:frappe/frappe.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_options.dart';
@@ -13,6 +12,7 @@ import '../atom_utils.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
+import '../impl/debounce.dart';
 
 final Logger _logger = new Logger('atom.buffer_observer');
 
@@ -117,8 +117,8 @@ class BufferUpdater extends BufferObserver {
     // Debounce atom onDidChange events; atom sends us several events as a file
     // is opening. The number of events is proportional to the file size. For
     // a file like dart:html, this is on the order of 800 onDidChange events.
-    var onDidChangeSub = new EventStream(editor.onDidChange)
-        .debounce(new Duration(milliseconds: 10))
+    var onDidChangeSub = editor.onDidChange
+        .transform(new Debounce(new Duration(milliseconds: 10)))
         .listen(_didChange);
 
     _subs.add(onDidChangeSub);
@@ -168,7 +168,8 @@ class OverlayManager implements Disposable {
   StreamSubscription sub;
 
   OverlayManager() {
-    sub = analysisServer.isActiveProperty.listen(_serverActive);
+    _serverActive(analysisServer.isActive);
+    sub = analysisServer.onActive.listen(_serverActive);
   }
 
   void addOverlay(String path, String data) {
@@ -177,7 +178,7 @@ class OverlayManager implements Disposable {
     if (overlay == null) {
       overlay = overlays[path] = new OverlayInfo(path, data);
       if (analysisServer.isActive) {
-        _logger.finer("addContentOverlay('${path}')");
+        _logger.fine("addContentOverlay('${path}')");
         _log(analysisServer.updateContent(
           path, new AddContentOverlay('add', data)
         ));
@@ -204,7 +205,7 @@ class OverlayManager implements Disposable {
 
       overlay.data = newData;
 
-      _logger.finer("changedOverlayContent('${path}')");
+      _logger.fine("changedOverlayContent('${path}')");
       _log(analysisServer.updateContent(
           path, new ChangeContentOverlay('change', diffs)
       ));
@@ -220,7 +221,7 @@ class OverlayManager implements Disposable {
     if (overlay.count == 0) {
       overlays.remove(path);
 
-      _logger.finer("removeContentOverlay('${path}')");
+      _logger.fine("removeContentOverlay('${path}')");
       _log(analysisServer.updateContent(
         path, new RemoveContentOverlay('remove')
       ));

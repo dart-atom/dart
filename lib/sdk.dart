@@ -6,12 +6,12 @@ library atom.sdk;
 
 import 'dart:async';
 
-import 'package:frappe/frappe.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import 'atom.dart';
 import 'atom_utils.dart';
+import 'impl/debounce.dart';
 import 'jobs.dart';
 import 'process.dart';
 import 'state.dart';
@@ -69,8 +69,8 @@ class SdkManager implements Disposable {
     }
 
     // Listen to changes to the sdk pref setting; debounce the changes.
-    _prefSub = new EventStream(atom.config.onDidChange(_prefPath))
-        .debounce(new Duration(seconds: 1))
+    _prefSub = atom.config.onDidChange(_prefPath)
+        .transform(new Debounce(new Duration(seconds: 1)))
         .listen((value) => _setSdkPath(value));
 
     _commands.add(atom.commands.add('atom-workspace', 'dartlang:auto-locate-sdk', (_) {
