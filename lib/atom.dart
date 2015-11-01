@@ -738,12 +738,12 @@ class TextEditor extends ProxyHolder {
 
   String selectAll() => invoke('selectAll');
 
-  /// An ambiguous type:
-  /// {
-  ///   'scopes': ['source.dart']
-  /// }
-  ScopeDescriptor getRootScopeDescriptor() =>
-      new ScopeDescriptor(invoke('getRootScopeDescriptor'));
+  // /// An ambiguous type:
+  // /// {
+  // ///   'scopes': ['source.dart']
+  // /// }
+  // ScopeDescriptor getRootScopeDescriptor() =>
+  //     new ScopeDescriptor(invoke('getRootScopeDescriptor'));
 
   /// Get the syntactic scopeDescriptor for the given position in buffer
   /// coordinates.
