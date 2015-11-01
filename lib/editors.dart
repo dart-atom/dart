@@ -119,9 +119,7 @@ class EditorManager implements Disposable {
 class Editors implements Disposable {
   static bool _isDartTypeEditor(TextEditor editor) {
     if (editor == null) return false;
-    ScopeDescriptor descriptor = editor.getRootScopeDescriptor();
-    List scopes  = descriptor == null ? null : descriptor.scopes;
-    return scopes == null ? false: scopes.contains('source.dart');
+    return isDartFile(editor.getPath());
   }
 
   static bool _isDartProjectEditor(TextEditor editor) {

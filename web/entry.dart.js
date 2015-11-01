@@ -26824,8 +26824,6 @@ self._domRemove = function(element) {
           return;
         if ($.$get$atom()._config.getValue$1("dartlang.formatOnSave") !== true)
           return;
-        if (!Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive())
-          return;
         if (Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(t1.editor.getPath$0()) == null)
           return;
         t1.isFormatting = true;
@@ -26899,7 +26897,7 @@ self._domRemove = function(element) {
         if (overlay == null) {
           t1.$indexSet(0, path, new K.OverlayInfo(path, 1, data));
           if (Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive()) {
-            $.$get$_logger3().fine$1("addContentOverlay('" + H.S(path) + "')");
+            $.$get$_logger3().fine$1("addContentOverlay " + H.S(path));
             K._log(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).updateContent$2(path, new E.AddContentOverlay("add", data)));
           }
         } else
@@ -26918,8 +26916,9 @@ self._domRemove = function(element) {
           t1._captured_count_0 = 1;
           diffs = H.setRuntimeTypeInfo(new H.MappedListIterable([new G.Edit(0, t2, newData)], new K.OverlayManager_updateOverlay_closure(t1)), [null, null]).toList$0(0);
           overlay.data = newData;
-          $.$get$_logger3().fine$1("changedOverlayContent('" + H.S(path) + "')");
-          K._log(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).updateContent$2(path, new E.ChangeContentOverlay("change", diffs)));
+          $.$get$_logger3().finer$1("changedOverlayContent " + H.S(path));
+          if (Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive())
+            K._log(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).updateContent$2(path, new E.ChangeContentOverlay("change", diffs)));
         }
       },
       removeOverlay$1: function(path) {
@@ -26930,12 +26929,15 @@ self._domRemove = function(element) {
           return;
         if (--overlay.count === 0) {
           t1.remove$1(0, path);
-          $.$get$_logger3().fine$1("removeContentOverlay('" + H.S(path) + "')");
-          K._log(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).updateContent$2(path, new E.RemoveContentOverlay("remove")));
+          $.$get$_logger3().fine$1("removeContentOverlay " + H.S(path));
+          if (Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive())
+            K._log(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).updateContent$2(path, new E.RemoveContentOverlay("remove")));
         }
       },
       _serverActive$1: [function(active) {
         var t1, toSend, t2;
+        if (active !== true)
+          return;
         t1 = this.overlays;
         if (t1.get$isNotEmpty(t1)) {
           toSend = P.LinkedHashMap__makeEmpty();
@@ -28695,13 +28697,11 @@ self._domRemove = function(element) {
       },
       $isDisposable: 1,
       static: {Editors__isDartTypeEditor: [function(editor) {
-          var t1, descriptor, scopes;
+          var t1;
           if (editor == null)
             return false;
-          t1 = editor.invoke$1("getRootScopeDescriptor");
-          descriptor = t1 == null ? null : new E.ScopeDescriptor(t1);
-          scopes = descriptor == null ? null : P.List_List$from(J.$index$asx(descriptor.obj, "scopes"), true, null);
-          return scopes == null ? false : C.JSArray_methods.contains$1(scopes, "source.dart");
+          t1 = editor.invoke$1("getPath");
+          return t1 == null ? false : J.endsWith$1$s(t1, ".dart");
         }, "call$1", "editors_Editors__isDartTypeEditor$closure", 2, 0, 146], Editors$_allDartEditors: function() {
           var t1 = new F.Editors(null, null, null, new G.StreamSubscriptions([]), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), null, []);
           t1.Editors$_allDartEditors$0();

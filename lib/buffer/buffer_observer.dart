@@ -73,7 +73,6 @@ class BufferFormatter extends BufferObserver {
     _subs.add(this.editor.onDidSave.listen((_) {
       if (isFormatting) return;
       if (!formatOnSave) return;
-      if (!analysisServer.isActive) return;
       if (!dartProject) return; // Breaks stand-alone dart files?
 
       isFormatting = true;
@@ -178,7 +177,7 @@ class OverlayManager implements Disposable {
     if (overlay == null) {
       overlay = overlays[path] = new OverlayInfo(path, data);
       if (analysisServer.isActive) {
-        _logger.fine("addContentOverlay('${path}')");
+        _logger.fine('addContentOverlay ${path}');
         _log(analysisServer.updateContent(
           path, new AddContentOverlay('add', data)
         ));
@@ -205,10 +204,12 @@ class OverlayManager implements Disposable {
 
       overlay.data = newData;
 
-      _logger.fine("changedOverlayContent('${path}')");
-      _log(analysisServer.updateContent(
-          path, new ChangeContentOverlay('change', diffs)
-      ));
+      _logger.finer('changedOverlayContent ${path}');
+      if (analysisServer.isActive) {
+        _log(analysisServer.updateContent(
+            path, new ChangeContentOverlay('change', diffs)
+        ));
+      }
     }
   }
 
@@ -221,19 +222,25 @@ class OverlayManager implements Disposable {
     if (overlay.count == 0) {
       overlays.remove(path);
 
-      _logger.fine("removeContentOverlay('${path}')");
-      _log(analysisServer.updateContent(
-        path, new RemoveContentOverlay('remove')
-      ));
+      _logger.fine('removeContentOverlay ${path}');
+      if (analysisServer.isActive) {
+        _log(analysisServer.updateContent(
+          path, new RemoveContentOverlay('remove')
+        ));
+      }
     }
   }
 
   void _serverActive(bool active) {
+    if (!active) return;
+
     if (overlays.isNotEmpty) {
       Map<String, dynamic> toSend = {};
+
       overlays.forEach((key, OverlayInfo info) {
         toSend[key] = new AddContentOverlay('add', info.data);
       });
+
       _log(analysisServer.server.analysis.updateContent(toSend));
     }
   }
