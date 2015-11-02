@@ -12,6 +12,7 @@
 - when opening a directory with multiple projects, we now notify if pub needs to
   be run for each project
 - fixed a regression with jump-to-declaration
+- fixed syntax highlighting issues with dartdoc comments
 
 ## 0.4.12
 - fixed an issue when editing in c-style comments
