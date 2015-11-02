@@ -307,7 +307,7 @@
         'name': 'string.quoted.triple.single.dart'
       }
       {
-        'begin': '(?<!\\\\|r)"'
+        'begin': '(?<!\\|r)"'
         'end': '"'
         'name': 'string.interpolated.double.dart'
         'patterns': [
