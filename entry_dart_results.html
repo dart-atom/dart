@@ -183,7 +183,7 @@ table {
 				<div class="menu-item">path</div>
 				<a href="#package_pub_semver" class="menu-item">
 					<span>pub_semver</span>
-					<span class="counter warning">4</span>
+					<span class="counter warning">1</span>
 				</a>
 				<div class="menu-item">source_span</div>
 				<div class="menu-item">string_scanner</div>
@@ -197,7 +197,7 @@ table {
 		</div>
 		<div class="column three-fourths">
 			<h1 class="page-title">DDC compilation report for web/entry.dart</h1>
-			<p>Found 6 errors and 85 warnings.</p>
+			<p>Found 6 errors and 82 warnings.</p>
 			<h2 id=package_atom_dartlang>package:atom_dartlang</h2>
 			<span class="counter warning">50 warnings</span>
 			<div class="file">
@@ -3300,27 +3300,7 @@ table {
 				</div>
 			</div>
 			<h2 id=package_pub_semver>package:pub_semver</h2>
-			<span class="counter warning">4 warnings</span>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:pub_semver/src/version_constraint.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">145</td>
-								<td class="blob-code blob-code-inner">    return new VersionConstraint.intersection(constraints);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">constraints (List&lt;dynamic&gt;) will need runtime check to cast to type Iterable&lt;VersionConstraint&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+			<span class="counter warning">1 warning</span>
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">UninferredClosure</span>
@@ -3352,46 +3332,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">(constraint) {if (constraint.isEmpty) return []; if (constraint is VersionUnion) return constraint.constraints; return [constraint];} ((dynamic) → dynamic) will need runtime check to cast to type (VersionConstraint) → Iterable&lt;dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:pub_semver/src/version_union.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">75</td>
-								<td class="blob-code blob-code-inner">    return new VersionUnion._(merged);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">merged (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;VersionRange&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DownCastComposite</span>
-					<span class="file-info">package:pub_semver/src/version_union.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">158</td>
-								<td class="blob-code blob-code-inner">    return new VersionUnion._(newConstraints);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">newConstraints (List&lt;dynamic&gt;) will need runtime check to cast to type List&lt;VersionRange&gt;</td>
 							</tr>
 						</tbody>
 					</table>
