@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.13
 - exposed quick assists - `ctrl-1`; these are common source refactorings
 - tweaked the css for the dartdoc tooltip
 - tweaked the display of debugger variables
