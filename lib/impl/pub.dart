@@ -28,7 +28,6 @@ final Logger _logger = new Logger('atom.pub');
 
 class PubManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
-  StreamSubscription projectSubscription;
 
   PubManager() {
     // get, update, run
@@ -166,10 +165,7 @@ class PubManager implements Disposable, ContextMenuContributor {
     }
   }
 
-  void dispose() {
-    disposables.dispose();
-    projectSubscription.cancel();
-  }
+  void dispose() => disposables.dispose();
 
   void _showRunPubDialog(DartProject project, {bool neverRun: false}) {
     String title = "Pub has never been run for project `${project.workspaceRelativeName}`. "

@@ -12,23 +12,19 @@ import 'utils.dart';
 
 final Logger _logger = new Logger('atom.breakpoints');
 
-// TODO: persist breakpoints
-
 // TODO: track changes to breakpoint files
 
 // TODO: allow files outside the workspace?
 
-// TODO: error message when they explicitely set a breakpoint, but not if an
+// TODO: error message when they explicitly set a breakpoint, but not if an
 // existing one fails to apply
-
-// TODO: display executable location
 
 // TODO: when setting breakpoints, adjust to where the VM actually set the
 // breakpoint
 
 // TODO: no breakpoints on ws or comment lines
 
-class BreakpointManager implements Disposable {
+class BreakpointManager implements Disposable, StateStorable {
   Disposables disposables = new Disposables();
 
   List<AtomBreakpoint> _breakpoints = [];
@@ -43,6 +39,8 @@ class BreakpointManager implements Disposable {
 
     editorManager.dartEditors.openEditors.forEach(_processEditor);
     editorManager.dartEditors.onEditorOpened.listen(_processEditor);
+
+    state.registerStorable('breakpoints', this);
   }
 
   void addBreakpoint(AtomBreakpoint breakpoint) {
@@ -86,7 +84,7 @@ class BreakpointManager implements Disposable {
   }
 
   void _createEditorBreakpoint(TextEditor editor, AtomBreakpoint bp) {
-    _logger.fine('creating editor breakpoint: ${bp}');
+    _logger.finer('creating editor breakpoint: ${bp}');
     Marker marker = editor.markBufferRange(
         debuggerCoordsToEditorRange(bp.line, bp.column),
         persistent: false);
@@ -135,6 +133,22 @@ class BreakpointManager implements Disposable {
     _editorBreakpoints.remove(bp);
   }
 
+  void initFromStored(dynamic storedData) {
+    if (storedData is List) {
+      storedData.map((json) {
+        addBreakpoint(new AtomBreakpoint.fromJson(json));
+      }).toList();
+
+      _logger.fine('restored ${_breakpoints.length} breakpoints');
+    }
+  }
+
+  dynamic toStorable() {
+    return _breakpoints.map((AtomBreakpoint bp) {
+      return bp.toJsonable();
+    }).toList();
+  }
+
   void dispose() => disposables.dispose();
 }
 
@@ -144,6 +158,9 @@ class AtomBreakpoint {
   final int column;
 
   AtomBreakpoint(this.path, this.line, {this.column});
+
+  AtomBreakpoint.fromJson(json) :
+      path = json['path'], line = json['line'], column = json['column'];
 
   String get asUrl => 'file://${path}';
 
@@ -159,6 +176,14 @@ class AtomBreakpoint {
 
   int get hashCode => id.hashCode;
   bool operator==(other) => other is AtomBreakpoint && id == other.id;
+
+  Map toJsonable() {
+    if (column == null) {
+      return {'path': path, 'line': line};
+    } else {
+      return {'path': path, 'line': line, 'column': column};
+    }
+  }
 
   String toString() => id;
 }

@@ -42,6 +42,7 @@ import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
 import 'jobs.dart';
+import 'js.dart';
 import 'launch/console.dart';
 import 'launch/launch.dart';
 import 'launch/launch_cli.dart';
@@ -99,14 +100,15 @@ class AtomDartPackage extends AtomPackage {
     exports['provideAutocomplete'] = () => dartProvider.toProxy();
   }
 
-  void packageActivated([Map inState]) {
+  void packageActivated([dynamic pluginState]) {
     _setupLogging();
     _logger.info("activated");
     _logger.fine("Running on Chrome version ${chromeVersion}.");
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
 
-    state.loadFrom(inState);
+    state.loadFrom(pluginState);
+
     checkChangelog();
 
     disposables.add(deps[JobManager] = new JobManager());
@@ -264,13 +266,12 @@ class AtomDartPackage extends AtomPackage {
     });
   }
 
-  Map serialize() => state.toMap();
+  dynamic serialize() => state.saveState();
 
   void packageDeactivated() {
     _logger.info('deactivated');
 
     try {
-      // TODO: Cancel any running Jobs (see #120).
       disposables.dispose();
       subscriptions.cancel();
     } catch (e, st) {

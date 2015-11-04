@@ -4,6 +4,7 @@
 - added a setting to enable the debugger; it is disabled by default while we
   work to complete it
 - added the ability to copy text from the console and errors views
+- we now remember launch configurations and breakpoints between sessions
 
 ## 0.4.13
 - exposed quick assists - `ctrl-1`; these are common source refactorings

@@ -32,12 +32,15 @@ JsObject require(String input) => context.callMethod('require', [input]);
 
 /// Attempts to convert a JsObject to a List or Map based on `JSON.stringify`
 /// and dart:convert's `JSON.decode`.
-///
-/// Good news, everyone! Now you too can interoperate with JavaScript primitives
-/// in a ridiculously convulted way and expensive way!
-toDartObjectViaWizardy(JsObject obj) {
-  if (obj == null) throw 'The Wizard says: "Null?! You shall not pass!"';
-  return JSON.decode(_browserJson.callMethod('stringify', [obj]));
+dynamic toDartObjectViaWizardy(JsObject obj) {
+  if (obj == null) return null;
+
+  try {
+    String str = _browserJson.callMethod('stringify', [obj]);
+    return JSON.decode(str);
+  } catch (e, st) {
+    _logger.severe('toDartObjectViaWizardy', e, st);
+  }
 }
 
 Future promiseToFuture(promise) {
