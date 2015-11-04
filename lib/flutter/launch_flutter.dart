@@ -87,9 +87,7 @@ class _LaunchInstance {
     _launch.pipeStdio('[${project.path}] pub run ${_toolName} start\n', highlight: true);
 
     _withDebug = configuration.debug ?? debugDefault;
-    if (!atom.config.getBoolValue('${pluginId}.enableDebugging')) {
-      _withDebug = false;
-    }
+    if (!LaunchManager.launchWithDebugging()) _withDebug = false;
   }
 
   Future<Launch> launch() async {

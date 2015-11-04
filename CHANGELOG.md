@@ -1,5 +1,10 @@
 # dartlang plugin changelog
 
+## unreleased
+- added a setting to enable the debugger; it is disabled by default while we
+  work to complete it
+- added the ability to copy text from the console and errors views
+
 ## 0.4.13
 - exposed quick assists - `ctrl-1`; these are common source refactorings
 - tweaked the css for the dartdoc tooltip

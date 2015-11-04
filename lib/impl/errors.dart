@@ -146,8 +146,7 @@ class ErrorsView extends AtomView {
     bool hidden = state['errorViewShowing'] == false;
     hidden ? hide() : show();
 
-    // disposables.add(
-    //     atom.commands.add('div.errors-view', 'core:copy', (_) => _copy()));
+    root.listenForUserCopy();
   }
 
   void show() {

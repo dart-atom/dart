@@ -63,6 +63,8 @@ class ConsoleView extends AtomView {
     subs.add(launchManager.onLaunchActivated.listen(_launchActivated));
     subs.add(launchManager.onLaunchTerminated.listen(_launchTerminated));
     subs.add(launchManager.onLaunchRemoved.listen(_launchRemoved));
+
+    root.listenForUserCopy();
   }
 
   void _launchAdded(Launch launch) {

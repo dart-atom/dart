@@ -13,6 +13,8 @@ import '../jobs.dart';
 import '../state.dart';
 import '../utils.dart';
 
+// TODO: De-bounce the jobs display by 100ms.
+
 const Duration _shortDuration = const Duration(milliseconds: 400);
 
 class StatusDisplay implements Disposable {
