@@ -314,6 +314,15 @@ class AtomDartPackage extends AtomPackage {
         'default': true,
         'order': 3
       },
+      // launch with debugging
+      'launchWithDebugging': {
+        'title': 'Launch applications with debugging enabled',
+        'description': 'Note: This feature is very early alpha. '
+            'Default to launching applications with debugging support enabled.',
+        'type': 'boolean',
+        'default': false,
+        'order': 3
+      },
 
       // show infos and todos
       'showInfos': {

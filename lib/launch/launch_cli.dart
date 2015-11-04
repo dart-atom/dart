@@ -61,9 +61,7 @@ class CliLaunchType extends LaunchType {
     if (sdk == null) new Future.error('No Dart SDK configured');
 
     bool withDebug = configuration.debug ?? debugDefault;
-    if (!atom.config.getBoolValue('${pluginId}.enableDebugging')) {
-      withDebug = false;
-    }
+    if (!LaunchManager.launchWithDebugging()) withDebug = false;
 
     String path = configuration.primaryResource;
     String cwd = configuration.cwd;

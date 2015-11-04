@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'atom.dart' hide Point;
+import 'atom_utils.dart';
 import 'utils.dart';
 
 /// Finds the first descendant element of this document with the given id.
@@ -189,6 +190,22 @@ class CoreElement {
   }
 
   void clear() => element.children.clear();
+
+  /// Listen for a user copy event (ctrl-c / cmd-c) and copy the selected DOM
+  /// bits into the user's paste buffer.
+  void listenForUserCopy() {
+    element.onKeyDown.listen(_handleCopyKeyPress);
+  }
+
+  void _handleCopyKeyPress(KeyboardEvent event) {
+    // ctrl-c or cmd-c
+    if (event.keyCode != 67) return;
+
+    if ((isMac && event.metaKey) || (!isMac && event.ctrlKey)) {
+      event.preventDefault();
+      document.execCommand('copy', false, null);
+    }
+  }
 
   void dispose() {
     if (element.parent == null) return;

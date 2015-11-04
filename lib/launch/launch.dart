@@ -15,6 +15,10 @@ import '../utils.dart';
 final Logger _logger = new Logger('atom.launch');
 
 class LaunchManager implements Disposable {
+  static bool launchWithDebugging() {
+    return atom.config.getBoolValue('${pluginId}.launchWithDebugging');
+  }
+
   StreamController<Launch> _launchAdded = new StreamController.broadcast(sync: true);
   StreamController<Launch> _launchActivated = new StreamController.broadcast();
   StreamController<Launch> _launchTerminated = new StreamController.broadcast();
