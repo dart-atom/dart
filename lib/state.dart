@@ -5,6 +5,7 @@
 library atom.state;
 
 import 'dart:async';
+import 'dart:convert' show JSON;
 
 import 'analysis_server.dart';
 import 'debug/breakpoints.dart';
@@ -33,22 +34,30 @@ SdkManager get sdkManager => deps[SdkManager];
 final State state = new State();
 
 class State {
-  Map _map = {};
+  dynamic _pluginState = {};
+  Map<String, StateStorable> _storables = {};
+
   Map<String, StreamController> _controllers = {};
 
   State();
 
-  dynamic operator[](String key) => _map[key];
+  dynamic operator[](String key) => _pluginState[key];
 
   void operator[]=(String key, dynamic value) {
-    _map[key] = value;
-
+    _pluginState[key] = value;
     if (_controllers[key] != null) _controllers[key].add(value);
   }
 
-  void loadFrom(Map map) {
-    if (map == null) map = {};
-    _map = map;
+  /// Register the given [StateStorable]. This will call
+  /// [StateStorable.fromStored] before it returns.
+  void registerStorable(String key, StateStorable storable) {
+    _storables[key] = storable;
+    String data = this[key];
+    storable.initFromStored(data == null ? null : JSON.decode(data));
+  }
+
+  void loadFrom(dynamic inState) {
+    _pluginState = inState ?? {};
   }
 
   Stream onValueChanged(String key) {
@@ -63,5 +72,20 @@ class State {
     }
   }
 
-  Map toMap() => _map;
+  dynamic saveState() {
+    _storables.forEach((String key, StateStorable storable) {
+      _pluginState[key] = JSON.encode(storable.toStorable());
+    });
+    return _pluginState;
+  }
+}
+
+abstract class StateStorable {
+  StateStorable();
+
+  /// Initialize the state from a previously stored JSON encodable value.
+  void initFromStored(dynamic storedData);
+
+  /// Write the current state to a JSON encodable value.
+  dynamic toStorable();
 }

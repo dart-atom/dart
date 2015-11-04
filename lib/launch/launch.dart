@@ -14,7 +14,7 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('atom.launch');
 
-class LaunchManager implements Disposable {
+class LaunchManager implements Disposable, StateStorable {
   static bool launchWithDebugging() {
     return atom.config.getBoolValue('${pluginId}.launchWithDebugging');
   }
@@ -32,7 +32,7 @@ class LaunchManager implements Disposable {
   List<LaunchConfiguration> _configs;
 
   LaunchManager() {
-    _readConfigs();
+    state.registerStorable('launches', this);
   }
 
   Launch get activeLaunch => _activeLaunch;
@@ -112,30 +112,22 @@ class LaunchManager implements Disposable {
     return null;
   }
 
-  void _readConfigs() {
-    state['launchConfigs'] = null;
+  void initFromStored(dynamic storedData) {
+    if (storedData is List) {
+      _configs = storedData.map((json) {
+        return new LaunchConfiguration.from(json);
+      }).toList();
 
-    // TODO: Restore this.
-    var savedConfigs = []; //state['launchConfigs'];
-
-    // TODO: This is not being restored as a List.
-    if (savedConfigs is List) {
-      _configs = new List.from(savedConfigs.map((Map json) {
-        try {
-          return new LaunchConfiguration.from(json);
-        } catch (e) {
-          _logger.warning('Error restoring launch config', e);
-          return null;
-        }
-      }).where((config) => config != null));
-
-      _logger.info('Restored ${_configs} launch configurations.');
+      _logger.info('restored ${_configs.length} launch configurations');
     } else {
-      // TODO: Restore this.
-      //state['launchConfigs'] = [];
-
       _configs = [];
     }
+  }
+
+  dynamic toStorable() {
+    return _configs.map((LaunchConfiguration config) {
+      return config.getStorableMap();
+    }).toList();
   }
 
   void createConfiguration(LaunchConfiguration config, {bool quiet: false}) {
@@ -143,9 +135,6 @@ class LaunchManager implements Disposable {
         'configuration for `${config.shortResourceName}`.');
 
     _configs.add(config);
-
-    // TODO: Restore this.
-    //(state['launchConfigs'] as List).add(config.getStorableMap());
   }
 
   List<LaunchConfiguration> getAllConfigurations() => _configs;
@@ -178,10 +167,7 @@ class LaunchManager implements Disposable {
   }
 
   void deleteConfiguration(LaunchConfiguration config) {
-    if (_configs.remove(config)) {
-      // TODO: Restore this.
-      //(state['launchConfigs'] as List).remove(config.getStorableMap());
-    }
+    _configs.remove(config);
   }
 
   void dispose() {

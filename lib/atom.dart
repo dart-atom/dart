@@ -34,9 +34,9 @@ abstract class AtomPackage {
   AtomPackage();
 
   Map config() => {};
-  void packageActivated([Map state]) { }
+  void packageActivated([dynamic state]) { }
   void packageDeactivated() { }
-  Map serialize() => {};
+  dynamic serialize() => {};
 
   /// Register a method for a service callback (`consumedServices`).
   void registerServiceConsumer(String methodName, Disposable callback(JsObject obj)) {
