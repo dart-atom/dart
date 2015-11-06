@@ -93,7 +93,7 @@ class ProcessRunner {
 
   Future<int> kill() {
     _logger.fine('kill: ${command} ');
-    _process.kill();
+    if (_process != null) _process.kill();
     new Future.delayed(new Duration(milliseconds: 50), () {
       if (!_exitCompleter.isCompleted) _exitCompleter.complete(0);
     });

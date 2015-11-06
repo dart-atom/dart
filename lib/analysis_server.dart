@@ -110,8 +110,19 @@ class AnalysisServer implements Disposable {
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
 
-    onSend.listen((String message)    => _logger.finer('--> ${message}'));
-    onReceive.listen((String message) => _logger.finer('<-- ${message}'));
+    var trim = (String str) => str.length > 200 ? str.substring(0, 200) + '…' : str;
+
+    onSend.listen((String message) {
+      if (_logger.isLoggable(Level.FINER)) {
+        _logger.finer('--> ${trim(message)}');
+      }
+    });
+
+    onReceive.listen((String message) {
+      if (_logger.isLoggable(Level.FINER)) {
+        _logger.finer('<-- ${trim(message)}');
+      }
+    });
   }
 
   /// Returns whether the analysis server is active and running.
@@ -306,7 +317,7 @@ class AnalysisServer implements Disposable {
 
     if (dispose || (!shouldBeRunning && _server != null)) {
       // shutdown
-      _server.kill();
+      if (_server != null) _server.kill();
     } else if (shouldBeRunning) {
       // startup
       if (_server == null) {
@@ -435,29 +446,27 @@ class _AnalysisServerWrapper extends Server {
         _analyzingController.add(analyzing);
       }
     });
+
     server.onError.listen((ServerError error) {
-      if (error.isFatal) {
-        _logger.severe(error.message);
-        if (error.stackTrace != null) {
-          _logger.severe(error.stackTrace);
-        }
-        if (AnalysisServer.startWithDebugging) {
+      StackTrace st = error.stackTrace == null
+        ? null
+        : new StackTrace.fromString(error.stackTrace);
+
+      _logger.info(error.message, null, st);
+
+      if (AnalysisServer.startWithDebugging) {
+        if (error.isFatal) {
           atom.notifications.addError(
             'Error from the analysis server: ${error.message}',
             detail: error.stackTrace);
-        }
-      } else {
-        _logger.warning(error.message);
-        if (error.stackTrace != null) {
-          _logger.warning(error.stackTrace);
-        }
-        if (AnalysisServer.startWithDebugging) {
+        } else {
           atom.notifications.addWarning(
             'Error from the analysis server: ${error.message}',
             detail: error.stackTrace);
         }
       }
     });
+
     execution.onLaunchData.listen((ExecutionLaunchData data) {
       if (data.kind == 'SERVER') {
         _executables.add(data.file);
@@ -513,7 +522,7 @@ class _AnalysisServerWrapper extends Server {
 
       return new Future.value(0);
     } else {
-      _logger.warning("kill signal sent to dead analysis server");
+      _logger.info("kill signal sent to dead analysis server");
       return new Future.value(1);
     }
   }

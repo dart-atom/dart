@@ -109,8 +109,19 @@ class ObservatoryDebugConnection extends DebugConnection {
   Future get onTerminated => completer.future;
 
   void _init() {
-    service.onSend.listen((str) => _logger.fine('==> ${str}'));
-    service.onReceive.listen((str) => _logger.fine('<== ${str}'));
+    var trim = (String str) => str.length > 200 ? str.substring(0, 200) + '…' : str;
+
+    service.onSend.listen((str) {
+      if (_logger.isLoggable(Level.FINER)) {
+        _logger.finer('==> ${trim(str)}');
+      }
+    });
+
+    service.onReceive.listen((str) {
+      if (_logger.isLoggable(Level.FINER)) {
+        _logger.finer('<== ${trim(str)}');
+      }
+    });
 
     // TODO: Recommended boot-up sequence (done synchronously):
     // 1) getVersion.

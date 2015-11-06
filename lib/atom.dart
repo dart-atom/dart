@@ -1118,7 +1118,7 @@ class AtomEvent extends ProxyHolder {
         return null;
       }
     } catch (e, st) {
-      _logger.warning('exception while handling context menu', e, st);
+      _logger.info('exception while handling context menu', e, st);
       return null;
     }
   }
