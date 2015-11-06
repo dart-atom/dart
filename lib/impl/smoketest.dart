@@ -67,7 +67,7 @@ void smokeTest() {
   atom.notifications.addSuccess('Hello world from dart-lang!');
   atom.notifications.addWarning('Hello world from dart-lang!', detail: loremIpsum);
   NotificationHelper helper = new NotificationHelper(notification.view);
-  helper.setSummary('Running...');
+  helper.setSummary('Running…');
   helper.setNoWrap();
   helper.setRunning();
   helper.appendText('Foo bar 2.');

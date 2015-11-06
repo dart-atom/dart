@@ -96,10 +96,13 @@ void _activePaneItemChanged(_) {
 void _handleLogRecord(LogRecord log) {
   if (log.level >= Level.WARNING) {
     bool fatal = log.level >= Level.SEVERE;
-    String desc = '${log.loggerName}:${log.message}';
+    String message = log.message;
+    if (message.contains('/Users/')) {
+      message = message.substring(0, message.indexOf('/Users/'));
+    }
+    String desc = '${log.loggerName}:${message}';
     if (log.error != null) desc += ',${log.error.runtimeType}';
     if (log.stackTrace != null) desc += ',${sanitizeStacktrace(log.stackTrace)}';
-
     _ga.sendException(desc, fatal: fatal);
   }
 }
