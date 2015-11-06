@@ -11,6 +11,9 @@ import 'package:logging/logging.dart';
 /// @optional
 const String optional = 'optional';
 
+/// @experimental
+const String experimental = 'experimental';
+
 final Logger _logger = new Logger('analysis_server_lib');
 
 const String generatedProtocolVersion = '1.12.0';
@@ -31,6 +34,7 @@ class Server {
   SearchDomain _search;
   EditDomain _edit;
   ExecutionDomain _execution;
+  ExperimentalDomain _experimental;
 
   Server(Stream<String> inStream, void writeMessage(String message)) {
     configure(inStream, writeMessage);
@@ -41,6 +45,7 @@ class Server {
     _search = new SearchDomain(this);
     _edit = new EditDomain(this);
     _execution = new ExecutionDomain(this);
+    _experimental = new ExperimentalDomain(this);
   }
 
   ServerDomain get server => _server;
@@ -49,6 +54,7 @@ class Server {
   SearchDomain get search => _search;
   EditDomain get edit => _edit;
   ExecutionDomain get execution => _execution;
+  ExperimentalDomain get experimental => _experimental;
 
   Stream<String> get onSend => _onSend.stream;
   Stream<String> get onReceive => _onReceive.stream;
@@ -905,6 +911,27 @@ class MapUriResult {
   MapUriResult({this.file, this.uri});
 }
 
+// experimental domain
+
+@experimental
+class ExperimentalDomain extends Domain {
+  ExperimentalDomain(Server server) : super(server, 'experimental');
+
+  Future<DiagnosticsResult> getDiagnostics() =>
+      _call('experimental.getDiagnostics').then(DiagnosticsResult.parse);
+}
+
+class DiagnosticsResult {
+  static DiagnosticsResult parse(Map m) =>
+      new DiagnosticsResult(m['contexts'] == null
+          ? null
+          : m['contexts'].map((obj) => ContextData.parse(obj)).toList());
+
+  final List<ContextData> contexts;
+
+  DiagnosticsResult(this.contexts);
+}
+
 // type definitions
 
 class AddContentOverlay implements Jsonable {
@@ -1118,6 +1145,30 @@ class CompletionSuggestion {
 
   String toString() =>
       '[CompletionSuggestion kind: ${kind}, relevance: ${relevance}, completion: ${completion}, selectionOffset: ${selectionOffset}, selectionLength: ${selectionLength}, isDeprecated: ${isDeprecated}, isPotential: ${isPotential}]';
+}
+
+@experimental
+class ContextData {
+  static ContextData parse(Map m) {
+    if (m == null) return null;
+    return new ContextData(
+        m['name'],
+        m['explicitFileCount'],
+        m['implicitFileCount'],
+        m['workItemQueueLength'],
+        m['cacheEntryExceptions'] == null
+            ? null
+            : new List.from(m['cacheEntryExceptions']));
+  }
+
+  final String name;
+  final int explicitFileCount;
+  final int implicitFileCount;
+  final int workItemQueueLength;
+  final List<String> cacheEntryExceptions;
+
+  ContextData(this.name, this.explicitFileCount, this.implicitFileCount,
+      this.workItemQueueLength, this.cacheEntryExceptions);
 }
 
 class Element {
