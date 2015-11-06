@@ -370,6 +370,11 @@ class PubJob extends Job {
   Object get schedulingRule => _pubspecDir;
 
   Future run() {
+    if (!sdkManager.hasSdk) {
+      sdkManager.showNoSdkMessage();
+      return new Future.value();
+    }
+
     List<String> args = [pubCommand];
     if (_noPackageSymlinks) args.insert(0, '--no-package-symlinks');
 
@@ -406,6 +411,11 @@ class PubRunJob extends Job {
   Object get schedulingRule => _pubspecDir;
 
   Future run() {
+    if (!sdkManager.hasSdk) {
+      sdkManager.showNoSdkMessage();
+      return new Future.value();
+    }
+
     List<String> l = isGlobal ? ['global', 'run'] : ['run'];
     l.addAll(args);
     ProcessNotifier notifier = new ProcessNotifier(title == null ? name : title);
@@ -435,6 +445,11 @@ class PubGlobalActivate extends Job {
   bool get quiet => runQuiet;
 
   Future run() {
+    if (!sdkManager.hasSdk) {
+      sdkManager.showNoSdkMessage();
+      return new Future.value();
+    }
+    
     ProcessRunner runner = sdkManager.sdk.execBin(
         'pub', ['global', 'activate', packageName]);
 
