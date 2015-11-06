@@ -60,8 +60,8 @@ export 'atom.dart' show registerPackage;
 final Logger _logger = new Logger('plugin');
 
 class AtomDartPackage extends AtomPackage {
-  final Disposables disposables = new Disposables();
-  final StreamSubscriptions subscriptions = new StreamSubscriptions();
+  final Disposables disposables = new Disposables(catchExceptions: true);
+  final StreamSubscriptions subscriptions = new StreamSubscriptions(catchExceptions: true);
 
   ErrorsController errorsController;
   ConsoleController consoleController;
@@ -271,12 +271,8 @@ class AtomDartPackage extends AtomPackage {
   void packageDeactivated() {
     _logger.info('deactivated');
 
-    try {
-      disposables.dispose();
-      subscriptions.cancel();
-    } catch (e, st) {
-      _logger.severe('Exception while deactivating package', e, st);
-    }
+    disposables.dispose();
+    subscriptions.cancel();
   }
 
   Map config() {
@@ -318,7 +314,7 @@ class AtomDartPackage extends AtomPackage {
       // launch with debugging
       'launchWithDebugging': {
         'title': 'Launch applications with debugging enabled',
-        'description': 'Note: This feature is very early alpha. '
+        'description': 'Note: This feature is in an alpha stage of development. '
             'Default to launching applications with debugging support enabled.',
         'type': 'boolean',
         'default': false,

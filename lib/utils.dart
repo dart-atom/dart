@@ -6,6 +6,8 @@ library atom.utils;
 
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 final String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing "
     "elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
     "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi "
@@ -13,6 +15,8 @@ final String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing "
     " in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur"
     " sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt "
     "mollit anim id est laborum.";
+
+final Logger _logger = new Logger('atom.utils');
 
 /// Ensure the first letter is lower-case.
 String toStartingLowerCase(String str) {
@@ -56,7 +60,11 @@ abstract class Disposable {
 }
 
 class Disposables implements Disposable {
+  final bool catchExceptions;
+
   List<Disposable> _disposables = [];
+
+  Disposables({this.catchExceptions});
 
   void add(Disposable disposable) => _disposables.add(disposable);
 
@@ -64,7 +72,15 @@ class Disposables implements Disposable {
 
   void dispose() {
     for (Disposable disposable in _disposables) {
-      disposable.dispose();
+      if (catchExceptions) {
+        try {
+          disposable.dispose();
+        } catch (e, st) {
+          _logger.severe('exception during dispose', e, st);
+        }
+      } else {
+        disposable.dispose();
+      }
     }
 
     _disposables.clear();
@@ -72,7 +88,11 @@ class Disposables implements Disposable {
 }
 
 class StreamSubscriptions implements Disposable {
+  final bool catchExceptions;
+
   List<StreamSubscription> _subscriptions = [];
+
+  StreamSubscriptions({this.catchExceptions});
 
   void add(StreamSubscription subscription) => _subscriptions.add(subscription);
 
@@ -81,7 +101,15 @@ class StreamSubscriptions implements Disposable {
 
   void cancel() {
     for (StreamSubscription subscription in _subscriptions) {
-      subscription.cancel();
+      if (catchExceptions) {
+        try {
+          subscription.cancel();
+        } catch (e, st) {
+          _logger.severe('exception during subscription cancel', e, st);
+        }
+      } else {
+        subscription.cancel();
+      }
     }
 
     _subscriptions.clear();
