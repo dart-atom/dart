@@ -335,7 +335,7 @@ class PubAppLocal extends PubApp {
   Future run({List<String> args, String cwd, String title}) {
     if (!sdkManager.hasSdk) return new Future.error('no sdk installed');
 
-    List<String> list = ['run', name];
+    List<String> list = [name];
     if (args != null) list.addAll(args);
     Job job = new PubRunJob.local(this.cwd, list, title: title);
     return job.schedule();
@@ -449,7 +449,7 @@ class PubGlobalActivate extends Job {
       sdkManager.showNoSdkMessage();
       return new Future.value();
     }
-    
+
     ProcessRunner runner = sdkManager.sdk.execBin(
         'pub', ['global', 'activate', packageName]);
 

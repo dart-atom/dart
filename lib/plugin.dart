@@ -41,6 +41,7 @@ import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
+import 'impl/tests.dart';
 import 'jobs.dart';
 import 'js.dart';
 import 'launch/console.dart';
@@ -141,6 +142,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new TypeHierarchyHelper());
     disposables.add(deps[QuickFixHelper] = new QuickFixHelper());
     disposables.add(consoleController = new ConsoleController());
+    disposables.add(deps[TestManager] = new TestManager());
 
     disposables.add(new UsageManager());
 
