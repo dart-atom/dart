@@ -1,20 +1,24 @@
 # See https://atom.io/docs/latest/hacking-atom-package-word-count#menus.
 
-'menu': [ {
+'menu': [{
     label: 'Packages'
-    submenu: [
+    submenu: [{
+      label: 'Flutter'
+      submenu: [
+        {label: 'Create new Flutter project…', command: 'dartlang:create-flutter-project'}
+      ]
+    }, {
       label: 'Dart'
       submenu: [
-        {label: 'Create new Flutter project…', command: 'dartlang:create-flutter-project'},
         {label: 'Package Settings…', command: 'dartlang:settings'},
-        {type:  'separator'},
+        { type: 'separator'},
         {label: 'Re-analyze Sources', command: 'dartlang:reanalyze-sources'},
         {label: 'Analysis Server Status', command: 'dartlang:analysis-server-status'},
-        {type:  'separator'},
+        { type: 'separator'},
         {label: 'Getting Started…', command: 'dartlang:getting-started'},
         {label: 'Release Notes', command: 'dartlang:release-notes'},
         {label: 'Send Feedback…', command: 'dartlang:send-feedback'}
-      ]
+    ]}
     ]
   }
 ]
