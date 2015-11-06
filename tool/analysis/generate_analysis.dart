@@ -121,6 +121,7 @@ class Api {
 }
 
 class Domain {
+  bool experimental = false;
   String name;
 
   List<Request> requests;
@@ -129,6 +130,7 @@ class Domain {
 
   Domain(Element element) {
     name = element.attributes['name'];
+    experimental = element.attributes.containsKey('experimental');
     requests = element
         .getElementsByTagName('request')
         .map((element) => new Request(this, element))
@@ -146,6 +148,7 @@ class Domain {
     gen.writeln();
     gen.writeln('// ${name} domain');
     gen.writeln();
+    if (experimental) gen.writeln('@experimental');
     gen.writeStatement('class ${className} extends Domain {');
     gen.writeStatement(
         "${className}(Server server) : super(server, '${name}');");
@@ -202,11 +205,14 @@ class Domain {
 
 class Request {
   final Domain domain;
+
+  bool experimental = false;
   String method;
   List<Field> args = [];
   List<Field> results = [];
 
   Request(this.domain, Element element) {
+    experimental = element.attributes.containsKey('experimental');
     method = element.attributes['method'];
 
     List paramsList = element.getElementsByTagName('params');
@@ -231,6 +237,8 @@ class Request {
     if (results.isNotEmpty) {
       domain.resultClasses[resultName] = results;
     }
+
+    if (experimental) gen.writeln('@experimental');
 
     if (results.isEmpty) {
       if (args.isEmpty) {
@@ -421,12 +429,14 @@ class TypeDef {
   ]);
 
   String name;
+  bool experimental = false;
   bool isString = false;
   List<Field> fields;
   bool _callParam = false;
 
   TypeDef(Element element) {
     name = element.attributes['name'];
+    experimental = element.attributes.containsKey('experimental');
 
     // object, enum, ref
     Set<String> tags = new Set.from(element.children.map((c) => c.localName));
@@ -469,6 +479,7 @@ class TypeDef {
 
   void generate(DartGenerator gen) {
     gen.writeln();
+    if (experimental) gen.writeln('@experimental');
     String abs = isAbstract ? '/*abstract*/ ' : '';
     gen.writeln('${abs}class ${name} ${callParam ? "implements Jsonable " : ""}{');
     gen.writeln('static ${name} parse(Map m) {');
@@ -672,6 +683,9 @@ import 'package:logging/logging.dart';
 
 /// @optional
 const String optional = 'optional';
+
+/// @experimental
+const String experimental = 'experimental';
 
 final Logger _logger = new Logger('analysis_server_lib');
 
