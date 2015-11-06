@@ -15,10 +15,12 @@
 # Global commands (mac)
 'body.platform-darwin':
   'ctrl-alt-cmd-;': 'dartlang:rebuild-restart-dev'
+  'ctrl-alt-cmd-t': 'dartlang:run-tests'
 
 # Global commands (windows and linux)
 'body.platform-win32, body.platform-linux':
   'ctrl-alt-;': 'dartlang:rebuild-restart-dev'
+  'ctrl-alt-t': 'dartlang:run-tests'
 
 # Dart editor commands (common to all platforms)
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
