@@ -5,6 +5,7 @@
   work to complete it
 - added the ability to copy text from the console and errors views
 - we now remember launch configurations and breakpoints between sessions
+- we now verify that there's an SDK before running the pub commands
 
 ## 0.4.13
 - exposed quick assists - `ctrl-1`; these are common source refactorings
