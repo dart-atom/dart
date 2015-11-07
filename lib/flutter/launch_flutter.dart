@@ -30,7 +30,7 @@ class FlutterLaunchType extends LaunchType {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
 
-    PubAppLocal flutter = new PubApp.local(_toolName, project.path) as PubAppLocal;
+    PubAppLocal flutter = new PubAppLocal(_toolName, project.path);
     if (!flutter.isInstalledSync()) return false;
 
     String relPath = relativize(project.path, path);
@@ -47,7 +47,7 @@ class FlutterLaunchType extends LaunchType {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return new Future.error("File not in a Dart project.");
 
-    PubAppLocal flutter = new PubApp.local(_toolName, project.path) as PubAppLocal;
+    PubAppLocal flutter = new PubAppLocal(_toolName, project.path);
     bool exists = flutter.isInstalledSync();
 
     if (!exists) {
@@ -91,21 +91,11 @@ class _LaunchInstance {
   }
 
   Future<Launch> launch() async {
-    PubAppLocal flutter = new PubApp.local(_toolName, project.path) as PubAppLocal;
-
-    // Ensure that the sky server isn't already running and potentially serving
-    // an older (or different) app.
-    _runner = _flutter(flutter, ['stop']);
-    _runner.execStreaming();
-    _runner.onStdout.listen((str) => _launch.pipeStdio(str));
-    _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
-
-    Future f = _runner.onExit.timeout(new Duration(seconds: 4), onTimeout: () => 0);
-    await f;
+    PubAppLocal flutter = new PubAppLocal(_toolName, project.path);
 
     // Chain together both 'flutter start' and 'flutter logs'.
     // TODO: Add a user option for `--checked`.
-    _runner = _flutter(flutter, ['start']); //, '--poke']);
+    _runner = _flutter(flutter, ['start']);
     _runner.execStreaming();
     _runner.onStdout.listen((str) => _launch.pipeStdio(str));
     _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));

@@ -8,6 +8,7 @@
 - we now verify that there's an SDK before running the pub commands
 - bound the test runner to the `run tests` command (`ctrl-alt-cmd-t`
   / `ctrl-alt-t`)
+- when launching Flutter apps, we no longer call `flutter stop`
 
 ## 0.4.13
 - exposed quick assists - `ctrl-1`; these are common source refactorings

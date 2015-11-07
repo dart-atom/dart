@@ -110,7 +110,7 @@ class AnalysisServer implements Disposable {
     // Create the analysis server diagnostics dialog.
     disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
 
-    var trim = (String str) => str.length > 200 ? str.substring(0, 200) + '…' : str;
+    var trim = (String str) => str.length > 260 ? str.substring(0, 260) + '…' : str;
 
     onSend.listen((String message) {
       if (_logger.isLoggable(Level.FINER)) {
