@@ -31,7 +31,7 @@ class CreateProjectManager implements Disposable {
     String projectPath = "${root}${separator}${Haikunator.haikunate(delimiter: '_')}";
     String _response;
 
-    PubAppGlobal flutter = new PubApp.global('flutter') as PubAppGlobal;
+    PubAppGlobal flutter = new PubAppGlobal('flutter');
 
     // Install `flutter` if it is not installed or there is an update available.
     Future f = flutter.installIfUpdateAvailable();

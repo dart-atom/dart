@@ -109,7 +109,7 @@ class ObservatoryDebugConnection extends DebugConnection {
   Future get onTerminated => completer.future;
 
   void _init() {
-    var trim = (String str) => str.length > 200 ? str.substring(0, 200) + '…' : str;
+    var trim = (String str) => str.length > 1000 ? str.substring(0, 1000) + '…' : str;
 
     service.onSend.listen((str) {
       if (_logger.isLoggable(Level.FINER)) {

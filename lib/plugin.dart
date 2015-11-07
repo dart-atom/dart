@@ -94,15 +94,16 @@ class AtomDartPackage extends AtomPackage {
       return _consumer;
     });
 
-    DartAutocompleteProvider dartProvider = new DartAutocompleteProvider();
+    DartAutocompleteProvider autocompleteProvider = new DartAutocompleteProvider();
     // TODO: why isn't this working?
     // registerServiceProvider('provideAutocomplete', () => provider.toProxy());
     final JsObject exports = context['module']['exports'];
-    exports['provideAutocomplete'] = () => dartProvider.toProxy();
+    exports['provideAutocomplete'] = () => autocompleteProvider.toProxy();
   }
 
   void packageActivated([dynamic pluginState]) {
     _setupLogging();
+
     _logger.info("activated");
     _logger.fine("Running on Chrome version ${chromeVersion}.");
 
