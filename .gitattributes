@@ -7,3 +7,4 @@
 *.png binary
 
 web/entry.dart.js linguist-vendored
+web/entry_dart_results.html linguist-documentation
