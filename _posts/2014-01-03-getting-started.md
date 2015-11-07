@@ -8,13 +8,13 @@ fa-icon: sign-in
 ## Using commands
 
 Much of Atom's functionality is surfaced via named commands. You can see all the
-available commands by hitting `'shift-cmd-p'` / `'ctrl-shift-p'`. You can execute a
+available commands by hitting `shift-cmd-p` / `ctrl-shift-p`. You can execute a
 command directly by searching for it and selecting it in the command palette.
 Many commands can also be accessed using associated key bindings.
 
 ## Setting up and configuring
 
-To open the settings for Atom, hit `'cmd-,'` / `'ctrl-,'` or select the
+To open the settings for Atom, hit `cmd-,` / `ctrl-,` or select the
 `Atom > Preferences…` menu item. From here you can configure general text editor
 settings, customize key bindings, customize the theme and look of Atom, and
 adjust settings for various Atom packages, including the `dartlang` package.
@@ -75,7 +75,7 @@ files in Atom; stay tuned.
 There are various tools and commands available to help you work with Dart
 projects. The various `pub` commands are available as context menu items in the
 files view. The commands are also available from the command palette
-(`'shift-cmd-p'` / `'ctrl-shift-p'`). So, to run `pub get` on a project, select the
+(`shift-cmd-p` / `ctrl-shift-p`). So, to run `pub get` on a project, select the
 `pubspec.yaml` file in the files view, right click, and select the `Pub Get`
 menu item. Alternatively, whenever a Dart file is open, you can run the `pub get`
 Atom command, and pub will be run for the associated Dart project.
@@ -100,22 +100,22 @@ summary, or by configuring it in the settings page.
 
 Clicking on an issue in the problems view will take you to that source code with
 the problem. For some issues, the plugin can provide automated fixes - so called
-'quick fixes'. When at a source location with errors, hit `'ctrl-1'`; if there are
+'quick fixes'. When at a source location with errors, hit `ctrl-1`; if there are
 any available fixes a menu with available options will be shown.
 
 When looking at source code, you can get more information about a class, method,
 or variable by placing the cursor on that symbol and hitting `F1`. The dartdoc
 information for that element will be displayed.
 
-Command or option-clicking on an element, or hitting `'ctrl-alt-down'`, will jump
-to its definition. To jump back, hit `cmd-option-up` (or `'ctrl-alt-up'`).
+Command or option-clicking on an element, or hitting `ctrl-alt-down`, will jump
+to its definition. To jump back, hit `cmd-option-up` (or `ctrl-alt-up`).
 
 You can toggle on and off a structural outline view of the current Dart file by
 executing the command `'toggle outline view'`.
 
 In order to find all the places where an element is referenced, right click on
 that element and select the menu item `Find References`. You can also use the
-key binding `'ctrl-f4'`. The results will be displayed in a view on the right;
+key binding `ctrl-f4`. The results will be displayed in a view on the right;
 clicking on a result will jump to the associated source location. The results
 view can be closed via the close button (or by hitting the escape key twice).
 
@@ -129,10 +129,10 @@ summary in the status line (normally showing `no errors`).
 
 In addition to quick fixes, the plugin can also perform some automated code
 transformations. These include a rename refactoring, available from the context
-menu or via `'option-shift-r'` / `'alt-shift-r'`. Also, the plugin has the ability
+menu or via `option-shift-r` / `alt-shift-r`. Also, the plugin has the ability
 to automatically organize import directives, available by the `'organize directives'`
-command or `'option-cmd-o'` / `'ctrl-alt-o'`. Additionally, you can format a Dart
-source code using the `'dart format'` command or the `'option-cmd-b'` / `'ctrl-alt-b'`
+command or `option-cmd-o` / `ctrl-alt-o`. Additionally, you can format a Dart
+source code using the `'dart format'` command or the `option-cmd-b` / `ctrl-alt-b`
 key binding.
 
 ## Diagnosing analysis server issues
