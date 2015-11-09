@@ -1,14 +1,11 @@
 # dartlang plugin changelog
 
 ## unreleased
-- added a setting to enable the debugger; it is disabled by default while we
-  work to complete it
 - added the ability to copy text from the console and errors views
 - we now remember launch configurations and breakpoints between sessions
-- we now verify that there's an SDK before running the pub commands
-- bound the test runner to the `run tests` command (`ctrl-alt-cmd-t`
-  / `ctrl-alt-t`)
-- when launching Flutter apps, we no longer call `flutter stop`
+- we now verify that there's an SDK before running pub commands
+- bound the test runner to the `run tests` command (`ctrl-alt-cmd-t` / `ctrl-alt-t`)
+- when launching Flutter apps, we no longer call the `flutter stop` command
 
 ## 0.4.13
 - exposed quick assists - `ctrl-1`; these are common source refactorings

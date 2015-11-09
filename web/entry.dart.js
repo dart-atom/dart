@@ -23175,7 +23175,7 @@ self._domRemove = function(element) {
       t1.$indexSet(exports, "activate", $._package.get$packageActivated());
       t1.$indexSet(exports, "deactivate", $._package.get$packageDeactivated());
       $._package.toString;
-      t1.$indexSet(exports, "config", K.jsify(P.LinkedHashMap__makeLiteral(["sdkLocation", P.LinkedHashMap__makeLiteral(["title", "Dart SDK Location", "description", "The location of the Dart SDK.", "type", "string", "default", "", "order", 1]), "useErrorsView", P.LinkedHashMap__makeLiteral(["title", "Show errors view", "description", "Use a custom errors view to display Dart errors and warnings. This will be used in place of the default linter view.", "type", "boolean", "default", true, "order", 2]), "showOutlineView", P.LinkedHashMap__makeLiteral(["title", "Show outline view", "description", "Show an outline view for Dart files.", "type", "boolean", "default", true, "order", 2]), "autoShowConsole", P.LinkedHashMap__makeLiteral(["title", "Auto open console", "description", "Automatically open the console when an application is run.", "type", "boolean", "default", true, "order", 3]), "launchWithDebugging", P.LinkedHashMap__makeLiteral(["title", "Launch applications with debugging enabled", "description", "Note: This feature is in an alpha stage of development. Default to launching applications with debugging support enabled.", "type", "boolean", "default", false, "order", 3]), "showInfos", P.LinkedHashMap__makeLiteral(["title", "Show infos", "description", "Show informational level analysis issues.", "type", "boolean", "default", true, "order", 4]), "showTodos", P.LinkedHashMap__makeLiteral(["title", "Show todos", "description", "When showing infos, also show TODO items.", "type", "boolean", "default", false, "order", 4]), "formatOnSave", P.LinkedHashMap__makeLiteral(["title", "Format current file on save", "description", "Format the current editor on save.", "type", "boolean", "default", false, "order", 5]), "noPackageSymlinks", P.LinkedHashMap__makeLiteral(["title", "Run pub with '--no-package-symlinks'", "description", "Run pub with a command-line option to not create packages symlinks. Note: Flutter applications will not currently work with this option enabled.", "type", "boolean", "default", false, "order", 6]), "sendUsage", P.LinkedHashMap__makeLiteral(["title", "Report usage information to Google Analytics.", "description", "Report anonymized usage information to Google Analytics.", "type", "boolean", "default", true, "order", 7]), "logging", P.LinkedHashMap__makeLiteral(["title", "Log plugin diagnostics to the devtools console.", "description", "This is for plugin development only!", "type", "string", "default", "info", "enum", ["error", "warning", "info", "fine", "finer"], "order", 10]), "debugAnalysisServer", P.LinkedHashMap__makeLiteral(["title", "Start the analysis server with debug flags.", "description", "This is for plugin development only! The analysis server will be started with the observatory port and AS diagnostics ports turned on. A restart is required.", "type", "boolean", "default", false, "order", 11])])));
+      t1.$indexSet(exports, "config", K.jsify(P.LinkedHashMap__makeLiteral(["sdkLocation", P.LinkedHashMap__makeLiteral(["title", "Dart SDK Location", "description", "The location of the Dart SDK.", "type", "string", "default", "", "order", 1]), "useErrorsView", P.LinkedHashMap__makeLiteral(["title", "Show errors view", "description", "Use a custom errors view to display Dart errors and warnings. This will be used in place of the default linter view.", "type", "boolean", "default", true, "order", 2]), "showOutlineView", P.LinkedHashMap__makeLiteral(["title", "Show outline view", "description", "Show an outline view for Dart files.", "type", "boolean", "default", true, "order", 2]), "autoShowConsole", P.LinkedHashMap__makeLiteral(["title", "Auto open console", "description", "Automatically open the console when an application is run.", "type", "boolean", "default", true, "order", 3]), "showInfos", P.LinkedHashMap__makeLiteral(["title", "Show infos", "description", "Show informational level analysis issues.", "type", "boolean", "default", true, "order", 4]), "showTodos", P.LinkedHashMap__makeLiteral(["title", "Show todos", "description", "When showing infos, also show TODO items.", "type", "boolean", "default", false, "order", 4]), "formatOnSave", P.LinkedHashMap__makeLiteral(["title", "Format current file on save", "description", "Format the current editor on save.", "type", "boolean", "default", false, "order", 5]), "noPackageSymlinks", P.LinkedHashMap__makeLiteral(["title", "Run pub with '--no-package-symlinks'", "description", "Run pub with a command-line option to not create packages symlinks. Note: Flutter applications will not currently work with this option enabled.", "type", "boolean", "default", false, "order", 6]), "sendUsage", P.LinkedHashMap__makeLiteral(["title", "Report usage information to Google Analytics.", "description", "Report anonymized usage information to Google Analytics.", "type", "boolean", "default", true, "order", 7]), "logging", P.LinkedHashMap__makeLiteral(["title", "Log plugin diagnostics to the devtools console.", "description", "This is for plugin development only!", "type", "string", "default", "info", "enum", ["error", "warning", "info", "fine", "finer"], "order", 10]), "debugAnalysisServer", P.LinkedHashMap__makeLiteral(["title", "Start the analysis server with debug flags.", "description", "This is for plugin development only! The analysis server will be started with the observatory port and AS diagnostics ports turned on. A restart is required.", "type", "boolean", "default", false, "order", 11])])));
       t1.$indexSet(exports, "serialize", $._package.get$serialize());
       $package._registeredMethods.forEach$1(0, new E.registerPackage_closure(exports));
       $package._registeredMethods = null;
@@ -29588,7 +29588,7 @@ self._domRemove = function(element) {
         t5._sendData$1(new X.TextFragment(t2, false, false, true));
         t2 = t3.get$debug();
         t4._withDebug = t2 == null ? true : t2;
-        if (!J.$eq$($.$get$atom()._config.getValue$2$scope("dartlang.launchWithDebugging", null), true))
+        if (!X.LaunchManager_launchWithDebugging())
           t4._withDebug = false;
         t1._lastLaunch = t4;
         return t4.launch$0();
@@ -30567,7 +30567,11 @@ self._domRemove = function(element) {
         for (; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
           t1[_i].dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
-      $isDisposable: 1
+      $isDisposable: 1,
+      static: {LaunchManager_launchWithDebugging: function() {
+          var t1 = $.$get$atom();
+          return J.$eq$(t1._config.getValue$2$scope("dartlang.launchWithDebugging", null), true) || J.$eq$(t1._config.getValue$2$scope("dartlang.enableDebugging", null), true);
+        }}
     },
     LaunchManager_addLaunch_closure: {
       "^": "Closure:56;_launch$_captured_this_0,_captured_removed_1",
@@ -30818,15 +30822,14 @@ self._domRemove = function(element) {
         return P.List_List$from(t1, true, H.getRuntimeTypeArgument(t1, "Iterable", 0));
       },
       performLaunch$2: function(manager, configuration) {
-        var sdk, withDebug, t1, path, cwd, args, project, paths, cwd0, _args, desc, t2, t3, t4, t5, runner, t6, t7, t8, launch;
+        var sdk, withDebug, path, cwd, args, project, paths, t1, cwd0, _args, desc, t2, t3, t4, t5, runner, t6, t7, t8, launch;
         sdk = Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$sdk();
         if (sdk == null)
           P.Future_Future$error("No Dart SDK configured", null, null);
         withDebug = configuration.get$debug();
         if (withDebug == null)
           withDebug = true;
-        t1 = $.$get$atom();
-        if (!J.$eq$(t1._config.getValue$2$scope("dartlang.launchWithDebugging", null), true))
+        if (!X.LaunchManager_launchWithDebugging())
           withDebug = false;
         path = configuration.get$primaryResource();
         cwd = configuration.get$cwd();
@@ -30834,7 +30837,7 @@ self._domRemove = function(element) {
         project = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
         if (cwd == null)
           if (project == null) {
-            paths = P.List_List$from(t1._project.invoke$2("relativizePath", path), true, null);
+            paths = P.List_List$from($.$get$atom()._project.invoke$2("relativizePath", path), true, null);
             t1 = paths.length;
             if (0 >= t1)
               return H.ioore(paths, 0);

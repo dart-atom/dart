@@ -16,7 +16,9 @@ final Logger _logger = new Logger('atom.launch');
 
 class LaunchManager implements Disposable, StateStorable {
   static bool launchWithDebugging() {
-    return atom.config.getBoolValue('${pluginId}.launchWithDebugging');
+    // TODO: Remove the 'enableDebugging' flag.
+    return atom.config.getBoolValue('${pluginId}.launchWithDebugging') ||
+      atom.config.getBoolValue('${pluginId}.enableDebugging');
   }
 
   StreamController<Launch> _launchAdded = new StreamController.broadcast(sync: true);
