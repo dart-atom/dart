@@ -19,8 +19,6 @@ type, code completion, refactorings, and integration with Pub and other tools.
 ## Installing
 
 - install Atom [atom.io](https://atom.io/)
-- install the [linter][] package (with `apm install linter` or through the
-  Atom UI)
 - install this [dartlang][] package (with `apm install dartlang` or through the
   Atom UI)
 
@@ -32,8 +30,8 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 
 ## Get notified of news
 
-Follow [@dartpluginatom](https://twitter.com/dartpluginatom) for
-news and accouncements.
+Follow [@dartpluginatom](https://twitter.com/dartpluginatom) for news and
+announcements.
 
 ## Terms and Privacy
 
@@ -47,6 +45,4 @@ Terms of Service and Google's general
 See the [LICENSE](https://github.com/dart-atom/dartlang/blob/master/LICENSE)
 file.
 
-[linter]: https://atom.io/packages/linter
 [dartlang]: https://atom.io/packages/dartlang
-

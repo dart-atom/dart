@@ -6,6 +6,7 @@
 - we now verify that there's an SDK before running pub commands
 - bound the test runner to the `run tests` command (`ctrl-alt-cmd-t` / `ctrl-alt-t`)
 - updated launching Flutter apps to use the new Flutter SDK / workflow
+- the `linter` plugin is now installed automatically
 
 ## 0.4.13
 - exposed quick assists - `ctrl-1`; these are common source refactorings

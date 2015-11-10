@@ -168,24 +168,26 @@ class PubManager implements Disposable, ContextMenuContributor {
   void dispose() => disposables.dispose();
 
   void _showRunPubDialog(DartProject project, {bool neverRun: false}) {
-    String title = "Pub has never been run for project `${project.workspaceRelativeName}`. "
-        "Run 'pub get'?";
+    String title =
+      "Pub has never been run for project `${project.workspaceRelativeName}`. "
+      "Run 'pub get'?";
 
     if (!neverRun) {
-      title = "The pubspec.yaml file for project `${project.workspaceRelativeName}` "
-          "has been modified since pub was last run. Run 'pub get'?";
+      title =
+        "The pubspec.yaml file for project `${project.workspaceRelativeName}` "
+        "has been modified since pub was last run. Run 'pub get'?";
     }
 
     Notification _notification;
     _notification = atom.notifications.addInfo(
-        title,
-        dismissable: true,
-        buttons: [
-          new NotificationButton('Run Pub…', () {
-            _notification.dismiss();
-            new PubJob.get(project.path).schedule();
-          })
-        ]
+      title,
+      dismissable: true,
+      buttons: [
+        new NotificationButton('Run pub get…', () {
+          _notification.dismiss();
+          new PubJob.get(project.path).schedule();
+        })
+      ]
     );
   }
 }
