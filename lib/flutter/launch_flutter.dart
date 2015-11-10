@@ -8,15 +8,17 @@ import '../atom.dart';
 import '../atom_utils.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
-import '../impl/pub.dart';
 import '../launch/launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../state.dart';
+import 'flutter_sdk.dart';
+
+final Logger _logger = new Logger('atom.flutter_launch');
 
 const String _toolName = 'flutter';
 
-final Logger _logger = new Logger('atom.flutter_launch');
+FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
 
 class FlutterLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -30,14 +32,14 @@ class FlutterLaunchType extends LaunchType {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
 
-    PubAppLocal flutter = new PubAppLocal(_toolName, project.path);
-    if (!flutter.isInstalledSync()) return false;
+    if (!_flutterSdk.hasSdk) return false;
 
     String relPath = relativize(project.path, path);
     return relPath == 'lib${separator}main.dart';
   }
 
   List<String> getLaunchablesFor(DartProject project) {
+    // TODO: Return other main files?
     File file = project.directory.getFile('lib${separator}main.dart');
     return file.existsSync() ? [file.path] : [];
   }
@@ -47,12 +49,10 @@ class FlutterLaunchType extends LaunchType {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return new Future.error("File not in a Dart project.");
 
-    PubAppLocal flutter = new PubAppLocal(_toolName, project.path);
-    bool exists = flutter.isInstalledSync();
-
-    if (!exists) {
-      return new Future.error("Unable to locate the '${_toolName}' package; "
-          "did you import it into your project?");
+    if (!_flutterSdk.hasSdk) {
+      _flutterSdk.showInstallationInfo();
+      return new Future.error("Unable to launch ${configuration.shortResourceName}; "
+        " no Flutter SDK found.");
     }
 
     return _killLastLaunch().then((_) {
@@ -84,18 +84,18 @@ class _LaunchInstance {
         'lib${separator}main.dart',
         killHandler: _kill);
     launchManager.addLaunch(_launch);
-    _launch.pipeStdio('[${project.path}] pub run ${_toolName} start\n', highlight: true);
+    _launch.pipeStdio('[${project.path}] ${_toolName} start\n', highlight: true);
 
     _withDebug = configuration.debug ?? debugDefault;
     if (!LaunchManager.launchWithDebugging()) _withDebug = false;
   }
 
   Future<Launch> launch() async {
-    PubAppLocal flutter = new PubAppLocal(_toolName, project.path);
+    FlutterTool flutter = _flutterSdk.sdk.flutterTool;
 
     // Chain together both 'flutter start' and 'flutter logs'.
     // TODO: Add a user option for `--checked`.
-    _runner = _flutter(flutter, ['start']);
+    _runner = _flutter(flutter, ['start'], project.path);
     _runner.execStreaming();
     _runner.onStdout.listen((str) => _launch.pipeStdio(str));
     _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
@@ -122,7 +122,7 @@ class _LaunchInstance {
       }
 
       // Chain 'flutter logs'.
-      _runner = _flutter(flutter, ['logs', '--clear']);
+      _runner = _flutter(flutter, ['logs', '--clear'], project.path);
       _runner.execStreaming();
       _runner.onStdout.listen((str) => _launch.pipeStdio(str));
       _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
@@ -146,8 +146,8 @@ class _LaunchInstance {
   }
 }
 
-ProcessRunner _flutter(PubAppLocal flutter, List<String> args) {
-  return flutter.runRaw(args, startProcess: false);
+ProcessRunner _flutter(FlutterTool flutter, List<String> args, String cwd) {
+  return flutter.runRaw(args, cwd: cwd, startProcess: false);
 }
 
 class FlutterUriTranslator implements UriTranslator {
@@ -203,7 +203,3 @@ class FlutterUriTranslator implements UriTranslator {
     }
   }
 }
-
-// Future<bool> hasFswatchInstalled() {
-//   return exec('fswatch', ['--version']).then((_) => true).catchError((_) => false);
-// }

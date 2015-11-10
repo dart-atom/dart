@@ -5,7 +5,9 @@
     submenu: [{
       label: 'Flutter'
       submenu: [
-        {label: 'Create new Flutter project…', command: 'dartlang:create-flutter-project'}
+        {label: 'Create new Flutter project…', command: 'flutter:create-project'}
+        { type: 'separator'},
+        {label: 'Getting Started…', command: 'flutter:getting-started'},
       ]
     }, {
       label: 'Dart'
