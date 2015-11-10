@@ -7,6 +7,7 @@
 - bound the test runner to the `run tests` command (`ctrl-alt-cmd-t` / `ctrl-alt-t`)
 - updated launching Flutter apps to use the new Flutter SDK / workflow
 - the `linter` plugin is now installed automatically
+- fixed an NPE when launching applications
 
 ## 0.4.13
 - exposed quick assists - `ctrl-1`; these are common source refactorings

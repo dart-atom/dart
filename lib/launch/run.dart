@@ -61,6 +61,8 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
   }
 
   void _handleFastRunCommand(String path) {
+    if (path == null) return;
+
     LaunchConfiguration config = _getConfigFor(path);
 
     // Look for already created launch configs for the path.
@@ -132,6 +134,8 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
   }
 
   void _handleRunConfigCommand(String path) {
+    if (path == null) return;
+
     // TODO: Show an inline config editor.
 
     _handleFastRunCommand(path);
