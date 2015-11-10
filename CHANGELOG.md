@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.14
 - added the ability to copy text from the console and errors views
 - we now remember launch configurations and breakpoints between sessions
 - we now verify that there's an SDK before running pub commands
