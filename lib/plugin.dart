@@ -31,6 +31,8 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'flutter/create_project.dart';
+import 'flutter/flutter_dev.dart';
+import 'flutter/flutter_sdk.dart';
 import 'flutter/launch_flutter.dart';
 import 'flutter/toolbar.dart';
 import 'impl/changelog.dart';
@@ -144,6 +146,9 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[QuickFixHelper] = new QuickFixHelper());
     disposables.add(consoleController = new ConsoleController());
     disposables.add(deps[TestManager] = new TestManager());
+
+    disposables.add(new FlutterDev());
+    disposables.add(deps[FlutterSdkManager] = new FlutterSdkManager());
 
     disposables.add(new UsageManager());
 
@@ -288,6 +293,13 @@ class AtomDartPackage extends AtomPackage {
         'default': '',
         'order': 1
       },
+      'flutterSdkLocation': {
+        'title': 'Flutter SDK Location',
+        'description': 'The location of the Flutter SDK.',
+        'type': 'string',
+        'default': '',
+        'order': 2
+      },
 
       // custom views
       'useErrorsView': {
@@ -296,14 +308,14 @@ class AtomDartPackage extends AtomPackage {
             'warnings. This will be used in place of the default linter view.',
         'type': 'boolean',
         'default': true,
-        'order': 2
+        'order': 3
       },
       'showOutlineView': {
         'title': 'Show outline view',
         'description': 'Show an outline view for Dart files.',
         'type': 'boolean',
         'default': true,
-        'order': 2
+        'order': 3
       },
 
       // auto show console
@@ -312,7 +324,7 @@ class AtomDartPackage extends AtomPackage {
         'description': 'Automatically open the console when an application is run.',
         'type': 'boolean',
         'default': true,
-        'order': 3
+        'order': 4
       },
       // // launch with debugging
       // 'launchWithDebugging': {
@@ -321,7 +333,7 @@ class AtomDartPackage extends AtomPackage {
       //       'Default to launching applications with debugging support enabled.',
       //   'type': 'boolean',
       //   'default': false,
-      //   'order': 3
+      //   'order': 4
       // },
 
       // show infos and todos
@@ -330,14 +342,14 @@ class AtomDartPackage extends AtomPackage {
         'description': 'Show informational level analysis issues.',
         'type': 'boolean',
         'default': true,
-        'order': 4
+        'order': 5
       },
       'showTodos': {
         'title': 'Show todos',
         'description': 'When showing infos, also show TODO items.',
         'type': 'boolean',
         'default': false,
-        'order': 4
+        'order': 5
       },
 
       // format on save
@@ -346,7 +358,7 @@ class AtomDartPackage extends AtomPackage {
         'description': 'Format the current editor on save.',
         'type': 'boolean',
         'default': false,
-        'order': 5
+        'order': 6
       },
 
       // no package symlinks
@@ -358,7 +370,7 @@ class AtomDartPackage extends AtomPackage {
             'this option enabled.',
         'type': 'boolean',
         'default': false,
-        'order': 6
+        'order': 7
       },
 
       // google analytics
@@ -367,7 +379,7 @@ class AtomDartPackage extends AtomPackage {
         'description': "Report anonymized usage information to Google Analytics.",
         'type': 'boolean',
         'default': true,
-        'order': 7
+        'order': 8
       },
 
       'logging': {

@@ -5,7 +5,7 @@
 - we now remember launch configurations and breakpoints between sessions
 - we now verify that there's an SDK before running pub commands
 - bound the test runner to the `run tests` command (`ctrl-alt-cmd-t` / `ctrl-alt-t`)
-- when launching Flutter apps, we no longer call the `flutter stop` command
+- updated launching Flutter apps to use the new Flutter SDK / workflow
 
 ## 0.4.13
 - exposed quick assists - `ctrl-1`; these are common source refactorings

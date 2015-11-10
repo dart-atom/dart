@@ -1,26 +1,26 @@
 library atom.flutter.create_project;
 
-import 'dart:async';
-
 import 'package:haikunator/haikunator.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
-import '../impl/pub.dart';
 import '../state.dart';
 import '../utils.dart';
+import 'flutter_sdk.dart';
+
+FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
 
 class CreateProjectManager implements Disposable {
   Disposables disposables = new Disposables();
 
   CreateProjectManager() {
     disposables.add(atom.commands
-        .add('atom-workspace', 'dartlang:create-flutter-project', _createProject));
+        .add('atom-workspace', 'flutter:create-project', _createProject));
   }
 
   void _createProject(AtomEvent _) {
-    if (!sdkManager.hasSdk) {
-      sdkManager.showNoSdkMessage(messagePrefix: 'Unable to create project');
+    if (!_flutterSdk.hasSdk) {
+      _flutterSdk.showInstallationInfo();
       return;
     }
 
@@ -30,22 +30,16 @@ class CreateProjectManager implements Disposable {
     }
     String projectPath = "${root}${separator}${Haikunator.haikunate(delimiter: '_')}";
     String _response;
-
-    PubAppGlobal flutter = new PubAppGlobal('flutter');
-
-    // Install `flutter` if it is not installed or there is an update available.
-    Future f = flutter.installIfUpdateAvailable();
-
-    promptUser('Enter the path to the project to create:',
+    FlutterTool flutter = _flutterSdk.sdk.flutterTool;
+    promptUser(
+        'Enter the path to the project to create:',
         defaultText: projectPath,
         selectLastWord: true).then((String response) {
       _response = response;
-      if (_response != null) return f;
-    }).then((_) {
+
       if (_response != null) {
-        return flutter.run(
-            args: ['init', '--out', _response],
-            title: 'Creating Flutter Project');
+        return flutter.runInJob(
+          ['init', '--out', _response], title: 'Creating Flutter Project');
       }
     }).then((_) {
       if (_response != null) {

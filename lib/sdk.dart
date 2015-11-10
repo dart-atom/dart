@@ -53,10 +53,11 @@ final Logger _logger = new Logger('sdk');
 class SdkManager implements Disposable {
   StreamController<Sdk> _controller = new StreamController.broadcast(sync: true);
 
-  Sdk _sdk;
   StreamSubscription _prefSub;
   Disposables _commands = new Disposables();
 
+  Sdk _sdk;
+  
   SdkManager() {
     // Load the existing setting and initiate auto-discovery if necessary.
     String currentPath = atom.config.getValue(_prefPath);
@@ -137,13 +138,13 @@ class SdkManager implements Disposable {
 
     if (_sdk != null) {
       _sdk.getVersion().then((String version) {
-          if (verbose) {
-            atom.notifications.addSuccess(
-                "Dart SDK found at ${sdk.directory.path}. Version ${version}.");
-          }
+        if (verbose) {
+          atom.notifications.addSuccess(
+              "Dart SDK found at ${sdk.directory.path}. Version ${version}.");
+        }
 
-          _logger.info('version ${version} (${_sdk.path})');
-          _verifyMinVersion(version);
+        _logger.info('version ${version} (${_sdk.path})');
+        _verifyMinVersion(version);
       });
     }
   }
