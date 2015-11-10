@@ -101,9 +101,12 @@ class LaunchManager implements Disposable, StateStorable {
   /// Get the best launch handler for the given resource; return `null`
   /// otherwise.
   LaunchType getHandlerFor(String path) {
+    if (path == null) return null;
+
     for (LaunchType type in launchTypes) {
       if (type.canLaunch(path)) return type;
     }
+
     return null;
   }
 

@@ -31026,6 +31026,8 @@ self._domRemove = function(element) {
       },
       getHandlerFor$1: function(path) {
         var t1, t2, _i, type;
+        if (path == null)
+          return;
         for (t1 = this.launchTypes, t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
           type = t1[_i];
           if (type.canLaunch$1(path) === true)
@@ -34765,6 +34767,8 @@ self._domRemove = function(element) {
       },
       _handleFastRunCommand$1: function(path) {
         var config, launchType, project, t1, runnables, t2, displayPath;
+        if (path == null)
+          return;
         config = this._newest$1(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getConfigurationsForPath$1(path));
         if (config != null) {
           $.$get$_logger16().fine$1("Using existing launch config for '" + H.S(path) + "'.");
@@ -34810,6 +34814,11 @@ self._domRemove = function(element) {
         $.$get$_logger16().info$1("Launching '" + H.S(config) + "'.");
         config.touch$0();
         Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getLaunchType$1(config.get$launchType()).performLaunch$2(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK), config).catchError$1(new L.RunApplicationManager__run_closure(config));
+      },
+      _handleRunConfigCommand$1: function(path) {
+        if (path == null)
+          return;
+        this._handleFastRunCommand$1(path);
       },
       _newest$1: function(configs) {
         var config, t1, _i, c;
@@ -34865,14 +34874,14 @@ self._domRemove = function(element) {
       "^": "Closure:0;_run$_captured_this_4,_captured_stop_5",
       call$1: function($event) {
         this._captured_stop_5.call$1($event);
-        this._run$_captured_this_4._handleFastRunCommand$1($event.get$targetFilePath());
+        this._run$_captured_this_4._handleRunConfigCommand$1($event.get$targetFilePath());
       }
     },
     RunApplicationManager_closure3: {
       "^": "Closure:0;_run$_captured_this_6,_captured_stop_7",
       call$1: function($event) {
         this._captured_stop_7.call$1($event);
-        this._run$_captured_this_6._handleFastRunCommand$1($event.get$editor().invoke$1("getPath"));
+        this._run$_captured_this_6._handleRunConfigCommand$1($event.get$editor().invoke$1("getPath"));
       }
     },
     RunApplicationManager__run_closure: {
