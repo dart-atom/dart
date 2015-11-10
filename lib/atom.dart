@@ -561,6 +561,11 @@ class PackageManager extends ProxyHolder {
 
   List<String> getAvailablePackageNames() =>
       new List.from(invoke('getAvailablePackageNames'));
+
+  /// Activate a single package by name.
+  Future activatePackage(String name) {
+    return promiseToFuture(invoke('activatePackage', name));
+  }
 }
 
 /// Represents a project that's opened in Atom.

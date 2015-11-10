@@ -46,6 +46,7 @@ import 'impl/status_display.dart';
 import 'impl/tests.dart';
 import 'jobs.dart';
 import 'js.dart';
+import 'atom_package_deps.dart' as package_deps;
 import 'launch/console.dart';
 import 'launch/launch.dart';
 import 'launch/launch_cli.dart';
@@ -195,6 +196,9 @@ class AtomDartPackage extends AtomPackage {
   }
 
   void _initPlugin() {
+    // Install the packages we're dependent on.
+    package_deps.install();
+
     loadPackageJson().then(_verifyPackages);
 
     _validateSettings();
@@ -225,19 +229,7 @@ class AtomDartPackage extends AtomPackage {
 
   // Verify that our dependencies are satisfied.
   void _verifyPackages(Map m) {
-    List<String> deps = m['packages'] as List<String>;
-    if (deps == null) deps = [];
-
     List<String> packages = atom.packages.getAvailablePackageNames();
-
-    for (String dep in deps) {
-      if (!packages.contains(dep)) {
-        atom.notifications.addWarning(
-          "The 'dartlang' plugin requires the '${dep}' plugin in order to work. "
-          "You can install it via the Install section of the Settings dialog.",
-          dismissable: true);
-      }
-    }
 
     if (packages.contains('emmet') && !atom.packages.isPackageDisabled('emmet')) {
       if (state['emmet'] == null) {
