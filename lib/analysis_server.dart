@@ -458,11 +458,13 @@ class _AnalysisServerWrapper extends Server {
         if (error.isFatal) {
           atom.notifications.addError(
             'Error from the analysis server: ${error.message}',
-            detail: error.stackTrace);
+            detail: error.stackTrace,
+            dismissable: true);
         } else {
           atom.notifications.addWarning(
             'Error from the analysis server: ${error.message}',
-            detail: error.stackTrace);
+            detail: error.stackTrace,
+            dismissable: true);
         }
       }
     });

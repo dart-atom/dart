@@ -24841,10 +24841,10 @@ self._domRemove = function(element) {
         if (t2._config.getValue$1("dartlang.debugAnalysisServer") === true)
           if (error.get$isFatal() === true) {
             t2 = t2._notifications;
-            t2.invoke$3("addError", "Error from the analysis server: " + H.S(t1.get$message(error)), t2._options$5$buttons$description$detail$dismissable$icon(null, null, error.get$stackTrace(), null, null));
+            t2.invoke$3("addError", "Error from the analysis server: " + H.S(t1.get$message(error)), t2._options$5$buttons$description$detail$dismissable$icon(null, null, error.get$stackTrace(), true, null));
           } else {
             t2 = t2._notifications;
-            t2.invoke$3("addWarning", "Error from the analysis server: " + H.S(t1.get$message(error)), t2._options$5$buttons$description$detail$dismissable$icon(null, null, error.get$stackTrace(), null, null));
+            t2.invoke$3("addWarning", "Error from the analysis server: " + H.S(t1.get$message(error)), t2._options$5$buttons$description$detail$dismissable$icon(null, null, error.get$stackTrace(), true, null));
           }
       }, null, null, 2, 0, null, 9, "call"]
     },
@@ -29286,6 +29286,8 @@ self._domRemove = function(element) {
         P.print(tag + " " + H.S(t1.get$message(r)));
         if (t1.get$error(r) != null)
           P.print(tag + "   " + H.S(t1.get$error(r)));
+        if (r.get$stackTrace() != null)
+          P.print(tag + "   " + H.S(r.get$stackTrace()));
       }, null, null, 2, 0, null, 18, "call"]
     }
   }, 1], ["atom.error_repository", "package:atom_dartlang/error_repository.dart",, E, {

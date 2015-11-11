@@ -12,7 +12,9 @@ main() {
   Logger.root.onRecord.listen((LogRecord r) {
     String tag = '${r.level.name.toLowerCase()} • ${r.loggerName}:';
     print('${tag} ${r.message}');
-    if (r.error != null) print('${tag}   ${r.error}');
+
+    if (r.error != null)      print('${tag}   ${r.error}');
+    if (r.stackTrace != null) print('${tag}   ${r.stackTrace}');
   });
 
   registerPackage(new AtomDartPackage());
