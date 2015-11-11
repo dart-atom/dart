@@ -57,7 +57,7 @@ class SdkManager implements Disposable {
   Disposables _commands = new Disposables();
 
   Sdk _sdk;
-  
+
   SdkManager() {
     // Load the existing setting and initiate auto-discovery if necessary.
     String currentPath = atom.config.getValue(_prefPath);
@@ -144,7 +144,7 @@ class SdkManager implements Disposable {
         }
 
         _logger.info('version ${version} (${_sdk.path})');
-        _verifyMinVersion(version);
+        _verifyMinVersion(_sdk, version);
       });
     }
   }
@@ -156,7 +156,7 @@ class SdkManager implements Disposable {
 
   bool _alreadyWarned = false;
 
-  void _verifyMinVersion(String version) {
+  void _verifyMinVersion(Sdk currentSdk, String version) {
     if (version == null) return;
 
     try {
@@ -168,6 +168,7 @@ class SdkManager implements Disposable {
             'SDK version ${installedVersion} is older than the recommended '
             'version of ${_minSdkVersion}. Please visit www.dartlang.org to '
             'download a recent SDK.',
+            detail: 'Using SDK at ${currentSdk.path}.',
             dismissable: true);
         }
       }

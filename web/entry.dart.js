@@ -34962,7 +34962,7 @@ self._domRemove = function(element) {
         this._sdk$_prefSub.cancel$0();
         this._sdk$_commands.dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
-      _verifyMinVersion$1: function(version) {
+      _verifyMinVersion$2: function(currentSdk, version) {
         var installedVersion, t1, t2, exception;
         if (version == null)
           return;
@@ -34973,7 +34973,7 @@ self._domRemove = function(element) {
             if (!this._alreadyWarned) {
               this._alreadyWarned = true;
               t2 = $.$get$atom()._notifications;
-              t2.invoke$3("addWarning", "SDK version " + H.S(installedVersion) + " is older than the recommended version of " + H.S(t1) + ". Please visit www.dartlang.org to download a recent SDK.", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, true, null));
+              t2.invoke$3("addWarning", "SDK version " + H.S(installedVersion) + " is older than the recommended version of " + H.S(t1) + ". Please visit www.dartlang.org to download a recent SDK.", t2._options$5$buttons$description$detail$dismissable$icon(null, null, "Using SDK at " + H.S(J.$index$asx(J.get$directory$x(currentSdk).obj, "path")) + ".", true, null));
             }
         } catch (exception) {
           H.unwrapException(exception);
@@ -35054,7 +35054,7 @@ self._domRemove = function(element) {
         }
         t1 = this._sdk$_captured_this_1;
         $.$get$_logger23().info$1("version " + H.S(version) + " (" + H.S(J.$index$asx(t1._sdk$_sdk.directory.obj, "path")) + ")");
-        t1._verifyMinVersion$1(version);
+        t1._verifyMinVersion$2(t1._sdk$_sdk, version);
       }, null, null, 2, 0, null, 31, "call"]
     },
     SdkManager__handleShowSdkInfo_closure: {

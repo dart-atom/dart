@@ -2,6 +2,7 @@
 
 ## unreleased
 - added a user preference to control the modifier key for jump to declaration
+- improved the warning when the user's SDK was out-of-date
 
 ## 0.4.14
 - added the ability to copy text from the console and errors views
