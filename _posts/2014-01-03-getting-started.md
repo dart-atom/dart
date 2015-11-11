@@ -144,3 +144,8 @@ and let you re-analyze the Dart source for the current projects.
 
 This status dialog can be useful for diagnosing issues with the analysis server,
 like analysis not terminating, or excessive CPU or memory consumption.
+
+For developers working on the plugin itself, or trying to resolve analysis server
+issues, you can enable a setting to start the analysis server with debug flags. This
+will expose some additional options in the analysis server status dialog; only a
+very small number of developers should need to enable this setting.
