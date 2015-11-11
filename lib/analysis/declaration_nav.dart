@@ -17,6 +17,8 @@ import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('declaration_nav');
 
+final String _keyPref = '${pluginId}.jumpToDeclarationKeys';
+
 class NavigationHelper implements Disposable {
   Disposables _commands = new Disposables();
   AnalysisNavigation _lastNavInfo;
@@ -53,21 +55,22 @@ class NavigationHelper implements Disposable {
     var view = editor.view;
     var fn = (JsObject evt) {
       try {
-        // TODO: Consider using the `hyperclick` package - once atom has package
-        // dependencies - and deferring to their keybinding settings.
-        bool jump = false;
-        if (isMac) {
-          // TODO: This does override multiple cursors (cmd-click) on the mac,
-          // which might not be desired by some users.
-          jump = evt['altKey'] || evt['metaKey'];
-        } else {
-          jump = evt['ctrlKey'] || evt['altKey'];
+        bool shouldJump = evt[_jumpKey()];
+        if (shouldJump) {
+          _handleNavigateEditor(editor);
         }
-        if (jump) Timer.run(() => _handleNavigateEditor(editor));
       } catch (e) { }
     };
 
-    _eventListener = new EventListener(view, 'click', fn);
+    _eventListener = new EventListener(view, 'mousedown', fn);
+  }
+
+  static String _jumpKey() {
+    String key = atom.config.getValue(_keyPref);
+    if (key == 'command') return 'metaKey';
+    if (key == 'control') return 'ctrlKey';
+    if (key == 'option' || key == 'alt') return 'altKey';
+    return isMac ? 'metaKey' : 'ctrlKey';
   }
 
   void _navigationEvent(AnalysisNavigation navInfo) {

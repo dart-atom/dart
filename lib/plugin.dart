@@ -352,6 +352,17 @@ class AtomDartPackage extends AtomPackage {
         'order': 6
       },
 
+      // key-bindings
+      'jumpToDeclarationKeys': {
+        'title': 'Jump to declaration modifer key',
+        'description': 'The modifer key to use when clicking on a symbol in '
+            'order to jump to is declaration.',
+        'type': 'string',
+        'default': isMac ? 'command' : 'control',
+        'enum': isMac ? ['command', 'option'] : ['control', 'alt'],
+        'order': 7
+      },
+
       // no package symlinks
       'noPackageSymlinks': {
         'title': "Run pub with '--no-package-symlinks'",
@@ -361,7 +372,7 @@ class AtomDartPackage extends AtomPackage {
             'this option enabled.',
         'type': 'boolean',
         'default': false,
-        'order': 7
+        'order': 8
       },
 
       // google analytics
@@ -370,7 +381,7 @@ class AtomDartPackage extends AtomPackage {
         'description': "Report anonymized usage information to Google Analytics.",
         'type': 'boolean',
         'default': true,
-        'order': 8
+        'order': 9
       },
 
       'logging': {
