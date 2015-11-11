@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- added a user preference to control the modifier key for jump to declaration
+
 ## 0.4.14
 - added the ability to copy text from the console and errors views
 - we now remember launch configurations and breakpoints between sessions
