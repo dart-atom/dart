@@ -1,10 +1,9 @@
 'scopeName': 'source.yaml-ext'
-'name': 'YAML'
+'name': 'YAML-ext'
 'fileTypes': [
   '.analysis_options'
   'pubspec.lock'
 ]
-'firstLineMatch': '^#cloud-config'
 'patterns': [
   {
     'include': '#erb'
@@ -13,11 +12,11 @@
     'begin': '^(\\s*)(?!-\\s*)(\\S+\\s*(:))\\s*(\\||>)'
     'beginCaptures':
       '2':
-        'name': 'entity.name.tag.yaml'
+        'name': 'entity.name.tag.yaml-ext'
       '3':
-        'name': 'punctuation.separator.key-value.yaml'
+        'name': 'punctuation.separator.key-value.yaml-ext'
     'end': '^(?!\\1\\s+)(?=\\s*(-|\\S+\\s*:|#))'
-    'name': 'string.unquoted.block.yaml'
+    'name': 'string.unquoted.block.yaml-ext'
     'patterns': [
       {
         'include': '#erb'
@@ -28,15 +27,15 @@
     'begin': '^(\\s*)(?:(-)|(?:(-(\\s*))?(\\S+\\s*(:))))\\s*(\\||>)'
     'beginCaptures':
       '2':
-        'name': 'punctuation.definition.entry.yaml'
+        'name': 'punctuation.definition.entry.yaml-ext'
       '3':
-        'name': 'punctuation.definition.entry.yaml'
+        'name': 'punctuation.definition.entry.yaml-ext'
       '5':
-        'name': 'entity.name.tag.yaml'
+        'name': 'entity.name.tag.yaml-ext'
       '6':
-        'name': 'punctuation.separator.key-value.yaml'
+        'name': 'punctuation.separator.key-value.yaml-ext'
     'end': '^(?!\\1 \\4\\s+)(?=\\s*(-|\\S+\\s*:|#))'
-    'name': 'string.unquoted.block.yaml'
+    'name': 'string.unquoted.block.yaml-ext'
     'patterns': [
       {
         'include': '#erb'
@@ -46,31 +45,31 @@
   {
     'captures':
       '1':
-        'name': 'punctuation.definition.entry.yaml'
+        'name': 'punctuation.definition.entry.yaml-ext'
       '2':
-        'name': 'entity.name.tag.yaml'
+        'name': 'entity.name.tag.yaml-ext'
       '3':
-        'name': 'punctuation.separator.key-value.yaml'
+        'name': 'punctuation.separator.key-value.yaml-ext'
       '4':
-        'name': 'punctuation.definition.entry.yaml'
+        'name': 'punctuation.definition.entry.yaml-ext'
     'match': '(?:(?:(-\\s*)?([^\\s#].*?(:)(?=\\s)))|(-))\\s*((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)(L|l|UL|ul|u|U|F|f)?\\s*($|(?=#)(?!#\\{))'
-    'name': 'constant.numeric.yaml'
+    'name': 'constant.numeric.yaml-ext'
   }
   {
     'begin': '(?:(?:(-\\s*)?([^\\s#].*?(:)(?=\\s)))|(-))[ \t]*'
     'beginCaptures':
       '1':
-        'name': 'punctuation.definition.entry.yaml'
+        'name': 'punctuation.definition.entry.yaml-ext'
       '2':
-        'name': 'entity.name.tag.yaml'
+        'name': 'entity.name.tag.yaml-ext'
       '3':
-        'name': 'punctuation.separator.key-value.yaml'
+        'name': 'punctuation.separator.key-value.yaml-ext'
       '4':
-        'name': 'punctuation.definition.entry.yaml'
+        'name': 'punctuation.definition.entry.yaml-ext'
     'end': '$|(?=#)(?!#\\{)'
     'patterns': [
       {
-        'name': 'string.unquoted.yaml'
+        'name': 'string.unquoted.yaml-ext'
         'match': '\\!\\s*'
       }
       {
@@ -80,44 +79,44 @@
         'include': '#single_quoted_string'
       }
       {
-        'name': 'string.unquoted.yaml'
+        'name': 'string.unquoted.yaml-ext'
         'match': '[^"\'#\\n]([^#\\n]|((?<!\\s)#))*'
       }
     ]
-    'name': 'string.unquoted.yaml'
+    'name': 'string.unquoted.yaml-ext'
   }
   {
     'captures':
       '1':
-        'name': 'punctuation.definition.entry.yaml'
+        'name': 'punctuation.definition.entry.yaml-ext'
       '2':
-        'name': 'entity.name.tag.yaml'
+        'name': 'entity.name.tag.yaml-ext'
       '3':
-        'name': 'punctuation.separator.key-value.yaml'
+        'name': 'punctuation.separator.key-value.yaml-ext'
       '4':
-        'name': 'punctuation.definition.entry.yaml'
+        'name': 'punctuation.definition.entry.yaml-ext'
     'match': '(?:(?:(-\\s*)?(\\w+\\s*(:)))|(-))\\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*($|(?=#)(?!#\\{))'
-    'name': 'constant.other.date.yaml'
+    'name': 'constant.other.date.yaml-ext'
   }
   {
     'captures':
       '1':
-        'name': 'entity.name.tag.yaml'
+        'name': 'entity.name.tag.yaml-ext'
       '2':
-        'name': 'punctuation.separator.key-value.yaml'
+        'name': 'punctuation.separator.key-value.yaml-ext'
       '3':
-        'name': 'keyword.other.omap.yaml'
+        'name': 'keyword.other.omap.yaml-ext'
       '4':
-        'name': 'punctuation.definition.keyword.yaml'
+        'name': 'punctuation.definition.keyword.yaml-ext'
     'match': '(\\w.*?)(:)\\s*((\\!\\!)omap)?'
-    'name': 'meta.tag.yaml'
+    'name': 'meta.tag.yaml-ext'
   }
   {
     'captures':
       '1':
-        'name': 'punctuation.definition.variable.yaml'
+        'name': 'punctuation.definition.variable.yaml-ext'
     'match': '(\\&|\\*)\\w.*?$'
-    'name': 'variable.other.yaml'
+    'name': 'variable.other.yaml-ext'
   }
   {
     'include': '#double_quoted_string'
@@ -129,12 +128,12 @@
     'begin': '`'
     'beginCaptures':
       '0':
-        'name': 'punctuation.definition.string.begin.yaml'
+        'name': 'punctuation.definition.string.begin.yaml-ext'
     'end': '`'
     'endCaptures':
       '0':
-        'name': 'punctuation.definition.string.end.yaml'
-    'name': 'string.interpolated.yaml'
+        'name': 'punctuation.definition.string.end.yaml-ext'
+    'name': 'string.interpolated.yaml-ext'
     'patterns': [
       {
         'include': '#escaped_char'
@@ -147,33 +146,33 @@
   {
     'captures':
       '1':
-        'name': 'entity.name.tag.yaml'
+        'name': 'entity.name.tag.yaml-ext'
       '2':
-        'name': 'keyword.operator.merge-key.yaml'
+        'name': 'keyword.operator.merge-key.yaml-ext'
       '3':
-        'name': 'punctuation.definition.keyword.yaml'
+        'name': 'punctuation.definition.keyword.yaml-ext'
     'match': '(\\<\\<): ((\\*).*)$'
-    'name': 'keyword.operator.merge-key.yaml'
+    'name': 'keyword.operator.merge-key.yaml-ext'
   }
   {
     'disabled': '1'
     'match': '( |\t)+$'
-    'name': 'invalid.deprecated.trailing-whitespace.yaml'
+    'name': 'invalid.deprecated.trailing-whitespace.yaml-ext'
   }
   {
     'begin': '(^[ \\t]+)?(?<!\\$)(?<=^|[ \\t])(?=#)(?!#\\{)'
     'beginCaptures':
       '1':
-        'name': 'punctuation.whitespace.comment.leading.yaml'
+        'name': 'punctuation.whitespace.comment.leading.yaml-ext'
     'end': '(?!\\G)'
     'patterns': [
       {
         'begin': '#'
         'beginCaptures':
           '0':
-            'name': 'punctuation.definition.comment.yaml'
+            'name': 'punctuation.definition.comment.yaml-ext'
         'end': '\\n'
-        'name': 'comment.line.number-sign.yaml'
+        'name': 'comment.line.number-sign.yaml-ext'
       }
     ]
   }
@@ -184,7 +183,7 @@
   {
     'begin': '^(?=\\t)'
     'end': '(?=[^\\t])'
-    'name': 'meta.leading-tabs.yaml'
+    'name': 'meta.leading-tabs.yaml-ext'
     'patterns': [
       {
         'captures':
@@ -225,17 +224,17 @@
     ]
   'escaped_char':
     'match': '\\\\.'
-    'name': 'constant.character.escape.yaml'
+    'name': 'constant.character.escape.yaml-ext'
   'double_quoted_string':
     'begin': '"'
     'beginCaptures':
       '0':
-        'name': 'punctuation.definition.string.begin.yaml'
+        'name': 'punctuation.definition.string.begin.yaml-ext'
     'end': '"'
     'endCaptures':
       '0':
-        'name': 'punctuation.definition.string.end.yaml'
-    'name': 'string.quoted.double.yaml'
+        'name': 'punctuation.definition.string.end.yaml-ext'
+    'name': 'string.quoted.double.yaml-ext'
     'patterns': [
       {
         'include': '#escaped_char'
@@ -248,12 +247,12 @@
     'begin': '\''
     'beginCaptures':
       '0':
-        'name': 'punctuation.definition.string.begin.yaml'
+        'name': 'punctuation.definition.string.begin.yaml-ext'
     'end': '\''
     'endCaptures':
       '0':
-        'name': 'punctuation.definition.string.end.yaml'
-    'name': 'string.quoted.single.yaml'
+        'name': 'punctuation.definition.string.end.yaml-ext'
+    'name': 'string.quoted.single.yaml-ext'
     'patterns': [
       {
         'include': '#escaped_char'

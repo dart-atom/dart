@@ -20,7 +20,9 @@ import 'analysis/references.dart';
 import 'analysis/type_hierarchy.dart';
 import 'analysis_server.dart';
 import 'atom.dart';
+import 'atom_autocomplete.dart' show AutocompleteProvider;
 import 'atom_linter.dart' show LinterService;
+import 'atom_package_deps.dart' as package_deps;
 import 'atom_statusbar.dart';
 import 'atom_utils.dart';
 import 'autocomplete.dart';
@@ -46,7 +48,6 @@ import 'impl/status_display.dart';
 import 'impl/tests.dart';
 import 'jobs.dart';
 import 'js.dart';
-import 'atom_package_deps.dart' as package_deps;
 import 'launch/console.dart';
 import 'launch/launch.dart';
 import 'launch/launch_cli.dart';
@@ -97,11 +98,9 @@ class AtomDartPackage extends AtomPackage {
       return _consumer;
     });
 
-    DartAutocompleteProvider autocompleteProvider = new DartAutocompleteProvider();
-    // TODO: why isn't this working?
-    // registerServiceProvider('provideAutocomplete', () => provider.toProxy());
-    final JsObject exports = context['module']['exports'];
-    exports['provideAutocomplete'] = () => autocompleteProvider.toProxy();
+    final JsObject moduleExports = context['module']['exports'];
+    AutocompleteProvider dartCompleterProvider = new DartAutocompleteProvider();
+    moduleExports['provideAutocomplete'] = () => dartCompleterProvider.toProxy();
   }
 
   void packageActivated([dynamic pluginState]) {
