@@ -7322,8 +7322,8 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.AtomDartPackage_closure1[1];
     AtomDartPackage_closure1.prototype = $desc;
     AtomDartPackage_closure1.$__fields__ = ["_plugin$_captured_this_2"];
-    function AtomDartPackage_closure2(_captured_autocompleteProvider_3) {
-      this._captured_autocompleteProvider_3 = _captured_autocompleteProvider_3;
+    function AtomDartPackage_closure2(_captured_dartCompleterProvider_3) {
+      this._captured_dartCompleterProvider_3 = _captured_dartCompleterProvider_3;
       this.$deferredAction();
     }
     AtomDartPackage_closure2.builtin$cls = "AtomDartPackage_closure2";
@@ -7331,7 +7331,7 @@ self._domRemove = function(element) {
       AtomDartPackage_closure2.name = "AtomDartPackage_closure2";
     $desc = $collectedClasses$.AtomDartPackage_closure2[1];
     AtomDartPackage_closure2.prototype = $desc;
-    AtomDartPackage_closure2.$__fields__ = ["_captured_autocompleteProvider_3"];
+    AtomDartPackage_closure2.$__fields__ = ["_captured_dartCompleterProvider_3"];
     function AtomDartPackage_packageActivated_closure() {
       this.$deferredAction();
     }
@@ -32910,9 +32910,9 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 4, "call"]
     },
     AtomDartPackage_closure2: {
-      "^": "Closure:1;_captured_autocompleteProvider_3",
+      "^": "Closure:1;_captured_dartCompleterProvider_3",
       call$0: [function() {
-        return this._captured_autocompleteProvider_3.toProxy$0();
+        return this._captured_dartCompleterProvider_3.toProxy$0();
       }, null, null, 0, 0, null, "call"]
     },
     AtomDartPackage_packageActivated_closure: {
