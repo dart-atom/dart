@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../atom_utils.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
@@ -33,15 +32,23 @@ class FlutterLaunchType extends LaunchType {
     if (project == null) return false;
 
     if (!_flutterSdk.hasSdk) return false;
+    if (!analysisServer.isExecutable(path)) return false;
 
-    String relPath = relativize(project.path, path);
-    return relPath == 'lib${separator}main.dart';
+    // TODO: The file 'path' should also import package:flutter.
+
+    return project.importsPackage('flutter');
   }
 
   List<String> getLaunchablesFor(DartProject project) {
-    // TODO: Return other main files?
-    File file = project.directory.getFile('lib${separator}main.dart');
-    return file.existsSync() ? [file.path] : [];
+    // TODO: This is temporary until we can query files for package:flutter imports.
+    if (!project.importsPackage('flutter')) return [];
+
+    return analysisServer.getExecutablesFor(project.path).where((String path) {
+      return path.endsWith('dart');
+    }).toList();
+
+    // File file = project.directory.getFile('lib${separator}main.dart');
+    // return file.existsSync() ? [file.path] : [];
   }
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
@@ -81,11 +88,9 @@ class _LaunchInstance {
         launchManager,
         launchType,
         configuration,
-        'lib${separator}main.dart',
+        configuration.shortResourceName,
         killHandler: _kill);
     launchManager.addLaunch(_launch);
-    _launch.pipeStdio('[${project.path}] ${_toolName} start\n', highlight: true);
-
     _withDebug = configuration.debug ?? debugDefault;
     if (!LaunchManager.launchWithDebugging()) _withDebug = false;
   }
@@ -93,9 +98,19 @@ class _LaunchInstance {
   Future<Launch> launch() async {
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
 
-    // Chain together both 'flutter start' and 'flutter logs'.
     // TODO: Add a user option for `--checked`.
-    _runner = _flutter(flutter, ['start'], project.path);
+    List<String> args = ['start'];
+
+    String relPath = relativize(project.path, _launch.launchConfiguration.primaryResource);
+    if (relPath != 'lib/main.dart') {
+      args.add('-t');
+      args.add(relPath);
+    }
+
+    _launch.pipeStdio('[${project.path}] ${_toolName} ${args.join(' ')}\n', highlight: true);
+
+    // Chain together both 'flutter start' and 'flutter logs'.
+    _runner = _flutter(flutter, args, project.path);
     _runner.execStreaming();
     _runner.onStdout.listen((str) => _launch.pipeStdio(str));
     _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));

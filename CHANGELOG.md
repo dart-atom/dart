@@ -3,6 +3,8 @@
 ## unreleased
 - added a user preference to control the modifier key for jump to declaration
 - improved the warning when the user's SDK was out-of-date
+- improved our logic to detect FLUTTER_ROOT
+- allow the user to run a greater variety of Flutter apps (not just lib/main.dart)
 
 ## 0.4.14
 - added the ability to copy text from the console and errors views

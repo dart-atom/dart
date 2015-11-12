@@ -24,14 +24,13 @@ class ErrorRepository implements Disposable {
 
   final StreamSubscriptions subs = new StreamSubscriptions();
 
-  StreamController _controller = new StreamController.broadcast();
+  StreamController _changeController = new StreamController.broadcast();
   Stream<AnalysisErrors> _errorStream;
   Stream<AnalysisFlushResults> _flushStream;
 
   ErrorRepository();
 
-  // TODO: stream a delta object like dart-tools ErrorRepository does.
-  Stream get onChange => _controller.stream;
+  Stream get onChange => _changeController.stream;
 
   void initStreams(Stream<AnalysisErrors> errorStream,
       Stream<AnalysisFlushResults> flushStream) {
@@ -48,7 +47,7 @@ class ErrorRepository implements Disposable {
   /// analysis server goes down.
   void clearAll() {
     knownErrors.clear();
-    _controller.add(null);
+    _changeController.add(null);
   }
 
   /// Clear all errors for files contained within the given directory.
@@ -62,9 +61,6 @@ class ErrorRepository implements Disposable {
   void dispose() => subs.cancel();
 
   void _handleAddErrors(AnalysisErrors analysisErrors) {
-    // TODO: Consider consolidating all error events for a Dart project and
-    // firing once analysis is complete.
-
     String path = analysisErrors.file;
     File file = new File.fromPath(path);
 
@@ -80,7 +76,7 @@ class ErrorRepository implements Disposable {
       knownErrors[path] = analysisErrors.errors;
 
       if (!listIdentical(oldErrors, newErrors)) {
-        _controller.add(null);
+        _changeController.add(null);
       }
     } else {
       _logger.info('received an error event for a non-existent file: ${path}');
@@ -89,6 +85,6 @@ class ErrorRepository implements Disposable {
 
   void _handleFlushErrors(AnalysisFlushResults analysisFlushResults) {
     analysisFlushResults.files.forEach(knownErrors.remove);
-    _controller.add(null);
+    _changeController.add(null);
   }
 }
