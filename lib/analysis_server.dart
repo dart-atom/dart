@@ -32,7 +32,9 @@ final Logger _logger = new Logger('analysis-server');
 
 class AnalysisServer implements Disposable {
   static bool get startWithDebugging =>
-      atom.config.getValue('${pluginId}.debugAnalysisServer');
+      atom.config.getBoolValue('${pluginId}.debugAnalysisServer');
+  static bool get useChecked =>
+      atom.config.getBoolValue('${pluginId}.analysisServerUseChecked');
 
   static final int OBSERVATORY_PORT = 23071;
   static final int DIAGNOSTICS_PORT = 23072;
@@ -78,6 +80,10 @@ class AnalysisServer implements Disposable {
         }
       }
     });
+
+    disposables.add(atom.commands.add('atom-workspace',
+      '${pluginId}:analysis-server-diagnostics', (_) => _showDiagnostics()
+    ));
   }
 
   Stream<bool> get onActive => _serverActiveController.stream;
@@ -366,6 +372,49 @@ class AnalysisServer implements Disposable {
       errorRepository.clearAll();
     }
   }
+
+  void _showDiagnostics() {
+    if (!isActive) {
+      atom.notifications.addWarning('Analysis server not running.');
+      return;
+    }
+
+    _server.experimental.getDiagnostics().then((DiagnosticsResult diagnostics) {
+      List<ContextData> contexts = diagnostics.contexts;
+
+      String info = '${contexts.length} ${pluralize('context', contexts.length)}\n\n';
+      info = info + contexts.map((ContextData context) {
+        int fileCount = context.explicitFileCount + context.implicitFileCount;
+        List<String> exceptions = context.cacheEntryExceptions ?? [];
+
+        return ('${context.name}\n'
+          '  ${fileCount} total analyzed files (${context.explicitFileCount} explicit), '
+          'queue length ${context.workItemQueueLength}\n  '
+          + exceptions.join('\n  ')
+        ).trim();
+      }).join('\n\n');
+
+      atom.notifications.addInfo(
+        'Analysis server diagnostics',
+        detail: info,
+        dismissable: true
+      );
+    }).catchError((e) {
+      if (e is RequestError) {
+        atom.notifications.addError(
+          'Diagnostics Error',
+          description: '${e.code} ${e.message}',
+          dismissable: true
+        );
+      } else {
+        atom.notifications.addError(
+          'Diagnostics Error',
+          description: '${e}',
+          dismissable: true
+        );
+      }
+    });
+  }
 }
 
 class _AnalyzingJob extends Job {
@@ -531,10 +580,8 @@ class _AnalysisServerWrapper extends Server {
 
   /// Creates a process.
   static ProcessRunner _createProcess(Sdk sdk) {
-    List<String> arguments = [
-      sdk.getSnapshotPath('analysis_server.dart.snapshot'),
-      '--sdk=${sdk.path}'
-    ];
+    String path = sdk.getSnapshotPath('analysis_server.dart.snapshot');
+    List<String> arguments = [path, '--sdk=${sdk.path}'];
 
     if (AnalysisServer.startWithDebugging) {
       arguments.insert(0, '--observe=${AnalysisServer.OBSERVATORY_PORT}');
@@ -544,6 +591,10 @@ class _AnalysisServerWrapper extends Server {
       arguments.add('--port=${AnalysisServer.DIAGNOSTICS_PORT}');
       _logger.info('analysis server diagnostics available at '
           '${AnalysisServer.diagnosticsUrl}.');
+    }
+
+    if (AnalysisServer.useChecked) {
+      arguments.insert(0, '--checked');
     }
 
     return new ProcessRunner(sdk.dartVm.path, args: arguments);

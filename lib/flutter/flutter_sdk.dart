@@ -184,6 +184,14 @@ Future<String> _discoverSdk() {
 
 String _resolveSdkFromFlutterPath(String path) {
   if (path == null) return null;
+
+  // Don't resolve to the pub cache.
+  if (isWindows) {
+    if (path.contains(r'Pub\Cache')) return null;
+  } else {
+    if (path.contains(r'/.pub-cache/')) return null;
+  }
+
   File vmFile = new File.fromPath(path.trim());
   return vmFile.getParent().getParent().path;
 }

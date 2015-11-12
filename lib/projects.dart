@@ -143,6 +143,8 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     }
     projects.addAll(newDirs.map((dir) => new DartProject(dir)));
 
+    // TODO: Verify no duplicates?
+
     if (changed) {
       _logger.fine('${projects}');
       _projectsController.add(projects);
@@ -401,6 +403,23 @@ class DartProject {
   bool operator==(other) => other is DartProject && directory == other.directory;
 
   String toString() => '[Project ${directory.getBaseName()}]';
+
+  bool importsPackage(String packageName) {
+    File dotPackages = directory.getFile(pub.dotPackagesFileName);
+
+    if (dotPackages.existsSync()) {
+      try {
+        List<String> lines = dotPackages.readSync().split('\n');
+        return lines
+          .map((line) => line.trim())
+          .any((String line) => line.startsWith('${packageName}:'));
+      } catch (_) {
+
+      }
+    }
+
+    return false;
+  }
 }
 
 class ProjectScanJob extends Job {

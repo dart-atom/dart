@@ -142,6 +142,7 @@ class PubManager implements Disposable, ContextMenuContributor {
 
   void _handleProjectAdded(DartProject project) => _validatePubspecCurrent(project);
 
+  // TODO: Remove pubspec.lock checking when the SDK revs.
   void _validatePubspecCurrent(DartProject project) {
     File pubspecYamlFile = project.directory.getFile(pubspecFileName);
     File pubspecLockFile = project.directory.getFile(pubspecLockFileName);
