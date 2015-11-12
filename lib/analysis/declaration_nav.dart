@@ -19,10 +19,11 @@ final Logger _logger = new Logger('declaration_nav');
 
 final String _keyPref = '${pluginId}.jumpToDeclarationKeys';
 
+// TODO: Use analysisServer.getNavigation()?
+
 class NavigationHelper implements Disposable {
   Disposables _commands = new Disposables();
-  AnalysisNavigation _lastNavInfo;
-  Map<String, Completer<AnalysisNavigation>> _navCompleters = {};
+  _NavCompleterHelper _completerHelper = new _NavCompleterHelper();
   Disposable _eventListener = new Disposables();
 
   List<_NavigationPosition> _history = [];
@@ -74,9 +75,7 @@ class NavigationHelper implements Disposable {
   }
 
   void _navigationEvent(AnalysisNavigation navInfo) {
-    String path = navInfo.file;
-    _lastNavInfo = navInfo;
-    if (_navCompleters[path] != null) _navCompleters[path].complete(navInfo);
+    _completerHelper.handleNavInfo(navInfo);
   }
 
   void _handleNavigate(AtomEvent event) {
@@ -117,20 +116,10 @@ class NavigationHelper implements Disposable {
 
   void _beep() => atom.beep();
 
+  static final Duration _timeout = new Duration(milliseconds: 1000);
+
   Future<AnalysisNavigation> _getNavigationInfoFor(String path) {
-    if (_lastNavInfo != null && _lastNavInfo.file == path) {
-      return new Future.value(_lastNavInfo);
-    }
-
-    if (_navCompleters[path] != null) return _navCompleters[path].future;
-
-    Completer<AnalysisNavigation> completer = new Completer();
-    _navCompleters[path] = completer;
-    new Timer(new Duration(milliseconds: 350), () {
-      if (!completer.isCompleted) completer.complete(null);
-    });
-    completer.future.whenComplete(() => _navCompleters.remove(path));
-    return completer.future;
+    return _completerHelper.getNavigationInfo(path, timeout: _timeout);
   }
 
   Future _processNavInfo(TextEditor editor, int offset, AnalysisNavigation navInfo) {
@@ -172,6 +161,45 @@ class NavigationHelper implements Disposable {
       Point start = range.start;
       _history.add(
           new _NavigationPosition(editor.getPath(), start.row, start.column, length));
+    }
+  }
+}
+
+class _NavCompleterHelper {
+  List<AnalysisNavigation> _lastInfos = [];
+  Map<String, Completer<AnalysisNavigation>> _completers = {};
+
+  _NavCompleterHelper();
+
+  void handleNavInfo(AnalysisNavigation info) {
+    String path = info.file;
+
+    if (_completers[path] != null) {
+      _completers[path].complete(info);
+      _completers.remove(path);
+    }
+
+    _lastInfos.insert(0, info);
+    if (_lastInfos.length > 24) {
+      _lastInfos = _lastInfos.sublist(0, 24);
+    }
+  }
+
+  Future<AnalysisNavigation> getNavigationInfo(String path, {Duration timeout}) {
+    for (AnalysisNavigation nav in _lastInfos) {
+      if (nav.file == path) {
+        return new Future.value(nav);
+      }
+    }
+
+    if (_completers[path] == null) {
+      _completers[path] = new Completer<AnalysisNavigation>();
+    }
+
+    if (timeout != null) {
+      return _completers[path].future.timeout(timeout, onTimeout: () => null);
+    } else {
+      return _completers[path].future;
     }
   }
 }

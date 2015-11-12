@@ -5,6 +5,7 @@
 - improved the warning when the user's SDK was out-of-date
 - improved our logic to detect FLUTTER_ROOT
 - allow the user to run a greater variety of Flutter apps (not just lib/main.dart)
+- fixed an issue with the jump to declaration feature
 
 ## 0.4.14
 - added the ability to copy text from the console and errors views
