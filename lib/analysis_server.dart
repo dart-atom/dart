@@ -275,6 +275,10 @@ class AnalysisServer implements Disposable {
         options: options);
   }
 
+  Future<NavigationResult> getNavigation(String path, int offset, int length) {
+    return server.analysis.getNavigation(path, offset, length);
+  }
+
   Future<FixesResult> getFixes(String path, int offset) {
     return server.edit.getFixes(path, offset);
   }
