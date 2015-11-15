@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../debug/debugger.dart';
@@ -162,10 +163,12 @@ class LaunchManager implements Disposable, StateStorable {
   List<LaunchConfiguration> getAllRunnables(DartProject project) {
     List<LaunchConfiguration> results = [];
 
-    for (LaunchType type in launchTypes) {
-      results.addAll(type
-          .getLaunchablesFor(project)
-          .map((path) => type.createConfiguration(path)));
+    if (project != null) {
+      for (LaunchType type in launchTypes) {
+        results.addAll(type
+            .getLaunchablesFor(project)
+            .map((path) => type.createConfiguration(path)));
+      }
     }
 
     return results;
@@ -199,7 +202,9 @@ abstract class LaunchType {
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration);
 
   bool operator== (obj) => obj is LaunchType && obj.type == type;
+
   int get hashCode => type.hashCode;
+
   String toString() => type;
 }
 
@@ -273,19 +278,24 @@ class Launch implements Disposable {
   final String title;
   final LaunchManager manager;
   final int id = ++_id;
+  @deprecated
   final Function killHandler;
+  final String cwd;
 
   StreamController<TextFragment> _stdio = new StreamController.broadcast();
   final Property<int> exitCode = new Property();
 
   final Property<int> servicePort = new Property();
   DebugConnection _debugConnection;
+  _PathResolver _pathResolver;
 
   Launch(this.manager, this.launchType, this.launchConfiguration, this.title, {
     this.killHandler,
+    this.cwd,
     int servicePort
   }) {
     if (servicePort != null) this.servicePort.value = servicePort;
+    if (cwd != null) _pathResolver = new _PathResolver(cwd);
   }
 
   bool get errored => exitCode.hasValue && exitCode.value != 0;
@@ -337,6 +347,10 @@ class Launch implements Disposable {
     manager._launchTerminated.add(this);
   }
 
+  Future<String> resolve(String url) {
+    return _pathResolver != null ? _pathResolver.resolve(url) : new Future.value();
+  }
+
   void dispose() {
     if (canKill() && !isRunning) {
       kill();
@@ -362,4 +376,126 @@ class TextFragment {
   });
 
   String toString() => text;
+}
+
+/// Use the analysis server to resolve urls. Cache the results so we don't issue
+/// too many queries.
+class CachingServerResolver implements _Resolver {
+  _PathResolver _pathResolver;
+  _ServerResolver _serverResolver;
+
+  Map<String, String> _cache = {};
+
+  CachingServerResolver({String cwd, AnalysisServer server}) {
+    if (cwd != null) {
+      _pathResolver = new _PathResolver(cwd);
+
+      if (server.isActive) {
+        _serverResolver = new _ServerResolver(cwd, server);
+      }
+    }
+  }
+
+  Future<String> resolve(String url) {
+    if (_cache.containsKey(url)) {
+      return new Future.value(_cache[url]);
+    }
+
+    return _resolve(url).then((result) {
+      _cache[url] = result;
+      return result;
+    });
+  }
+
+  Future<String> _resolve(String url) {
+    if (_serverResolver != null) {
+      return _serverResolver.resolve(url).then((result) {
+        if (result != null) return result;
+        return _pathResolver?.resolve(url);
+      });
+    } else if (_pathResolver != null) {
+      return _pathResolver.resolve(url);
+    } else {
+      return new Future.value();
+    }
+  }
+
+  void dispose() {
+    _pathResolver?.dispose();
+    _serverResolver?.dispose();
+  }
+}
+
+abstract class _Resolver implements Disposable {
+  Future<String> resolve(String url);
+}
+
+class _PathResolver implements _Resolver {
+  final String cwd;
+
+  _PathResolver(this.cwd);
+
+  Future<String> resolve(String url) {
+    if (url.length < 2) return new Future.value();
+
+    String path;
+
+    if (url[0] == '/' || url[0] == separator || url[1] == ':') {
+      path = url;
+    } else if (cwd != null) {
+      path = join(cwd, url);
+    }
+
+    if (path == null) return null;
+    if (existsSync(path)) return new Future.value(path);
+
+    try {
+      Uri uri = Uri.parse(url);
+      if (uri.scheme == 'file') {
+        path = uri.path;
+        if (existsSync(path)) return new Future.value(path);
+      }
+    } catch (_) { }
+
+    return new Future.value();
+  }
+
+  void dispose() { }
+}
+
+class _ServerResolver implements _Resolver {
+  final String path;
+  final AnalysisServer server;
+
+  Completer<String> _contextCompleter = new Completer();
+
+  _ServerResolver(this.path, this.server) {
+    analysisServer.server.execution.createContext(path).then((result) {
+      return _contextCompleter.complete(result.id);
+    }).catchError((_) {
+      return _contextCompleter.complete(null);
+    });
+  }
+
+  Future<String> resolve(String url) {
+    return _context.then((String id) {
+      if (id == null) return null;
+
+      return analysisServer.server.execution.mapUri(id, uri: url).then((result) {
+        if (result.file != null) return result.file;
+      }).catchError((_e) {
+        return null;
+      });
+    });
+  }
+
+  void dispose() {
+    _context.then((String id) {
+      if (id != null) {
+        analysisServer.server.execution.deleteContext(id).catchError((_) => null);
+      }
+    });
+  }
+
+  Future<String> get _context => _contextCompleter.future;
 }

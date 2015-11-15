@@ -575,7 +575,7 @@ atom-notification.dartlang {
 .console-view {
   .console-title-area {
     position: absolute;
-    top: 6px;
+    top: 0;
     right: 20px;
     z-index: 1;
 
@@ -592,18 +592,19 @@ atom-notification.dartlang {
     }
 
     .console-tabs {
-      border-bottom: 2px solid @text-color-info;
-      padding-bottom: @component-icon-padding;
+
     }
 
     .process-tab {
-      padding: 1px 5px 2px 5px;
       display: inline-block;
       transition: background-color 0.2s ease;
+      border-radius: 4px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
     }
 
     .process-tab + .process-tab {
-      margin-left: 16px;
+      margin-left: 8px;
     }
 
     .process-icon + .process-icon {
@@ -619,6 +620,19 @@ atom-notification.dartlang {
 
   .view-content {
     padding: 0;
+
+    .trace-link {
+      cursor: pointer;
+      color: @text-color-highlight;
+    }
+
+    .trace-link:hover {
+      text-decoration: underline;
+    }
+
+    .console-error .trace-link {
+      color: lighten(@text-color-error, 20%);
+    }
   }
 
   .console-line {

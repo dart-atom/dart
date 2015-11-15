@@ -50,7 +50,7 @@ class ConsoleView extends AtomView {
   _LaunchController _activeController;
   Map<Launch, _LaunchController> _controllers = {};
 
-  ConsoleView() : super('Console', classes: 'console-view dartlang',
+  ConsoleView() : super('Console', classes: 'console-view',
       prefName: 'Console', rightPanel: false, showTitle: false,
       groupName: 'bottomView') {
     content..add([
@@ -99,7 +99,7 @@ class ConsoleView extends AtomView {
 
 class _LaunchController implements Disposable {
   // Only show a set amount of lines of output.
-  static const _max_lines = 200;
+  static const _maxLines = 200;
 
   final ConsoleView view;
   final Launch launch;
@@ -166,8 +166,8 @@ class _LaunchController implements Disposable {
   }
 
   void _updateToggles() {
-    container.toggleClass('badge-info', launch.isActive && !launch.errored);
-    container.toggleClass('badge-error', launch.isActive && launch.errored);
+    container.toggleClass('badge-info', launch.isActive);
+    // container.toggleClass('badge-error', launch.isActive && launch.errored);
   }
 
   void _updateButtons() {
@@ -218,17 +218,73 @@ class _LaunchController implements Disposable {
   //   }
   // }
 
+  // ' (dart:core-patch/errors_patch.dart:27)'
+  // ' (packages/flutter/src/rendering/flex.dart:475)'
+  // ' (/Users/foo/flutter/flutter_playground/lib/main.dart:6)'
+  // ' (file:///Users/foo/flutter/flutter_playground/lib/main.dart:6)'
+  // ' (http:localhost:8080/src/errors.dart:27)'
+  // ' (http:localhost:8080/src/errors.dart:27:12)'
+  // ' (file:///ssd2/sky/engine/src/out/android_Release/gen/sky/bindings/Customhooks.dart:35)'
+  //
+  // 'test/utils_test.dart 21 '
+  // 'test/utils_test.dart 21:7 '
+  final RegExp _consoleMatcher =
+      new RegExp(r' \((\S+\.dart):(\d+)(:\d+)?\)|(\S+\.dart) (\d+)(:\d+)? ');
+
   void _emitText(String str, {bool error: false, bool subtle: false, bool highlight: false}) {
     _scrollTop = null;
     _lastText = str;
 
-    CoreElement e = output.add(span(text: str));
+    List<Match> matches = _consoleMatcher.allMatches(str).toList();
+
+    CoreElement e;
+
+    if (matches.isEmpty) {
+      e = span(text: str);
+    } else {
+      e = span();
+
+      int offset = 0;
+
+      for (Match match in matches) {
+        String ref = match.group(1) ?? match.group(4);
+        String line = match.group(2) ?? match.group(5);
+        int startIndex = match.start + (match.group(1) != null ? 2 : 0);
+
+        e.add(span(text: str.substring(offset, startIndex)));
+
+        String text = '${ref}:${line}';
+        CoreElement link = e.add(span(text: text));
+
+        offset = startIndex + text.length;
+
+        launch.resolve(ref).then((String path) {
+          if (path != null) {
+            link.toggleClass('trace-link');
+            link.click(() {
+              editorManager.jumpToLine(
+                path,
+                int.parse(line, onError: (_) => 1) - 1,
+                selectLine: true
+              );
+            });
+          }
+        });
+      }
+
+      if (offset != str.length) {
+        e.add(span(text: str.substring(offset)));
+      }
+    }
+
     if (highlight) e.toggleClass('text-highlight');
     if (error) e.toggleClass('console-error');
     if (subtle) e.toggleClass('text-subtle');
 
+    output.add(e);
+
     List children = output.element.children;
-    if (children.length > _max_lines) {
+    if (children.length > _maxLines) {
       children.remove(children.first);
     }
 

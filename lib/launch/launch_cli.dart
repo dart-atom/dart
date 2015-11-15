@@ -99,12 +99,12 @@ class CliLaunchType extends LaunchType {
     }
 
     ProcessRunner runner = new ProcessRunner(
-        sdk.dartVm.path,
-        args: _args,
-        cwd: cwd);
+      sdk.dartVm.path,
+      args: _args,
+      cwd: cwd);
 
-    Launch launch = new Launch(manager, this, configuration, path,
-        killHandler: () => runner.kill());
+    Launch launch = new _CliLaunch(manager, this, configuration, path,
+        killHandler: () => runner.kill(), cwd: cwd, project: project);
     if (withDebug) launch.servicePort.value = _observePort;
     manager.addLaunch(launch);
 
@@ -129,4 +129,33 @@ class CliLaunchType extends LaunchType {
 
     return new Future.value(launch);
   }
+}
+
+// TODO: Move more launching functionality into this class
+class _CliLaunch extends Launch {
+  CachingServerResolver _resolver;
+
+  _CliLaunch(
+    LaunchManager manager,
+    LaunchType launchType,
+    LaunchConfiguration launchConfiguration,
+    String title,
+    { Function killHandler, String cwd, DartProject project }
+  ) : super(
+    manager,
+    launchType,
+    launchConfiguration,
+    title,
+    killHandler: killHandler,
+    cwd: cwd
+  ) {
+    _resolver = new CachingServerResolver(
+      cwd: project?.path,
+      server: analysisServer
+    );
+
+    exitCode.onChanged.first.then((_) => _resolver.dispose());
+  }
+
+  Future<String> resolve(String url) => _resolver.resolve(url);
 }

@@ -874,6 +874,10 @@ class TextEditor extends ProxyHolder {
     invoke('scrollToBufferPosition', bufferPosition, options);
   }
 
+  /// For each cursor, select the containing line. This method merges selections
+  /// on successive lines.
+  void selectLinesContainingCursors() => invoke('selectLinesContainingCursors');
+
   /// Invoke the given callback synchronously when the content of the buffer
   /// changes. Because observers are invoked synchronously, it's important not
   /// to perform any expensive operations via this method. Consider
@@ -1185,7 +1189,7 @@ class BufferedProcess extends ProxyHolder {
       Map nodeOptions = {};
       if (cwd != null) nodeOptions['cwd'] = cwd;
       if (env != null) nodeOptions['env'] = jsify(env);
-      options['options'] = jsify(nodeOptions);
+      options['options'] = nodeOptions;
     }
 
     JsObject ctor = require('atom')['BufferedProcess'];
@@ -1223,6 +1227,8 @@ JsObject _cvt(JsObject object) {
 
 Stats statSync(String path) =>
     new Stats(require('fs').callMethod('statSync', [path]));
+
+bool existsSync(String path) => require('fs').callMethod('existsSync', [path]);
 
 /// Returns the operating system's default directory for temp files.
 String tmpdir() => require('os').callMethod('tmpdir');

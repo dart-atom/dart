@@ -36,10 +36,13 @@ class ShellLaunchType extends LaunchType {
       launchName = relativize(cwd, launchName);
     }
 
-    ProcessRunner runner = new ProcessRunner(script, args: args, cwd: cwd);
+    ProcessRunner runner = new ProcessRunner(
+      script,
+      args: args,
+      cwd: cwd);
 
     Launch launch = new Launch(manager, this, configuration, launchName,
-        killHandler: () => runner.kill());
+        killHandler: () => runner.kill(), cwd: cwd);
     manager.addLaunch(launch);
 
     runner.execStreaming();
