@@ -1,0 +1,370 @@
+@import "ui-variables";
+@import "syntax-variables";
+
+.job-status-bar {
+  display: none;
+}
+
+.job-status-bar.showing {
+  display: inline-block;
+}
+
+.job-status-bar {
+  overflow: hidden;
+  cursor: pointer;
+
+  .text-label {
+    transition: 0.2s;
+    position: relative;
+    top: 20px;
+  }
+
+  .status-spinner {
+    opacity: 0;
+    transition: 0.4s;
+    fill: @text-color;
+    width: 20px;
+    height: 20px;
+  }
+
+  .showing {
+    top: -1px;
+    opacity: 1;
+  }
+
+  .badge-count {
+    display: none;
+  }
+
+  .badge-count.showing {
+    display: inline-block;
+  }
+}
+
+.jobs-dialog {
+  li.job-container {
+    display: flex !important;
+  }
+
+  .inline-block .inline-block {
+    vertical-align: middle;
+  }
+
+  .info {
+    cursor: pointer;
+  }
+}
+
+.modal-header {
+  margin-bottom: 4px;
+}
+
+div.atom-view {
+  min-width: 100px;
+  min-height: 53px;
+  height: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.atom-view {
+  .view-header {
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 8px;
+  }
+
+  .view-content {
+    padding: 8px;
+    overflow: auto;
+  }
+
+  .view-resize[vertical] {
+    cursor: ew-resize;
+    z-index: 3;
+    position: absolute;;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+  }
+
+  .view-resize[horizontal] {
+    cursor: ns-resize;
+    z-index: 3;
+    position: absolute;;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 8px;
+  }
+}
+
+.atom-view {
+  .list-tree {
+    .list-item,
+    li.list-nested-item div.list-item {
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+
+    /* TODO: Should we have any clickable item in the list have a pointer cursor?
+    li.list-nested-item > div.list-item::before {
+      cursor: pointer;
+    }*/
+
+    li.list-nested-item.collapsed > div.list-item::before {
+      content: "\f078";
+    }
+
+    li.list-nested-item.collapsed > ul.list-tree {
+      display: none;
+    }
+  }
+}
+
+.close-button {
+  top: 1px;
+  color: @text-color;
+  cursor: default;
+  margin-left: 8px;
+}
+
+.close-button:hover {
+  color: @text-color-highlight;
+}
+
+.close-button:before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  font-size: 12px;
+  width: 12px;
+  height: 12px;
+  content: "\f081";
+}
+
+.analysis-dialog {
+  .last-message {
+    font-family: monospace;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: pre-line;
+    line-height: 1em;
+    min-height: 5em;
+    max-height: 8em;
+    margin-bottom: 5px;
+  }
+
+  .modal-header {
+    white-space: nowrap;
+  }
+
+  button {
+    min-width: 75px;
+  }
+}
+
+div.linter-tab.active {
+  text-shadow: none;
+}
+
+.suggestion-deprecated .word-container span {
+  text-decoration: line-through;
+}
+
+.suggestion-potential .word-container span {
+  font-style: italic;
+}
+
+/* type hierarchy */
+.type-hierarchy {
+  div.list-item > span,
+  li.list-item > span {
+    cursor: pointer;
+  }
+}
+
+.hierarchy-abstract {
+  font-style: italic;
+}
+
+.hierarchy-deprecated {
+  text-decoration: line-through;
+}
+
+.hierarchy-muted {
+  color: @text-color-subtle;
+}
+
+.list-tree .list-item.tree-selected,
+.list-tree li.list-nested-item div.list-item.tree-selected {
+  color: @text-color-highlight;
+  font-weight: bold;
+}
+
+/* find references */
+.find-references {
+  .search-summary {
+
+  }
+
+  .searching {
+    font-style: italic;
+  }
+
+  .potential-match {
+    text-decoration: line-through;
+  }
+
+  .search-result {
+    white-space: pre;
+  }
+
+  .search-result > span {
+    cursor: pointer;
+  }
+
+  .result-line {
+    color: @text-color-subtle;
+    display: inline-block;
+    min-width: 37px;
+    text-align: end;
+  }
+}
+
+.find-references li.list-item.search-result {
+  white-space: pre;
+  margin-left: 0;
+}
+
+div.dartlang-toolbar button.btn {
+  padding-top: 1px;
+  margin-top: 1px;
+}
+
+/* hmmm, this is adjusting a global atom style... */
+atom-notification.success code,
+atom-notification.info code {
+  text-shadow: none;
+}
+
+.dartlang {
+  .badge {
+    padding: 2px 5px;
+    vertical-align: initial;
+    text-shadow: none;
+    font-size: inherit;
+  }
+
+  .badge.subtle {
+    color: @text-color;
+  }
+
+  .badge[disabled] {
+    cursor: default;
+  }
+}
+
+status-bar .dartlang .badge {
+  cursor: pointer;
+}
+
+/* Error view */
+
+.errors-view {
+  .errors-focus-area {
+    position: absolute;
+    top: 6px;
+    right: 15px;
+    -webkit-user-select: none;
+    background-color: @tree-view-background-color;
+
+    .focus-title {
+      display: inline-block;
+    }
+
+    .errors-count {
+      display: inline-block;
+    }
+
+    .badge {
+      margin-right: 5px;
+      cursor: default;
+    }
+  }
+
+  .view-content {
+    padding: 3px;
+  }
+
+  .errors-item {
+    cursor: default;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+
+    .error-type {
+      border-radius: 2px;
+    }
+
+    span,
+    a {
+      margin: 3px;
+    }
+
+    .quick-fix {
+      cursor: pointer;
+      display: inline-block;
+      margin-left: 5px;
+      margin-right: 0;
+    }
+
+    .quick-fix.icon-tools::before {
+      font-size: 1.2em;
+    }
+  }
+}
+
+/* notifications */
+
+atom-notification.icon-running::before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  content: "\f087";
+  -webkit-font-smoothing: antialiased;
+
+  // -webkit-animation-name: spin;
+  // -webkit-animation-duration: 4000ms;
+  // -webkit-animation-iteration-count: infinite;
+  // -webkit-animation-timing-function: linear;
+}
+
+atom-notification {
+  .detail-content-no-wrap {
+    word-wrap: initial;
+  }
+}
+
+atom-notification.dartlang {
+  div.detail {
+    max-height: 150px;
+  }
+}
+
+// @keyframes spin {
+//   from {transform:rotate(0deg);}
+//   to {transform:rotate(360deg);}
+// }

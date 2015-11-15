@@ -1,0 +1,178 @@
+@import "ui-variables";
+@import "syntax-variables";
+
+.debugger-ui {
+  position: absolute;
+  display: inline-flex;
+  top: 48px;
+  right: @component-padding;
+  opacity: 0;
+  font-size: @font-size;
+  font-family: @font-family;
+  width: 300px;
+
+  background-color: @base-background-color; //lighten(@tool-panel-background-color, 8%)
+  border: 1px solid @base-border-color;
+  border-radius: @component-border-radius;
+
+  box-shadow: 0 0 2px @base-background-color;
+
+  transition: opacity 300ms;
+
+  z-index: 1010;
+
+  .no-left {
+    margin-left: 0;
+  }
+
+  .btn-toolbar {
+    display: flex;
+  }
+
+  .debug-header {
+    /*align-self: center;*/
+    padding: 6px;
+    border-bottom: 1px solid @base-border-color;
+  }
+
+  .debug-title {
+    border-bottom: 1px solid #333; //@text-color-subtle
+    color: @text-color;
+    font-size: 1.2em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: @component-line-height;
+
+    span.title {
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+    }
+
+    span.badge {
+      color: @text-color;
+      margin-left: @component-icon-padding;
+    }
+  }
+
+  .debug-vars {
+    padding: 6px;
+
+    div.select-list {
+      height: 125px;
+      overflow-y: auto;
+
+      li::before {
+        /*content: '• ';*/
+      }
+
+      .var-name {
+        width: 60px;
+        display: inline-block;
+        text-align: right;
+      }
+
+      .var-value {
+        color: @text-color-subtle;
+        margin-left: @component-icon-padding;
+      }
+    }
+  }
+
+  .debug-vars li {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .debug-footer {
+    padding: 6px;
+    border-top: 1px solid @base-border-color;
+
+    atom-text-editor[mini] {
+      font-size: 13px;
+    }
+  }
+
+  select.form-control {
+   color: @text-color;
+   border-color: @button-border-color;
+   background-color: @button-background-color;
+   &:hover,
+   &:focus {
+     box-shadow: none;
+     background-color: @button-background-color-hover;
+   }
+ }
+}
+
+.debugger-ui.debugger-show {
+  opacity: 1;
+}
+
+atom-text-editor::shadow .debugger-breakpoint {
+
+}
+
+atom-text-editor::shadow .debugger-breakpoint::before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  content: "\f052";
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  -webkit-font-smoothing: antialiased;
+}
+
+atom-text-editor::shadow .debugger-executionpoint-line {
+  background-color: @syntax-selection-color;
+}
+
+atom-text-editor::shadow .debugger-executionpoint-highlight div.region {
+  z-index: 1;
+}
+
+atom-text-editor::shadow .debugger-executionpoint-highlight div.region::before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  font-size: 12px;
+  width: 16px;
+  height: 16px;
+  content: "\f0aa";
+  position: absolute;
+  top: 16px;
+  right: -4px;
+  -webkit-font-smoothing: antialiased;
+}
+
+atom-text-editor::shadow .debugger-executionpoint-linenumber {
+
+}
+
+atom-text-editor::shadow .debugger-executionpoint-linenumber::before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  font-size: 18px;
+  width: 16px;
+  height: 16px;
+  content: "\f03e";
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  -webkit-font-smoothing: antialiased;
+}
