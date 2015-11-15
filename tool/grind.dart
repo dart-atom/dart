@@ -66,7 +66,7 @@ runAtomTests() async {
 @Task('Analyze the source code with ddc')
 ddc() {
   return new DevCompiler().analyzeAsync(
-    getFile('web/entry.dart'), htmlOutput: true);
+    getFile('web/entry.dart'), htmlReport: true);
 }
 
 @Task()

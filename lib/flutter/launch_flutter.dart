@@ -82,14 +82,20 @@ class _LaunchInstance {
   ProcessRunner _runner;
   bool _withDebug;
 
-  _LaunchInstance(this.project, LaunchConfiguration configuration,
-      LaunchType launchType) {
-    _launch = new Launch(
-        launchManager,
-        launchType,
-        configuration,
-        configuration.shortResourceName,
-        killHandler: _kill);
+  _LaunchInstance(
+    this.project,
+    LaunchConfiguration configuration,
+    LaunchType launchType
+  ) {
+    _launch = new _FlutterLaunch(
+      launchManager,
+      launchType,
+      configuration,
+      configuration.shortResourceName,
+      killHandler: _kill,
+      cwd: project.path,
+      project: project
+    );
     launchManager.addLaunch(_launch);
     _withDebug = configuration.debug ?? debugDefault;
     if (!LaunchManager.launchWithDebugging()) _withDebug = false;
@@ -107,7 +113,9 @@ class _LaunchInstance {
       args.add(relPath);
     }
 
-    _launch.pipeStdio('[${project.path}] ${_toolName} ${args.join(' ')}\n', highlight: true);
+    _launch.pipeStdio(
+      '[${project.workspaceRelativeName}] '
+      '${_toolName} ${args.join(' ')}\n', highlight: true);
 
     // Chain together both 'flutter start' and 'flutter logs'.
     _runner = _flutter(flutter, args, project.path);
@@ -163,6 +171,35 @@ class _LaunchInstance {
 
 ProcessRunner _flutter(FlutterTool flutter, List<String> args, String cwd) {
   return flutter.runRaw(args, cwd: cwd, startProcess: false);
+}
+
+// TODO: Move _LaunchInstance functionality into this class?
+class _FlutterLaunch extends Launch {
+  CachingServerResolver _resolver;
+
+  _FlutterLaunch(
+    LaunchManager manager,
+    LaunchType launchType,
+    LaunchConfiguration launchConfiguration,
+    String title,
+    { Function killHandler, String cwd, DartProject project }
+  ) : super(
+    manager,
+    launchType,
+    launchConfiguration,
+    title,
+    killHandler: killHandler,
+    cwd: cwd
+  ) {
+    _resolver = new CachingServerResolver(
+      cwd: project?.path,
+      server: analysisServer
+    );
+
+    exitCode.onChanged.first.then((_) => _resolver.dispose());
+  }
+
+  Future<String> resolve(String url) => _resolver.resolve(url);
 }
 
 class FlutterUriTranslator implements UriTranslator {

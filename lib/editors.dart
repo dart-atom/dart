@@ -110,6 +110,21 @@ class EditorManager implements Disposable {
     });
   }
 
+  Future<TextEditor> jumpToLine(String path, int line, {bool selectLine: true}) {
+    Map options = { 'searchAllPanes': true };
+
+    if (line != null) options['initialLine'] = line;
+
+    // If we're editing the target file, then use the current editor.
+    var ed = atom.workspace.getActiveTextEditor();
+    if (ed != null && ed.getPath() == path) options['searchAllPanes'] = false;
+
+    return atom.workspace.open(path, options: options).then((TextEditor editor) {
+      if (selectLine) editor.selectLinesContainingCursors();
+      return editor;
+    });
+  }
+
   void dispose() {
     dartEditors.dispose();
     dartProjectEditors.dispose();

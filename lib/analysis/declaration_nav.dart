@@ -179,10 +179,9 @@ class _NavCompleterHelper {
       _completers.remove(path);
     }
 
+    _lastInfos.removeWhere((nav) => nav.file == path);
     _lastInfos.insert(0, info);
-    if (_lastInfos.length > 24) {
-      _lastInfos = _lastInfos.sublist(0, 24);
-    }
+    if (_lastInfos.length > 24) _lastInfos = _lastInfos.sublist(0, 24);
   }
 
   Future<AnalysisNavigation> getNavigationInfo(String path, {Duration timeout}) {
