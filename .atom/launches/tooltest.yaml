@@ -1,0 +1,10 @@
+# Command-line launch configuration for tool/test.dart.
+type: cli
+path: tool/test.dart
+
+cli:
+  checked: true
+  args:
+    - foo
+    - bar
+    - baz

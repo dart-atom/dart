@@ -1,0 +1,3 @@
+# Shell launch configuration for tool/travis.sh.
+type: shell
+path: tool/travis.sh

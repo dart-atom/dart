@@ -1,0 +1,7 @@
+# Pub launch configuration for test/utils_test.dart.
+type: pub
+path: test/utils_test.dart
+
+pub:
+  app: test
+  args: -j1 --no-color test/utils_test.dart
