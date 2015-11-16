@@ -25711,21 +25711,21 @@ self._domRemove = function(element) {
       "^": "Closure:1;",
       call$0: function() {
         $.$get$shell().toString;
-        return $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", ["http://localhost:23072/"]);
+        return $.$get$_shell().callMethod$2("openExternal", ["http://localhost:23072/"]);
       }
     },
     AnalysisServerDialog_showDialog_closure0: {
       "^": "Closure:1;",
       call$0: function() {
         $.$get$shell().toString;
-        return $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", ["http://localhost:23071/"]);
+        return $.$get$_shell().callMethod$2("openExternal", ["http://localhost:23071/"]);
       }
     },
     AnalysisServerDialog_showDialog_closure1: {
       "^": "Closure:1;",
       call$0: function() {
         $.$get$shell().toString;
-        return $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", ["http://localhost:23071/_getCrashDump"]);
+        return $.$get$_shell().callMethod$2("openExternal", ["http://localhost:23071/_getCrashDump"]);
       }
     }
   }], ["atom.analysis_server_lib", "package:atom_dartlang/analysis/analysis_server_lib.dart",, E, {
@@ -27904,7 +27904,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;_changelog$_captured_this_1",
       call$1: function(_) {
         $.$get$shell().toString;
-        $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", ["https://dart-atom.github.io/dartlang/"]);
+        $.$get$_shell().callMethod$2("openExternal", ["https://dart-atom.github.io/dartlang/"]);
       }
     },
     ChangelogManager__handleReleaseNotes_closure: {
@@ -27912,7 +27912,7 @@ self._domRemove = function(element) {
       call$1: [function(contents) {
         var t1, t2;
         t1 = this._changelog$_captured_this_0;
-        t2 = new E.File(E._cvt(new E.Directory(E._create("Directory", $.$get$context().callMethod$2("require", ["os"]).callMethod$1("tmpdir"), null)).invoke$2("getFile", "CHANGELOG.md")));
+        t2 = new E.File(E._cvt(new E.Directory(E._create("Directory", $.$get$_os().callMethod$1("tmpdir"), null)).invoke$2("getFile", "CHANGELOG.md")));
         t1._changeLogFile = t2;
         t2.invoke$2("writeSync", contents);
         return t1._changeLogFile;
@@ -28176,7 +28176,7 @@ self._domRemove = function(element) {
         t1 = $.$get$shell();
         t2 = "http://localhost:" + H.S(this._console$_captured_this_0.launch.get$servicePort()._utils$_value) + "/";
         t1.toString;
-        $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", [t2]);
+        $.$get$_shell().callMethod$2("openExternal", [t2]);
       }
     },
     _LaunchController__updateButtons_closure0: {
@@ -28877,7 +28877,7 @@ self._domRemove = function(element) {
         var t1, t2;
         t1 = J.getInterceptor$x($location);
         t2 = t1.get$path($location);
-        if (new E.Stats($.$get$context().callMethod$2("require", ["fs"]).callMethod$2("statSync", [t2])).invoke$1("isFile") === true)
+        if (new E.Stats($.$get$_fs().callMethod$2("statSync", [t2])).invoke$1("isFile") === true)
           Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$1(t1.get$path($location)).then$1(new G.DebugUIController__jumpToLocation_closure(this, $location, true));
         else {
           t2 = $.$get$atom()._notifications;
@@ -29928,7 +29928,7 @@ self._domRemove = function(element) {
       _handleAddErrors$1: [function(analysisErrors) {
         var path, t1, oldErrors, newErrors;
         path = analysisErrors.get$file();
-        if (new E.File(E._create("File", path, null)).invoke$1("existsSync") === true && new E.Stats($.$get$context().callMethod$2("require", ["fs"]).callMethod$2("statSync", [path])).invoke$1("isFile") === true) {
+        if (new E.File(E._create("File", path, null)).invoke$1("existsSync") === true && new E.Stats($.$get$_fs().callMethod$2("statSync", [path])).invoke$1("isFile") === true) {
           t1 = this.knownErrors;
           oldErrors = t1.$index(0, path);
           newErrors = analysisErrors.get$errors();
@@ -30966,7 +30966,7 @@ self._domRemove = function(element) {
       call$0: [function() {
         this._flutter_sdk$_box_0._captured_notification_0.invoke$1("dismiss");
         $.$get$shell().toString;
-        $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", ["http://flutter.io/getting-started/"]);
+        $.$get$_shell().callMethod$2("openExternal", ["http://flutter.io/getting-started/"]);
       }, null, null, 0, 0, null, "call"]
     },
     FlutterSdkManager_showInstallationInfo_closure0: {
@@ -32110,8 +32110,8 @@ self._domRemove = function(element) {
         }
         if (path == null)
           return;
-        t1 = $.$get$context();
-        if (t1.callMethod$2("require", ["fs"]).callMethod$2("existsSync", [path]) === true) {
+        t1 = $.$get$_fs();
+        if (t1.callMethod$2("existsSync", [path]) === true) {
           t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
           t1._asyncComplete$1(path);
           return t1;
@@ -32120,7 +32120,7 @@ self._domRemove = function(element) {
           uri = P.Uri_parse(url, 0, null);
           if (uri.get$scheme() === "file") {
             path = uri.get$_path();
-            if (t1.callMethod$2("require", ["fs"]).callMethod$2("existsSync", [path]) === true) {
+            if (t1.callMethod$2("existsSync", [path]) === true) {
               t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
               t1._asyncComplete$1(path);
               return t1;
@@ -33921,7 +33921,7 @@ self._domRemove = function(element) {
         t1 = $.$get$shell();
         t2 = "https://github.com/dart-atom/dartlang/issues/new?body=" + P.Uri__uriEncode(C.List_KIf, description, C.Utf8Codec_false, false);
         t1.toString;
-        $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", [t2]);
+        $.$get$_shell().callMethod$2("openExternal", [t2]);
       }, null, null, 2, 0, null, 58, "call"]
     },
     AtomDartPackage__registerLinter_closure: {
@@ -34421,7 +34421,7 @@ self._domRemove = function(element) {
           return;
         t1 = this._projects$_box_0;
         t1._captured_path_0 = response;
-        if (new E.Stats($.$get$context().callMethod$2("require", ["fs"]).callMethod$2("statSync", [response])).invoke$1("isDirectory") !== true) {
+        if (new E.Stats($.$get$_fs().callMethod$2("statSync", [response])).invoke$1("isDirectory") !== true) {
           t2 = $.$get$atom()._notifications;
           t2.invoke$3("addWarning", "'" + H.S(t1._captured_path_0) + "' is not a directory.", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
           return;
@@ -34638,7 +34638,7 @@ self._domRemove = function(element) {
         return this._validatePubspecCurrent$1(project);
       }, "call$1", "get$_handleProjectAdded", 2, 0, 80, 96],
       _validatePubspecCurrent$1: function(project) {
-        var t1, pubspecYamlFile, pubspecLockFile, dotPackagesFile, t2, pubspecTime;
+        var t1, pubspecYamlFile, pubspecLockFile, dotPackagesFile, t2;
         t1 = J.getInterceptor$x(project);
         pubspecYamlFile = t1.get$directory(project).getFile$1("pubspec.yaml");
         pubspecLockFile = t1.get$directory(project).getFile$1("pubspec.lock");
@@ -34647,17 +34647,13 @@ self._domRemove = function(element) {
           return;
         if (dotPackagesFile.invoke$1("existsSync") === true) {
           t1 = J.$index$asx(pubspecYamlFile.obj, "path");
-          t2 = $.$get$context();
-          pubspecTime = J.$index$asx(t2.callMethod$2("require", ["fs"]).callMethod$2("statSync", [t1]), "mtime");
-          t1 = J.$index$asx(dotPackagesFile.obj, "path");
-          if (J.$gt$n(J.compareTo$1$ns(pubspecTime, J.$index$asx(t2.callMethod$2("require", ["fs"]).callMethod$2("statSync", [t1]), "mtime")), 0))
+          t2 = $.$get$_fs();
+          if (J.$gt$n(J.compareTo$1$ns(J.$index$asx(t2.callMethod$2("statSync", [t1]), "mtime"), J.$index$asx(t2.callMethod$2("statSync", [J.$index$asx(dotPackagesFile.obj, "path")]), "mtime")), 0))
             this._showRunPubDialog$1(project);
         } else if (pubspecLockFile.invoke$1("existsSync") === true) {
           t1 = J.$index$asx(pubspecYamlFile.obj, "path");
-          t2 = $.$get$context();
-          pubspecTime = J.$index$asx(t2.callMethod$2("require", ["fs"]).callMethod$2("statSync", [t1]), "mtime");
-          t1 = J.$index$asx(pubspecLockFile.obj, "path");
-          if (J.$gt$n(J.compareTo$1$ns(pubspecTime, J.$index$asx(t2.callMethod$2("require", ["fs"]).callMethod$2("statSync", [t1]), "mtime")), 0))
+          t2 = $.$get$_fs();
+          if (J.$gt$n(J.compareTo$1$ns(J.$index$asx(t2.callMethod$2("statSync", [t1]), "mtime"), J.$index$asx(t2.callMethod$2("statSync", [J.$index$asx(pubspecLockFile.obj, "path")]), "mtime")), 0))
             this._showRunPubDialog$1(project);
         } else
           this._showRunPubDialog$2$neverRun(project, true);
@@ -49737,7 +49733,7 @@ self._domRemove = function(element) {
       }, "call$0", "get$dispose", 0, 0, 2],
       _gettingStarted$1: [function(_) {
         $.$get$shell().toString;
-        $.$get$context().callMethod$2("require", ["shell"]).callMethod$2("openExternal", ["http://flutter.io/getting-started/"]);
+        $.$get$_shell().callMethod$2("openExternal", ["http://flutter.io/getting-started/"]);
       }, "call$1", "get$_gettingStarted", 2, 0, 12],
       $isDisposable: 1
     }
@@ -58144,6 +58140,12 @@ self._domRemove = function(element) {
     }());
   }, "_logger0", "$get$_logger0", "_logger", function() {
     return N.Logger_Logger("atom");
+  }, "_fs", "$get$_fs", "_fs", function() {
+    return K.require("fs");
+  }, "_os", "$get$_os", "_os", function() {
+    return K.require("os");
+  }, "_shell", "$get$_shell", "_shell", function() {
+    return K.require("shell");
   }, "atom", "$get$atom", "atom", function() {
     var t1 = new E.Atom(null, null, null, null, null, null, null, null, null, $.$get$_ctx());
     t1.Atom$0();

@@ -18,6 +18,10 @@ export 'js.dart' show Promise, ProxyHolder;
 
 final Logger _logger = new Logger('atom');
 
+final JsObject _fs = require('fs');
+final JsObject _os = require('os');
+final JsObject _shell = require('shell');
+
 AtomPackage _package;
 
 /// The singleton instance of [Atom].
@@ -1149,8 +1153,6 @@ class AtomEvent extends ProxyHolder {
 class Shell {
   Shell();
 
-  JsObject get _shell => require('shell');
-
   openExternal(String url) => _shell.callMethod('openExternal', [url]);
 }
 
@@ -1225,13 +1227,12 @@ JsObject _cvt(JsObject object) {
   return new JsObject.fromBrowserObject(object);
 }
 
-Stats statSync(String path) =>
-    new Stats(require('fs').callMethod('statSync', [path]));
+Stats statSync(String path) => new Stats(_fs.callMethod('statSync', [path]));
 
-bool existsSync(String path) => require('fs').callMethod('existsSync', [path]);
+bool existsSync(String path) => _fs.callMethod('existsSync', [path]);
 
 /// Returns the operating system's default directory for temp files.
-String tmpdir() => require('os').callMethod('tmpdir');
+String tmpdir() => _os.callMethod('tmpdir');
 
 class Stats extends ProxyHolder {
   Stats(JsObject obj) : super(obj);
