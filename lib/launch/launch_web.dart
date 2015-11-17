@@ -24,4 +24,6 @@ class WebLaunchType extends LaunchType {
 
     return new Future.error(new UnimplementedError());
   }
+
+  String getDefaultConfigText() => null;
 }

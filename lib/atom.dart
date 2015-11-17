@@ -634,6 +634,10 @@ class File extends Entry {
   File.fromPath(String path, [bool symlink]) :
       super(_create('File', path, symlink));
 
+  /// Creates the file on disk that corresponds to [getPath] if no such file
+  /// already exists.
+  Future create() => promiseToFuture(invoke('create'));
+
   Stream get onDidRename => eventStream('onDidRename');
   Stream get onDidDelete => eventStream('onDidDelete');
 
@@ -663,6 +667,10 @@ class Directory extends Entry {
   Directory(JsObject object) : super(object);
   Directory.fromPath(String path, [bool symlink]) :
       super(_create('Directory', path, symlink));
+
+  /// Creates the directory on disk that corresponds to [getPath] if no such
+  /// directory already exists. [mode] defaults to `0777`.
+  Future create([int mode]) => promiseToFuture(invoke('create', mode));
 
   /// Returns `true` if this [Directory] is the root directory of the
   /// filesystem, or `false` if it isn't.

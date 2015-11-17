@@ -1,6 +1,11 @@
 library foo_test;
 
+import 'dart:io';
+
 void main(List<String> args) {
+  print('args: ${args}');
+  print(Directory.current);
+
   String abc = 'abd_def';
   int count = 78;
 

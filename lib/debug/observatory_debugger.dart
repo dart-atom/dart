@@ -272,13 +272,6 @@ class ObservatoryDebugConnection extends DebugConnection {
     }
   }
 
-  // void _printLocals(Frame frame) {
-  //   for (BoundVariable local in frame.vars) {
-  //     String valueText = _refToString(local.value);
-  //     launch.pipeStdio('  - ${local.name}: ${valueText}\n', subtle: true);
-  //   }
-  // }
-
   void _printException(InstanceRef exception) {
     launch.pipeStdio('exception: ${_refToString(exception)}\n', error: true);
   }

@@ -1,7 +1,0 @@
-# Flutter launch configuration for lib/main_sample.dart.
-type: flutter
-path: lib/main_sample.dart
-
-flutter:
-  checked: true
-  logging: verbose

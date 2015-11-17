@@ -15,6 +15,7 @@ import 'editors.dart';
 import 'error_repository.dart';
 import 'jobs.dart';
 import 'launch/launch.dart';
+import 'launch/launch_configs.dart';
 import 'projects.dart';
 import 'sdk.dart';
 
@@ -27,6 +28,7 @@ EditorManager get editorManager => deps[EditorManager];
 ErrorRepository get errorRepository => deps[ErrorRepository];
 JobManager get jobs => deps[JobManager];
 LaunchManager get launchManager => deps[LaunchManager];
+LaunchConfigurationManager get launchConfigurationManager => deps[LaunchConfigurationManager];
 DebugManager get debugManager => deps[DebugManager];
 BreakpointManager get breakpointManager => deps[BreakpointManager];
 ProjectManager get projectManager => deps[ProjectManager];

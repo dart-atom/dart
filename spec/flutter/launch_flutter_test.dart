@@ -15,15 +15,15 @@ class FlutterUriTranslatorTest extends TestSuite {
   @Test()
   targetToClient_package() {
     expect(
-      x.targetToClient('http://localhost:9888/packages/flutter/src/material/dialog.dart'),
+      x.targetToClient('packages/flutter/src/material/dialog.dart'),
       'package:flutter/src/material/dialog.dart');
   }
 
   @Test()
   targetToClient_file() {
     expect(
-      x.targetToClient('http://localhost:9888/lib/main.dart'),
-      'file:///projects/foo_bar/lib/main.dart');
+      x.targetToClient('/projects/foo_bar/lib/main.dart'),
+      '/projects/foo_bar/lib/main.dart');
   }
 
   @Test()
@@ -35,14 +35,14 @@ class FlutterUriTranslatorTest extends TestSuite {
   clientToTarget_package() {
     expect(
       x.clientToTarget('package:flutter/src/material/dialog.dart'),
-      'http://localhost:9888/packages/flutter/src/material/dialog.dart');
+      'packages/flutter/src/material/dialog.dart');
   }
 
   @Test()
   clientToTarget_file() {
     expect(
-      x.clientToTarget('file:///projects/foo_bar/lib/main.dart'),
-      'http://localhost:9888/lib/main.dart');
+      x.clientToTarget('/projects/foo_bar/lib/main.dart'),
+      '/projects/foo_bar/lib/main.dart');
   }
 
   @Test()

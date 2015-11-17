@@ -1,0 +1,11 @@
+# Cli launch configuration for tool/test.dart.
+path: tool/test.dart
+type: cli
+
+cli:
+  args:
+    - one
+    - two
+    - three four five
+  checked: true
+  debug: true
