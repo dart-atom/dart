@@ -56,4 +56,8 @@ class ShellLaunchType extends LaunchType {
 
     return new Future.value(launch);
   }
+
+  String getDefaultConfigText() {
+    return 'args: \n';
+  }
 }

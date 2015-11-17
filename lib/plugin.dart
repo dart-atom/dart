@@ -51,6 +51,7 @@ import 'js.dart';
 import 'launch/console.dart';
 import 'launch/launch.dart';
 import 'launch/launch_cli.dart';
+import 'launch/launch_configs.dart';
 import 'launch/launch_shell.dart';
 import 'launch/run.dart';
 import 'linter.dart' show DartLinterConsumer;
@@ -122,6 +123,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[EditorManager] = new EditorManager());
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
     disposables.add(deps[LaunchManager] = new LaunchManager());
+    disposables.add(deps[LaunchConfigurationManager] = new LaunchConfigurationManager());
     disposables.add(deps[BreakpointManager] = new BreakpointManager());
     disposables.add(deps[DebugManager] = new DebugManager());
 
@@ -317,15 +319,6 @@ class AtomDartPackage extends AtomPackage {
         'default': true,
         'order': 4
       },
-      // // launch with debugging
-      // 'launchWithDebugging': {
-      //   'title': 'Launch applications with debugging enabled',
-      //   'description': 'Note: This feature is in an alpha stage of development. '
-      //       'Default to launching applications with debugging support enabled.',
-      //   'type': 'boolean',
-      //   'default': false,
-      //   'order': 4
-      // },
 
       // show infos and todos
       'showInfos': {

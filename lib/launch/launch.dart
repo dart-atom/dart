@@ -12,16 +12,13 @@ import '../debug/debugger.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
+import 'launch_configs.dart';
+
+export 'launch_configs.dart' show LaunchConfiguration;
 
 final Logger _logger = new Logger('atom.launch');
 
-class LaunchManager implements Disposable, StateStorable {
-  static bool launchWithDebugging() {
-    // TODO: Remove the 'enableDebugging' flag.
-    return atom.config.getBoolValue('${pluginId}.launchWithDebugging') ||
-      atom.config.getBoolValue('${pluginId}.enableDebugging');
-  }
-
+class LaunchManager implements Disposable {
   StreamController<Launch> _launchAdded = new StreamController.broadcast(sync: true);
   StreamController<Launch> _launchActivated = new StreamController.broadcast();
   StreamController<Launch> _launchTerminated = new StreamController.broadcast();
@@ -32,11 +29,7 @@ class LaunchManager implements Disposable, StateStorable {
   Launch _activeLaunch;
   final List<Launch> _launches = [];
 
-  List<LaunchConfiguration> _configs;
-
-  LaunchManager() {
-    state.registerStorable('launches', this);
-  }
+  LaunchManager();
 
   Launch get activeLaunch => _activeLaunch;
 
@@ -118,64 +111,17 @@ class LaunchManager implements Disposable, StateStorable {
     return null;
   }
 
-  void initFromStored(dynamic storedData) {
-    if (storedData is List) {
-      _configs = storedData.map((json) {
-        return new LaunchConfiguration.from(json);
-      }).toList();
-
-      _logger.info('restored ${_configs.length} launch configurations');
-    } else {
-      _configs = [];
-    }
-  }
-
-  dynamic toStorable() {
-    return _configs.map((LaunchConfiguration config) {
-      return config.getStorableMap();
-    }).toList();
-  }
-
-  void createConfiguration(LaunchConfiguration config, {bool quiet: false}) {
-    atom.notifications.addInfo('Created a ${config.launchType} launch '
-        'configuration for `${config.shortResourceName}`.');
-
-    _configs.add(config);
-  }
-
-  List<LaunchConfiguration> getAllConfigurations() => _configs;
-
-  List<LaunchConfiguration> getConfigurationsForPath(String path) {
-    return new List.from(_configs.where((LaunchConfiguration config) {
-      return config.primaryResource == path;
-    }));
-  }
-
-  List<LaunchConfiguration> getConfigurationsForProject(DartProject project) {
-    String path = '${project.path}${separator}';
-
-    return new List.from(_configs.where((LaunchConfiguration config) {
-      String r = config.primaryResource;
-      return r != null && r.startsWith(path);
-    }));
-  }
-
-  List<LaunchConfiguration> getAllRunnables(DartProject project) {
-    List<LaunchConfiguration> results = [];
+  List<Launchable> getAllLaunchables(DartProject project) {
+    List<Launchable> results = [];
 
     if (project != null) {
       for (LaunchType type in launchTypes) {
-        results.addAll(type
-            .getLaunchablesFor(project)
-            .map((path) => type.createConfiguration(path)));
+        List<String> paths = type.getLaunchablesFor(project);
+        results.addAll(paths.map((path) => new Launchable(type, path)));
       }
     }
 
     return results;
-  }
-
-  void deleteConfiguration(LaunchConfiguration config) {
-    _configs.remove(config);
   }
 
   void dispose() {
@@ -195,11 +141,11 @@ abstract class LaunchType {
 
   List<String> getLaunchablesFor(DartProject project);
 
-  LaunchConfiguration createConfiguration(String path) {
-    return new LaunchConfiguration(this, primaryResource: path);
-  }
-
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration);
+
+  /// Return a yaml fragment with the defaults values for a new launch
+  /// configuration.
+  String getDefaultConfigText();
 
   bool operator== (obj) => obj is LaunchType && obj.type == type;
 
@@ -208,65 +154,11 @@ abstract class LaunchType {
   String toString() => type;
 }
 
-/// A configuration for a particular launch type.
-class LaunchConfiguration {
-  Map<String, dynamic> _config = {};
+class Launchable {
+  final LaunchType type;
+  final String relativePath;
 
-  LaunchConfiguration(LaunchType launchType, {String primaryResource}) {
-    if (launchType != null) _config['launchType'] = launchType.type;
-    if (primaryResource != null) this.primaryResource = primaryResource;
-    touch();
-  }
-
-  LaunchConfiguration.from(this._config);
-
-  bool get debug => _config['debug'];
-  set debug(bool value) {
-    _config['debug'] = value;
-  }
-
-  String get launchType => _config['launchType'];
-
-  String get cwd => _config['cwd'];
-  set cwd(String value) {
-    _config['cwd'] = value;
-  }
-
-  String get primaryResource => _config['primary'];
-  set primaryResource(String value) {
-    _config['primary'] = value;
-  }
-
-  String get args => _config['args'];
-  set args(String value) {
-    _config['args'] = value;
-  }
-
-  List<String> get argsAsList {
-    String str = args;
-    // TODO: Handle args wrapped by quotes.
-    return str == null ? null : str.split(' ');
-  }
-
-  /// Used when persisting the `LaunchConfiguration`.
-  Map getStorableMap() => _config;
-
-  /// Update the timestamp for this launch configuration.
-  void touch() {
-    _config['timestamp'] = new DateTime.now().millisecondsSinceEpoch;
-  }
-
-  /// Get the last launch time.
-  int get timestamp => _config['timestamp'];
-
-  String get shortResourceName {
-    String resource = primaryResource;
-    if (resource == null) return null;
-
-    return atom.project.relativizePath(resource)[1];
-  }
-
-  String toString() => primaryResource;
+  Launchable(this.type, this.relativePath);
 }
 
 /// The instantiation of something that was launched.
@@ -408,7 +300,7 @@ class CachingServerResolver implements _Resolver {
   }
 
   Future<String> _resolve(String url) {
-    if (_serverResolver != null) {
+    if (_serverResolver != null && !url.startsWith('file:/') && url.contains(':')) {
       return _serverResolver.resolve(url).then((result) {
         if (result != null) return result;
         return _pathResolver?.resolve(url);

@@ -11,8 +11,6 @@ import '../state.dart';
 import '../utils.dart';
 import 'debugger_ui.dart';
 
-const bool debugDefault = true;
-
 final Logger _logger = new Logger('atom.debugger');
 
 void _displayError(dynamic error) {

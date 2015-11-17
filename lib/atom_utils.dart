@@ -50,6 +50,7 @@ String dirname(entry) {
   return index == -1 ? null : entry.substring(0, index);
 }
 
+/// Return the name of the file for the given path.
 String basename(String path) {
   if (path.endsWith(separator)) path = path.substring(0, path.length - 1);
   int index = path.lastIndexOf(separator);

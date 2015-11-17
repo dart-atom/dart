@@ -6,7 +6,6 @@ import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
-import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../process.dart';
 import '../projects.dart';
@@ -60,9 +59,7 @@ class CliLaunchType extends LaunchType {
 
     if (sdk == null) new Future.error('No Dart SDK configured');
 
-    bool withDebug = configuration.debug ?? debugDefault;
-    if (!LaunchManager.launchWithDebugging()) withDebug = false;
-
+    bool withDebug = configuration.debug;
     String path = configuration.primaryResource;
     String cwd = configuration.cwd;
     List<String> args = configuration.argsAsList;
@@ -85,18 +82,22 @@ class CliLaunchType extends LaunchType {
       path = relativize(cwd, path);
     }
 
-    List<String> _args = [path];
-    if (args != null) _args.addAll(args);
-
-    String desc = '[${cwd}] ${_args.join(' ')}\n';
+    List<String> _args = [];
 
     if (withDebug) {
       // TODO: Find an open port.
       //http://127.0.0.1:8181/
       // todo: --pause_isolates_on_start=true
-      _args.insert(0, '--pause_isolates_on_start=true');
-      _args.insert(0, '--enable-vm-service=${_observePort}');
+      _args.add('--pause_isolates_on_start=true');
+      _args.add('--enable-vm-service=${_observePort}');
     }
+
+    if (configuration.checked) _args.add('--checked');
+
+    _args.add(path);
+    if (args != null) _args.addAll(args);
+
+    String desc = '[${cwd}] ${path} ${args == null ? '' : args.join(' ')}\n';
 
     ProcessRunner runner = new ProcessRunner(
       sdk.dartVm.path,
@@ -128,6 +129,10 @@ class CliLaunchType extends LaunchType {
     runner.onExit.then((code) => launch.launchTerminated(code));
 
     return new Future.value(launch);
+  }
+
+  String getDefaultConfigText() {
+    return 'args: \nchecked: true\n';
   }
 }
 
