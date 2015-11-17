@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.15
 - create hyperlinks from exception traces in the console view
 - changed launch configurations to be stored in user-editable yaml files in the project
 - support running flutter and command-line apps in checked and production modes
