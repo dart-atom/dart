@@ -2,6 +2,7 @@ library atom.toolbar;
 
 import 'dart:js';
 
+import '../atom.dart';
 import '../elements.dart';
 import '../js.dart';
 import '../state.dart';
@@ -10,12 +11,44 @@ import '../utils.dart';
 // device-mobile
 
 class ToolbarContribution implements Disposable {
-  ToolbarTile _tile;
+  ToolbarTile leftTile;
+  ToolbarTile rightTile;
+  Disposable editorWatcher;
+
+  CoreElement run;
+
+  CoreElement back;
+  CoreElement forward;
 
   ToolbarContribution(Toolbar toolbar) {
-    CoreElement back;
-    CoreElement forward;
+    leftTile = toolbar.addLeftTile(item: _buildLeftTile().element);
+    rightTile = toolbar.addRightTile(item: _buildRightTile().element);
+  }
 
+  CoreElement _buildLeftTile() {
+    CoreElement e = div(c: 'btn-group btn-group-sm dartlang-toolbar')..add([
+      run = button(c: 'btn icon icon-playback-play')
+    ]);
+
+    run.click(() {
+      TextEditor editor = atom.workspace.getActiveTextEditor();
+
+      if (editor == null) {
+        atom.notifications.addWarning('No active text editor.');
+        return;
+      }
+
+      atom.commands.dispatch(atom.views.getView(editor), 'dartlang:run-application');
+    });
+
+    editorWatcher = atom.workspace.observeActivePaneItem((_) {
+      run.enabled = atom.workspace.getActiveTextEditor() != null;
+    });
+
+    return e;
+  }
+
+  CoreElement _buildRightTile() {
     // <kbd class='key-binding'>⌘⌥A</kbd>
     CoreElement e = div(c: 'btn-group btn-group-sm dartlang-toolbar')..add([
       back = button(c: 'btn icon icon-arrow-left'),
@@ -32,10 +65,14 @@ class ToolbarContribution implements Disposable {
       forward.disabled = !navigationManager.canGoForward();
     });
 
-    _tile = toolbar.addRightTile(item: e.element);
+    return e;
   }
 
-  void dispose() => _tile.destroy();
+  void dispose() {
+    leftTile.destroy();
+    rightTile.destroy();
+    editorWatcher.dispose();
+  }
 }
 
 /// A wrapper around the `toolbar` API.

@@ -122,7 +122,7 @@ class ConsoleView2 extends View2 {
     // TODO: Listen for obs. port being provided after a delay.
     if (launch.canDebug()) {
       _debugButton = buttons.add(
-        button(text: 'Observatory', c: 'btn icon icon-search')
+        button(text: 'Observatory', c: 'btn icon icon-dashboard') // icon-search
       );
       _debugButton.tooltip = 'Open the Observatory';
       _debugButton.click(() {
@@ -133,7 +133,7 @@ class ConsoleView2 extends View2 {
     // kill
     if (launch.canKill()) {
       _terminateButton = buttons.add(
-        button(text: 'Stop', c: 'btn icon icon-primitive-square')
+        button(text: 'Terminate', c: 'btn icon icon-primitive-square')
       );
       _terminateButton.tooltip = 'Terminate process';
       _terminateButton.click(() => launch.kill());
