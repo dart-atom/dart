@@ -36,16 +36,17 @@ import 'flutter/create_project.dart';
 import 'flutter/flutter_dev.dart';
 import 'flutter/flutter_sdk.dart';
 import 'flutter/launch_flutter.dart';
-import 'flutter/toolbar.dart';
 import 'impl/changelog.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/errors.dart';
+import 'impl/navigation.dart';
 import 'impl/outline.dart';
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
 import 'impl/tests.dart';
+import 'impl/toolbar.dart';
 import 'jobs.dart';
 import 'js.dart';
 import 'launch/console.dart';
@@ -129,6 +130,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[BreakpointManager] = new BreakpointManager());
     disposables.add(deps[DebugManager] = new DebugManager());
     disposables.add(deps[ViewGroupManager2] = new ViewGroupManager2());
+    disposables.add(deps[NavigationManager] = new NavigationManager());
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
     PubManager pubManager = new PubManager();

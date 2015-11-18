@@ -1,9 +1,10 @@
-library atom.flutter.toolbar;
+library atom.toolbar;
 
 import 'dart:js';
 
 import '../elements.dart';
 import '../js.dart';
+import '../state.dart';
 import '../utils.dart';
 
 // device-mobile
@@ -12,24 +13,24 @@ class ToolbarContribution implements Disposable {
   ToolbarTile _tile;
 
   ToolbarContribution(Toolbar toolbar) {
-    // CoreElement back;
-    // CoreElement forward;
+    CoreElement back;
+    CoreElement forward;
 
     // <kbd class='key-binding'>⌘⌥A</kbd>
     CoreElement e = div(c: 'btn-group btn-group-sm dartlang-toolbar')..add([
-      // back = button(c: 'btn icon icon-arrow-left'),
-      // forward = button(c: 'btn icon icon-arrow-right')
+      back = button(c: 'btn icon icon-arrow-left'),
+      forward = button(c: 'btn icon icon-arrow-right')
     ]);
 
-    // back.disabled = true;
-    // back.click(() => navigationManager.goBack());
-    // forward.disabled = true;
-    // forward.click(() => navigationManager.goForward());
+    back.disabled = true;
+    back.click(() => navigationManager.goBack());
+    forward.disabled = true;
+    forward.click(() => navigationManager.goForward());
 
-    // navigationManager.onNavigate.listen((_) {
-    //   back.disabled = !navigationManager.canGoBack();
-    //   forward.disabled = !navigationManager.canGoForward();
-    // });
+    navigationManager.onNavigate.listen((_) {
+      back.disabled = !navigationManager.canGoBack();
+      forward.disabled = !navigationManager.canGoForward();
+    });
 
     _tile = toolbar.addRightTile(item: e.element);
   }
