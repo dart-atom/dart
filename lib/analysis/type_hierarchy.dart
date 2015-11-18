@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../atom.dart';
+import '../elements.dart';
 import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
@@ -16,17 +17,13 @@ final Logger _logger = new Logger('type_hierarchy');
 
 class TypeHierarchyHelper implements Disposable {
   Disposable _command;
-  TypeHierarchyView _view;
 
   TypeHierarchyHelper() {
     _command = atom.commands.add(
         'atom-text-editor', 'dartlang:type-hierarchy', _handleHierarchy);
   }
 
-  void dispose() {
-    _command.dispose();
-    if (_view != null) _view.dispose();
-  }
+  void dispose() => _command.dispose();
 
   void _handleHierarchy(AtomEvent event) => _handleHierarchyEditor(event.editor);
 
@@ -41,28 +38,49 @@ class TypeHierarchyHelper implements Disposable {
 
         if (result.hierarchyItems == null) {
           atom.beep();
-        } else {
-          // TODO: Flash the token that we're doing the type hierarchy of?
-          if (_view == null) _view = new TypeHierarchyView();
-          _view.showHierarchy(result);
+          return;
         }
+
+        TypeHierarchyView.showHierarchy(result);
       });
     });
     job.schedule();
   }
 }
 
-class TypeHierarchyView extends AtomView {
+class TypeHierarchyView extends View2 {
+  static TypeHierarchyView _singleton;
+
+  static void showHierarchy(TypeHierarchyResult result) {
+    if (_singleton == null) {
+      _singleton = new TypeHierarchyView();
+      _singleton._buildHierarchy(result);
+      viewGroupManager.addView('right', _singleton);
+    } else {
+      _singleton._buildHierarchy(result);
+      viewGroupManager.activate(_singleton);
+    }
+  }
+
+  CoreElement element;
   ListTreeBuilder treeBuilder;
   List<TypeHierarchyItem> _items;
 
-  TypeHierarchyView() : super('Type Hierarchy', classes: 'type-hierarchy',
-      groupName: 'rightView') {
-    treeBuilder = content.add(new ListTreeBuilder(_render)..flex());
+  TypeHierarchyView() {
+    element = div(c: 'type-hierarchy')..layoutVertical();
+    treeBuilder = element.add(new ListTreeBuilder(_render)..flex());
     treeBuilder.onClickNode.listen(_jumpTo);
   }
 
-  void showHierarchy(TypeHierarchyResult result) {
+  String get id => 'typeHierarchy';
+
+  String get label => 'Type Hierarchy';
+
+  void dispose() {
+    _singleton = null;
+  }
+
+  void _buildHierarchy(TypeHierarchyResult result) {
     treeBuilder.clear();
 
     List<TypeHierarchyItem> items = result.hierarchyItems;
@@ -92,8 +110,6 @@ class TypeHierarchyView extends AtomView {
 
     treeBuilder.addNode(node);
     treeBuilder.selectNode(targetNode);
-
-    show();
   }
 
   Node _createChild(List<TypeHierarchyItem> items, TypeHierarchyItem item) {

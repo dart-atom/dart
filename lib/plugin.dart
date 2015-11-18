@@ -60,6 +60,8 @@ import 'sdk.dart';
 import 'state.dart';
 import 'usage.dart' show UsageManager;
 import 'utils.dart';
+import 'views.dart';
+import 'views.dart' show ViewGroupManager2;
 
 export 'atom.dart' show registerPackage;
 
@@ -126,6 +128,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[LaunchConfigurationManager] = new LaunchConfigurationManager());
     disposables.add(deps[BreakpointManager] = new BreakpointManager());
     disposables.add(deps[DebugManager] = new DebugManager());
+    disposables.add(deps[ViewGroupManager2] = new ViewGroupManager2());
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
     PubManager pubManager = new PubManager();

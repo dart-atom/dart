@@ -92,7 +92,7 @@ class ConsoleView extends AtomView {
     if (controller == _activeController) _activeController = null;
 
     if (_controllers.isEmpty && isVisible()) {
-      autoHide();
+      hide();
     }
   }
 }

@@ -214,7 +214,7 @@ class UriResolver implements Disposable {
   }
 
   Future<String> resolveUriToPath(String uri) {
-    return _resolveUriToPath(uri).then((result) {
+    return _resolveUriToPath(uri).then((String result) {
       _logger.finer('resolve ${uri} <== ${result}');
       return result;
     });
@@ -238,7 +238,7 @@ class UriResolver implements Disposable {
 
   /// This can return one or two results.
   Future<List<String>> resolvePathToUri(String path) {
-    return _resolvePathToUri(path).then((result) {
+    return _resolvePathToUri(path).then((String result) {
       _logger.finer('resolve ${path} ==> ${result}');
       return result;
     });
