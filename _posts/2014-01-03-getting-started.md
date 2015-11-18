@@ -107,8 +107,8 @@ When looking at source code, you can get more information about a class, method,
 or variable by placing the cursor on that symbol and hitting `F1`. The dartdoc
 information for that element will be displayed.
 
-Command or option-clicking on an element, or hitting `ctrl-alt-down`, will jump
-to its definition. To jump back, hit `cmd-option-up` (or `ctrl-alt-up`).
+Command or option-clicking on an element will jump to its definition. To jump
+back, hit `cmd-option-up` (or `ctrl-alt-up`).
 
 You can toggle on and off a structural outline view of the current Dart file by
 executing the command `'toggle outline view'`.
