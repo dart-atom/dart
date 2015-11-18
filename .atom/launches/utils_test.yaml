@@ -1,0 +1,7 @@
+# Cli launch configuration for test/utils_test.dart.
+type: cli
+path: test/utils_test.dart
+
+cli:
+  args: 
+  checked: true

@@ -24852,10 +24852,16 @@ self._domRemove = function(element) {
         return this._server._search.getTypeHierarchy$2(path, offset);
       },
       isExecutable$1: function(path) {
-        return this._server._executables.contains$1(0, path);
+        var t1 = this._server;
+        if (!(t1 != null && t1.process != null))
+          return false;
+        return t1._executables.contains$1(0, path);
       },
       getExecutablesFor$1: function(projectPath) {
-        var t1 = this._server._executables;
+        var t1 = this._server;
+        if (!(t1 != null && t1.process != null))
+          return [];
+        t1 = t1._executables;
         t1 = H.setRuntimeTypeInfo(new H.WhereIterable(t1, new X.AnalysisServer_getExecutablesFor_closure(projectPath)), [H.getTypeArgumentByIndex(t1, 0)]);
         return P.List_List$from(t1, true, H.getRuntimeTypeArgument(t1, "Iterable", 0));
       },
@@ -51644,11 +51650,11 @@ self._domRemove = function(element) {
   }], ["path.context", "package:path/src/context.dart",, F, {
     "^": "",
     _validateArgList: function(method, args) {
-      var i, numArgs, numArgs0, message, t1, t2, t3, t4;
-      for (i = 1; i < 8; ++i) {
+      var numArgs, i, numArgs0, message, t1, t2, t3, t4;
+      for (numArgs = args.length, i = 1; i < numArgs; ++i) {
         if (args[i] == null || args[i - 1] != null)
           continue;
-        for (numArgs = 8; numArgs >= 1; numArgs = numArgs0) {
+        for (; numArgs >= 1; numArgs = numArgs0) {
           numArgs0 = numArgs - 1;
           if (args[numArgs0] != null)
             break;
@@ -51677,6 +51683,19 @@ self._domRemove = function(element) {
     },
     Context: {
       "^": "Object;style>,_context$_current",
+      absolute$7: function(_, part1, part2, part3, part4, part5, part6, part7) {
+        var t1;
+        F._validateArgList("absolute", [part1, part2, part3, part4, part5, part6, part7]);
+        t1 = this.style;
+        t1 = J.$gt$n(t1.rootLength$1(part1), 0) && !t1.isRootRelative$1(part1);
+        if (t1)
+          return part1;
+        t1 = this._context$_current;
+        return this.join$8(0, t1 != null ? t1 : B.current(), part1, part2, part3, part4, part5, part6, part7);
+      },
+      absolute$1: function($receiver, part1) {
+        return this.absolute$7($receiver, part1, null, null, null, null, null, null);
+      },
       join$8: function(_, part1, part2, part3, part4, part5, part6, part7, part8) {
         var parts = H.setRuntimeTypeInfo([part1, part2, part3, part4, part5, part6, part7, part8], [P.String]);
         F._validateArgList("join", parts);
@@ -51732,23 +51751,72 @@ self._domRemove = function(element) {
         return parsed.parts;
       },
       normalize$1: function(path) {
-        var parsed = Q.ParsedPath_ParsedPath$parse(path, this.style);
+        var parsed;
+        if (!this._needsNormalization$1(path))
+          return path;
+        parsed = Q.ParsedPath_ParsedPath$parse(path, this.style);
         parsed.normalize$0();
         return parsed.toString$0(0);
       },
+      _needsNormalization$1: function(path) {
+        var codeUnits, t1, root, t2, i, start, previous, t3, previousPrevious, t4, codeUnit, t5;
+        codeUnits = J.get$codeUnits$s(path);
+        t1 = this.style;
+        root = t1.rootLength$1(path);
+        if (!J.$eq$(root, 0)) {
+          if (t1 === $.$get$Style_windows()) {
+            if (typeof root !== "number")
+              return H.iae(root);
+            t2 = codeUnits.__internal$_string;
+            i = 0;
+            for (; i < root; ++i)
+              if (C.JSString_methods.codeUnitAt$1(t2, i) === 47)
+                return true;
+          }
+          start = root;
+          previous = 47;
+        } else {
+          start = 0;
+          previous = null;
+        }
+        for (t2 = codeUnits.__internal$_string, t3 = t2.length, i = start, previousPrevious = null; t4 = J.getInterceptor$n(i), t4.$lt(i, t3); i = t4.$add(i, 1), previousPrevious = previous, previous = codeUnit) {
+          codeUnit = C.JSString_methods.codeUnitAt$1(t2, i);
+          if (t1.isSeparator$1(codeUnit)) {
+            if (t1 === $.$get$Style_windows() && codeUnit === 47)
+              return true;
+            if (previous != null && t1.isSeparator$1(previous))
+              return true;
+            if (previous === 46)
+              t5 = previousPrevious == null || previousPrevious === 46 || t1.isSeparator$1(previousPrevious);
+            else
+              t5 = false;
+            if (t5)
+              return true;
+          }
+        }
+        if (previous == null)
+          return true;
+        if (t1.isSeparator$1(previous))
+          return true;
+        if (previous === 46)
+          t1 = previousPrevious == null || previousPrevious === 47 || previousPrevious === 46;
+        else
+          t1 = false;
+        if (t1)
+          return true;
+        return false;
+      },
       relative$2$from: function(path, from) {
-        var t1, t2, fromParsed, pathParsed, t3;
+        var t1, fromParsed, pathParsed, t2, t3;
         from = this._context$_current;
         from = from != null ? from : B.current();
         t1 = this.style;
         if (!J.$gt$n(t1.rootLength$1(from), 0) && J.$gt$n(t1.rootLength$1(path), 0))
           return this.normalize$1(path);
-        if (!J.$gt$n(t1.rootLength$1(path), 0) || t1.isRootRelative$1(path)) {
-          t2 = this._context$_current;
-          path = this.join$8(0, t2 != null ? t2 : B.current(), path, null, null, null, null, null, null);
-        }
+        if (!J.$gt$n(t1.rootLength$1(path), 0) || t1.isRootRelative$1(path))
+          path = this.absolute$1(0, path);
         if (!J.$gt$n(t1.rootLength$1(path), 0) && J.$gt$n(t1.rootLength$1(from), 0))
-          throw H.wrapException(new E.PathException("Unable to find a path to \"" + path + "\" from \"" + H.S(from) + "\"."));
+          throw H.wrapException(new E.PathException("Unable to find a path to \"" + H.S(path) + "\" from \"" + H.S(from) + "\"."));
         fromParsed = Q.ParsedPath_ParsedPath$parse(from, t1);
         fromParsed.normalize$0();
         pathParsed = Q.ParsedPath_ParsedPath$parse(path, t1);
@@ -51788,7 +51856,7 @@ self._domRemove = function(element) {
         }
         t2 = fromParsed.parts;
         if (t2.length > 0 && J.$eq$(t2[0], ".."))
-          throw H.wrapException(new E.PathException("Unable to find a path to \"" + path + "\" from \"" + H.S(from) + "\"."));
+          throw H.wrapException(new E.PathException("Unable to find a path to \"" + H.S(path) + "\" from \"" + H.S(from) + "\"."));
         C.JSArray_methods.insertAll$2(pathParsed.parts, 0, P.List_List$filled(fromParsed.parts.length, "..", null));
         t2 = pathParsed.separators;
         if (0 >= t2.length)
@@ -52923,7 +52991,7 @@ self._domRemove = function(element) {
         t1 = "line " + (line + 1) + ", column " + H.S(J.$add$ns(column, 1));
         if (this.get$sourceUrl() != null) {
           t2 = this.get$sourceUrl();
-          t2 = t1 + (" of " + $.$get$context0().prettyUri$1(t2));
+          t2 = t1 + (" of " + H.S($.$get$context0().prettyUri$1(t2)));
           t1 = t2;
         }
         t1 += ": " + H.S(message);
@@ -57452,6 +57520,9 @@ self._domRemove = function(element) {
   };
   J.get$classes$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$classes(receiver);
+  };
+  J.get$codeUnits$s = function(receiver) {
+    return J.getInterceptor$s(receiver).get$codeUnits(receiver);
   };
   J.get$data$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$data(receiver);

@@ -1,12 +1,22 @@
 # dartlang plugin changelog
 
 ## unreleased
+- re-worked the UI for the errors, console, type hierarchy, and find references
+  views
+- fixed a NPE related to determining whether files are executable
+- bound `jump-to-declaration` to `ctrl-alt-enter` on windows
+
+## 0.4.15
+- create hyperlinks from exception traces in the console view
+- changed launch configurations to be stored in user-editable yaml files in the
+  project
+- support running flutter and command-line apps in checked and production modes
+- support passing args to command-line apps
 - added a user preference to control the modifier key for jump to declaration
 - improved the warning when the user's SDK was out-of-date
 - improved our logic to detect FLUTTER_ROOT
 - allow the user to run a greater variety of Flutter apps (not just lib/main.dart)
 - fixed an issue with the jump to declaration feature
-- create hyperlinks from exception traces in the console view
 
 ## 0.4.14
 - added the ability to copy text from the console and errors views
