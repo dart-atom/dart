@@ -19,7 +19,7 @@ class ConsoleController implements Disposable {
   Disposables disposables = new Disposables();
   StreamSubscription _sub;
 
-  List<View2> _allViews = [];
+  List<View> _allViews = [];
 
   ConsoleController() {
     statusElement = new ConsoleStatusElement(this, false);
@@ -49,7 +49,7 @@ class ConsoleController implements Disposable {
     bool anyActive = _allViews.any((view) => viewGroupManager.isActiveId(view.id));
     bool viewShown = false;
 
-    for (View2 view in _allViews) {
+    for (View view in _allViews) {
       if (!viewGroupManager.hasViewId(view.id)) {
         viewShown = true;
         viewGroupManager.addView('bottom', view);
@@ -60,7 +60,7 @@ class ConsoleController implements Disposable {
       viewGroupManager.activate(_allViews.first);
     } else if (!viewShown) {
       // Hide all the views.
-      for (View2 view in _allViews.toList()) {
+      for (View view in _allViews.toList()) {
         viewGroupManager.removeViewId(view.id);
       }
     }
@@ -77,7 +77,7 @@ class ConsoleController implements Disposable {
 
 // TODO: auto-hide
 
-class ConsoleView2 extends View2 {
+class ConsoleView2 extends View {
   // Only show a set amount of lines of output.
   static const _maxLines = 200;
 

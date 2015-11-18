@@ -48,7 +48,7 @@ class TypeHierarchyHelper implements Disposable {
   }
 }
 
-class TypeHierarchyView extends View2 {
+class TypeHierarchyView extends View {
   static TypeHierarchyView _singleton;
 
   static void showHierarchy(TypeHierarchyResult result) {

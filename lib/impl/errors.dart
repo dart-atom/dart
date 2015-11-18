@@ -128,7 +128,7 @@ class ErrorsController implements Disposable {
   }
 }
 
-class ErrorsView extends View2 {
+class ErrorsView extends View {
   CoreElement element;
   CoreElement target;
   CoreElement body;
