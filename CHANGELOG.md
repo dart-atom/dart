@@ -2,6 +2,7 @@
 
 ## unreleased
 - fixed a NPE related to determining whether files are executable
+- bound `jump-to-declaration` to `ctrl-alt-enter` on windows
 
 ## 0.4.15
 - create hyperlinks from exception traces in the console view
