@@ -301,11 +301,14 @@ class AnalysisServer implements Disposable {
   /// Return whether the given file is executable. This means it has a `main()`
   /// method and does not import `dart:html`;
   bool isExecutable(String path) {
+    if (!isActive) return false;
     return _server._executables.contains(path);
   }
 
   /// Returns all the executables for the given project path.
   List<String> getExecutablesFor(String projectPath) {
+    if (!isActive) return [];
+
     return _server._executables
         .where((path) => path.startsWith(projectPath))
         .toList();
