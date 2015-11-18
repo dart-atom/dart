@@ -2,49 +2,11 @@
 @import "syntax-variables";
 
 .console-view {
-  .console-title-area {
+  .button-bar {
     position: absolute;
-    top: 0;
-    right: 20px;
+    bottom: 8px;
+    right: 8px;
     z-index: 1;
-
-    .badge {
-      cursor: pointer;
-    }
-
-    .badge[disabled] {
-      cursor: default;
-    }
-
-    .launch-terminated {
-      font-style: italic;
-    }
-
-    .console-tabs {
-
-    }
-
-    .process-tab {
-      display: inline-block;
-      transition: background-color 0.2s ease;
-      border-radius: 4px;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
-    }
-
-    .process-tab + .process-tab {
-      margin-left: 8px;
-    }
-
-    .process-icon + .process-icon {
-      margin-left: 4px;
-    }
-
-    .run-buttons {
-      display: inline-block;
-      position: relative;
-      top: 1px;
-    }
   }
 
   .view-content {
@@ -77,6 +39,10 @@
   .console-error {
     color: @text-color-error;
   }
+}
+
+.atom-view .launch-terminated .title {
+  font-style: italic;
 }
 
 .process-status-bar {

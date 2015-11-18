@@ -21,17 +21,13 @@ final Logger _logger = new Logger('references');
 
 class FindReferencesHelper implements Disposable {
   Disposable _command;
-  FindReferencesView _view;
 
   FindReferencesHelper() {
     _command = atom.commands.add(
         'atom-text-editor', 'dartlang:find-references', _handleReferences);
   }
 
-  void dispose() {
-    _command.dispose();
-    if (_view != null) _view.dispose();
-  }
+  void dispose() => _command.dispose();
 
   void _handleReferences(AtomEvent event) => _handleReferencesEditor(event.editor);
 
@@ -41,37 +37,65 @@ class FindReferencesHelper implements Disposable {
     int offset = editor.getBuffer().characterIndexForPosition(range.start);
 
     Job job = new AnalysisRequestJob('find references', () {
-      return analysisServer.findElementReferences(path, offset, false).then((result) {
+      return analysisServer.findElementReferences(path, offset, false).then(
+          (FindElementReferencesResult result) {
         if (result == null) return;
 
         if (result.id == null) {
           atom.beep();
-        } else {
-          if (_view == null) _view = new FindReferencesView();
-          _view._showView(result);
+          return;
         }
+
+        FindReferencesView.showView(result);
       });
     });
     job.schedule();
   }
 }
 
-class FindReferencesView extends AtomView {
+class FindReferencesView extends View2 {
+  static FindReferencesView _singleton;
+
+  static void showView(FindElementReferencesResult result) {
+    if (_singleton == null) {
+      _singleton = new FindReferencesView();
+      _singleton._handleSearchResults(result);
+      viewGroupManager.addView('right', _singleton);
+    } else {
+      _singleton._handleSearchResults(result);
+      viewGroupManager.activate(_singleton);
+    }
+  }
+
+  CoreElement element;
   CoreElement target;
   CoreElement status;
   ListTreeBuilder treeBuilder;
   _MatchParser matchParser = new _MatchParser();
 
-  FindReferencesView() : super('References', classes: 'find-references',
-      groupName: 'rightView') {
-    target = content.add(span(c: 'text-highlight'));
-    status = content.add(span(c: 'search-summary'));
-    treeBuilder = content.add(new ListTreeBuilder(_render)..flex());
+  FindReferencesView() {
+    element = div(c: 'find-references')..layoutVertical();
+    element.add([
+      div(c: 'references-title')..add([
+        target = element.add(span(c: 'text-highlight')),
+        status = element.add(span(c: 'search-summary'))
+      ]),
+      treeBuilder = element.add(new ListTreeBuilder(_render)..flex())
+    ]);
+
     treeBuilder.onClickNode.listen(_jumpTo);
     treeBuilder.onDoubleClick.listen(_doubleClick);
   }
 
-  void _showView(FindElementReferencesResult findResult) {
+  String get id => 'findReferences';
+
+  String get label => 'References';
+
+  void dispose() {
+    _singleton = null;
+  }
+
+  void _handleSearchResults(FindElementReferencesResult findResult) {
     bool isMethod = findResult.element.parameters != null;
     target.text = "'${findResult.element.name}${isMethod ? '()' : ''}'";
 
@@ -102,8 +126,6 @@ class FindReferencesView extends AtomView {
         treeBuilder.addNode(node);
       }
     });
-
-    show();
 
     matchParser.reset();
   }
@@ -149,10 +171,6 @@ class FindReferencesView extends AtomView {
       String path = node.data;
       atom.workspace.open(path, options: { 'searchAllPanes': true });
     }
-  }
-
-  void hide() {
-    super.hide();
   }
 
   List<String> _renderPath(String originalPath) {

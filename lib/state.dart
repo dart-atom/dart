@@ -18,6 +18,7 @@ import 'launch/launch.dart';
 import 'launch/launch_configs.dart';
 import 'projects.dart';
 import 'sdk.dart';
+import 'views.dart';
 
 export 'dependencies.dart' show deps;
 
@@ -33,6 +34,8 @@ DebugManager get debugManager => deps[DebugManager];
 BreakpointManager get breakpointManager => deps[BreakpointManager];
 ProjectManager get projectManager => deps[ProjectManager];
 SdkManager get sdkManager => deps[SdkManager];
+ViewGroupManager2 get viewGroupManager => deps[ViewGroupManager2];
+
 final State state = new State();
 
 class State {

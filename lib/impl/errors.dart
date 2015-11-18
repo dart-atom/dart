@@ -35,7 +35,7 @@ class ErrorsController implements Disposable {
 
   ErrorsController() {
     disposables.add(atom.commands.add(
-      'atom-workspace', '${pluginId}:toggle-errors-view', (_) => _toggleView()
+      'atom-workspace', '${pluginId}:toggle-errors-view', (_) => toggleView()
     ));
 
     enabled = atom.config.getValue(_errorPref);
@@ -68,12 +68,22 @@ class ErrorsController implements Disposable {
     view.dispose();
   }
 
+  void toggleView() {
+    if (view.isViewActive()) {
+      view.showView(false);
+    } else if (view.isViewShowing()) {
+      viewGroupManager.activateView(view.id);
+    } else {
+      view.showView(true);
+    }
+  }
+
   void _togglePrefs(bool value) {
     enabled = value;
 
     // Sync the UI.
-    if (view.isVisible() && !enabled) _toggleView();
-    if (!view.isVisible() && enabled) _toggleView();
+    if (view.isViewShowing() && !enabled) view.showView(false);
+    if (!view.isViewShowing() && enabled) view.showView(true);
     if (statusElement.isShowing() && !enabled) statusElement.hide();
     if (!statusElement.isShowing() && enabled) statusElement.show();
 
@@ -81,8 +91,6 @@ class ErrorsController implements Disposable {
     atom.config.setValue('linter.showErrorPanel', !enabled);
     atom.config.setValue('linter.displayLinterInfo', !enabled);
   }
-
-  void _toggleView() => view.toggle();
 
   void initStatusBar(StatusBar statusBar) {
     statusElement._init(statusBar);
@@ -120,16 +128,16 @@ class ErrorsController implements Disposable {
   }
 }
 
-class ErrorsView extends AtomView {
+class ErrorsView extends View2 {
+  CoreElement element;
   CoreElement target;
   CoreElement body;
   CoreElement countElement;
   CoreElement focusElement;
 
-  ErrorsView(bool enabled) : super('Errors', classes: 'errors-view dartlang',
-      prefName: 'Errors', rightPanel: false, cancelCloses: false,
-      showTitle: false, groupName: 'bottomView') {
-    content.add([
+  ErrorsView(bool enabled) {
+    element = div(c: 'errors-view dartlang');
+    element.add([
       body = div(),
       div(c: 'text-muted errors-focus-area')..add([
         countElement = div(c: 'errors-count'),
@@ -137,31 +145,45 @@ class ErrorsView extends AtomView {
       ])
     ]);
 
-    content.element.tabIndex = 1;
+    element.element.tabIndex = 1;
 
     if (state['errorViewShowing'] == null) {
       state['errorViewShowing'] = enabled;
     }
 
-    bool hidden = state['errorViewShowing'] == false;
-    hidden ? hide() : show();
+    showView(state['errorViewShowing'] != false);
 
-    root.listenForUserCopy();
+    element.listenForUserCopy();
   }
 
-  void show() {
-    super.show();
+  String get id => 'errorView';
+
+  String get label => 'Errors';
+
+  bool isViewShowing() => viewGroupManager.hasViewId(id);
+
+  bool isViewActive() {
+    return isViewShowing() ? viewGroupManager.isActiveId(id) : false;
+  }
+
+  void showView(bool show) {
+    if (isViewShowing() == show) return;
+
+    if (show) {
+      viewGroupManager.addView('bottom', this);
+    } else {
+      viewGroupManager.removeViewId(id);
+    }
+  }
+
+  void handleActivate() {
+    super.handleActivate();
     state['errorViewShowing'] = true;
   }
 
-  void hide() {
-    super.hide();
+  void dispose() {
     state['errorViewShowing'] = false;
   }
-
-  // void _copy() {
-  //   //body.element.document.execCommand('copy');
-  // }
 
   void _handleErrorsChanged(List<AnalysisError> errors, {String focus}) {
     // Update the main view.
@@ -319,7 +341,7 @@ class ErrorsStatusElement implements Disposable {
       _badgeSpan = span(c: 'badge subtle')
     ]);
 
-    _element.click(parent._toggleView);
+    _element.click(parent.toggleView);
 
     statusTile = statusBar.addLeftTile(item: _element.element, priority: -100);
 

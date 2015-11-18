@@ -67,6 +67,8 @@ class LaunchManager implements Disposable {
   }
 
   void removeLaunch(Launch launch) {
+    if (!_launches.contains(launch)) return;
+
     _launches.remove(launch);
     bool activeChanged = false;
     if (launch == _activeLaunch) {

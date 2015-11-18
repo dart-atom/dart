@@ -1,0 +1,7 @@
+# Cli launch configuration for tool/grind.dart.
+type: cli
+path: tool/grind.dart
+
+cli:
+  args: 
+  checked: true

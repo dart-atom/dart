@@ -183,6 +183,8 @@ class SelectionGroup<T> {
 
   List<T> get items => _items;
 
+  int get length => _items.length;
+
   Stream<T> get onAdded => _addedController.stream;
   Stream<T> get onSelectionChanged => _selectionChangedController.stream;
   Stream<T> get onRemoved => _removedController.stream;
@@ -205,12 +207,14 @@ class SelectionGroup<T> {
   }
 
   void remove(T item) {
+    if (!_items.contains(item)) return;
+
     _items.remove(item);
     _removedController.add(item);
 
     if (_selection == item) {
       _selection = null;
-      _selectionChangedController.add(selection);
+      _selectionChangedController.add(null);
     }
   }
 }
