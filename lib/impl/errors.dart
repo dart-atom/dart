@@ -16,6 +16,8 @@ import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
 
+const String errorViewId = 'errors';
+
 final String _errorPref = '${pluginId}.useErrorsView';
 
 final String _initKeyPath = '_dartlang._errorsInitialized';
@@ -156,7 +158,7 @@ class ErrorsView extends View {
     element.listenForUserCopy();
   }
 
-  String get id => 'errorView';
+  String get id => errorViewId;
 
   String get label => 'Errors';
 
@@ -169,6 +171,8 @@ class ErrorsView extends View {
   void showView(bool show) {
     if (isViewShowing() == show) return;
 
+    state['errorViewShowing'] = show;
+
     if (show) {
       viewGroupManager.addView('bottom', this);
     } else {
@@ -176,14 +180,7 @@ class ErrorsView extends View {
     }
   }
 
-  void handleActivate() {
-    super.handleActivate();
-    state['errorViewShowing'] = true;
-  }
-
-  void dispose() {
-    state['errorViewShowing'] = false;
-  }
+  void dispose() { }
 
   void _handleErrorsChanged(List<AnalysisError> errors, {String focus}) {
     // Update the main view.

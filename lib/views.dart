@@ -230,6 +230,8 @@ class ViewGroup implements Disposable {
   bool get showing => _panel.isVisible();
 
   void addView(View view, {bool activate: true}) {
+    if (views.items.contains(view)) return;
+
     view.group = this;
 
     view.handleDeactivate();
@@ -478,4 +480,25 @@ class Node<T> {
   int get hashCode => data.hashCode;
 
   String toString() => data.toString();
+}
+
+/// Implement double tap escape to close.
+class DoubleCancelCommand implements Disposable {
+  Function handleCancel;
+  Disposable _command;
+  Timer _timer;
+
+  DoubleCancelCommand(this.handleCancel) {
+    _command = atom.commands.add('atom-workspace', 'core:cancel', _handleCancel);
+  }
+
+  void _handleCancel(_) {
+    if (_timer != null) {
+      handleCancel();
+    } else {
+      _timer = new Timer(new Duration(milliseconds: 750), () => _timer = null);
+    }
+  }
+
+  void dispose() => _command.dispose();
 }

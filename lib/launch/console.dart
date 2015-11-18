@@ -2,12 +2,12 @@
 /// A console output view.
 library atom.console;
 
-import 'dart:async';
 import 'dart:html' show ScrollAlignment;
 
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../elements.dart';
+import '../impl/errors.dart';
 import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
@@ -17,9 +17,10 @@ class ConsoleController implements Disposable {
   ConsoleStatusElement statusElement;
 
   Disposables disposables = new Disposables();
-  StreamSubscription _sub;
+  StreamSubscriptions _subs = new StreamSubscriptions();
 
   List<View> _allViews = [];
+  View _errorsView;
 
   ConsoleController() {
     statusElement = new ConsoleStatusElement(this, false);
@@ -29,7 +30,10 @@ class ConsoleController implements Disposable {
       _toggleViews();
     }));
 
-    _sub = launchManager.onLaunchAdded.listen(_launchAdded);
+    disposables.add(new DoubleCancelCommand(_handleDoubleEscape));
+
+    _subs.add(launchManager.onLaunchAdded.listen(_launchAdded));
+    _subs.add(launchManager.onLaunchRemoved.listen(_launchRemoved));
   }
 
   void initStatusBar(StatusBar statusBar) {
@@ -37,13 +41,29 @@ class ConsoleController implements Disposable {
   }
 
   void _launchAdded(Launch launch) {
+    // Check if we should auto-toggle hide the errors view.
+    ViewGroup group = viewGroupManager.getGroup('bottom');
+    if (group.views.length == 1 && group.hasViewId(errorViewId)) {
+      _errorsView = group.getViewById(errorViewId);
+      group.removeView(_errorsView);
+    }
+
     ConsoleView2 view = new ConsoleView2(this, launch);
     _allViews.add(view);
     viewGroupManager.addView('bottom', view);
   }
 
+  void _launchRemoved(Launch launch) {
+    // Re-show the errors view if we auto-hide it.
+    if (_errorsView != null && launchManager.launches.isEmpty) {
+      if (!viewGroupManager.hasViewId(errorViewId)) {
+        viewGroupManager.addView('bottom', _errorsView);
+      }
+      _errorsView = null;
+    }
+  }
+
   void _toggleViews() {
-    print(_allViews);
     if (_allViews.isEmpty) return;
 
     bool anyActive = _allViews.any((view) => viewGroupManager.isActiveId(view.id));
@@ -66,16 +86,22 @@ class ConsoleController implements Disposable {
     }
   }
 
+  void _handleDoubleEscape() {
+    for (Launch launch in launchManager.launches.toList()) {
+      if (launch.isTerminated) {
+        launchManager.removeLaunch(launch);
+      }
+    }
+  }
+
   void dispose() {
     statusElement.dispose();
     disposables.dispose();
-    _sub.cancel();
+    _subs.cancel();
   }
 }
 
 // TODO: activity spinner - where to show?
-
-// TODO: auto-hide
 
 class ConsoleView2 extends View {
   // Only show a set amount of lines of output.
@@ -122,7 +148,7 @@ class ConsoleView2 extends View {
     // TODO: Listen for obs. port being provided after a delay.
     if (launch.canDebug()) {
       _debugButton = buttons.add(
-        button(text: 'Observatory', c: 'btn icon icon-dashboard') // icon-search
+        button(text: 'Observatory', c: 'btn icon icon-dashboard')
       );
       _debugButton.tooltip = 'Open the Observatory';
       _debugButton.click(() {
