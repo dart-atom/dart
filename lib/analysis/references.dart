@@ -53,7 +53,7 @@ class FindReferencesHelper implements Disposable {
   }
 }
 
-class FindReferencesView extends View2 {
+class FindReferencesView extends View {
   static FindReferencesView _singleton;
 
   static void showView(FindElementReferencesResult result) {

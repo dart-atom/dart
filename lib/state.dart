@@ -35,7 +35,7 @@ DebugManager get debugManager => deps[DebugManager];
 BreakpointManager get breakpointManager => deps[BreakpointManager];
 ProjectManager get projectManager => deps[ProjectManager];
 SdkManager get sdkManager => deps[SdkManager];
-ViewGroupManager2 get viewGroupManager => deps[ViewGroupManager2];
+ViewGroupManager get viewGroupManager => deps[ViewGroupManager];
 NavigationManager get navigationManager => deps[NavigationManager];
 
 final State state = new State();
