@@ -314,14 +314,14 @@ class AtomDartPackage extends AtomPackage {
         'order': 3
       },
 
-      // auto show console
-      'autoShowConsole': {
-        'title': 'Auto open console',
-        'description': 'Automatically open the console when an application is run.',
-        'type': 'boolean',
-        'default': true,
-        'order': 4
-      },
+      // // auto show console
+      // 'autoShowConsole': {
+      //   'title': 'Auto open console',
+      //   'description': 'Automatically open the console when an application is run.',
+      //   'type': 'boolean',
+      //   'default': true,
+      //   'order': 4
+      // },
 
       // show infos and todos
       'showInfos': {

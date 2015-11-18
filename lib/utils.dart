@@ -207,6 +207,8 @@ class SelectionGroup<T> {
   }
 
   void remove(T item) {
+    if (!_items.contains(item)) return;
+
     _items.remove(item);
     _removedController.add(item);
 

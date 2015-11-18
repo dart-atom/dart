@@ -404,7 +404,7 @@ class ViewGroup2 implements Disposable {
     ]);
 
     _closeButton.hidden();
-    _closeButton.click(() => removeView(views.selection));
+    _closeButton.click(() => views.selection.handleClose());
     _closeButton.element.style
       ..position = 'absolute'
       ..right = '8px'
@@ -465,7 +465,7 @@ class ViewGroup2 implements Disposable {
     if (hidden && views.items.isNotEmpty) _setVisible(true);
     tabHeader.hidden(views.length < 2);
     _closeButton.hidden(views.length != 1);
-    tabHeader.add(view._tabElement);
+    tabHeader.add(view.tabElement);
   }
 
   void _onActiveChanged(View2 view) {
@@ -489,7 +489,7 @@ class ViewGroup2 implements Disposable {
     tabHeader.hidden(views.length < 2);
     _closeButton.hidden(views.length != 1);
     view.element.dispose();
-    view._tabElement.dispose();
+    view.tabElement.dispose();
     view.dispose();
   }
 
@@ -512,13 +512,13 @@ class ViewGroup2 implements Disposable {
 }
 
 abstract class View2 implements Disposable {
-  CoreElement _tabElement;
+  CoreElement tabElement;
   ViewGroup2 group;
 
   View2() {
-    _tabElement = li(c: 'tab')..add([
+    tabElement = li(c: 'tab')..add([
       div(text: label, c: 'title')..click(_handleTab),
-      div(c: 'close-icon')..click(_handleClose)
+      div(c: 'close-icon')..click(handleClose)
     ]);
   }
 
@@ -530,21 +530,23 @@ abstract class View2 implements Disposable {
 
   void handleActivate() {
     element.toggleAttribute('hidden', false);
-    _tabElement.toggleClass('active', true);
+    tabElement.toggleClass('active', true);
   }
 
   void handleDeactivate() {
     element.toggleAttribute('hidden', true);
-    _tabElement.toggleClass('active', false);
+    tabElement.toggleClass('active', false);
   }
 
   void _handleTab() {
     group.activateView(this);
   }
 
-  void _handleClose() {
+  void handleClose() {
     group.removeView(this);
   }
+
+  String toString() => '[${label} ${id}]';
 }
 
 class ListTreeBuilder extends CoreElement {
