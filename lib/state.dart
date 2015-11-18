@@ -13,6 +13,7 @@ import 'debug/debugger.dart';
 import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
+import 'impl/navigation.dart';
 import 'jobs.dart';
 import 'launch/launch.dart';
 import 'launch/launch_configs.dart';
@@ -35,6 +36,7 @@ BreakpointManager get breakpointManager => deps[BreakpointManager];
 ProjectManager get projectManager => deps[ProjectManager];
 SdkManager get sdkManager => deps[SdkManager];
 ViewGroupManager2 get viewGroupManager => deps[ViewGroupManager2];
+NavigationManager get navigationManager => deps[NavigationManager];
 
 final State state = new State();
 
