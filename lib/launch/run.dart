@@ -47,8 +47,7 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
   List<ContextMenuItem> getTreeViewContributions() {
     return [
-      new RunAppContextCommand('Run Application', 'dartlang:run-application'),
-      new RunAppContextCommand('Run App Configuration…', 'dartlang:run-application-configuration')
+      new RunAppContextCommand('Run Application', 'dartlang:run-application')
     ];
   }
 
