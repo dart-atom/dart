@@ -386,7 +386,7 @@ class AnalysisServer implements Disposable {
       return;
     }
 
-    _server.experimental.getDiagnostics().then((DiagnosticsResult diagnostics) {
+    _server.diagnostic.getDiagnostics().then((DiagnosticsResult diagnostics) {
       List<ContextData> contexts = diagnostics.contexts;
 
       String info = '${contexts.length} ${pluralize('context', contexts.length)}\n\n';

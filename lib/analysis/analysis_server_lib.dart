@@ -34,7 +34,7 @@ class Server {
   SearchDomain _search;
   EditDomain _edit;
   ExecutionDomain _execution;
-  ExperimentalDomain _experimental;
+  DiagnosticDomain _diagnostic;
 
   Server(Stream<String> inStream, void writeMessage(String message)) {
     configure(inStream, writeMessage);
@@ -45,7 +45,7 @@ class Server {
     _search = new SearchDomain(this);
     _edit = new EditDomain(this);
     _execution = new ExecutionDomain(this);
-    _experimental = new ExperimentalDomain(this);
+    _diagnostic = new DiagnosticDomain(this);
   }
 
   ServerDomain get server => _server;
@@ -54,7 +54,7 @@ class Server {
   SearchDomain get search => _search;
   EditDomain get edit => _edit;
   ExecutionDomain get execution => _execution;
-  ExperimentalDomain get experimental => _experimental;
+  DiagnosticDomain get diagnostic => _diagnostic;
 
   Stream<String> get onSend => _onSend.stream;
   Stream<String> get onReceive => _onReceive.stream;
@@ -911,14 +911,14 @@ class MapUriResult {
   MapUriResult({this.file, this.uri});
 }
 
-// experimental domain
+// diagnostic domain
 
 @experimental
-class ExperimentalDomain extends Domain {
-  ExperimentalDomain(Server server) : super(server, 'experimental');
+class DiagnosticDomain extends Domain {
+  DiagnosticDomain(Server server) : super(server, 'diagnostic');
 
   Future<DiagnosticsResult> getDiagnostics() =>
-      _call('experimental.getDiagnostics').then(DiagnosticsResult.parse);
+      _call('diagnostic.getDiagnostics').then(DiagnosticsResult.parse);
 }
 
 class DiagnosticsResult {
