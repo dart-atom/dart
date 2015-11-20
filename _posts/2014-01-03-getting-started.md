@@ -107,8 +107,8 @@ When looking at source code, you can get more information about a class, method,
 or variable by placing the cursor on that symbol and hitting `F1`. The dartdoc
 information for that element will be displayed.
 
-Command or option-clicking on an element, or hitting `ctrl-alt-down`, will jump
-to its definition. To jump back, hit `cmd-option-up` (or `ctrl-alt-up`).
+Command or option-clicking on an element will jump to its definition. To jump
+back, hit `cmd-option-up` (or `ctrl-alt-up`).
 
 You can toggle on and off a structural outline view of the current Dart file by
 executing the command `'toggle outline view'`.
@@ -144,3 +144,8 @@ and let you re-analyze the Dart source for the current projects.
 
 This status dialog can be useful for diagnosing issues with the analysis server,
 like analysis not terminating, or excessive CPU or memory consumption.
+
+For developers working on the plugin itself, or trying to resolve analysis server
+issues, you can enable a setting to start the analysis server with debug flags. This
+will expose some additional options in the analysis server status dialog; only a
+very small number of developers should need to enable this setting.
