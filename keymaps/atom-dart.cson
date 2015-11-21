@@ -15,6 +15,7 @@
 # Global commands (mac)
 'body.platform-darwin':
   'ctrl-alt-cmd-;': 'dartlang:rebuild-restart-dev'
+  'ctrl-alt-cmd-\'': 'dartlang:rebuild-run-tests-dev'
   'ctrl-alt-cmd-t': 'dartlang:run-tests'
 
 # Global commands (windows and linux)

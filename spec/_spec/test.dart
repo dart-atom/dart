@@ -1,19 +1,14 @@
 library test;
 
-@MirrorsUsed(metaTargets: const [Test])
-import 'dart:mirrors';
-
 import 'jasmine.dart' as jasmine;
 
-class Test {
-  const Test();
-}
+typedef Test();
 
 /// TODO: doc
-registerSuite(Type testSuite) => _registerSuite(testSuite);
+registerSuite(TestSuite testSuite) => _registerSuite(testSuite);
 
 /// TODO: doc
-registerSuites(List<Type> testSuites) => testSuites.forEach(registerSuite);
+registerSuites(List<TestSuite> testSuites) => testSuites.forEach(registerSuite);
 
 /// TODO: doc
 abstract class TestSuite {
@@ -27,6 +22,9 @@ abstract class TestSuite {
   setUp() {
 
   }
+
+  /// Return the `<name, test>` tests for this test suite.
+  Map<String, Test> getTests();
 
   /// Called after each test in the test suite has run. Can return a Future to
   /// indicate that the tearDown is async.
@@ -47,52 +45,32 @@ abstract class TestSuite {
 
 // Impl.
 
-_registerSuite(Type testSuite) {
-  ClassMirror classMirror = reflectClass(testSuite);
-
-  String suiteName = _symbolName(classMirror.simpleName);
-  print(suiteName);
+_registerSuite(TestSuite suite) {
+  String suiteName = suite.runtimeType.toString();
 
   jasmine.describe(suiteName, () {
-    TestSuite suite = classMirror.newInstance(const Symbol(''), []).reflectee;
-
     // // Call setUpSuite.
     // jasmine.beforeAll(() {
     //   return reflect(suite).invoke(#setUpSuite, []);
     // });
 
     // Call setUp.
-    jasmine.beforeEach(() {
-      return reflect(suite).invoke(#setUp, []);
-    });
+    jasmine.beforeEach(() => suite.setUp());
 
     // Call tearDown.
-    jasmine.afterEach(() {
-      return reflect(suite).invoke(#tearDown, []);
-    });
+    jasmine.afterEach(() => suite.tearDown());
 
     // // Call tearDownSuite.
     // jasmine.afterAll(() {
     //   return reflect(suite).invoke(#tearDownSuite, []);
     // });
 
-    classMirror.instanceMembers.forEach((Symbol name, MethodMirror method) {
-      if (method.metadata.any((meta) => meta.reflectee is Test)) {
-        String testName = _symbolName(name);
-        print("  - ${testName}");
+    Map<String, Test> tests = suite.getTests();
 
-        jasmine.it(testName, () {
-          reflect(suite).invoke(name, []);
-        });
-      }
-    });
+    for (String testName in tests.keys) {
+      Test test = tests[testName];
+      print("${suiteName} - ${testName}");
+      jasmine.it(testName, () => test());
+    }
   });
-}
-
-// Symbol("CatTest") ==> CatTest
-String _symbolName(Symbol symbol) {
-  String name = symbol.toString();
-  if (name.startsWith('Symbol("')) name = name.substring(8);
-  if (name.endsWith('")')) name = name.substring(0, name.length - 2);
-  return name;
 }

@@ -44,11 +44,10 @@ build() async {
 buildAtomTests() async {
   final String base = 'spec/all-spec';
   File inputFile = getFile('${base}.dart');
-  await Dart2js.compileAsync(inputFile,
-      csp: true,
-      enableExperimentalMirrors: true,
-      outFile: getFile('${base}.js'));
+  File outputFile = getFile('${base}.js');
+  await Dart2js.compileAsync(inputFile, csp: true, outFile: outputFile);
   delete(getFile('${base}.js.deps'));
+  //outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
 }
 
 @Task('Run the Atom tests')

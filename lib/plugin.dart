@@ -43,7 +43,6 @@ import 'impl/navigation.dart';
 import 'impl/outline.dart';
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
-import 'impl/smoketest.dart';
 import 'impl/status_display.dart';
 import 'impl/tests.dart';
 import 'impl/toolbar.dart';
@@ -158,15 +157,13 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[FlutterSdkManager] = new FlutterSdkManager());
 
     disposables.add(new UsageManager());
+    disposables.add(new RebuildManager());
 
     _registerLinter();
     _registerLaunchTypes();
 
     // Register commands.
-    _addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
-    _addCmd('atom-workspace', 'dartlang:rebuild-restart-dev', (_) {
-      new RebuildJob().schedule();
-    });
+    //_addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
     _addCmd('atom-workspace', 'dartlang:settings', (_) {
       atom.workspace.open('atom://config/packages/dartlang');
     });
