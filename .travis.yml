@@ -1,5 +1,5 @@
 language: dart
-dart: dev
+dart: stable
 
 script: ./tool/travis.sh
 
