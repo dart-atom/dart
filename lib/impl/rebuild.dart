@@ -7,13 +7,31 @@ library atom.rebuild;
 
 import 'dart:async';
 
-import 'pub.dart';
 import '../atom.dart';
 import '../jobs.dart';
 import '../state.dart';
+import '../utils.dart';
+import 'pub.dart';
+
+class RebuildManager implements Disposable {
+  Disposables disposables = new Disposables();
+
+  RebuildManager() {
+    disposables.add(atom.commands.add('atom-workspace', 'dartlang:rebuild-restart-dev', (_) {
+      new RebuildJob("Rebuilding dartlang").schedule();
+    }));
+    disposables.add(atom.commands.add('atom-workspace', 'dartlang:rebuild-run-tests-dev', (_) {
+      new RebuildJob("Building dartlang tests", runTests: true).schedule();
+    }));
+  }
+
+  void dispose() => disposables.dispose();
+}
 
 class RebuildJob extends Job {
-  RebuildJob() : super("Rebuilding dart-lang", RebuildJob);
+  final bool runTests;
+
+  RebuildJob(String title, {this.runTests: false}) : super(title, RebuildJob);
 
   Future run() {
     // Validate that there's an sdk.
@@ -24,7 +42,8 @@ class RebuildJob extends Job {
 
     // Find the `dartlang` project.
     Directory proj = atom.project.getDirectories().firstWhere(
-        (d) => d.getBaseName().endsWith(pluginId), orElse: () => null);
+        (d) => d.getBaseName().endsWith(pluginId), orElse: () => null
+    );
     if (proj == null) {
       atom.notifications.addWarning("Unable to find project '${pluginId}'.");
       return new Future.value();
@@ -35,12 +54,27 @@ class RebuildJob extends Job {
       if (editor.isModified()) editor.save();
     });
 
-    return new PubRunJob.local(proj.getPath(), ['grinder', 'build']).schedule().then(
+    List<String> args = ['grinder', runTests ? 'build-atom-tests' : 'build'];
+
+    return new PubRunJob.local(proj.getPath(), args, title: name).schedule().then(
         (JobStatus status) {
       // Check for an exit code of `0` from grind build.
       if (status.isOk && status.result == 0) {
-        new Future.delayed(new Duration(seconds: 2)).then((_) => atom.reload());
+        if (runTests) {
+          _runTests();
+        } else {
+          new Future.delayed(new Duration(seconds: 2)).then((_) => atom.reload());
+        }
       }
     });
+  }
+
+  void _runTests() {
+    TextEditor editor = atom.workspace.getActiveTextEditor();
+    if (editor == null) {
+      atom.notifications.addWarning("No active editor - can't run tests.");
+    } else {
+      atom.commands.dispatch(atom.views.getView(editor), 'window:run-package-specs');
+    }
   }
 }

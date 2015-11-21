@@ -1,12 +1,9 @@
-@MirrorsUsed(targets: const [CatTest, DogTest])
-import 'dart:mirrors';
-
 import 'test.dart';
 
 register() {
   registerSuites([
-    CatTest,
-    DogTest
+    new CatTest(),
+    new DogTest()
   ]);
 }
 
@@ -19,20 +16,26 @@ class CatTest extends TestSuite {
     print('I was torn down.');
   }
 
-  @Test()
-  hasPaws() {
+  Map<String, Test> getTests() => {
+    'hasPaws': _hasPaws,
+    'has4Paws': _has4Paws
+  };
+
+  _hasPaws() {
     expect(true, true);
   }
 
-  @Test()
-  has4Paws() {
+  _has4Paws() {
     expect(2, 4);
   }
 }
 
 class DogTest extends TestSuite {
-  @Test()
-  fooBar() {
+  Map<String, Test> getTests() => {
+    'fooBar': _fooBar
+  };
+
+  _fooBar() {
     expect(4, 4);
   }
 }

@@ -31,6 +31,8 @@ beforeAll(Callback callback) {
   context.callMethod('beforeAll', [callback]);
 }
 
+// TODO: Re-do this to support Jasmine 1.3
+// (http://jasmine.github.io/1.3/introduction.html) - runs(), waitsFor(), runs()
 beforeEach(Callback callback) {
   context.callMethod('beforeEach', [callback]);
   // _beforeEach.apply([(_done) {
@@ -75,20 +77,21 @@ class Expectation {
   }
 }
 
-class Done {
-  final JsObject obj;
-
-  Done(this.obj);
-
-  finished() {
-    (obj as JsFunction).apply([]);
-  }
-
-  fail([dynamic error]) {
-    if (error != null) {
-      obj.callMethod('fail', [error]);
-    } else {
-      obj.callMethod('fail');
-    }
-  }
-}
+// Jasmine 2.0
+// class Done {
+//   final JsObject obj;
+//
+//   Done(this.obj);
+//
+//   finished() {
+//     (obj as JsFunction).apply([]);
+//   }
+//
+//   fail([dynamic error]) {
+//     if (error != null) {
+//       obj.callMethod('fail', [error]);
+//     } else {
+//       obj.callMethod('fail');
+//     }
+//   }
+// }
