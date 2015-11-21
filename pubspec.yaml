@@ -15,7 +15,7 @@ dependencies:
   markdown: ^0.8.0
   pub_semver: ^1.2.1
   usage: ^1.0.0
-  vm_service_lib: 0.0.7
+  vm_service_lib: 0.0.8+2
   yaml: ^2.0.0
 
 dev_dependencies:

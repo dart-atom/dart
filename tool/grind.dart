@@ -70,7 +70,7 @@ ddc() {
 }
 
 @Task()
-test() => new PubApp.local('test').runAsync(['-rexpanded']);
+test() => Dart.runAsync('test/all.dart');
 
 // TODO: Removed the `ddc` dep task for now.
 @Task()

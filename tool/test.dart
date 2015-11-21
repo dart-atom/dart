@@ -1,6 +1,7 @@
 library foo_test;
 
 import 'dart:io';
+import 'dart:developer' as dev;
 
 void main(List<String> args) {
   print('args: ${args}');
@@ -12,9 +13,20 @@ void main(List<String> args) {
   Cat pebbles;
   Dog fido = new Dog(Dog.FIDO_NAME);
 
+  dev.log('log from test');
+
+  // TODO: Handle this.
+  dev.Timeline.timeSync('frame', _mockFrame);
+
+  dev.inspect(fido);
+
   print('foo 1');
   print('foo 2');
   print('foo 3');
+
+  dev.log('log from test', name: 'test', level: 1);
+  dev.Timeline.timeSync('frame', _mockFrame);
+  dev.Timeline.timeSync('frame', _mockFrame);
 
   print('${abc} ${count}');
 
@@ -54,4 +66,12 @@ class Dog extends Animal {
   Dog(String name) : super(name);
 
   void bark() => print('woof!');
+}
+
+dynamic _mockFrame() {
+  final List<String> names = [
+    'Fido', 'Sparky', 'Chips', 'Scooter'
+  ];
+
+  return names.map((name) => new Dog(name)).toList();
 }

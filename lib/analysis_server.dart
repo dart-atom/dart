@@ -36,10 +36,8 @@ class AnalysisServer implements Disposable {
   static bool get useChecked =>
       atom.config.getBoolValue('${pluginId}.analysisServerUseChecked');
 
-  static final int OBSERVATORY_PORT = 23071;
   static final int DIAGNOSTICS_PORT = 23072;
 
-  static String get observatoryUrl => 'http://localhost:${OBSERVATORY_PORT}/';
   static String get diagnosticsUrl => 'http://localhost:${DIAGNOSTICS_PORT}/';
 
   StreamSubscriptions subs = new StreamSubscriptions();
@@ -591,10 +589,6 @@ class _AnalysisServerWrapper extends Server {
     List<String> arguments = [path, '--sdk=${sdk.path}'];
 
     if (AnalysisServer.startWithDebugging) {
-      arguments.insert(0, '--observe=${AnalysisServer.OBSERVATORY_PORT}');
-      _logger.info('observatory on analysis server available at '
-          '${AnalysisServer.observatoryUrl}.');
-
       arguments.add('--port=${AnalysisServer.DIAGNOSTICS_PORT}');
       _logger.info('analysis server diagnostics available at '
           '${AnalysisServer.diagnosticsUrl}.');
