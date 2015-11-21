@@ -100,9 +100,9 @@ class ObservatoryDebugConnection extends DebugConnection {
   Future resume() => service.resume(_currentIsolate.id);
 
   // TODO: only on suspend.
-  stepIn() => service.resume(_currentIsolate.id, step: StepOption.Into);
-  stepOver() => service.resume(_currentIsolate.id, step: StepOption.Over);
-  stepOut() => service.resume(_currentIsolate.id, step: StepOption.Out);
+  stepIn() => service.resume(_currentIsolate.id, step: StepOption.kInto);
+  stepOver() => service.resume(_currentIsolate.id, step: StepOption.kOver);
+  stepOut() => service.resume(_currentIsolate.id, step: StepOption.kOut);
 
   terminate() => launch.kill();
 
@@ -122,6 +122,26 @@ class ObservatoryDebugConnection extends DebugConnection {
         _logger.finer('<== ${trim(str)}');
       }
     });
+
+    // Handle the dart:developer log() calls.
+    service.onEvent('_Logging').listen((Event e) {
+      var json = e.json['logRecord'];
+
+      // num time = json['time'];
+      // num level = json['level'];
+      // InstanceRef error = InstanceRef.parse(json['error']);
+      // InstanceRef stackTrace = InstanceRef.parse(json['stackTrace']);
+      InstanceRef loggerName = InstanceRef.parse(json['loggerName']);
+      InstanceRef message = InstanceRef.parse(json['message']);
+
+      String name = loggerName.valueAsString;
+      if (name == null || name.isEmpty) {
+        launch.pipeStdio('${message.valueAsString}\n', highlight: true);
+      } else {
+        launch.pipeStdio('[${name}] ${message.valueAsString}\n', highlight: true);
+      }
+    });
+    service.streamListen('_Logging');
 
     // TODO: Recommended boot-up sequence (done synchronously):
     // 1) getVersion.
@@ -165,7 +185,7 @@ class ObservatoryDebugConnection extends DebugConnection {
           _currentIsolate = vm.isolates.first;
           _installInto(_currentIsolate).then((_) {
             service.getIsolate(_currentIsolate.id).then((Isolate isolate) {
-              if (isolate.pauseEvent.kind == EventKind.PauseStart) {
+              if (isolate.pauseEvent.kind == EventKind.kPauseStart) {
                 resume();
               } else {
                 _startIt = true;
@@ -214,7 +234,7 @@ class ObservatoryDebugConnection extends DebugConnection {
       });
     }).then((_) {
       return service.setExceptionPauseMode(
-        _currentIsolate.id, ExceptionPauseMode.Unhandled);
+        _currentIsolate.id, ExceptionPauseMode.kUnhandled);
     });
   }
 
@@ -226,7 +246,7 @@ class ObservatoryDebugConnection extends DebugConnection {
     launch.pipeStdio('${e}\n', subtle: true);
 
     // IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
-    if (e.kind == EventKind.IsolateRunnable) {
+    if (e.kind == EventKind.kIsolateRunnable) {
       // Don't re-init if it is already inited.
       if (_currentIsolate == null) {
         _currentIsolate = e.isolate;
@@ -239,7 +259,7 @@ class ObservatoryDebugConnection extends DebugConnection {
         _startIt = false;
         resume();
       }
-    } else if (e.kind == EventKind.IsolateExit) {
+    } else if (e.kind == EventKind.kIsolateExit) {
       _currentIsolate = null;
     }
   }
@@ -247,27 +267,33 @@ class ObservatoryDebugConnection extends DebugConnection {
   void _handleDebugEvent(Event e) {
     IsolateRef isolate = e.isolate;
 
-    if (e.kind == EventKind.Resume) {
+    // TODO:
+    if (e.kind == 'Inspect') { //EventKind.kInspect) {
+      // e.inspectee
+      launch.pipeStdio('${e}\n', highlight: true);
+    }
+
+    if (e.kind == EventKind.kResume) {
       _suspend(false);
-    } else if (e.kind == EventKind.PauseStart || e.kind == EventKind.PauseExit ||
-        e.kind == EventKind.PauseBreakpoint || e.kind == EventKind.PauseInterrupted ||
-        e.kind == EventKind.PauseException) {
+    } else if (e.kind == EventKind.kPauseStart || e.kind == EventKind.kPauseExit ||
+        e.kind == EventKind.kPauseBreakpoint || e.kind == EventKind.kPauseInterrupted ||
+        e.kind == EventKind.kPauseException) {
       _suspend(true);
     }
 
-    if (e.kind == EventKind.Resume || e.kind == EventKind.IsolateExit) {
+    if (e.kind == EventKind.kResume || e.kind == EventKind.kIsolateExit) {
       // TODO: isolate is resumed
 
     }
 
-    if (e.kind != EventKind.Resume && e.topFrame != null) {
+    if (e.kind != EventKind.kResume && e.topFrame != null) {
       topFrame = new ObservatoryDebugFrame(this, service, isolate, e.topFrame);
       topFrame.locals = new List.from(
           e.topFrame.vars.map((v) => new ObservatoryDebugVariable(v)));
       topFrame.tokenPos = e.topFrame.location.tokenPos;
     }
 
-    if (e.kind != EventKind.Resume && e.topFrame != null) {
+    if (e.kind != EventKind.kResume && e.topFrame != null) {
       if (e.exception != null) _printException(e.exception);
     }
   }
@@ -319,7 +345,7 @@ String printFunctionName(FuncRef ref, {bool terse: false}) {
 String _refToString(dynamic value) {
   if (value is InstanceRef) {
     InstanceRef ref = value as InstanceRef;
-    if (ref.kind == InstanceKind.String) {
+    if (ref.kind == InstanceKind.kString) {
       // TODO: escape string chars
       return "'${ref.valueAsString}'";
     } else if (ref.valueAsString != null) {

@@ -1156,6 +1156,7 @@ class ContextData {
         m['explicitFileCount'],
         m['implicitFileCount'],
         m['workItemQueueLength'],
+        m['workItemQueueLengthAverage'],
         m['cacheEntryExceptions'] == null
             ? null
             : new List.from(m['cacheEntryExceptions']));
@@ -1165,10 +1166,16 @@ class ContextData {
   final int explicitFileCount;
   final int implicitFileCount;
   final int workItemQueueLength;
+  final String workItemQueueLengthAverage;
   final List<String> cacheEntryExceptions;
 
-  ContextData(this.name, this.explicitFileCount, this.implicitFileCount,
-      this.workItemQueueLength, this.cacheEntryExceptions);
+  ContextData(
+      this.name,
+      this.explicitFileCount,
+      this.implicitFileCount,
+      this.workItemQueueLength,
+      this.workItemQueueLengthAverage,
+      this.cacheEntryExceptions);
 }
 
 class Element {
