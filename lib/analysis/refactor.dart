@@ -1,4 +1,3 @@
-
 library atom.refactor;
 
 import 'dart:async';
@@ -20,8 +19,8 @@ class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 
   RefactoringHelper() {
-    _commands.add(atom.commands.add('atom-text-editor',
-        'dartlang:refactor-rename', (e) {
+    _commands.add(
+        atom.commands.add('atom-text-editor', 'dartlang:refactor-rename', (e) {
       _handleRenameRefactor(e.editor);
     }));
   }
@@ -45,8 +44,9 @@ class RefactoringHelper implements Disposable {
 
     // TODO: Timeout if the refactor request takes too long?
     Job job = new AnalysisRequestJob('rename', () {
-      return analysisServer.getAvailableRefactorings(
-          path, offset, end - offset).then((AvailableRefactoringsResult result) {
+      return analysisServer
+          .getAvailableRefactorings(path, offset, end - offset)
+          .then((AvailableRefactoringsResult result) {
         if (result == null) return;
         _handleAvailableRefactoringsResult(result, path, offset, end, oldName);
       });
@@ -70,16 +70,18 @@ class RefactoringHelper implements Disposable {
     }
 
     promptUser('Rename refactor: enter the new name.',
-        defaultText: oldName,
-        selectText: true).then((_newName) {
+        defaultText: oldName, selectText: true).then((_newName) {
       newName = _newName;
       if (_newName == null) return null;
 
       Job job = new AnalysisRequestJob('rename', () {
         // Perform the refactoring.
         RefactoringOptions option = new RenameRefactoringOptions(newName);
-        return analysisServer.getRefactoring(Refactorings.RENAME, path, offset,
-            end - offset, false, options: option).then((RefactoringResult result) {
+        return analysisServer
+            .getRefactoring(
+                Refactorings.RENAME, path, offset, end - offset, false,
+                options: option)
+            .then((RefactoringResult result) {
           if (result == null) return;
           _handleRefactoringResult(result, oldName, newName, path);
         });
@@ -88,8 +90,8 @@ class RefactoringHelper implements Disposable {
     });
   }
 
-  void _handleRefactoringResult(RefactoringResult result, String oldName,
-      String newName, String path) {
+  void _handleRefactoringResult(
+      RefactoringResult result, String oldName, String newName, String path) {
     // TODO: use optionsProblems
     // TODO: use finalProblems
     // TODO: use feedback
@@ -110,7 +112,8 @@ class RefactoringHelper implements Disposable {
       sourceFileEdits.forEach((SourceFileEdit fileEdit) {
         fileEdit.edits.removeWhere((SourceEdit edit) => edit.id != null);
       });
-      sourceFileEdits.removeWhere((SourceFileEdit fileEdit) => fileEdit.edits.isEmpty);
+      sourceFileEdits
+          .removeWhere((SourceFileEdit fileEdit) => fileEdit.edits.isEmpty);
 
       // We want to confirm this refactoring with users if it's going to
       // rename across files.
@@ -143,24 +146,25 @@ class RefactoringHelper implements Disposable {
 
         var userCancelled = () => notification.dismiss();
 
-        notification = atom.notifications.addInfo(
-            'Confirm rename in ${sourceFileEdits.length} files?',
-            detail: fileSummary,
-            dismissable: true,
-            buttons: [
-              new NotificationButton('Rename', userConfirmed),
-              new NotificationButton('Cancel', userCancelled)
-            ]);
+        notification = atom.notifications
+            .addInfo('Confirm rename in ${sourceFileEdits.length} files?',
+                detail: fileSummary,
+                dismissable: true,
+                buttons: [
+                  new NotificationButton('Rename', userConfirmed),
+                  new NotificationButton('Cancel', userCancelled)
+                ]);
       } else {
         apply();
       }
     }
   }
 
-  Future _apply(List<SourceFileEdit> sourceFileEdits, String oldName, String newName) {
+  Future _apply(
+      List<SourceFileEdit> sourceFileEdits, String oldName, String newName) {
     return Future.forEach(sourceFileEdits, (SourceFileEdit edit) {
-      return atom.workspace.open(edit.file, options: {'searchAllPanes': true}).then(
-          (TextEditor editor) {
+      return atom.workspace.open(edit.file, options: {'searchAllPanes': true})
+          .then((TextEditor editor) {
         applyEdits(editor, edit.edits);
       });
     }).then((_) {
