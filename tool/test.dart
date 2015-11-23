@@ -1,7 +1,8 @@
 library foo_test;
 
-import 'dart:io';
+// import 'dart:async';
 import 'dart:developer' as dev;
+import 'dart:io';
 
 void main(List<String> args) {
   print('args: ${args}');
@@ -20,9 +21,17 @@ void main(List<String> args) {
 
   dev.inspect(fido);
 
+  // int i = 0;
+  //
+  // new Timer.periodic(new Duration(milliseconds: 10), (t) {
+  //   print('foo ${i}');
+  //   i++;
+  //   if (i > 300) t.cancel();
+  // });
+
   print('foo 1');
   print('foo 2');
-  print('foo 3');
+  print('3 foo');
 
   dev.log('log from test', name: 'test', level: 1);
   dev.Timeline.timeSync('frame', _mockFrame);

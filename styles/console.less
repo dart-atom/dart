@@ -2,38 +2,20 @@
 @import "syntax-variables";
 
 .console-view {
-  .button-bar {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    z-index: 1;
-
-    .icon::before {
-      font-size: 14px;
-      width: 14px;
-      height: 14px;
-    }
+  .trace-link {
+    cursor: pointer;
+    color: @text-color-highlight;
   }
 
-  .view-content {
-    padding: 0;
+  .trace-link:hover {
+    text-decoration: underline;
+  }
 
-    .trace-link {
-      cursor: pointer;
-      color: @text-color-highlight;
-    }
-
-    .trace-link:hover {
-      text-decoration: underline;
-    }
-
-    .console-error .trace-link {
-      color: lighten(@text-color-error, 20%);
-    }
+  .console-error .trace-link {
+    color: lighten(@text-color-error, 20%);
   }
 
   .console-line {
-    padding: 0;
     background-color: inherit;
     -webkit-user-select: text;
   }
@@ -44,6 +26,22 @@
 
   .console-error {
     color: @text-color-error;
+  }
+
+  .console-header {
+    margin-bottom: 8px;
+  }
+
+  .console-footer {
+    margin-top: 8px;
+    font-style: italic;
+    color: @text-color-subtle;
+  }
+
+  .button-bar {
+    button.btn {
+      margin-left: 5px;
+    }
   }
 }
 

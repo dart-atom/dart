@@ -128,7 +128,7 @@ class LaunchConfiguration {
 
   String get launchFileName => basename(_file.path);
 
-  //String get launchFilePath => _file.path;
+  String get configYamlPath => _file.path;
 
   String get type => _map['type'];
 

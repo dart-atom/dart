@@ -158,6 +158,14 @@ class ViewGroupManager implements Disposable {
     return _groups.values.any((group) => group.hasViewId(viewId));
   }
 
+  View getViewById(String id) {
+    for (ViewGroup group in _groups.values) {
+      if (group.hasViewId(id)) return group.getViewById(id);
+    }
+
+    return null;
+  }
+
   void dispose() {
     for (ViewGroup group in _groups.values.toList()) {
       group.dispose();
@@ -182,9 +190,8 @@ class ViewGroup implements Disposable {
 
   CoreElement root;
   CoreElement tabHeader;
-  CoreElement content;
+  CoreElement tabContainer;
 
-  CloseButton _closeButton;
   Panel _panel;
 
   View _active;
@@ -199,23 +206,16 @@ class ViewGroup implements Disposable {
 
     root.add([
       tabHeader = ul(c: 'list-inline tab-bar inset-panel')..hidden(),
-      content = div(c: 'view-content')..flex(),
-      _closeButton = new CloseButton(),
+      tabContainer = div(c: 'tab-container')..flex(),
       resizer = rightPanel
           ? new ViewResizer.createVertical() : new ViewResizer.createHorizontal()
     ]);
-
-    _closeButton.hidden();
-    _closeButton.click(() => views.selection.handleClose());
-    _closeButton.element.style
-      ..position = 'absolute'
-      ..right = '8px'
-      ..top = '6px';
 
     if (rightPanel) {
       _panel = atom.workspace.addRightPanel(item: root.element, visible: false);
     } else {
       _panel = atom.workspace.addBottomPanel(item: root.element, visible: false);
+      root.toggleAttribute('compact', true);
     }
 
     _setupResizer(
@@ -235,7 +235,7 @@ class ViewGroup implements Disposable {
     view.group = this;
 
     view.handleDeactivate();
-    content.add(view.element);
+    tabContainer.add(view.root);
     views.add(view);
     if (views.length > 1 && activate) views.setSelection(view);
   }
@@ -268,7 +268,9 @@ class ViewGroup implements Disposable {
   void _onViewAdded(View view) {
     if (hidden && views.items.isNotEmpty) _setVisible(true);
     tabHeader.hidden(views.length < 2);
-    _closeButton.hidden(views.length != 1);
+    for (View v in views.items) {
+      v._closeButton.hidden(views.length != 1);
+    }
     tabHeader.add(view.tabElement);
   }
 
@@ -291,8 +293,10 @@ class ViewGroup implements Disposable {
     _history.remove(view);
     if (showing && views.items.isEmpty) _setVisible(false);
     tabHeader.hidden(views.length < 2);
-    _closeButton.hidden(views.length != 1);
-    view.element.dispose();
+    for (View v in views.items) {
+      v._closeButton.hidden(views.length != 1);
+    }
+    view.root.dispose();
     view.tabElement.dispose();
     view.dispose();
   }
@@ -316,29 +320,41 @@ class ViewGroup implements Disposable {
 }
 
 abstract class View implements Disposable {
+  final CoreElement root;
+  final CoreElement toolbar;
+  final CoreElement content;
+
   CoreElement tabElement;
+  CloseButton _closeButton;
+
   ViewGroup group;
 
-  View() {
+  View() :
+      root = div(c: 'tab-content'),
+      toolbar = div(c: 'button-bar'),
+      content = div() {
+    root.add([toolbar, content]);
+
     tabElement = li(c: 'tab')..add([
       div(text: label, c: 'title')..click(_handleTab),
       div(c: 'close-icon')..click(handleClose)
     ]);
+
+    _closeButton = toolbar.add(new CloseButton()..click(handleClose));
   }
 
   String get id;
   String get label;
-  CoreElement get element;
 
   void dispose();
 
   void handleActivate() {
-    element.toggleAttribute('hidden', false);
+    root.toggleAttribute('hidden', false);
     tabElement.toggleClass('active', true);
   }
 
   void handleDeactivate() {
-    element.toggleAttribute('hidden', true);
+    root.toggleAttribute('hidden', true);
     tabElement.toggleClass('active', false);
   }
 
@@ -397,14 +413,6 @@ class ListTreeBuilder extends CoreElement {
       Element e = d.element;
       render(node.data, e);
       _nodeToElementMap[node] = e;
-      e.onClick.listen((_) => _clickController.add(node));
-      e.onDoubleClick.listen((Event event) {
-        if (!event.defaultPrevented) _doubleClickController.add(node);
-      });
-      element.add(d);
-
-      CoreElement u = ul(c: 'list-tree');
-      element.add(u);
 
       if (hasToggle) {
         e.onClick.listen((MouseEvent e) {
@@ -416,6 +424,17 @@ class ListTreeBuilder extends CoreElement {
           }
         });
       }
+
+      e.onClick.listen((Event event) {
+        if (!event.defaultPrevented) _clickController.add(node);
+      });
+      e.onDoubleClick.listen((Event event) {
+        if (!event.defaultPrevented) _doubleClickController.add(node);
+      });
+      element.add(d);
+
+      CoreElement u = ul(c: 'list-tree');
+      element.add(u);
 
       for (Node child in node.children) {
         _addNode(u, child);
@@ -478,6 +497,10 @@ class Node<T> {
 
   bool operator ==(other) => other is Node && data == other.data;
   int get hashCode => data.hashCode;
+
+  int get decendentCount => children.fold(1, (int val, Node n) {
+    return val + n.decendentCount;
+  });
 
   String toString() => data.toString();
 }

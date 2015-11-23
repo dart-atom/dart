@@ -41,17 +41,17 @@ class ShellLaunchType extends LaunchType {
       args: args,
       cwd: cwd);
 
+    String description = args == null ? launchName : '${launchName} ${args.join(' ')}';
     Launch launch = new Launch(manager, this, configuration, launchName,
-        killHandler: () => runner.kill(), cwd: cwd);
+      killHandler: () => runner.kill(),
+      cwd: cwd,
+      title: description
+    );
     manager.addLaunch(launch);
 
     runner.execStreaming();
     runner.onStdout.listen((str) => launch.pipeStdio(str));
     runner.onStderr.listen((str) => launch.pipeStdio(str, error: true));
-
-    String desc = args == null ? launchName : '${launchName} ${args.join(' ')}';
-    launch.pipeStdio(runner.cwd == null ? '${desc}\n' : '[${runner.cwd}] ${desc}\n', subtle: true);
-
     runner.onExit.then((code) => launch.launchTerminated(code));
 
     return new Future.value(launch);

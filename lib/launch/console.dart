@@ -2,7 +2,7 @@
 /// A console output view.
 library atom.console;
 
-import 'dart:html' show ScrollAlignment;
+import 'dart:js' as js;
 
 import '../atom.dart';
 import '../atom_statusbar.dart';
@@ -48,7 +48,7 @@ class ConsoleController implements Disposable {
       group.removeView(_errorsView);
     }
 
-    ConsoleView2 view = new ConsoleView2(this, launch);
+    ConsoleView view = new ConsoleView(this, launch);
     _allViews.add(view);
     viewGroupManager.addView('bottom', view);
   }
@@ -103,7 +103,7 @@ class ConsoleController implements Disposable {
 
 // TODO: activity spinner - where to show?
 
-class ConsoleView2 extends View {
+class ConsoleView extends View {
   // Only show a set amount of lines of output.
   static const _maxLines = 200;
 
@@ -115,28 +115,28 @@ class ConsoleView2 extends View {
   int _launchId;
   StreamSubscriptions _subs = new StreamSubscriptions();
 
-  CoreElement element;
   CoreElement output;
   String _lastText = '';
 
   CoreElement _debugButton;
   CoreElement _terminateButton;
 
-  ConsoleView2(this.controller, this.launch) {
+  ConsoleView(this.controller, this.launch) {
     _launchId = _idCount++;
 
-    CoreElement buttons;
-
-    element = div(c: 'console-view')..add([
-      buttons = div(c: 'button-bar btn-group btn-group-sm')..layoutHorizontal(),
-      output = new CoreElement('pre', classes: 'console-line')
-    ]);
+    root.toggleClass('console-view');
+    toolbar.toggleClass('btn-group');
+    toolbar.toggleClass('btn-group-sm');
+    content.toggleClass('tab-scrollable-container');
+    output = content.add(
+      new CoreElement('pre', classes: 'console-line tab-scrollable')
+    );
 
     _subs.add(launchManager.onLaunchActivated.listen(_launchActivated));
     _subs.add(launchManager.onLaunchTerminated.listen(_launchTerminated));
     _subs.add(launchManager.onLaunchRemoved.listen(_launchRemoved));
 
-    element.listenForUserCopy();
+    root.listenForUserCopy();
 
     // Allow the text in the console to be selected.
     output.element.tabIndex = -1;
@@ -144,10 +144,30 @@ class ConsoleView2 extends View {
     _subs.add(launch.onStdio.listen((text) => _emitText(
         text.text, error: text.error, subtle: text.subtle, highlight: text.highlight)));
 
-    // debug
+    // Configure
+    if (launch.launchConfiguration != null) {
+      CoreElement e = toolbar.add(
+        button(text: 'Configure', c: 'btn icon icon-gear')
+      );
+      e.tooltip = 'Configure this application launch';
+      e.click(() {
+        atom.workspace.open(launch.launchConfiguration.configYamlPath);
+      });
+    }
+
+    // Terminate
+    if (launch.canKill()) {
+      _terminateButton = toolbar.add(
+        button(text: 'Terminate', c: 'btn icon icon-primitive-square')
+      );
+      _terminateButton.tooltip = 'Terminate process';
+      _terminateButton.click(() => launch.kill());
+    }
+
+    // Observatory
     // TODO: Listen for obs. port being provided after a delay.
     if (launch.canDebug()) {
-      _debugButton = buttons.add(
+      _debugButton = toolbar.add(
         button(text: 'Observatory', c: 'btn icon icon-dashboard')
       );
       _debugButton.tooltip = 'Open the Observatory';
@@ -156,14 +176,24 @@ class ConsoleView2 extends View {
       });
     }
 
-    // kill
-    if (launch.canKill()) {
-      _terminateButton = buttons.add(
-        button(text: 'Terminate', c: 'btn icon icon-primitive-square')
-      );
-      _terminateButton.tooltip = 'Terminate process';
-      _terminateButton.click(() => launch.kill());
+    // Emit a header.
+    CoreElement header = div(c: 'console-header');
+    String name = launch.name;
+    String title = launch.title;
+    if (title == null) {
+      header.add(span(text: '${name}\n', c: 'text-highlight'));
+    } else if (title.contains(name)) {
+      int index = title.indexOf(name);
+      String pre = title.substring(0, index);
+      if (pre.isNotEmpty) header.add(span(text: pre));
+      header.add(span(text: name, c: 'text-highlight'));
+      String post = title.substring(index + name.length);
+      header.add(span(text: '${post}\n'));
+    } else {
+      header.add(span(text: '${title}\n', c: 'text-highlight'));
     }
+    header.add(span(text: launch.subtitle ?? '', c: 'text-subtle'));
+    _emitElement(header);
   }
 
   String get label => launch.launchConfiguration.shortResourceName;
@@ -184,7 +214,9 @@ class ConsoleView2 extends View {
     if (launch == l) {
       tabElement.toggleClass('launch-terminated');
       if (!_lastText.endsWith('\n')) _emitText('\n');
-      _emitText('• exited with code ${launch.exitCode} •', highlight: true);
+      CoreElement footer =
+        div(text: 'exited with code ${launch.exitCode}', c: 'console-footer');
+      _emitElement(footer);
       _debugButton?.disabled = true;
       _terminateButton?.disabled = true;
     }
@@ -268,16 +300,21 @@ class ConsoleView2 extends View {
     if (error) e.toggleClass('console-error');
     if (subtle) e.toggleClass('text-subtle');
 
-    output.add(e);
-
     List children = output.element.children;
     if (children.length > _maxLines) {
-      children.remove(children.first);
+      // Don't remove the console header.
+      children.remove(children[1]);
     }
 
-    if (output.element.parent != null) {
-      output.element.scrollIntoView(ScrollAlignment.BOTTOM);
-    }
+    _emitElement(e);
+  }
+
+  void _emitElement(CoreElement e) {
+    output.add(e);
+
+    //e.element.scrollIntoView(ScrollAlignment.BOTTOM);
+    js.JsObject obj = new js.JsObject.fromBrowserObject(e.element);
+    obj.callMethod('scrollIntoView', [true]);
   }
 }
 

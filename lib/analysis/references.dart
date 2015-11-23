@@ -24,7 +24,8 @@ class FindReferencesHelper implements Disposable {
 
   FindReferencesHelper() {
     _command = atom.commands.add(
-        'atom-text-editor', 'dartlang:find-references', _handleReferences);
+      'atom-text-editor', 'dartlang:find-references', _handleReferences
+    );
   }
 
   void dispose() => _command.dispose();
@@ -39,14 +40,14 @@ class FindReferencesHelper implements Disposable {
     Job job = new AnalysisRequestJob('find references', () {
       return analysisServer.findElementReferences(path, offset, false).then(
           (FindElementReferencesResult result) {
-        if (result == null) return;
-
-        if (result.id == null) {
+        if (result == null || result.id == null) {
           atom.beep();
           return;
+        } else {
+          FindReferencesView.showView(result,
+            refData: { 'path': path, 'offset': offset }
+          );
         }
-
-        FindReferencesView.showView(result);
       });
     });
     job.schedule();
@@ -54,68 +55,84 @@ class FindReferencesHelper implements Disposable {
 }
 
 class FindReferencesView extends View {
-  static FindReferencesView _singleton;
+  static void showView(FindElementReferencesResult result, {
+    Map refData
+  }) {
+    FindReferencesView view = viewGroupManager.getViewById('findReferences');
 
-  static void showView(FindElementReferencesResult result) {
-    if (_singleton == null) {
-      _singleton = new FindReferencesView();
-      _singleton._handleSearchResults(result);
-      viewGroupManager.addView('right', _singleton);
+    if (view != null) {
+      view._handleSearchResults(result, refData: refData);
+      viewGroupManager.activate(view);
     } else {
-      _singleton._handleSearchResults(result);
-      viewGroupManager.activate(_singleton);
+      FindReferencesView view = new FindReferencesView();
+      view._handleSearchResults(result, refData: refData);
+      viewGroupManager.addView('right', view);
     }
   }
 
-  CoreElement element;
-  CoreElement target;
-  CoreElement status;
+  CoreElement title;
+  CoreElement subtitle;
   ListTreeBuilder treeBuilder;
+  Disposables disposables = new Disposables();
   _MatchParser matchParser = new _MatchParser();
+  // CoreElement refreshButton;
+  // Map _refData;
 
   FindReferencesView() {
-    element = div(c: 'find-references')..layoutVertical();
-    element.add([
-      div(c: 'references-title')..add([
-        target = element.add(span(c: 'text-highlight')),
-        status = element.add(span(c: 'search-summary'))
+    content.toggleClass('find-references');
+    content.toggleClass('tab-scrollable-container');
+    content.add([
+      div(c: 'view-header')..add([
+        title = div(c: 'view-title'),
+        subtitle = div(c: 'text-subtle')
       ]),
-      treeBuilder = element.add(new ListTreeBuilder(_render)..flex())
+      treeBuilder = new ListTreeBuilder(_render)
     ]);
 
+    // toolbar.add([
+    //   refreshButton = span(c: 'icon-button icon-sync')..click(_refesh)
+    // ]);
+
+    treeBuilder.toggleClass('tab-scrollable');
     treeBuilder.onClickNode.listen(_jumpTo);
     treeBuilder.onDoubleClick.listen(_doubleClick);
+
+    disposables.add(new DoubleCancelCommand(handleClose));
   }
 
   String get id => 'findReferences';
 
   String get label => 'References';
 
-  void dispose() {
-    _singleton = null;
-  }
+  void dispose() => disposables.dispose();
 
-  void _handleSearchResults(FindElementReferencesResult findResult) {
+  void _handleSearchResults(FindElementReferencesResult findResult, {Map refData}) {
+    // this._refData = refData;
+
     bool isMethod = findResult.element.parameters != null;
-    target.text = "'${findResult.element.name}${isMethod ? '()' : ''}'";
-
-    status.text = ' - searching…';
-    status.clazz('searching');
+    String name = "${findResult.element.name}${isMethod ? '()' : ''}";
+    title.text = 'References';
+    subtitle.text = "'${name}'; searching…";
+    subtitle.toggleClass('searching', true);
+    // refreshButton.enabled = false;
 
     treeBuilder.clear();
 
     Stream<SearchResult> stream = analysisServer.filterSearchResults(findResult.id);
 
     stream.toList().then((List<SearchResult> l) {
-      status.text = ' - ${commas(l.length)} ${pluralize('result', l.length)} found.';
-      status.toggleClass('searching');
+      subtitle.text = "${commas(l.length)} ${pluralize('result', l.length)} for '${name}'";
+      subtitle.toggleClass('searching', false);
+      // refreshButton.enabled = _refData != null;
 
       LinkedHashMap<String, List<SearchResult>> results = new LinkedHashMap();
+
       for (SearchResult r in l) {
         String path = r.location.file;
         if (results[path] == null) results[path] = [];
         results[path].add(r);
       }
+
       for (String path in results.keys) {
         Node node = new Node(path, canHaveChildren: true);
         List<SearchResult> fileResults = results[path];
@@ -205,6 +222,33 @@ class FindReferencesView extends View {
     // Return the original path.
     return [originalPath];
   }
+
+  // void _refesh() {
+  //   if (_refData == null) return;
+  //
+  //   String path = _refData['path'];
+  //   int offset = _refData['offset'];
+  //
+  //   refreshButton.enabled = false;
+  //
+  //   Job job = new AnalysisRequestJob('find references', () {
+  //     return new Future.delayed(new Duration(milliseconds: 150)).then((_) {
+  //       return analysisServer.findElementReferences(path, offset, false);
+  //     }).then((FindElementReferencesResult result) {
+  //       if (result == null || result.id == null) {
+  //         refreshButton.enabled = true;
+  //         atom.beep();
+  //         return;
+  //       } else {
+  //         FindReferencesView.showView(result, refData: _refData, isRefreshing: true);
+  //       }
+  //     }).catchError((e) {
+  //       refreshButton.enabled = false;
+  //       throw e;
+  //     });
+  //   });
+  //   job.schedule();
+  // }
 
   static final _cachePrefix = '${separator}.pub-cache${separator}';
   static final _pubPrefix = 'hosted${separator}pub.dartlang.org${separator}';

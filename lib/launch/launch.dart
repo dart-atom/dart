@@ -169,6 +169,7 @@ class Launch implements Disposable {
 
   final LaunchType launchType;
   final LaunchConfiguration launchConfiguration;
+  final String name;
   final String title;
   final LaunchManager manager;
   final int id = ++_id;
@@ -183,10 +184,11 @@ class Launch implements Disposable {
   DebugConnection _debugConnection;
   _PathResolver _pathResolver;
 
-  Launch(this.manager, this.launchType, this.launchConfiguration, this.title, {
+  Launch(this.manager, this.launchType, this.launchConfiguration, this.name, {
     this.killHandler,
     this.cwd,
-    int servicePort
+    int servicePort,
+    this.title
   }) {
     if (servicePort != null) this.servicePort.value = servicePort;
     if (cwd != null) _pathResolver = new _PathResolver(cwd);
@@ -206,6 +208,26 @@ class Launch implements Disposable {
   String get primaryResource => launchConfiguration.primaryResource;
 
   DartProject get project => projectManager.getProjectFor(primaryResource);
+
+  String get locationLabel {
+    if (cwd == null) return null;
+    String home = homedir();
+    if (cwd.startsWith(home)) {
+      return '~${cwd.substring(home.length)}';
+    } else {
+      return cwd;
+    }
+  }
+
+  String get subtitle {
+    List<String> desc = [];
+
+    if (locationLabel != null) desc.add(locationLabel);
+    if (launchConfiguration.checked) desc.add('checked mode');
+    if (launchConfiguration.debug) desc.add('debug');
+
+    return desc.isEmpty ? null : desc.join(', ');
+  }
 
   void pipeStdio(String str, {bool error: false, bool subtle: false, bool highlight: false}) {
     _stdio.add(new TextFragment(str, error: error, subtle: subtle, highlight: highlight));
@@ -245,18 +267,18 @@ class Launch implements Disposable {
     return _pathResolver != null ? _pathResolver.resolve(url) : new Future.value();
   }
 
+  void addDebugConnection(DebugConnection connection) {
+    this._debugConnection = connection;
+    debugManager.addConnection(connection);
+  }
+
   void dispose() {
     if (canKill() && !isRunning) {
       kill();
     }
   }
 
-  String toString() => '${launchType}: ${title}';
-
-  void addDebugConnection(DebugConnection connection) {
-    this._debugConnection = connection;
-    debugManager.addConnection(connection);
-  }
+  String toString() => '${launchType}: ${name}';
 }
 
 class TextFragment {

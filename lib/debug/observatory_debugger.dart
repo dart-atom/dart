@@ -270,7 +270,7 @@ class ObservatoryDebugConnection extends DebugConnection {
     // TODO:
     if (e.kind == 'Inspect') { //EventKind.kInspect) {
       // e.inspectee
-      launch.pipeStdio('${e}\n', highlight: true);
+      launch.pipeStdio('${e}\n');
     }
 
     if (e.kind == EventKind.kResume) {
