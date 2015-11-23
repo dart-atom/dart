@@ -3,8 +3,8 @@
 ## unreleased
 - re-worked the UI for the errors, console, type hierarchy, and find references
   views
-  - added styled headers for the console, type hierarchy, and find references views
-  - added a button to open the launch configuration file from the console view
+- added styled headers for the console, type hierarchy, and find references views
+- added a button to open the launch configuration file from the console view
 - bound `jump-to-declaration` to `ctrl-alt-enter` on windows
 - fixed a NPE related to determining whether files are executable
 - fixed an exception when restoring saved settings
