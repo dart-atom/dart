@@ -32,7 +32,7 @@ JsObject require(String input) => context.callMethod('require', [input]);
 
 /// Attempts to convert a JsObject to a List or Map based on `JSON.stringify`
 /// and dart:convert's `JSON.decode`.
-dynamic toDartObjectViaWizardy(JsObject obj) {
+dynamic jsObjectToDart(JsObject obj) {
   if (obj == null) return null;
 
   try {

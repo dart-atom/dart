@@ -26853,7 +26853,7 @@ self._domRemove = function(element) {
         t2 = t1 != null && t1.hasShown;
         t3 = J.getInterceptor$asx(options);
         if (t2) {
-          t2 = K.toDartObjectViaWizardy(t3.$index(options, "suggestion"));
+          t2 = K.jsObjectToDart(t3.$index(options, "suggestion"));
           t1.toString;
           index = J.$index$asx(t2, "itemIndex");
           t2 = t1.completer;
@@ -26870,7 +26870,7 @@ self._domRemove = function(element) {
         } else {
           t1 = new E.TextEditor(E._cvt(t3.$index(options, "editor")));
           E._cvt(t3.$index(options, "triggerPosition"));
-          t3 = K.toDartObjectViaWizardy(t3.$index(options, "suggestion"));
+          t3 = K.jsObjectToDart(t3.$index(options, "suggestion"));
           t2 = J.getInterceptor$asx(t3);
           requiredImport = t2.$index(t3, "requiredImport");
           if (requiredImport != null)
@@ -31145,7 +31145,7 @@ self._domRemove = function(element) {
     require: function(input) {
       return $.$get$context().callMethod$2("require", [input]);
     },
-    toDartObjectViaWizardy: function(obj) {
+    jsObjectToDart: function(obj) {
       var str, e, st, t1, exception;
       if (obj == null)
         return;
@@ -36151,10 +36151,18 @@ self._domRemove = function(element) {
         }
       },
       registerStorable$2: function(key, storable) {
-        var data;
-        this._storables.$indexSet(0, key, storable);
-        data = J.$index$asx(this._pluginState, key);
-        storable.initFromStored$1(data == null ? null : C.JsonCodec_null_null.decode$1(data));
+        var data, e, t1, exception;
+        try {
+          this._storables.$indexSet(0, key, storable);
+          data = J.$index$asx(this._pluginState, key);
+          t1 = data;
+          t1 = typeof t1 === "string" ? C.JsonCodec_null_null.decode$1(data) : null;
+          storable.initFromStored$1(t1);
+        } catch (exception) {
+          t1 = H.unwrapException(exception);
+          e = t1;
+          P.print("Exception restoring state: " + H.S(e));
+        }
       },
       onValueChanged$1: function(key) {
         var t1, controller;

@@ -55,12 +55,16 @@ class State {
     if (_controllers[key] != null) _controllers[key].add(value);
   }
 
-  /// Register the given [StateStorable]. This will call
-  /// [StateStorable.fromStored] before it returns.
+  /// Register the given [StateStorable]. This will call [StateStorable.fromStored]
+  /// before it returns.
   void registerStorable(String key, StateStorable storable) {
-    _storables[key] = storable;
-    String data = this[key];
-    storable.initFromStored(data == null ? null : JSON.decode(data));
+    try {
+      _storables[key] = storable;
+      var data = this[key];
+      storable.initFromStored(data is String ? JSON.decode(data) : null);
+    } catch (e) {
+      print('Exception restoring state: ${e}');
+    }
   }
 
   void loadFrom(dynamic inState) {
