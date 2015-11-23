@@ -59,77 +59,27 @@
   margin-bottom: 4px;
 }
 
-div.atom-view {
-  min-width: 100px;
-  min-height: 64px;
-  height: 100%;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.atom-view {
-  .view-header {
-    overflow-x: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    padding: 8px;
-  }
-
-  .view-content {
-    padding: 8px;
-    overflow: auto;
-  }
-
-  .view-resize[vertical] {
-    cursor: ew-resize;
-    z-index: 3;
-    position: absolute;;
-    top: 0;
-    bottom: 0;
-    width: 8px;
-  }
-
-  .view-resize[horizontal] {
-    cursor: ns-resize;
-    z-index: 3;
-    position: absolute;;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 8px;
-  }
-}
-
-.atom-view {
-  .list-tree {
-    .list-item,
-    li.list-nested-item div.list-item {
-      text-overflow: ellipsis;
-      overflow-x: hidden;
-      white-space: nowrap;
-      line-height: 22px;
-    }
-
-    /* TODO: Should we have any clickable item in the list have a pointer cursor?
-    li.list-nested-item > div.list-item::before {
-      cursor: pointer;
-    }*/
-
-    li.list-nested-item.collapsed > div.list-item::before {
-      content: "\f078";
-    }
-
-    li.list-nested-item.collapsed > ul.list-tree {
-      display: none;
-    }
-  }
-}
-
-.close-button {
-  top: 1px;
+.icon-button {
   color: @text-color;
   cursor: default;
   margin-left: 8px;
+}
+
+.icon-button:hover {
+  color: @text-color-highlight;
+}
+
+.icon-button[disabled],
+.icon-button[disabled]:hover {
+  color: @text-color-subtle;
+}
+
+.close-button {
+  color: @text-color;
+  cursor: default;
+  margin-left: 8px;
+  top: -1px;
+  position: relative;
 }
 
 .close-button:hover {
@@ -143,9 +93,9 @@ div.atom-view {
   display: inline-block;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
-  font-size: 12px;
-  width: 12px;
-  height: 12px;
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
   content: "\f081";
 }
 
@@ -210,14 +160,6 @@ div.linter-tab.active {
 
 /* find references */
 .find-references {
-  .references-title {
-    margin-bottom: 8px;
-  }
-
-  .search-summary {
-
-  }
-
   .searching {
     font-style: italic;
   }
@@ -277,62 +219,6 @@ atom-notification.info code {
 
 status-bar .dartlang .badge {
   cursor: pointer;
-}
-
-/* Error view */
-
-.errors-view {
-  .errors-focus-area {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    -webkit-user-select: none;
-    background-color: @tree-view-background-color;
-
-    .focus-title {
-      display: inline-block;
-    }
-
-    .errors-count {
-      display: inline-block;
-    }
-
-    .badge {
-      margin-right: 5px;
-      cursor: default;
-    }
-  }
-
-  .view-content {
-    padding: 3px;
-  }
-
-  .errors-item {
-    cursor: default;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-
-    .error-type {
-      border-radius: 2px;
-    }
-
-    span,
-    a {
-      margin: 3px;
-    }
-
-    .quick-fix {
-      cursor: pointer;
-      display: inline-block;
-      margin-left: 5px;
-      margin-right: 0;
-    }
-
-    .quick-fix.icon-tools::before {
-      font-size: 1.2em;
-    }
-  }
 }
 
 /* notifications */

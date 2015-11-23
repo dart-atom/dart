@@ -14,6 +14,7 @@ import '../state.dart';
 import '../utils.dart';
 import 'debugger.dart';
 import 'utils.dart';
+// import 'debugger_ui2.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui');
 
@@ -60,6 +61,8 @@ class DebugUIController implements Disposable {
         frameVars = ul(c: 'list-group')
       ])
     ]);
+
+    //DebuggerView.showViewForConnection(connection);
 
     var temp = new DivElement();
     temp.setInnerHtml(

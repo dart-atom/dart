@@ -131,23 +131,21 @@ class ErrorsController implements Disposable {
 }
 
 class ErrorsView extends View {
-  CoreElement element;
   CoreElement target;
-  CoreElement body;
   CoreElement countElement;
   CoreElement focusElement;
 
   ErrorsView(bool enabled) {
-    element = div(c: 'errors-view dartlang');
-    element.add([
-      body = div(),
-      div(c: 'text-muted errors-focus-area')..add([
-        countElement = div(c: 'errors-count'),
-        focusElement = div(c: 'badge focus-title')
-      ])
+    root.toggleClass('errors-view', true);
+    root.toggleClass('dartlang', true);
+
+    toolbar.add([
+      focusElement = div(c: 'badge focus-title'),
+      countElement = div(c: 'errors-count')
     ]);
 
-    element.element.tabIndex = 1;
+    content.toggleClass('tab-scrollable');
+    content.element.tabIndex = 1;
 
     if (state['errorViewShowing'] == null) {
       state['errorViewShowing'] = enabled;
@@ -155,7 +153,7 @@ class ErrorsView extends View {
 
     showView(state['errorViewShowing'] != false);
 
-    element.listenForUserCopy();
+    root.listenForUserCopy();
   }
 
   String get id => errorViewId;
@@ -184,16 +182,16 @@ class ErrorsView extends View {
 
   void _handleErrorsChanged(List<AnalysisError> errors, {String focus}) {
     // Update the main view.
-    body.element.children.clear();
+    content.element.children.clear();
 
     if (errors.isEmpty) {
-      body.add(
+      content.add(
         div(c: 'errors-item')..add(
           span(text: 'No issues.', c: 'text-muted')
         )
       );
     } else {
-      body.element.children.addAll(errors.map(_cvtError));
+      content.element.children.addAll(errors.map(_cvtError));
     }
 
     // Update the focus label.

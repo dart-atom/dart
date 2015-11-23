@@ -49,36 +49,46 @@ class TypeHierarchyHelper implements Disposable {
 }
 
 class TypeHierarchyView extends View {
-  static TypeHierarchyView _singleton;
-
   static void showHierarchy(TypeHierarchyResult result) {
-    if (_singleton == null) {
-      _singleton = new TypeHierarchyView();
-      _singleton._buildHierarchy(result);
-      viewGroupManager.addView('right', _singleton);
+    TypeHierarchyView view = viewGroupManager.getViewById('typeHierarchy');
+
+    if (view != null) {
+      view._buildHierarchy(result);
+      viewGroupManager.activate(view);
     } else {
-      _singleton._buildHierarchy(result);
-      viewGroupManager.activate(_singleton);
+      TypeHierarchyView view = new TypeHierarchyView();
+      view._buildHierarchy(result);
+      viewGroupManager.addView('right', view);
     }
   }
 
-  CoreElement element;
+  CoreElement title;
+  CoreElement subtitle;
   ListTreeBuilder treeBuilder;
+  Disposables disposables = new Disposables();
   List<TypeHierarchyItem> _items;
 
   TypeHierarchyView() {
-    element = div(c: 'type-hierarchy')..layoutVertical();
-    treeBuilder = element.add(new ListTreeBuilder(_render)..flex());
+    content.toggleClass('type-hierarchy');
+    content.toggleClass('tab-scrollable-container');
+    content.add([
+      div(c: 'view-header')..add([
+        title = div(c: 'view-title'),
+        subtitle = div(c: 'text-subtle')
+      ]),
+      treeBuilder = new ListTreeBuilder(_render)
+    ]);
+    treeBuilder.toggleClass('tab-scrollable');
     treeBuilder.onClickNode.listen(_jumpTo);
+
+    disposables.add(new DoubleCancelCommand(handleClose));
   }
 
   String get id => 'typeHierarchy';
 
   String get label => 'Type Hierarchy';
 
-  void dispose() {
-    _singleton = null;
-  }
+  void dispose() => disposables.dispose();
 
   void _buildHierarchy(TypeHierarchyResult result) {
     treeBuilder.clear();
@@ -89,6 +99,9 @@ class TypeHierarchyView extends View {
     TypeHierarchyItem item = items.first;
     Node node = new Node(item, canHaveChildren: _hasSubclasses(item));
     Node targetNode = node;
+
+    String name = item.displayName != null ? item.displayName : item.classElement.name;
+    title.text = "Type Hierarchy";
 
     if (node.canHaveChildren) {
       for (int ref in _sort(items, item.subclasses)) {
@@ -107,6 +120,9 @@ class TypeHierarchyView extends View {
       item = superItem;
       node = superNode;
     }
+
+    int count = node.decendentCount;
+    subtitle.text = "${count} ${pluralize('item', count)} for '${name}'";
 
     treeBuilder.addNode(node);
     treeBuilder.selectNode(targetNode);

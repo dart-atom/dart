@@ -1,0 +1,47 @@
+@import "ui-variables";
+
+.errors-view {
+  .button-bar {
+    //background-color: @tree-view-background-color;
+
+    .focus-title {
+      display: inline-block;
+    }
+
+    .errors-count {
+      display: inline-block;
+    }
+
+    .badge {
+      margin-left: 5px;
+      cursor: default;
+    }
+  }
+
+  .errors-item {
+    cursor: default;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+
+    .error-type {
+      border-radius: 2px;
+    }
+
+    span,
+    a {
+      margin: 3px;
+    }
+
+    .quick-fix {
+      cursor: pointer;
+      display: inline-block;
+      margin-left: 5px;
+      margin-right: 0;
+    }
+
+    .quick-fix.icon-tools::before {
+      font-size: 1.2em;
+    }
+  }
+}

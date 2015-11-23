@@ -1,0 +1,117 @@
+@import "ui-variables";
+
+div.atom-view {
+  min-width: 100px;
+  min-height: 64px;
+  height: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.atom-view {
+  // Contains zero or more tab contents.
+  .tab-container {
+    padding: 0 8px;
+    display: flex;
+  }
+
+  // The style for content contained in a tab.
+  .tab-content {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tab-scrollable-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  // A scrollable area in a tab view.
+  .tab-scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    padding: 8px 0;
+  }
+
+  .button-bar {
+    position: absolute;
+    top: 8px;
+    right: 0;
+    display: flex;
+    flex-flow: row-reverse;
+    z-index: 1;
+
+    .icon::before {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .view-header {
+    margin-top: 4px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid @text-color-subtle;
+    flex-shrink: 0;
+
+    .view-title {
+      font-size: 1.25em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .view-resize[vertical] {
+    cursor: ew-resize;
+    z-index: 3;
+    position: absolute;;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+  }
+
+  .view-resize[horizontal] {
+    cursor: ns-resize;
+    z-index: 3;
+    position: absolute;;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 8px;
+  }
+}
+
+.atom-view[compact] {
+  .tab-container {
+    padding: 0 4px;
+  }
+
+  .tab-scrollable {
+    padding: 4px 0;
+  }
+}
+
+.atom-view {
+  .list-tree {
+    .list-item,
+    li.list-nested-item div.list-item {
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+      white-space: nowrap;
+      line-height: 22px;
+    }
+
+    li.list-nested-item.collapsed > div.list-item::before {
+      content: "\f078";
+    }
+
+    li.list-nested-item.collapsed > ul.list-tree {
+      display: none;
+    }
+  }
+}
