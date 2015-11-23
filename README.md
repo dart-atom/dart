@@ -16,6 +16,8 @@ This package is a full-featured Dart development plugin for Atom. It supports
 features like auto-discovery of the Dart SDK, errors and warnings shown as you
 type, code completion, refactorings, and integration with Pub and other tools.
 
+![Dart plugin for Atom screenshot](assets/dart-plugin-atom-screenshot.png)
+
 ## Installing
 
 - install Atom [atom.io](https://atom.io/)
