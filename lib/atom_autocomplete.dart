@@ -107,13 +107,13 @@ abstract class AutocompleteProvider implements Disposable {
 
   void _onDidInsertSuggestion(options) {
     if (_override != null && _override.hasShown) {
-      _override.userSelection(toDartObjectViaWizardy(options['suggestion']));
+      _override.userSelection(jsObjectToDart(options['suggestion']));
       _override = null;
     } else {
       onDidInsertSuggestion(
         new TextEditor(options['editor']),
         new Point(options['triggerPosition']),
-        toDartObjectViaWizardy(options['suggestion']));
+        jsObjectToDart(options['suggestion']));
     }
   }
 }

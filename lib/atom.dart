@@ -228,7 +228,7 @@ class Workspace extends ProxyHolder {
   /// An [TextEditor] will be used if no openers return a value.
   Disposable addOpener(dynamic opener(String url, Map options)) {
     return new JsDisposable(invoke('addOpener', (url, options) {
-      Map m = options == null ? {} : toDartObjectViaWizardy(options);
+      Map m = options == null ? {} : jsObjectToDart(options);
       return opener(url, m);
     }));
   }
