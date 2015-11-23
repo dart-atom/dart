@@ -144,7 +144,18 @@ class ConsoleView extends View {
     _subs.add(launch.onStdio.listen((text) => _emitText(
         text.text, error: text.error, subtle: text.subtle, highlight: text.highlight)));
 
-    // kill
+    // Configure
+    if (launch.launchConfiguration != null) {
+      CoreElement e = toolbar.add(
+        button(text: 'Configure', c: 'btn icon icon-gear')
+      );
+      e.tooltip = 'Configure this application launch';
+      e.click(() {
+        atom.workspace.open(launch.launchConfiguration.configYamlPath);
+      });
+    }
+
+    // Terminate
     if (launch.canKill()) {
       _terminateButton = toolbar.add(
         button(text: 'Terminate', c: 'btn icon icon-primitive-square')
@@ -153,7 +164,7 @@ class ConsoleView extends View {
       _terminateButton.click(() => launch.kill());
     }
 
-    // debug
+    // Observatory
     // TODO: Listen for obs. port being provided after a delay.
     if (launch.canDebug()) {
       _debugButton = toolbar.add(
@@ -165,11 +176,24 @@ class ConsoleView extends View {
       });
     }
 
-    // // TODO: emit a header
-    // // cwd, launch name, launch type?, launch config hyperlink
-    // // some config settings (main() params, checked, ...)
-    // CoreElement header = div(text: launch.title, c: 'console-header');
-    // _emitElement(header);
+    // Emit a header.
+    CoreElement header = div(c: 'console-header');
+    String name = launch.name;
+    String title = launch.title;
+    if (title == null) {
+      header.add(span(text: '${name}\n', c: 'text-highlight'));
+    } else if (title.contains(name)) {
+      int index = title.indexOf(name);
+      String pre = title.substring(0, index);
+      if (pre.isNotEmpty) header.add(span(text: pre));
+      header.add(span(text: name, c: 'text-highlight'));
+      String post = title.substring(index + name.length);
+      header.add(span(text: '${post}\n'));
+    } else {
+      header.add(span(text: '${title}\n', c: 'text-highlight'));
+    }
+    header.add(span(text: launch.subtitle ?? '', c: 'text-subtle'));
+    _emitElement(header);
   }
 
   String get label => launch.launchConfiguration.shortResourceName;
@@ -278,8 +302,8 @@ class ConsoleView extends View {
 
     List children = output.element.children;
     if (children.length > _maxLines) {
-      // TODO: Don't remove the console header.
-      children.remove(children.first); //[1]);
+      // Don't remove the console header.
+      children.remove(children[1]);
     }
 
     _emitElement(e);

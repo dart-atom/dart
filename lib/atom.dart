@@ -1242,6 +1242,8 @@ bool existsSync(String path) => _fs.callMethod('existsSync', [path]);
 /// Returns the operating system's default directory for temp files.
 String tmpdir() => _os.callMethod('tmpdir');
 
+String homedir() => _os.callMethod('homedir');
+
 class Stats extends ProxyHolder {
   Stats(JsObject obj) : super(obj);
 

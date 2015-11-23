@@ -87,12 +87,25 @@ class _LaunchInstance {
   Launch _launch;
   ProcessRunner _runner;
   bool _withDebug;
+  List<String> _args;
 
   _LaunchInstance(
     this.project,
     LaunchConfiguration configuration,
     LaunchType launchType
   ) {
+    _args = ['start'];
+
+    if (!configuration.checked) _args.add('--no-checked');
+
+    String relPath = relativize(project.path, configuration.primaryResource);
+    if (relPath != 'lib/main.dart') {
+      _args.add('-t');
+      _args.add(relPath);
+    }
+
+    String description = '${_toolName} ${_args.join(' ')}';
+
     _launch = new _FlutterLaunch(
       launchManager,
       launchType,
@@ -100,7 +113,8 @@ class _LaunchInstance {
       configuration.shortResourceName,
       killHandler: _kill,
       cwd: project.path,
-      project: project
+      project: project,
+      title: description
     );
     launchManager.addLaunch(_launch);
     _withDebug = configuration.debug;
@@ -109,22 +123,8 @@ class _LaunchInstance {
   Future<Launch> launch() async {
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
 
-    List<String> args = ['start'];
-
-    if (!_launch.launchConfiguration.checked) args.add('--no-checked');
-
-    String relPath = relativize(project.path, _launch.launchConfiguration.primaryResource);
-    if (relPath != 'lib/main.dart') {
-      args.add('-t');
-      args.add(relPath);
-    }
-
-    _launch.pipeStdio(
-      '[${project.workspaceRelativeName}] '
-      '${_toolName} ${args.join(' ')}\n', highlight: true);
-
     // Chain together both 'flutter start' and 'flutter logs'.
-    _runner = _flutter(flutter, args, project.path);
+    _runner = _flutter(flutter, _args, project.path);
     _runner.execStreaming();
     _runner.onStdout.listen((str) => _launch.pipeStdio(str));
     _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
@@ -187,15 +187,16 @@ class _FlutterLaunch extends Launch {
     LaunchManager manager,
     LaunchType launchType,
     LaunchConfiguration launchConfiguration,
-    String title,
-    { Function killHandler, String cwd, DartProject project }
+    String name,
+    { Function killHandler, String cwd, DartProject project, String title }
   ) : super(
     manager,
     launchType,
     launchConfiguration,
-    title,
+    name,
     killHandler: killHandler,
-    cwd: cwd
+    cwd: cwd,
+    title: title
   ) {
     _resolver = new CachingServerResolver(
       cwd: project?.path,
@@ -204,6 +205,9 @@ class _FlutterLaunch extends Launch {
 
     exitCode.onChanged.first.then((_) => _resolver.dispose());
   }
+
+  // TODO: Use the device name?
+  String get locationLabel => project.workspaceRelativeName;
 
   Future<String> resolve(String url) => _resolver.resolve(url);
 }

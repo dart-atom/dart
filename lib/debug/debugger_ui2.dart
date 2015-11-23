@@ -39,7 +39,7 @@ class DebuggerView extends View {
   }
 
   // TODO: Shorter title.
-  String get label => 'Debug ${connection.launch.title}';
+  String get label => 'Debug ${connection.launch.name}';
 
   String get id => viewIdForConnection(connection);
 

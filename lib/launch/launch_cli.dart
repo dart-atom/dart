@@ -97,7 +97,7 @@ class CliLaunchType extends LaunchType {
     _args.add(path);
     if (args != null) _args.addAll(args);
 
-    String desc = '[${cwd}] ${path} ${args == null ? '' : args.join(' ')}\n';
+    String description = '${path} ${args == null ? '' : args.join(' ')}';
 
     ProcessRunner runner = new ProcessRunner(
       sdk.dartVm.path,
@@ -105,7 +105,11 @@ class CliLaunchType extends LaunchType {
       cwd: cwd);
 
     Launch launch = new _CliLaunch(manager, this, configuration, path,
-        killHandler: () => runner.kill(), cwd: cwd, project: project);
+      killHandler: () => runner.kill(),
+      cwd: cwd,
+      project: project,
+      title: description
+    );
     if (withDebug) launch.servicePort.value = _observePort;
     manager.addLaunch(launch);
 
@@ -125,7 +129,6 @@ class CliLaunchType extends LaunchType {
       }
     });
     runner.onStderr.listen((str) => launch.pipeStdio(str, error: true));
-    launch.pipeStdio(desc, highlight: true);
     runner.onExit.then((code) => launch.launchTerminated(code));
 
     return new Future.value(launch);
@@ -144,15 +147,16 @@ class _CliLaunch extends Launch {
     LaunchManager manager,
     LaunchType launchType,
     LaunchConfiguration launchConfiguration,
-    String title,
-    { Function killHandler, String cwd, DartProject project }
+    String name,
+    { Function killHandler, String cwd, DartProject project, String title }
   ) : super(
     manager,
     launchType,
     launchConfiguration,
-    title,
+    name,
     killHandler: killHandler,
-    cwd: cwd
+    cwd: cwd,
+    title: title
   ) {
     _resolver = new CachingServerResolver(
       cwd: project?.path,
