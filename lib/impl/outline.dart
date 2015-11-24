@@ -233,6 +233,15 @@ class OutlineView implements Disposable {
   void _render(Outline item, html.Element intoElement) {
     analysis.Element e = item.element;
 
+    // static class members
+    if (((e.flags & 0x08) != 0) &&
+        (e.kind == 'FIELD' || e.kind == 'METHOD' || e.kind == 'GETTER' || e.kind == 'SETTER')) {
+      intoElement.children.add(new html.SpanElement()
+        ..classes.add('comment')
+        ..text = '•'
+      );
+    }
+
     if (e.kind == 'CLASS') {
       intoElement.children.add(new html.SpanElement()
           ..classes.add('keyword')
@@ -246,12 +255,6 @@ class OutlineView implements Disposable {
           ..classes.add('keyword')
           ..text = 'typedef ');
     }
-
-    // // Types on the left.
-    // if (e.returnType != null && e.returnType.isNotEmpty) {
-    //   intoElement.children.add(
-    //       new html.SpanElement()..classes.add('muted')..text = '${e.returnType} ');
-    // }
 
     if (e.kind == 'GETTER') {
       intoElement.children.add(new html.SpanElement()
@@ -291,7 +294,6 @@ class OutlineView implements Disposable {
       //name += e.typeParameters;
     }
 
-    // Types on the right?
     if (e.returnType != null && e.returnType.isNotEmpty) {
       String type = e.returnType;
       int index = type.indexOf('<');
