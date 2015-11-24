@@ -1,6 +1,6 @@
 library foo_test;
 
-// import 'dart:async';
+import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:io';
 
@@ -13,6 +13,8 @@ void main(List<String> args) {
 
   Cat pebbles;
   Dog fido = new Dog(Dog.FIDO_NAME);
+
+  dev.registerExtension('foo', _fooHandler);
 
   dev.log('log from test');
 
@@ -83,4 +85,10 @@ dynamic _mockFrame() {
   ];
 
   return names.map((name) => new Dog(name)).toList();
+}
+
+Future<dev.ServiceExtensionResponse> _fooHandler(String method, Map parameters) {
+  print('handling ${method}');
+  print('params: ${parameters}');
+  return new Future.value(new dev.ServiceExtensionResponse.result('bar'));
 }

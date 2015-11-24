@@ -268,9 +268,15 @@ class ObservatoryDebugConnection extends DebugConnection {
     IsolateRef isolate = e.isolate;
 
     // TODO:
-    if (e.kind == 'Inspect') { //EventKind.kInspect) {
-      // e.inspectee
-      launch.pipeStdio('${e}\n');
+    if (e.kind == EventKind.kInspect) {
+      InstanceRef ref = e.inspectee;
+      if (ref.valueAsString != null)
+        launch.pipeStdio('${ref.valueAsString}\n');
+      launch.pipeStdio('${ref}\n');
+
+      // service.callServiceExtension('foo', {'baz': 'woot'}).then((response) {
+      //   print(response);
+      // });
     }
 
     if (e.kind == EventKind.kResume) {

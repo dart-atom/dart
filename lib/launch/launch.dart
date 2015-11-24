@@ -226,7 +226,7 @@ class Launch implements Disposable {
     if (launchConfiguration.checked) desc.add('checked mode');
     if (launchConfiguration.debug) desc.add('debug');
 
-    return desc.isEmpty ? null : desc.join(', ');
+    return desc.isEmpty ? null : desc.join(' • ');
   }
 
   void pipeStdio(String str, {bool error: false, bool subtle: false, bool highlight: false}) {
