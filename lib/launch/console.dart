@@ -147,7 +147,7 @@ class ConsoleView extends View {
     // Configure
     if (launch.launchConfiguration != null) {
       CoreElement e = toolbar.add(
-        button(text: 'Config', c: 'btn icon icon-gear')
+        button(text: 'Configure', c: 'btn icon icon-gear')
       );
       e.tooltip = 'Configure this application launch';
       e.click(() {

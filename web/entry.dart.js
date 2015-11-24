@@ -17227,7 +17227,7 @@ self._domRemove = function(element) {
     Error0.prototype.get$exception = function() {
       return this.exception;
     };
-    function Event1(kind, isolate, vm, timestamp, breakpoint, pauseBreakpoints, topFrame, exception, bytes, json, type) {
+    function Event1(kind, isolate, vm, timestamp, breakpoint, pauseBreakpoints, topFrame, exception, bytes, inspectee, json, type) {
       this.kind = kind;
       this.isolate = isolate;
       this.vm = vm;
@@ -17237,6 +17237,7 @@ self._domRemove = function(element) {
       this.topFrame = topFrame;
       this.exception = exception;
       this.bytes = bytes;
+      this.inspectee = inspectee;
       this.json = json;
       this.type = type;
       this.$deferredAction();
@@ -17246,7 +17247,7 @@ self._domRemove = function(element) {
       Event1.name = "Event1";
     $desc = $collectedClasses$.Event1[1];
     Event1.prototype = $desc;
-    Event1.$__fields__ = ["kind", "isolate", "vm", "timestamp", "breakpoint", "pauseBreakpoints", "topFrame", "exception", "bytes", "json", "type"];
+    Event1.$__fields__ = ["kind", "isolate", "vm", "timestamp", "breakpoint", "pauseBreakpoints", "topFrame", "exception", "bytes", "inspectee", "json", "type"];
     Event1.prototype.get$kind = function(receiver) {
       return this.kind;
     };
@@ -17264,6 +17265,9 @@ self._domRemove = function(element) {
     };
     Event1.prototype.get$bytes = function() {
       return this.bytes;
+    };
+    Event1.prototype.get$inspectee = function() {
+      return this.inspectee;
     };
     function FieldRef(name, owner, declaredType, isConst, isFinal, isStatic, id, json, type) {
       this.name = name;
@@ -17335,6 +17339,9 @@ self._domRemove = function(element) {
     Flag.$__fields__ = ["name", "comment", "modified", "valueAsString"];
     Flag.prototype.get$name = function(receiver) {
       return this.name;
+    };
+    Flag.prototype.get$valueAsString = function() {
+      return this.valueAsString;
     };
     function FlagList(flags, json, type) {
       this.flags = flags;
@@ -17509,6 +17516,9 @@ self._domRemove = function(element) {
     };
     Instance.prototype.set$classRef = function(v) {
       return this.Instance_classRef = v;
+    };
+    Instance.prototype.get$valueAsString = function() {
+      return this.valueAsString;
     };
     Instance.prototype.set$valueAsString = function(v) {
       return this.valueAsString = v;
@@ -17759,6 +17769,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.Null0[1];
     Null0.prototype = $desc;
     Null0.$__fields__ = ["Null_valueAsString", "kind", "Instance_classRef", "valueAsString", "valueAsStringIsTruncated", "length", "offset", "count", "name", "typeClass", "parameterizedClass", "fields", "elements", "associations", "bytes", "closureFunction", "closureContext", "mirrorReferent", "pattern", "isCaseSensitive", "isMultiLine", "propertyKey", "propertyValue", "typeArguments", "parameterIndex", "targetType", "bound", "id", "classRef", "size", "json", "type"];
+    Null0.prototype.get$valueAsString = function() {
+      return this.Null_valueAsString;
+    };
     Null0.prototype.set$valueAsString = function(v) {
       return this.Null_valueAsString = v;
     };
@@ -17829,6 +17842,9 @@ self._domRemove = function(element) {
     Sentinel.$__fields__ = ["kind", "valueAsString", "json", "type"];
     Sentinel.prototype.get$kind = function(receiver) {
       return this.kind;
+    };
+    Sentinel.prototype.get$valueAsString = function() {
+      return this.valueAsString;
     };
     function ScriptRef(uri, id, json, type) {
       this.uri = uri;
@@ -28016,7 +28032,7 @@ self._domRemove = function(element) {
         t2 = this.launch;
         t5.push(t2.get$onStdio().listen$1(new Y.ConsoleView_closure(this)));
         if (t2.get$launchConfiguration() != null) {
-          e = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-gear", "Config"));
+          e = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-gear", "Configure"));
           e.set$tooltip("Configure this application launch");
           J.click$1$x(e, new Y.ConsoleView_closure0(this));
         }
@@ -31529,7 +31545,7 @@ self._domRemove = function(element) {
           desc.push("checked mode");
         if (t1.get$debug() === true)
           desc.push("debug");
-        return desc.length === 0 ? null : C.JSArray_methods.join$1(desc, ", ");
+        return desc.length === 0 ? null : C.JSArray_methods.join$1(desc, " \u2022 ");
       },
       pipeStdio$4$error$highlight$subtle: function(str, error, highlight, subtle) {
         var t1 = this._stdio;
@@ -32722,11 +32738,19 @@ self._domRemove = function(element) {
           this._currentIsolate = null;
       }, "call$1", "get$_handleIsolateEvent", 2, 0, 42, 0],
       _handleDebugEvent$1: [function(e) {
-        var isolate, t1, t2, t3;
+        var isolate, t1, ref, t2, t3;
         isolate = e.get$isolate();
         t1 = J.getInterceptor$x(e);
         if (J.$eq$(t1.get$kind(e), "Inspect")) {
-          t2 = H.S(e) + "\n";
+          ref = e.get$inspectee();
+          if (ref.get$valueAsString() != null) {
+            t2 = H.S(ref.get$valueAsString()) + "\n";
+            t3 = this.launch._stdio;
+            if (!t3.get$_mayAddEvent())
+              H.throwExpression(t3._addEventError$0());
+            t3._sendData$1(new X.TextFragment(t2, false, false, false));
+          }
+          t2 = H.S(ref) + "\n";
           t3 = this.launch._stdio;
           if (!t3.get$_mayAddEvent())
             H.throwExpression(t3._addEventError$0());
@@ -32841,11 +32865,13 @@ self._domRemove = function(element) {
     ObservatoryDebugConnection__init_closure2: {
       "^": "Closure:64;$this",
       call$1: [function(e) {
-        var json, t1, loggerName, message, $name, t2;
+        var json, t1, t2, loggerName, message, $name;
         json = J.$index$asx(e.get$json(), "logRecord");
         t1 = J.getInterceptor$asx(json);
-        loggerName = S.InstanceRef$_fromJson(t1.$index(json, "loggerName"));
-        message = S.InstanceRef$_fromJson(t1.$index(json, "message"));
+        t2 = t1.$index(json, "loggerName");
+        loggerName = t2 == null ? null : S.InstanceRef$_fromJson(t2);
+        t1 = t1.$index(json, "message");
+        message = t1 == null ? null : S.InstanceRef$_fromJson(t1);
         $name = loggerName.valueAsString;
         t1 = $name == null || J.get$isEmpty$asx($name) === true;
         t2 = this.$this;
@@ -53871,13 +53897,13 @@ self._domRemove = function(element) {
         }, "call$1", "vm_service_lib_Error_parse$closure", 2, 0, 173]}
     },
     Event1: {
-      "^": "Response;kind>,isolate<,vm,timestamp<,breakpoint,pauseBreakpoints,topFrame<,exception<,bytes<,json,type",
+      "^": "Response;kind>,isolate<,vm,timestamp<,breakpoint,pauseBreakpoints,topFrame<,exception<,bytes<,inspectee<,json,type",
       toString$0: function(_) {
         return "[Event type: " + H.S(this.type) + ", kind: " + H.S(this.kind) + ", timestamp: " + H.S(this.timestamp) + "]";
       },
       static: {Event_parse: [function(json) {
           var t1, t2;
-          t1 = new S.Event1(null, null, null, null, null, null, null, null, null, json, null);
+          t1 = new S.Event1(null, null, null, null, null, null, null, null, null, null, json, null);
           t1.type = J.$index$asx(json, "type");
           t2 = J.getInterceptor$asx(json);
           t1.kind = t2.$index(json, "kind");
@@ -53889,6 +53915,7 @@ self._domRemove = function(element) {
           t1.topFrame = S._createObject(t2.$index(json, "topFrame"));
           t1.exception = S._createObject(t2.$index(json, "exception"));
           t1.bytes = t2.$index(json, "bytes");
+          t1.inspectee = S._createObject(t2.$index(json, "inspectee"));
           return t1;
         }, "call$1", "vm_service_lib_Event_parse$closure", 2, 0, 174]}
     },
@@ -53951,7 +53978,7 @@ self._domRemove = function(element) {
         }, "call$1", "vm_service_lib_Field_parse$closure", 2, 0, 176]}
     },
     Flag: {
-      "^": "Object;name>,comment,modified,valueAsString",
+      "^": "Object;name>,comment,modified,valueAsString<",
       toString$0: function(_) {
         return "[Flag name: " + H.S(this.name) + ", comment: " + H.S(this.comment) + ", modified: " + H.S(this.modified) + "]";
       },
@@ -54076,7 +54103,7 @@ self._domRemove = function(element) {
         this.pattern = S._createObject(t1.$index(json, "pattern"));
       },
       static: {InstanceRef_parse: [function(json) {
-          return S.InstanceRef$_fromJson(json);
+          return json == null ? null : S.InstanceRef$_fromJson(json);
         }, "call$1", "vm_service_lib_InstanceRef_parse$closure", 2, 0, 182], InstanceRef$_fromJson: function(json) {
           var t1 = new S.InstanceRef(null, null, null, null, null, null, null, null, null, null, json, null);
           t1.type = J.$index$asx(json, "type");
@@ -54086,7 +54113,7 @@ self._domRemove = function(element) {
         }}
     },
     Instance: {
-      "^": "Obj;kind>,classRef:Instance_classRef?,valueAsString?,valueAsStringIsTruncated,length>,offset>,count,name>,typeClass,parameterizedClass,fields,elements,associations,bytes<,closureFunction,closureContext,mirrorReferent,pattern,isCaseSensitive,isMultiLine,propertyKey,propertyValue,typeArguments,parameterIndex,targetType,bound,id,classRef,size,json,type",
+      "^": "Obj;kind>,classRef:Instance_classRef?,valueAsString@,valueAsStringIsTruncated,length>,offset>,count,name>,typeClass,parameterizedClass,fields,elements,associations,bytes<,closureFunction,closureContext,mirrorReferent,pattern,isCaseSensitive,isMultiLine,propertyKey,propertyValue,typeArguments,parameterIndex,targetType,bound,id,classRef,size,json,type",
       get$hashCode: function(_) {
         return J.get$hashCode$(this.id);
       },
@@ -54324,7 +54351,7 @@ self._domRemove = function(element) {
         }, "call$1", "vm_service_lib_NullRef_parse$closure", 2, 0, 191]}
     },
     Null0: {
-      "^": "Instance;valueAsString:Null_valueAsString?,kind,Instance_classRef,valueAsString,valueAsStringIsTruncated,length,offset,count,name,typeClass,parameterizedClass,fields,elements,associations,bytes,closureFunction,closureContext,mirrorReferent,pattern,isCaseSensitive,isMultiLine,propertyKey,propertyValue,typeArguments,parameterIndex,targetType,bound,id,classRef,size,json,type",
+      "^": "Instance;valueAsString:Null_valueAsString@,kind,Instance_classRef,valueAsString,valueAsStringIsTruncated,length,offset,count,name,typeClass,parameterizedClass,fields,elements,associations,bytes,closureFunction,closureContext,mirrorReferent,pattern,isCaseSensitive,isMultiLine,propertyKey,propertyValue,typeArguments,parameterIndex,targetType,bound,id,classRef,size,json,type",
       get$hashCode: function(_) {
         return J.get$hashCode$(this.id);
       },
@@ -54405,7 +54432,7 @@ self._domRemove = function(element) {
         }, "call$1", "vm_service_lib_Response_parse$closure", 2, 0, 195]}
     },
     Sentinel: {
-      "^": "Response;kind>,valueAsString,json,type",
+      "^": "Response;kind>,valueAsString<,json,type",
       toString$0: function(_) {
         return "[Sentinel type: " + H.S(this.type) + ", kind: " + H.S(this.kind) + ", valueAsString: " + H.S(this.valueAsString) + "]";
       },
