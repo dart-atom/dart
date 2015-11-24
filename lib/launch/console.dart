@@ -147,13 +147,25 @@ class ConsoleView extends View {
     // Configure
     if (launch.launchConfiguration != null) {
       CoreElement e = toolbar.add(
-        button(text: 'Configure', c: 'btn icon icon-gear')
+        button(text: 'Config', c: 'btn icon icon-gear')
       );
       e.tooltip = 'Configure this application launch';
       e.click(() {
         atom.workspace.open(launch.launchConfiguration.configYamlPath);
       });
     }
+
+    // Re-run
+    // TODO: Re-enable this when we listen for changes to launch configurations.
+    // if (launch.launchConfiguration != null) {
+    //   CoreElement e = toolbar.add(
+    //     button(text: 'Rerun', c: 'btn icon icon-sync')
+    //   );
+    //   e.tooltip = 'Rerun this application';
+    //   e.click(() {
+    //     deps[RunApplicationManager].run(launch.launchConfiguration);
+    //   });
+    // }
 
     // Terminate
     if (launch.canKill()) {

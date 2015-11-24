@@ -62,7 +62,7 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
     // Look for already created launch configs for the path.
     if (config != null) {
       _logger.fine("Using existing launch config for '${path}'.");
-      _run(config);
+      run(config);
       return;
     }
 
@@ -71,7 +71,7 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
     if (launchType != null) {
       LaunchConfiguration config = _createConfig(projectPath, launchType, path);
       _logger.fine("Creating new launch config for '${path}'.");
-      _run(config);
+      run(config);
       return;
     }
 
@@ -83,7 +83,7 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
       if (config != null) {
         _logger.fine("Using recent launch config '${config}'.");
-        _run(config);
+        run(config);
         return;
       }
     }
@@ -105,7 +105,7 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
       );
 
       _logger.fine("Found one runnable in project: '${config}'.");
-      _run(config);
+      run(config);
     } else {
       atom.notifications.addWarning(
         'This project contains more than one potentially runnable file; '
@@ -128,7 +128,7 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
   }
 
-  void _run(LaunchConfiguration config) {
+  void run(LaunchConfiguration config) {
     _preLaunch();
 
     _logger.info("Launching '${config}'.");
@@ -145,6 +145,12 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
   LaunchConfiguration _getConfigFor(String projectPath, String path) {
     List<LaunchConfiguration> configs =
         launchConfigurationManager.getConfigsFor(projectPath);
+
+    // Check if the file _is_ a launch config.
+    for (LaunchConfiguration config in configs) {
+      if (config.configYamlPath == path) return config;
+    }
+
     return _newest(configs.where((config) => config.primaryResource == path));
   }
 

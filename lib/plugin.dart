@@ -133,7 +133,9 @@ class AtomDartPackage extends AtomPackage {
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
     PubManager pubManager = new PubManager();
+
     RunApplicationManager runAppManager = new RunApplicationManager();
+    disposables.add(deps[RunApplicationManager] = runAppManager);
 
     disposables.add(analysisOptionsManager);
     disposables.add(new ChangelogManager());

@@ -14,7 +14,9 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('atom.launch_configs');
 
-// TODO: allow users to run the files directly
+// TODO: We need to update the launch configs in place - not create new objects.
+
+// TODO: watch the directory; update on changes.
 
 class LaunchConfigurationManager implements Disposable, StateStorable {
   Map<String, _ProjectConfigurations> _projectConfigs = {};
