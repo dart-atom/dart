@@ -8,6 +8,7 @@
 - bound `jump-to-declaration` to `ctrl-alt-enter` on windows
 - fixed a NPE related to determining whether files are executable
 - fixed an exception when restoring saved settings
+- pass the route parameter to flutter launch configurations
 
 ## 0.4.15
 - create hyperlinks from exception traces in the console view

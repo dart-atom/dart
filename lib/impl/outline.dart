@@ -79,6 +79,8 @@ class OutlineView implements Disposable {
   AnalysisOutline lastOutline;
   StreamSubscriptions subs = new StreamSubscriptions();
 
+  List<Outline> _topLevel = [];
+
   OutlineView(this.controller, this.editor) {
     subs.add(editor.onDidDestroy.listen((_) => dispose()));
     subs.add(editor.onDidChangeCursorPosition.listen(_cursorChanged));
@@ -177,11 +179,14 @@ class OutlineView implements Disposable {
 
     treeBuilder.clear();
 
+    _topLevel.clear();
+
     if (data.outline == null) {
       treeBuilder.add(div(text: 'outline not available', c: 'comment'));
     } else {
       List<Outline> nodes = data.outline.children ?? <Outline>[];
       for (Outline node in nodes) {
+        _topLevel.add(node);
         treeBuilder.addNode(_toNode(node));
       }
     }
@@ -234,8 +239,7 @@ class OutlineView implements Disposable {
     analysis.Element e = item.element;
 
     // static class members
-    if (((e.flags & 0x08) != 0) &&
-        (e.kind == 'FIELD' || e.kind == 'METHOD' || e.kind == 'GETTER' || e.kind == 'SETTER')) {
+    if (((e.flags & 0x08) != 0) && !_topLevel.contains(item)) {
       intoElement.children.add(new html.SpanElement()
         ..classes.add('comment')
         ..text = '•'

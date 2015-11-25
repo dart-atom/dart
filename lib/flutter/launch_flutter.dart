@@ -71,7 +71,7 @@ class FlutterLaunchType extends LaunchType {
   }
 
   String getDefaultConfigText() {
-    return 'checked: true\n';
+    return 'checked: true\nroute:\n';
   }
 
   Future _killLastLaunch() {
@@ -98,13 +98,19 @@ class _LaunchInstance {
 
     if (!configuration.checked) _args.add('--no-checked');
 
+    var route = configuration.typeArgs['route'];
+    if (route is String && route.isNotEmpty) {
+      _args.add('--route');
+      _args.add(route);
+    }
+
     String relPath = relativize(project.path, configuration.primaryResource);
     if (relPath != 'lib/main.dart') {
       _args.add('-t');
       _args.add(relPath);
     }
 
-    String description = '${_toolName} ${_args.join(' ')}';
+    String description = '${_toolName} ${_args.join(' ')} • ${_toolName} logs';
 
     _launch = new _FlutterLaunch(
       launchManager,

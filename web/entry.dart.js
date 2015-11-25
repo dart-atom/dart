@@ -7490,7 +7490,7 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.OutlineController_closure1[1];
     OutlineController_closure1.prototype = $desc;
     OutlineController_closure1.$__fields__ = ["$this"];
-    function OutlineView(controller, editor, root, content, fileType, title, treeBuilder, lastOutline, subs) {
+    function OutlineView(controller, editor, root, content, fileType, title, treeBuilder, lastOutline, subs, _topLevel) {
       this.controller = controller;
       this.editor = editor;
       this.root = root;
@@ -7500,6 +7500,7 @@ self._domRemove = function(element) {
       this.treeBuilder = treeBuilder;
       this.lastOutline = lastOutline;
       this.subs = subs;
+      this._topLevel = _topLevel;
       this.$deferredAction();
     }
     OutlineView.builtin$cls = "OutlineView";
@@ -7507,7 +7508,7 @@ self._domRemove = function(element) {
       OutlineView.name = "OutlineView";
     $desc = $collectedClasses$.OutlineView[1];
     OutlineView.prototype = $desc;
-    OutlineView.$__fields__ = ["controller", "editor", "root", "content", "fileType", "title", "treeBuilder", "lastOutline", "subs"];
+    OutlineView.$__fields__ = ["controller", "editor", "root", "content", "fileType", "title", "treeBuilder", "lastOutline", "subs", "_topLevel"];
     OutlineView.prototype.get$root = function() {
       return this.root;
     };
@@ -28064,7 +28065,7 @@ self._domRemove = function(element) {
             header.add$1(0, K.CoreElement$("span", null, "text-highlight", $name));
             header.add$1(0, K.CoreElement$("span", null, null, t1.substring$1(title, J.$add$ns(index, J.get$length$asx($name))) + "\n"));
           } else
-            header.add$1(0, K.CoreElement$("span", null, "text-highlight", H.S(title) + "\n"));
+            header.add$1(0, K.CoreElement$("span", null, null, H.S(title) + "\n"));
         }
         t1 = t2.get$subtitle();
         header.add$1(0, K.CoreElement$("span", null, "text-subtle", t1 == null ? "" : t1));
@@ -30277,7 +30278,7 @@ self._domRemove = function(element) {
         return this._killLastLaunch$0().then$1(new M.FlutterLaunchType_performLaunch_closure(this, configuration, project));
       },
       getDefaultConfigText$0: function() {
-        return "checked: true\n";
+        return "checked: true\nroute:\n";
       },
       _killLastLaunch$0: function() {
         var t1, launch;
@@ -30305,7 +30306,7 @@ self._domRemove = function(element) {
     FlutterLaunchType_performLaunch_closure: {
       "^": "Closure:0;$this,configuration,project",
       call$1: [function(_) {
-        var t1, t2, t3, t4, t5, t6, relPath, description, t7, t8;
+        var t1, t2, t3, t4, t5, route, t6, relPath, description, t7, t8;
         t1 = this.$this;
         t2 = this.project;
         t3 = this.configuration;
@@ -30314,13 +30315,18 @@ self._domRemove = function(element) {
         t4._flutter_launch$_args = t5;
         if (J.get$checked$x(t3) !== true)
           t5.push("--no-checked");
+        route = J.$index$asx(t3.get$typeArgs(), "route");
+        if (typeof route === "string" && route.length !== 0) {
+          t5.push("--route");
+          t5.push(route);
+        }
         t6 = J.getInterceptor$x(t2);
         relPath = S.relativize(t6.get$path(t2), t3.get$primaryResource());
         if (!J.$eq$(relPath, "lib/main.dart")) {
           t5.push("-t");
           t5.push(relPath);
         }
-        description = "flutter " + C.JSArray_methods.join$1(t5, " ");
+        description = "flutter " + C.JSArray_methods.join$1(t5, " ") + " \u2022 flutter logs";
         t5 = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK);
         t7 = t3.get$shortResourceName();
         t8 = t4.get$_kill();
@@ -33171,7 +33177,7 @@ self._domRemove = function(element) {
       }
     },
     OutlineView: {
-      "^": "Object;controller,editor,root<,content,fileType,title*,treeBuilder,lastOutline,subs",
+      "^": "Object;controller,editor,root<,content,fileType,title*,treeBuilder,lastOutline,subs,_topLevel",
       _install$0: function() {
         var t1, t2, t3, t4, t5, t6, t7, resizer;
         if (this.content != null)
@@ -33250,7 +33256,7 @@ self._domRemove = function(element) {
         }
       },
       _handleOutline$1: [function(data) {
-        var t1, t2, t3, nodes, node;
+        var t1, t2, t3, nodes, node, t4;
         t1 = this.editor;
         if (!J.$eq$(data.get$file(), t1.invoke$1("getPath")))
           return;
@@ -33272,15 +33278,18 @@ self._domRemove = function(element) {
           }
         }
         this.treeBuilder.clear$0(0);
-        t2 = J.getInterceptor$x(data);
-        if (t2.get$outline(data) == null)
+        t2 = this._topLevel;
+        C.JSArray_methods.set$length(t2, 0);
+        t3 = J.getInterceptor$x(data);
+        if (t3.get$outline(data) == null)
           this.treeBuilder.add$1(0, K.CoreElement$("div", null, "comment", "outline not available"));
         else {
-          nodes = J.get$children$x(t2.get$outline(data));
-          for (t2 = J.get$iterator$ax(nodes == null ? H.setRuntimeTypeInfo([], [E.Outline]) : nodes); t2.moveNext$0();) {
-            node = t2.__interceptors$_current;
-            t3 = this.treeBuilder;
-            t3._addNode$2(t3, this._toNode$1(node));
+          nodes = J.get$children$x(t3.get$outline(data));
+          for (t3 = J.get$iterator$ax(nodes == null ? H.setRuntimeTypeInfo([], [E.Outline]) : nodes); t3.moveNext$0();) {
+            node = t3.__interceptors$_current;
+            t2.push(node);
+            t4 = this.treeBuilder;
+            t4._addNode$2(t4, this._toNode$1(node));
           }
         }
         this._cursorChanged$1(new E.Point(E._cvt(t1.invoke$1("getCursorBufferPosition"))));
@@ -33332,12 +33341,7 @@ self._domRemove = function(element) {
       _outline$_render$2: [function(item, intoElement) {
         var e, t1, t2, t3, t4, span, $name, type, index;
         e = item.get$element();
-        if (J.$and$n(e.get$flags(), 8) !== 0) {
-          t1 = J.getInterceptor$x(e);
-          t1 = J.$eq$(t1.get$kind(e), "FIELD") || J.$eq$(t1.get$kind(e), "METHOD") || J.$eq$(t1.get$kind(e), "GETTER") || J.$eq$(t1.get$kind(e), "SETTER");
-        } else
-          t1 = false;
-        if (t1) {
+        if (J.$and$n(e.get$flags(), 8) !== 0 && !C.JSArray_methods.contains$1(this._topLevel, item)) {
           t1 = J.get$children$x(intoElement);
           t2 = C.HtmlDocument_methods.createElement$1(document, "span");
           t3 = J.getInterceptor$x(t2);
@@ -33441,7 +33445,7 @@ self._domRemove = function(element) {
       },
       $isDisposable: 1,
       static: {OutlineView$: function(controller, editor) {
-          var t1 = new A.OutlineView(controller, editor, null, null, null, null, null, null, new G.StreamSubscriptions(null, []));
+          var t1 = new A.OutlineView(controller, editor, null, null, null, null, null, null, new G.StreamSubscriptions(null, []), []);
           t1.OutlineView$2(controller, editor);
           return t1;
         }}
@@ -37247,9 +37251,8 @@ self._domRemove = function(element) {
             t4 = $.$get$atom()._workspace;
             t3._panel = new E.Panel(t4.invoke$2("addRightPanel", t4._panelOptions$3(t5, false, null)));
           } else {
-            t6 = $.$get$atom()._workspace;
-            t3._panel = new E.Panel(t6.invoke$2("addBottomPanel", t6._panelOptions$3(t5, false, null)));
-            t4.attribute$2("compact", true);
+            t4 = $.$get$atom()._workspace;
+            t3._panel = new E.Panel(t4.invoke$2("addBottomPanel", t4._panelOptions$3(t5, false, null)));
           }
           t4 = groupName + "Panel";
           t3._setupResizer$3(t4, resizer, rightPanel ? 250 : 125);
