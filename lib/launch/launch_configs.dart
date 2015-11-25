@@ -185,7 +185,7 @@ class LaunchConfiguration {
 
   List<String> get argsAsList {
     var val = typeArgs['args'];
-    if (val == null) return null;
+    if (val == null) return [];
     if (val is List) return val;
 
     String str = '${val}';

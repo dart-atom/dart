@@ -30306,15 +30306,18 @@ self._domRemove = function(element) {
     FlutterLaunchType_performLaunch_closure: {
       "^": "Closure:0;$this,configuration,project",
       call$1: [function(_) {
-        var t1, t2, t3, t4, t5, route, t6, relPath, description, t7, t8;
+        var t1, t2, t3, t4, isMojo, flutterArgs, t5, checked, route, t6, relPath, description, t7, t8;
         t1 = this.$this;
         t2 = this.project;
         t3 = this.configuration;
         t4 = new M._LaunchInstance(t2, null, null, null, null);
-        t5 = ["start"];
+        isMojo = J.$eq$(J.$index$asx(t3.get$typeArgs(), "run_mojo"), true);
+        flutterArgs = t3.get$argsAsList();
+        t5 = [isMojo ? "run_mojo" : "start"];
         t4._flutter_launch$_args = t5;
-        if (J.get$checked$x(t3) !== true)
-          t5.push("--no-checked");
+        checked = J.$index$asx(t3.get$typeArgs(), "checked");
+        if (typeof checked === "boolean")
+          t5.push(checked ? "--checked" : "--no-checked");
         route = J.$index$asx(t3.get$typeArgs(), "route");
         if (typeof route === "string" && route.length !== 0) {
           t5.push("--route");
@@ -30326,6 +30329,7 @@ self._domRemove = function(element) {
           t5.push("-t");
           t5.push(relPath);
         }
+        C.JSArray_methods.addAll$1(t5, flutterArgs);
         description = "flutter " + C.JSArray_methods.join$1(t5, " ") + " \u2022 flutter logs";
         t5 = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK);
         t7 = t3.get$shortResourceName();
@@ -31854,7 +31858,7 @@ self._domRemove = function(element) {
         return P.List_List$from(t1, true, H.getRuntimeTypeArgument(t1, "Iterable", 0));
       },
       performLaunch$2: function(manager, configuration) {
-        var sdk, withDebug, path, cwd, args, project, paths, t1, cwd0, _args, t2, t3, description, t4, t5, t6, runner, launch;
+        var sdk, withDebug, path, cwd, args, project, paths, t1, cwd0, _args, t2, description, t3, t4, t5, runner, launch;
         sdk = Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$sdk();
         if (sdk == null)
           P.Future_Future$error("No Dart SDK configured", null, null);
@@ -31891,16 +31895,14 @@ self._domRemove = function(element) {
         if (J.get$checked$x(configuration) === true)
           _args.push("--checked");
         _args.push(path);
-        t2 = args == null;
-        if (!t2)
-          C.JSArray_methods.addAll$1(_args, args);
-        t3 = H.S(path) + " ";
-        description = t3 + (t2 ? "" : J.join$1$ax(args, " "));
-        t3 = J.$index$asx(sdk.get$dartVm().obj, "path");
-        t4 = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
+        C.JSArray_methods.addAll$1(_args, args);
+        t2 = H.S(path) + " ";
+        description = t2 + J.join$1$ax(args, " ");
+        t2 = J.$index$asx(sdk.get$dartVm().obj, "path");
+        t3 = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
+        t4 = P.StreamController_StreamController(null, null, null, null, false, null);
         t5 = P.StreamController_StreamController(null, null, null, null, false, null);
-        t6 = P.StreamController_StreamController(null, null, null, null, false, null);
-        runner = new Z.ProcessRunner(t3, _args, cwd, null, null, t4, null, t5, t6);
+        runner = new Z.ProcessRunner(t2, _args, cwd, null, null, t3, null, t4, t5);
         launch = Z._CliLaunch$(manager, this, configuration, path, cwd, new Z.CliLaunchType_performLaunch_closure(runner), project, description);
         if (t1) {
           t1 = launch.servicePort;
@@ -31912,9 +31914,9 @@ self._domRemove = function(element) {
         }
         manager.addLaunch$1(launch);
         runner.execStreaming$0();
-        H.setRuntimeTypeInfo(new P._ControllerStream(t5), [H.getTypeArgumentByIndex(t5, 0)]).listen$1(new Z.CliLaunchType_performLaunch_closure0(launch));
-        H.setRuntimeTypeInfo(new P._ControllerStream(t6), [H.getTypeArgumentByIndex(t6, 0)]).listen$1(new Z.CliLaunchType_performLaunch_closure1(launch));
-        t4.future.then$1(new Z.CliLaunchType_performLaunch_closure2(launch));
+        H.setRuntimeTypeInfo(new P._ControllerStream(t4), [H.getTypeArgumentByIndex(t4, 0)]).listen$1(new Z.CliLaunchType_performLaunch_closure0(launch));
+        H.setRuntimeTypeInfo(new P._ControllerStream(t5), [H.getTypeArgumentByIndex(t5, 0)]).listen$1(new Z.CliLaunchType_performLaunch_closure1(launch));
+        t3.future.then$1(new Z.CliLaunchType_performLaunch_closure2(launch));
         t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
         t1._asyncComplete$1(launch);
         return t1;
@@ -32142,7 +32144,7 @@ self._domRemove = function(element) {
       get$argsAsList: function() {
         var val = J.$index$asx(this.get$typeArgs(), "args");
         if (val == null)
-          return;
+          return [];
         if (!!J.getInterceptor(val).$isList)
           return val;
         return H.S(val).split(" ");
@@ -32291,7 +32293,7 @@ self._domRemove = function(element) {
         t2 = P.StreamController_StreamController(null, null, null, null, false, null);
         t3 = P.StreamController_StreamController(null, null, null, null, false, null);
         runner = new Z.ProcessRunner(script, args, cwd, null, null, t1, null, t2, t3);
-        description = args == null ? launchName : H.S(launchName) + " " + J.join$1$ax(args, " ");
+        description = H.S(launchName) + " " + J.join$1$ax(args, " ");
         t4 = $.Launch__id + 1;
         $.Launch__id = t4;
         t5 = P.StreamController_StreamController$broadcast(null, null, false, null);
