@@ -94,9 +94,18 @@ class _LaunchInstance {
     LaunchConfiguration configuration,
     LaunchType launchType
   ) {
-    _args = ['start'];
+    // The flutter launch config can run mojo apps when 'run_mojo': true.
+    bool isMojo = configuration.typeArgs['run_mojo'] == true;
 
-    if (!configuration.checked) _args.add('--no-checked');
+    List<String> flutterArgs = configuration.argsAsList;
+
+    // Use either `flutter start` or `flutter run_mojo`.
+    _args = [isMojo ? 'run_mojo' : 'start'];
+
+    var checked = configuration.typeArgs['checked'];
+    if (checked is bool) {
+      _args.add(checked ? '--checked' : '--no-checked');
+    }
 
     var route = configuration.typeArgs['route'];
     if (route is String && route.isNotEmpty) {
@@ -109,6 +118,8 @@ class _LaunchInstance {
       _args.add('-t');
       _args.add(relPath);
     }
+
+    _args.addAll(flutterArgs);
 
     String description = '${_toolName} ${_args.join(' ')} • ${_toolName} logs';
 
