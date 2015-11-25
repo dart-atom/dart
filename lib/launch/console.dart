@@ -202,7 +202,7 @@ class ConsoleView extends View {
       String post = title.substring(index + name.length);
       header.add(span(text: '${post}\n'));
     } else {
-      header.add(span(text: '${title}\n', c: 'text-highlight'));
+      header.add(span(text: '${title}\n'));
     }
     header.add(span(text: launch.subtitle ?? '', c: 'text-subtle'));
     _emitElement(header);

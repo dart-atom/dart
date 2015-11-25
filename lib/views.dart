@@ -208,14 +208,15 @@ class ViewGroup implements Disposable {
       tabHeader = ul(c: 'list-inline tab-bar inset-panel')..hidden(),
       tabContainer = div(c: 'tab-container')..flex(),
       resizer = rightPanel
-          ? new ViewResizer.createVertical() : new ViewResizer.createHorizontal()
+          ? new ViewResizer.createVertical()
+          : new ViewResizer.createHorizontal()
     ]);
 
     if (rightPanel) {
       _panel = atom.workspace.addRightPanel(item: root.element, visible: false);
     } else {
       _panel = atom.workspace.addBottomPanel(item: root.element, visible: false);
-      root.toggleAttribute('compact', true);
+      // root.toggleAttribute('compact', true);
     }
 
     _setupResizer(
