@@ -28593,7 +28593,7 @@ self._domRemove = function(element) {
         return;
       }, null, null, 2, 0, null, 1, "call"]
     }
-  }], ["atom.debugger_ui2", "package:atom_dartlang/debug/debugger_ui2.dart",, X, {
+  }], ["atom.debugger_ui2", "package:atom_dartlang/debug/debugger_ui.dart",, X, {
     "^": "",
     DebuggerView: {
       "^": "View;connection,_execMarker,root,toolbar,content,tabElement,_closeButton,group",
