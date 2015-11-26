@@ -55,7 +55,9 @@ class DebuggerView extends View {
     CoreElement primarySection;
     CoreElement secondarySection;
 
-    content..toggleClass('debugger')..toggleClass('tab-non-scrollable')..layoutVertical()..add([
+    root.toggleClass('debugger');
+
+    content..toggleClass('tab-non-scrollable')..layoutVertical()..add([
       titleSection = div(c: 'debugger-section view-header'),
       primarySection = div(c: 'debugger-section resizable')..flex(),
       secondarySection = div(c: 'debugger-section resizable debugger-section-last')

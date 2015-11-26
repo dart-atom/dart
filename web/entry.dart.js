@@ -28672,10 +28672,10 @@ self._domRemove = function(element) {
         var t1, t2, t3, t4, titleSection, primarySection, secondarySection, title, subtitle, resizer;
         t1 = this.connection;
         t1.get$onTerminated().then$1(new X.DebuggerView_closure(this));
+        J.toggle$2$x(J.get$classes$x(this.root.element), "debugger", null);
         t2 = this.content;
         t3 = t2.element;
         t4 = J.getInterceptor$x(t3);
-        J.toggle$2$x(t4.get$classes(t3), "debugger", null);
         J.toggle$2$x(t4.get$classes(t3), "tab-non-scrollable", null);
         t4.setAttribute$2(t3, "layout", "");
         t4.setAttribute$2(t3, "vertical", "");
