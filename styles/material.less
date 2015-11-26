@@ -1,0 +1,32 @@
+@import "ui-variables";
+// @import "syntax-variables";
+
+.material-icon-button {
+  display: inline-block;
+
+  width: 22px;
+  height: 22px;
+  margin: 1px;
+  text-align: center;
+  border-radius: 50%;
+  transition: background-color 40ms ease;
+
+  span {
+    display: inline-block;
+    margin: 3px;
+  }
+}
+
+.material-icon-button:hover {
+  background-color: @background-color-highlight;
+  color: @text-color-highlight;
+}
+
+.material-icon-button:active {
+  background-color: @background-color-selected;
+}
+
+.material-icon-button[disabled] {
+  color: @text-color-subtle;
+  background-color: inherit !important;
+}

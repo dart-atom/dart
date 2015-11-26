@@ -9,7 +9,7 @@ import '../atom_utils.dart';
 import '../launch/launch.dart';
 import '../state.dart';
 import '../utils.dart';
-import 'debugger_ui.dart';
+import 'debugger_ui2.dart';
 
 final Logger _logger = new Logger('atom.debugger');
 
@@ -32,10 +32,7 @@ class DebugManager implements Disposable {
 
   DebugManager() {
     onAdded.listen((DebugConnection connection) {
-      DebugUIController controller = new DebugUIController(connection);
-      connection.onTerminated.then((_) {
-        controller.dispose();
-      });
+      DebuggerView.showViewForConnection(connection);
     });
 
     var add = (String cmd, Function closure) {

@@ -37,12 +37,18 @@ div.atom-view {
     padding: 8px 0;
   }
 
+  .tab-non-scrollable {
+    flex: 1;
+    padding: 8px 0;
+  }
+
   .button-bar {
     position: absolute;
     top: 8px;
     right: 0;
     display: flex;
     flex-flow: row-reverse;
+    align-items: center;
     z-index: 1;
 
     .icon::before {
@@ -50,10 +56,22 @@ div.atom-view {
       width: 14px;
       height: 14px;
     }
+
+    // button {
+    //   margin-top: 2px;
+    // }
+    //
+    // div.close-button {
+    //   margin-top: 4px;
+    // }
+    //
+    // div.badge {
+    //   margin-top: 2px;
+    // }
   }
 
   .view-header {
-    margin-top: 4px;
+    // margin-top: 4px;
     padding-bottom: 8px;
     border-bottom: 1px solid @text-color-subtle;
     flex-shrink: 0;
@@ -64,6 +82,15 @@ div.atom-view {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+
+    .view-subtitle {
+      margin-top: 2px;
+      color: @text-color-subtle;
+    }
+  }
+
+  .view-header-static {
+    margin-top: 8px;
   }
 
   .view-resize[vertical] {
