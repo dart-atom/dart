@@ -242,7 +242,7 @@ class OutlineView implements Disposable {
     if (((e.flags & 0x08) != 0) && !_topLevel.contains(item)) {
       intoElement.children.add(new html.SpanElement()
         ..classes.add('comment')
-        ..text = '•'
+        ..text = '▪'
       );
     }
 

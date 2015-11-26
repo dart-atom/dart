@@ -19,9 +19,9 @@ void main(List<String> args) {
   // dev.log('log from test');
 
   // TODO: Handle this.
-  dev.Timeline.timeSync('frame', _mockFrame);
+  // dev.Timeline.timeSync('frame', _mockFrame);
 
-  dev.inspect(fido);
+  // dev.inspect(fido);
 
   // int i = 0;
   //
@@ -33,11 +33,11 @@ void main(List<String> args) {
 
   print('foo 1');
   print('foo 2');
-  print('3 foo');
+  print('foo 3');
 
-  dev.log('log from test', name: 'test', level: 1);
-  dev.Timeline.timeSync('frame', _mockFrame);
-  dev.Timeline.timeSync('frame', _mockFrame);
+  // dev.log('log from test', name: 'test', level: 1);
+  // dev.Timeline.timeSync('frame', _mockFrame);
+  // dev.Timeline.timeSync('frame', _mockFrame);
 
   print('${abc} ${count}');
 
@@ -79,13 +79,13 @@ class Dog extends Animal {
   void bark() => print('woof!');
 }
 
-dynamic _mockFrame() {
-  final List<String> names = [
-    'Fido', 'Sparky', 'Chips', 'Scooter'
-  ];
-
-  return names.map((name) => new Dog(name)).toList();
-}
+// dynamic _mockFrame() {
+//   final List<String> names = [
+//     'Fido', 'Sparky', 'Chips', 'Scooter'
+//   ];
+//
+//   return names.map((name) => new Dog(name)).toList();
+// }
 
 Future<dev.ServiceExtensionResponse> _fooHandler(String method, Map parameters) {
   print('handling ${method}');

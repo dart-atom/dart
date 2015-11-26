@@ -20,7 +20,8 @@ class TypeHierarchyHelper implements Disposable {
 
   TypeHierarchyHelper() {
     _command = atom.commands.add(
-        'atom-text-editor', 'dartlang:type-hierarchy', _handleHierarchy);
+      'atom-text-editor', 'dartlang:type-hierarchy', _handleHierarchy
+    );
   }
 
   void dispose() => _command.dispose();
@@ -72,9 +73,9 @@ class TypeHierarchyView extends View {
     content.toggleClass('type-hierarchy');
     content.toggleClass('tab-scrollable-container');
     content.add([
-      div(c: 'view-header')..add([
+      div(c: 'view-header view-header-static')..add([
         title = div(c: 'view-title'),
-        subtitle = div(c: 'text-subtle')
+        subtitle = div(c: 'view-subtitle')
       ]),
       treeBuilder = new ListTreeBuilder(_render)
     ]);

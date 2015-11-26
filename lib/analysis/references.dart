@@ -82,14 +82,14 @@ class FindReferencesView extends View {
     content.toggleClass('find-references');
     content.toggleClass('tab-scrollable-container');
     content.add([
-      div(c: 'view-header')..add([
+      div(c: 'view-header view-header-static')..add([
         title = div(c: 'view-title'),
-        subtitle = div(c: 'text-subtle')
+        subtitle = div(c: 'view-subtitle')
       ]),
       treeBuilder = new ListTreeBuilder(_render)
     ]);
 
-    // toolbar.add([
+    // toolbar.add([ // MIconButton instead
     //   refreshButton = span(c: 'icon-button icon-sync')..click(_refesh)
     // ]);
 

@@ -1,209 +1,172 @@
-library atom.debugger_ui;
-
-import 'dart:async';
-import 'dart:html' show DivElement, querySelector;
-import 'dart:js' as js;
+library atom.debugger_ui2;
 
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
-import '../editors.dart';
 import '../elements.dart';
 import '../state.dart';
-import '../utils.dart';
+import '../views.dart';
 import 'debugger.dart';
 import 'utils.dart';
-// import 'debugger_ui2.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui');
 
-// TODO: feedback when an operation is in progress (like pause, which can take
-// a long time depending on the running app)
+// TODO: do something about the outline view - it and the debugger view
+// fight for real estate
 
-class DebugUIController implements Disposable {
-  final Disposables disposables = new Disposables();
+class DebuggerView extends View {
+  static String viewIdForConnection(DebugConnection connection) {
+    return 'debug.${connection.hashCode}';
+  }
+
+  static DebuggerView showViewForConnection(DebugConnection connection) {
+    String id = viewIdForConnection(connection);
+
+    if (viewGroupManager.hasViewId(id)) {
+      DebuggerView view = viewGroupManager.getGroup('right').getViewById(id);
+      viewGroupManager.activateView(id);
+      return view;
+    } else {
+      DebuggerView view = new DebuggerView(connection);
+      viewGroupManager.addView('right', view);
+      return view;
+    }
+  }
+
   final DebugConnection connection;
 
-  CoreElement ui;
-  CoreElement frameTitle;
-  //CoreElement frameLocation;
-  CoreElement frameVars;
-
-  Timer _debounceTimer;
+  // MIconButton _stopButton;
   Marker _execMarker;
 
-  DebugUIController(this.connection) {
+  DebuggerView(this.connection) {
+    // Close the debugger view on termination.
+    connection.onTerminated.then((_) {
+      handleClose();
+      dispose();
+    });
+
+    // // Add a stop button to the view toolbar.
+    // toolbar.add([
+    //   _stopButton = new MIconButton('icon-primitive-square')..tooltip = 'Terminate process'
+    // ]);
+    // _stopButton.click(_terminate);
+
+    CoreElement titleSection;
+    CoreElement primarySection;
+    CoreElement secondarySection;
+
+    root.toggleClass('debugger');
+
+    content..toggleClass('tab-non-scrollable')..layoutVertical()..add([
+      titleSection = div(c: 'debugger-section view-header'),
+      primarySection = div(c: 'debugger-section resizable')..flex(),
+      secondarySection = div(c: 'debugger-section resizable debugger-section-last')
+    ]);
+
+    _createTitleSection(titleSection);
+    _createPrimarySection(primarySection);
+    _createSecondarySection(secondarySection);
+  }
+
+  void _createTitleSection(CoreElement section) {
+    CoreElement title;
+    CoreElement subtitle;
+
+    section.add([
+      title = div(c: 'view-title'),
+      subtitle = div(c: 'view-subtitle')
+    ]);
+
+    title.text = 'Debugging ${connection.launch.name}';
+    title.tooltip = title.text;
+
+    // TODO:
+    subtitle.text = 'Under construction';
+  }
+
+  void _createPrimarySection(CoreElement section) {
+    section.layoutVertical();
+
     CoreElement resume = button(c: 'btn icon-playback-play')..click(_resume);
-    CoreElement pause = button(c: 'btn icon-playback-pause')..click(_pause);
+    // CoreElement pause = button(c: 'btn icon-playback-pause')..click(_pause);
     CoreElement stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
     CoreElement stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
     CoreElement stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
+    CoreElement stopOut = button(c: 'btn icon-primitive-square')..click(_terminate);
 
-    CoreElement toolbar = div(c: 'btn-toolbar')..add([
-      div(c: 'btn-group')..add([
-        pause, resume
-      ]),
-      div(c: 'btn-group')..add([
-        stepIn, stepOver, stepOut
-      ]),
-      div(c: 'btn-group')..add([
-        button(c: 'btn icon-primitive-square')..click(_terminate)
-      ])
+    CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
+      resume,
+      div()..flex(),
+      stepIn,
+      stepOver,
+      stepOut,
+      div()..flex(),
+      stopOut
     ]);
 
-    CoreElement frameContent = div(c: 'debug-vars')..add([
-      div(c: 'debug-title')..layoutHorizontal()..add([
-        frameTitle = span(text: ' ', c: 'title')..flex()
-        //frameLocation = span(c: 'badge')
-      ]),
-      div(c: 'select-list')..add([
-        frameVars = ul(c: 'list-group')
-      ])
+    section.add([
+      executionControlToolbar,
+      // TODO:
+      div(c: 'under-construction', text: 'Under construction')..flex()
     ]);
-
-    //DebuggerView.showViewForConnection(connection);
-
-    var temp = new DivElement();
-    temp.setInnerHtml(
-        '<atom-text-editor mini placeholder-text="evaluate:" '
-          'data-grammar="source dart">'
-        '</atom-text-editor>',
-        treeSanitizer: new TrustedHtmlTreeSanitizer());
-    var editorElement = temp.querySelector('atom-text-editor');
-    js.JsFunction editorConverter = js.context['getTextEditorForElement'];
-    TextEditor editor = new TextEditor(editorConverter.apply([editorElement]));
-    editor.setGrammar(atom.grammars.grammarForScopeName('source.dart'));
-
-    CoreElement footer = div(c: 'debug-footer')..add([
-      temp
-    ]);
-
-    ui = div(c: 'debugger-ui')..layoutVertical()..add([
-      div(c: 'debug-header')..add([
-        toolbar
-      ]),
-      frameContent,
-      footer
-    ]);
-
-    // debugger-ui atom-text-editor? atom-workspace
-    disposables.add(atom.commands.add(footer.element, 'core:confirm', (_) {
-      String text = editor.getText();
-      flashSelection(editor, new Range.fromPoints(
-          new Point.coords(0, 0),
-          new Point.coords(0, text.length)
-      ));
-      _eval(text);
-    }));
-
-    // Oh, the travesty.
-    //document.body.children.add(ui.element);
-    //querySelector('atom-workspace').children.add(ui.element);
-    js.context.callMethod('_domHoist', [ui.element, 'atom-workspace']);
 
     void updateUi(bool suspended) {
       resume.enabled = suspended;
-      pause.enabled = !suspended;
+      // pause.enabled = !suspended;
       stepIn.enabled = suspended;
       stepOut.enabled = suspended;
       stepOver.enabled = suspended;
+      stopOut.enabled = connection.isAlive;
+      // _stopButton.enabled = connection.isAlive;
 
-      if (_debounceTimer != null) {
-        _debounceTimer.cancel();
-        _debounceTimer = null;
-      }
+      // Update the execution point.
+      if (suspended && connection.topFrame != null) {
+        connection.topFrame.getLocation().then((DebugLocation location) {
+          _removeExecutionMarker();
 
-      if (!suspended) {
-        // Put a brief debounce delay here when stepping to reduce flashing.
-        _debounceTimer = new Timer(
-            new Duration(milliseconds: 40),
-            () => _updateVariables(suspended));
+          if (location != null) {
+            _jumpToLocation(location, addExecMarker: true);
+          }
+        });
       } else {
-        _updateVariables(suspended);
+        _removeExecutionMarker();
       }
     }
 
     updateUi(connection.isSuspended);
-    _show();
     connection.onSuspendChanged.listen(updateUi);
   }
 
-  void _updateVariables(bool suspended) {
-    if (_debounceTimer != null) {
-      _debounceTimer.cancel();
-      _debounceTimer = null;
-    }
+  void _createSecondarySection(CoreElement section) {
+    ViewResizer resizer;
 
-    // Update the execution point.
-    if (suspended && connection.topFrame != null) {
-      connection.topFrame.getLocation().then((DebugLocation location) {
-        _removeExecutionMarker();
+    section.add([
+      resizer = new ViewResizer.createHorizontal(),
+      // TODO:
+      div(c: 'under-construction', text: 'Under construction')..flex()
+    ]);
 
-        if (location != null) {
-          _jumpToLocation(location, addExecMarker: true);
-        }
-      });
-    } else {
-      _removeExecutionMarker();
-    }
-
-    frameVars.clear();
-
-    if (suspended) {
-      if (connection.topFrame != null) {
-        frameTitle.text = connection.topFrame.title;
-        // frameLocation.text = connection.topFrame.cursorDescription;
-        // frameLocation.hidden(false);
-
-        List<DebugVariable> locals = connection.topFrame.locals;
-
-        if (locals.isEmpty) {
-          frameVars.add(em(text: '<no local variables>', c: 'text-muted'));
-        } else {
-          for (DebugVariable v in locals) {
-            frameVars.add(li()..add([
-              span(text: v.name, c: 'var-name'),
-              span(text: v.valueDescription, c: 'var-value'),
-            ]));
-          }
-        }
-      } else {
-        frameTitle.text = ' ';
-        // frameLocation.hidden(true);
-      }
-    } else {
-      // frameLocation.hidden(true);
-      if (connection.isolate != null) {
-        frameTitle.text = "Isolate '${connection.isolate.name}' running…";
-      } else {
-        frameTitle.text = ' ';
-      }
-    }
+    // TODO: general debugger ui settings
+    resizer.position = state['debuggerSplitter'] == null ? 300 : state['debuggerSplitter'];
   }
 
-  void _eval(String expression) {
-    if (connection.topFrame == null) {
-      atom.beep();
-    } else {
-      connection.topFrame.eval(expression).then((String result) {
-        connection.launch.pipeStdio('${expression}: ${result}\n', subtle: true);
-      }).catchError((e) {
-        connection.launch.pipeStdio('${expression}: ${e}\n', error: true);
-      });
-    }
+  // TODO: Shorter title.
+  String get label => 'Debug ${connection.launch.name}';
+
+  String get id => viewIdForConnection(connection);
+
+  void dispose() {
+    // TODO:
+
   }
 
-  void _show() {
-    new Future.delayed(Duration.ZERO).then((_) {
-      ui.toggleClass('debugger-show');
-    });
-  }
-
-  Future _hide() {
-    ui.toggleClass('debugger-show');
-    return ui.element.onTransitionEnd.first;
-  }
+  // TODO: This is temporary.
+  // _pause() => connection.pause();
+  _resume() => connection.resume();
+  _stepIn() => connection.stepIn();
+  _stepOver() => connection.stepOver();
+  _stepOut() => connection.stepOut();
+  _terminate() => connection.terminate();
 
   void _jumpToLocation(DebugLocation location, {bool addExecMarker: false}) {
     if (statSync(location.path).isFile()) {
@@ -247,25 +210,5 @@ class DebugUIController implements Disposable {
       _execMarker.destroy();
       _execMarker = null;
     }
-  }
-
-  // TODO: This is all temporary.
-  _pause() => connection.pause();
-  _resume() => connection.resume();
-  _stepIn() => connection.stepIn();
-  _stepOver() => connection.stepOver();
-  _stepOut() => connection.stepOut();
-  _terminate() => connection.terminate();
-
-  void dispose() {
-    disposables.dispose();
-    _removeExecutionMarker();
-    _hide().then((_) {
-      // So sad.
-      js.context.callMethod('_domRemove', [ui.element]);
-      //ui.dispose();
-    }).catchError((e) {
-      _logger.warning('error when closing debugger ui', e);
-    });
   }
 }

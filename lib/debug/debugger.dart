@@ -32,10 +32,7 @@ class DebugManager implements Disposable {
 
   DebugManager() {
     onAdded.listen((DebugConnection connection) {
-      DebugUIController controller = new DebugUIController(connection);
-      connection.onTerminated.then((_) {
-        controller.dispose();
-      });
+      DebuggerView.showViewForConnection(connection);
     });
 
     var add = (String cmd, Function closure) {
