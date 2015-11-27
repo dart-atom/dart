@@ -36,6 +36,7 @@ import 'flutter/create_project.dart';
 import 'flutter/flutter_dev.dart';
 import 'flutter/flutter_sdk.dart';
 import 'flutter/launch_flutter.dart';
+import 'flutter/launch_mojo.dart';
 import 'impl/changelog.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/errors.dart';
@@ -408,6 +409,7 @@ class AtomDartPackage extends AtomPackage {
   void _registerLaunchTypes() {
     FlutterLaunchType.register(launchManager);
     CliLaunchType.register(launchManager);
+    MojoLaunchType.register(launchManager);
     ShellLaunchType.register(launchManager);
     //WebLaunchType.register(launchManager);
   }

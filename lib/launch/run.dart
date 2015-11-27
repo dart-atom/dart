@@ -132,14 +132,20 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
     _preLaunch();
 
     _logger.info("Launching '${config}'.");
-    config.touch();
-
     LaunchType launchType = launchManager.getLaunchType(config.type);
-    launchType.performLaunch(launchManager, config).catchError((e) {
+
+    if (launchType == null) {
       atom.notifications.addError(
-          "Error running '${config.primaryResource}'.",
-          detail: '${e}');
-    });
+        "No handler for launch type '${config.type}' found.");
+    } else {
+      config.touch();
+
+      launchType.performLaunch(launchManager, config).catchError((e) {
+        atom.notifications.addError(
+            "Error running '${config.primaryResource}'.",
+            detail: '${e}');
+      });
+    }
   }
 
   LaunchConfiguration _getConfigFor(String projectPath, String path) {
