@@ -29,6 +29,8 @@ class FlutterLaunchType extends LaunchType {
 
   FlutterLaunchType() : super('flutter');
 
+  String get flutterStartCommand => 'start';
+
   bool canLaunch(String path) {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
@@ -92,15 +94,12 @@ class _LaunchInstance {
   _LaunchInstance(
     this.project,
     LaunchConfiguration configuration,
-    LaunchType launchType
+    FlutterLaunchType launchType
   ) {
-    // The flutter launch config can run mojo apps when 'run_mojo': true.
-    bool isMojo = configuration.typeArgs['run_mojo'] == true;
-
     List<String> flutterArgs = configuration.argsAsList;
 
     // Use either `flutter start` or `flutter run_mojo`.
-    _args = [isMojo ? 'run_mojo' : 'start'];
+    _args = [launchType.flutterStartCommand];
 
     var checked = configuration.typeArgs['checked'];
     if (checked is bool) {
