@@ -30,3 +30,87 @@
   color: @text-color-subtle;
   background-color: inherit !important;
 }
+
+.material-tabgroup {
+  .material-tab-container {
+    overflow-x: hidden;
+    display: flex;
+  }
+
+  .material-tab {
+    font-size: 1.1em;
+    text-transform: uppercase;
+    cursor: default;
+    display: inline;
+  }
+
+  .material-tab + .material-tab {
+    margin-left: 0.8em;
+  }
+
+  .material-tab.tab-selected {
+    color: @text-color-highlight;
+  }
+
+  .material-tab:hover {
+    color: @text-color-highlight;
+    text-decoration: underline;
+  }
+
+  .material-tab:active {
+    background-color: @background-color-highlight;
+  }
+
+  .material-tab[disabled] {
+    color: @text-color-subtle;
+    text-decoration: none;
+    background-color: inherit;
+  }
+}
+
+.material-list {
+  ul,
+  ol {
+    margin-bottom: 0;
+    padding-left: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    cursor: default;
+    // background-color: @base-background-color;
+  }
+
+  li {
+    cursor: pointer;
+    display: block;
+    line-height: @component-line-height;
+    min-height: @component-line-height;
+    padding: 0 4px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    border-bottom: 1px solid @tool-panel-background-color;
+
+    .material-icon-button span {
+      margin: 0;
+    }
+  }
+
+  li:hover {
+    background-color: @button-background-color-hover;
+  }
+
+  li.material-list-selected,
+  li.material-list-selected span {
+    color: @text-color-selected;
+    background-color: @background-color-selected;
+  }
+}
+
+.hideable {
+  opacity: 1;
+  transition: opacity 100ms ease;
+}
+
+.hideable.hiding {
+  opacity: 0;
+}

@@ -1,11 +1,15 @@
-library atom.debugger_ui2;
+library atom.debugger_ui;
 
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
+import '../atom_utils.dart';
 import '../elements.dart';
+import '../material.dart';
 import '../state.dart';
+import '../utils.dart';
 import '../views.dart';
+import 'breakpoints.dart';
 import 'debugger.dart';
 import 'utils.dart';
 
@@ -14,12 +18,19 @@ final Logger _logger = new Logger('atom.debugger_ui');
 // TODO: do something about the outline view - it and the debugger view
 // fight for real estate
 
+// TODO: ensure that the debugger ui exists over the course of the debug connection,
+// and that a new one is not created after a debugger tab is closed, and that
+// closing a debugger tab doesn't tear down any listening state.
+
 class DebuggerView extends View {
   static String viewIdForConnection(DebugConnection connection) {
     return 'debug.${connection.hashCode}';
   }
 
   static DebuggerView showViewForConnection(DebugConnection connection) {
+    // TODO: also check for any debugger views that were removed from the view
+    // group manager but that are still active.
+
     String id = viewIdForConnection(connection);
 
     if (viewGroupManager.hasViewId(id)) {
@@ -35,8 +46,11 @@ class DebuggerView extends View {
 
   final DebugConnection connection;
 
-  // MIconButton _stopButton;
   Marker _execMarker;
+
+  MTabGroup primaryTabGroup;
+  MTabGroup secondaryTabGroup;
+  BreakpointsTab breakpointsTab;
 
   DebuggerView(this.connection) {
     // Close the debugger view on termination.
@@ -45,13 +59,8 @@ class DebuggerView extends View {
       dispose();
     });
 
-    // // Add a stop button to the view toolbar.
-    // toolbar.add([
-    //   _stopButton = new MIconButton('icon-primitive-square')..tooltip = 'Terminate process'
-    // ]);
-    // _stopButton.click(_terminate);
-
     CoreElement titleSection;
+    CoreElement flowControlSection;
     CoreElement primarySection;
     CoreElement secondarySection;
 
@@ -59,11 +68,14 @@ class DebuggerView extends View {
 
     content..toggleClass('tab-non-scrollable')..layoutVertical()..add([
       titleSection = div(c: 'debugger-section view-header'),
-      primarySection = div(c: 'debugger-section resizable')..flex(),
+      flowControlSection = div(c: 'debugger-section'),
+      primarySection = div(c: 'debugger-section resizable')..layoutVertical()..flex(),
       secondarySection = div(c: 'debugger-section resizable debugger-section-last')
+        ..layoutVertical()
     ]);
 
     _createTitleSection(titleSection);
+    _createFlowControlSection(flowControlSection);
     _createPrimarySection(primarySection);
     _createSecondarySection(secondarySection);
   }
@@ -84,9 +96,7 @@ class DebuggerView extends View {
     subtitle.text = 'Under construction';
   }
 
-  void _createPrimarySection(CoreElement section) {
-    section.layoutVertical();
-
+  void _createFlowControlSection(CoreElement section) {
     CoreElement resume = button(c: 'btn icon-playback-play')..click(_resume);
     // CoreElement pause = button(c: 'btn icon-playback-pause')..click(_pause);
     CoreElement stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
@@ -104,10 +114,12 @@ class DebuggerView extends View {
       stopOut
     ]);
 
+    // TODO: Pull down menu for switching between isolates.
+    CoreElement subtitle;
+
     section.add([
       executionControlToolbar,
-      // TODO:
-      div(c: 'under-construction', text: 'Under construction')..flex()
+      subtitle = div(c: 'debugger-section-subtitle', text: ' ')
     ]);
 
     void updateUi(bool suspended) {
@@ -117,7 +129,6 @@ class DebuggerView extends View {
       stepOut.enabled = suspended;
       stepOver.enabled = suspended;
       stopOut.enabled = connection.isAlive;
-      // _stopButton.enabled = connection.isAlive;
 
       // Update the execution point.
       if (suspended && connection.topFrame != null) {
@@ -131,10 +142,34 @@ class DebuggerView extends View {
       } else {
         _removeExecutionMarker();
       }
+
+      if (suspended) {
+        subtitle.text = 'Isolate ${connection.isolate.name} (paused)';
+      } else {
+        if (connection.isolate != null) {
+          subtitle.text = 'Isolate ${connection.isolate.name}';
+        } else {
+          subtitle.text = ' ';
+        }
+      }
     }
 
     updateUi(connection.isSuspended);
     connection.onSuspendChanged.listen(updateUi);
+  }
+
+  void _createPrimarySection(CoreElement section) {
+    section.layoutVertical();
+
+
+    section.add([
+      primaryTabGroup = new MTabGroup()..flex()
+    ]);
+
+    // Set up the tab group.
+    primaryTabGroup.tabs.add(new _MockTab('Execution'));
+    primaryTabGroup.tabs.add(new _MockTab('Libraries'));
+    primaryTabGroup.tabs.add(new _MockTab('Isolates'));
   }
 
   void _createSecondarySection(CoreElement section) {
@@ -142,12 +177,18 @@ class DebuggerView extends View {
 
     section.add([
       resizer = new ViewResizer.createHorizontal(),
-      // TODO:
-      div(c: 'under-construction', text: 'Under construction')..flex()
+      secondaryTabGroup = new MTabGroup()..flex()
+      // div(c: 'under-construction', text: 'Under construction')..flex()
     ]);
 
-    // TODO: general debugger ui settings
-    resizer.position = state['debuggerSplitter'] == null ? 300 : state['debuggerSplitter'];
+    // Set up the splitter.
+    resizer.position = state['debuggerSplitter'] == null ? 225 : state['debuggerSplitter'];
+    resizer.onPositionChanged.listen((pos) => state['debuggerSplitter'] = pos);
+
+    // Set up the tab group.
+    secondaryTabGroup.tabs.add(new _MockTab('Eval'));
+    secondaryTabGroup.tabs.add(new _MockTab('Watchpoints'));
+    secondaryTabGroup.tabs.add(breakpointsTab = new BreakpointsTab());
   }
 
   // TODO: Shorter title.
@@ -157,7 +198,7 @@ class DebuggerView extends View {
 
   void dispose() {
     // TODO:
-
+    breakpointsTab.dispose();
   }
 
   // TODO: This is temporary.
@@ -210,5 +251,105 @@ class DebuggerView extends View {
       _execMarker.destroy();
       _execMarker = null;
     }
+  }
+}
+
+class _MockTab extends MTab {
+  _MockTab(String name) : super(name.toLowerCase(), name) {
+    content.toggleClass('under-construction');
+    content.text = '${name}: under construction';
+
+    active.onChanged.listen((val) {
+      print(val ? 'activated $this' : 'deactivated $this');
+    });
+  }
+}
+
+class BreakpointsTab extends MTab {
+  _TabTitlebar titlebar;
+  MList list;
+  StreamSubscriptions subs = new StreamSubscriptions();
+
+  BreakpointsTab() : super('breakpoints', 'Breakpoints') {
+    content..layoutVertical()..flex();
+
+    titlebar = content.add(new _TabTitlebar());
+
+    content.add([
+      list = new MList(_render)..flex()
+    ]);
+
+    list.onDoubleClick.listen((AtomBreakpoint bp) {
+      _openBreakpoint(bp);
+    });
+
+    // Set up the list.
+    _update();
+
+    // TODO: onchange
+    subs.add(breakpointManager.onAdd.listen(_update));
+    subs.add(breakpointManager.onRemove.listen(_update));
+  }
+
+  void _update([_]) {
+    List<AtomBreakpoint> bps = new List.from(breakpointManager.breakpoints);
+    bps.sort();
+
+    if (bps.isEmpty) {
+      titlebar.title = 'No breakpoints';
+    } else {
+      titlebar.title = '${bps.length} ${pluralize('breakpoint', bps.length)}';
+    }
+
+    list.update(bps);
+  }
+
+  void _render(AtomBreakpoint bp, CoreElement element) {
+    String pathText = bp.path;
+    List<String> rel = atom.project.relativizePath(bp.path);
+    if (rel[0] != null) {
+      pathText = basename(rel[0]) + ' ' + rel[1];
+    }
+
+    String lineText = ' line ${bp.line}';
+    if (bp.column != null) lineText += ':${bp.column}';
+
+    var handleDelete = () {
+      breakpointManager.removeBreakpoint(bp);
+    };
+
+    element..add([
+      span(c: 'icon-primitive-dot debugger-breakpoint-icon'),
+      div(c: 'overflow-hidden-ellipsis')..flex()..add([
+        span(text: pathText, c: 'debugger-breakpoint-path')..tooltip = bp.path,
+        span(text: lineText, c: 'text-subtle')
+      ]),
+      new MIconButton('icon-x')..click(handleDelete)
+    ])..layoutHorizontal();
+  }
+
+  void _openBreakpoint(AtomBreakpoint bp) {
+    int col = bp.column == null ? null : bp.column - 1;
+    editorManager.jumpToLocation(bp.path, bp.line - 1, col);
+  }
+
+  void dispose() => subs.dispose();
+}
+
+class _TabTitlebar extends CoreElement {
+  CoreElement titleElement;
+  CoreElement toolbar;
+
+  _TabTitlebar() : super('div', classes: 'debug-tab-container') {
+    layoutHorizontal();
+
+    add([
+      titleElement = div(c: 'debug-tab-title')..flex(),
+      toolbar = div(c: 'debug-tab-toolbar')
+    ]);
+  }
+
+  set title(String value) {
+    titleElement.text = value;
   }
 }

@@ -1,4 +1,4 @@
-library atom.debugger_ui;
+library atom.debugger_ui_old;
 
 import 'dart:async';
 import 'dart:html' show DivElement, querySelector;
