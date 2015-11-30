@@ -337,9 +337,9 @@ abstract class View implements Disposable {
     root.add([toolbar, content]);
 
     tabElement = li(c: 'tab')..add([
-      div(text: label, c: 'title')..click(_handleTab),
+      div(text: label, c: 'title'),
       div(c: 'close-icon')..click(handleClose)
-    ]);
+    ])..click(_handleTab)..element.attributes['data-type'] = 'ViewPartEditor';
 
     _closeButton = toolbar.add(new CloseButton()..click(handleClose));
   }
