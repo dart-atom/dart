@@ -35,9 +35,6 @@ class MTabGroup extends CoreElement {
   }
 
   void _handleTabAdd(MTab tab) {
-    // if (_tabContainer.element.hasChildNodes()) {
-    //   _tabContainer.add(span()..flex());
-    // }
     _tabContainer.add(tab._tabElement.element);
     _contentContainer.add(tab.content);
     tab.content.hidden(true);

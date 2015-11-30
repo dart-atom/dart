@@ -178,7 +178,6 @@ class DebuggerView extends View {
     section.add([
       resizer = new ViewResizer.createHorizontal(),
       secondaryTabGroup = new MTabGroup()..flex()
-      // div(c: 'under-construction', text: 'Under construction')..flex()
     ]);
 
     // Set up the splitter.
@@ -286,7 +285,7 @@ class BreakpointsTab extends MTab {
     // Set up the list.
     _update();
 
-    // TODO: onchange
+    // TODO: Support listening for breakpoint change events.
     subs.add(breakpointManager.onAdd.listen(_update));
     subs.add(breakpointManager.onRemove.listen(_update));
   }
