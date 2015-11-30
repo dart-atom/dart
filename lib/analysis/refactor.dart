@@ -83,7 +83,7 @@ class RefactoringHelper implements Disposable {
                 options: option)
             .then((RefactoringResult result) {
           if (result == null) return;
-          _handleRefactoringResult(result, oldName, newName, path);
+          _handleRefactoringResult(result, "Renamed '${oldName}' to '${newName}'.", path);
         });
       });
       job.schedule();
@@ -91,77 +91,84 @@ class RefactoringHelper implements Disposable {
   }
 
   void _handleRefactoringResult(
-      RefactoringResult result, String oldName, String newName, String path) {
+      RefactoringResult result, String successMsg, String path) {
     // TODO: use optionsProblems
     // TODO: use finalProblems
     // TODO: use feedback
     if (result.initialProblems.isNotEmpty) {
-      atom.notifications.addError('Unable to Perform Rename',
+      atom.notifications.addError('Unable to Refactor',
           detail: '${result.initialProblems.first.message}');
       atom.beep();
-    } else if (result.change == null) {
-      atom.notifications.addError('Unable to Perform Rename',
+      return;
+    }
+
+    SourceChange change = result.change;
+    if (change == null) {
+      atom.notifications.addError('Unable to Refactor',
           detail: 'No change information returned.');
       atom.beep();
-    } else {
-      SourceChange change = result.change;
-      List<SourceFileEdit> sourceFileEdits = change.edits;
-
-      // Remove any 'potential' edits. The analysis server sends over things
-      // like edits to package: files.
-      sourceFileEdits.forEach((SourceFileEdit fileEdit) {
-        fileEdit.edits.removeWhere((SourceEdit edit) => edit.id != null);
-      });
-      sourceFileEdits
-          .removeWhere((SourceFileEdit fileEdit) => fileEdit.edits.isEmpty);
-
-      // We want to confirm this refactoring with users if it's going to
-      // rename across files.
-      var apply = () {
-        _apply(sourceFileEdits, oldName, newName).then((_) {
-          // Ensure the original file is selected.
-          atom.workspace.open(path);
-        });
-      };
-
-      if (sourceFileEdits.length > 1) {
-        var project = projectManager.getProjectFor(path);
-        String projectPrefix = project == null ? '' : project.path;
-
-        Iterable<String> paths = sourceFileEdits.map((edit) {
-          String filePath = edit.file;
-          if (filePath.startsWith(projectPrefix)) {
-            return project.name + filePath.substring(projectPrefix.length);
-          } else {
-            return filePath;
-          }
-        });
-        String fileSummary = (paths.toList()..sort()).join('\n');
-        Notification notification;
-
-        var userConfirmed = () {
-          notification.dismiss();
-          apply();
-        };
-
-        var userCancelled = () => notification.dismiss();
-
-        notification = atom.notifications
-            .addInfo('Confirm rename in ${sourceFileEdits.length} files?',
-                detail: fileSummary,
-                dismissable: true,
-                buttons: [
-                  new NotificationButton('Rename', userConfirmed),
-                  new NotificationButton('Cancel', userCancelled)
-                ]);
-      } else {
-        apply();
-      }
+      return;
     }
+
+    // Remove any 'potential' edits. The analysis server sends over things
+    // like edits to package: files.
+    List<SourceFileEdit> sourceFileEdits = change.edits;
+    sourceFileEdits.forEach((SourceFileEdit fileEdit) {
+      fileEdit.edits.removeWhere((SourceEdit edit) => edit.id != null);
+    });
+    sourceFileEdits
+        .removeWhere((SourceFileEdit fileEdit) => fileEdit.edits.isEmpty);
+
+    var apply = () {
+      _applyEdits(sourceFileEdits, successMsg)
+          .then((_) {
+        // Ensure the original file is selected.
+        atom.workspace.open(path);
+      });
+    };
+
+    // If this changes a single file,
+    // then apply the change without confirming with the user
+    if (sourceFileEdits.length == 1) {
+      apply();
+      return;
+    }
+
+    // Otherwise, confirm this refactoring with users
+    // since it will affect multiple files.
+    var project = projectManager.getProjectFor(path);
+    String projectPrefix = project == null ? '' : project.path;
+
+    Iterable<String> paths = sourceFileEdits.map((edit) {
+      String filePath = edit.file;
+      if (filePath.startsWith(projectPrefix)) {
+        return project.name + filePath.substring(projectPrefix.length);
+      } else {
+        return filePath;
+      }
+    });
+    String fileSummary = (paths.toList()..sort()).join('\n');
+    Notification notification;
+
+    var userConfirmed = () {
+      notification.dismiss();
+      apply();
+    };
+
+    var userCancelled = () => notification.dismiss();
+
+    notification = atom.notifications
+        .addInfo('Refactor ${sourceFileEdits.length} files?',
+            detail: fileSummary,
+            dismissable: true,
+            buttons: [
+              new NotificationButton('Continue', userConfirmed),
+              new NotificationButton('Cancel', userCancelled)
+            ]);
   }
 
-  Future _apply(
-      List<SourceFileEdit> sourceFileEdits, String oldName, String newName) {
+  /// Apply the source edits, displaying [successMsg] once complete.
+  Future _applyEdits(List<SourceFileEdit> sourceFileEdits, String successMsg) {
     return Future.forEach(sourceFileEdits, (SourceFileEdit edit) {
       return atom.workspace.open(edit.file, options: {'searchAllPanes': true})
           .then((TextEditor editor) {
@@ -170,13 +177,13 @@ class RefactoringHelper implements Disposable {
     }).then((_) {
       String fileSummary = sourceFileEdits.map((edit) => edit.file).join('\n');
       if (sourceFileEdits.length == 1) fileSummary = null;
-      atom.notifications.addSuccess("Renamed '${oldName}' to '${newName}'.",
-          detail: fileSummary);
+      atom.notifications.addSuccess(successMsg, detail: fileSummary);
     }).catchError((e) {
-      atom.notifications.addError('Error Performing Rename', detail: '${e}');
+      atom.notifications.addError('Refactoring Error', detail: '${e}');
     });
   }
 
+  /// Find the identifier at the given [offset] location.
   static String _findIdentifier(String text, int offset) {
     while (offset > 0) {
       if (idRegex.hasMatch(text[offset - 1])) {
