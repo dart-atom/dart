@@ -15,88 +15,141 @@ import '../utils.dart';
 
 final Logger _logger = new Logger('refactoring');
 
+typedef _RefactorHandler(String path, int offset, int end, String text);
+
 class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 
   RefactoringHelper() {
-    _commands.add(
-        atom.commands.add('atom-text-editor', 'dartlang:refactor-rename', (e) {
-      _handleRenameRefactor(e.editor);
-    }));
+    _addCommand('dartlang:refactor-rename', _handleRenameRefactor);
+    _addCommand('dartlang:refactor-extract-local', _handleExtractLocal);
   }
 
   void dispose() => _commands.dispose();
 
-  void _handleRenameRefactor(TextEditor editor) {
-    String path = editor.getPath();
+  void _addCommand(String id, _RefactorHandler handler) {
+    _commands.add(atom.commands.add('atom-text-editor', id, (e) {
+      TextEditor editor = e.editor;
+      String path = editor.getPath();
 
-    if (projectManager.getProjectFor(path) == null) {
-      atom.beep();
-      return;
-    }
+      if (projectManager.getProjectFor(path) == null) {
+        atom.beep();
+        return;
+      }
 
-    Range range = editor.getSelectedBufferRange();
-    TextBuffer buffer = editor.getBuffer();
-    int offset = buffer.characterIndexForPosition(range.start);
-    int end = buffer.characterIndexForPosition(range.end);
-    String text = editor.getText();
+      Range range = editor.getSelectedBufferRange();
+      TextBuffer buffer = editor.getBuffer();
+      int offset = buffer.characterIndexForPosition(range.start);
+      int end = buffer.characterIndexForPosition(range.end);
+      String text = editor.getText();
+
+      handler(path, offset, end, text);
+    }));
+  }
+
+  void _handleExtractLocal(String path, int offset, int end, String text) {
+    // Check if extract local can be performed
+    _checkRefactoringAvailable(
+        Refactorings.EXTRACT_LOCAL_VARIABLE, path, offset, end,
+        (AvailableRefactoringsResult result) {
+      // TODO: use the rename refactoring feedback
+      // to better select the ID being renamed.
+      String oldName = '';
+
+      promptUser('Extract local variable: enter the new name.',
+          defaultText: oldName, selectText: true).then((String newName) {
+        // Abort if user cancels the operation or nothing to do
+        if (newName == null) return;
+        newName = newName.trim();
+        if (newName == '' || newName == oldName) return;
+
+        RefactoringOptions options = new ExtractLocalVariableOptions(newName);
+        _performRefactoring(Refactorings.EXTRACT_LOCAL_VARIABLE, options, path,
+            offset, end, "Extracted '${newName}'.");
+      });
+    });
+  }
+
+  void _handleRenameRefactor(String path, int offset, int end, String text) {
     String oldName = _findIdentifier(text, offset);
 
-    // TODO: Timeout if the refactor request takes too long?
-    Job job = new AnalysisRequestJob('rename', () {
+    // Check if rename can be performed
+    _checkRefactoringAvailable(Refactorings.RENAME, path, offset, end,
+        (AvailableRefactoringsResult result) {
+      // TODO: use the rename refactoring feedback
+      // to better select the ID being renamed.
+
+      promptUser('Rename refactor: enter the new name.',
+          defaultText: oldName, selectText: true).then((String newName) {
+        // Abort if user cancels the operation or nothing to do
+        if (newName == null) return;
+        newName = newName.trim();
+        if (newName == '' || newName == oldName) return;
+
+        // Perform the refactoring
+        RefactoringOptions options = new RenameRefactoringOptions(newName);
+        _performRefactoring(Refactorings.RENAME, options, path, offset, end,
+            "Renamed '${oldName}' to '${newName}'.");
+      });
+    });
+  }
+
+  /// If [refactoringName] can be triggered at the given location,
+  /// then call [refactor].
+  void _checkRefactoringAvailable(String refactoringName, String path,
+      int offset, int end, refactor(AvailableRefactoringsResult result)) {
+    Job job = new AnalysisRequestJob(_jobName(refactoringName), () {
       return analysisServer
           .getAvailableRefactorings(path, offset, end - offset)
           .then((AvailableRefactoringsResult result) {
+        if (result == null) {
+          atom.beep();
+          return;
+        }
+
+        // Check if the desired refactoring is available
+        List refactorings = result.kinds;
+        bool canRefactor = refactorings.contains(refactoringName);
+        if (!canRefactor) {
+          atom.beep();
+          return;
+        }
+
+        // Continue with the refactoring
+        refactor(result);
+      });
+    });
+
+    // TODO: Timeout if the refactor request takes too long?
+    job.schedule();
+  }
+
+  /// Request [refactoringName] changes from the server and apply them.
+  _performRefactoring(String refactoringName, RefactoringOptions options,
+      String path, int offset, int end, String successMsg) {
+    Job job = new AnalysisRequestJob(_jobName(refactoringName), () {
+      return analysisServer
+          .getRefactoring(refactoringName, path, offset, end - offset, false,
+              options: options)
+          .then((RefactoringResult result) {
+        // Abort if refactoring failed
         if (result == null) return;
-        _handleAvailableRefactoringsResult(result, path, offset, end, oldName);
+
+        // Apply refactoring
+        _applyRefactoringResult(refactoringName, result, successMsg, path);
       });
     });
     job.schedule();
   }
 
-  // TODO: use the rename refactoring feedback to better select the ID being
-  // renamed.
-
-  void _handleAvailableRefactoringsResult(AvailableRefactoringsResult result,
-      String path, int offset, int end, String oldName) {
-    String newName;
-    List refactorings = result.kinds;
-
-    bool canRefactor = refactorings.contains(Refactorings.RENAME);
-
-    if (!canRefactor) {
-      atom.beep();
-      return null;
-    }
-
-    promptUser('Rename refactor: enter the new name.',
-        defaultText: oldName, selectText: true).then((_newName) {
-      newName = _newName;
-      if (_newName == null) return null;
-
-      Job job = new AnalysisRequestJob('rename', () {
-        // Perform the refactoring.
-        RefactoringOptions option = new RenameRefactoringOptions(newName);
-        return analysisServer
-            .getRefactoring(
-                Refactorings.RENAME, path, offset, end - offset, false,
-                options: option)
-            .then((RefactoringResult result) {
-          if (result == null) return;
-          _handleRefactoringResult(result, "Renamed '${oldName}' to '${newName}'.", path);
-        });
-      });
-      job.schedule();
-    });
-  }
-
-  void _handleRefactoringResult(
-      RefactoringResult result, String successMsg, String path) {
+  /// Apply the refactoring result specified by the server.
+  void _applyRefactoringResult(String refactoringName, RefactoringResult result,
+      String successMsg, String path) {
     // TODO: use optionsProblems
     // TODO: use finalProblems
     // TODO: use feedback
     if (result.initialProblems.isNotEmpty) {
-      atom.notifications.addError('Unable to Refactor',
+      atom.notifications.addError('Unable to ${_readableName(refactoringName)}',
           detail: '${result.initialProblems.first.message}');
       atom.beep();
       return;
@@ -104,7 +157,7 @@ class RefactoringHelper implements Disposable {
 
     SourceChange change = result.change;
     if (change == null) {
-      atom.notifications.addError('Unable to Refactor',
+      atom.notifications.addError('Unable to ${_readableName(refactoringName)}',
           detail: 'No change information returned.');
       atom.beep();
       return;
@@ -120,8 +173,7 @@ class RefactoringHelper implements Disposable {
         .removeWhere((SourceFileEdit fileEdit) => fileEdit.edits.isEmpty);
 
     var apply = () {
-      _applyEdits(sourceFileEdits, successMsg)
-          .then((_) {
+      _applyEdits(sourceFileEdits, successMsg).then((_) {
         // Ensure the original file is selected.
         atom.workspace.open(path);
       });
@@ -157,8 +209,8 @@ class RefactoringHelper implements Disposable {
 
     var userCancelled = () => notification.dismiss();
 
-    notification = atom.notifications
-        .addInfo('Refactor ${sourceFileEdits.length} files?',
+    notification =
+        atom.notifications.addInfo('Refactor ${sourceFileEdits.length} files?',
             detail: fileSummary,
             dismissable: true,
             buttons: [
@@ -208,4 +260,10 @@ class RefactoringHelper implements Disposable {
 
     return buf.toString();
   }
+
+  /// Translate refactoring id to job name
+  String _jobName(String id) => id.toLowerCase().replaceAll('_', ' ');
+
+  /// Translate refactoring id to human readable name
+  String _readableName(String id) => id.toLowerCase().replaceAll('_', ' ');
 }
