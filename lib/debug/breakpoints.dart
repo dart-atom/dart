@@ -152,7 +152,7 @@ class BreakpointManager implements Disposable, StateStorable {
   void dispose() => disposables.dispose();
 }
 
-class AtomBreakpoint {
+class AtomBreakpoint implements Comparable {
   final String path;
   final int line;
   final int column;
@@ -186,6 +186,20 @@ class AtomBreakpoint {
   }
 
   String toString() => id;
+
+  int compareTo(other) {
+    if (other is! AtomBreakpoint) return -1;
+
+    int val = path.compareTo(other.path);
+    if (val != 0) return val;
+
+    val = line - other.line;
+    if (val != 0) return val;
+
+    int col_a = column == null ? -1 : column;
+    int col_b = other.column == null ? -1 : other.column;
+    return col_a - col_b;
+  }
 }
 
 class _EditorBreakpoint implements Disposable {

@@ -8,11 +8,12 @@ import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
+import '../state.dart';
 import '../utils.dart';
 
 final Logger _logger = new Logger('changelog');
 
-checkChangelog() => getPackageVersion().then(_checkChangelog);
+Future checkChangelog() => getPackageVersion().then(_checkChangelog);
 
 class ChangelogManager implements Disposable {
   Disposables disposables = new Disposables();
@@ -20,10 +21,10 @@ class ChangelogManager implements Disposable {
   File _changeLogFile;
 
   ChangelogManager() {
-    disposables.add(atom.commands.add('atom-workspace', 'dartlang:release-notes', (_) {
+    disposables.add(atom.commands.add('atom-workspace', '${pluginId}:release-notes', (_) {
       _handleReleaseNotes();
     }));
-    disposables.add(atom.commands.add('atom-workspace', 'dartlang:getting-started', (_) {
+    disposables.add(atom.commands.add('atom-workspace', '${pluginId}:getting-started', (_) {
       _handleGettingStarted();
     }));
   }

@@ -1,137 +1,6 @@
 @import "ui-variables";
 @import "syntax-variables";
 
-// .debugger-ui {
-//   position: absolute;
-//   display: inline-flex;
-//   top: 78px;
-//   right: 8px;
-//   opacity: 0;
-//   font-size: @font-size;
-//   font-family: @font-family;
-//   width: 300px;
-//
-//   background-color: @base-background-color; //lighten(@tool-panel-background-color, 8%)
-//   border: 1px solid @base-border-color;
-//   border-radius: @component-border-radius;
-//
-//   box-shadow: 0 0 2px @base-background-color;
-//
-//   transition: opacity 300ms;
-//
-//   z-index: 1010;
-//
-//   .no-left {
-//     margin-left: 0;
-//   }
-//
-//   .btn-toolbar {
-//     display: flex;
-//   }
-//
-//   .debug-header {
-//     /*align-self: center;*/
-//     padding: 6px;
-//     border-bottom: 1px solid @base-border-color;
-//   }
-//
-//   .debug-title {
-//     border-bottom: 1px solid #333; //@text-color-subtle
-//     color: @text-color;
-//     font-size: 1.2em;
-//     overflow: hidden;
-//     white-space: nowrap;
-//     text-overflow: ellipsis;
-//     height: @component-line-height;
-//
-//     span.title {
-//       overflow-x: hidden;
-//       text-overflow: ellipsis;
-//     }
-//
-//     span.badge {
-//       color: @text-color;
-//       margin-left: @component-icon-padding;
-//     }
-//   }
-//
-//   .debug-vars {
-//     padding: 6px;
-//
-//     div.select-list {
-//       height: 75px;
-//       overflow-y: auto;
-//
-//       li::before {
-//         /*content: '• ';*/
-//       }
-//
-//       .var-name {
-//         width: 60px;
-//         display: inline-block;
-//         text-align: right;
-//       }
-//
-//       .var-value {
-//         color: @text-color-subtle;
-//         margin-left: @component-icon-padding;
-//       }
-//     }
-//   }
-//
-//   .debug-vars li {
-//     overflow: hidden;
-//     white-space: nowrap;
-//     text-overflow: ellipsis;
-//   }
-//
-//   .debug-footer {
-//     padding: 6px;
-//     border-top: 1px solid @base-border-color;
-//
-//     atom-text-editor[mini] {
-//       font-size: 13px;
-//     }
-//   }
-//
-//   select.form-control {
-//    color: @text-color;
-//    border-color: @button-border-color;
-//    background-color: @button-background-color;
-//    &:hover,
-//    &:focus {
-//      box-shadow: none;
-//      background-color: @button-background-color-hover;
-//    }
-//  }
-// }
-//
-// .debugger-ui.debugger-show {
-//   opacity: 1;
-// }
-
-.debugger-section {
-  flex-shrink: 0;
-  border-bottom: 1px solid @text-color-subtle;
-  position: relative;
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-.debugger-section.view-header {
-  padding-top: 0;
-}
-
-.debugger-section.debugger-section-last {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.debugger-section.resizable {
-  min-width: 100px;
-  min-height: 100px;
-}
-
 .debugger {
   .button-bar {
     min-height: 22px;
@@ -143,9 +12,62 @@
     overflow-x: hidden;
 
     button.btn {
-      // width: 40px;
       margin-left: 3px;
     }
+  }
+
+  .debugger-section {
+    flex-shrink: 0;
+    border-bottom: 1px solid @base-border-color;
+    position: relative;
+    padding-top: 8px;
+    padding-bottom: 6px;
+
+    .debugger-section-subtitle {
+      color: @text-color-subtle;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-top: 5px;
+    }
+  }
+
+  .debugger-section.view-header {
+    padding-top: 0;
+  }
+
+  .debugger-section.debugger-section-last {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .debugger-section.resizable {
+    min-width: 100px;
+    min-height: 100px;
+  }
+
+  .debug-tab-container {
+    flex-shrink: 0;
+
+    .debug-tab-title {
+      color: @text-color-subtle;
+      align-self: flex-end;
+      line-height: 22px;
+      min-height: 22px;
+    }
+
+    .debug-tab-toolbar {
+      min-height: 22px;
+    }
+  }
+
+  .debugger-breakpoint-path {
+
+  }
+
+  .debugger-breakpoint-icon {
+    color: @syntax-gutter-text-color;
+    opacity: 0.6;
   }
 }
 

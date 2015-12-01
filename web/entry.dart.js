@@ -1175,6 +1175,16 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.Atom[1];
     Atom.prototype = $desc;
     Atom.$__fields__ = ["_commands", "_config", "_contextMenu", "_grammars", "_notifications", "_packages", "_project", "_views", "_workspace", "obj"];
+    function Atom_pickFolder_closure(completer) {
+      this.completer = completer;
+      this.$deferredAction();
+    }
+    Atom_pickFolder_closure.builtin$cls = "Atom_pickFolder_closure";
+    if (!("name" in Atom_pickFolder_closure))
+      Atom_pickFolder_closure.name = "Atom_pickFolder_closure";
+    $desc = $collectedClasses$.Atom_pickFolder_closure[1];
+    Atom_pickFolder_closure.prototype = $desc;
+    Atom_pickFolder_closure.$__fields__ = ["completer"];
     function ViewRegistry(obj) {
       this.obj = obj;
       this.$deferredAction();
@@ -2880,6 +2890,9 @@ self._domRemove = function(element) {
     AddContentOverlay.$__fields__ = ["type", "content"];
     AddContentOverlay.prototype.get$type = function(receiver) {
       return this.type;
+    };
+    AddContentOverlay.prototype.get$content = function(receiver) {
+      return this.content;
     };
     function AnalysisError(severity, type, location, message, correction, hasFix) {
       this.severity = severity;
@@ -4945,9 +4958,12 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.UriResolver_dispose_closure[1];
     UriResolver_dispose_closure.prototype = $desc;
     UriResolver_dispose_closure.$__fields__ = [];
-    function DebuggerView(connection, _execMarker, root, toolbar, content, tabElement, _closeButton, group) {
+    function DebuggerView(connection, _execMarker, primaryTabGroup, secondaryTabGroup, breakpointsTab, root, toolbar, content, tabElement, _closeButton, group) {
       this.connection = connection;
       this._execMarker = _execMarker;
+      this.primaryTabGroup = primaryTabGroup;
+      this.secondaryTabGroup = secondaryTabGroup;
+      this.breakpointsTab = breakpointsTab;
       this.root = root;
       this.toolbar = toolbar;
       this.content = content;
@@ -4961,7 +4977,7 @@ self._domRemove = function(element) {
       DebuggerView.name = "DebuggerView";
     $desc = $collectedClasses$.DebuggerView[1];
     DebuggerView.prototype = $desc;
-    DebuggerView.$__fields__ = ["connection", "_execMarker", "root", "toolbar", "content", "tabElement", "_closeButton", "group"];
+    DebuggerView.$__fields__ = ["connection", "_execMarker", "primaryTabGroup", "secondaryTabGroup", "breakpointsTab", "root", "toolbar", "content", "tabElement", "_closeButton", "group"];
     function DebuggerView_closure($this) {
       this.$this = $this;
       this.$deferredAction();
@@ -4972,7 +4988,8 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.DebuggerView_closure[1];
     DebuggerView_closure.prototype = $desc;
     DebuggerView_closure.$__fields__ = ["$this"];
-    function DebuggerView__createPrimarySection_updateUi($this, resume, stepIn, stepOver, stepOut, stopOut) {
+    function DebuggerView__createFlowControlSection_updateUi(_box_0, $this, resume, stepIn, stepOver, stepOut, stopOut) {
+      this._box_0 = _box_0;
       this.$this = $this;
       this.resume = resume;
       this.stepIn = stepIn;
@@ -4981,22 +4998,31 @@ self._domRemove = function(element) {
       this.stopOut = stopOut;
       this.$deferredAction();
     }
-    DebuggerView__createPrimarySection_updateUi.builtin$cls = "DebuggerView__createPrimarySection_updateUi";
-    if (!("name" in DebuggerView__createPrimarySection_updateUi))
-      DebuggerView__createPrimarySection_updateUi.name = "DebuggerView__createPrimarySection_updateUi";
-    $desc = $collectedClasses$.DebuggerView__createPrimarySection_updateUi[1];
-    DebuggerView__createPrimarySection_updateUi.prototype = $desc;
-    DebuggerView__createPrimarySection_updateUi.$__fields__ = ["$this", "resume", "stepIn", "stepOver", "stepOut", "stopOut"];
-    function DebuggerView__createPrimarySection_updateUi_closure($this) {
+    DebuggerView__createFlowControlSection_updateUi.builtin$cls = "DebuggerView__createFlowControlSection_updateUi";
+    if (!("name" in DebuggerView__createFlowControlSection_updateUi))
+      DebuggerView__createFlowControlSection_updateUi.name = "DebuggerView__createFlowControlSection_updateUi";
+    $desc = $collectedClasses$.DebuggerView__createFlowControlSection_updateUi[1];
+    DebuggerView__createFlowControlSection_updateUi.prototype = $desc;
+    DebuggerView__createFlowControlSection_updateUi.$__fields__ = ["_box_0", "$this", "resume", "stepIn", "stepOver", "stepOut", "stopOut"];
+    function DebuggerView__createFlowControlSection_updateUi_closure($this) {
       this.$this = $this;
       this.$deferredAction();
     }
-    DebuggerView__createPrimarySection_updateUi_closure.builtin$cls = "DebuggerView__createPrimarySection_updateUi_closure";
-    if (!("name" in DebuggerView__createPrimarySection_updateUi_closure))
-      DebuggerView__createPrimarySection_updateUi_closure.name = "DebuggerView__createPrimarySection_updateUi_closure";
-    $desc = $collectedClasses$.DebuggerView__createPrimarySection_updateUi_closure[1];
-    DebuggerView__createPrimarySection_updateUi_closure.prototype = $desc;
-    DebuggerView__createPrimarySection_updateUi_closure.$__fields__ = ["$this"];
+    DebuggerView__createFlowControlSection_updateUi_closure.builtin$cls = "DebuggerView__createFlowControlSection_updateUi_closure";
+    if (!("name" in DebuggerView__createFlowControlSection_updateUi_closure))
+      DebuggerView__createFlowControlSection_updateUi_closure.name = "DebuggerView__createFlowControlSection_updateUi_closure";
+    $desc = $collectedClasses$.DebuggerView__createFlowControlSection_updateUi_closure[1];
+    DebuggerView__createFlowControlSection_updateUi_closure.prototype = $desc;
+    DebuggerView__createFlowControlSection_updateUi_closure.$__fields__ = ["$this"];
+    function DebuggerView__createSecondarySection_closure() {
+      this.$deferredAction();
+    }
+    DebuggerView__createSecondarySection_closure.builtin$cls = "DebuggerView__createSecondarySection_closure";
+    if (!("name" in DebuggerView__createSecondarySection_closure))
+      DebuggerView__createSecondarySection_closure.name = "DebuggerView__createSecondarySection_closure";
+    $desc = $collectedClasses$.DebuggerView__createSecondarySection_closure[1];
+    DebuggerView__createSecondarySection_closure.prototype = $desc;
+    DebuggerView__createSecondarySection_closure.$__fields__ = [];
     function DebuggerView__jumpToLocation_closure($this, location, addExecMarker) {
       this.$this = $this;
       this.location = location;
@@ -5009,6 +5035,81 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.DebuggerView__jumpToLocation_closure[1];
     DebuggerView__jumpToLocation_closure.prototype = $desc;
     DebuggerView__jumpToLocation_closure.$__fields__ = ["$this", "location", "addExecMarker"];
+    function _MockTab(id, name, _tabElement, content, enabled, active) {
+      this.id = id;
+      this.name = name;
+      this._tabElement = _tabElement;
+      this.content = content;
+      this.enabled = enabled;
+      this.active = active;
+      this.$deferredAction();
+    }
+    _MockTab.builtin$cls = "_MockTab";
+    if (!("name" in _MockTab))
+      _MockTab.name = "_MockTab";
+    $desc = $collectedClasses$._MockTab[1];
+    _MockTab.prototype = $desc;
+    _MockTab.$__fields__ = ["id", "name", "_tabElement", "content", "enabled", "active"];
+    function _MockTab_closure($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    _MockTab_closure.builtin$cls = "_MockTab_closure";
+    if (!("name" in _MockTab_closure))
+      _MockTab_closure.name = "_MockTab_closure";
+    $desc = $collectedClasses$._MockTab_closure[1];
+    _MockTab_closure.prototype = $desc;
+    _MockTab_closure.$__fields__ = ["$this"];
+    function BreakpointsTab(titlebar, list, subs, id, name, _tabElement, content, enabled, active) {
+      this.titlebar = titlebar;
+      this.list = list;
+      this.subs = subs;
+      this.id = id;
+      this.name = name;
+      this._tabElement = _tabElement;
+      this.content = content;
+      this.enabled = enabled;
+      this.active = active;
+      this.$deferredAction();
+    }
+    BreakpointsTab.builtin$cls = "BreakpointsTab";
+    if (!("name" in BreakpointsTab))
+      BreakpointsTab.name = "BreakpointsTab";
+    $desc = $collectedClasses$.BreakpointsTab[1];
+    BreakpointsTab.prototype = $desc;
+    BreakpointsTab.$__fields__ = ["titlebar", "list", "subs", "id", "name", "_tabElement", "content", "enabled", "active"];
+    function BreakpointsTab_closure($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    BreakpointsTab_closure.builtin$cls = "BreakpointsTab_closure";
+    if (!("name" in BreakpointsTab_closure))
+      BreakpointsTab_closure.name = "BreakpointsTab_closure";
+    $desc = $collectedClasses$.BreakpointsTab_closure[1];
+    BreakpointsTab_closure.prototype = $desc;
+    BreakpointsTab_closure.$__fields__ = ["$this"];
+    function BreakpointsTab__render_closure(bp) {
+      this.bp = bp;
+      this.$deferredAction();
+    }
+    BreakpointsTab__render_closure.builtin$cls = "BreakpointsTab__render_closure";
+    if (!("name" in BreakpointsTab__render_closure))
+      BreakpointsTab__render_closure.name = "BreakpointsTab__render_closure";
+    $desc = $collectedClasses$.BreakpointsTab__render_closure[1];
+    BreakpointsTab__render_closure.prototype = $desc;
+    BreakpointsTab__render_closure.$__fields__ = ["bp"];
+    function _TabTitlebar(titleElement, toolbar, element) {
+      this.titleElement = titleElement;
+      this.toolbar = toolbar;
+      this.element = element;
+      this.$deferredAction();
+    }
+    _TabTitlebar.builtin$cls = "_TabTitlebar";
+    if (!("name" in _TabTitlebar))
+      _TabTitlebar.name = "_TabTitlebar";
+    $desc = $collectedClasses$._TabTitlebar[1];
+    _TabTitlebar.prototype = $desc;
+    _TabTitlebar.$__fields__ = ["titleElement", "toolbar", "element"];
     function NavigationHelper(_declaration_nav$_commands, _completerHelper, _eventListener) {
       this._declaration_nav$_commands = _declaration_nav$_commands;
       this._completerHelper = _completerHelper;
@@ -5330,6 +5431,16 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.CoreElement_click_closure[1];
     CoreElement_click_closure.prototype = $desc;
     CoreElement_click_closure.$__fields__ = ["handle"];
+    function CoreElement_dblclick_closure(handle) {
+      this.handle = handle;
+      this.$deferredAction();
+    }
+    CoreElement_dblclick_closure.builtin$cls = "CoreElement_dblclick_closure";
+    if (!("name" in CoreElement_dblclick_closure))
+      CoreElement_dblclick_closure.name = "CoreElement_dblclick_closure";
+    $desc = $collectedClasses$.CoreElement_dblclick_closure[1];
+    CoreElement_dblclick_closure.prototype = $desc;
+    CoreElement_dblclick_closure.$__fields__ = ["handle"];
     function ProgressElement(_progress, element) {
       this._progress = _progress;
       this.element = element;
@@ -5369,6 +5480,9 @@ self._domRemove = function(element) {
     };
     TitledModelDialog.prototype.set$title = function(receiver, v) {
       return this.title = v;
+    };
+    TitledModelDialog.prototype.get$content = function(receiver) {
+      return this.content;
     };
     function TitledModelDialog_closure($this) {
       this.$this = $this;
@@ -5958,6 +6072,17 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.SdkLocationJob[1];
     SdkLocationJob.prototype = $desc;
     SdkLocationJob.$__fields__ = ["sdkManager", "name", "schedulingRule"];
+    function MojoLaunchType(_lastLaunch, type) {
+      this._lastLaunch = _lastLaunch;
+      this.type = type;
+      this.$deferredAction();
+    }
+    MojoLaunchType.builtin$cls = "MojoLaunchType";
+    if (!("name" in MojoLaunchType))
+      MojoLaunchType.name = "MojoLaunchType";
+    $desc = $collectedClasses$.MojoLaunchType[1];
+    MojoLaunchType.prototype = $desc;
+    MojoLaunchType.$__fields__ = ["_lastLaunch", "type"];
     function FormattingHelper(_formatting$_commands) {
       this._formatting$_commands = _formatting$_commands;
       this.$deferredAction();
@@ -7427,6 +7552,9 @@ self._domRemove = function(element) {
     OutlineView.prototype.get$root = function() {
       return this.root;
     };
+    OutlineView.prototype.get$content = function(receiver) {
+      return this.content;
+    };
     OutlineView.prototype.get$title = function(receiver) {
       return this.title;
     };
@@ -7575,8 +7703,7 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.AtomDartPackage__validateSettings_closure[1];
     AtomDartPackage__validateSettings_closure.prototype = $desc;
     AtomDartPackage__validateSettings_closure.$__fields__ = [];
-    function AtomDartPackage__validateSettings_closure0($this) {
-      this.$this = $this;
+    function AtomDartPackage__validateSettings_closure0() {
       this.$deferredAction();
     }
     AtomDartPackage__validateSettings_closure0.builtin$cls = "AtomDartPackage__validateSettings_closure0";
@@ -7584,8 +7711,9 @@ self._domRemove = function(element) {
       AtomDartPackage__validateSettings_closure0.name = "AtomDartPackage__validateSettings_closure0";
     $desc = $collectedClasses$.AtomDartPackage__validateSettings_closure0[1];
     AtomDartPackage__validateSettings_closure0.prototype = $desc;
-    AtomDartPackage__validateSettings_closure0.$__fields__ = ["$this"];
-    function AtomDartPackage__validateSettings_closure1() {
+    AtomDartPackage__validateSettings_closure0.$__fields__ = [];
+    function AtomDartPackage__validateSettings_closure1($this) {
+      this.$this = $this;
       this.$deferredAction();
     }
     AtomDartPackage__validateSettings_closure1.builtin$cls = "AtomDartPackage__validateSettings_closure1";
@@ -7593,16 +7721,16 @@ self._domRemove = function(element) {
       AtomDartPackage__validateSettings_closure1.name = "AtomDartPackage__validateSettings_closure1";
     $desc = $collectedClasses$.AtomDartPackage__validateSettings_closure1[1];
     AtomDartPackage__validateSettings_closure1.prototype = $desc;
-    AtomDartPackage__validateSettings_closure1.$__fields__ = [];
-    function AtomDartPackage__showWelcomeToast_closure() {
+    AtomDartPackage__validateSettings_closure1.$__fields__ = ["$this"];
+    function AtomDartPackage__validateSettings_closure2() {
       this.$deferredAction();
     }
-    AtomDartPackage__showWelcomeToast_closure.builtin$cls = "AtomDartPackage__showWelcomeToast_closure";
-    if (!("name" in AtomDartPackage__showWelcomeToast_closure))
-      AtomDartPackage__showWelcomeToast_closure.name = "AtomDartPackage__showWelcomeToast_closure";
-    $desc = $collectedClasses$.AtomDartPackage__showWelcomeToast_closure[1];
-    AtomDartPackage__showWelcomeToast_closure.prototype = $desc;
-    AtomDartPackage__showWelcomeToast_closure.$__fields__ = [];
+    AtomDartPackage__validateSettings_closure2.builtin$cls = "AtomDartPackage__validateSettings_closure2";
+    if (!("name" in AtomDartPackage__validateSettings_closure2))
+      AtomDartPackage__validateSettings_closure2.name = "AtomDartPackage__validateSettings_closure2";
+    $desc = $collectedClasses$.AtomDartPackage__validateSettings_closure2[1];
+    AtomDartPackage__validateSettings_closure2.prototype = $desc;
+    AtomDartPackage__validateSettings_closure2.$__fields__ = [];
     function AtomDartPackage__handleSendFeedback_closure() {
       this.$deferredAction();
     }
@@ -9156,12 +9284,12 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.StateStorable[1];
     StateStorable.prototype = $desc;
     StateStorable.$__fields__ = [];
-    function StatusDisplay(_status$_disposables, _status$_subscription, dialog, _statusbarTile, _status$_timer) {
-      this._status$_disposables = _status$_disposables;
-      this._status$_subscription = _status$_subscription;
+    function StatusDisplay(_status0$_disposables, _status0$_subscription, dialog, _statusbarTile, _status0$_timer) {
+      this._status0$_disposables = _status0$_disposables;
+      this._status0$_subscription = _status0$_subscription;
       this.dialog = dialog;
       this._statusbarTile = _statusbarTile;
-      this._status$_timer = _status$_timer;
+      this._status0$_timer = _status0$_timer;
       this.$deferredAction();
     }
     StatusDisplay.builtin$cls = "StatusDisplay";
@@ -9169,7 +9297,7 @@ self._domRemove = function(element) {
       StatusDisplay.name = "StatusDisplay";
     $desc = $collectedClasses$.StatusDisplay[1];
     StatusDisplay.prototype = $desc;
-    StatusDisplay.$__fields__ = ["_status$_disposables", "_status$_subscription", "dialog", "_statusbarTile", "_status$_timer"];
+    StatusDisplay.$__fields__ = ["_status0$_disposables", "_status0$_subscription", "dialog", "_statusbarTile", "_status0$_timer"];
     function StatusDisplay_closure(_box_0, $this, statusElement) {
       this._box_0 = _box_0;
       this.$this = $this;
@@ -9706,8 +9834,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.ViewGroup__setupResizer_closure[1];
     ViewGroup__setupResizer_closure.prototype = $desc;
     ViewGroup__setupResizer_closure.$__fields__ = ["prefName"];
-    function View(root, tabElement, _closeButton, group) {
+    function View(root, content, tabElement, _closeButton, group) {
       this.root = root;
+      this.content = content;
       this.tabElement = tabElement;
       this._closeButton = _closeButton;
       this.group = group;
@@ -9718,9 +9847,12 @@ self._domRemove = function(element) {
       View.name = "View";
     $desc = $collectedClasses$.View[1];
     View.prototype = $desc;
-    View.$__fields__ = ["root", "tabElement", "_closeButton", "group"];
+    View.$__fields__ = ["root", "content", "tabElement", "_closeButton", "group"];
     View.prototype.get$root = function() {
       return this.root;
+    };
+    View.prototype.get$content = function(receiver) {
+      return this.content;
     };
     View.prototype.get$tabElement = function() {
       return this.tabElement;
@@ -10306,6 +10438,28 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$._SyncBroadcastStreamController__sendData_closure[1];
     _SyncBroadcastStreamController__sendData_closure.prototype = $desc;
     _SyncBroadcastStreamController__sendData_closure.$__fields__ = ["$this", "data"];
+    function _SyncBroadcastStreamController__sendError_closure($this, error, stackTrace) {
+      this.$this = $this;
+      this.error = error;
+      this.stackTrace = stackTrace;
+      this.$deferredAction();
+    }
+    _SyncBroadcastStreamController__sendError_closure.builtin$cls = "_SyncBroadcastStreamController__sendError_closure";
+    if (!("name" in _SyncBroadcastStreamController__sendError_closure))
+      _SyncBroadcastStreamController__sendError_closure.name = "_SyncBroadcastStreamController__sendError_closure";
+    $desc = $collectedClasses$._SyncBroadcastStreamController__sendError_closure[1];
+    _SyncBroadcastStreamController__sendError_closure.prototype = $desc;
+    _SyncBroadcastStreamController__sendError_closure.$__fields__ = ["$this", "error", "stackTrace"];
+    function _SyncBroadcastStreamController__sendDone_closure($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    _SyncBroadcastStreamController__sendDone_closure.builtin$cls = "_SyncBroadcastStreamController__sendDone_closure";
+    if (!("name" in _SyncBroadcastStreamController__sendDone_closure))
+      _SyncBroadcastStreamController__sendDone_closure.name = "_SyncBroadcastStreamController__sendDone_closure";
+    $desc = $collectedClasses$._SyncBroadcastStreamController__sendDone_closure[1];
+    _SyncBroadcastStreamController__sendDone_closure.prototype = $desc;
+    _SyncBroadcastStreamController__sendDone_closure.$__fields__ = ["$this"];
     function _AsyncBroadcastStreamController(onListen, onCancel, _state, _async$_next, _async$_previous, _addStreamState, _doneFuture) {
       this.onListen = onListen;
       this.onCancel = onCancel;
@@ -12588,6 +12742,9 @@ self._domRemove = function(element) {
     AnchorElement.prototype.get$hostname = function(receiver) {
       return receiver.hostname;
     };
+    AnchorElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     AnchorElement.prototype.set$href = function(receiver, v) {
       return receiver.href = v;
     };
@@ -12621,6 +12778,9 @@ self._domRemove = function(element) {
     AreaElement.prototype.get$hostname = function(receiver) {
       return receiver.hostname;
     };
+    AreaElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     AreaElement.prototype.set$href = function(receiver, v) {
       return receiver.href = v;
     };
@@ -12639,6 +12799,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.BaseElement[1];
     BaseElement.prototype = $desc;
     BaseElement.$__fields__ = [];
+    BaseElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     BaseElement.prototype.set$href = function(receiver, v) {
       return receiver.href = v;
     };
@@ -12693,6 +12856,12 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.CanvasElement[1];
     CanvasElement.prototype = $desc;
     CanvasElement.$__fields__ = [];
+    CanvasElement.prototype.set$height = function(receiver, v) {
+      return receiver.height = v;
+    };
+    CanvasElement.prototype.set$width = function(receiver, v) {
+      return receiver.width = v;
+    };
     function CharacterData() {
       this.$deferredAction();
     }
@@ -12741,6 +12910,47 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.Interceptor_CssStyleDeclarationBase[1];
     Interceptor_CssStyleDeclarationBase.prototype = $desc;
     Interceptor_CssStyleDeclarationBase.$__fields__ = [];
+    function _CssStyleDeclarationSet(_elementIterable, _elementCssStyleDeclarationSetIterable) {
+      this._elementIterable = _elementIterable;
+      this._elementCssStyleDeclarationSetIterable = _elementCssStyleDeclarationSetIterable;
+      this.$deferredAction();
+    }
+    _CssStyleDeclarationSet.builtin$cls = "_CssStyleDeclarationSet";
+    if (!("name" in _CssStyleDeclarationSet))
+      _CssStyleDeclarationSet.name = "_CssStyleDeclarationSet";
+    $desc = $collectedClasses$._CssStyleDeclarationSet[1];
+    _CssStyleDeclarationSet.prototype = $desc;
+    _CssStyleDeclarationSet.$__fields__ = ["_elementIterable", "_elementCssStyleDeclarationSetIterable"];
+    function Object_CssStyleDeclarationBase() {
+      this.$deferredAction();
+    }
+    Object_CssStyleDeclarationBase.builtin$cls = "Object_CssStyleDeclarationBase";
+    if (!("name" in Object_CssStyleDeclarationBase))
+      Object_CssStyleDeclarationBase.name = "Object_CssStyleDeclarationBase";
+    $desc = $collectedClasses$.Object_CssStyleDeclarationBase[1];
+    Object_CssStyleDeclarationBase.prototype = $desc;
+    Object_CssStyleDeclarationBase.$__fields__ = [];
+    function _CssStyleDeclarationSet_closure() {
+      this.$deferredAction();
+    }
+    _CssStyleDeclarationSet_closure.builtin$cls = "_CssStyleDeclarationSet_closure";
+    if (!("name" in _CssStyleDeclarationSet_closure))
+      _CssStyleDeclarationSet_closure.name = "_CssStyleDeclarationSet_closure";
+    $desc = $collectedClasses$._CssStyleDeclarationSet_closure[1];
+    _CssStyleDeclarationSet_closure.prototype = $desc;
+    _CssStyleDeclarationSet_closure.$__fields__ = [];
+    function _CssStyleDeclarationSet_setProperty_closure(propertyName, value, priority) {
+      this.propertyName = propertyName;
+      this.value = value;
+      this.priority = priority;
+      this.$deferredAction();
+    }
+    _CssStyleDeclarationSet_setProperty_closure.builtin$cls = "_CssStyleDeclarationSet_setProperty_closure";
+    if (!("name" in _CssStyleDeclarationSet_setProperty_closure))
+      _CssStyleDeclarationSet_setProperty_closure.name = "_CssStyleDeclarationSet_setProperty_closure";
+    $desc = $collectedClasses$._CssStyleDeclarationSet_setProperty_closure[1];
+    _CssStyleDeclarationSet_setProperty_closure.prototype = $desc;
+    _CssStyleDeclarationSet_setProperty_closure.$__fields__ = ["propertyName", "value", "priority"];
     function CssStyleDeclarationBase() {
       this.$deferredAction();
     }
@@ -12887,6 +13097,16 @@ self._domRemove = function(element) {
     _ChildrenElementList.prototype.get$_element = function() {
       return this._element;
     };
+    function _FrozenElementList(_nodeList) {
+      this._nodeList = _nodeList;
+      this.$deferredAction();
+    }
+    _FrozenElementList.builtin$cls = "_FrozenElementList";
+    if (!("name" in _FrozenElementList))
+      _FrozenElementList.name = "_FrozenElementList";
+    $desc = $collectedClasses$._FrozenElementList[1];
+    _FrozenElementList.prototype = $desc;
+    _FrozenElementList.$__fields__ = ["_nodeList"];
     function Element() {
       this.$deferredAction();
     }
@@ -12904,6 +13124,9 @@ self._domRemove = function(element) {
     };
     Element.prototype.set$title = function(receiver, v) {
       return receiver.title = v;
+    };
+    Element.prototype.set$className = function(receiver, v) {
+      return receiver.className = v;
     };
     Element.prototype.get$id = function(receiver) {
       return receiver.id;
@@ -12945,11 +13168,17 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.EmbedElement[1];
     EmbedElement.prototype = $desc;
     EmbedElement.$__fields__ = [];
+    EmbedElement.prototype.set$height = function(receiver, v) {
+      return receiver.height = v;
+    };
     EmbedElement.prototype.get$name = function(receiver) {
       return receiver.name;
     };
     EmbedElement.prototype.get$type = function(receiver) {
       return receiver.type;
+    };
+    EmbedElement.prototype.set$width = function(receiver, v) {
+      return receiver.width = v;
     };
     function ErrorEvent() {
       this.$deferredAction();
@@ -13154,8 +13383,14 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.IFrameElement[1];
     IFrameElement.prototype = $desc;
     IFrameElement.$__fields__ = [];
+    IFrameElement.prototype.set$height = function(receiver, v) {
+      return receiver.height = v;
+    };
     IFrameElement.prototype.get$name = function(receiver) {
       return receiver.name;
+    };
+    IFrameElement.prototype.set$width = function(receiver, v) {
+      return receiver.width = v;
     };
     function ImageData() {
       this.$deferredAction();
@@ -13178,6 +13413,12 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.ImageElement[1];
     ImageElement.prototype = $desc;
     ImageElement.$__fields__ = [];
+    ImageElement.prototype.set$height = function(receiver, v) {
+      return receiver.height = v;
+    };
+    ImageElement.prototype.set$width = function(receiver, v) {
+      return receiver.width = v;
+    };
     function InputElement() {
       this.$deferredAction();
     }
@@ -13196,6 +13437,9 @@ self._domRemove = function(element) {
     InputElement.prototype.get$files = function(receiver) {
       return receiver.files;
     };
+    InputElement.prototype.set$height = function(receiver, v) {
+      return receiver.height = v;
+    };
     InputElement.prototype.get$name = function(receiver) {
       return receiver.name;
     };
@@ -13207,6 +13451,9 @@ self._domRemove = function(element) {
     };
     InputElement.prototype.get$directory = function(receiver) {
       return receiver.webkitdirectory;
+    };
+    InputElement.prototype.set$width = function(receiver, v) {
+      return receiver.width = v;
     };
     function KeyboardEvent() {
       this.$deferredAction();
@@ -13268,6 +13515,9 @@ self._domRemove = function(element) {
     LinkElement.prototype.set$disabled = function(receiver, v) {
       return receiver.disabled = v;
     };
+    LinkElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     LinkElement.prototype.set$href = function(receiver, v) {
       return receiver.href = v;
     };
@@ -13285,6 +13535,9 @@ self._domRemove = function(element) {
     Location0.$__fields__ = [];
     Location0.prototype.get$hostname = function(receiver) {
       return receiver.hostname;
+    };
+    Location0.prototype.get$href = function(receiver) {
+      return receiver.href;
     };
     Location0.prototype.set$href = function(receiver, v) {
       return receiver.href = v;
@@ -13403,6 +13656,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.MetaElement[1];
     MetaElement.prototype = $desc;
     MetaElement.$__fields__ = [];
+    MetaElement.prototype.get$content = function(receiver) {
+      return receiver.content;
+    };
     MetaElement.prototype.get$name = function(receiver) {
       return receiver.name;
     };
@@ -13608,11 +13864,17 @@ self._domRemove = function(element) {
     ObjectElement.prototype.get$data = function(receiver) {
       return receiver.data;
     };
+    ObjectElement.prototype.set$height = function(receiver, v) {
+      return receiver.height = v;
+    };
     ObjectElement.prototype.get$name = function(receiver) {
       return receiver.name;
     };
     ObjectElement.prototype.get$type = function(receiver) {
       return receiver.type;
+    };
+    ObjectElement.prototype.set$width = function(receiver, v) {
+      return receiver.width = v;
     };
     function OptGroupElement() {
       this.$deferredAction();
@@ -13956,6 +14218,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.TemplateElement[1];
     TemplateElement.prototype = $desc;
     TemplateElement.$__fields__ = [];
+    TemplateElement.prototype.get$content = function(receiver) {
+      return receiver.content;
+    };
     function TextAreaElement() {
       this.$deferredAction();
     }
@@ -14037,6 +14302,12 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.VideoElement[1];
     VideoElement.prototype = $desc;
     VideoElement.$__fields__ = [];
+    VideoElement.prototype.set$height = function(receiver, v) {
+      return receiver.height = v;
+    };
+    VideoElement.prototype.set$width = function(receiver, v) {
+      return receiver.width = v;
+    };
     function WebSocket() {
       this.$deferredAction();
     }
@@ -14244,6 +14515,67 @@ self._domRemove = function(element) {
     CssRect.prototype.get$_element = function() {
       return this._element;
     };
+    function _MultiElementCssClassSet(_elementIterable, _sets) {
+      this._elementIterable = _elementIterable;
+      this._sets = _sets;
+      this.$deferredAction();
+    }
+    _MultiElementCssClassSet.builtin$cls = "_MultiElementCssClassSet";
+    if (!("name" in _MultiElementCssClassSet))
+      _MultiElementCssClassSet.name = "_MultiElementCssClassSet";
+    $desc = $collectedClasses$._MultiElementCssClassSet[1];
+    _MultiElementCssClassSet.prototype = $desc;
+    _MultiElementCssClassSet.$__fields__ = ["_elementIterable", "_sets"];
+    function closure2() {
+      this.$deferredAction();
+    }
+    closure2.builtin$cls = "closure2";
+    if (!("name" in closure2))
+      closure2.name = "closure2";
+    $desc = $collectedClasses$.closure2[1];
+    closure2.prototype = $desc;
+    closure2.$__fields__ = [];
+    function _MultiElementCssClassSet_readClasses_closure(s) {
+      this.s = s;
+      this.$deferredAction();
+    }
+    _MultiElementCssClassSet_readClasses_closure.builtin$cls = "_MultiElementCssClassSet_readClasses_closure";
+    if (!("name" in _MultiElementCssClassSet_readClasses_closure))
+      _MultiElementCssClassSet_readClasses_closure.name = "_MultiElementCssClassSet_readClasses_closure";
+    $desc = $collectedClasses$._MultiElementCssClassSet_readClasses_closure[1];
+    _MultiElementCssClassSet_readClasses_closure.prototype = $desc;
+    _MultiElementCssClassSet_readClasses_closure.$__fields__ = ["s"];
+    function _MultiElementCssClassSet_modify_closure(f) {
+      this.f = f;
+      this.$deferredAction();
+    }
+    _MultiElementCssClassSet_modify_closure.builtin$cls = "_MultiElementCssClassSet_modify_closure";
+    if (!("name" in _MultiElementCssClassSet_modify_closure))
+      _MultiElementCssClassSet_modify_closure.name = "_MultiElementCssClassSet_modify_closure";
+    $desc = $collectedClasses$._MultiElementCssClassSet_modify_closure[1];
+    _MultiElementCssClassSet_modify_closure.prototype = $desc;
+    _MultiElementCssClassSet_modify_closure.$__fields__ = ["f"];
+    function _MultiElementCssClassSet_toggle_closure(value, shouldAdd) {
+      this.value = value;
+      this.shouldAdd = shouldAdd;
+      this.$deferredAction();
+    }
+    _MultiElementCssClassSet_toggle_closure.builtin$cls = "_MultiElementCssClassSet_toggle_closure";
+    if (!("name" in _MultiElementCssClassSet_toggle_closure))
+      _MultiElementCssClassSet_toggle_closure.name = "_MultiElementCssClassSet_toggle_closure";
+    $desc = $collectedClasses$._MultiElementCssClassSet_toggle_closure[1];
+    _MultiElementCssClassSet_toggle_closure.prototype = $desc;
+    _MultiElementCssClassSet_toggle_closure.$__fields__ = ["value", "shouldAdd"];
+    function _MultiElementCssClassSet_remove_closure(value) {
+      this.value = value;
+      this.$deferredAction();
+    }
+    _MultiElementCssClassSet_remove_closure.builtin$cls = "_MultiElementCssClassSet_remove_closure";
+    if (!("name" in _MultiElementCssClassSet_remove_closure))
+      _MultiElementCssClassSet_remove_closure.name = "_MultiElementCssClassSet_remove_closure";
+    $desc = $collectedClasses$._MultiElementCssClassSet_remove_closure[1];
+    _MultiElementCssClassSet_remove_closure.prototype = $desc;
+    _MultiElementCssClassSet_remove_closure.$__fields__ = ["value"];
     function _ElementCssClassSet(_element) {
       this._element = _element;
       this.$deferredAction();
@@ -14292,6 +14624,18 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$._ElementEventStreamImpl[1];
     _ElementEventStreamImpl.prototype = $desc;
     _ElementEventStreamImpl.$__fields__ = ["_html$_target", "_eventType", "_useCapture"];
+    function _ElementListEventStreamImpl(_targetList, _useCapture, _eventType) {
+      this._targetList = _targetList;
+      this._useCapture = _useCapture;
+      this._eventType = _eventType;
+      this.$deferredAction();
+    }
+    _ElementListEventStreamImpl.builtin$cls = "_ElementListEventStreamImpl";
+    if (!("name" in _ElementListEventStreamImpl))
+      _ElementListEventStreamImpl.name = "_ElementListEventStreamImpl";
+    $desc = $collectedClasses$._ElementListEventStreamImpl[1];
+    _ElementListEventStreamImpl.prototype = $desc;
+    _ElementListEventStreamImpl.$__fields__ = ["_targetList", "_useCapture", "_eventType"];
     function _EventStreamSubscription(_pauseCount, _html$_target, _eventType, _html$_onData, _useCapture) {
       this._pauseCount = _pauseCount;
       this._html$_target = _html$_target;
@@ -14306,6 +14650,28 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$._EventStreamSubscription[1];
     _EventStreamSubscription.prototype = $desc;
     _EventStreamSubscription.$__fields__ = ["_pauseCount", "_html$_target", "_eventType", "_html$_onData", "_useCapture"];
+    function _StreamPool(_html$_controller, _html$_subscriptions) {
+      this._html$_controller = _html$_controller;
+      this._html$_subscriptions = _html$_subscriptions;
+      this.$deferredAction();
+    }
+    _StreamPool.builtin$cls = "_StreamPool";
+    if (!("name" in _StreamPool))
+      _StreamPool.name = "_StreamPool";
+    $desc = $collectedClasses$._StreamPool[1];
+    _StreamPool.prototype = $desc;
+    _StreamPool.$__fields__ = ["_html$_controller", "_html$_subscriptions"];
+    function _StreamPool_add_closure($this, stream) {
+      this.$this = $this;
+      this.stream = stream;
+      this.$deferredAction();
+    }
+    _StreamPool_add_closure.builtin$cls = "_StreamPool_add_closure";
+    if (!("name" in _StreamPool_add_closure))
+      _StreamPool_add_closure.name = "_StreamPool_add_closure";
+    $desc = $collectedClasses$._StreamPool_add_closure[1];
+    _StreamPool_add_closure.prototype = $desc;
+    _StreamPool_add_closure.$__fields__ = ["$this", "stream"];
     function _Html5NodeValidator(uriPolicy) {
       this.uriPolicy = uriPolicy;
       this.$deferredAction();
@@ -14514,6 +14880,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.AElement[1];
     AElement.prototype = $desc;
     AElement.$__fields__ = [];
+    AElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     function AltGlyphElement() {
       this.$deferredAction();
     }
@@ -14523,6 +14892,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.AltGlyphElement[1];
     AltGlyphElement.prototype = $desc;
     AltGlyphElement.$__fields__ = [];
+    AltGlyphElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     function AnimationElement() {
       this.$deferredAction();
     }
@@ -14718,6 +15090,9 @@ self._domRemove = function(element) {
     FEImageElement.prototype.get$y = function(receiver) {
       return receiver.y;
     };
+    FEImageElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     function FEMergeElement() {
       this.$deferredAction();
     }
@@ -14874,6 +15249,9 @@ self._domRemove = function(element) {
     FilterElement.prototype.get$y = function(receiver) {
       return receiver.y;
     };
+    FilterElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     function ForeignObjectElement() {
       this.$deferredAction();
     }
@@ -14922,6 +15300,9 @@ self._domRemove = function(element) {
     ImageElement0.prototype.get$y = function(receiver) {
       return receiver.y;
     };
+    ImageElement0.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     function MarkerElement() {
       this.$deferredAction();
     }
@@ -14961,6 +15342,9 @@ self._domRemove = function(element) {
     PatternElement.prototype.get$y = function(receiver) {
       return receiver.y;
     };
+    PatternElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     function RectElement() {
       this.$deferredAction();
     }
@@ -14987,6 +15371,9 @@ self._domRemove = function(element) {
     ScriptElement.$__fields__ = [];
     ScriptElement.prototype.get$type = function(receiver) {
       return receiver.type;
+    };
+    ScriptElement.prototype.get$href = function(receiver) {
+      return receiver.href;
     };
     function StyleElement0() {
       this.$deferredAction();
@@ -15064,6 +15451,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.TextPathElement[1];
     TextPathElement.prototype = $desc;
     TextPathElement.$__fields__ = [];
+    TextPathElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     function TextPositioningElement() {
       this.$deferredAction();
     }
@@ -15094,6 +15484,9 @@ self._domRemove = function(element) {
     UseElement.prototype.get$y = function(receiver) {
       return receiver.y;
     };
+    UseElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     function ViewElement() {
       this.$deferredAction();
     }
@@ -15112,6 +15505,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$._GradientElement[1];
     _GradientElement.prototype = $desc;
     _GradientElement.$__fields__ = [];
+    _GradientElement.prototype.get$href = function(receiver) {
+      return receiver.href;
+    };
     function _SVGCursorElement() {
       this.$deferredAction();
     }
@@ -16171,6 +16567,118 @@ self._domRemove = function(element) {
     TagState.prototype.get$children = function(receiver) {
       return this.children;
     };
+    function MIconButton(iconName, element) {
+      this.iconName = iconName;
+      this.element = element;
+      this.$deferredAction();
+    }
+    MIconButton.builtin$cls = "MIconButton";
+    if (!("name" in MIconButton))
+      MIconButton.name = "MIconButton";
+    $desc = $collectedClasses$.MIconButton[1];
+    MIconButton.prototype = $desc;
+    MIconButton.$__fields__ = ["iconName", "element"];
+    function MTabGroup(tabs, _tabContainer, _contentContainer, _activeTab, element) {
+      this.tabs = tabs;
+      this._tabContainer = _tabContainer;
+      this._contentContainer = _contentContainer;
+      this._activeTab = _activeTab;
+      this.element = element;
+      this.$deferredAction();
+    }
+    MTabGroup.builtin$cls = "MTabGroup";
+    if (!("name" in MTabGroup))
+      MTabGroup.name = "MTabGroup";
+    $desc = $collectedClasses$.MTabGroup[1];
+    MTabGroup.prototype = $desc;
+    MTabGroup.$__fields__ = ["tabs", "_tabContainer", "_contentContainer", "_activeTab", "element"];
+    function MTabGroup__handleTabAdd_closure($this, tab) {
+      this.$this = $this;
+      this.tab = tab;
+      this.$deferredAction();
+    }
+    MTabGroup__handleTabAdd_closure.builtin$cls = "MTabGroup__handleTabAdd_closure";
+    if (!("name" in MTabGroup__handleTabAdd_closure))
+      MTabGroup__handleTabAdd_closure.name = "MTabGroup__handleTabAdd_closure";
+    $desc = $collectedClasses$.MTabGroup__handleTabAdd_closure[1];
+    MTabGroup__handleTabAdd_closure.prototype = $desc;
+    MTabGroup__handleTabAdd_closure.$__fields__ = ["$this", "tab"];
+    function MTab(id, name, _tabElement, content, active) {
+      this.id = id;
+      this.name = name;
+      this._tabElement = _tabElement;
+      this.content = content;
+      this.active = active;
+      this.$deferredAction();
+    }
+    MTab.builtin$cls = "MTab";
+    if (!("name" in MTab))
+      MTab.name = "MTab";
+    $desc = $collectedClasses$.MTab[1];
+    MTab.prototype = $desc;
+    MTab.$__fields__ = ["id", "name", "_tabElement", "content", "active"];
+    MTab.prototype.get$id = function(receiver) {
+      return this.id;
+    };
+    MTab.prototype.get$name = function(receiver) {
+      return this.name;
+    };
+    MTab.prototype.get$_tabElement = function() {
+      return this._tabElement;
+    };
+    MTab.prototype.get$content = function(receiver) {
+      return this.content;
+    };
+    MTab.prototype.get$active = function() {
+      return this.active;
+    };
+    function MTab_closure($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    MTab_closure.builtin$cls = "MTab_closure";
+    if (!("name" in MTab_closure))
+      MTab_closure.name = "MTab_closure";
+    $desc = $collectedClasses$.MTab_closure[1];
+    MTab_closure.prototype = $desc;
+    MTab_closure.$__fields__ = ["$this"];
+    function MList(renderer, selectedItem, _ul, _itemToElement, _material$_doubleClick, element) {
+      this.renderer = renderer;
+      this.selectedItem = selectedItem;
+      this._ul = _ul;
+      this._itemToElement = _itemToElement;
+      this._material$_doubleClick = _material$_doubleClick;
+      this.element = element;
+      this.$deferredAction();
+    }
+    MList.builtin$cls = "MList";
+    if (!("name" in MList))
+      MList.name = "MList";
+    $desc = $collectedClasses$.MList[1];
+    MList.prototype = $desc;
+    MList.$__fields__ = ["renderer", "selectedItem", "_ul", "_itemToElement", "_material$_doubleClick", "element"];
+    function MList_update_closure($this, item) {
+      this.$this = $this;
+      this.item = item;
+      this.$deferredAction();
+    }
+    MList_update_closure.builtin$cls = "MList_update_closure";
+    if (!("name" in MList_update_closure))
+      MList_update_closure.name = "MList_update_closure";
+    $desc = $collectedClasses$.MList_update_closure[1];
+    MList_update_closure.prototype = $desc;
+    MList_update_closure.$__fields__ = ["$this", "item"];
+    function MList_update_closure0($this, item) {
+      this.$this = $this;
+      this.item = item;
+      this.$deferredAction();
+    }
+    MList_update_closure0.builtin$cls = "MList_update_closure0";
+    if (!("name" in MList_update_closure0))
+      MList_update_closure0.name = "MList_update_closure0";
+    $desc = $collectedClasses$.MList_update_closure0[1];
+    MList_update_closure0.prototype = $desc;
+    MList_update_closure0.$__fields__ = ["$this", "item"];
     function NavigationManager(_navigation$_commands, _navController, _history, _future) {
       this._navigation$_commands = _navigation$_commands;
       this._navController = _navController;
@@ -16562,6 +17070,227 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.SourceSpanMixin[1];
     SourceSpanMixin.prototype = $desc;
     SourceSpanMixin.$__fields__ = [];
+    function StatusViewManager(disposables) {
+      this.disposables = disposables;
+      this.$deferredAction();
+    }
+    StatusViewManager.builtin$cls = "StatusViewManager";
+    if (!("name" in StatusViewManager))
+      StatusViewManager.name = "StatusViewManager";
+    $desc = $collectedClasses$.StatusViewManager[1];
+    StatusViewManager.prototype = $desc;
+    StatusViewManager.$__fields__ = ["disposables"];
+    function StatusViewManager_closure($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    StatusViewManager_closure.builtin$cls = "StatusViewManager_closure";
+    if (!("name" in StatusViewManager_closure))
+      StatusViewManager_closure.name = "StatusViewManager_closure";
+    $desc = $collectedClasses$.StatusViewManager_closure[1];
+    StatusViewManager_closure.prototype = $desc;
+    StatusViewManager_closure.$__fields__ = ["$this"];
+    function StatusView(subs, root, toolbar, content, tabElement, _closeButton, group) {
+      this.subs = subs;
+      this.root = root;
+      this.toolbar = toolbar;
+      this.content = content;
+      this.tabElement = tabElement;
+      this._closeButton = _closeButton;
+      this.group = group;
+      this.$deferredAction();
+    }
+    StatusView.builtin$cls = "StatusView";
+    if (!("name" in StatusView))
+      StatusView.name = "StatusView";
+    $desc = $collectedClasses$.StatusView[1];
+    StatusView.prototype = $desc;
+    StatusView.$__fields__ = ["subs", "root", "toolbar", "content", "tabElement", "_closeButton", "group"];
+    function StatusView_closure(_box_0) {
+      this._box_0 = _box_0;
+      this.$deferredAction();
+    }
+    StatusView_closure.builtin$cls = "StatusView_closure";
+    if (!("name" in StatusView_closure))
+      StatusView_closure.name = "StatusView_closure";
+    $desc = $collectedClasses$.StatusView_closure[1];
+    StatusView_closure.prototype = $desc;
+    StatusView_closure.$__fields__ = ["_box_0"];
+    function StatusView__createPluginSection_closure(header) {
+      this.header = header;
+      this.$deferredAction();
+    }
+    StatusView__createPluginSection_closure.builtin$cls = "StatusView__createPluginSection_closure";
+    if (!("name" in StatusView__createPluginSection_closure))
+      StatusView__createPluginSection_closure.name = "StatusView__createPluginSection_closure";
+    $desc = $collectedClasses$.StatusView__createPluginSection_closure[1];
+    StatusView__createPluginSection_closure.prototype = $desc;
+    StatusView__createPluginSection_closure.$__fields__ = ["header"];
+    function StatusView__createPluginSection_closure0(link) {
+      this.link = link;
+      this.$deferredAction();
+    }
+    StatusView__createPluginSection_closure0.builtin$cls = "StatusView__createPluginSection_closure0";
+    if (!("name" in StatusView__createPluginSection_closure0))
+      StatusView__createPluginSection_closure0.name = "StatusView__createPluginSection_closure0";
+    $desc = $collectedClasses$.StatusView__createPluginSection_closure0[1];
+    StatusView__createPluginSection_closure0.prototype = $desc;
+    StatusView__createPluginSection_closure0.$__fields__ = ["link"];
+    function StatusView__createPluginSection_closure1() {
+      this.$deferredAction();
+    }
+    StatusView__createPluginSection_closure1.builtin$cls = "StatusView__createPluginSection_closure1";
+    if (!("name" in StatusView__createPluginSection_closure1))
+      StatusView__createPluginSection_closure1.name = "StatusView__createPluginSection_closure1";
+    $desc = $collectedClasses$.StatusView__createPluginSection_closure1[1];
+    StatusView__createPluginSection_closure1.prototype = $desc;
+    StatusView__createPluginSection_closure1.$__fields__ = [];
+    function StatusView__createPluginSection_closure2() {
+      this.$deferredAction();
+    }
+    StatusView__createPluginSection_closure2.builtin$cls = "StatusView__createPluginSection_closure2";
+    if (!("name" in StatusView__createPluginSection_closure2))
+      StatusView__createPluginSection_closure2.name = "StatusView__createPluginSection_closure2";
+    $desc = $collectedClasses$.StatusView__createPluginSection_closure2[1];
+    StatusView__createPluginSection_closure2.prototype = $desc;
+    StatusView__createPluginSection_closure2.$__fields__ = [];
+    function StatusView__createPluginSection__closure() {
+      this.$deferredAction();
+    }
+    StatusView__createPluginSection__closure.builtin$cls = "StatusView__createPluginSection__closure";
+    if (!("name" in StatusView__createPluginSection__closure))
+      StatusView__createPluginSection__closure.name = "StatusView__createPluginSection__closure";
+    $desc = $collectedClasses$.StatusView__createPluginSection__closure[1];
+    StatusView__createPluginSection__closure.prototype = $desc;
+    StatusView__createPluginSection__closure.$__fields__ = [];
+    function StatusView__createDartSdkSection_closure() {
+      this.$deferredAction();
+    }
+    StatusView__createDartSdkSection_closure.builtin$cls = "StatusView__createDartSdkSection_closure";
+    if (!("name" in StatusView__createDartSdkSection_closure))
+      StatusView__createDartSdkSection_closure.name = "StatusView__createDartSdkSection_closure";
+    $desc = $collectedClasses$.StatusView__createDartSdkSection_closure[1];
+    StatusView__createDartSdkSection_closure.prototype = $desc;
+    StatusView__createDartSdkSection_closure.$__fields__ = [];
+    function StatusView__createDartSdkSection_closure0(_box_0, header) {
+      this._box_0 = _box_0;
+      this.header = header;
+      this.$deferredAction();
+    }
+    StatusView__createDartSdkSection_closure0.builtin$cls = "StatusView__createDartSdkSection_closure0";
+    if (!("name" in StatusView__createDartSdkSection_closure0))
+      StatusView__createDartSdkSection_closure0.name = "StatusView__createDartSdkSection_closure0";
+    $desc = $collectedClasses$.StatusView__createDartSdkSection_closure0[1];
+    StatusView__createDartSdkSection_closure0.prototype = $desc;
+    StatusView__createDartSdkSection_closure0.$__fields__ = ["_box_0", "header"];
+    function StatusView__createDartSdkSection__closure(header) {
+      this.header = header;
+      this.$deferredAction();
+    }
+    StatusView__createDartSdkSection__closure.builtin$cls = "StatusView__createDartSdkSection__closure";
+    if (!("name" in StatusView__createDartSdkSection__closure))
+      StatusView__createDartSdkSection__closure.name = "StatusView__createDartSdkSection__closure";
+    $desc = $collectedClasses$.StatusView__createDartSdkSection__closure[1];
+    StatusView__createDartSdkSection__closure.prototype = $desc;
+    StatusView__createDartSdkSection__closure.$__fields__ = ["header"];
+    function StatusView__createDartSdkSection_closure1() {
+      this.$deferredAction();
+    }
+    StatusView__createDartSdkSection_closure1.builtin$cls = "StatusView__createDartSdkSection_closure1";
+    if (!("name" in StatusView__createDartSdkSection_closure1))
+      StatusView__createDartSdkSection_closure1.name = "StatusView__createDartSdkSection_closure1";
+    $desc = $collectedClasses$.StatusView__createDartSdkSection_closure1[1];
+    StatusView__createDartSdkSection_closure1.prototype = $desc;
+    StatusView__createDartSdkSection_closure1.$__fields__ = [];
+    function StatusView__createAnalysisServerSection_closure(_box_0, header) {
+      this._box_0 = _box_0;
+      this.header = header;
+      this.$deferredAction();
+    }
+    StatusView__createAnalysisServerSection_closure.builtin$cls = "StatusView__createAnalysisServerSection_closure";
+    if (!("name" in StatusView__createAnalysisServerSection_closure))
+      StatusView__createAnalysisServerSection_closure.name = "StatusView__createAnalysisServerSection_closure";
+    $desc = $collectedClasses$.StatusView__createAnalysisServerSection_closure[1];
+    StatusView__createAnalysisServerSection_closure.prototype = $desc;
+    StatusView__createAnalysisServerSection_closure.$__fields__ = ["_box_0", "header"];
+    function StatusView__createAnalysisServerSection__closure() {
+      this.$deferredAction();
+    }
+    StatusView__createAnalysisServerSection__closure.builtin$cls = "StatusView__createAnalysisServerSection__closure";
+    if (!("name" in StatusView__createAnalysisServerSection__closure))
+      StatusView__createAnalysisServerSection__closure.name = "StatusView__createAnalysisServerSection__closure";
+    $desc = $collectedClasses$.StatusView__createAnalysisServerSection__closure[1];
+    StatusView__createAnalysisServerSection__closure.prototype = $desc;
+    StatusView__createAnalysisServerSection__closure.$__fields__ = [];
+    function StatusView__createAnalysisServerSection__closure0(_box_0, header) {
+      this._box_0 = _box_0;
+      this.header = header;
+      this.$deferredAction();
+    }
+    StatusView__createAnalysisServerSection__closure0.builtin$cls = "StatusView__createAnalysisServerSection__closure0";
+    if (!("name" in StatusView__createAnalysisServerSection__closure0))
+      StatusView__createAnalysisServerSection__closure0.name = "StatusView__createAnalysisServerSection__closure0";
+    $desc = $collectedClasses$.StatusView__createAnalysisServerSection__closure0[1];
+    StatusView__createAnalysisServerSection__closure0.prototype = $desc;
+    StatusView__createAnalysisServerSection__closure0.$__fields__ = ["_box_0", "header"];
+    function StatusView__createAnalysisServerSection_closure0(_box_0, update) {
+      this._box_0 = _box_0;
+      this.update = update;
+      this.$deferredAction();
+    }
+    StatusView__createAnalysisServerSection_closure0.builtin$cls = "StatusView__createAnalysisServerSection_closure0";
+    if (!("name" in StatusView__createAnalysisServerSection_closure0))
+      StatusView__createAnalysisServerSection_closure0.name = "StatusView__createAnalysisServerSection_closure0";
+    $desc = $collectedClasses$.StatusView__createAnalysisServerSection_closure0[1];
+    StatusView__createAnalysisServerSection_closure0.prototype = $desc;
+    StatusView__createAnalysisServerSection_closure0.$__fields__ = ["_box_0", "update"];
+    function StatusView__createAnalyticsSection_closure() {
+      this.$deferredAction();
+    }
+    StatusView__createAnalyticsSection_closure.builtin$cls = "StatusView__createAnalyticsSection_closure";
+    if (!("name" in StatusView__createAnalyticsSection_closure))
+      StatusView__createAnalyticsSection_closure.name = "StatusView__createAnalyticsSection_closure";
+    $desc = $collectedClasses$.StatusView__createAnalyticsSection_closure[1];
+    StatusView__createAnalyticsSection_closure.prototype = $desc;
+    StatusView__createAnalyticsSection_closure.$__fields__ = [];
+    function StatusView__handleSdkBrowse_closure() {
+      this.$deferredAction();
+    }
+    StatusView__handleSdkBrowse_closure.builtin$cls = "StatusView__handleSdkBrowse_closure";
+    if (!("name" in StatusView__handleSdkBrowse_closure))
+      StatusView__handleSdkBrowse_closure.name = "StatusView__handleSdkBrowse_closure";
+    $desc = $collectedClasses$.StatusView__handleSdkBrowse_closure[1];
+    StatusView__handleSdkBrowse_closure.prototype = $desc;
+    StatusView__handleSdkBrowse_closure.$__fields__ = [];
+    function StatusHeader(title, subtitle) {
+      this.title = title;
+      this.subtitle = subtitle;
+      this.$deferredAction();
+    }
+    StatusHeader.builtin$cls = "StatusHeader";
+    if (!("name" in StatusHeader))
+      StatusHeader.name = "StatusHeader";
+    $desc = $collectedClasses$.StatusHeader[1];
+    StatusHeader.prototype = $desc;
+    StatusHeader.$__fields__ = ["title", "subtitle"];
+    StatusHeader.prototype.get$title = function(receiver) {
+      return this.title;
+    };
+    StatusHeader.prototype.set$title = function(receiver, v) {
+      return this.title = v;
+    };
+    StatusHeader.prototype.get$subtitle = function() {
+      return this.subtitle;
+    };
+    function _getPlatformVersions_closure() {
+      this.$deferredAction();
+    }
+    _getPlatformVersions_closure.builtin$cls = "_getPlatformVersions_closure";
+    if (!("name" in _getPlatformVersions_closure))
+      _getPlatformVersions_closure.name = "_getPlatformVersions_closure";
+    $desc = $collectedClasses$._getPlatformVersions_closure[1];
+    _getPlatformVersions_closure.prototype = $desc;
+    _getPlatformVersions_closure.$__fields__ = [];
     function EagerSpanScanner(_line, _column, _sourceFile, _lastSpan, sourceUrl, string, _string_scanner$_position, _lastMatch) {
       this._line = _line;
       this._column = _column;
@@ -18503,15 +19232,15 @@ self._domRemove = function(element) {
     Pair.prototype.get$last = function(receiver) {
       return this.last;
     };
-    function closure2() {
+    function closure3() {
       this.$deferredAction();
     }
-    closure2.builtin$cls = "closure2";
-    if (!("name" in closure2))
-      closure2.name = "closure2";
-    $desc = $collectedClasses$.closure2[1];
-    closure2.prototype = $desc;
-    closure2.$__fields__ = [];
+    closure3.builtin$cls = "closure3";
+    if (!("name" in closure3))
+      closure3.name = "closure3";
+    $desc = $collectedClasses$.closure3[1];
+    closure3.prototype = $desc;
+    closure3.$__fields__ = [];
     function YamlDocument(contents, span, versionDirective, tagDirectives, startImplicit, endImplicit) {
       this.contents = contents;
       this.span = span;
@@ -18660,7 +19389,7 @@ self._domRemove = function(element) {
     YamlScalar.prototype.get$style = function(receiver) {
       return this.style;
     };
-    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JavaScriptFunction, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, CapabilityImpl, _Serializer, _Deserializer, ConstantMapView, ConstantMap, ConstantStringMap, ConstantStringMap_values_closure, _ConstantMapKeyIterable, GeneralConstantMap, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, ExceptionAndStackTrace, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, CastErrorImplementation, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, JsLinkedHashMap_addAll_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, _StringAllMatchesIterable, _StringAllMatchesIterator, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, ViewRegistry, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, Config_onDidChange_closure, Config_onDidChange_closure0, ContextMenuManager, ContextMenuManager_add_closure, ContextMenuItem, ContextMenuItem_toJs_closure, _SeparatorMenuItem, NotificationManager, NotificationManager__options_closure, Notification, NotificationButton, NotificationButton_toProxy_closure, NotificationHelper, NotificationHelper_appendText_closure, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextEditor_onDidChangeCursorPosition_closure, TextBuffer, Marker, Decoration, GrammarRegistry, Range, Point, AtomEvent, Shell, ScopeDescriptor, BufferedProcess, BufferedProcess_create_closure, Stats, OrganizeFileManager, OrganizeFileManager__addEditorCommand_closure, OrganizeFileManager__handleSortMembers_closure, OrganizeFileManager__handleOrganizeDirectives_closure, OrganizeFileManager__handleOrganizeDirectives_closure0, AnalysisOptionsManager, AnalysisServer, AnalysisServer_closure, AnalysisServer_closure0, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__setup_closure1, AnalysisServer__syncRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__focusedEditorChanged_closure, AnalysisServer_filterSearchResults_closure, AnalysisServer_filterSearchResults_closure0, AnalysisServer_getExecutablesFor_closure, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, AnalysisServer__initNewServer_closure5, AnalysisServer__showDiagnostics_closure, AnalysisServer__showDiagnostics__closure, AnalysisServer__showDiagnostics_closure0, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_closure, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_setup_closure0, _AnalysisServerWrapper_setup_closure1, _AnalysisServerWrapper_setup_closure2, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart__closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, RenameRefactoringOptions, AnalysisRequestJob, AnalysisRequestJob_run_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_showDialog_closure, Server, Domain, ServerDomain, ServerError, ServerStatus, VersionResult, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, AnalysisOutline, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, SearchResults, SearchResults_parse_closure, FindElementReferencesResult, TypeHierarchyResult, TypeHierarchyResult_parse_closure, EditDomain, FormatResult, FormatResult_parse_closure, AssistsResult, AssistsResult_parse_closure, AvailableRefactoringsResult, FixesResult, FixesResult_parse_closure, RefactoringResult, RefactoringResult_parse_closure, RefactoringResult_parse_closure0, RefactoringResult_parse_closure1, SortMembersResult, OrganizeDirectivesResult, ExecutionDomain, ExecutionLaunchData, CreateContextResult, MapUriResult, DiagnosticDomain, DiagnosticsResult, DiagnosticsResult_parse_closure, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisOptions, AnalysisStatus, ChangeContentOverlay, CompletionSuggestion, ContextData, Element0, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Outline, Outline_parse_closure, Position, PubStatus, RefactoringFeedback, RefactoringOptions, RefactoringProblem, RemoveContentOverlay, RequestError, SearchResult, SearchResult_parse_closure, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, TypeHierarchyItem, install_closure, _InstallJob, _InstallJob_run_closure, _InstallJob_run_closure0, _InstallJob_run_closure1, _InstallJob__install_closure, promptUser_closure, promptUser_closure0, promptUser_closure1, promptUser_closure2, getSystemDescription_closure, getSystemDescription_closure0, PermissiveNodeValidator, TrustedHtmlTreeSanitizer, loadPackageJson_closure, getPackageVersion_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions_closure0, AutocompleteProvider__getSuggestions__closure, AutocompleteOptions, Suggestion, _AutocompleteOverride, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions_closure0, DartAutocompleteProvider_getSuggestions__closure, DartAutocompleteProvider_getSuggestions__closure0, DartAutocompleteProvider_getSuggestions__closure1, DartAutocompleteProvider__handleCompletionResults_closure2, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__handleCompletionResults_closure0, DartAutocompleteProvider__handleCompletionResults_closure1, DartAutocompleteProvider__handleCompletionResults_closure3, DartAutocompleteProvider__handleCompletionResults__closure, DartAutocompleteProvider__handleCompletionResults_closure4, BreakpointManager, BreakpointManager_closure, BreakpointManager_getBreakpontsFor_closure, BreakpointManager__processEditor_closure, BreakpointManager__findSimilar_closure, BreakpointManager__findSimilar_closure0, BreakpointManager_initFromStored_closure, BreakpointManager_toStorable_closure, AtomBreakpoint, _EditorBreakpoint, _EditorBreakpoint_closure, BufferObserverManager, BufferObserverManager_closure, BufferObserverManager__closure, BufferObserverManager_dispose_closure, BufferObserver, BufferFormatter, BufferFormatter_closure, BufferFormatter__closure, BufferFormatter___closure, BufferFormatter_closure0, BufferUpdater, OverlayManager, OverlayManager_updateOverlay_closure, OverlayManager__serverActive_closure, OverlayInfo, _log_closure, ChangelogManager, ChangelogManager_closure, ChangelogManager_closure0, ChangelogManager__handleReleaseNotes_closure, ChangelogManager__handleReleaseNotes_closure0, ConsoleController, ConsoleController_closure, ConsoleController__toggleViews_closure, ConsoleView, ConsoleView_closure, ConsoleView_closure0, ConsoleView_closure1, ConsoleView_closure2, ConsoleView__emitText_closure, ConsoleView__emitText__closure, ConsoleView__emitText___closure, ConsoleStatusElement, DartdocHelper, DartdocHelper_closure, DartdocHelper__handleDartdoc_closure, DartdocHelper__handleDartdoc__closure, DartdocHelper__render_writeTitle, DartdocControl, DartdocControl_closure, DartdocControl_closure0, Debounce, Debounce_bind_closure, Debounce_bind__closure, Debounce_bind_closure0, DebugManager, DebugManager_closure, DebugManager_closure0, DebugManager__closure, DebugManager_closure1, DebugManager_closure2, DebugManager_closure3, DebugManager_closure4, DebugManager_dispose_closure, DebugConnection, DebugIsolate, DebugFrame, DebugVariable, DebugLocation, UriTranslator, UriResolver, UriResolver_closure, UriResolver_closure0, UriResolver_resolveUriToPath_closure, UriResolver__resolveUriToPath_closure, UriResolver__resolveUriToPath_closure0, UriResolver_resolvePathToUri_closure, UriResolver__resolvePathToUri_closure, UriResolver__resolvePathToUri_closure0, UriResolver_dispose_closure, DebuggerView, DebuggerView_closure, DebuggerView__createPrimarySection_updateUi, DebuggerView__createPrimarySection_updateUi_closure, DebuggerView__jumpToLocation_closure, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__processNavInfo_closure, _NavCompleterHelper, _NavCompleterHelper_handleNavInfo_closure, _NavCompleterHelper_getNavigationInfo_closure, Dependencies, _handleEnterKey_closure, _handleEnterKey_closure0, _handleEnterKey_closure1, _handleEnterKey_closure2, _handleEnterKey_closure3, _handleEnterKey_closure4, _handleEnterKey_closure5, applyEdits_closure, applyEdits__closure, selectEditGroup_closure, _sortEdits_closure, EditorManager, EditorManager_jumpToLocation_closure, EditorManager_jumpToLine_closure, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_onClick_closure, CoreElement_click_closure, ProgressElement, CloseButton, TitledModelDialog, TitledModelDialog_closure, TitledModelDialog_closure0, main_closure, ErrorRepository, ErrorsController, ErrorsController_closure, ErrorsController__handleErrorsChanged_closure, ErrorsView, ErrorsView__cvtError_closure, ErrorsView__cvtError__closure, ErrorsView__cvtError_closure0, ErrorsView__cvtError_closure1, ErrorsView__cvtError_closure2, ErrorsView__jumpTo_closure, ErrorsStatusElement, CreateProjectManager, CreateProjectManager__createProject_closure, CreateProjectManager__createProject_closure0, CreateProjectManager__createProject__closure, FlutterLaunchType, FlutterLaunchType_getLaunchablesFor_closure, FlutterLaunchType_performLaunch_closure, _LaunchInstance, _LaunchInstance_launch_closure, _LaunchInstance_launch_closure0, _LaunchInstance_launch_closure1, _LaunchInstance_launch__closure, _LaunchInstance_launch_closure2, _LaunchInstance_launch_closure3, _LaunchInstance_launch_closure4, _FlutterLaunch, _FlutterLaunch_closure, FlutterUriTranslator, FlutterSdkManager, FlutterSdkManager_closure, FlutterSdkManager_closure0, FlutterSdkManager_closure1, FlutterSdkManager_tryToAutoConfigure_closure, FlutterSdkManager_showInstallationInfo_closure, FlutterSdkManager_showInstallationInfo_closure0, FlutterSdkManager_showInstallationInfo_closure1, _discoverSdk_closure, _discoverSdk_closure0, _discoverSdk_closure1, _discoverSdk_closure2, _discoverSdk_closure3, _discoverSdk_closure4, FlutterSdk, FlutterTool, _FlutterToolJob, SdkLocationJob, FormattingHelper, FormattingHelper_closure, FormattingHelper_closure0, FormattingHelper_formatFile_closure, FormattingHelper_formatEditor_closure, FormattingHelper_formatEditor_closure0, Job, Status, JobStatus, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager_runningJobs_closure, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, EventListener, EventListener_closure, LaunchManager, LaunchManager_addLaunch_closure, LaunchManager_addLaunch_closure0, LaunchManager_getAllLaunchables_closure, LaunchType, Launchable, Launch, TextFragment, CachingServerResolver, CachingServerResolver_resolve_closure, CachingServerResolver__resolve_closure, _PathResolver, _ServerResolver, _ServerResolver_closure, _ServerResolver_closure0, _ServerResolver_resolve_closure, _ServerResolver_resolve__closure, _ServerResolver_resolve__closure0, _ServerResolver_dispose_closure, _ServerResolver_dispose__closure, CliLaunchType, CliLaunchType_getLaunchablesFor_closure, CliLaunchType_performLaunch_closure, CliLaunchType_performLaunch_closure0, CliLaunchType_performLaunch__closure, CliLaunchType_performLaunch_closure1, CliLaunchType_performLaunch_closure2, _CliLaunch, _CliLaunch_closure, LaunchConfigurationManager, _createUniqueFilename_closure, LaunchConfiguration, _ProjectConfigurations, _ProjectConfigurations_closure, _ProjectConfigurations_createConfig_closure, ShellLaunchType, ShellLaunchType_performLaunch_closure, ShellLaunchType_performLaunch_closure0, ShellLaunchType_performLaunch_closure1, ShellLaunchType_performLaunch_closure2, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintMessage, Rn, Pt, DartLinterConsumer, DartLinterConsumer_closure, DartLinterConsumer_closure0, DartLinterConsumer__regenErrors_closure, DartLinterConsumer__filter_closure, DartLinterConsumer__emit_closure, DartLinterProvider, ObservatoryDebugger_connect_closure, ObservatoryDebugger_connect__closure, ObservatoryDebugger_connect__closure0, ObservatoryDebugger_connect_closure0, ObservatoryDebugger_connect_closure1, ObservatoryDebugConnection, ObservatoryDebugConnection_closure, ObservatoryDebugConnection__init_closure, ObservatoryDebugConnection__init_closure0, ObservatoryDebugConnection__init_closure1, ObservatoryDebugConnection__init_closure2, ObservatoryDebugConnection__init_closure3, ObservatoryDebugConnection__init_closure4, ObservatoryDebugConnection__init__closure, ObservatoryDebugConnection__init__closure0, ObservatoryDebugConnection__init___closure, ObservatoryDebugConnection__installInto_closure, ObservatoryDebugConnection__installInto__closure2, ObservatoryDebugConnection__installInto__closure3, ObservatoryDebugConnection__installInto__closure4, ObservatoryDebugConnection__installInto_closure0, ObservatoryDebugConnection__installInto_closure1, ObservatoryDebugConnection__installInto__closure, ObservatoryDebugConnection__installInto__closure0, ObservatoryDebugConnection__installInto__closure1, ObservatoryDebugConnection__installInto_closure2, ObservatoryDebugConnection__handleIsolateEvent_closure, ObservatoryDebugConnection__handleDebugEvent_closure, ObservatoryDebugConnection__resolveScript_closure, ObservatoryLog, ObservatoryDebugIsolate, ObservatoryDebugFrame, ObservatoryDebugFrame_getLocation_closure, ObservatoryDebugFrame_getLocation__closure, ObservatoryDebugFrame_getLocation__closure0, ObservatoryDebugFrame_eval_closure, ObservatoryDebugVariable, OutlineController, OutlineController_closure, OutlineController_closure0, OutlineController_closure1, OutlineView, OutlineView_closure, OutlineView__setupResizer_closure, OutlineView__setupResizer_closure0, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage_closure1, AtomDartPackage_closure2, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated__closure, AtomDartPackage_packageActivated__closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage__validateSettings_closure, AtomDartPackage__validateSettings_closure0, AtomDartPackage__validateSettings_closure1, AtomDartPackage__showWelcomeToast_closure, AtomDartPackage__handleSendFeedback_closure, AtomDartPackage__registerLinter_closure, AtomDartPackage__registerLinter_closure0, AtomDartPackage__registerLinter_closure1, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure2, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure, ProcessRunner_execStreaming_closure0, ProcessRunner_kill_closure, ProcessResult, ProcessNotifier, ProcessNotifier_watch_closure, ProcessNotifier_watch_closure0, ProcessNotifier_watch_closure1, ProcessNotifier_watch_closure2, ProjectManager, ProjectManager_closure, ProjectManager_closure0, ProjectManager_closure1, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, ProjectManager__markDartProject_closure, ProjectManager__initProjectControllers_closure, DartProject, DartProject_importsPackage_closure, DartProject_importsPackage_closure0, ProjectScanJob, _MarkDartProjectContextCommand, PubManager, PubManager_closure, PubManager_closure0, PubManager_closure1, PubManager_closure2, PubManager_closure3, PubManager_closure4, PubManager_closure5, PubManager_closure6, PubManager_closure7, PubManager__addSdkCmd_closure, PubManager__handleRun_closure, PubManager__handleGlobalRun_closure, PubManager__handleGlobalActivate_closure, PubManager__showRunPubDialog_closure, PubApp, PubAppLocal, PubJob, PubRunJob, PubGlobalActivate, PubContextCommand, QuickFixHelper, QuickFixHelper_closure, QuickFixHelper__handleQuickFix_closure, QuickFixHelper__handleQuickFix__closure, QuickFixHelper__handleQuickFix__closure0, QuickFixHelper__handleFixesResult_closure, QuickFixHelper__handleFixesResult__closure, QuickFixHelper__handleFixesResult_closure0, QuickFixHelper__handleFixesResult_closure1, QuickFixHelper__handleFixesResult_closure2, _Change, _applyChange_closure, _applyChange__closure0, _applyChange_closure0, _applyChange__closure, _applyChange_closure1, RebuildManager, RebuildManager_closure, RebuildManager_closure0, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RefactoringHelper, RefactoringHelper_closure, RefactoringHelper__handleRenameRefactor_closure, RefactoringHelper__handleRenameRefactor__closure, RefactoringHelper__handleAvailableRefactoringsResult_closure, RefactoringHelper__handleAvailableRefactoringsResult__closure, RefactoringHelper__handleAvailableRefactoringsResult___closure, RefactoringHelper__handleRefactoringResult_closure, RefactoringHelper__handleRefactoringResult__closure0, RefactoringHelper__handleRefactoringResult_closure0, RefactoringHelper__handleRefactoringResult_closure1, RefactoringHelper__handleRefactoringResult__closure, RefactoringHelper__handleRefactoringResult_closure2, RefactoringHelper__handleRefactoringResult_closure3, RefactoringHelper__handleRefactoringResult_closure4, RefactoringHelper__apply_closure, RefactoringHelper__apply__closure0, RefactoringHelper__apply_closure0, RefactoringHelper__apply__closure, RefactoringHelper__apply_closure1, FindReferencesHelper, FindReferencesHelper__handleReferencesEditor_closure, FindReferencesHelper__handleReferencesEditor__closure, FindReferencesView, FindReferencesView__handleSearchResults_closure, FindReferencesView__handleSearchResults__closure, FindReferencesView__handleSearchResults__closure0, _MatchParser, RunApplicationManager, RunApplicationManager_closure, RunApplicationManager_closure0, RunApplicationManager_closure1, RunApplicationManager_run_closure, RunApplicationManager__getConfigFor_closure, RunAppContextCommand, SdkManager, SdkManager_closure, SdkManager_closure0, SdkManager_closure1, SdkManager_tryToAutoConfigure_closure, SdkManager__setSdk_closure, SdkManager__handleShowSdkInfo_closure, SdkManager__handleShowSdkInfo__closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob0, State, State_onValueChanged_closure, State_saveState_closure, StateStorable, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay_closure0, JobsDialog, StatusBar, Tile, TestManager, TestManager__runTests_closure, ToolbarContribution, ToolbarContribution__buildLeftTile_closure, ToolbarContribution__buildLeftTile_closure0, ToolbarContribution__buildRightTile_closure, ToolbarContribution__buildRightTile_closure0, ToolbarContribution__buildRightTile_closure1, Toolbar, ToolbarTile, TypeHierarchyHelper, TypeHierarchyHelper__handleHierarchyEditor_closure, TypeHierarchyHelper__handleHierarchyEditor__closure, TypeHierarchyView, TypeHierarchyView__sort_closure, TypeHierarchyView__render_closure, TypeHierarchyView__render_closure0, UsageManager, UsageManager_closure, UsageManager__init_closure, UsageManager__init__closure, UsageManager__init__closure0, Disposable, Disposables, StreamSubscriptions, Edit, Property, SelectionGroup, ViewResizer, ViewResizer__init_closure0, ViewResizer__init_closure, ViewResizer__init__closure, ViewResizer__init__closure0, ViewResizer__minSize_closure, ViewResizer__targetSize_closure, ViewGroupManager, ViewGroupManager_isActiveId_closure, ViewGroupManager_hasViewId_closure, ViewGroup, ViewGroup_getViewById_closure, ViewGroup_getViewById_closure0, ViewGroup__setupResizer_closure, View, ListTreeBuilder, ListTreeBuilder__addNode_closure, ListTreeBuilder__addNode_closure0, ListTreeBuilder__addNode_closure1, ListTreeBuilder__addNode_closure2, ListTreeBuilder__addNode_closure3, Node0, Node_decendentCount_closure, DoubleCancelCommand, DoubleCancelCommand__handleCancel_closure, UnmodifiableMapMixin, CodeUnits, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, SkipIterable, EfficientLengthSkipIterable, SkipIterator, EmptyIterable, EmptyIterator, FixedLengthListMixin, UnmodifiableListMixin, UnmodifiableListBase, ReversedListIterable, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _awaitOnObject_closure, _awaitOnObject_closure0, _wrapJsFunctionForAsync_closure, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _AsyncBroadcastStreamController, Future, closure0, Future_forEach_closure, Future_forEach__closure, Future_forEach__closure0, Future_doWhile_closure, TimeoutException, _Completer, _AsyncCompleter, _SyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _Future_timeout_closure, _Future_timeout_closure0, _Future_timeout_closure1, _AsyncCallbackEntry, Stream, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_last_closure, Stream_last_closure0, StreamSubscription, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _SyncStreamController, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _StateStreamSubscription, _SkipStream, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _HashMap, _HashMap_values_closure, _HashMap_addAll_closure, _IdentityHashMap, _CustomHashMap, _CustomHashMap_closure, _HashMapKeyIterable, _HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, _LinkedHashSetCell, _LinkedHashSetIterator, UnmodifiableListView, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, MapMixin, _MapBaseValueIterable, _MapBaseValueIterator, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMap_addAll_closure, _JsonMapKeyIterable, Base64Codec, Base64Decoder, _Base64Decoder, Codec, Converter, Encoding, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, Utf8Codec, Utf8Encoder, _Utf8Encoder, Utf8Decoder, _Utf8Decoder, _Utf8Decoder_convert_scanOneByteCharacters, _Utf8Decoder_convert_addSingleBytes, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _Exception, FormatException, IntegerDivisionByZeroException, Expando, Function, $int, Iterable, Iterator, List, Map, Null, num, Object, Match, RegExp, StackTrace, _StringStackTrace, Stopwatch, String, Runes, RuneIterator, StringBuffer, Symbol, Uri, Uri_parse_parseAuth, Uri__checkNonWindowsPathReservedCharacters_closure, Uri__makePath_closure, Uri__makeQuery_closure, Uri_hashCode_combine, Uri_parseIPv4Address_error, Uri_parseIPv4Address_closure, Uri_parseIPv6Address_error, Uri_parseIPv6Address_parseHex, UriData, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, BaseElement, Blob, BodyElement, ButtonElement, CanvasElement, CharacterData, CompositionEvent, CssStyleDeclaration, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, DeviceLightEvent, DivElement, Document0, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, Element, closure1, ScrollAlignment, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, HtmlDocument, HttpRequest, HttpRequest_getString_closure, HttpRequest_request_closure, HttpRequestEventTarget, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, LinkElement, Location0, MapElement, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MediaStream, MenuElement, MenuItemElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, MidiOutput, MidiPort, MouseEvent, Navigator, NavigatorUserMediaError, NetworkInformation, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptGroupElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, ProgressEvent, PushEvent, Range0, ScriptElement0, SelectElement, ShadowRoot, SourceElement, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesisEvent, Storage, Storage_addAll_closure, Storage_keys_closure, Storage_values_closure, StyleElement, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, TextAreaElement, TextEvent, TouchEvent, TrackElement, UIEvent, VideoElement, WebSocket, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _SpeechRecognitionResultList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, _AttributeMap, _AttributeMap_addAll_closure, _ElementAttributeMap, _MarginCssRect, CssRect, _ElementCssClassSet, Dimension, _EventStream, _ElementEventStreamImpl, _EventStreamSubscription, _Html5NodeValidator, ImmutableListMixin, NodeValidatorBuilder, NodeValidatorBuilder_allowsElement_closure, NodeValidatorBuilder_allowsAttribute_closure, _SimpleNodeValidator, _SimpleNodeValidator_closure, _SimpleNodeValidator_closure0, _TemplatingNodeValidator, _TemplatingNodeValidator_closure, _SvgNodeValidator, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, NodeValidator, _SameOriginUriPolicy, _ValidatingTreeSanitizer, _ValidatingTreeSanitizer_sanitizeTree_walk, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement, StyleElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, _JSRandom, Point0, _RectangleBase, Rectangle, MutableRectangle, DefaultEquality, IterableEquality, _UnorderedEquality, UnorderedIterableEquality, Uint8List, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, FlutterDev, Haikunator_haikunate_closure, _AcceptStructuredClone, _AcceptStructuredClone_walk_closure, _AcceptStructuredCloneDart2Js, convertNativePromiseToDartFuture_closure, convertNativePromiseToDartFuture_closure0, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__iterable_closure, FilteredElementList_removeRange_closure, Logger, closure, Level, LogRecord, BlockParser, BlockSyntax, BlockSyntax_isAtBlockEnd_closure, EmptyBlockSyntax, SetextHeaderSyntax, HeaderSyntax, BlockquoteSyntax, CodeBlockSyntax, FencedCodeBlockSyntax, HorizontalRuleSyntax, BlockHtmlSyntax, ListItem, ListSyntax, ListSyntax_parse_endItem, ListSyntax_parse_tryMatch, UnorderedListSyntax, OrderedListSyntax, ParagraphSyntax, Node1, Element1, Text, Document, Link, HtmlRenderer, HtmlRenderer_visitElementBefore_closure, InlineParser, InlineSyntax, TextSyntax, AutolinkSyntax, TagSyntax, LinkSyntax, ImageLinkSyntax, ImageLinkSyntax__createElement_closure, CodeSyntax, TagState, NavigationManager, NavigationPosition, Context, Context_join_closure, Context_joinAll_closure, Context_split_closure, _validateArgList_closure, InternalStyle, ParsedPath, ParsedPath_normalize_closure, PathException, Style, PosixStyle, UrlStyle, WindowsStyle, Version0, Version__splitParts_closure, QueueList, Object_ListMixin0, SourceFile, FileLocation, FileSpan, _FileSpan, SourceLocation, SourceLocationMixin, SourceSpan, SourceSpanException, SourceSpanFormatException, SourceSpanMixin, EagerSpanScanner, _EagerSpanScannerState, StringScannerException, SpanScanner, StringScanner, Analytics, AnalyticsMock, AnalyticsHtml, postEncode_closure, ThrottlingBucket, AnalyticsImpl, AnalyticsImpl__sendPayload_closure, AnalyticsImpl__recordFuture_closure, PersistentProperties, PostHandler, HtmlPostHandler, HtmlPostHandler_sendPost_closure, HtmlPersistentProperties, _createObject_closure, VmService, VmService_dispose_closure, RPCError, Log, BoundField, BoundVariable, Breakpoint, ClassRef, Class, ClassList, CodeRef, Code, ContextRef, Context0, ContextElement, ErrorRef, Error0, Event1, FieldRef, Field, Flag, FlagList, Frame, FuncRef, Func, InstanceRef, Instance, IsolateRef, Isolate, LibraryRef, Library, LibraryDependency, MapAssociation, Message, NullRef, Null0, ObjRef, Obj, Response, Sentinel, ScriptRef, Script, SourceLocation0, Stack, Success, TypeArgumentsRef, TypeArguments, UnresolvedSourceLocation, Version, VMRef, VM, _DeepEquals, deepHashCode__deepHashCode, deepHashCode__deepHashCode_closure, Event0, DocumentStartEvent, DocumentEndEvent, AliasEvent, _ValueEvent, ScalarEvent, SequenceStartEvent, MappingStartEvent, EventType, YamlException, Loader, Loader__parseNumberValue_closure, Loader__parseNumberValue_closure0, Loader__parseNumberValue_closure1, Loader__parseNumberValue_closure2, Loader__parseNumberValue_closure3, Parser, Parser__parseNode_parseAnchor, Parser__parseNode_parseTag, _State, Scanner, Scanner__fetchMoreTokens_closure, _SimpleKey, _Chomping, ScalarStyle, CollectionStyle, Token, VersionDirectiveToken, TagDirectiveToken, AnchorToken, AliasToken, TagToken, ScalarToken, TokenType, Pair, closure2, YamlDocument, VersionDirective, TagDirective, YamlNode, YamlMap, YamlNode_MapMixin, YamlNode_MapMixin_UnmodifiableMapMixin, YamlMap_keys_closure, YamlList, YamlNode_ListMixin, YamlScalar];
+    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JavaScriptFunction, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, CapabilityImpl, _Serializer, _Deserializer, ConstantMapView, ConstantMap, ConstantStringMap, ConstantStringMap_values_closure, _ConstantMapKeyIterable, GeneralConstantMap, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, ExceptionAndStackTrace, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, CastErrorImplementation, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, JsLinkedHashMap_addAll_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, _StringAllMatchesIterable, _StringAllMatchesIterator, AtomPackage, registerPackage_closure, registerPackage__closure, Atom, Atom_pickFolder_closure, ViewRegistry, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Panel, Panel_onDidDestroy_closure, CommandRegistry, CommandRegistry_add_closure, Config, Config_onDidChange_closure, Config_onDidChange_closure0, ContextMenuManager, ContextMenuManager_add_closure, ContextMenuItem, ContextMenuItem_toJs_closure, _SeparatorMenuItem, NotificationManager, NotificationManager__options_closure, Notification, NotificationButton, NotificationButton_toProxy_closure, NotificationHelper, NotificationHelper_appendText_closure, PackageManager, Project, Project_getDirectories_closure, Entry, File, Directory, Directory_getEntriesSync_closure, TextEditorView, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextEditor_onDidChangeCursorPosition_closure, TextBuffer, Marker, Decoration, GrammarRegistry, Range, Point, AtomEvent, Shell, ScopeDescriptor, BufferedProcess, BufferedProcess_create_closure, Stats, OrganizeFileManager, OrganizeFileManager__addEditorCommand_closure, OrganizeFileManager__handleSortMembers_closure, OrganizeFileManager__handleOrganizeDirectives_closure, OrganizeFileManager__handleOrganizeDirectives_closure0, AnalysisOptionsManager, AnalysisServer, AnalysisServer_closure, AnalysisServer_closure0, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__setup_closure1, AnalysisServer__syncRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__focusedEditorChanged_closure, AnalysisServer_filterSearchResults_closure, AnalysisServer_filterSearchResults_closure0, AnalysisServer_getExecutablesFor_closure, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, AnalysisServer__initNewServer_closure5, AnalysisServer__showDiagnostics_closure, AnalysisServer__showDiagnostics__closure, AnalysisServer__showDiagnostics_closure0, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_closure, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_setup_closure0, _AnalysisServerWrapper_setup_closure1, _AnalysisServerWrapper_setup_closure2, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart__closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, RenameRefactoringOptions, AnalysisRequestJob, AnalysisRequestJob_run_closure, AnalysisServerDialog, AnalysisServerDialog_closure, AnalysisServerDialog_closure0, AnalysisServerDialog_closure1, AnalysisServerDialog_showDialog_closure, Server, Domain, ServerDomain, ServerError, ServerStatus, VersionResult, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, AnalysisOutline, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, SearchResults, SearchResults_parse_closure, FindElementReferencesResult, TypeHierarchyResult, TypeHierarchyResult_parse_closure, EditDomain, FormatResult, FormatResult_parse_closure, AssistsResult, AssistsResult_parse_closure, AvailableRefactoringsResult, FixesResult, FixesResult_parse_closure, RefactoringResult, RefactoringResult_parse_closure, RefactoringResult_parse_closure0, RefactoringResult_parse_closure1, SortMembersResult, OrganizeDirectivesResult, ExecutionDomain, ExecutionLaunchData, CreateContextResult, MapUriResult, DiagnosticDomain, DiagnosticsResult, DiagnosticsResult_parse_closure, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisOptions, AnalysisStatus, ChangeContentOverlay, CompletionSuggestion, ContextData, Element0, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Outline, Outline_parse_closure, Position, PubStatus, RefactoringFeedback, RefactoringOptions, RefactoringProblem, RemoveContentOverlay, RequestError, SearchResult, SearchResult_parse_closure, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, TypeHierarchyItem, install_closure, _InstallJob, _InstallJob_run_closure, _InstallJob_run_closure0, _InstallJob_run_closure1, _InstallJob__install_closure, promptUser_closure, promptUser_closure0, promptUser_closure1, promptUser_closure2, getSystemDescription_closure, getSystemDescription_closure0, PermissiveNodeValidator, TrustedHtmlTreeSanitizer, loadPackageJson_closure, getPackageVersion_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions_closure0, AutocompleteProvider__getSuggestions__closure, AutocompleteOptions, Suggestion, _AutocompleteOverride, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions_closure0, DartAutocompleteProvider_getSuggestions__closure, DartAutocompleteProvider_getSuggestions__closure0, DartAutocompleteProvider_getSuggestions__closure1, DartAutocompleteProvider__handleCompletionResults_closure2, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__handleCompletionResults_closure0, DartAutocompleteProvider__handleCompletionResults_closure1, DartAutocompleteProvider__handleCompletionResults_closure3, DartAutocompleteProvider__handleCompletionResults__closure, DartAutocompleteProvider__handleCompletionResults_closure4, BreakpointManager, BreakpointManager_closure, BreakpointManager_getBreakpontsFor_closure, BreakpointManager__processEditor_closure, BreakpointManager__findSimilar_closure, BreakpointManager__findSimilar_closure0, BreakpointManager_initFromStored_closure, BreakpointManager_toStorable_closure, AtomBreakpoint, _EditorBreakpoint, _EditorBreakpoint_closure, BufferObserverManager, BufferObserverManager_closure, BufferObserverManager__closure, BufferObserverManager_dispose_closure, BufferObserver, BufferFormatter, BufferFormatter_closure, BufferFormatter__closure, BufferFormatter___closure, BufferFormatter_closure0, BufferUpdater, OverlayManager, OverlayManager_updateOverlay_closure, OverlayManager__serverActive_closure, OverlayInfo, _log_closure, ChangelogManager, ChangelogManager_closure, ChangelogManager_closure0, ChangelogManager__handleReleaseNotes_closure, ChangelogManager__handleReleaseNotes_closure0, ConsoleController, ConsoleController_closure, ConsoleController__toggleViews_closure, ConsoleView, ConsoleView_closure, ConsoleView_closure0, ConsoleView_closure1, ConsoleView_closure2, ConsoleView__emitText_closure, ConsoleView__emitText__closure, ConsoleView__emitText___closure, ConsoleStatusElement, DartdocHelper, DartdocHelper_closure, DartdocHelper__handleDartdoc_closure, DartdocHelper__handleDartdoc__closure, DartdocHelper__render_writeTitle, DartdocControl, DartdocControl_closure, DartdocControl_closure0, Debounce, Debounce_bind_closure, Debounce_bind__closure, Debounce_bind_closure0, DebugManager, DebugManager_closure, DebugManager_closure0, DebugManager__closure, DebugManager_closure1, DebugManager_closure2, DebugManager_closure3, DebugManager_closure4, DebugManager_dispose_closure, DebugConnection, DebugIsolate, DebugFrame, DebugVariable, DebugLocation, UriTranslator, UriResolver, UriResolver_closure, UriResolver_closure0, UriResolver_resolveUriToPath_closure, UriResolver__resolveUriToPath_closure, UriResolver__resolveUriToPath_closure0, UriResolver_resolvePathToUri_closure, UriResolver__resolvePathToUri_closure, UriResolver__resolvePathToUri_closure0, UriResolver_dispose_closure, DebuggerView, DebuggerView_closure, DebuggerView__createFlowControlSection_updateUi, DebuggerView__createFlowControlSection_updateUi_closure, DebuggerView__createSecondarySection_closure, DebuggerView__jumpToLocation_closure, _MockTab, _MockTab_closure, BreakpointsTab, BreakpointsTab_closure, BreakpointsTab__render_closure, _TabTitlebar, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__processNavInfo_closure, _NavCompleterHelper, _NavCompleterHelper_handleNavInfo_closure, _NavCompleterHelper_getNavigationInfo_closure, Dependencies, _handleEnterKey_closure, _handleEnterKey_closure0, _handleEnterKey_closure1, _handleEnterKey_closure2, _handleEnterKey_closure3, _handleEnterKey_closure4, _handleEnterKey_closure5, applyEdits_closure, applyEdits__closure, selectEditGroup_closure, _sortEdits_closure, EditorManager, EditorManager_jumpToLocation_closure, EditorManager_jumpToLine_closure, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_onClick_closure, CoreElement_click_closure, CoreElement_dblclick_closure, ProgressElement, CloseButton, TitledModelDialog, TitledModelDialog_closure, TitledModelDialog_closure0, main_closure, ErrorRepository, ErrorsController, ErrorsController_closure, ErrorsController__handleErrorsChanged_closure, ErrorsView, ErrorsView__cvtError_closure, ErrorsView__cvtError__closure, ErrorsView__cvtError_closure0, ErrorsView__cvtError_closure1, ErrorsView__cvtError_closure2, ErrorsView__jumpTo_closure, ErrorsStatusElement, CreateProjectManager, CreateProjectManager__createProject_closure, CreateProjectManager__createProject_closure0, CreateProjectManager__createProject__closure, FlutterLaunchType, FlutterLaunchType_getLaunchablesFor_closure, FlutterLaunchType_performLaunch_closure, _LaunchInstance, _LaunchInstance_launch_closure, _LaunchInstance_launch_closure0, _LaunchInstance_launch_closure1, _LaunchInstance_launch__closure, _LaunchInstance_launch_closure2, _LaunchInstance_launch_closure3, _LaunchInstance_launch_closure4, _FlutterLaunch, _FlutterLaunch_closure, FlutterUriTranslator, FlutterSdkManager, FlutterSdkManager_closure, FlutterSdkManager_closure0, FlutterSdkManager_closure1, FlutterSdkManager_tryToAutoConfigure_closure, FlutterSdkManager_showInstallationInfo_closure, FlutterSdkManager_showInstallationInfo_closure0, FlutterSdkManager_showInstallationInfo_closure1, _discoverSdk_closure, _discoverSdk_closure0, _discoverSdk_closure1, _discoverSdk_closure2, _discoverSdk_closure3, _discoverSdk_closure4, FlutterSdk, FlutterTool, _FlutterToolJob, SdkLocationJob, MojoLaunchType, FormattingHelper, FormattingHelper_closure, FormattingHelper_closure0, FormattingHelper_formatFile_closure, FormattingHelper_formatEditor_closure, FormattingHelper_formatEditor_closure0, Job, Status, JobStatus, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager_runningJobs_closure, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, JsDisposable, EventListener, EventListener_closure, LaunchManager, LaunchManager_addLaunch_closure, LaunchManager_addLaunch_closure0, LaunchManager_getAllLaunchables_closure, LaunchType, Launchable, Launch, TextFragment, CachingServerResolver, CachingServerResolver_resolve_closure, CachingServerResolver__resolve_closure, _PathResolver, _ServerResolver, _ServerResolver_closure, _ServerResolver_closure0, _ServerResolver_resolve_closure, _ServerResolver_resolve__closure, _ServerResolver_resolve__closure0, _ServerResolver_dispose_closure, _ServerResolver_dispose__closure, CliLaunchType, CliLaunchType_getLaunchablesFor_closure, CliLaunchType_performLaunch_closure, CliLaunchType_performLaunch_closure0, CliLaunchType_performLaunch__closure, CliLaunchType_performLaunch_closure1, CliLaunchType_performLaunch_closure2, _CliLaunch, _CliLaunch_closure, LaunchConfigurationManager, _createUniqueFilename_closure, LaunchConfiguration, _ProjectConfigurations, _ProjectConfigurations_closure, _ProjectConfigurations_createConfig_closure, ShellLaunchType, ShellLaunchType_performLaunch_closure, ShellLaunchType_performLaunch_closure0, ShellLaunchType_performLaunch_closure1, ShellLaunchType_performLaunch_closure2, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintMessage, Rn, Pt, DartLinterConsumer, DartLinterConsumer_closure, DartLinterConsumer_closure0, DartLinterConsumer__regenErrors_closure, DartLinterConsumer__filter_closure, DartLinterConsumer__emit_closure, DartLinterProvider, ObservatoryDebugger_connect_closure, ObservatoryDebugger_connect__closure, ObservatoryDebugger_connect__closure0, ObservatoryDebugger_connect_closure0, ObservatoryDebugger_connect_closure1, ObservatoryDebugConnection, ObservatoryDebugConnection_closure, ObservatoryDebugConnection__init_closure, ObservatoryDebugConnection__init_closure0, ObservatoryDebugConnection__init_closure1, ObservatoryDebugConnection__init_closure2, ObservatoryDebugConnection__init_closure3, ObservatoryDebugConnection__init_closure4, ObservatoryDebugConnection__init__closure, ObservatoryDebugConnection__init__closure0, ObservatoryDebugConnection__init___closure, ObservatoryDebugConnection__installInto_closure, ObservatoryDebugConnection__installInto__closure2, ObservatoryDebugConnection__installInto__closure3, ObservatoryDebugConnection__installInto__closure4, ObservatoryDebugConnection__installInto_closure0, ObservatoryDebugConnection__installInto_closure1, ObservatoryDebugConnection__installInto__closure, ObservatoryDebugConnection__installInto__closure0, ObservatoryDebugConnection__installInto__closure1, ObservatoryDebugConnection__installInto_closure2, ObservatoryDebugConnection__handleIsolateEvent_closure, ObservatoryDebugConnection__handleDebugEvent_closure, ObservatoryDebugConnection__resolveScript_closure, ObservatoryLog, ObservatoryDebugIsolate, ObservatoryDebugFrame, ObservatoryDebugFrame_getLocation_closure, ObservatoryDebugFrame_getLocation__closure, ObservatoryDebugFrame_getLocation__closure0, ObservatoryDebugFrame_eval_closure, ObservatoryDebugVariable, OutlineController, OutlineController_closure, OutlineController_closure0, OutlineController_closure1, OutlineView, OutlineView_closure, OutlineView__setupResizer_closure, OutlineView__setupResizer_closure0, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage_closure1, AtomDartPackage_closure2, AtomDartPackage_packageActivated_closure, AtomDartPackage_packageActivated_closure0, AtomDartPackage_packageActivated__closure, AtomDartPackage_packageActivated__closure0, AtomDartPackage_packageActivated_closure1, AtomDartPackage__validateSettings_closure, AtomDartPackage__validateSettings_closure0, AtomDartPackage__validateSettings_closure1, AtomDartPackage__validateSettings_closure2, AtomDartPackage__handleSendFeedback_closure, AtomDartPackage__registerLinter_closure, AtomDartPackage__registerLinter_closure0, AtomDartPackage__registerLinter_closure1, AtomDartPackage__setupLogging_closure, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure2, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure, ProcessRunner_execStreaming_closure0, ProcessRunner_kill_closure, ProcessResult, ProcessNotifier, ProcessNotifier_watch_closure, ProcessNotifier_watch_closure0, ProcessNotifier_watch_closure1, ProcessNotifier_watch_closure2, ProjectManager, ProjectManager_closure, ProjectManager_closure0, ProjectManager_closure1, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, ProjectManager__markDartProject_closure, ProjectManager__initProjectControllers_closure, DartProject, DartProject_importsPackage_closure, DartProject_importsPackage_closure0, ProjectScanJob, _MarkDartProjectContextCommand, PubManager, PubManager_closure, PubManager_closure0, PubManager_closure1, PubManager_closure2, PubManager_closure3, PubManager_closure4, PubManager_closure5, PubManager_closure6, PubManager_closure7, PubManager__addSdkCmd_closure, PubManager__handleRun_closure, PubManager__handleGlobalRun_closure, PubManager__handleGlobalActivate_closure, PubManager__showRunPubDialog_closure, PubApp, PubAppLocal, PubJob, PubRunJob, PubGlobalActivate, PubContextCommand, QuickFixHelper, QuickFixHelper_closure, QuickFixHelper__handleQuickFix_closure, QuickFixHelper__handleQuickFix__closure, QuickFixHelper__handleQuickFix__closure0, QuickFixHelper__handleFixesResult_closure, QuickFixHelper__handleFixesResult__closure, QuickFixHelper__handleFixesResult_closure0, QuickFixHelper__handleFixesResult_closure1, QuickFixHelper__handleFixesResult_closure2, _Change, _applyChange_closure, _applyChange__closure0, _applyChange_closure0, _applyChange__closure, _applyChange_closure1, RebuildManager, RebuildManager_closure, RebuildManager_closure0, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run_closure2, RebuildJob_run__closure, RefactoringHelper, RefactoringHelper_closure, RefactoringHelper__handleRenameRefactor_closure, RefactoringHelper__handleRenameRefactor__closure, RefactoringHelper__handleAvailableRefactoringsResult_closure, RefactoringHelper__handleAvailableRefactoringsResult__closure, RefactoringHelper__handleAvailableRefactoringsResult___closure, RefactoringHelper__handleRefactoringResult_closure, RefactoringHelper__handleRefactoringResult__closure0, RefactoringHelper__handleRefactoringResult_closure0, RefactoringHelper__handleRefactoringResult_closure1, RefactoringHelper__handleRefactoringResult__closure, RefactoringHelper__handleRefactoringResult_closure2, RefactoringHelper__handleRefactoringResult_closure3, RefactoringHelper__handleRefactoringResult_closure4, RefactoringHelper__apply_closure, RefactoringHelper__apply__closure0, RefactoringHelper__apply_closure0, RefactoringHelper__apply__closure, RefactoringHelper__apply_closure1, FindReferencesHelper, FindReferencesHelper__handleReferencesEditor_closure, FindReferencesHelper__handleReferencesEditor__closure, FindReferencesView, FindReferencesView__handleSearchResults_closure, FindReferencesView__handleSearchResults__closure, FindReferencesView__handleSearchResults__closure0, _MatchParser, RunApplicationManager, RunApplicationManager_closure, RunApplicationManager_closure0, RunApplicationManager_closure1, RunApplicationManager_run_closure, RunApplicationManager__getConfigFor_closure, RunAppContextCommand, SdkManager, SdkManager_closure, SdkManager_closure0, SdkManager_closure1, SdkManager_tryToAutoConfigure_closure, SdkManager__setSdk_closure, SdkManager__handleShowSdkInfo_closure, SdkManager__handleShowSdkInfo__closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery_discoverSdk_closure0, SdkDiscovery_discoverSdk_closure1, SdkDiscovery_discoverSdk_closure2, SdkDiscovery_discoverSdk_closure3, SdkDiscovery_discoverSdk_closure4, SdkLocationJob0, State, State_onValueChanged_closure, State_saveState_closure, StateStorable, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay_closure0, JobsDialog, StatusBar, Tile, TestManager, TestManager__runTests_closure, ToolbarContribution, ToolbarContribution__buildLeftTile_closure, ToolbarContribution__buildLeftTile_closure0, ToolbarContribution__buildRightTile_closure, ToolbarContribution__buildRightTile_closure0, ToolbarContribution__buildRightTile_closure1, Toolbar, ToolbarTile, TypeHierarchyHelper, TypeHierarchyHelper__handleHierarchyEditor_closure, TypeHierarchyHelper__handleHierarchyEditor__closure, TypeHierarchyView, TypeHierarchyView__sort_closure, TypeHierarchyView__render_closure, TypeHierarchyView__render_closure0, UsageManager, UsageManager_closure, UsageManager__init_closure, UsageManager__init__closure, UsageManager__init__closure0, Disposable, Disposables, StreamSubscriptions, Edit, Property, SelectionGroup, ViewResizer, ViewResizer__init_closure0, ViewResizer__init_closure, ViewResizer__init__closure, ViewResizer__init__closure0, ViewResizer__minSize_closure, ViewResizer__targetSize_closure, ViewGroupManager, ViewGroupManager_isActiveId_closure, ViewGroupManager_hasViewId_closure, ViewGroup, ViewGroup_getViewById_closure, ViewGroup_getViewById_closure0, ViewGroup__setupResizer_closure, View, ListTreeBuilder, ListTreeBuilder__addNode_closure, ListTreeBuilder__addNode_closure0, ListTreeBuilder__addNode_closure1, ListTreeBuilder__addNode_closure2, ListTreeBuilder__addNode_closure3, Node0, Node_decendentCount_closure, DoubleCancelCommand, DoubleCancelCommand__handleCancel_closure, UnmodifiableMapMixin, CodeUnits, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, SkipIterable, EfficientLengthSkipIterable, SkipIterator, EmptyIterable, EmptyIterator, FixedLengthListMixin, UnmodifiableListMixin, UnmodifiableListBase, ReversedListIterable, Symbol0, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _awaitOnObject_closure, _awaitOnObject_closure0, _wrapJsFunctionForAsync_closure, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _SyncBroadcastStreamController__sendError_closure, _SyncBroadcastStreamController__sendDone_closure, _AsyncBroadcastStreamController, Future, closure0, Future_forEach_closure, Future_forEach__closure, Future_forEach__closure0, Future_doWhile_closure, TimeoutException, _Completer, _AsyncCompleter, _SyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _Future_timeout_closure, _Future_timeout_closure0, _Future_timeout_closure1, _AsyncCallbackEntry, Stream, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_last_closure, Stream_last_closure0, StreamSubscription, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _SyncStreamController, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _StreamIteratorImpl, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _StateStreamSubscription, _SkipStream, AsyncError, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _HashMap, _HashMap_values_closure, _HashMap_addAll_closure, _IdentityHashMap, _CustomHashMap, _CustomHashMap_closure, _HashMapKeyIterable, _HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, _LinkedHashSetCell, _LinkedHashSetIterator, UnmodifiableListView, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, MapMixin, _MapBaseValueIterable, _MapBaseValueIterator, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMap_addAll_closure, _JsonMapKeyIterable, Base64Codec, Base64Decoder, _Base64Decoder, Codec, Converter, Encoding, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, Utf8Codec, Utf8Encoder, _Utf8Encoder, Utf8Decoder, _Utf8Decoder, _Utf8Decoder_convert_scanOneByteCharacters, _Utf8Decoder_convert_addSingleBytes, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _Exception, FormatException, IntegerDivisionByZeroException, Expando, Function, $int, Iterable, Iterator, List, Map, Null, num, Object, Match, RegExp, StackTrace, _StringStackTrace, Stopwatch, String, Runes, RuneIterator, StringBuffer, Symbol, Uri, Uri_parse_parseAuth, Uri__checkNonWindowsPathReservedCharacters_closure, Uri__makePath_closure, Uri__makeQuery_closure, Uri_hashCode_combine, Uri_parseIPv4Address_error, Uri_parseIPv4Address_closure, Uri_parseIPv6Address_error, Uri_parseIPv6Address_parseHex, UriData, HtmlElement, AnchorElement, ApplicationCacheErrorEvent, AreaElement, BaseElement, Blob, BodyElement, ButtonElement, CanvasElement, CharacterData, CompositionEvent, CssStyleDeclaration, Interceptor_CssStyleDeclarationBase, _CssStyleDeclarationSet, Object_CssStyleDeclarationBase, _CssStyleDeclarationSet_closure, _CssStyleDeclarationSet_setProperty_closure, CssStyleDeclarationBase, DeviceLightEvent, DivElement, Document0, DocumentFragment, DomError, DomException, DomRectReadOnly, DomSettableTokenList, DomTokenList, _ChildrenElementList, _FrozenElementList, Element, closure1, ScrollAlignment, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, File0, FileList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, FormElement, HtmlCollection, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, HtmlDocument, HttpRequest, HttpRequest_getString_closure, HttpRequest_request_closure, HttpRequestEventTarget, IFrameElement, ImageData, ImageElement, InputElement, KeyboardEvent, KeygenElement, LIElement, LinkElement, Location0, MapElement, MediaElement, MediaKeyEvent, MediaKeyMessageEvent, MediaStream, MenuElement, MenuItemElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, MidiOutput, MidiPort, MouseEvent, Navigator, NavigatorUserMediaError, NetworkInformation, _ChildNodeListLazy, Node, NodeList, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, OListElement, ObjectElement, OptGroupElement, OptionElement, OutputElement, ParamElement, PluginPlaceholderElement, PositionError, ProgressElement0, ProgressEvent, PushEvent, Range0, ScriptElement0, SelectElement, ShadowRoot, SourceElement, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesisEvent, Storage, Storage_addAll_closure, Storage_keys_closure, Storage_values_closure, StyleElement, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, TextAreaElement, TextEvent, TouchEvent, TrackElement, UIEvent, VideoElement, WebSocket, Window, _Attr, _ClientRect, _DocumentType, _DomRect, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, _SpeechRecognitionResultList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, _AttributeMap, _AttributeMap_addAll_closure, _ElementAttributeMap, _MarginCssRect, CssRect, _MultiElementCssClassSet, closure2, _MultiElementCssClassSet_readClasses_closure, _MultiElementCssClassSet_modify_closure, _MultiElementCssClassSet_toggle_closure, _MultiElementCssClassSet_remove_closure, _ElementCssClassSet, Dimension, _EventStream, _ElementEventStreamImpl, _ElementListEventStreamImpl, _EventStreamSubscription, _StreamPool, _StreamPool_add_closure, _Html5NodeValidator, ImmutableListMixin, NodeValidatorBuilder, NodeValidatorBuilder_allowsElement_closure, NodeValidatorBuilder_allowsAttribute_closure, _SimpleNodeValidator, _SimpleNodeValidator_closure, _SimpleNodeValidator_closure0, _TemplatingNodeValidator, _TemplatingNodeValidator_closure, _SvgNodeValidator, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, NodeValidator, _SameOriginUriPolicy, _ValidatingTreeSanitizer, _ValidatingTreeSanitizer_sanitizeTree_walk, KeyRange, AElement, AltGlyphElement, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, MarkerElement, MaskElement, PatternElement, RectElement, ScriptElement, StyleElement0, _AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, UseElement, ViewElement, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGGlyphRefElement, _SVGMPathElement, SqlError, Capability, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, _JSRandom, Point0, _RectangleBase, Rectangle, MutableRectangle, DefaultEquality, IterableEquality, _UnorderedEquality, UnorderedIterableEquality, Uint8List, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, FlutterDev, Haikunator_haikunate_closure, _AcceptStructuredClone, _AcceptStructuredClone_walk_closure, _AcceptStructuredCloneDart2Js, convertNativePromiseToDartFuture_closure, convertNativePromiseToDartFuture_closure0, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, FilteredElementList, FilteredElementList__iterable_closure, FilteredElementList_removeRange_closure, Logger, closure, Level, LogRecord, BlockParser, BlockSyntax, BlockSyntax_isAtBlockEnd_closure, EmptyBlockSyntax, SetextHeaderSyntax, HeaderSyntax, BlockquoteSyntax, CodeBlockSyntax, FencedCodeBlockSyntax, HorizontalRuleSyntax, BlockHtmlSyntax, ListItem, ListSyntax, ListSyntax_parse_endItem, ListSyntax_parse_tryMatch, UnorderedListSyntax, OrderedListSyntax, ParagraphSyntax, Node1, Element1, Text, Document, Link, HtmlRenderer, HtmlRenderer_visitElementBefore_closure, InlineParser, InlineSyntax, TextSyntax, AutolinkSyntax, TagSyntax, LinkSyntax, ImageLinkSyntax, ImageLinkSyntax__createElement_closure, CodeSyntax, TagState, MIconButton, MTabGroup, MTabGroup__handleTabAdd_closure, MTab, MTab_closure, MList, MList_update_closure, MList_update_closure0, NavigationManager, NavigationPosition, Context, Context_join_closure, Context_joinAll_closure, Context_split_closure, _validateArgList_closure, InternalStyle, ParsedPath, ParsedPath_normalize_closure, PathException, Style, PosixStyle, UrlStyle, WindowsStyle, Version0, Version__splitParts_closure, QueueList, Object_ListMixin0, SourceFile, FileLocation, FileSpan, _FileSpan, SourceLocation, SourceLocationMixin, SourceSpan, SourceSpanException, SourceSpanFormatException, SourceSpanMixin, StatusViewManager, StatusViewManager_closure, StatusView, StatusView_closure, StatusView__createPluginSection_closure, StatusView__createPluginSection_closure0, StatusView__createPluginSection_closure1, StatusView__createPluginSection_closure2, StatusView__createPluginSection__closure, StatusView__createDartSdkSection_closure, StatusView__createDartSdkSection_closure0, StatusView__createDartSdkSection__closure, StatusView__createDartSdkSection_closure1, StatusView__createAnalysisServerSection_closure, StatusView__createAnalysisServerSection__closure, StatusView__createAnalysisServerSection__closure0, StatusView__createAnalysisServerSection_closure0, StatusView__createAnalyticsSection_closure, StatusView__handleSdkBrowse_closure, StatusHeader, _getPlatformVersions_closure, EagerSpanScanner, _EagerSpanScannerState, StringScannerException, SpanScanner, StringScanner, Analytics, AnalyticsMock, AnalyticsHtml, postEncode_closure, ThrottlingBucket, AnalyticsImpl, AnalyticsImpl__sendPayload_closure, AnalyticsImpl__recordFuture_closure, PersistentProperties, PostHandler, HtmlPostHandler, HtmlPostHandler_sendPost_closure, HtmlPersistentProperties, _createObject_closure, VmService, VmService_dispose_closure, RPCError, Log, BoundField, BoundVariable, Breakpoint, ClassRef, Class, ClassList, CodeRef, Code, ContextRef, Context0, ContextElement, ErrorRef, Error0, Event1, FieldRef, Field, Flag, FlagList, Frame, FuncRef, Func, InstanceRef, Instance, IsolateRef, Isolate, LibraryRef, Library, LibraryDependency, MapAssociation, Message, NullRef, Null0, ObjRef, Obj, Response, Sentinel, ScriptRef, Script, SourceLocation0, Stack, Success, TypeArgumentsRef, TypeArguments, UnresolvedSourceLocation, Version, VMRef, VM, _DeepEquals, deepHashCode__deepHashCode, deepHashCode__deepHashCode_closure, Event0, DocumentStartEvent, DocumentEndEvent, AliasEvent, _ValueEvent, ScalarEvent, SequenceStartEvent, MappingStartEvent, EventType, YamlException, Loader, Loader__parseNumberValue_closure, Loader__parseNumberValue_closure0, Loader__parseNumberValue_closure1, Loader__parseNumberValue_closure2, Loader__parseNumberValue_closure3, Parser, Parser__parseNode_parseAnchor, Parser__parseNode_parseTag, _State, Scanner, Scanner__fetchMoreTokens_closure, _SimpleKey, _Chomping, ScalarStyle, CollectionStyle, Token, VersionDirectiveToken, TagDirectiveToken, AnchorToken, AliasToken, TagToken, ScalarToken, TokenType, Pair, closure3, YamlDocument, VersionDirective, TagDirective, YamlNode, YamlMap, YamlNode_MapMixin, YamlNode_MapMixin_UnmodifiableMapMixin, YamlMap_keys_closure, YamlList, YamlNode_ListMixin, YamlScalar];
   };
   function setupProgram(programData, typesOffset) {
     "use strict";
@@ -19187,7 +19916,7 @@ self._domRemove = function(element) {
       }],
       noSuchMethod$1: ["super$Interceptor$noSuchMethod", function(receiver, invocation) {
         throw H.wrapException(P.NoSuchMethodError$(receiver, invocation.get$memberName(), invocation.get$positionalArguments(), invocation.get$namedArguments(), null));
-      }, null, "get$noSuchMethod", 2, 0, null, 40],
+      }, null, "get$noSuchMethod", 2, 0, null, 45],
       get$runtimeType: function(receiver) {
         return new H.TypeImpl(H.getRuntimeTypeString(receiver), null);
       },
@@ -19222,7 +19951,7 @@ self._domRemove = function(element) {
       },
       noSuchMethod$1: [function(receiver, invocation) {
         return this.super$Interceptor$noSuchMethod(receiver, invocation);
-      }, null, "get$noSuchMethod", 2, 0, null, 40]
+      }, null, "get$noSuchMethod", 2, 0, null, 45]
     },
     JavaScriptObject: {
       "^": "Interceptor;",
@@ -20353,7 +21082,7 @@ self._domRemove = function(element) {
         case "error":
           throw H.wrapException(t1.$index(msg, "msg"));
       }
-    }, null, null, 4, 0, null, 89, 0],
+    }, null, null, 4, 0, null, 133, 0],
     IsolateNatives__log: function(msg) {
       var trace, t1, t2, exception;
       if (init.globalState.isWorker === true) {
@@ -20408,7 +21137,7 @@ self._domRemove = function(element) {
       static: {_Manager__serializePrintMessage: [function(object) {
           var t1 = P.LinkedHashMap__makeLiteral(["command", "print", "msg", object]);
           return new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.$int)).serialize$1(t1);
-        }, null, null, 2, 0, null, 56]}
+        }, null, null, 2, 0, null, 55]}
     },
     _IsolateContext: {
       "^": "Object;id>,ports,weakPorts,isolateStatics<,controlPort<,pauseCapability,terminateCapability,initialized?,isPaused<,delayedEvents<,pauseTokens,doneHandlers,_scheduledControlEvents,_isExecutingEvent,errorsAreFatal,errorPorts",
@@ -20992,7 +21721,7 @@ self._domRemove = function(element) {
         if (!(x instanceof P.Object))
           this.unsupported$1(x);
         return ["dart", init.classIdExtractor(x), this.serializeArrayInPlace$1(init.classFieldsExtractor(x))];
-      }, "call$1", "get$serialize", 2, 0, 0, 47],
+      }, "call$1", "get$serialize", 2, 0, 0, 57],
       unsupported$2: function(x, message) {
         throw H.wrapException(new P.UnsupportedError(H.S(message == null ? "Can't transmit:" : message) + " " + H.S(x)));
       },
@@ -21149,7 +21878,7 @@ self._domRemove = function(element) {
           default:
             throw H.wrapException("couldn't deserialize: " + H.S(x));
         }
-      }, "call$1", "get$deserialize", 2, 0, 0, 47],
+      }, "call$1", "get$deserialize", 2, 0, 0, 57],
       deserializeArrayInPlace$1: function(x) {
         var t1, i, t2;
         t1 = J.getInterceptor$asx(x);
@@ -21365,7 +22094,7 @@ self._domRemove = function(element) {
     },
     Primitives_dateNow: [function() {
       return Date.now();
-    }, "call$0", "_js_helper_Primitives_dateNow$closure", 0, 0, 123],
+    }, "call$0", "_js_helper_Primitives_dateNow$closure", 0, 0, 131],
     Primitives_initTicker: function() {
       var $window, performance;
       if ($.Primitives_timerFrequency != null)
@@ -21742,7 +22471,7 @@ self._domRemove = function(element) {
         return H._callInIsolate(isolate, new H.invokeClosure_closure3(closure, arg1, arg2, arg3, arg4));
       else
         throw H.wrapException(P.Exception_Exception("Unsupported number of arguments for wrapped closure"));
-    }, null, null, 14, 0, null, 117, 39, 113, 66, 86, 129, 73],
+    }, null, null, 14, 0, null, 132, 40, 125, 124, 117, 135, 109],
     convertDartClosureToJS: function(closure, arity) {
       var $function;
       if (closure == null)
@@ -22500,7 +23229,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(key) {
         return this.$this._fetch$1(key);
-      }, null, null, 2, 0, null, 48, "call"]
+      }, null, null, 2, 0, null, 62, "call"]
     },
     _ConstantMapKeyIterable: {
       "^": "Iterable;__js_helper$_map",
@@ -22594,7 +23323,7 @@ self._domRemove = function(element) {
       parameterName$1: [function(parameter) {
         var metadataIndex = this.data[parameter + this.optionalParameterCount + 3];
         return init.metadata[metadataIndex];
-      }, "call$1", "get$parameterName", 2, 0, 19],
+      }, "call$1", "get$parameterName", 2, 0, 23],
       defaultValue$1: function(_, parameter) {
         var t1 = this.requiredParameterCount;
         if (typeof parameter !== "number")
@@ -22622,7 +23351,7 @@ self._domRemove = function(element) {
       }
     },
     Primitives_functionNoSuchMethod_closure: {
-      "^": "Closure:159;_box_0,$arguments,namedArgumentList",
+      "^": "Closure:130;_box_0,$arguments,namedArgumentList",
       call$2: function($name, argument) {
         var t1 = this._box_0;
         t1.names = t1.names + "$" + H.S($name);
@@ -23243,7 +23972,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(each) {
         return this.$this.$index(0, each);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 28, "call"]
     },
     JsLinkedHashMap_addAll_closure: {
       "^": "Closure;$this",
@@ -23321,7 +24050,7 @@ self._domRemove = function(element) {
       }
     },
     initHooks_closure0: {
-      "^": "Closure:122;getUnknownTag",
+      "^": "Closure:65;getUnknownTag",
       call$2: function(o, tag) {
         return this.getUnknownTag(o, tag);
       }
@@ -23636,12 +24365,17 @@ self._domRemove = function(element) {
           return result;
         else
           return;
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     },
     Atom: {
       "^": "ProxyHolder;_commands,_config,_contextMenu,_grammars,_notifications,_packages,_project,_views,_workspace,obj",
       getVersion$0: function() {
         return this.invoke$1("getVersion");
+      },
+      pickFolder$0: function() {
+        var completer = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
+        this.invoke$2("pickFolder", new E.Atom_pickFolder_closure(completer));
+        return completer.future;
       },
       Atom$0: function() {
         var t1, t2, t3;
@@ -23658,6 +24392,19 @@ self._domRemove = function(element) {
         this._views = new E.ViewRegistry(t2.$index(t1, "views"));
         this._workspace = new E.Workspace(t2.$index(t1, "workspace"));
       }
+    },
+    Atom_pickFolder_closure: {
+      "^": "Closure:0;completer",
+      call$1: [function(result) {
+        var t1, t2, t3;
+        t1 = J.getInterceptor(result);
+        t2 = !!t1.$isList && t1.get$isNotEmpty(result);
+        t3 = this.completer;
+        if (t2)
+          t3.complete$1(0, t1.get$first(result));
+        else
+          t3.complete$1(0, null);
+      }, null, null, 2, 0, null, 2, "call"]
     },
     ViewRegistry: {
       "^": "ProxyHolder;obj"
@@ -23710,13 +24457,13 @@ self._domRemove = function(element) {
       "^": "Closure:0;callback",
       call$1: [function(ed) {
         return this.callback.call$1(new E.TextEditor(E._cvt(ed)));
-      }, null, null, 2, 0, null, 109, "call"]
+      }, null, null, 2, 0, null, 106, "call"]
     },
     Workspace_observeActivePaneItem_closure: {
       "^": "Closure:0;callback",
       call$1: [function(item) {
         return this.callback.call$1(item);
-      }, null, null, 2, 0, null, 60, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     Workspace_open_closure: {
       "^": "Closure:0;url",
@@ -23777,7 +24524,7 @@ self._domRemove = function(element) {
         return H.setRuntimeTypeInfo(new P._BroadcastStream(controller), [H.getTypeArgumentByIndex(controller, 0)]);
       }, function(keyPath) {
         return this.onDidChange$2(keyPath, null);
-      }, "onDidChange$1", "call$2", "call$1", "get$onDidChange", 2, 2, 117, 3]
+      }, "onDidChange$1", "call$2", "call$1", "get$onDidChange", 2, 2, 70, 3]
     },
     Config_onDidChange_closure: {
       "^": "Closure:1;_box_0",
@@ -23807,7 +24554,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(item) {
         return item.toJs$0();
-      }, null, null, 2, 0, null, 60, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     ContextMenuItem: {
       "^": "Object;",
@@ -23860,10 +24607,10 @@ self._domRemove = function(element) {
       }
     },
     NotificationManager__options_closure: {
-      "^": "Closure:106;",
+      "^": "Closure:122;",
       call$1: [function(nb) {
         return nb.toProxy$0();
-      }, null, null, 2, 0, null, 63, "call"]
+      }, null, null, 2, 0, null, 103, "call"]
     },
     Notification: {
       "^": "ProxyHolder;obj",
@@ -23965,7 +24712,7 @@ self._domRemove = function(element) {
         if (this.stderr)
           J.toggle$1$x(t1.get$classes(div), "text-error");
         return div;
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 61, "call"]
     },
     PackageManager: {
       "^": "ProxyHolder;obj"
@@ -23983,7 +24730,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(dir) {
         return new E.Directory(dir);
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     Entry: {
       "^": "ProxyHolder;",
@@ -24048,7 +24795,7 @@ self._domRemove = function(element) {
       call$1: [function(entry) {
         entry = E._cvt(entry);
         return entry.callMethod$1("isFile") === true ? new E.File(entry) : new E.Directory(entry);
-      }, null, null, 2, 0, null, 44, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     },
     TextEditorView: {
       "^": "ProxyHolder;obj"
@@ -24078,10 +24825,10 @@ self._domRemove = function(element) {
       },
       isEmpty$0: [function(_) {
         return this.invoke$1("isEmpty");
-      }, "call$0", "get$isEmpty", 0, 0, 11],
+      }, "call$0", "get$isEmpty", 0, 0, 12],
       isNotEmpty$0: [function(_) {
         return this.invoke$1("isEmpty") !== true;
-      }, "call$0", "get$isNotEmpty", 0, 0, 11],
+      }, "call$0", "get$isNotEmpty", 0, 0, 12],
       insertText$2$options: function(text, options) {
         var result, t1;
         result = this.invoke$3("insertText", text, options);
@@ -24166,10 +24913,10 @@ self._domRemove = function(element) {
       }
     },
     TextEditor_setSelectedBufferRanges_closure: {
-      "^": "Closure:154;",
+      "^": "Closure:62;",
       call$1: [function(r) {
         return r.get$obj();
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     TextEditor_onDidChangeCursorPosition_closure: {
       "^": "Closure:0;",
@@ -24215,10 +24962,10 @@ self._domRemove = function(element) {
       "^": "ProxyHolder;obj",
       isEmpty$0: [function(_) {
         return this.invoke$1("isEmpty");
-      }, "call$0", "get$isEmpty", 0, 0, 11],
+      }, "call$0", "get$isEmpty", 0, 0, 12],
       isNotEmpty$0: [function(_) {
         return this.invoke$1("isEmpty") !== true;
-      }, "call$0", "get$isNotEmpty", 0, 0, 11],
+      }, "call$0", "get$isNotEmpty", 0, 0, 12],
       get$start: function(_) {
         return new E.Point(E._cvt(J.$index$asx(this.obj, "start")));
       },
@@ -24321,7 +25068,7 @@ self._domRemove = function(element) {
         }}
     },
     BufferedProcess_create_closure: {
-      "^": "Closure:12;onWillThrowError",
+      "^": "Closure:13;onWillThrowError",
       call$1: [function(e) {
         e.callMethod$1("handle");
         this.onWillThrowError.call$1(J.$index$asx(e, "error"));
@@ -24526,10 +25273,10 @@ self._domRemove = function(element) {
         if (removedProjects._collection$_length !== 0 || addedProjects._collection$_length !== 0)
           this._syncRoots$0();
         this._checkTrigger$0();
-      }, "call$1", "get$_reconcileRoots", 2, 0, 105, 67],
+      }, "call$1", "get$_reconcileRoots", 2, 0, 71, 99],
       _handleSdkChange$1: [function(newSdk) {
         this._checkTrigger$0();
-      }, "call$1", "get$_handleSdkChange", 2, 0, 98, 68],
+      }, "call$1", "get$_handleSdkChange", 2, 0, 72, 97],
       _focusedEditorChanged$1: [function(editor) {
         var t1, path, t2;
         t1 = this._server;
@@ -24757,7 +25504,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(dir) {
         return J.get$path$x(dir);
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     AnalysisServer__reconcileRoots_closure: {
       "^": "Closure:0;",
@@ -24785,7 +25532,7 @@ self._domRemove = function(element) {
       }, null, null, 0, 0, null, "call"]
     },
     AnalysisServer_filterSearchResults_closure0: {
-      "^": "Closure:68;_box_0,id,controller",
+      "^": "Closure:76;_box_0,id,controller",
       call$1: [function(result) {
         var t1, t2, r, t3;
         t1 = J.getInterceptor$x(result);
@@ -24840,7 +25587,7 @@ self._domRemove = function(element) {
           Q.Dependencies_instance().getDependency$1(C.Type_ErrorRepository_jfx).clearAll$0();
         }
         return;
-      }, null, null, 2, 0, null, 54, "call"]
+      }, null, null, 2, 0, null, 52, "call"]
     },
     AnalysisServer__initNewServer_closure1: {
       "^": "Closure:0;$this",
@@ -24901,7 +25648,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 92, "call"]
     },
     AnalysisServer__showDiagnostics_closure: {
-      "^": "Closure:60;",
+      "^": "Closure:79;",
       call$1: [function(diagnostics) {
         var contexts, t1, info;
         contexts = diagnostics.get$contexts();
@@ -24909,10 +25656,10 @@ self._domRemove = function(element) {
         info = "" + t1.get$length(contexts) + " " + G.pluralize("context", t1.get$length(contexts)) + "\n\n" + t1.map$1(contexts, new X.AnalysisServer__showDiagnostics__closure()).join$1(0, "\n\n");
         t1 = $.$get$atom()._notifications;
         t1.invoke$3("addInfo", "Analysis server diagnostics", t1._options$5$buttons$description$detail$dismissable$icon(null, null, info, true, null));
-      }, null, null, 2, 0, null, 98, "call"]
+      }, null, null, 2, 0, null, 90, "call"]
     },
     AnalysisServer__showDiagnostics__closure: {
-      "^": "Closure:70;",
+      "^": "Closure:87;",
       call$1: [function(context) {
         var fileCount, exceptions;
         fileCount = J.$add$ns(context.get$explicitFileCount(), context.get$implicitFileCount());
@@ -24920,7 +25667,7 @@ self._domRemove = function(element) {
         if (exceptions == null)
           exceptions = [];
         return C.JSString_methods.trim$0(H.S(J.get$name$x(context)) + "\n  " + H.S(fileCount) + " total analyzed files (" + H.S(context.get$explicitFileCount()) + " explicit), queue length " + H.S(context.get$workItemQueueLength()) + "\n  " + (exceptions && C.JSArray_methods).join$1(exceptions, "\n  "));
-      }, null, null, 2, 0, null, 22, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     AnalysisServer__showDiagnostics_closure0: {
       "^": "Closure:0;",
@@ -25094,10 +25841,10 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(v) {
         return $.$get$_logger4().info$1("version " + H.S(J.get$version$x(v)));
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     _AnalysisServerWrapper_setup_closure0: {
-      "^": "Closure:74;$this",
+      "^": "Closure:99;$this",
       call$1: [function($status) {
         var t1, t2;
         if ($status.get$analysis() != null) {
@@ -25109,10 +25856,10 @@ self._domRemove = function(element) {
             H.throwExpression(t1._addEventError$0());
           t1._sendData$1(t2);
         }
-      }, null, null, 2, 0, null, 58, "call"]
+      }, null, null, 2, 0, null, 59, "call"]
     },
     _AnalysisServerWrapper_setup_closure1: {
-      "^": "Closure:77;",
+      "^": "Closure:105;",
       call$1: [function(error) {
         var st, t1, t2;
         st = error.get$stackTrace() == null ? null : new P._StringStackTrace(error.get$stackTrace());
@@ -25130,7 +25877,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 9, "call"]
     },
     _AnalysisServerWrapper_setup_closure2: {
-      "^": "Closure:85;$this",
+      "^": "Closure:107;$this",
       call$1: [function(data) {
         var t1 = this.$this;
         if (J.$eq$(J.get$kind$x(data), "SERVER"))
@@ -25206,14 +25953,14 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 6, "call"]
     },
     _AnalysisServerWrapper__startProcess_closure1: {
-      "^": "Closure:35;completer",
+      "^": "Closure:34;completer",
       call$1: [function(exitCode) {
         var t1;
         $.$get$_logger4().fine$1("exited with code " + H.S(exitCode));
         t1 = this.completer;
         if (t1.future._state === 0)
           t1.complete$1(0, exitCode);
-      }, null, null, 2, 0, null, 54, "call"]
+      }, null, null, 2, 0, null, 52, "call"]
     },
     _AnalysisServerWrapper__messageWriter_closure: {
       "^": "Closure:3;process",
@@ -25306,15 +26053,15 @@ self._domRemove = function(element) {
         this._statusElement = t3;
         t4 = K.CoreElement$("button", null, "btn btn-sm", "Start");
         t4.clazz$1("inline-block-tight");
-        t4.click$1(0, this.get$_handleServerStart());
+        t4.click$1(0, this.get$_analysis_server_dialog$_handleServerStart());
         this._startButton = t4;
         t5 = K.CoreElement$("button", null, "btn btn-sm", "Reanalyze");
         t5.clazz$1("inline-block-tight");
-        t5.click$1(0, this.get$_handleReanalyze());
+        t5.click$1(0, this.get$_analysis_server_dialog$_handleReanalyze());
         this._reanalyzeButton = t5;
         t6 = K.CoreElement$("button", null, "btn btn-sm", "Shutdown");
         t6.clazz$1("inline-block-tight");
-        t6.click$1(0, this.get$_handleServerStop());
+        t6.click$1(0, this.get$_analysis_server_dialog$_handleServerStop());
         this._stopButton = t6;
         t2.add$1(0, [t3, t4, t5, t6]);
         t6 = K.CoreElement$("div", null, "last-message text-subtle", null);
@@ -25350,7 +26097,7 @@ self._domRemove = function(element) {
           t2 = H.S(message);
           J.set$text$x(t1.element, t2);
         }
-      }, "call$1", "get$_logTraffic", 2, 0, 8, 10],
+      }, "call$1", "get$_logTraffic", 2, 0, 9, 10],
       _updateStatus$1$updateTitle: function(updateTitle) {
         var t1, t2;
         if (this._statusElement == null)
@@ -25420,18 +26167,18 @@ self._domRemove = function(element) {
         });
         return P._asyncHelper(null, $async$_updateTitle$0, $async$completer, null);
       },
-      _handleServerStart$0: [function() {
+      _analysis_server_dialog$_handleServerStart$0: [function() {
         E.trackCommand("dartlang:analysis-server-start");
         J.start$0$x(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC));
-      }, "call$0", "get$_handleServerStart", 0, 0, 2],
-      _handleReanalyze$0: [function() {
+      }, "call$0", "get$_analysis_server_dialog$_handleServerStart", 0, 0, 2],
+      _analysis_server_dialog$_handleReanalyze$0: [function() {
         E.trackCommand("dartlang:reanalyze-sources");
         Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).reanalyzeSources$0();
-      }, "call$0", "get$_handleReanalyze", 0, 0, 2],
-      _handleServerStop$0: [function() {
+      }, "call$0", "get$_analysis_server_dialog$_handleReanalyze", 0, 0, 2],
+      _analysis_server_dialog$_handleServerStop$0: [function() {
         E.trackCommand("dartlang:analysis-server-stop");
         Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).shutdown$0();
-      }, "call$0", "get$_handleServerStop", 0, 0, 2],
+      }, "call$0", "get$_analysis_server_dialog$_handleServerStop", 0, 0, 2],
       AnalysisServerDialog$0: function() {
         this._analysis_server_dialog$_disposables._disposables.push($.$get$atom()._commands.add$3(0, "atom-workspace", "dartlang:analysis-server-status", new S.AnalysisServerDialog_closure(this)));
         Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$onActive().listen$1(new S.AnalysisServerDialog_closure0(this));
@@ -25566,7 +26313,7 @@ self._domRemove = function(element) {
           e = t1;
           $.$get$_logger9().severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e));
         }
-      }, "call$1", "get$_processMessage", 2, 0, 8, 10],
+      }, "call$1", "get$_processMessage", 2, 0, 9, 10],
       _call$2: function(method, args) {
         var id, t1, m, message, t2;
         id = "" + ++this._id;
@@ -25648,20 +26395,20 @@ self._domRemove = function(element) {
       static: {ServerError_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.ServerError(t1.$index(m, "isFatal"), t1.$index(m, "message"), t1.$index(m, "stackTrace"));
-        }, "call$1", "analysis_server_lib_ServerError_parse$closure", 2, 0, 124, 5]}
+        }, "call$1", "analysis_server_lib_ServerError_parse$closure", 2, 0, 132, 5]}
     },
     ServerStatus: {
       "^": "Object;analysis<,pub",
       static: {ServerStatus_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.ServerStatus(E.AnalysisStatus_parse(t1.$index(m, "analysis")), E.PubStatus_parse(t1.$index(m, "pub")));
-        }, "call$1", "analysis_server_lib_ServerStatus_parse$closure", 2, 0, 125, 5]}
+        }, "call$1", "analysis_server_lib_ServerStatus_parse$closure", 2, 0, 133, 5]}
     },
     VersionResult: {
       "^": "Object;version>",
       static: {VersionResult_parse: [function(m) {
           return new E.VersionResult(J.$index$asx(m, "version"));
-        }, "call$1", "analysis_server_lib_VersionResult_parse$closure", 2, 0, 126, 5]}
+        }, "call$1", "analysis_server_lib_VersionResult_parse$closure", 2, 0, 134, 5]}
     },
     AnalysisDomain: {
       "^": "Domain;server,name,_analysis_server_lib$_controllers,_streams",
@@ -25682,7 +26429,7 @@ self._domRemove = function(element) {
           t1 = J.getInterceptor$asx(m);
           t2 = t1.$index(m, "file");
           return new E.AnalysisErrors(t2, t1.$index(m, "errors") == null ? null : J.map$1$ax(t1.$index(m, "errors"), new E.AnalysisErrors_parse_closure()).toList$0(0));
-        }, "call$1", "analysis_server_lib_AnalysisErrors_parse$closure", 2, 0, 127, 5]}
+        }, "call$1", "analysis_server_lib_AnalysisErrors_parse$closure", 2, 0, 135, 5]}
     },
     AnalysisErrors_parse_closure: {
       "^": "Closure:0;",
@@ -25695,7 +26442,7 @@ self._domRemove = function(element) {
       static: {AnalysisFlushResults_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.AnalysisFlushResults(t1.$index(m, "files") == null ? null : P.List_List$from(t1.$index(m, "files"), true, null));
-        }, "call$1", "analysis_server_lib_AnalysisFlushResults_parse$closure", 2, 0, 128, 5]}
+        }, "call$1", "analysis_server_lib_AnalysisFlushResults_parse$closure", 2, 0, 136, 5]}
     },
     AnalysisNavigation: {
       "^": "Object;file<,regions<,targets<,files>",
@@ -25706,7 +26453,7 @@ self._domRemove = function(element) {
           t3 = t1.$index(m, "regions") == null ? null : J.map$1$ax(t1.$index(m, "regions"), new E.AnalysisNavigation_parse_closure()).toList$0(0);
           t4 = t1.$index(m, "targets") == null ? null : J.map$1$ax(t1.$index(m, "targets"), new E.AnalysisNavigation_parse_closure0()).toList$0(0);
           return new E.AnalysisNavigation(t2, t3, t4, t1.$index(m, "files") == null ? null : P.List_List$from(t1.$index(m, "files"), true, null));
-        }, "call$1", "analysis_server_lib_AnalysisNavigation_parse$closure", 2, 0, 129, 5]}
+        }, "call$1", "analysis_server_lib_AnalysisNavigation_parse$closure", 2, 0, 137, 5]}
     },
     AnalysisNavigation_parse_closure: {
       "^": "Closure:0;",
@@ -25725,14 +26472,14 @@ self._domRemove = function(element) {
       static: {AnalysisOutline_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.AnalysisOutline(t1.$index(m, "file"), t1.$index(m, "kind"), E.Outline_parse(t1.$index(m, "outline")), t1.$index(m, "libraryName"));
-        }, "call$1", "analysis_server_lib_AnalysisOutline_parse$closure", 2, 0, 130, 5]}
+        }, "call$1", "analysis_server_lib_AnalysisOutline_parse$closure", 2, 0, 138, 5]}
     },
     HoverResult: {
       "^": "Object;hovers<",
       static: {HoverResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.HoverResult(t1.$index(m, "hovers") == null ? null : J.map$1$ax(t1.$index(m, "hovers"), new E.HoverResult_parse_closure()).toList$0(0));
-        }, "call$1", "analysis_server_lib_HoverResult_parse$closure", 2, 0, 131, 5]}
+        }, "call$1", "analysis_server_lib_HoverResult_parse$closure", 2, 0, 139, 5]}
     },
     HoverResult_parse_closure: {
       "^": "Closure:0;",
@@ -25759,7 +26506,7 @@ self._domRemove = function(element) {
           t4 = t1.$index(m, "replacementLength");
           t5 = t1.$index(m, "results") == null ? null : J.map$1$ax(t1.$index(m, "results"), new E.CompletionResults_parse_closure()).toList$0(0);
           return new E.CompletionResults(t2, t3, t4, t5, t1.$index(m, "isLast"));
-        }, "call$1", "analysis_server_lib_CompletionResults_parse$closure", 2, 0, 132, 5]}
+        }, "call$1", "analysis_server_lib_CompletionResults_parse$closure", 2, 0, 140, 5]}
     },
     CompletionResults_parse_closure: {
       "^": "Closure:0;",
@@ -25771,7 +26518,7 @@ self._domRemove = function(element) {
       "^": "Object;id>",
       static: {SuggestionsResult_parse: [function(m) {
           return new E.SuggestionsResult(J.$index$asx(m, "id"));
-        }, "call$1", "analysis_server_lib_SuggestionsResult_parse$closure", 2, 0, 133, 5]}
+        }, "call$1", "analysis_server_lib_SuggestionsResult_parse$closure", 2, 0, 141, 5]}
     },
     SearchDomain: {
       "^": "Domain;server,name,_analysis_server_lib$_controllers,_streams",
@@ -25797,7 +26544,7 @@ self._domRemove = function(element) {
           t2 = t1.$index(m, "id");
           t3 = t1.$index(m, "results") == null ? null : J.map$1$ax(t1.$index(m, "results"), new E.SearchResults_parse_closure()).toList$0(0);
           return new E.SearchResults(t2, t3, t1.$index(m, "isLast"));
-        }, "call$1", "analysis_server_lib_SearchResults_parse$closure", 2, 0, 134, 5]}
+        }, "call$1", "analysis_server_lib_SearchResults_parse$closure", 2, 0, 142, 5]}
     },
     SearchResults_parse_closure: {
       "^": "Closure:0;",
@@ -25810,14 +26557,14 @@ self._domRemove = function(element) {
       static: {FindElementReferencesResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.FindElementReferencesResult(t1.$index(m, "id"), E.Element_parse(t1.$index(m, "element")));
-        }, "call$1", "analysis_server_lib_FindElementReferencesResult_parse$closure", 2, 0, 135, 5]}
+        }, "call$1", "analysis_server_lib_FindElementReferencesResult_parse$closure", 2, 0, 143, 5]}
     },
     TypeHierarchyResult: {
       "^": "Object;hierarchyItems<",
       static: {TypeHierarchyResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.TypeHierarchyResult(t1.$index(m, "hierarchyItems") == null ? null : J.map$1$ax(t1.$index(m, "hierarchyItems"), new E.TypeHierarchyResult_parse_closure()).toList$0(0));
-        }, "call$1", "analysis_server_lib_TypeHierarchyResult_parse$closure", 2, 0, 136, 5]}
+        }, "call$1", "analysis_server_lib_TypeHierarchyResult_parse$closure", 2, 0, 216, 5]}
     },
     TypeHierarchyResult_parse_closure: {
       "^": "Closure:0;",
@@ -25861,7 +26608,7 @@ self._domRemove = function(element) {
           t1 = J.getInterceptor$asx(m);
           t2 = t1.$index(m, "edits") == null ? null : J.map$1$ax(t1.$index(m, "edits"), new E.FormatResult_parse_closure()).toList$0(0);
           return new E.FormatResult(t2, t1.$index(m, "selectionOffset"), t1.$index(m, "selectionLength"));
-        }, "call$1", "analysis_server_lib_FormatResult_parse$closure", 2, 0, 137, 5]}
+        }, "call$1", "analysis_server_lib_FormatResult_parse$closure", 2, 0, 145, 5]}
     },
     FormatResult_parse_closure: {
       "^": "Closure:0;",
@@ -25874,7 +26621,7 @@ self._domRemove = function(element) {
       static: {AssistsResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.AssistsResult(t1.$index(m, "assists") == null ? null : J.map$1$ax(t1.$index(m, "assists"), new E.AssistsResult_parse_closure()).toList$0(0));
-        }, "call$1", "analysis_server_lib_AssistsResult_parse$closure", 2, 0, 208, 5]}
+        }, "call$1", "analysis_server_lib_AssistsResult_parse$closure", 2, 0, 146, 5]}
     },
     AssistsResult_parse_closure: {
       "^": "Closure:0;",
@@ -25887,14 +26634,14 @@ self._domRemove = function(element) {
       static: {AvailableRefactoringsResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.AvailableRefactoringsResult(t1.$index(m, "kinds") == null ? null : P.List_List$from(t1.$index(m, "kinds"), true, null));
-        }, "call$1", "analysis_server_lib_AvailableRefactoringsResult_parse$closure", 2, 0, 139, 5]}
+        }, "call$1", "analysis_server_lib_AvailableRefactoringsResult_parse$closure", 2, 0, 147, 5]}
     },
     FixesResult: {
       "^": "Object;fixes<",
       static: {FixesResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.FixesResult(t1.$index(m, "fixes") == null ? null : J.map$1$ax(t1.$index(m, "fixes"), new E.FixesResult_parse_closure()).toList$0(0));
-        }, "call$1", "analysis_server_lib_FixesResult_parse$closure", 2, 0, 140, 5]}
+        }, "call$1", "analysis_server_lib_FixesResult_parse$closure", 2, 0, 148, 5]}
     },
     FixesResult_parse_closure: {
       "^": "Closure:0;",
@@ -25913,7 +26660,7 @@ self._domRemove = function(element) {
           t5 = E.RefactoringFeedback_parse(t1.$index(m, "feedback"));
           t6 = E.SourceChange_parse(t1.$index(m, "change"));
           return new E.RefactoringResult(t2, t3, t4, t5, t6, t1.$index(m, "potentialEdits") == null ? null : P.List_List$from(t1.$index(m, "potentialEdits"), true, null));
-        }, "call$1", "analysis_server_lib_RefactoringResult_parse$closure", 2, 0, 141, 5]}
+        }, "call$1", "analysis_server_lib_RefactoringResult_parse$closure", 2, 0, 149, 5]}
     },
     RefactoringResult_parse_closure: {
       "^": "Closure:0;",
@@ -25937,13 +26684,13 @@ self._domRemove = function(element) {
       "^": "Object;edit<",
       static: {SortMembersResult_parse: [function(m) {
           return new E.SortMembersResult(E.SourceFileEdit_parse(J.$index$asx(m, "edit")));
-        }, "call$1", "analysis_server_lib_SortMembersResult_parse$closure", 2, 0, 142, 5]}
+        }, "call$1", "analysis_server_lib_SortMembersResult_parse$closure", 2, 0, 150, 5]}
     },
     OrganizeDirectivesResult: {
       "^": "Object;edit<",
       static: {OrganizeDirectivesResult_parse: [function(m) {
           return new E.OrganizeDirectivesResult(E.SourceFileEdit_parse(J.$index$asx(m, "edit")));
-        }, "call$1", "analysis_server_lib_OrganizeDirectivesResult_parse$closure", 2, 0, 143, 5]}
+        }, "call$1", "analysis_server_lib_OrganizeDirectivesResult_parse$closure", 2, 0, 151, 5]}
     },
     ExecutionDomain: {
       "^": "Domain;server,name,_analysis_server_lib$_controllers,_streams",
@@ -25973,20 +26720,20 @@ self._domRemove = function(element) {
           t2 = t1.$index(m, "file");
           t3 = t1.$index(m, "kind");
           return new E.ExecutionLaunchData(t2, t3, t1.$index(m, "referencedFiles") == null ? null : P.List_List$from(t1.$index(m, "referencedFiles"), true, null));
-        }, "call$1", "analysis_server_lib_ExecutionLaunchData_parse$closure", 2, 0, 144, 5]}
+        }, "call$1", "analysis_server_lib_ExecutionLaunchData_parse$closure", 2, 0, 152, 5]}
     },
     CreateContextResult: {
       "^": "Object;id>",
       static: {CreateContextResult_parse: [function(m) {
           return new E.CreateContextResult(J.$index$asx(m, "id"));
-        }, "call$1", "analysis_server_lib_CreateContextResult_parse$closure", 2, 0, 145, 5]}
+        }, "call$1", "analysis_server_lib_CreateContextResult_parse$closure", 2, 0, 153, 5]}
     },
     MapUriResult: {
       "^": "Object;file<,uri<",
       static: {MapUriResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.MapUriResult(t1.$index(m, "file"), t1.$index(m, "uri"));
-        }, "call$1", "analysis_server_lib_MapUriResult_parse$closure", 2, 0, 146, 5]}
+        }, "call$1", "analysis_server_lib_MapUriResult_parse$closure", 2, 0, 154, 5]}
     },
     DiagnosticDomain: {
       "^": "Domain;server,name,_analysis_server_lib$_controllers,_streams"
@@ -25996,7 +26743,7 @@ self._domRemove = function(element) {
       static: {DiagnosticsResult_parse: [function(m) {
           var t1 = J.getInterceptor$asx(m);
           return new E.DiagnosticsResult(t1.$index(m, "contexts") == null ? null : J.map$1$ax(t1.$index(m, "contexts"), new E.DiagnosticsResult_parse_closure()).toList$0(0));
-        }, "call$1", "analysis_server_lib_DiagnosticsResult_parse$closure", 2, 0, 147, 5]}
+        }, "call$1", "analysis_server_lib_DiagnosticsResult_parse$closure", 2, 0, 155, 5]}
     },
     DiagnosticsResult_parse_closure: {
       "^": "Closure:0;",
@@ -26005,7 +26752,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 4, "call"]
     },
     AddContentOverlay: {
-      "^": "Object;type>,content",
+      "^": "Object;type>,content>",
       toMap$0: function() {
         return E._mapify(P.LinkedHashMap__makeLiteral(["type", this.type, "content", this.content]));
       },
@@ -26437,7 +27184,7 @@ self._domRemove = function(element) {
       return S.loadPackageJson().then$1(new F.install_closure());
     },
     install_closure: {
-      "^": "Closure:153;",
+      "^": "Closure:55;",
       call$1: [function(info) {
         var installedPackages, requiredPackages, toInstall, t1;
         installedPackages = P.List_List$from($.$get$atom()._packages.invoke$1("getAvailablePackageNames"), true, null);
@@ -26451,7 +27198,7 @@ self._domRemove = function(element) {
         $.$get$_logger22().info$1("installing " + P.IterableBase_iterableToFullString(toInstall, "{", "}"));
         t1 = toInstall.toList$0(0);
         return Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(new F._InstallJob(t1, false, 0, "Installing Packages", null));
-      }, null, null, 2, 0, null, 81, "call"]
+      }, null, null, 2, 0, null, 88, "call"]
     },
     _InstallJob: {
       "^": "Job;packages,quitRequested,errorCount,name,schedulingRule",
@@ -26503,7 +27250,7 @@ self._domRemove = function(element) {
       }, null, null, 0, 0, null, "call"]
     },
     _InstallJob__install_closure: {
-      "^": "Closure:20;$this,helper,name",
+      "^": "Closure:24;$this,helper,name",
       call$1: [function(result) {
         result.get$stdout();
         if (result.get$stdout().length !== 0)
@@ -26640,7 +27387,7 @@ self._domRemove = function(element) {
       call$1: [function(ver) {
         this._box_0.pluginVer = ver;
         return Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$hasSdk() ? Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$sdk().getVersion$0() : null;
-      }, null, null, 2, 0, null, 21, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     getSystemDescription_closure0: {
       "^": "Closure:0;_box_0,sdkPath,atomVer,os",
@@ -26660,7 +27407,7 @@ self._domRemove = function(element) {
           } else
             description += "\nNo SDK configured.";
         return description;
-      }, null, null, 2, 0, null, 21, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     PermissiveNodeValidator: {
       "^": "Object;",
@@ -26687,7 +27434,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(map) {
         return J.$index$asx(map, "version");
-      }, null, null, 2, 0, null, 132, "call"]
+      }, null, null, 2, 0, null, 87, "call"]
     }
   }], ["atom.autocomplete", "package:atom_dartlang/atom_autocomplete.dart",, X, {
     "^": "",
@@ -26728,7 +27475,7 @@ self._domRemove = function(element) {
           f = this.getSuggestions$1(opts).then$1(new X.AutocompleteProvider__getSuggestions_closure0(timer));
         }
         return H.setRuntimeTypeInfo(new K.Promise(K.Promise__jsObjectFromFuture(f)), [null]).obj;
-      }, "call$1", "get$_getSuggestions", 2, 0, 25, 41],
+      }, "call$1", "get$_getSuggestions", 2, 0, 31, 37],
       _onDidInsertSuggestion$1: [function(options) {
         var t1, t2, t3, index, requiredImport, selectionOffset;
         t1 = $._override;
@@ -26761,14 +27508,14 @@ self._domRemove = function(element) {
           if (selectionOffset != null)
             t1.invoke$2("setCursorBufferPosition", new E.Point(E._cvt(new E.TextBuffer(E._cvt(t1.invoke$1("getBuffer"))).invoke$2("positionForCharacterIndex", selectionOffset))));
         }
-      }, "call$1", "get$_onDidInsertSuggestion", 2, 0, 9, 41],
+      }, "call$1", "get$_onDidInsertSuggestion", 2, 0, 10, 37],
       $isDisposable: 1
     },
     AutocompleteProvider__getSuggestions_closure: {
       "^": "Closure:0;",
       call$1: [function(s) {
         return s._toProxy$0();
-      }, null, null, 2, 0, null, 16, "call"]
+      }, null, null, 2, 0, null, 17, "call"]
     },
     AutocompleteProvider__getSuggestions_closure0: {
       "^": "Closure:0;timer",
@@ -26776,13 +27523,13 @@ self._domRemove = function(element) {
         var t1 = J.getInterceptor$asx(suggestions);
         $.$get$_logger25().finer$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this.timer.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
         return t1.map$1(suggestions, new X.AutocompleteProvider__getSuggestions__closure()).toList$0(0);
-      }, null, null, 2, 0, null, 69, "call"]
+      }, null, null, 2, 0, null, 84, "call"]
     },
     AutocompleteProvider__getSuggestions__closure: {
       "^": "Closure:0;",
       call$1: [function(suggestion) {
         return suggestion._toProxy$0();
-      }, null, null, 2, 0, null, 74, "call"]
+      }, null, null, 2, 0, null, 82, "call"]
     },
     AutocompleteOptions: {
       "^": "Object;editor,bufferPosition,scopeDescriptor,prefix<",
@@ -26963,7 +27710,7 @@ self._domRemove = function(element) {
           if (!J.$eq$(a.get$relevance(), b.get$relevance()))
             return J.$sub$n(b.get$relevance(), a.get$relevance());
           return C.JSString_methods.compareTo$1(J.toLowerCase$0$s(a.get$completion()), J.toLowerCase$0$s(b.get$completion()));
-        }, "call$2", "autocomplete_impl_DartAutocompleteProvider__compareSuggestions$closure", 4, 0, 148]}
+        }, "call$2", "autocomplete_impl_DartAutocompleteProvider__compareSuggestions$closure", 4, 0, 156]}
     },
     DartAutocompleteProvider_getSuggestions_closure: {
       "^": "Closure:0;",
@@ -26998,10 +27745,10 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this,text,offset,prefix",
       call$1: [function(r) {
         return this.$this._handleCompletionResults$4(this.text, this.offset, this.prefix, r);
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     DartAutocompleteProvider__handleCompletionResults_closure2: {
-      "^": "Closure:26;",
+      "^": "Closure:39;",
       call$1: function(suggestion) {
         if (J.$eq$(J.get$kind$x(suggestion), "KEYWORD"))
           return F._copySuggestion(suggestion, J.$sub$n(suggestion.get$relevance(), 1));
@@ -27029,7 +27776,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 2, "call"]
     },
     DartAutocompleteProvider__handleCompletionResults_closure3: {
-      "^": "Closure:26;_box_1,$this,prefixLower,replacementOffset",
+      "^": "Closure:39;_box_1,$this,prefixLower,replacementOffset",
       call$1: [function(cs) {
         var t1, text, snippet, t2, t3, names, completionPrefix, t4, selectionOffset, potential, t5, t6, suggestion;
         t1 = {};
@@ -27092,13 +27839,13 @@ self._domRemove = function(element) {
         if (selectionOffset != null)
           suggestion.selectionOffset = selectionOffset;
         return suggestion;
-      }, null, null, 2, 0, null, 75, "call"]
+      }, null, null, 2, 0, null, 76, "call"]
     },
     DartAutocompleteProvider__handleCompletionResults__closure: {
       "^": "Closure:0;_box_0",
       call$1: [function($name) {
         return "${" + ++this._box_0.count + ":" + H.S($name) + "}";
-      }, null, null, 2, 0, null, 42, "call"]
+      }, null, null, 2, 0, null, 50, "call"]
     },
     DartAutocompleteProvider__handleCompletionResults_closure4: {
       "^": "Closure:0;",
@@ -27263,13 +28010,13 @@ self._domRemove = function(element) {
       call$1: [function(json) {
         var t1 = J.getInterceptor$asx(json);
         this.$this.addBreakpoint$1(new A.AtomBreakpoint(t1.$index(json, "path"), t1.$index(json, "line"), t1.$index(json, "column")));
-      }, null, null, 2, 0, null, 83, "call"]
+      }, null, null, 2, 0, null, 75, "call"]
     },
     BreakpointManager_toStorable_closure: {
       "^": "Closure:14;",
       call$1: [function(bp) {
         return bp.toJsonable$0();
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 24, "call"]
     },
     AtomBreakpoint: {
       "^": "Object;path>,line<,column<",
@@ -27312,7 +28059,25 @@ self._domRemove = function(element) {
       },
       toString$0: function(_) {
         return this.get$id(this);
-      }
+      },
+      compareTo$1: function(_, other) {
+        var val, col_a, col_b;
+        if (!(other instanceof A.AtomBreakpoint))
+          return -1;
+        val = J.compareTo$1$ns(this.path, other.path);
+        if (!J.$eq$(val, 0))
+          return val;
+        val = J.$sub$n(this.line, other.line);
+        if (!J.$eq$(val, 0))
+          return val;
+        col_a = this.column;
+        if (col_a == null)
+          col_a = -1;
+        col_b = other.column;
+        return J.$sub$n(col_a, col_b == null ? -1 : col_b);
+      },
+      $isComparable: 1,
+      $asComparable: Isolate.functionThatReturnsNull
     },
     _EditorBreakpoint: {
       "^": "Object;manager,editor,bp<,marker,_breakpoints$_sub",
@@ -27456,7 +28221,7 @@ self._domRemove = function(element) {
         if (didFormat === true)
           this.editor.save$0();
         P.Timer_Timer(P.Duration$(0, 0, 0, 10, 0, 0), new K.BufferFormatter___closure(this.$this));
-      }, null, null, 2, 0, null, 87, "call"]
+      }, null, null, 2, 0, null, 74, "call"]
     },
     BufferFormatter___closure: {
       "^": "Closure:1;$this",
@@ -27479,12 +28244,12 @@ self._domRemove = function(element) {
         return this.changedOverlay$0();
       }, function() {
         return this._didChange$1(null);
-      }, "_didChange$0", "call$1", "call$0", "get$_didChange", 0, 2, 15, 3, 1],
+      }, "_didChange$0", "call$1", "call$0", "get$_didChange", 0, 2, 11, 3, 1],
       _didDestroy$1: [function(_) {
         return this.dispose$0();
       }, function() {
         return this._didDestroy$1(null);
-      }, "_didDestroy$0", "call$1", "call$0", "get$_didDestroy", 0, 2, 15, 3, 1],
+      }, "_didDestroy$0", "call$1", "call$0", "get$_didDestroy", 0, 2, 11, 3, 1],
       addOverlay$0: function() {
         if (Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(this.path) == null)
           return;
@@ -27563,7 +28328,7 @@ self._domRemove = function(element) {
           t1.forEach$1(0, new K.OverlayManager__serverActive_closure(toSend));
           K._log(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$server().get$analysis().updateContent$1(toSend));
         }
-      }, "call$1", "get$_serverActive", 2, 0, 21, 90],
+      }, "call$1", "get$_serverActive", 2, 0, 19, 69],
       dispose$0: [function() {
         this.sub.cancel$0();
       }, "call$0", "get$dispose", 0, 0, 2],
@@ -27577,7 +28342,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     OverlayManager__serverActive_closure: {
-      "^": "Closure:103;toSend",
+      "^": "Closure:85;toSend",
       call$2: function(key, info) {
         this.toSend.$indexSet(0, key, new E.AddContentOverlay("add", J.get$data$x(info)));
       }
@@ -27606,7 +28371,7 @@ self._domRemove = function(element) {
         }
       } else
         $.$get$_logger21().info$1("dartlang version " + H.S(currentVersion));
-    }, "call$1", "changelog___checkChangelog$closure", 2, 0, 8, 93],
+    }, "call$1", "changelog___checkChangelog$closure", 2, 0, 9, 68],
     ChangelogManager: {
       "^": "Object;disposables,_changeLogFile",
       _handleReleaseNotes$0: function() {
@@ -27658,13 +28423,13 @@ self._domRemove = function(element) {
         t1._changeLogFile = t2;
         t2.invoke$2("writeSync", contents);
         return t1._changeLogFile;
-      }, null, null, 2, 0, null, 100, "call"]
+      }, null, null, 2, 0, null, 67, "call"]
     },
     ChangelogManager__handleReleaseNotes_closure0: {
-      "^": "Closure:101;",
+      "^": "Closure:86;",
       call$1: [function(file) {
         $.$get$atom()._workspace.open$2$options(0, J.get$path$x(file), P.LinkedHashMap__makeLiteral(["split", "right"]));
-      }, null, null, 2, 0, null, 106, "call"]
+      }, null, null, 2, 0, null, 66, "call"]
     }
   }], ["atom.console", "package:atom_dartlang/launch/console.dart",, Y, {
     "^": "",
@@ -27683,14 +28448,14 @@ self._domRemove = function(element) {
         view = Y.ConsoleView$(this, launch);
         this._allViews.push(view);
         Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).addView$2("bottom", view);
-      }, "call$1", "get$_launchAdded", 2, 0, 13, 43],
+      }, "call$1", "get$_launchAdded", 2, 0, 15, 58],
       _launchRemoved$1: [function(launch) {
         if (this._errorsView != null && Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).get$launches().length === 0) {
           if (!Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).hasViewId$1("errors"))
             Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).addView$2("bottom", this._errorsView);
           this._errorsView = null;
         }
-      }, "call$1", "get$_launchRemoved", 2, 0, 13, 43],
+      }, "call$1", "get$_launchRemoved", 2, 0, 15, 58],
       _toggleViews$0: [function() {
         var t1, anyActive, t2, viewShown, _i, view;
         t1 = this._allViews;
@@ -27789,7 +28554,7 @@ self._domRemove = function(element) {
             Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).activate$1(this);
           else
             Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).addView$2("bottom", this);
-      }, "call$1", "get$_console$_launchActivated", 2, 0, 13, 20],
+      }, "call$1", "get$_console$_launchActivated", 2, 0, 15, 20],
       _launchTerminated$1: [function(l) {
         var t1 = this.launch;
         if (J.$eq$(t1, l)) {
@@ -27808,14 +28573,14 @@ self._domRemove = function(element) {
           else
             J.set$disabled$x(t1, true);
         }
-      }, "call$1", "get$_launchTerminated", 2, 0, 13, 20],
+      }, "call$1", "get$_launchTerminated", 2, 0, 15, 20],
       _launchRemoved$1: [function(l) {
         if (J.$eq$(this.launch, l)) {
           Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).removeViewId$1("console." + H.S(this._launchId));
           C.JSArray_methods.remove$1(this.controller._allViews, this);
           this._console$_subs.cancel$0();
         }
-      }, "call$1", "get$_launchRemoved", 2, 0, 13, 20],
+      }, "call$1", "get$_launchRemoved", 2, 0, 15, 20],
       handleClose$0: [function() {
         this.super$View$handleClose();
         var t1 = this.launch;
@@ -27892,47 +28657,46 @@ self._domRemove = function(element) {
         t5.push(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).get$onLaunchActivated().listen$1(this.get$_console$_launchActivated()));
         t5.push(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).get$onLaunchTerminated().listen$1(this.get$_launchTerminated()));
         t5.push(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).get$onLaunchRemoved().listen$1(this.get$_launchRemoved()));
-        t2 = t3.get$onKeyDown(t2);
-        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t2._html$_target, t2._eventType, W._wrapZone(t1.get$_handleCopyKeyPress()), false), [H.getTypeArgumentByIndex(t2, 0)])._tryResume$0();
+        t3.get$onKeyDown(t2).listen$1(t1.get$_handleCopyKeyPress());
         J.set$tabIndex$x(this.output.get$element(), -1);
-        t2 = this.launch;
-        t5.push(t2.get$onStdio().listen$1(new Y.ConsoleView_closure(this)));
-        if (t2.get$launchConfiguration() != null) {
+        t1 = this.launch;
+        t5.push(t1.get$onStdio().listen$1(new Y.ConsoleView_closure(this)));
+        if (t1.get$launchConfiguration() != null) {
           e = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-gear", "Configure"));
           e.set$tooltip("Configure this application launch");
           J.click$1$x(e, new Y.ConsoleView_closure0(this));
         }
-        if (t2.canKill$0()) {
-          t1 = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-primitive-square", "Terminate"));
-          this._terminateButton = t1;
-          t1.set$tooltip("Terminate process");
+        if (t1.canKill$0()) {
+          t2 = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-primitive-square", "Terminate"));
+          this._terminateButton = t2;
+          t2.set$tooltip("Terminate process");
           J.click$1$x(this._terminateButton, new Y.ConsoleView_closure1(this));
         }
-        if (t2.canDebug$0()) {
-          t1 = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-dashboard", "Observatory"));
-          this._debugButton = t1;
-          t1.set$tooltip("Open the Observatory");
+        if (t1.canDebug$0()) {
+          t2 = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-dashboard", "Observatory"));
+          this._debugButton = t2;
+          t2.set$tooltip("Open the Observatory");
           J.click$1$x(this._debugButton, new Y.ConsoleView_closure2(this));
         }
         header = K.CoreElement$("div", null, "console-header", null);
-        t1 = J.getInterceptor$x(t2);
-        $name = t1.get$name(t2);
-        title = t1.get$title(t2);
+        t2 = J.getInterceptor$x(t1);
+        $name = t2.get$name(t1);
+        title = t2.get$title(t1);
         if (title == null)
           header.add$1(0, K.CoreElement$("span", null, "text-highlight", H.S($name) + "\n"));
         else {
-          t1 = J.getInterceptor$asx(title);
-          if (t1.contains$1(title, $name) === true) {
-            index = t1.indexOf$1(title, $name);
-            pre = t1.substring$2(title, 0, index);
+          t2 = J.getInterceptor$asx(title);
+          if (t2.contains$1(title, $name) === true) {
+            index = t2.indexOf$1(title, $name);
+            pre = t2.substring$2(title, 0, index);
             if (pre.length !== 0)
               header.add$1(0, K.CoreElement$("span", null, null, pre));
             header.add$1(0, K.CoreElement$("span", null, "text-highlight", $name));
-            header.add$1(0, K.CoreElement$("span", null, null, t1.substring$1(title, J.$add$ns(index, J.get$length$asx($name))) + "\n"));
+            header.add$1(0, K.CoreElement$("span", null, null, t2.substring$1(title, J.$add$ns(index, J.get$length$asx($name))) + "\n"));
           } else
             header.add$1(0, K.CoreElement$("span", null, null, H.S(title) + "\n"));
         }
-        t1 = t2.get$subtitle();
+        t1 = t1.get$subtitle();
         header.add$1(0, K.CoreElement$("span", null, "text-subtle", t1 == null ? "" : t1));
         this._emitElement$1(header);
       },
@@ -27952,7 +28716,7 @@ self._domRemove = function(element) {
         t3 = t1.get$error(text);
         t4 = text.get$subtle();
         return this.$this._emitText$4$error$highlight$subtle(t2, t3, t1.get$highlight(text), t4);
-      }, null, null, 2, 0, null, 124, "call"]
+      }, null, null, 2, 0, null, 86, "call"]
     },
     ConsoleView_closure0: {
       "^": "Closure:1;$this",
@@ -27985,7 +28749,7 @@ self._domRemove = function(element) {
           t1.toggleClass$1("trace-link");
           J.click$1$x(t1, new Y.ConsoleView__emitText__closure(this.line, path));
         }
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     },
     ConsoleView__emitText__closure: {
       "^": "Closure:1;line,path",
@@ -28027,7 +28791,7 @@ self._domRemove = function(element) {
         }
       }, function() {
         return this._handleLaunchesChanged$1(null);
-      }, "_handleLaunchesChanged$0", "call$1", "call$0", "get$_handleLaunchesChanged", 0, 2, 97, 3, 1],
+      }, "_handleLaunchesChanged$0", "call$1", "call$0", "get$_handleLaunchesChanged", 0, 2, 98, 3, 1],
       $isDisposable: 1
     }
   }], ["atom.dartdoc", "package:atom_dartlang/analysis/dartdoc.dart",, T, {
@@ -28132,7 +28896,7 @@ self._domRemove = function(element) {
           return t1.charCodeAt(0) == 0 ? t1 : t1;
         }, DartdocHelper__resolve: [function($name) {
           return new T.Element1("code", [new T.Text($name)], P.LinkedHashMap__makeEmpty());
-        }, "call$1", "dartdoc_DartdocHelper__resolve$closure", 2, 0, 149, 42], DartdocHelper__getLibraryName: function(hover) {
+        }, "call$1", "dartdoc_DartdocHelper__resolve$closure", 2, 0, 157, 50], DartdocHelper__getLibraryName: function(hover) {
           var $name, t1, index;
           $name = hover.get$containingLibraryName();
           if ($name != null && J.get$isNotEmpty$asx($name) === true)
@@ -28163,7 +28927,7 @@ self._domRemove = function(element) {
       }
     },
     DartdocHelper__handleDartdoc__closure: {
-      "^": "Closure:96;$this,explicit,editor",
+      "^": "Closure:108;$this,explicit,editor",
       call$1: [function(result) {
         if (result == null)
           return;
@@ -28171,7 +28935,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 2, "call"]
     },
     DartdocHelper__render_writeTitle: {
-      "^": "Closure:84;buf",
+      "^": "Closure:100;buf",
       call$2: function(title, desc) {
         if (desc != null && J.get$isNotEmpty$asx(desc) === true)
           this.buf._contents += "<span class='inline-block highlight'>" + title + "</span> " + H.S(desc) + "<br>\n";
@@ -28282,7 +29046,7 @@ self._domRemove = function(element) {
     _displayError: [function(error) {
       var t1 = $.$get$atom()._notifications;
       t1.invoke$3("addError", H.S(error), t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
-    }, "call$1", "debugger___displayError$closure", 2, 0, 9, 9],
+    }, "call$1", "debugger___displayError$closure", 2, 0, 10, 9],
     _fileUriToPath: function(uriStr) {
       var uri, prefix, t1, exception, _i;
       try {
@@ -28357,13 +29121,13 @@ self._domRemove = function(element) {
         }}
     },
     DebugManager_closure: {
-      "^": "Closure:83;",
+      "^": "Closure:103;",
       call$1: [function(connection) {
-        X.DebuggerView_showViewForConnection(connection);
-      }, null, null, 2, 0, null, 130, "call"]
+        G.DebuggerView_showViewForConnection(connection);
+      }, null, null, 2, 0, null, 110, "call"]
     },
     DebugManager_closure0: {
-      "^": "Closure:27;$this",
+      "^": "Closure:35;$this",
       call$2: function(cmd, closure) {
         this.$this.disposables._disposables.push($.$get$atom()._commands.add$3(0, "atom-workspace", "dartlang:" + cmd, new Z.DebugManager__closure(closure)));
       }
@@ -28543,7 +29307,7 @@ self._domRemove = function(element) {
       "^": "Closure:3;_box_0",
       call$1: [function(contextId) {
         return Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$server().get$execution().mapUri$2$uri(contextId, this._box_0.uri);
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 60, "call"]
     },
     UriResolver__resolveUriToPath_closure0: {
       "^": "Closure:0;_box_0,$this",
@@ -28564,7 +29328,7 @@ self._domRemove = function(element) {
       "^": "Closure:3;path",
       call$1: [function(contextId) {
         return Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$server().get$execution().mapUri$2$file(contextId, this.path);
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 60, "call"]
     },
     UriResolver__resolvePathToUri_closure0: {
       "^": "Closure:0;$this,path",
@@ -28593,16 +29357,13 @@ self._domRemove = function(element) {
         return;
       }, null, null, 2, 0, null, 1, "call"]
     }
-  }], ["atom.debugger_ui2", "package:atom_dartlang/debug/debugger_ui.dart",, X, {
+  }], ["atom.debugger_ui", "package:atom_dartlang/debug/debugger_ui.dart",, G, {
     "^": "",
     DebuggerView: {
-      "^": "View;connection,_execMarker,root,toolbar,content,tabElement,_closeButton,group",
-      _createPrimarySection$1: function(section) {
-        var t1, t2, resume, stepIn, stepOver, stepOut, stopOut, executionControlToolbar;
-        t1 = section.element;
-        t2 = J.getInterceptor$x(t1);
-        t2.setAttribute$2(t1, "layout", "");
-        t2.setAttribute$2(t1, "vertical", "");
+      "^": "View;connection,_execMarker,primaryTabGroup,secondaryTabGroup,breakpointsTab,root,toolbar,content,tabElement,_closeButton,group",
+      _createFlowControlSection$1: function(section) {
+        var t1, resume, stepIn, stepOver, stepOut, stopOut, executionControlToolbar, t2, t3, subtitle;
+        t1 = {};
         resume = K.CoreElement$("button", null, "btn icon-playback-play", null);
         resume.click$1(0, this.get$_resume());
         stepIn = K.CoreElement$("button", null, "btn icon-chevron-down", null);
@@ -28614,18 +29375,43 @@ self._domRemove = function(element) {
         stopOut = K.CoreElement$("button", null, "btn icon-primitive-square", null);
         stopOut.click$1(0, this.get$_terminate());
         executionControlToolbar = K.CoreElement$("div", null, "debugger-execution-toolbar", null);
-        t1 = K.CoreElement$("div", null, null, null);
-        t1.flex$0(0);
         t2 = K.CoreElement$("div", null, null, null);
         t2.flex$0(0);
-        executionControlToolbar.add$1(0, [resume, t1, stepIn, stepOver, stepOut, t2, stopOut]);
-        t2 = K.CoreElement$("div", null, "under-construction", "Under construction");
+        t3 = K.CoreElement$("div", null, null, null);
+        t3.flex$0(0);
+        executionControlToolbar.add$1(0, [resume, t2, stepIn, stepOver, stepOut, t3, stopOut]);
+        t1.subtitle = null;
+        subtitle = K.CoreElement$("div", null, "debugger-section-subtitle", " ");
+        t1.subtitle = subtitle;
+        section.add$1(0, [executionControlToolbar, subtitle]);
+        t1 = new G.DebuggerView__createFlowControlSection_updateUi(t1, this, resume, stepIn, stepOver, stepOut, stopOut);
+        t3 = this.connection;
+        t1.call$1(t3.get$isSuspended());
+        t3.get$onSuspendChanged().listen$1(t1);
+      },
+      _createSecondarySection$1: function(section) {
+        var t1, t2, t3, resizer;
+        t1 = P.StreamController_StreamController$broadcast(null, null, false, null);
+        t2 = H.setRuntimeTypeInfo(new P.Point0(0, 0), [null]);
+        t3 = W._ElementFactoryProvider_createElement_tag("div", null);
+        resizer = new T.ViewResizer(t1, t2, null, null, t3);
+        resizer.CoreElement$4$attributes$classes$text("div", null, null, null);
+        J.get$attributes$x(t3).remove$1(0, "vertical");
+        resizer.attribute$1("horizontal");
+        resizer._init$0();
+        t2 = M.MTabGroup$();
         t2.flex$0(0);
-        section.add$1(0, [executionControlToolbar, t2]);
-        t2 = new X.DebuggerView__createPrimarySection_updateUi(this, resume, stepIn, stepOver, stepOut, stopOut);
-        t1 = this.connection;
-        t2.call$1(t1.get$isSuspended());
-        t1.get$onSuspendChanged().listen$1(t2);
+        this.secondaryTabGroup = t2;
+        section.add$1(0, [resizer, t2]);
+        t2 = $.$get$state();
+        resizer.set$_targetSize(J.$index$asx(t2._pluginState, "debuggerSplitter") == null ? 225 : J.$index$asx(t2._pluginState, "debuggerSplitter"));
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new G.DebuggerView__createSecondarySection_closure());
+        this.secondaryTabGroup.tabs.add$1(0, G._MockTab$("Eval"));
+        this.secondaryTabGroup.tabs.add$1(0, G._MockTab$("Watchpoints"));
+        t1 = this.secondaryTabGroup.tabs;
+        t2 = G.BreakpointsTab$();
+        this.breakpointsTab = t2;
+        t1.add$1(0, t2);
       },
       get$label: function(_) {
         return "Debug " + H.S(J.get$name$x(this.connection.get$launch()));
@@ -28634,6 +29420,7 @@ self._domRemove = function(element) {
         return "debug." + H.S(J.get$hashCode$(this.connection));
       },
       dispose$0: [function() {
+        this.breakpointsTab.subs.cancel$0();
       }, "call$0", "get$dispose", 0, 0, 2],
       _resume$0: [function() {
         return this.connection.resume$0();
@@ -28655,7 +29442,7 @@ self._domRemove = function(element) {
         t1 = J.getInterceptor$x($location);
         t2 = t1.get$path($location);
         if (new E.Stats($.$get$_fs().callMethod$2("statSync", [t2])).invoke$1("isFile") === true)
-          Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$1(t1.get$path($location)).then$1(new X.DebuggerView__jumpToLocation_closure(this, $location, true));
+          Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$1(t1.get$path($location)).then$1(new G.DebuggerView__jumpToLocation_closure(this, $location, true));
         else {
           t2 = $.$get$atom()._notifications;
           t2.invoke$3("addWarning", "Cannot find file '" + H.S(t1.get$path($location)) + "'.", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
@@ -28669,9 +29456,9 @@ self._domRemove = function(element) {
         }
       },
       DebuggerView$1: function(connection) {
-        var t1, t2, t3, t4, titleSection, primarySection, secondarySection, title, subtitle, resizer;
+        var t1, t2, t3, t4, titleSection, flowControlSection, primarySection, secondarySection, t5, t6, title, subtitle;
         t1 = this.connection;
-        t1.get$onTerminated().then$1(new X.DebuggerView_closure(this));
+        t1.get$onTerminated().then$1(new G.DebuggerView_closure(this));
         J.toggle$2$x(J.get$classes$x(this.root.element), "debugger", null);
         t2 = this.content;
         t3 = t2.element;
@@ -28680,32 +29467,38 @@ self._domRemove = function(element) {
         t4.setAttribute$2(t3, "layout", "");
         t4.setAttribute$2(t3, "vertical", "");
         titleSection = K.CoreElement$("div", null, "debugger-section view-header", null);
+        flowControlSection = K.CoreElement$("div", null, "debugger-section", null);
         primarySection = K.CoreElement$("div", null, "debugger-section resizable", null);
+        t3 = primarySection.element;
+        t4 = J.getInterceptor$x(t3);
+        t4.setAttribute$2(t3, "layout", "");
+        t4.setAttribute$2(t3, "vertical", "");
         primarySection.flex$0(0);
         secondarySection = K.CoreElement$("div", null, "debugger-section resizable debugger-section-last", null);
-        t2.add$1(0, [titleSection, primarySection, secondarySection]);
+        t5 = secondarySection.element;
+        t6 = J.getInterceptor$x(t5);
+        t6.setAttribute$2(t5, "layout", "");
+        t6.setAttribute$2(t5, "vertical", "");
+        t2.add$1(0, [titleSection, flowControlSection, primarySection, secondarySection]);
         title = K.CoreElement$("div", null, "view-title", null);
         subtitle = K.CoreElement$("div", null, "view-subtitle", null);
         titleSection.add$1(0, [title, subtitle]);
         t2 = title.element;
-        t3 = J.getInterceptor$x(t2);
-        t3.set$text(t2, "Debugging " + H.S(J.get$name$x(t1.get$launch())));
-        t3.set$title(t2, t3.get$text(t2));
+        t5 = J.getInterceptor$x(t2);
+        t5.set$text(t2, "Debugging " + H.S(J.get$name$x(t1.get$launch())));
+        t5.set$title(t2, t5.get$text(t2));
         J.set$text$x(subtitle.element, "Under construction");
-        this._createPrimarySection$1(primarySection);
-        t2 = P.StreamController_StreamController$broadcast(null, null, false, null);
-        t3 = H.setRuntimeTypeInfo(new P.Point0(0, 0), [null]);
-        t1 = W._ElementFactoryProvider_createElement_tag("div", null);
-        resizer = new T.ViewResizer(t2, t3, null, null, t1);
-        resizer.CoreElement$4$attributes$classes$text("div", null, null, null);
-        J.get$attributes$x(t1).remove$1(0, "vertical");
-        resizer.attribute$1("horizontal");
-        resizer._init$0();
-        t1 = K.CoreElement$("div", null, "under-construction", "Under construction");
-        t1.flex$0(0);
-        secondarySection.add$1(0, [resizer, t1]);
-        t1 = $.$get$state();
-        resizer.set$_targetSize(J.$index$asx(t1._pluginState, "debuggerSplitter") == null ? 300 : J.$index$asx(t1._pluginState, "debuggerSplitter"));
+        this._createFlowControlSection$1(flowControlSection);
+        t4.setAttribute$2(t3, "layout", "");
+        t4.setAttribute$2(t3, "vertical", "");
+        t3 = M.MTabGroup$();
+        t3.flex$0(0);
+        this.primaryTabGroup = t3;
+        primarySection.add$1(0, [t3]);
+        this.primaryTabGroup.tabs.add$1(0, G._MockTab$("Execution"));
+        this.primaryTabGroup.tabs.add$1(0, G._MockTab$("Libraries"));
+        this.primaryTabGroup.tabs.add$1(0, G._MockTab$("Isolates"));
+        this._createSecondarySection$1(secondarySection);
       },
       static: {DebuggerView_showViewForConnection: function(connection) {
           var id, view;
@@ -28715,12 +29508,12 @@ self._domRemove = function(element) {
             Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).activateView$1(id);
             return view;
           } else {
-            view = X.DebuggerView$(connection);
+            view = G.DebuggerView$(connection);
             Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).addView$2("right", view);
             return view;
           }
         }, DebuggerView$: function(connection) {
-          var t1 = new X.DebuggerView(connection, null, K.CoreElement$("div", null, "tab-content", null), K.CoreElement$("div", null, "button-bar", null), K.CoreElement$("div", null, null, null), null, null, null);
+          var t1 = new G.DebuggerView(connection, null, null, null, null, K.CoreElement$("div", null, "tab-content", null), K.CoreElement$("div", null, "button-bar", null), K.CoreElement$("div", null, null, null), null, null, null);
           t1.View$0();
           t1.DebuggerView$1(connection);
           return t1;
@@ -28733,10 +29526,11 @@ self._domRemove = function(element) {
         t1 = this.$this;
         t2 = t1.group;
         t2.views.remove$1(0, t1);
+        t1.breakpointsTab.subs.cancel$0();
       }, null, null, 2, 0, null, 1, "call"]
     },
-    DebuggerView__createPrimarySection_updateUi: {
-      "^": "Closure:21;$this,resume,stepIn,stepOver,stepOut,stopOut",
+    DebuggerView__createFlowControlSection_updateUi: {
+      "^": "Closure:19;_box_0,$this,resume,stepIn,stepOver,stepOut,stopOut",
       call$1: [function(suspended) {
         var t1, t2, t3;
         t1 = suspended === true;
@@ -28749,19 +29543,39 @@ self._domRemove = function(element) {
         t3 = t2.connection;
         this.stopOut.attribute$2("disabled", !t3.get$isAlive());
         if (t1 && t3.get$topFrame() != null)
-          t3.get$topFrame().getLocation$0().then$1(new X.DebuggerView__createPrimarySection_updateUi_closure(t2));
+          t3.get$topFrame().getLocation$0().then$1(new G.DebuggerView__createFlowControlSection_updateUi_closure(t2));
         else
           t2._removeExecutionMarker$0();
+        if (t1) {
+          t1 = this._box_0.subtitle;
+          t3 = "Isolate " + H.S(J.get$name$x(t3.get$isolate())) + " (paused)";
+          J.set$text$x(t1.element, t3);
+        } else {
+          t1 = this._box_0;
+          if (t3.get$isolate() != null) {
+            t1 = t1.subtitle;
+            t3 = "Isolate " + H.S(J.get$name$x(t3.get$isolate()));
+            J.set$text$x(t1.element, t3);
+          } else
+            J.set$text$x(t1.subtitle.element, " ");
+        }
       }, null, null, 2, 0, null, 64, "call"]
     },
-    DebuggerView__createPrimarySection_updateUi_closure: {
-      "^": "Closure:69;$this",
+    DebuggerView__createFlowControlSection_updateUi_closure: {
+      "^": "Closure:106;$this",
       call$1: [function($location) {
         var t1 = this.$this;
         t1._removeExecutionMarker$0();
         if ($location != null)
           t1._jumpToLocation$2$addExecMarker($location, true);
       }, null, null, 2, 0, null, 65, "call"]
+    },
+    DebuggerView__createSecondarySection_closure: {
+      "^": "Closure:0;",
+      call$1: [function(pos) {
+        $.$get$state().$indexSet(0, "debuggerSplitter", pos);
+        return pos;
+      }, null, null, 2, 0, null, 25, "call"]
     },
     DebuggerView__jumpToLocation_closure: {
       "^": "Closure:6;$this,location,addExecMarker",
@@ -28783,6 +29597,161 @@ self._domRemove = function(element) {
           editor.decorateMarker$2(t2._execMarker, P.LinkedHashMap__makeLiteral(["type", "highlight", "class", "debugger-executionpoint-highlight"]));
         }
       }, null, null, 2, 0, null, 7, "call"]
+    },
+    _MockTab: {
+      "^": "MTab;id,name,_tabElement,content,enabled,active",
+      _MockTab$1: function($name) {
+        var t1, t2;
+        t1 = this.content.element;
+        t2 = J.getInterceptor$x(t1);
+        J.toggle$2$x(t2.get$classes(t1), "under-construction", null);
+        t2.set$text(t1, $name + ": under construction");
+        t1 = this.active._utils$_controller;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new G._MockTab_closure(this));
+      },
+      static: {_MockTab$: function($name) {
+          var t1, t2, t3;
+          t1 = $name.toLowerCase();
+          t2 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+          t2._utils$_value = true;
+          t3 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+          t3._utils$_value = true;
+          t3 = new G._MockTab(t1, $name, K.CoreElement$("div", null, "material-tab", null), K.CoreElement$("div", null, null, null), t2, t3);
+          t3.MTab$2(t1, $name);
+          t3._MockTab$1($name);
+          return t3;
+        }}
+    },
+    _MockTab_closure: {
+      "^": "Closure:0;$this",
+      call$1: [function(val) {
+        var t1 = this.$this;
+        P.print(val === true ? "activated " + (t1.id + " " + t1.name) : "deactivated " + (t1.id + " " + t1.name));
+      }, null, null, 2, 0, null, 13, "call"]
+    },
+    BreakpointsTab: {
+      "^": "MTab;titlebar,list,subs,id,name,_tabElement,content,enabled,active",
+      _debugger_ui$_update$1: [function(_) {
+        var bps, t1, t2;
+        bps = P.List_List$from(Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$breakpoints(), true, null);
+        C.JSArray_methods.sort$0(bps);
+        t1 = bps.length;
+        t2 = this.titlebar;
+        if (t1 === 0)
+          J.set$title$x(t2, "No breakpoints");
+        else
+          J.set$title$x(t2, "" + t1 + " " + G.pluralize("breakpoint", bps.length));
+        this.list.update$1(bps);
+      }, function() {
+        return this._debugger_ui$_update$1(null);
+      }, "_debugger_ui$_update$0", "call$1", "call$0", "get$_debugger_ui$_update", 0, 2, 11, 3, 1],
+      _debugger_ui$_render$2: [function(bp, element) {
+        var t1, pathText, rel, t2, lineText, t3, t4;
+        t1 = J.getInterceptor$x(bp);
+        pathText = t1.get$path(bp);
+        rel = P.List_List$from($.$get$atom()._project.invoke$2("relativizePath", t1.get$path(bp)), true, null);
+        if (0 >= rel.length)
+          return H.ioore(rel, 0);
+        t2 = rel[0];
+        if (t2 != null) {
+          t2 = J.$add$ns(S.basename(t2), " ");
+          if (1 >= rel.length)
+            return H.ioore(rel, 1);
+          pathText = J.$add$ns(t2, rel[1]);
+        }
+        lineText = " line " + H.S(bp.get$line());
+        if (bp.get$column() != null)
+          lineText += ":" + H.S(bp.get$column());
+        t2 = K.CoreElement$("span", null, "icon-primitive-dot debugger-breakpoint-icon", null);
+        t3 = K.CoreElement$("div", null, "overflow-hidden-ellipsis", null);
+        t3.flex$0(0);
+        t4 = K.CoreElement$("span", null, "debugger-breakpoint-path", pathText);
+        J.set$title$x(t4.element, t1.get$path(bp));
+        t3.add$1(0, [t4, K.CoreElement$("span", null, "text-subtle", lineText)]);
+        t4 = new M.MIconButton("icon-x", W._ElementFactoryProvider_createElement_tag("div", null));
+        t4.CoreElement$4$attributes$classes$text("div", null, "material-icon-button", null);
+        t4.add$1(0, [K.CoreElement$("span", null, "icon-x", null)]);
+        t4.click$1(0, new G.BreakpointsTab__render_closure(bp));
+        J.add$1$ax(element, [t2, t3, t4]);
+        element.layoutHorizontal$0();
+      }, "call$2", "get$_debugger_ui$_render", 4, 0, 119],
+      dispose$0: function() {
+        return this.subs.cancel$0();
+      },
+      BreakpointsTab$0: function() {
+        var t1, t2, t3, t4;
+        t1 = this.content;
+        t2 = t1.element;
+        t3 = J.getInterceptor$x(t2);
+        t3.setAttribute$2(t2, "layout", "");
+        t3.setAttribute$2(t2, "vertical", "");
+        t1.flex$0(0);
+        t2 = W._ElementFactoryProvider_createElement_tag("div", null);
+        t3 = new G._TabTitlebar(null, null, t2);
+        t3.CoreElement$4$attributes$classes$text("div", null, "debug-tab-container", null);
+        t4 = J.getInterceptor$x(t2);
+        t4.setAttribute$2(t2, "layout", "");
+        t4.setAttribute$2(t2, "horizontal", "");
+        t2 = K.CoreElement$("div", null, "debug-tab-title", null);
+        t2.flex$0(0);
+        t3.titleElement = t2;
+        t4 = K.CoreElement$("div", null, "debug-tab-toolbar", null);
+        t3.toolbar = t4;
+        t3.add$1(0, [t2, t4]);
+        this.titlebar = t1.add$1(0, t3);
+        t3 = this.get$_debugger_ui$_render();
+        t4 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+        t4._utils$_value = null;
+        t4 = H.setRuntimeTypeInfo(new M.MList(t3, t4, null, P.LinkedHashMap__makeEmpty(), P.StreamController_StreamController$broadcast(null, null, false, null), W._ElementFactoryProvider_createElement_tag("div", null)), [null]);
+        t4.CoreElement$4$attributes$classes$text("div", null, "material-list", null);
+        t3 = t4.element;
+        t2 = J.getInterceptor$x(t3);
+        t2.setAttribute$2(t3, "layout", "");
+        t2.setAttribute$2(t3, "vertical", "");
+        t3 = K.CoreElement$("ul", null, null, null);
+        t3.get$flex(t3);
+        t4._ul = t3;
+        t4.add$1(0, [t3]);
+        t4.flex$0(0);
+        this.list = t4;
+        t1.add$1(0, [t4]);
+        t4 = this.list._material$_doubleClick;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t4), [H.getTypeArgumentByIndex(t4, 0)]).listen$1(new G.BreakpointsTab_closure(this));
+        this._debugger_ui$_update$0();
+        t4 = this.subs._subscriptions;
+        t4.push(Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$onAdd().listen$1(this.get$_debugger_ui$_update()));
+        t4.push(Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$onRemove().listen$1(this.get$_debugger_ui$_update()));
+      },
+      static: {BreakpointsTab$: function() {
+          var t1, t2;
+          t1 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+          t1._utils$_value = true;
+          t2 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
+          t2._utils$_value = true;
+          t2 = new G.BreakpointsTab(null, null, new G.StreamSubscriptions(null, []), "breakpoints", "Breakpoints", K.CoreElement$("div", null, "material-tab", null), K.CoreElement$("div", null, null, null), t1, t2);
+          t2.MTab$2("breakpoints", "Breakpoints");
+          t2.BreakpointsTab$0();
+          return t2;
+        }}
+    },
+    BreakpointsTab_closure: {
+      "^": "Closure:14;$this",
+      call$1: [function(bp) {
+        var col = bp.get$column() == null ? null : J.$sub$n(bp.get$column(), 1);
+        Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$3(J.get$path$x(bp), J.$sub$n(bp.get$line(), 1), col);
+      }, null, null, 2, 0, null, 24, "call"]
+    },
+    BreakpointsTab__render_closure: {
+      "^": "Closure:1;bp",
+      call$0: function() {
+        Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).removeBreakpoint$1(this.bp);
+      }
+    },
+    _TabTitlebar: {
+      "^": "CoreElement;titleElement,toolbar,element",
+      set$title: function(_, value) {
+        J.set$text$x(this.titleElement.element, value);
+      }
     }
   }], ["atom.declaration_nav", "package:atom_dartlang/analysis/declaration_nav.dart",, D, {
     "^": "",
@@ -28796,7 +29765,7 @@ self._domRemove = function(element) {
       }, "call$1", "get$_activate", 2, 0, 5, 7],
       _navigationEvent$1: [function(navInfo) {
         this._completerHelper.handleNavInfo$1(navInfo);
-      }, "call$1", "get$_navigationEvent", 2, 0, 63, 37],
+      }, "call$1", "get$_navigationEvent", 2, 0, 120, 56],
       _handleNavigate$1: [function($event) {
         this._handleNavigateEditor$1($event.get$editor());
       }, "call$1", "get$_handleNavigate", 2, 0, 7],
@@ -28848,7 +29817,7 @@ self._domRemove = function(element) {
         }}
     },
     NavigationHelper__activate_closure: {
-      "^": "Closure:12;$this,editor",
+      "^": "Closure:13;$this,editor",
       call$1: function(evt) {
         var shouldJump, exception;
         try {
@@ -28861,13 +29830,13 @@ self._domRemove = function(element) {
       }
     },
     NavigationHelper__handleNavigateEditor_closure: {
-      "^": "Closure:53;$this,editor,offset",
+      "^": "Closure:124;$this,editor,offset",
       call$1: [function(navInfo) {
         if (navInfo != null)
           return this.$this._processNavInfo$3(this.editor, this.offset, navInfo);
         else
           $.$get$atom().invoke$1("beep");
-      }, null, null, 2, 0, null, 37, "call"]
+      }, null, null, 2, 0, null, 56, "call"]
     },
     NavigationHelper__handleNavigateEditor_closure0: {
       "^": "Closure:0;$this",
@@ -29175,7 +30144,7 @@ self._domRemove = function(element) {
       }
     },
     applyEdits__closure: {
-      "^": "Closure:28;buffer",
+      "^": "Closure:29;buffer",
       call$1: function(edit) {
         var t1, t2;
         t1 = this.buffer;
@@ -29188,16 +30157,16 @@ self._domRemove = function(element) {
       }
     },
     selectEditGroup_closure: {
-      "^": "Closure:46;group,buffer",
+      "^": "Closure:161;group,buffer",
       call$1: [function(position) {
         var t1, t2;
         t1 = this.buffer;
         t2 = J.getInterceptor$x(position);
         return new E.Range(E._create("Range", E._cvt(t1.invoke$2("positionForCharacterIndex", t2.get$offset(position))), E._cvt(t1.invoke$2("positionForCharacterIndex", J.$add$ns(t2.get$offset(position), J.get$length$asx(this.group))))));
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 35, "call"]
     },
     _sortEdits_closure: {
-      "^": "Closure:47;",
+      "^": "Closure:162;",
       call$2: function(a, b) {
         return J.$sub$n(J.get$offset$x(b), J.get$offset$x(a));
       }
@@ -29216,6 +30185,9 @@ self._domRemove = function(element) {
         if (ed != null && J.$eq$(ed.invoke$1("getPath"), path))
           options.$indexSet(0, "searchAllPanes", false);
         return t1._workspace.open$2$options(0, path, options).then$1(new F.EditorManager_jumpToLocation_closure($length));
+      },
+      jumpToLocation$3: function(path, line, column) {
+        return this.jumpToLocation$4(path, line, column, null);
       },
       jumpToLocation$1: function(path) {
         return this.jumpToLocation$4(path, null, null, null);
@@ -29287,7 +30259,7 @@ self._domRemove = function(element) {
         t1._sendData$1(editor);
       }, function() {
         return this._observeActivePaneItem$1(null);
-      }, "_observeActivePaneItem$0", "call$1", "call$0", "get$_observeActivePaneItem", 0, 2, 15, 3],
+      }, "_observeActivePaneItem$0", "call$1", "call$0", "get$_observeActivePaneItem", 0, 2, 11, 3],
       Editors$_allDartEditors$0: function() {
         this._matches = F.editors_Editors__isDartTypeEditor$closure();
         var t1 = $.$get$atom();
@@ -29304,7 +30276,7 @@ self._domRemove = function(element) {
             return false;
           t1 = editor.invoke$1("getPath");
           return t1 == null ? false : J.endsWith$1$s(t1, ".dart");
-        }, "call$1", "editors_Editors__isDartTypeEditor$closure", 2, 0, 150], Editors$_allDartEditors: function() {
+        }, "call$1", "editors_Editors__isDartTypeEditor$closure", 2, 0, 158], Editors$_allDartEditors: function() {
           var t1 = new F.Editors(null, null, null, new G.StreamSubscriptions(null, []), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), null, []);
           t1.Editors$_allDartEditors$0();
           return t1;
@@ -29382,12 +30354,18 @@ self._domRemove = function(element) {
       set$disabled: function(_, value) {
         return this.attribute$2("disabled", value);
       },
-      flex$1: function(_, flexAmount) {
+      layoutHorizontal$0: function() {
+        var t1, t2;
+        t1 = this.element;
+        t2 = J.getInterceptor$x(t1);
+        t2.setAttribute$2(t1, "layout", "");
+        t2.setAttribute$2(t1, "horizontal", "");
+      },
+      flex$1: [function(_, flexAmount) {
         this.attribute$2("flex", true);
-      },
-      flex$0: function($receiver) {
+      }, function($receiver) {
         return this.flex$1($receiver, null);
-      },
+      }, "flex$0", "call$1", "call$0", "get$flex", 0, 2, 167, 3],
       set$tooltip: function(value) {
         J.set$title$x(this.element, value);
       },
@@ -29397,6 +30375,9 @@ self._domRemove = function(element) {
       },
       click$1: function(_, handle) {
         return this.get$onClick(this)._createSubscription$4(new K.CoreElement_click_closure(handle), null, null, false);
+      },
+      dblclick$1: function(handle) {
+        return J.get$onDoubleClick$x(this.element).listen$1(new K.CoreElement_dblclick_closure(handle));
       },
       _handleCopyKeyPress$1: [function($event) {
         var t1, t2;
@@ -29412,7 +30393,7 @@ self._domRemove = function(element) {
           t1.preventDefault$0($event);
           document.execCommand("copy", false, null);
         }
-      }, "call$1", "get$_handleCopyKeyPress", 2, 0, 48, 27],
+      }, "call$1", "get$_handleCopyKeyPress", 2, 0, 50, 34],
       dispose$0: ["super$CoreElement$dispose", function() {
         var t1, t2, exception;
         t1 = this.element;
@@ -29445,7 +30426,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(c) {
         return this.$this.add$1(0, c);
-      }, null, null, 2, 0, null, 62, "call"]
+      }, null, null, 2, 0, null, 70, "call"]
     },
     CoreElement_onClick_closure: {
       "^": "Closure:0;$this",
@@ -29460,6 +30441,13 @@ self._domRemove = function(element) {
         this.handle.call$0();
       }, null, null, 2, 0, null, 0, "call"]
     },
+    CoreElement_dblclick_closure: {
+      "^": "Closure:0;handle",
+      call$1: [function(e) {
+        J.stopImmediatePropagation$0$x(e);
+        this.handle.call$0();
+      }, null, null, 2, 0, null, 0, "call"]
+    },
     ProgressElement: {
       "^": "CoreElement;_progress,element"
     },
@@ -29467,7 +30455,7 @@ self._domRemove = function(element) {
       "^": "CoreElement;element"
     },
     TitledModelDialog: {
-      "^": "Object;_elements$_panel,_cancelCommand,title*,content",
+      "^": "Object;_elements$_panel,_cancelCommand,title*,content>",
       dispose$0: [function() {
         this._elements$_panel.invoke$1("destroy");
         this._cancelCommand.invoke$1("dispose");
@@ -29524,7 +30512,7 @@ self._domRemove = function(element) {
       E.registerPackage(R.AtomDartPackage$());
     }, "call$0", "entry__main$closure", 0, 0, 1],
     main_closure: {
-      "^": "Closure:49;",
+      "^": "Closure:51;",
       call$1: [function(r) {
         var tag, t1;
         tag = J.toLowerCase$0$s(J.get$name$x(r.get$level())) + " \u2022 " + r.get$loggerName() + ":";
@@ -29534,7 +30522,7 @@ self._domRemove = function(element) {
           P.print(tag + "   " + H.S(t1.get$error(r)));
         if (r.get$stackTrace() != null)
           P.print(tag + "   " + H.S(r.get$stackTrace()));
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     }
   }, 1], ["atom.error_repository", "package:atom_dartlang/error_repository.dart",, E, {
     "^": "",
@@ -29594,7 +30582,7 @@ self._domRemove = function(element) {
           }
         } else
           $.$get$_logger23().info$1("received an error event for a non-existent file: " + H.S(path));
-      }, "call$1", "get$_handleAddErrors", 2, 0, 50, 70],
+      }, "call$1", "get$_handleAddErrors", 2, 0, 52, 71],
       _handleFlushErrors$1: [function(analysisFlushResults) {
         var t1 = this.knownErrors;
         J.forEach$1$ax(J.get$files$x(analysisFlushResults), t1.get$remove(t1));
@@ -29602,7 +30590,7 @@ self._domRemove = function(element) {
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(null);
-      }, "call$1", "get$_handleFlushErrors", 2, 0, 51, 71],
+      }, "call$1", "get$_handleFlushErrors", 2, 0, 53, 72],
       $isDisposable: 1
     }
   }], ["atom.errors", "package:atom_dartlang/impl/errors.dart",, G, {
@@ -29653,7 +30641,7 @@ self._domRemove = function(element) {
         t1 = $.$get$atom();
         t1._config.invoke$3("set", "linter.showErrorPanel", this.enabled !== true);
         t1._config.invoke$3("set", "linter.displayLinterInfo", this.enabled !== true);
-      }, "call$1", "get$_togglePrefs", 2, 0, 21, 8],
+      }, "call$1", "get$_togglePrefs", 2, 0, 19, 8],
       _focusChanged$1: [function(_) {
         var t1, editor, path, newFocus;
         t1 = $.$get$atom();
@@ -29671,7 +30659,7 @@ self._domRemove = function(element) {
           this._focusedDir = newFocus;
           this._handleErrorsChanged$1(this._cachedErrors);
         }
-      }, "call$1", "get$_focusChanged", 2, 0, 9],
+      }, "call$1", "get$_focusChanged", 2, 0, 10],
       _handleErrorsChanged$1: [function(errors) {
         var filteredErrors, t1, shortName;
         this._cachedErrors = errors;
@@ -29680,7 +30668,7 @@ self._domRemove = function(element) {
         shortName = t1 == null ? null : S.basename(t1);
         this.statusElement._handleErrorsChanged$1(filteredErrors);
         this.view._handleErrorsChanged$2$focus(filteredErrors, shortName);
-      }, "call$1", "get$_handleErrorsChanged", 2, 0, 52, 72],
+      }, "call$1", "get$_handleErrorsChanged", 2, 0, 54, 73],
       ErrorsController$0: function() {
         var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11;
         t1 = $.$get$atom();
@@ -29710,13 +30698,12 @@ self._domRemove = function(element) {
         if (J.$index$asx(t5._pluginState, "errorViewShowing") == null)
           t5.$indexSet(0, "errorViewShowing", t3);
         t7.showView$1(!J.$eq$(J.$index$asx(t5._pluginState, "errorViewShowing"), false));
-        t3 = t9.get$onKeyDown(t8);
-        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t3._html$_target, t3._eventType, W._wrapZone(t4.get$_handleCopyKeyPress()), false), [H.getTypeArgumentByIndex(t3, 0)])._tryResume$0();
+        t9.get$onKeyDown(t8).listen$1(t4.get$_handleCopyKeyPress());
         this.view = t7;
         this.statusElement = new G.ErrorsStatusElement(this, this.enabled, null, null, null);
-        t7 = $.$get$_processedErrorsController();
-        t7.toString;
-        H.setRuntimeTypeInfo(new P._BroadcastStream(t7), [H.getTypeArgumentByIndex(t7, 0)]).listen$1(this.get$_handleErrorsChanged());
+        t3 = $.$get$_processedErrorsController();
+        t3.toString;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t3), [H.getTypeArgumentByIndex(t3, 0)]).listen$1(this.get$_handleErrorsChanged());
         this._handleErrorsChanged$1([]);
         t2.push(t1._workspace.observeActivePaneItem$1(this.get$_focusChanged()));
         this._sub = t1._config.onDidChange$1("dartlang.useErrorsView").listen$1(this.get$_togglePrefs());
@@ -29743,7 +30730,7 @@ self._domRemove = function(element) {
       }
     },
     ErrorsController__handleErrorsChanged_closure: {
-      "^": "Closure:44;$this",
+      "^": "Closure:30;$this",
       call$1: function(e) {
         return J.startsWith$1$s(J.get$location$x(e).get$file(), this.$this._focusedDir);
       }
@@ -29846,7 +30833,7 @@ self._domRemove = function(element) {
         message.click$1(0, new G.ErrorsView__cvtError_closure1(this, error));
         ahref.click$1(0, new G.ErrorsView__cvtError_closure2(this, error));
         return item.element;
-      }, "call$1", "get$_cvtError", 2, 0, 54, 9],
+      }, "call$1", "get$_cvtError", 2, 0, 56, 9],
       _errors$_jumpTo$1: function($location) {
         var options, t1, ed;
         options = P.LinkedHashMap__makeLiteral(["initialLine", $location.get$startLine(), "initialColumn", $location.get$startColumn(), "searchAllPanes", true]);
@@ -29996,7 +30983,7 @@ self._domRemove = function(element) {
           job._args = t1;
           return Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(job);
         }
-      }, null, null, 2, 0, null, 15, "call"]
+      }, null, null, 2, 0, null, 18, "call"]
     },
     CreateProjectManager__createProject_closure0: {
       "^": "Closure:0;_box_0",
@@ -30023,6 +31010,9 @@ self._domRemove = function(element) {
     "^": "",
     FlutterLaunchType: {
       "^": "LaunchType;_lastLaunch,type",
+      get$flutterStartCommand: function() {
+        return "start";
+      },
       canLaunch$1: function(path) {
         var project = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
         if (project == null)
@@ -30082,14 +31072,13 @@ self._domRemove = function(element) {
     FlutterLaunchType_performLaunch_closure: {
       "^": "Closure:0;$this,configuration,project",
       call$1: [function(_) {
-        var t1, t2, t3, t4, isMojo, flutterArgs, t5, checked, route, t6, relPath, description, t7, t8;
+        var t1, t2, t3, t4, flutterArgs, t5, checked, route, t6, relPath, description, t7, t8;
         t1 = this.$this;
         t2 = this.project;
         t3 = this.configuration;
         t4 = new M._LaunchInstance(t2, null, null, null, null);
-        isMojo = J.$eq$(J.$index$asx(t3.get$typeArgs(), "run_mojo"), true);
         flutterArgs = t3.get$argsAsList();
-        t5 = [isMojo ? "run_mojo" : "start"];
+        t5 = [t1.get$flutterStartCommand()];
         t4._flutter_launch$_args = t5;
         checked = J.$index$asx(t3.get$typeArgs(), "checked");
         if (typeof checked === "boolean")
@@ -30183,7 +31172,7 @@ self._domRemove = function(element) {
             }
         });
         return P._asyncHelper(null, $async$launch$0, $async$completer, null);
-      }, "call$0", "get$launch", 0, 0, 55],
+      }, "call$0", "get$launch", 0, 0, 57],
       _kill$0: [function() {
         var t1 = this._runner;
         if (t1 == null) {
@@ -30193,7 +31182,7 @@ self._domRemove = function(element) {
           return t1;
         } else
           return t1.kill$0();
-      }, "call$0", "get$_kill", 0, 0, 56]
+      }, "call$0", "get$_kill", 0, 0, 58]
     },
     _LaunchInstance_launch_closure: {
       "^": "Closure:0;$this",
@@ -30362,6 +31351,9 @@ self._domRemove = function(element) {
       "^": "Object;_flutter_sdk$_controller,_prefSub,_flutter_sdk$_disposables,_sdk",
       tryToAutoConfigure$1$complainOnFailure: function(complainOnFailure) {
         return Z._discoverSdk().then$1(new Z.FlutterSdkManager_tryToAutoConfigure_closure(complainOnFailure));
+      },
+      tryToAutoConfigure$0: function() {
+        return this.tryToAutoConfigure$1$complainOnFailure(true);
       },
       get$hasSdk: function() {
         return this._sdk != null;
@@ -30609,6 +31601,20 @@ self._domRemove = function(element) {
         return P.Future_Future$delayed(P.Duration$(0, 0, 0, 500, 0, 0), null, null);
       }
     }
+  }], ["atom.flutter.mojo_launch", "package:atom_dartlang/flutter/launch_mojo.dart",, D, {
+    "^": "",
+    MojoLaunchType: {
+      "^": "FlutterLaunchType;_lastLaunch,type",
+      get$type: function(_) {
+        return "mojo";
+      },
+      get$flutterStartCommand: function() {
+        return "run_mojo";
+      },
+      getDefaultConfigText$0: function() {
+        return "checked: true\n# args:\n#  - --mojo-path=path/to/mojo";
+      }
+    }
   }], ["atom.formatting", "package:atom_dartlang/analysis/formatting.dart",, F, {
     "^": "",
     FormattingHelper: {
@@ -30676,7 +31682,7 @@ self._domRemove = function(element) {
       }
     },
     FormattingHelper_formatFile_closure: {
-      "^": "Closure:20;",
+      "^": "Closure:24;",
       call$1: [function(result) {
         var t1;
         if (J.$eq$(result.get$exit(), 0)) {
@@ -30689,7 +31695,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 2, "call"]
     },
     FormattingHelper_formatEditor_closure: {
-      "^": "Closure:57;editor,quiet,buffer",
+      "^": "Closure:59;editor,quiet,buffer",
       call$1: [function(result) {
         var t1, t2;
         if (J.get$isEmpty$asx(result.get$edits())) {
@@ -31052,7 +32058,7 @@ self._domRemove = function(element) {
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(evt);
         return;
-      }, null, null, 2, 0, null, 76, "call"]
+      }, null, null, 2, 0, null, 77, "call"]
     },
     Promise: {
       "^": "ProxyHolder;obj",
@@ -31064,7 +32070,7 @@ self._domRemove = function(element) {
       },
       error$1: [function(_, errorCallback) {
         return this.invoke$2("catch", errorCallback);
-      }, "call$1", "get$error", 2, 0, 58, 77],
+      }, "call$1", "get$error", 2, 0, 60, 78],
       static: {Promise__jsObjectFromFuture: function(future) {
           return P.JsObject_JsObject(J.$index$asx($.$get$context(), "Promise"), [new K.Promise__jsObjectFromFuture_closure(future)]);
         }}
@@ -31073,7 +32079,7 @@ self._domRemove = function(element) {
       "^": "Closure:4;future",
       call$2: [function(resolve, reject) {
         this.future.then$1(new K.Promise__jsObjectFromFuture__closure(resolve)).catchError$1(new K.Promise__jsObjectFromFuture__closure0(reject));
-      }, null, null, 4, 0, null, 78, 79, "call"]
+      }, null, null, 4, 0, null, 79, 80, "call"]
     },
     Promise__jsObjectFromFuture__closure: {
       "^": "Closure:0;resolve",
@@ -31122,7 +32128,7 @@ self._domRemove = function(element) {
       "^": "Closure:4;fn",
       call$2: [function(_this, e) {
         return this.fn.call$1(P.JsObject_JsObject$fromBrowserObject(e));
-      }, null, null, 4, 0, null, 80, 0, "call"]
+      }, null, null, 4, 0, null, 81, 0, "call"]
     }
   }], ["atom.launch", "package:atom_dartlang/launch/launch.dart",, X, {
     "^": "",
@@ -31216,10 +32222,10 @@ self._domRemove = function(element) {
         return;
       },
       getLaunchType$1: function(typeCode) {
-        var t1, t2, _i, t3, type;
-        for (t1 = this.launchTypes, t2 = t1.length, _i = 0; t3 = t1.length, _i < t3; t3 === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
+        var t1, t2, _i, type;
+        for (t1 = this.launchTypes, t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
           type = t1[_i];
-          if (type.type === typeCode)
+          if (type.get$type(type) === typeCode)
             return type;
         }
         return;
@@ -31246,7 +32252,7 @@ self._domRemove = function(element) {
       $isDisposable: 1
     },
     LaunchManager_addLaunch_closure: {
-      "^": "Closure:59;$this,removed",
+      "^": "Closure:61;$this,removed",
       call$1: function(l) {
         var t1;
         if (l.get$isTerminated()) {
@@ -31272,20 +32278,22 @@ self._domRemove = function(element) {
       "^": "Closure:0;type",
       call$1: [function(path) {
         return new X.Launchable(this.type, path);
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     },
     LaunchType: {
       "^": "Object;type>",
       $eq: function(_, obj) {
+        var t1;
         if (obj == null)
           return false;
-        return obj instanceof X.LaunchType && obj.type === this.type;
+        t1 = J.getInterceptor(obj);
+        return !!t1.$isLaunchType && t1.get$type(obj) === this.get$type(this);
       },
       get$hashCode: function(_) {
-        return C.JSString_methods.get$hashCode(this.type);
+        return C.JSString_methods.get$hashCode(this.get$type(this));
       },
       toString$0: function(_) {
-        return this.type;
+        return this.get$type(this);
       }
     },
     Launchable: {
@@ -31368,10 +32376,10 @@ self._domRemove = function(element) {
         t4 = this.name;
         if (t2) {
           t2 = $.$get$atom()._notifications;
-          t2.invoke$3("addError", t3.type + ": " + H.S(t4) + " exited with error code " + H.S(t1._utils$_value) + ".", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+          t2.invoke$3("addError", t3.get$type(t3) + ": " + H.S(t4) + " exited with error code " + H.S(t1._utils$_value) + ".", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         } else {
           t1 = $.$get$atom()._notifications;
-          t1.invoke$3("addSuccess", t3.type + ": " + H.S(t4) + " finished.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+          t1.invoke$3("addSuccess", t3.get$type(t3) + ": " + H.S(t4) + " finished.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         }
         t1 = this.manager.get$_launch$_launchTerminated();
         if (!t1.get$_mayAddEvent())
@@ -31393,7 +32401,8 @@ self._domRemove = function(element) {
           this.kill$0();
       }, "call$0", "get$dispose", 0, 0, 2],
       toString$0: function(_) {
-        return this.launchType.type + ": " + H.S(this.name);
+        var t1 = this.launchType;
+        return t1.get$type(t1) + ": " + H.S(this.name);
       },
       killHandler$0: function() {
         return this.killHandler.call$0();
@@ -31561,7 +32570,7 @@ self._domRemove = function(element) {
         if (id == null)
           return;
         return Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$server().get$execution().mapUri$2$uri(id, this.url).then$1(new X._ServerResolver_resolve__closure()).catchError$1(new X._ServerResolver_resolve__closure0());
-      }, null, null, 2, 0, null, 50, "call"]
+      }, null, null, 2, 0, null, 48, "call"]
     },
     _ServerResolver_resolve__closure: {
       "^": "Closure:0;",
@@ -31574,7 +32583,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(_e) {
         return;
-      }, null, null, 2, 0, null, 82, "call"]
+      }, null, null, 2, 0, null, 83, "call"]
     },
     _ServerResolver_dispose_closure: {
       "^": "Closure:3;",
@@ -31586,7 +32595,7 @@ self._domRemove = function(element) {
           t2 = P.LinkedHashMap__makeLiteral(["id", id]);
           t1.server._call$2("execution.deleteContext", t2).catchError$1(new X._ServerResolver_dispose__closure());
         }
-      }, null, null, 2, 0, null, 50, "call"]
+      }, null, null, 2, 0, null, 48, "call"]
     },
     _ServerResolver_dispose__closure: {
       "^": "Closure:0;",
@@ -31844,7 +32853,7 @@ self._domRemove = function(element) {
           ;
         else
           config.dispose$0();
-      }, "call$1", "get$_handleProjectRemoved", 2, 0, 43, 51],
+      }, "call$1", "get$_handleProjectRemoved", 2, 0, 25, 47],
       initFromStored$1: function(storedData) {
         if (!!J.getInterceptor(storedData).$isMap)
           this._launchTimestamps = storedData;
@@ -31860,7 +32869,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(entry) {
         return J.get$path$x(entry);
-      }, null, null, 2, 0, null, 44, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     },
     LaunchConfiguration: {
       "^": "Object;projectPath,_file,_launch_configs$_map",
@@ -32122,7 +33131,7 @@ self._domRemove = function(element) {
       },
       _lint$1: [function(jsEditor) {
         return K.jsify([]);
-      }, "call$1", "get$_lint", 2, 0, 25, 84]
+      }, "call$1", "get$_lint", 2, 0, 31, 85]
     },
     LinterConsumer: {
       "^": "Object;"
@@ -32180,7 +33189,7 @@ self._domRemove = function(element) {
       if (!J.$eq$(aloc.get$file(), bloc.get$file()))
         return J.compareTo$1$ns(aloc.get$file(), bloc.get$file());
       return J.$sub$n(J.get$offset$x(aloc), J.get$offset$x(bloc));
-    }, "call$2", "linter_impl___errorComparer$closure", 4, 0, 151],
+    }, "call$2", "linter_impl___errorComparer$closure", 4, 0, 159],
     _sev: function(sev) {
       var t1 = J.getInterceptor(sev);
       if (t1.$eq(sev, "ERROR"))
@@ -32272,7 +33281,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     DartLinterConsumer__regenErrors_closure: {
-      "^": "Closure:61;_box_0,$this",
+      "^": "Closure:63;_box_0,$this",
       call$2: function(path, issues) {
         var first, t1, t2, t3, t4;
         issues = J.toList$0$ax(issues);
@@ -32292,7 +33301,7 @@ self._domRemove = function(element) {
       }
     },
     DartLinterConsumer__filter_closure: {
-      "^": "Closure:44;showInfos,showTodos",
+      "^": "Closure:30;showInfos,showTodos",
       call$1: function(issue) {
         if (this.showInfos !== true && J.$eq$(issue.get$severity(), "INFO"))
           return false;
@@ -32397,7 +33406,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     ObservatoryDebugger_connect__closure: {
-      "^": "Closure:62;",
+      "^": "Closure:64;",
       call$1: [function(e) {
         return H.stringTypeCast(J.get$data$x(e));
       }, null, null, 2, 0, null, 0, "call"]
@@ -32508,7 +33517,7 @@ self._domRemove = function(element) {
           }
         } else if (J.$eq$(t1.get$kind(e), "IsolateExit"))
           this._currentIsolate = null;
-      }, "call$1", "get$_handleIsolateEvent", 2, 0, 42, 0],
+      }, "call$1", "get$_handleIsolateEvent", 2, 0, 26, 0],
       _handleDebugEvent$1: [function(e) {
         var isolate, t1, ref, t2, t3;
         isolate = e.get$isolate();
@@ -32548,7 +33557,7 @@ self._domRemove = function(element) {
               H.throwExpression(t2._addEventError$0());
             t2._sendData$1(new X.TextFragment(t1, true, false, false));
           }
-      }, "call$1", "get$_handleDebugEvent", 2, 0, 42, 0],
+      }, "call$1", "get$_handleDebugEvent", 2, 0, 26, 0],
       _resolveScript$2: function(isolate, scriptRef) {
         var id, t1, t2, m;
         id = J.get$id$x(scriptRef);
@@ -32629,7 +33638,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 6, "call"]
     },
     ObservatoryDebugConnection__init_closure2: {
-      "^": "Closure:64;$this",
+      "^": "Closure:66;$this",
       call$1: [function(e) {
         var json, t1, t2, loggerName, message, $name;
         json = J.$index$asx(e.get$json(), "logRecord");
@@ -32657,13 +33666,13 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     ObservatoryDebugConnection__init_closure3: {
-      "^": "Closure:65;",
+      "^": "Closure:67;",
       call$1: [function(ver) {
         $.$get$_logger16().fine$1("Observatory version " + H.S(ver.get$major()) + "." + H.S(ver.get$minor()) + ".");
-      }, null, null, 2, 0, null, 21, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     ObservatoryDebugConnection__init_closure4: {
-      "^": "Closure:66;$this",
+      "^": "Closure:68;$this",
       call$1: [function(vm) {
         var t1, t2;
         $.$get$_logger16().info$1("Connected to " + H.S(vm.get$architectureBits()) + "/" + H.S(vm.get$targetCPU()) + "/" + H.S(vm.get$hostCPU()) + "/" + H.S(J.get$version$x(vm)));
@@ -32679,7 +33688,7 @@ self._domRemove = function(element) {
             t1._currentIsolate = t2;
             t1._installInto$1(t2).then$1(new D.ObservatoryDebugConnection__init__closure0(t1));
           }
-      }, null, null, 2, 0, null, 85, "call"]
+      }, null, null, 2, 0, null, 63, "call"]
     },
     ObservatoryDebugConnection__init__closure: {
       "^": "Closure:0;$this",
@@ -32695,36 +33704,36 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     ObservatoryDebugConnection__init___closure: {
-      "^": "Closure:67;$this",
+      "^": "Closure:69;$this",
       call$1: [function(isolate) {
         var t1 = this.$this;
         if (J.$eq$(J.get$kind$x(J.get$pauseEvent$x(isolate)), "PauseStart"))
           t1.service.resume$1(J.get$id$x(t1._currentIsolate));
         else
           t1._startIt = true;
-      }, null, null, 2, 0, null, 39, "call"]
+      }, null, null, 2, 0, null, 40, "call"]
     },
     ObservatoryDebugConnection__installInto_closure: {
       "^": "Closure:0;$this,_bps",
       call$1: [function(bp) {
         var t1 = this.$this;
         t1.uriResolver.resolvePathToUri$1(J.get$path$x(bp)).then$1(new D.ObservatoryDebugConnection__installInto__closure2(t1, bp)).then$1(new D.ObservatoryDebugConnection__installInto__closure3(this._bps, bp)).catchError$1(new D.ObservatoryDebugConnection__installInto__closure4());
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 24, "call"]
     },
     ObservatoryDebugConnection__installInto__closure2: {
-      "^": "Closure:41;$this,bp",
+      "^": "Closure:27;$this,bp",
       call$1: [function(uris) {
         var t1, t2;
         t1 = this.$this;
         t2 = this.bp;
         return t1.service.addBreakpointWithScriptUri$4$column(J.get$id$x(t1._currentIsolate), J.get$first$ax(uris), t2.get$line(), t2.get$column());
-      }, null, null, 2, 0, null, 52, "call"]
+      }, null, null, 2, 0, null, 44, "call"]
     },
     ObservatoryDebugConnection__installInto__closure3: {
-      "^": "Closure:40;_bps,bp",
+      "^": "Closure:28;_bps,bp",
       call$1: [function(vmBreakpoint) {
         this._bps.$indexSet(0, this.bp, vmBreakpoint);
-      }, null, null, 2, 0, null, 53, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     ObservatoryDebugConnection__installInto__closure4: {
       "^": "Closure:0;",
@@ -32740,7 +33749,7 @@ self._domRemove = function(element) {
           t1 = this.$this;
           t1.service._vm_service_lib$_call$2("removeBreakpoint", P.LinkedHashMap__makeLiteral(["isolateId", J.get$id$x(t1._currentIsolate), "breakpointId", J.get$id$x(vmBreakpoint)]));
         }
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 24, "call"]
     },
     ObservatoryDebugConnection__installInto_closure1: {
       "^": "Closure:14;$this,_bps",
@@ -32750,19 +33759,19 @@ self._domRemove = function(element) {
       }
     },
     ObservatoryDebugConnection__installInto__closure: {
-      "^": "Closure:41;$this,bp",
+      "^": "Closure:27;$this,bp",
       call$1: [function(uris) {
         var t1, t2;
         t1 = this.$this;
         t2 = this.bp;
         return t1.service.addBreakpointWithScriptUri$4$column(J.get$id$x(t1._currentIsolate), J.get$first$ax(uris), t2.get$line(), t2.get$column());
-      }, null, null, 2, 0, null, 52, "call"]
+      }, null, null, 2, 0, null, 44, "call"]
     },
     ObservatoryDebugConnection__installInto__closure0: {
-      "^": "Closure:40;_bps,bp",
+      "^": "Closure:28;_bps,bp",
       call$1: [function(vmBreakpoint) {
         this._bps.$indexSet(0, this.bp, vmBreakpoint);
-      }, null, null, 2, 0, null, 53, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     ObservatoryDebugConnection__installInto__closure1: {
       "^": "Closure:0;",
@@ -32788,7 +33797,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(v) {
         return new D.ObservatoryDebugVariable(v);
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     ObservatoryDebugConnection__resolveScript_closure: {
       "^": "Closure:0;$this,id",
@@ -32828,7 +33837,7 @@ self._domRemove = function(element) {
       }
     },
     ObservatoryDebugFrame_getLocation_closure: {
-      "^": "Closure:104;$this",
+      "^": "Closure:49;$this",
       call$1: [function(script) {
         var t1, pos, uri;
         t1 = this.$this;
@@ -32836,7 +33845,7 @@ self._domRemove = function(element) {
         uri = script.get$uri();
         if (pos != null)
           return t1.connection.uriResolver.resolveUriToPath$1(uri).then$1(new D.ObservatoryDebugFrame_getLocation__closure(pos)).catchError$1(new D.ObservatoryDebugFrame_getLocation__closure0(pos, uri));
-      }, null, null, 2, 0, null, 110, "call"]
+      }, null, null, 2, 0, null, 113, "call"]
     },
     ObservatoryDebugFrame_getLocation__closure: {
       "^": "Closure:3;pos",
@@ -32845,7 +33854,7 @@ self._domRemove = function(element) {
         t1 = this.pos.obj;
         t2 = J.getInterceptor$asx(t1);
         return new Z.DebugLocation(path, t2.$index(t1, "row"), t2.$index(t1, "column"));
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     },
     ObservatoryDebugFrame_getLocation__closure0: {
       "^": "Closure:0;pos,uri",
@@ -32934,7 +33943,7 @@ self._domRemove = function(element) {
       }
     },
     OutlineView: {
-      "^": "Object;controller,editor,root<,content,fileType,title*,treeBuilder,lastOutline,subs,_topLevel",
+      "^": "Object;controller,editor,root<,content>,fileType,title*,treeBuilder,lastOutline,subs,_topLevel",
       _install$0: function() {
         var t1, t2, t3, t4, t5, t6, t7, resizer;
         if (this.content != null)
@@ -33050,7 +34059,7 @@ self._domRemove = function(element) {
           }
         }
         this._cursorChanged$1(new E.Point(E._cvt(t1.invoke$1("getCursorBufferPosition"))));
-      }, "call$1", "get$_handleOutline", 2, 0, 71, 12],
+      }, "call$1", "get$_handleOutline", 2, 0, 73, 12],
       _cursorChanged$1: [function(pos) {
         var offset, selected, t1, t2, _i, sel, e;
         if (pos == null || this.treeBuilder == null)
@@ -33069,7 +34078,7 @@ self._domRemove = function(element) {
           if (e != null)
             J.scrollIntoView$0$x(e);
         }
-      }, "call$1", "get$_cursorChanged", 2, 0, 72, 30],
+      }, "call$1", "get$_cursorChanged", 2, 0, 74, 25],
       _collectSelected$3: function(node, offset, selected) {
         var t1, o, t2, t3;
         t1 = J.getInterceptor$x(node);
@@ -33180,7 +34189,7 @@ self._domRemove = function(element) {
           t3.set$text(t2, " \u2192 " + H.S(type));
           J.add$1$ax(t1, t2);
         }
-      }, "call$2", "get$_outline$_render", 4, 0, 73],
+      }, "call$2", "get$_outline$_render", 4, 0, 75],
       _outline$_jumpTo$1: [function(node) {
         var outline, $location, t1;
         outline = J.get$data$x(node);
@@ -33188,7 +34197,7 @@ self._domRemove = function(element) {
         Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4($location.get$file(), J.$sub$n($location.get$startLine(), 1), J.$sub$n($location.get$startColumn(), 1), J.get$length$asx($location));
         t1 = this.editor;
         t1.invoke$2("setCursorBufferPosition", new E.Point(E._cvt(new E.TextBuffer(E._cvt(t1.invoke$1("getBuffer"))).invoke$2("positionForCharacterIndex", J.get$offset$x(outline)))));
-      }, "call$1", "get$_outline$_jumpTo", 2, 0, 16, 17],
+      }, "call$1", "get$_outline$_jumpTo", 2, 0, 17, 15],
       OutlineView$2: function(controller, editor) {
         var t1, t2;
         t1 = this.editor;
@@ -33231,7 +34240,7 @@ self._domRemove = function(element) {
         t1._amChanging = true;
         $.$get$state().$indexSet(0, this.prefName, pos);
         t1._amChanging = false;
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     }
   }], ["atom.plugin", "package:atom_dartlang/plugin.dart",, R, {
     "^": "",
@@ -33311,64 +34320,69 @@ self._domRemove = function(element) {
         t2.push(runAppManager);
         t2.push(new S.AnalysisOptionsManager(new G.Disposables(null, [])));
         t2.push(Z.ChangelogManager$());
-        t1 = [];
-        t3 = new O.CreateProjectManager(new G.Disposables(null, t1));
-        t1.push(t4._commands.add$3(0, "atom-workspace", "flutter:create-project", t3.get$_createProject()));
+        t1 = Q.Dependencies_instance();
+        t3 = E.StatusViewManager$();
+        t1._instances.$indexSet(0, C.Type_StatusViewManager_tnX, t3);
         t2.push(t3);
-        t2.push(T.DartdocHelper$());
-        t3 = G.ErrorsController$();
-        this.errorsController = t3;
-        t2.push(t3);
-        t2.push(F.FormattingHelper$());
         t3 = [];
-        t1 = new D.NavigationHelper(new G.Disposables(null, t3), new D._NavCompleterHelper([], P.LinkedHashMap__makeEmpty()), new G.Disposables(null, []));
-        t3.push(t4._commands.add$3(0, "atom-text-editor", "dartlang:jump-to-declaration", t1.get$_handleNavigate()));
-        t3.push(t4._commands.add$3(0, "atom-text-editor[data-grammar~=\"dart\"]", "symbols-view:go-to-declaration", t1.get$_handleNavigate()));
-        Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$onNavigaton().listen$1(t1.get$_navigationEvent());
-        t3 = Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).get$dartProjectEditors()._activeEditorController;
-        H.setRuntimeTypeInfo(new P._BroadcastStream(t3), [H.getTypeArgumentByIndex(t3, 0)]).listen$1(t1.get$_activate());
-        t1._activate$1(Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).get$dartProjectEditors()._activeEditor);
+        t1 = new O.CreateProjectManager(new G.Disposables(null, t3));
+        t3.push(t4._commands.add$3(0, "atom-workspace", "flutter:create-project", t1.get$_createProject()));
         t2.push(t1);
-        t1 = new T.OrganizeFileManager(new G.Disposables(null, []));
-        t1._addEditorCommand$2("dartlang:sort-members", t1.get$_handleSortMembers());
-        t1._addEditorCommand$2("dartlang:organize-directives", t1.get$_handleOrganizeDirectives());
+        t2.push(T.DartdocHelper$());
+        t1 = G.ErrorsController$();
+        this.errorsController = t1;
         t2.push(t1);
+        t2.push(F.FormattingHelper$());
+        t1 = [];
+        t3 = new D.NavigationHelper(new G.Disposables(null, t1), new D._NavCompleterHelper([], P.LinkedHashMap__makeEmpty()), new G.Disposables(null, []));
+        t1.push(t4._commands.add$3(0, "atom-text-editor", "dartlang:jump-to-declaration", t3.get$_handleNavigate()));
+        t1.push(t4._commands.add$3(0, "atom-text-editor[data-grammar~=\"dart\"]", "symbols-view:go-to-declaration", t3.get$_handleNavigate()));
+        Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$onNavigaton().listen$1(t3.get$_navigationEvent());
+        t1 = Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).get$dartProjectEditors()._activeEditorController;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(t3.get$_activate());
+        t3._activate$1(Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).get$dartProjectEditors()._activeEditor);
+        t2.push(t3);
+        t3 = new T.OrganizeFileManager(new G.Disposables(null, []));
+        t3._addEditorCommand$2("dartlang:sort-members", t3.get$_handleSortMembers());
+        t3._addEditorCommand$2("dartlang:organize-directives", t3.get$_handleOrganizeDirectives());
+        t2.push(t3);
         t2.push(A.OutlineController$());
         t2.push(pubManager);
         t2.push(runAppManager);
         t2.push(F.RefactoringHelper$());
-        t1 = new V.FindReferencesHelper(null);
-        t1._command = t4._commands.add$3(0, "atom-text-editor", "dartlang:find-references", t1.get$_handleReferences());
+        t3 = new V.FindReferencesHelper(null);
+        t3._command = t4._commands.add$3(0, "atom-text-editor", "dartlang:find-references", t3.get$_handleReferences());
+        t2.push(t3);
+        t3 = new E.TypeHierarchyHelper(null);
+        t3._type_hierarchy$_command = t4._commands.add$3(0, "atom-text-editor", "dartlang:type-hierarchy", t3.get$_handleHierarchy());
+        t2.push(t3);
+        t3 = Q.Dependencies_instance();
+        t1 = M.QuickFixHelper$();
+        t3._instances.$indexSet(0, C.Type_QuickFixHelper_idk, t1);
         t2.push(t1);
-        t1 = new E.TypeHierarchyHelper(null);
-        t1._type_hierarchy$_command = t4._commands.add$3(0, "atom-text-editor", "dartlang:type-hierarchy", t1.get$_handleHierarchy());
+        t1 = Y.ConsoleController$();
+        this.consoleController = t1;
         t2.push(t1);
         t1 = Q.Dependencies_instance();
-        t3 = M.QuickFixHelper$();
-        t1._instances.$indexSet(0, C.Type_QuickFixHelper_idk, t3);
-        t2.push(t3);
-        t3 = Y.ConsoleController$();
-        this.consoleController = t3;
-        t2.push(t3);
-        t3 = Q.Dependencies_instance();
-        t1 = [];
-        t5 = new X.TestManager(new G.Disposables(null, t1));
-        t1.push(t4._commands.add$3(0, "atom-workspace", "dartlang:run-tests", t5.get$_runTests()));
-        t3._instances.$indexSet(0, C.Type_TestManager_OzB, t5);
+        t3 = [];
+        t5 = new X.TestManager(new G.Disposables(null, t3));
+        t3.push(t4._commands.add$3(0, "atom-workspace", "dartlang:run-tests", t5.get$_runTests()));
+        t1._instances.$indexSet(0, C.Type_TestManager_OzB, t5);
         t2.push(t5);
         t5 = [];
-        t3 = new V.FlutterDev(new G.Disposables(null, t5));
-        t5.push(t4._commands.add$3(0, "atom-workspace", "flutter:getting-started", t3.get$_gettingStarted()));
-        t2.push(t3);
-        t3 = Q.Dependencies_instance();
+        t1 = new V.FlutterDev(new G.Disposables(null, t5));
+        t5.push(t4._commands.add$3(0, "atom-workspace", "flutter:getting-started", t1.get$_gettingStarted()));
+        t2.push(t1);
+        t1 = Q.Dependencies_instance();
         t5 = Z.FlutterSdkManager$();
-        t3._instances.$indexSet(0, C.Type_FlutterSdkManager_Ag3, t5);
+        t1._instances.$indexSet(0, C.Type_FlutterSdkManager_Ag3, t5);
         t2.push(t5);
         t2.push(E.UsageManager$());
         t2.push(Z.RebuildManager$());
         this._registerLinter$0();
         Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).registerLaunchType$1(new M.FlutterLaunchType(null, "flutter"));
         Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).registerLaunchType$1(new Z.CliLaunchType("cli"));
+        Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).registerLaunchType$1(new D.MojoLaunchType(null, "flutter"));
         Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).registerLaunchType$1(new S.ShellLaunchType("shell"));
         t2.push(t4._commands.add$3(0, "atom-workspace", "dartlang:settings", new R.AtomDartPackage_packageActivated_closure()));
         t2.push(t4._commands.add$3(0, "atom-workspace", "dartlang:reanalyze-sources", new R.AtomDartPackage_packageActivated_closure0()));
@@ -33386,7 +34400,7 @@ self._domRemove = function(element) {
         P.Timer_Timer(C.Duration_0, this.get$_initPlugin());
       }, function() {
         return this.packageActivated$1(null);
-      }, "packageActivated$0", "call$1", "call$0", "get$packageActivated", 0, 2, 15, 3, 91],
+      }, "packageActivated$0", "call$1", "call$0", "get$packageActivated", 0, 2, 11, 3, 91],
       _initPlugin$0: [function() {
         F.install();
         S.loadPackageJson().then$1(this.get$_verifyPackages());
@@ -33394,8 +34408,9 @@ self._domRemove = function(element) {
       }, "call$0", "get$_initPlugin", 0, 0, 2],
       _validateSettings$0: function() {
         var runOnce = new R.AtomDartPackage__validateSettings_closure();
-        runOnce.call$2("_initialized", new R.AtomDartPackage__validateSettings_closure0(this));
-        runOnce.call$2("_initializedSymLinks", new R.AtomDartPackage__validateSettings_closure1());
+        runOnce.call$2("_initialized", new R.AtomDartPackage__validateSettings_closure0());
+        runOnce.call$2("_firstRun", new R.AtomDartPackage__validateSettings_closure1(this));
+        runOnce.call$2("_initializedSymLinks", new R.AtomDartPackage__validateSettings_closure2());
       },
       _verifyPackages$1: [function(m) {
         var t1, t2;
@@ -33408,10 +34423,7 @@ self._domRemove = function(element) {
             t1.invoke$3("addWarning", "The emmet package has severe performance issues when editing Dart files. It is recommended to disable emmet until issue https://github.com/emmetio/emmet-atom/issues/319 is fixed.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, true, null));
           }
         }
-      }, "call$1", "get$_verifyPackages", 2, 0, 75, 5],
-      _showWelcomeToast$0: function() {
-        S.getPackageVersion().then$1(new R.AtomDartPackage__showWelcomeToast_closure());
-      },
+      }, "call$1", "get$_verifyPackages", 2, 0, 77, 5],
       _handleSendFeedback$0: function() {
         S.getSystemDescription(false).then$1(new R.AtomDartPackage__handleSendFeedback_closure());
       },
@@ -33451,7 +34463,7 @@ self._domRemove = function(element) {
         }}
     },
     AtomDartPackage_closure: {
-      "^": "Closure:12;$this",
+      "^": "Closure:13;$this",
       call$1: [function(obj) {
         var statusBar, t1, t2, t3, t4, statusDisplay;
         statusBar = new T.StatusBar(obj);
@@ -33494,7 +34506,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 4, "call"]
     },
     AtomDartPackage_closure0: {
-      "^": "Closure:12;$this",
+      "^": "Closure:13;$this",
       call$1: [function(obj) {
         var t1, $toolbar;
         t1 = new D.Toolbar(obj);
@@ -33506,7 +34518,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 4, "call"]
     },
     AtomDartPackage_closure1: {
-      "^": "Closure:12;$this",
+      "^": "Closure:13;$this",
       call$1: [function(obj) {
         var t1 = this.$this._consumer;
         t1._service = new E.LinterService(obj);
@@ -33556,7 +34568,7 @@ self._domRemove = function(element) {
       }
     },
     AtomDartPackage__validateSettings_closure: {
-      "^": "Closure:27;",
+      "^": "Closure:35;",
       call$2: function($name, fn) {
         var t1 = $.$get$atom();
         if (!J.$eq$(t1._config.getValue$2$scope("_dartlang." + $name, null), true)) {
@@ -33566,24 +34578,22 @@ self._domRemove = function(element) {
       }
     },
     AtomDartPackage__validateSettings_closure0: {
-      "^": "Closure:1;$this",
+      "^": "Closure:1;",
       call$0: [function() {
         $.$get$atom()._config.invoke$3("set", "autocomplete-plus.autoActivationDelay", 500);
-        this.$this._showWelcomeToast$0();
       }, null, null, 0, 0, null, "call"]
     },
     AtomDartPackage__validateSettings_closure1: {
+      "^": "Closure:1;$this",
+      call$0: [function() {
+        Q.Dependencies_instance().getDependency$1(C.Type_StatusViewManager_tnX).toggleView$0();
+      }, null, null, 0, 0, null, "call"]
+    },
+    AtomDartPackage__validateSettings_closure2: {
       "^": "Closure:1;",
       call$0: [function() {
         $.$get$atom()._config.invoke$3("set", "core.followSymlinks", false);
       }, null, null, 0, 0, null, "call"]
-    },
-    AtomDartPackage__showWelcomeToast_closure: {
-      "^": "Closure:3;",
-      call$1: [function(version) {
-        var t1 = $.$get$atom()._notifications;
-        t1.invoke$3("addSuccess", "Welcome to the dartlang plugin for Atom!", t1._options$5$buttons$description$detail$dismissable$icon(null, "For help using this plugin, please see our getting started guide, available from the `Packages` > `Dart` > `Getting Started` menu item.\n\nThe Dart plugin anonymously reports feature usage statistics and basic crash reports to improve the tool over time. Please visit the plugin's settings page to configure this behavior.", "v" + H.S(version), true, null));
-      }, null, null, 2, 0, null, 32, "call"]
     },
     AtomDartPackage__handleSendFeedback_closure: {
       "^": "Closure:3;",
@@ -33593,7 +34603,7 @@ self._domRemove = function(element) {
         t2 = "https://github.com/dart-atom/dartlang/issues/new?body=" + H.S(P.Uri__uriEncode(C.List_KIf, description, C.Utf8Codec_false, false));
         t1.toString;
         $.$get$_shell().callMethod$2("openExternal", [t2]);
-      }, null, null, 2, 0, null, 55, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     AtomDartPackage__registerLinter_closure: {
       "^": "Closure:1;errorController,flushController",
@@ -33638,7 +34648,7 @@ self._domRemove = function(element) {
       return new Z.ProcessRunner(cmd, args, null, null, null, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]), null, P.StreamController_StreamController(null, null, null, null, false, null), P.StreamController_StreamController(null, null, null, null, false, null)).execSimple$0().then$1(new Z.exec_closure());
     },
     exec_closure: {
-      "^": "Closure:20;",
+      "^": "Closure:24;",
       call$1: [function(result) {
         if (J.$eq$(result.get$exit(), 0))
           return result.get$stdout();
@@ -33730,7 +34740,7 @@ self._domRemove = function(element) {
         else if ((t3 & 3) === 0)
           t1._ensurePendingEvents$0().add$1(0, H.setRuntimeTypeInfo(new P._DelayedData(t2, null), [H.getTypeArgumentByIndex(t1, 0)]));
         return;
-      }, null, null, 2, 0, null, 16, "call"]
+      }, null, null, 2, 0, null, 17, "call"]
     },
     ProcessRunner_execStreaming_closure1: {
       "^": "Closure:0;$this",
@@ -33746,7 +34756,7 @@ self._domRemove = function(element) {
         else if ((t3 & 3) === 0)
           t1._ensurePendingEvents$0().add$1(0, H.setRuntimeTypeInfo(new P._DelayedData(t2, null), [H.getTypeArgumentByIndex(t1, 0)]));
         return;
-      }, null, null, 2, 0, null, 16, "call"]
+      }, null, null, 2, 0, null, 17, "call"]
     },
     ProcessRunner_execStreaming_closure: {
       "^": "Closure:0;$this",
@@ -33829,7 +34839,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     ProcessNotifier_watch_closure2: {
-      "^": "Closure:35;$this",
+      "^": "Closure:34;$this",
       call$1: [function(result) {
         var t1, t2;
         t1 = this.$this;
@@ -33934,7 +34944,7 @@ self._domRemove = function(element) {
       _handleProjectPathsChanged$1: [function(allPaths) {
         this._updateChangeListeners$1(allPaths);
         this._fullScanForProjects$0();
-      }, "call$1", "get$_handleProjectPathsChanged", 2, 0, 76, 94],
+      }, "call$1", "get$_handleProjectPathsChanged", 2, 0, 78, 93],
       _updateChangeListeners$1: function(allPaths) {
         var t1, previousPaths, currentPaths, removedPaths, addedPaths, t2, addedPath, dir;
         t1 = this._directoryListeners;
@@ -34052,14 +35062,14 @@ self._domRemove = function(element) {
       }
     },
     ProjectManager_closure1: {
-      "^": "Closure:10;$this",
+      "^": "Closure:8;$this",
       call$1: function($event) {
         $event.invoke$1("stopImmediatePropagation");
         this.$this._markDartProject$1$path($event.get$targetFilePath());
       }
     },
     ProjectManager_dispose_closure: {
-      "^": "Closure:78;",
+      "^": "Closure:80;",
       call$1: function(sub) {
         return sub.cancel$0();
       }
@@ -34068,7 +35078,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(p) {
         return J.get$directory$x(p);
-      }, null, null, 2, 0, null, 95, "call"]
+      }, null, null, 2, 0, null, 94, "call"]
     },
     ProjectManager__fullScanForProjects_closure0: {
       "^": "Closure:0;dir",
@@ -34086,7 +35096,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(dir) {
         return new L.DartProject(dir, null);
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     ProjectManager__updateChangeListeners_closure: {
       "^": "Closure:0;$this,dir",
@@ -34095,7 +35105,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     ProjectManager__handleDirectoryChanged_closure: {
-      "^": "Closure:79;dir",
+      "^": "Closure:81;dir",
       call$1: function(project) {
         return J.$eq$(J.get$directory$x(project), this.dir);
       }
@@ -34123,10 +35133,10 @@ self._domRemove = function(element) {
         new E.File(t1).invoke$2("writeSync", "# .analysis_options\nmeta:\n  generatedOn: '" + new P.DateTime(Date.now(), false).toString$0(0) + "'\n");
         t2._workspace.open$1(0, J.$index$asx(t1, "path"));
         this.$this._fullScanForProjects$0();
-      }, null, null, 2, 0, null, 15, "call"]
+      }, null, null, 2, 0, null, 18, "call"]
     },
     ProjectManager__initProjectControllers_closure: {
-      "^": "Closure:80;$this,knownProjects",
+      "^": "Closure:82;$this,knownProjects",
       call$1: [function(projects) {
         var current, t1, t2, t3, t4, project, path, _i, projectPath;
         current = P.LinkedHashSet_LinkedHashSet(null, null, null, null);
@@ -34150,7 +35160,7 @@ self._domRemove = function(element) {
             t3._sendData$1(project);
           }
         }
-      }, null, null, 2, 0, null, 96, "call"]
+      }, null, null, 2, 0, null, 95, "call"]
     },
     DartProject: {
       "^": "Object;directory>,_analysisOptions",
@@ -34224,7 +35234,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(line) {
         return J.trim$0$s(line);
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 61, "call"]
     },
     DartProject_importsPackage_closure0: {
       "^": "Closure:3;packageName",
@@ -34323,7 +35333,7 @@ self._domRemove = function(element) {
       },
       _handleProjectAdded$1: [function(project) {
         return this._validatePubspecCurrent$1(project);
-      }, "call$1", "get$_handleProjectAdded", 2, 0, 43, 51],
+      }, "call$1", "get$_handleProjectAdded", 2, 0, 25, 47],
       _validatePubspecCurrent$1: function(project) {
         var t1, pubspecYamlFile, pubspecLockFile, dotPackagesFile, t2;
         t1 = J.getInterceptor$x(project);
@@ -34420,7 +35430,7 @@ self._domRemove = function(element) {
       }
     },
     PubManager_closure4: {
-      "^": "Closure:10;",
+      "^": "Closure:8;",
       call$1: function($event) {
         var t1, t2;
         t1 = $event.get$targetFilePath();
@@ -34430,7 +35440,7 @@ self._domRemove = function(element) {
       }
     },
     PubManager_closure5: {
-      "^": "Closure:10;",
+      "^": "Closure:8;",
       call$1: function($event) {
         var t1, t2;
         t1 = $event.get$targetFilePath();
@@ -34440,13 +35450,13 @@ self._domRemove = function(element) {
       }
     },
     PubManager_closure6: {
-      "^": "Closure:10;$this",
+      "^": "Closure:8;$this",
       call$1: function($event) {
         this.$this._handleRun$1$path($event.get$targetFilePath());
       }
     },
     PubManager_closure7: {
-      "^": "Closure:10;$this",
+      "^": "Closure:8;$this",
       call$1: function($event) {
         this.$this._handleGlobalRun$1$path($event.get$targetFilePath());
       }
@@ -34470,7 +35480,7 @@ self._domRemove = function(element) {
         $.$get$state().$indexSet(0, "lastRunText", response);
         t1 = R.PubRunJob$local(this.dir, response.split(" "), null);
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(t1);
-      }, null, null, 2, 0, null, 15, "call"]
+      }, null, null, 2, 0, null, 18, "call"]
     },
     PubManager__handleGlobalRun_closure: {
       "^": "Closure:3;dir",
@@ -34485,7 +35495,7 @@ self._domRemove = function(element) {
         t2 = new R.PubRunJob(t1, null, args, true, null, "Pub global run '" + H.S(C.JSArray_methods.get$first(args)) + "'", null);
         t2._pubspecDir = R._locatePubspecDir(t1);
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(t2);
-      }, null, null, 2, 0, null, 15, "call"]
+      }, null, null, 2, 0, null, 18, "call"]
     },
     PubManager__handleGlobalActivate_closure: {
       "^": "Closure:3;",
@@ -34496,7 +35506,7 @@ self._domRemove = function(element) {
         response = J.trim$0$s(response);
         t1 = "Pub global activate '" + response + "'";
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(new R.PubGlobalActivate(response, false, t1, null));
-      }, null, null, 2, 0, null, 15, "call"]
+      }, null, null, 2, 0, null, 18, "call"]
     },
     PubManager__showRunPubDialog_closure: {
       "^": "Closure:1;_box_0,project",
@@ -34691,17 +35701,17 @@ self._domRemove = function(element) {
       }
     },
     QuickFixHelper__handleQuickFix__closure: {
-      "^": "Closure:81;_box_0,f",
+      "^": "Closure:83;_box_0,f",
       call$1: [function(result) {
         this._box_0.fixes = result;
         return this.f;
       }, null, null, 2, 0, null, 2, "call"]
     },
     QuickFixHelper__handleQuickFix__closure0: {
-      "^": "Closure:82;_box_0,$this,editor,autoFix",
+      "^": "Closure:84;_box_0,$this,editor,autoFix",
       call$1: [function(assists) {
         this.$this._handleFixesResult$4$autoFix(this._box_0.fixes, assists, this.editor, this.autoFix);
-      }, null, null, 2, 0, null, 97, "call"]
+      }, null, null, 2, 0, null, 96, "call"]
     },
     QuickFixHelper__handleFixesResult_closure: {
       "^": "Closure:0;",
@@ -34710,19 +35720,19 @@ self._domRemove = function(element) {
       }
     },
     QuickFixHelper__handleFixesResult__closure: {
-      "^": "Closure:38;fix",
+      "^": "Closure:48;fix",
       call$1: [function(change) {
         return new M._Change(change, J.get$error$x(this.fix));
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     QuickFixHelper__handleFixesResult_closure0: {
-      "^": "Closure:38;",
+      "^": "Closure:48;",
       call$1: [function(change) {
         return new M._Change(change, null);
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     QuickFixHelper__handleFixesResult_closure1: {
-      "^": "Closure:37;_box_0",
+      "^": "Closure:33;_box_0",
       call$1: [function(change) {
         var t1, t2, t3, t4;
         t1 = "fix_" + ++this._box_0.i;
@@ -34730,15 +35740,15 @@ self._domRemove = function(element) {
         t3 = change.get$isAssist() ? "assist" : "quick-fix";
         t4 = change.get$isAssist() ? null : J.get$message$x(J.get$error$x(change));
         return new X.Suggestion(t1, null, t2, "", change.get$isAssist() ? "attribute" : "function", null, null, t3, null, null, null, t4, null, null, null, null);
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     QuickFixHelper__handleFixesResult_closure2: {
-      "^": "Closure:37;editor",
+      "^": "Closure:33;editor",
       call$1: [function(choice) {
         var t1 = this.editor;
         t1.undo$0();
         M._applyChange(t1, choice.get$change());
-      }, null, null, 2, 0, null, 131, "call"]
+      }, null, null, 2, 0, null, 98, "call"]
     },
     _Change: {
       "^": "Object;change<,error>",
@@ -34753,7 +35763,7 @@ self._domRemove = function(element) {
       }
     },
     _applyChange_closure: {
-      "^": "Closure:17;sourceFileEdits,linkedEditGroups",
+      "^": "Closure:16;sourceFileEdits,linkedEditGroups",
       call$1: function(edit) {
         return $.$get$atom()._workspace.open$2$options(0, edit.get$file(), P.LinkedHashMap__makeLiteral(["searchAllPanes", true])).then$1(new M._applyChange__closure0(this.sourceFileEdits, this.linkedEditGroups, edit));
       }
@@ -34787,7 +35797,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(edit) {
         return edit.get$file();
-      }, null, null, 2, 0, null, 34, "call"]
+      }, null, null, 2, 0, null, 26, "call"]
     },
     _applyChange_closure1: {
       "^": "Closure:0;",
@@ -34874,7 +35884,7 @@ self._domRemove = function(element) {
       }
     },
     RebuildJob_run_closure2: {
-      "^": "Closure:86;$this",
+      "^": "Closure:88;$this",
       call$1: [function($status) {
         var t1, editor;
         if ($status.get$isOk() && J.$eq$(J.get$result$x($status), 0))
@@ -34888,7 +35898,7 @@ self._domRemove = function(element) {
               t1._commands.invoke$4("dispatch", t1._views.invoke$2("getView", editor), "window:run-package-specs", null);
           } else
             P.Future_Future$delayed(P.Duration$(0, 0, 0, 0, 0, 2), null, null).then$1(new Z.RebuildJob_run__closure());
-      }, null, null, 2, 0, null, 58, "call"]
+      }, null, null, 2, 0, null, 59, "call"]
     },
     RebuildJob_run__closure: {
       "^": "Closure:0;",
@@ -35020,7 +36030,7 @@ self._domRemove = function(element) {
       }
     },
     RefactoringHelper__handleRenameRefactor__closure: {
-      "^": "Closure:87;$this,path,offset,end,oldName",
+      "^": "Closure:89;$this,path,offset,end,oldName",
       call$1: [function(result) {
         if (result == null)
           return;
@@ -35037,7 +36047,7 @@ self._domRemove = function(element) {
           return;
         t2 = G.toTitleCase("rename");
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(new X.AnalysisRequestJob(new F.RefactoringHelper__handleAvailableRefactoringsResult__closure(t1, this.$this, this.path, this.offset, this.end, this.oldName), t2, null));
-      }, null, null, 2, 0, null, 101, "call"]
+      }, null, null, 2, 0, null, 100, "call"]
     },
     RefactoringHelper__handleAvailableRefactoringsResult__closure: {
       "^": "Closure:1;_box_0,$this,path,offset,end,oldName",
@@ -35051,7 +36061,7 @@ self._domRemove = function(element) {
       }
     },
     RefactoringHelper__handleAvailableRefactoringsResult___closure: {
-      "^": "Closure:88;_box_0,$this,path,oldName",
+      "^": "Closure:90;_box_0,$this,path,oldName",
       call$1: [function(result) {
         if (result == null)
           return;
@@ -35059,19 +36069,19 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 2, "call"]
     },
     RefactoringHelper__handleRefactoringResult_closure: {
-      "^": "Closure:17;",
+      "^": "Closure:16;",
       call$1: function(fileEdit) {
         J.removeWhere$1$ax(fileEdit.get$edits(), new F.RefactoringHelper__handleRefactoringResult__closure0());
       }
     },
     RefactoringHelper__handleRefactoringResult__closure0: {
-      "^": "Closure:28;",
+      "^": "Closure:29;",
       call$1: function(edit) {
         return J.get$id$x(edit) != null;
       }
     },
     RefactoringHelper__handleRefactoringResult_closure0: {
-      "^": "Closure:17;",
+      "^": "Closure:16;",
       call$1: function(fileEdit) {
         return J.get$isEmpty$asx(fileEdit.get$edits());
       }
@@ -35099,7 +36109,7 @@ self._domRemove = function(element) {
           return J.$add$ns(J.get$name$x(this.project), t2.substring$1(filePath, J.get$length$asx(t1)));
         else
           return filePath;
-      }, null, null, 2, 0, null, 34, "call"]
+      }, null, null, 2, 0, null, 26, "call"]
     },
     RefactoringHelper__handleRefactoringResult_closure3: {
       "^": "Closure:1;_box_0,apply",
@@ -35115,7 +36125,7 @@ self._domRemove = function(element) {
       }, null, null, 0, 0, null, "call"]
     },
     RefactoringHelper__apply_closure: {
-      "^": "Closure:17;",
+      "^": "Closure:16;",
       call$1: function(edit) {
         return $.$get$atom()._workspace.open$2$options(0, edit.get$file(), P.LinkedHashMap__makeLiteral(["searchAllPanes", true])).then$1(new F.RefactoringHelper__apply__closure0(edit));
       }
@@ -35143,7 +36153,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(edit) {
         return edit.get$file();
-      }, null, null, 2, 0, null, 34, "call"]
+      }, null, null, 2, 0, null, 26, "call"]
     },
     RefactoringHelper__apply_closure1: {
       "^": "Closure:0;",
@@ -35183,7 +36193,7 @@ self._domRemove = function(element) {
       }
     },
     FindReferencesHelper__handleReferencesEditor__closure: {
-      "^": "Closure:89;path,offset",
+      "^": "Closure:91;path,offset",
       call$1: [function(result) {
         var t1, view, t2, t3, t4, t5, t6;
         if (result == null || J.get$id$x(result) == null) {
@@ -35298,7 +36308,7 @@ self._domRemove = function(element) {
             J.add$1$ax(t1, t2);
           }
         }
-      }, "call$2", "get$_references$_render", 4, 0, 90],
+      }, "call$2", "get$_references$_render", 4, 0, 92],
       _references$_jumpTo$1: [function(node) {
         var t1, t2, l;
         t1 = J.getInterceptor$x(node);
@@ -35309,7 +36319,7 @@ self._domRemove = function(element) {
           l = H.interceptedTypeCast(t1.get$data(node), "$isSearchResult").location;
           Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4(l.file, J.$sub$n(l.startLine, 1), J.$sub$n(l.startColumn, 1), l.length);
         }
-      }, "call$1", "get$_references$_jumpTo", 2, 0, 16, 17],
+      }, "call$1", "get$_references$_jumpTo", 2, 0, 17, 15],
       _doubleClick$1: [function(node) {
         var t1, t2, path;
         t1 = J.getInterceptor$x(node);
@@ -35318,7 +36328,7 @@ self._domRemove = function(element) {
           path = t1.get$data(node);
           $.$get$atom()._workspace.open$2$options(0, path, P.LinkedHashMap__makeLiteral(["searchAllPanes", true]));
         }
-      }, "call$1", "get$_doubleClick", 2, 0, 16, 17],
+      }, "call$1", "get$_doubleClick", 2, 0, 17, 15],
       _renderPath$1: function(originalPath) {
         var relPath, base, t1, index, path, sdk, prefix;
         relPath = P.List_List$from($.$get$atom()._project.invoke$2("relativizePath", originalPath), true, null);
@@ -35353,7 +36363,7 @@ self._domRemove = function(element) {
       }
     },
     FindReferencesView__handleSearchResults_closure: {
-      "^": "Closure:91;$this,name",
+      "^": "Closure:93;$this,name",
       call$1: [function(l) {
         var t1, t2, t3, t4, results, r, path, node, fileResults;
         t1 = this.$this;
@@ -35383,16 +36393,16 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 20, "call"]
     },
     FindReferencesView__handleSearchResults__closure: {
-      "^": "Closure:92;",
+      "^": "Closure:94;",
       call$2: [function(a, b) {
         return J.$sub$n(J.get$offset$x(J.get$location$x(a)), J.get$offset$x(J.get$location$x(b)));
-      }, null, null, 4, 0, null, 102, 103, "call"]
+      }, null, null, 4, 0, null, 101, 102, "call"]
     },
     FindReferencesView__handleSearchResults__closure0: {
       "^": "Closure:0;node",
       call$1: [function(r) {
         return this.node.children.push(H.setRuntimeTypeInfo(new T.Node0(r, false, []), [null]));
-      }, null, null, 2, 0, null, 18, "call"]
+      }, null, null, 2, 0, null, 19, "call"]
     },
     _MatchParser: {
       "^": "Object;file<,lines",
@@ -35529,9 +36539,17 @@ self._domRemove = function(element) {
         return t1[0];
       },
       run$1: function(config) {
+        var t1, launchType, t2;
         $.$get$_logger14().info$1("Launching '" + H.S(config) + "'.");
-        config.touch$0();
-        Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getLaunchType$1(J.get$type$x(config)).performLaunch$2(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK), config).catchError$1(new L.RunApplicationManager_run_closure(config));
+        t1 = J.getInterceptor$x(config);
+        launchType = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getLaunchType$1(t1.get$type(config));
+        if (launchType == null) {
+          t2 = $.$get$atom()._notifications;
+          t2.invoke$3("addError", "No handler for launch type '" + H.S(t1.get$type(config)) + "' found.", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+        } else {
+          config.touch$0();
+          launchType.performLaunch$2(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK), config).catchError$1(new L.RunApplicationManager_run_closure(config));
+        }
       },
       _getConfigFor$2: function(projectPath, path) {
         var configs, t1, _i, config;
@@ -35573,7 +36591,7 @@ self._domRemove = function(element) {
         }}
     },
     RunApplicationManager_closure: {
-      "^": "Closure:10;",
+      "^": "Closure:8;",
       call$1: function($event) {
         $event.invoke$1("stopImmediatePropagation");
         $event.invoke$1("preventDefault");
@@ -35637,6 +36655,9 @@ self._domRemove = function(element) {
       },
       tryToAutoConfigure$1$complainOnFailure: function(complainOnFailure) {
         return new V.SdkDiscovery().discoverSdk$0().then$1(new V.SdkManager_tryToAutoConfigure_closure(complainOnFailure));
+      },
+      tryToAutoConfigure$0: function() {
+        return this.tryToAutoConfigure$1$complainOnFailure(true);
       },
       get$onSdkChange: function() {
         var t1 = this._sdk$_controller;
@@ -35772,7 +36793,7 @@ self._domRemove = function(element) {
         t1 = this.$this;
         $.$get$_logger20().info$1("version " + H.S(version) + " (" + H.S(J.$index$asx(t1._sdk$_sdk.directory.obj, "path")) + ")");
         t1._verifyMinVersion$2(t1._sdk$_sdk, version);
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 54, "call"]
     },
     SdkManager__handleShowSdkInfo_closure: {
       "^": "Closure:3;",
@@ -35782,7 +36803,7 @@ self._domRemove = function(element) {
         t1.notification = null;
         t2 = $.$get$atom()._notifications;
         t1.notification = new E.Notification(t2.invoke$3("addInfo", "SDK and Plugin info", t2._options$5$buttons$description$detail$dismissable$icon([new E.NotificationButton("Configure SDK\u2026", new V.SdkManager__handleShowSdkInfo__closure(t1))], null, description, true, null)));
-      }, null, null, 2, 0, null, 55, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     SdkManager__handleShowSdkInfo__closure: {
       "^": "Closure:1;_box_0",
@@ -35997,7 +37018,7 @@ self._domRemove = function(element) {
       }
     },
     State_saveState_closure: {
-      "^": "Closure:93;$this",
+      "^": "Closure:95;$this",
       call$2: function(key, storable) {
         J.$indexSet$ax(this.$this._pluginState, key, C.JsonCodec_null_null.encode$1(storable.toStorable$0()));
       }
@@ -36008,11 +37029,11 @@ self._domRemove = function(element) {
   }], ["atom.status", "package:atom_dartlang/impl/status_display.dart",, E, {
     "^": "",
     StatusDisplay: {
-      "^": "Object;_status$_disposables,_status$_subscription,dialog,_statusbarTile,_status$_timer",
+      "^": "Object;_status0$_disposables,_status0$_subscription,dialog,_statusbarTile,_status0$_timer",
       dispose$0: [function() {
-        this._status$_subscription.cancel$0();
+        this._status0$_subscription.cancel$0();
         this._statusbarTile.invoke$1("destroy");
-        this._status$_disposables.dispose$0();
+        this._status0$_disposables.dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
       _showJobsDialog$0: [function() {
         var t1, t2, t3, t4;
@@ -36027,7 +37048,7 @@ self._domRemove = function(element) {
           t3.add$1(0, [t4]);
           t2.add$1(0, [t3]);
           this.dialog = t1;
-          this._status$_disposables._disposables.push(t1);
+          this._status0$_disposables._disposables.push(t1);
         }
         this.dialog.dialog._elements$_panel.invoke$1("show");
         this.dialog.updateJobsDialog$0();
@@ -36054,8 +37075,8 @@ self._domRemove = function(element) {
         m = P.LinkedHashMap__makeLiteral(["item", statusElement.element]);
         m.$indexSet(0, "priority", 1000);
         this._statusbarTile = new T.Tile(statusBar.invoke$2("addRightTile", m));
-        this._status$_subscription = Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).get$onQueueChanged().listen$1(new E.StatusDisplay_closure(_box_0, this, statusElement));
-        this._status$_disposables._disposables.push($.$get$atom()._commands.add$3(0, "atom-workspace", "dartlang:show-jobs", new E.StatusDisplay_closure0(this)));
+        this._status0$_subscription = Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).get$onQueueChanged().listen$1(new E.StatusDisplay_closure(_box_0, this, statusElement));
+        this._status0$_disposables._disposables.push($.$get$atom()._commands.add$3(0, "atom-workspace", "dartlang:show-jobs", new E.StatusDisplay_closure0(this)));
       },
       $isDisposable: 1,
       static: {StatusDisplay$: function(statusBar) {
@@ -36071,10 +37092,10 @@ self._domRemove = function(element) {
         job = Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).get$activeJob();
         showing = job != null;
         t1 = this.$this;
-        t2 = t1._status$_timer;
+        t2 = t1._status0$_timer;
         if (t2 != null) {
           t2.cancel$0();
-          t1._status$_timer = null;
+          t1._status0$_timer = null;
         }
         t2 = this._box_0;
         t3 = this.statusElement;
@@ -36084,7 +37105,7 @@ self._domRemove = function(element) {
           J.set$text$x(t4.element, t5);
           J.toggle$2$x(J.get$classes$x(t3.element), "showing", true);
         } else
-          t1._status$_timer = P.Timer_Timer(C.Duration_400000, new E.StatusDisplay__closure(t2, t3));
+          t1._status0$_timer = P.Timer_Timer(C.Duration_400000, new E.StatusDisplay__closure(t2, t3));
         jobLen = Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).get$allJobs().length;
         t3 = t2.countBadge;
         t4 = jobLen === 0 ? "" : "" + jobLen + " " + G.pluralize("job", jobLen);
@@ -36453,7 +37474,7 @@ self._domRemove = function(element) {
           Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4($location.file, J.$sub$n($location.startLine, 1), J.$sub$n($location.startColumn, 1), $location.length);
         else
           $.$get$atom().invoke$1("beep");
-      }, "call$1", "get$_jumpTo", 2, 0, 16, 17],
+      }, "call$1", "get$_jumpTo", 2, 0, 17, 15],
       _render$2: [function(item, intoElement) {
         var t1, t2, span, t3, t4;
         t1 = J.$and$n(item.get$classElement().flags, 1);
@@ -36483,10 +37504,10 @@ self._domRemove = function(element) {
           J.add$1$ax(t3.get$classes(span), "hierarchy-muted");
           J.add$1$ax(t1.get$children(intoElement), span);
         }
-      }, "call$2", "get$_render", 4, 0, 94]
+      }, "call$2", "get$_render", 4, 0, 96]
     },
     TypeHierarchyView__sort_closure: {
-      "^": "Closure:95;items",
+      "^": "Closure:97;items",
       call$2: [function(aIndex, bIndex) {
         var t1, t2, a, b, aName;
         t1 = this.items;
@@ -36501,13 +37522,13 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(i) {
         return J.$index$asx(this.$this._items, i).get$classElement().name;
-      }, null, null, 2, 0, null, 57, "call"]
+      }, null, null, 2, 0, null, 43, "call"]
     },
     TypeHierarchyView__render_closure0: {
       "^": "Closure:0;$this",
       call$1: [function(i) {
         return J.$index$asx(this.$this._items, i).get$classElement().name;
-      }, null, null, 2, 0, null, 57, "call"]
+      }, null, null, 2, 0, null, 43, "call"]
     }
   }], ["atom.usage", "package:atom_dartlang/usage.dart",, E, {
     "^": "",
@@ -36524,7 +37545,7 @@ self._domRemove = function(element) {
       if (J.$eq$(command, "newline"))
         return;
       $.$get$_ga().sendEvent$2(category, command);
-    }, "call$1", "usage__trackCommand$closure", 2, 0, 8, 107],
+    }, "call$1", "usage__trackCommand$closure", 2, 0, 9, 107],
     _activePaneItemChanged: [function(_) {
       var editor, path, t1, index, extension;
       editor = $.$get$atom()._workspace.getActiveTextEditor$0();
@@ -36541,7 +37562,7 @@ self._domRemove = function(element) {
           $.$get$_ga().sendScreenView$1("editor/" + extension.toLowerCase());
         }
       }
-    }, "call$1", "usage___activePaneItemChanged$closure", 2, 0, 9],
+    }, "call$1", "usage___activePaneItemChanged$closure", 2, 0, 10],
     _handleLogRecord: [function(log) {
       var fatal, t1, message, t2, desc;
       if (J.$ge$n(log.get$level(), C.Level_WARNING_900)) {
@@ -36558,7 +37579,7 @@ self._domRemove = function(element) {
           desc += "," + F.sanitizeStacktrace(log.get$stackTrace(), true);
         $.$get$_ga().sendException$2$fatal(desc, fatal);
       }
-    }, "call$1", "usage___handleLogRecord$closure", 2, 0, 152, 108],
+    }, "call$1", "usage___handleLogRecord$closure", 2, 0, 160, 108],
     UsageManager: {
       "^": "Object;_subs,_editorObserve",
       _usage$_init$0: function() {
@@ -36600,7 +37621,7 @@ self._domRemove = function(element) {
         t3.push(H.setRuntimeTypeInfo(new P._BroadcastStream(t4), [H.getTypeArgumentByIndex(t4, 0)]).listen$1(E.usage__trackCommand$closure()));
         t2._editorObserve = t1._workspace.observeActivePaneItem$1(E.usage___activePaneItemChanged$closure());
         Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$onActive().listen$1(new E.UsageManager__init__closure0());
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 54, "call"]
     },
     UsageManager__init__closure: {
       "^": "Closure:0;version",
@@ -36849,8 +37870,7 @@ self._domRemove = function(element) {
           t2.get$attributes(t1).remove$1(0, "vertical");
           this.attribute$1("horizontal");
         }
-        t1 = t2.get$onMouseDown(t1);
-        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._html$_target, t1._eventType, W._wrapZone(new T.ViewResizer__init_closure(this, new T.ViewResizer__init_closure0(this))), false), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
+        t2.get$onMouseDown(t1).listen$1(new T.ViewResizer__init_closure(this, new T.ViewResizer__init_closure0(this)));
       },
       _minSize$1: function(e) {
         var style, str, t1;
@@ -36919,7 +37939,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     ViewResizer__init__closure: {
-      "^": "Closure:36;$this,cancel",
+      "^": "Closure:47;$this,cancel",
       call$1: [function(e) {
         var t1, t2, t3, t4, t5, current, currentPos, newPos;
         t1 = J.getInterceptor$x(e);
@@ -37091,6 +38111,9 @@ self._domRemove = function(element) {
     },
     ViewGroup: {
       "^": "Object;name>,views,root<,tabHeader,tabContainer,_panel,_active,_views$_history",
+      get$hidden: function(_) {
+        return this._panel.invoke$1("isVisible") !== true;
+      },
       addView$2$activate: function(view, activate) {
         var t1, t2;
         t1 = this.views;
@@ -37138,7 +38161,7 @@ self._domRemove = function(element) {
         for (t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
           J.hidden$1$x(t1[_i].get$_closeButton(), t1.length !== 1);
         this.tabHeader.add$1(0, view.get$tabElement());
-      }, "call$1", "get$_onViewAdded", 2, 0, 22, 35],
+      }, "call$1", "get$_onViewAdded", 2, 0, 18, 32],
       _onActiveChanged$1: [function(view) {
         var t1, t2;
         t1 = this._active;
@@ -37159,7 +38182,7 @@ self._domRemove = function(element) {
         }
         if (this._active == null && this._views$_history.length !== 0)
           this.views.setSelection$1(C.JSArray_methods.get$last(this._views$_history));
-      }, "call$1", "get$_onActiveChanged", 2, 0, 22, 35],
+      }, "call$1", "get$_onActiveChanged", 2, 0, 18, 32],
       _onViewRemoved$1: [function(view) {
         var t1, t2, _i;
         C.JSArray_methods.remove$1(this._views$_history, view);
@@ -37172,7 +38195,7 @@ self._domRemove = function(element) {
         view.get$root().dispose$0();
         view.get$tabElement().dispose$0();
         view.dispose$0();
-      }, "call$1", "get$_onViewRemoved", 2, 0, 22, 35],
+      }, "call$1", "get$_onViewRemoved", 2, 0, 18, 32],
       _setupResizer$3: function(prefName, resizer, defaultSize) {
         var t1 = $.$get$state();
         resizer.set$_targetSize(J.$index$asx(t1._pluginState, prefName) == null ? defaultSize : J.$index$asx(t1._pluginState, prefName));
@@ -37185,6 +38208,9 @@ self._domRemove = function(element) {
         for (t1 = this.views._utils$_items, t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
           t1[_i].dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
+      hidden$1: function($receiver, arg0) {
+        return this.get$hidden(this).call$1(arg0);
+      },
       $isDisposable: 1
     },
     ViewGroup_getViewById_closure: {
@@ -37204,10 +38230,10 @@ self._domRemove = function(element) {
       call$1: [function(pos) {
         $.$get$state().$indexSet(0, this.prefName, pos);
         return pos;
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     View: {
-      "^": "Object;root<,tabElement<,_closeButton<,group?",
+      "^": "Object;root<,content>,tabElement<,_closeButton<,group?",
       handleActivate$0: function() {
         this.root.attribute$2("hidden", false);
         J.toggle$2$x(J.get$classes$x(this.tabElement.element), "active", true);
@@ -37232,10 +38258,11 @@ self._domRemove = function(element) {
         this.root.add$1(0, [t1, this.content]);
         t2 = K.CoreElement$("li", null, "tab", null);
         t3 = K.CoreElement$("div", null, "title", this.get$label(this));
-        t3.click$1(0, this.get$_handleTab());
         t4 = K.CoreElement$("div", null, "close-icon", null);
         t4.click$1(0, this.get$handleClose());
         t2.add$1(0, [t3, t4]);
+        t2.click$1(0, this.get$_handleTab());
+        J.get$attributes$x(t2.element).$indexSet(0, "data-type", "ViewPartEditor");
         this.tabElement = t2;
         t2 = new K.CloseButton(W._ElementFactoryProvider_createElement_tag("div", null));
         t2.CoreElement$4$attributes$classes$text("div", null, "close-button", null);
@@ -37337,7 +38364,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     ListTreeBuilder__addNode_closure1: {
-      "^": "Closure:36;element",
+      "^": "Closure:47;element",
       call$1: [function(e) {
         var t1 = J.getInterceptor$x(e);
         if (J.$lt$n(J.get$x$x(t1.get$offset(e)), 12)) {
@@ -37348,7 +38375,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     ListTreeBuilder__addNode_closure2: {
-      "^": "Closure:34;$this,node",
+      "^": "Closure:37;$this,node",
       call$1: [function($event) {
         var t1;
         if (J.get$defaultPrevented$x($event) !== true) {
@@ -37357,10 +38384,10 @@ self._domRemove = function(element) {
             H.throwExpression(t1._addEventError$0());
           t1._sendData$1(this.node);
         }
-      }, null, null, 2, 0, null, 27, "call"]
+      }, null, null, 2, 0, null, 34, "call"]
     },
     ListTreeBuilder__addNode_closure3: {
-      "^": "Closure:34;$this,node",
+      "^": "Closure:37;$this,node",
       call$1: [function($event) {
         var t1;
         if (J.get$defaultPrevented$x($event) !== true) {
@@ -37369,7 +38396,7 @@ self._domRemove = function(element) {
             H.throwExpression(t1._addEventError$0());
           t1._sendData$1(this.node);
         }
-      }, null, null, 2, 0, null, 27, "call"]
+      }, null, null, 2, 0, null, 34, "call"]
     },
     Node0: {
       "^": "Object;data>,canHaveChildren<,children>",
@@ -37392,7 +38419,7 @@ self._domRemove = function(element) {
       }
     },
     Node_decendentCount_closure: {
-      "^": "Closure:99;",
+      "^": "Closure:101;",
       call$2: function(val, n) {
         return J.$add$ns(val, n.get$decendentCount());
       }
@@ -37404,7 +38431,7 @@ self._domRemove = function(element) {
           this.handleCancel$0();
         else
           this._timer = P.Timer_Timer(P.Duration$(0, 0, 0, 750, 0, 0), new T.DoubleCancelCommand__handleCancel_closure(this));
-      }, "call$1", "get$_handleCancel", 2, 0, 9],
+      }, "call$1", "get$_handleCancel", 2, 0, 10],
       dispose$0: [function() {
         return this._views$_command.invoke$1("dispose");
       }, "call$0", "get$dispose", 0, 0, 2],
@@ -38382,14 +39409,14 @@ self._domRemove = function(element) {
     _AsyncRun__scheduleImmediateJsOverride: [function(callback) {
       ++init.globalState.topEventLoop._activeJsAsyncCount;
       self.scheduleImmediate(H.convertDartClosureToJS(new P._AsyncRun__scheduleImmediateJsOverride_internalCallback(callback), 0));
-    }, "call$1", "async__AsyncRun__scheduleImmediateJsOverride$closure", 2, 0, 18],
+    }, "call$1", "async__AsyncRun__scheduleImmediateJsOverride$closure", 2, 0, 22],
     _AsyncRun__scheduleImmediateWithSetImmediate: [function(callback) {
       ++init.globalState.topEventLoop._activeJsAsyncCount;
       self.setImmediate(H.convertDartClosureToJS(new P._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback(callback), 0));
-    }, "call$1", "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", 2, 0, 18],
+    }, "call$1", "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", 2, 0, 22],
     _AsyncRun__scheduleImmediateWithTimer: [function(callback) {
       P.Timer__createTimer(C.Duration_0, callback);
-    }, "call$1", "async__AsyncRun__scheduleImmediateWithTimer$closure", 2, 0, 18],
+    }, "call$1", "async__AsyncRun__scheduleImmediateWithTimer$closure", 2, 0, 22],
     _asyncHelper: function(object, bodyFunctionOrErrorCode, completer) {
       if (bodyFunctionOrErrorCode === 0) {
         J.complete$1$x(completer, object);
@@ -38590,7 +39617,7 @@ self._domRemove = function(element) {
       P._rootHandleUncaughtError(null, null, t1, error, stackTrace);
     }, function(error) {
       return P._nullErrorHandler(error, null);
-    }, "call$2", "call$1", "async___nullErrorHandler$closure", 2, 2, 31, 3, 9, 11],
+    }, "call$2", "call$1", "async___nullErrorHandler$closure", 2, 2, 41, 3, 9, 11],
     _nullDoneHandler: [function() {
     }, "call$0", "async___nullDoneHandler$closure", 0, 0, 2],
     _runUserCode: function(userCode, onSuccess, onError) {
@@ -38732,7 +39759,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     _AsyncRun__initializeScheduleImmediate_closure: {
-      "^": "Closure:100;_box_0,div,span",
+      "^": "Closure:102;_box_0,div,span",
       call$1: function(callback) {
         var t1, t2;
         ++init.globalState.topEventLoop._activeJsAsyncCount;
@@ -38763,13 +39790,13 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 2, "call"]
     },
     _awaitOnObject_closure0: {
-      "^": "Closure:33;bodyFunction",
+      "^": "Closure:38;bodyFunction",
       call$2: [function(error, stackTrace) {
         this.bodyFunction.call$2(1, new H.ExceptionAndStackTrace(error, stackTrace));
       }, null, null, 4, 0, null, 9, 11, "call"]
     },
     _wrapJsFunctionForAsync_closure: {
-      "^": "Closure:102;$protected",
+      "^": "Closure:104;$protected",
       call$2: [function(errorCode, result) {
         this.$protected(errorCode, result);
       }, null, null, 4, 0, null, 111, 2, "call"]
@@ -38815,7 +39842,9 @@ self._domRemove = function(element) {
       _onPause$0: [function() {
       }, "call$0", "get$_onPause", 0, 0, 2],
       _onResume$0: [function() {
-      }, "call$0", "get$_onResume", 0, 0, 2]
+      }, "call$0", "get$_onResume", 0, 0, 2],
+      $is_EventSink: 1,
+      $isStreamSubscription: 1
     },
     _BroadcastStreamController: {
       "^": "Object;_async$_next@,_async$_previous@",
@@ -38824,6 +39853,14 @@ self._domRemove = function(element) {
       },
       get$_mayAddEvent: function() {
         return this._state < 4;
+      },
+      _ensureDoneFuture$0: function() {
+        var t1 = this._doneFuture;
+        if (t1 != null)
+          return t1;
+        t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
+        this._doneFuture = t1;
+        return t1;
       },
       _removeListener$1: function(subscription) {
         var previous, next;
@@ -38890,8 +39927,37 @@ self._domRemove = function(element) {
           return {func: 1, v: true, args: [T]};
         }, this.$receiver, "_BroadcastStreamController");
       }, 12],
+      addError$2: [function(error, stackTrace) {
+        error = error != null ? error : new P.NullThrownError();
+        if (!this.get$_mayAddEvent())
+          throw H.wrapException(this._addEventError$0());
+        $.Zone__current.toString;
+        this._sendError$2(error, stackTrace);
+      }, function(error) {
+        return this.addError$2(error, null);
+      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 20, 3, 9, 11],
+      close$0: function(_) {
+        var doneFuture;
+        if ((this._state & 4) !== 0)
+          return this._doneFuture;
+        if (!this.get$_mayAddEvent())
+          throw H.wrapException(this._addEventError$0());
+        this._state |= 4;
+        doneFuture = this._ensureDoneFuture$0();
+        this._sendDone$0();
+        return doneFuture;
+      },
       _async$_add$1: function(data) {
         this._sendData$1(data);
+      },
+      _addError$2: function(error, stackTrace) {
+        this._sendError$2(error, stackTrace);
+      },
+      _close$0: function() {
+        var addState = this._addStreamState;
+        this._addStreamState = null;
+        this._state &= 4294967287;
+        C.JSNull_methods.complete$0(addState);
       },
       _forEachListener$1: function(action) {
         var t1, link, id, link0;
@@ -38954,6 +40020,17 @@ self._domRemove = function(element) {
           return;
         }
         this._forEachListener$1(new P._SyncBroadcastStreamController__sendData_closure(this, data));
+      },
+      _sendError$2: function(error, stackTrace) {
+        if (this._async$_next === this)
+          return;
+        this._forEachListener$1(new P._SyncBroadcastStreamController__sendError_closure(this, error, stackTrace));
+      },
+      _sendDone$0: function() {
+        if (this._async$_next !== this)
+          this._forEachListener$1(new P._SyncBroadcastStreamController__sendDone_closure(this));
+        else
+          this._doneFuture._asyncComplete$1(null);
       }
     },
     _SyncBroadcastStreamController__sendData_closure: {
@@ -38967,12 +40044,47 @@ self._domRemove = function(element) {
         }, this.$this, "_SyncBroadcastStreamController");
       }
     },
+    _SyncBroadcastStreamController__sendError_closure: {
+      "^": "Closure;$this,error,stackTrace",
+      call$1: function(subscription) {
+        subscription._addError$2(this.error, this.stackTrace);
+      },
+      $signature: function() {
+        return H.computeSignature(function(T) {
+          return {func: 1, args: [[P._BufferingStreamSubscription, T]]};
+        }, this.$this, "_SyncBroadcastStreamController");
+      }
+    },
+    _SyncBroadcastStreamController__sendDone_closure: {
+      "^": "Closure;$this",
+      call$1: function(subscription) {
+        subscription._close$0();
+      },
+      $signature: function() {
+        return H.computeSignature(function(T) {
+          return {func: 1, args: [[P._BroadcastSubscription, T]]};
+        }, this.$this, "_SyncBroadcastStreamController");
+      }
+    },
     _AsyncBroadcastStreamController: {
       "^": "_BroadcastStreamController;onListen,onCancel,_state,_async$_next,_async$_previous,_addStreamState,_doneFuture",
       _sendData$1: function(data) {
         var link;
         for (link = this._async$_next; link !== this; link = link.get$_async$_next())
           link._addPending$1(H.setRuntimeTypeInfo(new P._DelayedData(data, null), [null]));
+      },
+      _sendError$2: function(error, stackTrace) {
+        var link;
+        for (link = this._async$_next; link !== this; link = link.get$_async$_next())
+          link._addPending$1(new P._DelayedError(error, stackTrace, null));
+      },
+      _sendDone$0: function() {
+        var link = this._async$_next;
+        if (link !== this)
+          for (; link !== this; link = link.get$_async$_next())
+            link._addPending$1(C.C__DelayedDone);
+        else
+          this._doneFuture._asyncComplete$1(null);
       }
     },
     Future: {
@@ -39016,7 +40128,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     Future_doWhile_closure: {
-      "^": "Closure:32;_box_0,f,doneSignal",
+      "^": "Closure:40;_box_0,f,doneSignal",
       call$1: function(keepGoing) {
         var t1 = this.doneSignal;
         if (keepGoing === true)
@@ -39042,7 +40154,7 @@ self._domRemove = function(element) {
         this._completeError$2(error, stackTrace);
       }, function(error) {
         return this.completeError$2(error, null);
-      }, "completeError$1", "call$2", "call$1", "get$completeError", 2, 2, 24, 3, 9, 11]
+      }, "completeError$1", "call$2", "call$1", "get$completeError", 2, 2, 20, 3, 9, 11]
     },
     _AsyncCompleter: {
       "^": "_Completer;future",
@@ -39216,7 +40328,7 @@ self._domRemove = function(element) {
         P._Future__propagateToListeners(this, listeners);
       }, function(error) {
         return this._completeError$2(error, null);
-      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 31, 3, 9, 11],
+      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 41, 3, 9, 11],
       _asyncComplete$1: function(value) {
         var t1;
         if (value == null)
@@ -39396,7 +40508,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 8, "call"]
     },
     _Future__chainForeignFuture_closure0: {
-      "^": "Closure:23;target",
+      "^": "Closure:21;target",
       call$2: [function(error, stackTrace) {
         this.target._completeError$2(error, stackTrace);
       }, function(error) {
@@ -39428,7 +40540,7 @@ self._domRemove = function(element) {
       }
     },
     _Future__propagateToListeners_handleValueCallback: {
-      "^": "Closure:11;_box_1,listener,sourceValue,zone",
+      "^": "Closure:12;_box_1,listener,sourceValue,zone",
       call$0: function() {
         var e, s, exception, t1;
         try {
@@ -39543,7 +40655,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 112, "call"]
     },
     _Future__propagateToListeners_handleWhenCompleteCallback_closure0: {
-      "^": "Closure:23;_box_0,result",
+      "^": "Closure:21;_box_0,result",
       call$2: [function(error, stackTrace) {
         var t1, completeResult;
         t1 = this._box_0;
@@ -39579,7 +40691,7 @@ self._domRemove = function(element) {
           t1.cancel$0();
           this.result._completeWithValue$1(v);
         }
-      }, null, null, 2, 0, null, 36, "call"],
+      }, null, null, 2, 0, null, 16, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -39594,7 +40706,7 @@ self._domRemove = function(element) {
           t1.cancel$0();
           this.result._completeError$2(e, s);
         }
-      }, null, null, 4, 0, null, 0, 16, "call"]
+      }, null, null, 4, 0, null, 0, 17, "call"]
     },
     _AsyncCallbackEntry: {
       "^": "Object;callback,zone<,next@",
@@ -39683,7 +40795,7 @@ self._domRemove = function(element) {
         t1 = this._box_0;
         t2 = this.future;
         P._runUserCode(new P.Stream_contains__closure(this.needle, element), new P.Stream_contains__closure0(t1, t2), P._cancelAndErrorClosure(t1.subscription, t2));
-      }, null, null, 2, 0, null, 19, "call"],
+      }, null, null, 2, 0, null, 21, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -39697,7 +40809,7 @@ self._domRemove = function(element) {
       }
     },
     Stream_contains__closure0: {
-      "^": "Closure:32;_box_0,future",
+      "^": "Closure:40;_box_0,future",
       call$1: function(isMatch) {
         if (isMatch === true)
           P._cancelAndValue(this._box_0.subscription, this.future, true);
@@ -39713,7 +40825,7 @@ self._domRemove = function(element) {
       "^": "Closure;_box_0,$this,action,future",
       call$1: [function(element) {
         P._runUserCode(new P.Stream_forEach__closure(this.action, element), new P.Stream_forEach__closure0(), P._cancelAndErrorClosure(this._box_0.subscription, this.future));
-      }, null, null, 2, 0, null, 19, "call"],
+      }, null, null, 2, 0, null, 21, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [T]};
@@ -40441,7 +41553,8 @@ self._domRemove = function(element) {
           return;
         this._state = (t1 | 1) >>> 0;
         this._zone.runGuarded$1(this._onDone);
-      }, "call$0", "get$_sendDone", 0, 0, 2]
+      }, "call$0", "get$_sendDone", 0, 0, 2],
+      $isStreamSubscription: 1
     },
     _StreamIteratorImpl: {
       "^": "Object;_subscription,_async$_current,_futureOrPrefetch,_state",
@@ -40495,7 +41608,7 @@ self._domRemove = function(element) {
         this._state = 4;
       }, function(error) {
         return this._onError$2(error, null);
-      }, "_onError$1", "call$2", "call$1", "get$_onError", 2, 2, 24, 3, 9, 11],
+      }, "_onError$1", "call$2", "call$1", "get$_onError", 2, 2, 20, 3, 9, 11],
       _onDone$0: [function() {
         if (this._state === 2) {
           var hasNext = this._futureOrPrefetch;
@@ -40515,7 +41628,7 @@ self._domRemove = function(element) {
       }, null, null, 0, 0, null, "call"]
     },
     _cancelAndErrorClosure_closure: {
-      "^": "Closure:33;subscription,future",
+      "^": "Closure:38;subscription,future",
       call$2: function(error, stackTrace) {
         return P._cancelAndError(this.subscription, this.future, error, stackTrace);
       }
@@ -40591,7 +41704,7 @@ self._domRemove = function(element) {
       }, 12],
       _handleError$2: [function(error, stackTrace) {
         this._addError$2(error, stackTrace);
-      }, "call$2", "get$_handleError", 4, 0, 107, 9, 11],
+      }, "call$2", "get$_handleError", 4, 0, 109, 9, 11],
       _handleDone$0: [function() {
         this._close$0();
       }, "call$0", "get$_handleDone", 0, 0, 2],
@@ -40602,6 +41715,9 @@ self._domRemove = function(element) {
         this._subscription = this._stream._async$_source.listen$3$onDone$onError(t1, this.get$_handleDone(), t2);
       },
       $as_BufferingStreamSubscription: function($S, $T) {
+        return [$T];
+      },
+      $asStreamSubscription: function($S, $T) {
         return [$T];
       },
       static: {_ForwardingStreamSubscription$: function(_stream, onData, onError, onDone, cancelOnError, $S, $T) {
@@ -40668,7 +41784,8 @@ self._domRemove = function(element) {
       $as_ForwardingStreamSubscription: function($T) {
         return [$T, $T];
       },
-      $as_BufferingStreamSubscription: null
+      $as_BufferingStreamSubscription: null,
+      $asStreamSubscription: null
     },
     _SkipStream: {
       "^": "_ForwardingStream;_count,_async$_source",
@@ -40823,7 +41940,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this,f",
       call$1: [function(arg) {
         return this.$this.runUnaryGuarded$2(this.f, arg);
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     }
   }], ["dart.collection", "dart:collection",, P, {
     "^": "",
@@ -41246,7 +42363,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(each) {
         return this.$this.$index(0, each);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 28, "call"]
     },
     _HashMap_addAll_closure: {
       "^": "Closure;$this",
@@ -42471,7 +43588,7 @@ self._domRemove = function(element) {
     },
     _defaultToEncodable: [function(object) {
       return object.toJson$0();
-    }, "call$1", "convert___defaultToEncodable$closure", 2, 0, 39, 56],
+    }, "call$1", "convert___defaultToEncodable$closure", 2, 0, 32, 55],
     _JsonMap: {
       "^": "Object;_original,_processed,_data",
       $index: function(_, key) {
@@ -42564,7 +43681,7 @@ self._domRemove = function(element) {
         if (this._processed != null && !this.containsKey$1(0, key))
           return;
         return this._upgrade$0().remove$1(0, key);
-      }, "call$1", "get$remove", 2, 0, 108],
+      }, "call$1", "get$remove", 2, 0, 110],
       clear$0: function(_) {
         var t1;
         if (this._processed == null)
@@ -42639,7 +43756,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(each) {
         return this.$this.$index(0, each);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 28, "call"]
     },
     _JsonMap_addAll_closure: {
       "^": "Closure:4;$this",
@@ -43466,7 +44583,7 @@ self._domRemove = function(element) {
       }
     },
     _Utf8Decoder_convert_scanOneByteCharacters: {
-      "^": "Closure:109;endIndex",
+      "^": "Closure:111;endIndex",
       call$2: function(units, from) {
         var to, t1, i, unit;
         to = this.endIndex;
@@ -43483,7 +44600,7 @@ self._domRemove = function(element) {
       }
     },
     _Utf8Decoder_convert_addSingleBytes: {
-      "^": "Closure:110;$this,codeUnits,startIndex,endIndex",
+      "^": "Closure:112;$this,codeUnits,startIndex,endIndex",
       call$2: function(from, to) {
         this.$this._stringSink._contents += P.String_String$fromCharCodes(this.codeUnits, from, to);
       }
@@ -43519,7 +44636,7 @@ self._domRemove = function(element) {
     },
     Comparable_compare: [function(a, b) {
       return J.compareTo$1$ns(a, b);
-    }, "call$2", "core_Comparable_compare$closure", 4, 0, 155],
+    }, "call$2", "core_Comparable_compare$closure", 4, 0, 163],
     Error_safeToString: function(object) {
       if (typeof object === "number" || typeof object === "boolean" || null == object)
         return J.toString$0$(object);
@@ -43538,10 +44655,10 @@ self._domRemove = function(element) {
     },
     identical: [function(a, b) {
       return a == null ? b == null : a === b;
-    }, "call$2", "core__identical$closure", 4, 0, 156],
+    }, "call$2", "core__identical$closure", 4, 0, 164],
     identityHashCode: [function(object) {
       return H.objectHashCode(object);
-    }, "call$1", "core__identityHashCode$closure", 2, 0, 157],
+    }, "call$1", "core__identityHashCode$closure", 2, 0, 165],
     List_List$filled: function($length, fill, growable, $E) {
       var result, t1, i;
       result = J.JSArray_JSArray$fixed($length, $E);
@@ -43611,7 +44728,7 @@ self._domRemove = function(element) {
       return 65536 + ((start & 1023) << 10 >>> 0) + (end & 1023);
     },
     NoSuchMethodError_toString_closure: {
-      "^": "Closure:111;_box_0,sb",
+      "^": "Closure:113;_box_0,sb",
       call$2: function(key, value) {
         var t1, t2, t3;
         t1 = this.sb;
@@ -43773,7 +44890,7 @@ self._domRemove = function(element) {
         }}
     },
     Duration_toString_sixDigits: {
-      "^": "Closure:19;",
+      "^": "Closure:23;",
       call$1: function(n) {
         if (n >= 100000)
           return H.S(n);
@@ -43789,7 +44906,7 @@ self._domRemove = function(element) {
       }
     },
     Duration_toString_twoDigits: {
-      "^": "Closure:19;",
+      "^": "Closure:23;",
       call$1: function(n) {
         if (n >= 10)
           return "" + n;
@@ -45358,7 +46475,7 @@ self._domRemove = function(element) {
           return C.JSArray_methods.join$1(output, "/");
         }, Uri_decodeComponent: [function(encodedComponent) {
           return P.Uri__uriDecode(encodedComponent, 0, J.get$length$asx(encodedComponent), C.Utf8Codec_false, false);
-        }, "call$1", "core_Uri_decodeComponent$closure", 2, 0, 30, 115], Uri_parseIPv4Address: function(host) {
+        }, "call$1", "core_Uri_decodeComponent$closure", 2, 0, 44, 115], Uri_parseIPv4Address: function(host) {
           var t1, bytes;
           t1 = new P.Uri_parseIPv4Address_error();
           bytes = host.split(".");
@@ -45641,7 +46758,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(s) {
         return P.Uri__uriEncode(C.List_qg40, s, C.Utf8Codec_false, false);
-      }, null, null, 2, 0, null, 16, "call"]
+      }, null, null, 2, 0, null, 17, "call"]
     },
     Uri__makeQuery_closure: {
       "^": "Closure:4;_box_0,result",
@@ -45659,13 +46776,13 @@ self._domRemove = function(element) {
       }
     },
     Uri_hashCode_combine: {
-      "^": "Closure:112;",
+      "^": "Closure:114;",
       call$2: function(part, current) {
         return current * 31 + J.get$hashCode$(part) & 1073741823;
       }
     },
     Uri_parseIPv4Address_error: {
-      "^": "Closure:8;",
+      "^": "Closure:9;",
       call$1: function(msg) {
         throw H.wrapException(new P.FormatException("Illegal IPv4 address, " + msg, null, null));
       }
@@ -45682,7 +46799,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 116, "call"]
     },
     Uri_parseIPv6Address_error: {
-      "^": "Closure:113;host",
+      "^": "Closure:115;host",
       call$2: function(msg, position) {
         throw H.wrapException(new P.FormatException("Illegal IPv6 address, " + msg, this.host, position));
       },
@@ -45691,7 +46808,7 @@ self._domRemove = function(element) {
       }
     },
     Uri_parseIPv6Address_parseHex: {
-      "^": "Closure:114;host,error",
+      "^": "Closure:116;host,error",
       call$2: function(start, end) {
         var value, t1;
         if (J.$gt$n(J.$sub$n(end, start), 4))
@@ -45832,7 +46949,7 @@ self._domRemove = function(element) {
       return W.HttpRequest_request(url, null, null, null, null, null, null, null);
     }, function(url, method, sendData) {
       return W.HttpRequest_request(url, method, null, null, null, null, sendData, null);
-    }, "call$8$method$mimeType$onProgress$requestHeaders$responseType$sendData$withCredentials", "call$1", "call$3$method$sendData", "html_HttpRequest_request$closure", 2, 15, 158, 3, 3, 3, 3, 3, 3, 3],
+    }, "call$8$method$mimeType$onProgress$requestHeaders$responseType$sendData$withCredentials", "call$1", "call$3$method$sendData", "html_HttpRequest_request$closure", 2, 15, 166, 3, 3, 3, 3, 3, 3, 3],
     WebSocket_WebSocket: function(url, protocol_OR_protocols) {
       return new WebSocket(url);
     },
@@ -45878,7 +46995,7 @@ self._domRemove = function(element) {
       "%": "HTMLAppletElement|HTMLBRElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDialogElement|HTMLDirectoryElement|HTMLFontElement|HTMLFrameElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLLabelElement|HTMLLegendElement|HTMLMarqueeElement|HTMLModElement|HTMLParagraphElement|HTMLPictureElement|HTMLPreElement|HTMLQuoteElement|HTMLShadowElement|HTMLSpanElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableDataCellElement|HTMLTableHeaderCellElement|HTMLTitleElement|HTMLUListElement|HTMLUnknownElement;HTMLElement"
     },
     AnchorElement: {
-      "^": "HtmlElement;type=,hostname=,href},port=,protocol=",
+      "^": "HtmlElement;type=,hostname=,href%,port=,protocol=",
       toString$0: function(receiver) {
         return String(receiver);
       },
@@ -45894,7 +47011,7 @@ self._domRemove = function(element) {
       "%": "ApplicationCacheErrorEvent"
     },
     AreaElement: {
-      "^": "HtmlElement;hostname=,href},port=,protocol=",
+      "^": "HtmlElement;hostname=,href%,port=,protocol=",
       toString$0: function(receiver) {
         return String(receiver);
       },
@@ -45906,7 +47023,7 @@ self._domRemove = function(element) {
       "%": "HTMLAreaElement"
     },
     BaseElement: {
-      "^": "HtmlElement;href}",
+      "^": "HtmlElement;href%",
       "%": "HTMLBaseElement"
     },
     Blob: {
@@ -45927,7 +47044,7 @@ self._domRemove = function(element) {
       "%": "HTMLButtonElement"
     },
     CanvasElement: {
-      "^": "HtmlElement;",
+      "^": "HtmlElement;height},width}",
       $isObject: 1,
       "%": "HTMLCanvasElement"
     },
@@ -45953,6 +47070,24 @@ self._domRemove = function(element) {
         else
           return receiver.getPropertyValue(P.Device_cssPrefix() + propertyName);
       },
+      setProperty$3: function(receiver, propertyName, value, priority) {
+        var t1 = this._browserPropertyName$1(receiver, propertyName);
+        receiver.setProperty(t1, value, priority);
+        return;
+      },
+      _browserPropertyName$1: function(receiver, propertyName) {
+        var t1, $name;
+        t1 = $.$get$CssStyleDeclaration__propertyCache();
+        $name = t1[propertyName];
+        if (typeof $name === "string")
+          return $name;
+        $name = W.CssStyleDeclaration__camelCase(propertyName) in receiver ? propertyName : P.Device_cssPrefix() + propertyName;
+        t1[propertyName] = $name;
+        return $name;
+      },
+      get$content: function(receiver) {
+        return receiver.content;
+      },
       get$display: function(receiver) {
         return receiver.display;
       },
@@ -45973,16 +47108,78 @@ self._domRemove = function(element) {
     Interceptor_CssStyleDeclarationBase: {
       "^": "Interceptor+CssStyleDeclarationBase;"
     },
+    _CssStyleDeclarationSet: {
+      "^": "Object_CssStyleDeclarationBase;_elementIterable,_elementCssStyleDeclarationSetIterable",
+      getPropertyValue$1: function(_, propertyName) {
+        var t1 = this._elementCssStyleDeclarationSetIterable;
+        return J.getPropertyValue$1$x(t1.get$first(t1), propertyName);
+      },
+      setProperty$3: function(_, propertyName, value, priority) {
+        this._elementCssStyleDeclarationSetIterable.forEach$1(0, new W._CssStyleDeclarationSet_setProperty_closure(propertyName, value, priority));
+      },
+      _setAll$2: function(propertyName, value) {
+        var t1;
+        for (t1 = this._elementIterable, t1 = t1.get$iterator(t1); t1.moveNext$0();)
+          t1.__internal$_current.style[propertyName] = value;
+      },
+      set$display: function(_, value) {
+        this._setAll$2("display", value);
+      },
+      set$height: function(_, value) {
+        this._setAll$2("height", value);
+      },
+      set$width: function(_, value) {
+        this._setAll$2("width", value);
+      },
+      _CssStyleDeclarationSet$1: function(_elementIterable) {
+        this._elementCssStyleDeclarationSetIterable = H.setRuntimeTypeInfo(new H.MappedListIterable(P.List_List$from(this._elementIterable, true, null), new W._CssStyleDeclarationSet_closure()), [null, null]);
+      },
+      static: {_CssStyleDeclarationSet$: function(_elementIterable) {
+          var t1 = new W._CssStyleDeclarationSet(_elementIterable, null);
+          t1._CssStyleDeclarationSet$1(_elementIterable);
+          return t1;
+        }}
+    },
+    Object_CssStyleDeclarationBase: {
+      "^": "Object+CssStyleDeclarationBase;"
+    },
+    _CssStyleDeclarationSet_closure: {
+      "^": "Closure:0;",
+      call$1: [function(e) {
+        return J.get$style$x(e);
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    _CssStyleDeclarationSet_setProperty_closure: {
+      "^": "Closure:0;propertyName,value,priority",
+      call$1: function(e) {
+        return J.setProperty$3$x(e, this.propertyName, this.value, this.priority);
+      }
+    },
     CssStyleDeclarationBase: {
       "^": "Object;",
+      set$alignSelf: function(receiver, value) {
+        this.setProperty$3(receiver, "align-self", value, "");
+      },
+      get$content: function(receiver) {
+        return this.getPropertyValue$1(receiver, "content");
+      },
       get$display: function(receiver) {
         return this.getPropertyValue$1(receiver, "display");
+      },
+      set$display: function(receiver, value) {
+        this.setProperty$3(receiver, "display", value, "");
+      },
+      set$height: function(receiver, value) {
+        this.setProperty$3(receiver, "height", value, "");
       },
       get$highlight: function(receiver) {
         return this.getPropertyValue$1(receiver, "highlight");
       },
       get$outline: function(receiver) {
         return this.getPropertyValue$1(receiver, "outline");
+      },
+      set$width: function(receiver, value) {
+        this.setProperty$3(receiver, "width", value, "");
       }
     },
     DeviceLightEvent: {
@@ -46013,11 +47210,17 @@ self._domRemove = function(element) {
       get$onMouseDown: function(receiver) {
         return H.setRuntimeTypeInfo(new W._EventStream(receiver, "mousedown", false), [null]);
       },
+      querySelectorAll$1: function(receiver, selectors) {
+        return new W._FrozenElementList(receiver.querySelectorAll(selectors));
+      },
       createElement$2: function(receiver, tagName, typeExtension) {
         return receiver.createElement(tagName);
       },
       createElement$1: function($receiver, tagName) {
         return this.createElement$2($receiver, tagName, null);
+      },
+      hidden$1: function($receiver, arg0) {
+        return $receiver.hidden.call$1(arg0);
       },
       "%": "XMLDocument;Document"
     },
@@ -46027,6 +47230,9 @@ self._domRemove = function(element) {
         if (receiver._docChildren == null)
           receiver._docChildren = new P.FilteredElementList(receiver, new W._ChildNodeListLazy(receiver));
         return receiver._docChildren;
+      },
+      querySelectorAll$1: function(receiver, selectors) {
+        return new W._FrozenElementList(receiver.querySelectorAll(selectors));
       },
       set$innerHtml: function(receiver, value) {
         this.setInnerHtml$1(receiver, value);
@@ -46135,6 +47341,9 @@ self._domRemove = function(element) {
       remove$1: function(receiver, tokens) {
         return receiver.remove(tokens);
       },
+      toggle$2: function(receiver, token, force) {
+        return receiver.toggle(token, force);
+      },
       "%": ";DOMTokenList"
     },
     _ChildrenElementList: {
@@ -46227,13 +47436,74 @@ self._domRemove = function(element) {
         return [W.Element];
       }
     },
+    _FrozenElementList: {
+      "^": "ListBase;_nodeList",
+      get$length: function(_) {
+        return this._nodeList.length;
+      },
+      $index: function(_, index) {
+        var t1 = this._nodeList;
+        if (index >>> 0 !== index || index >= t1.length)
+          return H.ioore(t1, index);
+        return t1[index];
+      },
+      $indexSet: function(_, index, value) {
+        throw H.wrapException(new P.UnsupportedError("Cannot modify list"));
+      },
+      set$length: function(_, newLength) {
+        throw H.wrapException(new P.UnsupportedError("Cannot modify list"));
+      },
+      sort$1: function(_, compare) {
+        throw H.wrapException(new P.UnsupportedError("Cannot sort list"));
+      },
+      get$first: function(_) {
+        return C.NodeList_methods.get$first(this._nodeList);
+      },
+      get$last: function(_) {
+        return C.NodeList_methods.get$last(this._nodeList);
+      },
+      get$classes: function(_) {
+        return W._MultiElementCssClassSet__MultiElementCssClassSet(this);
+      },
+      get$style: function(_) {
+        return W._CssStyleDeclarationSet$(this);
+      },
+      get$marginEdge: function(_) {
+        return J.get$marginEdge$x(C.NodeList_methods.get$first(this._nodeList));
+      },
+      get$onChange: function(_) {
+        return H.setRuntimeTypeInfo(new W._ElementListEventStreamImpl(this, false, "change"), [null]);
+      },
+      get$onClick: function(_) {
+        return H.setRuntimeTypeInfo(new W._ElementListEventStreamImpl(this, false, "click"), [null]);
+      },
+      get$onDoubleClick: function(_) {
+        return H.setRuntimeTypeInfo(new W._ElementListEventStreamImpl(this, false, "dblclick"), [null]);
+      },
+      get$onKeyDown: function(_) {
+        return H.setRuntimeTypeInfo(new W._ElementListEventStreamImpl(this, false, "keydown"), [null]);
+      },
+      get$onMouseDown: function(_) {
+        return H.setRuntimeTypeInfo(new W._ElementListEventStreamImpl(this, false, "mousedown"), [null]);
+      },
+      $asListBase: Isolate.functionThatReturnsNull,
+      $asObject_ListMixin: Isolate.functionThatReturnsNull,
+      $asList: Isolate.functionThatReturnsNull,
+      $asIterable: Isolate.functionThatReturnsNull,
+      $isList: 1,
+      $isEfficientLength: 1,
+      $isIterable: 1
+    },
     Element: {
-      "^": "Node;tabIndex},title%,id=,_innerHtml:innerHTML},style=,tagName=",
+      "^": "Node;tabIndex},title%,className},id=,_innerHtml:innerHTML},style=,tagName=",
       get$attributes: function(receiver) {
         return new W._ElementAttributeMap(receiver);
       },
       get$children: function(receiver) {
         return new W._ChildrenElementList(receiver, receiver.children);
+      },
+      querySelectorAll$1: function(receiver, selectors) {
+        return new W._FrozenElementList(receiver.querySelectorAll(selectors));
       },
       get$classes: function(receiver) {
         return new W._ElementCssClassSet(receiver);
@@ -46401,7 +47671,7 @@ self._domRemove = function(element) {
       }
     },
     EmbedElement: {
-      "^": "HtmlElement;name=,type=",
+      "^": "HtmlElement;height},name=,type=,width}",
       "%": "HTMLEmbedElement"
     },
     ErrorEvent: {
@@ -46425,6 +47695,14 @@ self._domRemove = function(element) {
     },
     EventTarget: {
       "^": "Interceptor;",
+      addEventListener$3: function(receiver, type, listener, useCapture) {
+        if (listener != null)
+          this._addEventListener$3(receiver, type, listener, false);
+      },
+      removeEventListener$3: function(receiver, type, listener, useCapture) {
+        if (listener != null)
+          this._removeEventListener$3(receiver, type, listener, false);
+      },
       _addEventListener$3: function(receiver, type, listener, useCapture) {
         return receiver.addEventListener(type, H.convertDartClosureToJS(listener, 1), false);
       },
@@ -46595,6 +47873,12 @@ self._domRemove = function(element) {
       set$title: function(receiver, value) {
         receiver.title = value;
       },
+      get$hidden: function(receiver) {
+        return receiver.webkitHidden;
+      },
+      hidden$1: function($receiver, arg0) {
+        return this.get$hidden($receiver).call$1(arg0);
+      },
       "%": "HTMLDocument"
     },
     HttpRequest: {
@@ -46613,7 +47897,7 @@ self._domRemove = function(element) {
       "%": "XMLHttpRequest"
     },
     HttpRequest_getString_closure: {
-      "^": "Closure:115;",
+      "^": "Closure:117;",
       call$1: [function(xhr) {
         return J.get$responseText$x(xhr);
       }, null, null, 2, 0, null, 118, "call"]
@@ -46641,7 +47925,7 @@ self._domRemove = function(element) {
       "%": ";XMLHttpRequestEventTarget"
     },
     IFrameElement: {
-      "^": "HtmlElement;name=",
+      "^": "HtmlElement;height},name=,width}",
       "%": "HTMLIFrameElement"
     },
     ImageData: {
@@ -46650,7 +47934,7 @@ self._domRemove = function(element) {
       "%": "ImageData"
     },
     ImageElement: {
-      "^": "HtmlElement;",
+      "^": "HtmlElement;height},width}",
       complete$1: function($receiver, arg0) {
         return $receiver.complete.call$1(arg0);
       },
@@ -46658,7 +47942,7 @@ self._domRemove = function(element) {
       "%": "HTMLImageElement"
     },
     InputElement: {
-      "^": "HtmlElement;checked=,disabled},files=,name=,type=,value=,directory:webkitdirectory=",
+      "^": "HtmlElement;checked=,disabled},files=,height},name=,type=,value=,directory:webkitdirectory=,width}",
       accept$1: function($receiver, arg0) {
         return $receiver.accept.call$1(arg0);
       },
@@ -46688,11 +47972,11 @@ self._domRemove = function(element) {
       "%": "HTMLLIElement"
     },
     LinkElement: {
-      "^": "HtmlElement;disabled},href},type=",
+      "^": "HtmlElement;disabled},href%,type=",
       "%": "HTMLLinkElement"
     },
     Location0: {
-      "^": "Interceptor;hostname=,href},port=,protocol=",
+      "^": "Interceptor;hostname=,href%,port=,protocol=",
       toString$0: function(receiver) {
         return String(receiver);
       },
@@ -46745,7 +48029,7 @@ self._domRemove = function(element) {
       "%": "MessageEvent"
     },
     MetaElement: {
-      "^": "HtmlElement;name=",
+      "^": "HtmlElement;content=,name=",
       "%": "HTMLMetaElement"
     },
     MeterElement: {
@@ -47030,7 +48314,7 @@ self._domRemove = function(element) {
       "%": "HTMLOListElement"
     },
     ObjectElement: {
-      "^": "HtmlElement;data=,name=,type=",
+      "^": "HtmlElement;data=,height},name=,type=,width}",
       "%": "HTMLObjectElement"
     },
     OptGroupElement: {
@@ -47246,7 +48530,7 @@ self._domRemove = function(element) {
       "%": "HTMLTableSectionElement"
     },
     TemplateElement: {
-      "^": "HtmlElement;",
+      "^": "HtmlElement;content=",
       setInnerHtml$3$treeSanitizer$validator: function(receiver, html, treeSanitizer, validator) {
         var fragment;
         receiver.textContent = null;
@@ -47289,7 +48573,7 @@ self._domRemove = function(element) {
       "%": "FocusEvent|SVGZoomEvent;UIEvent"
     },
     VideoElement: {
-      "^": "MediaElement;",
+      "^": "MediaElement;height},width}",
       $isObject: 1,
       "%": "HTMLVideoElement"
     },
@@ -47398,8 +48682,14 @@ self._domRemove = function(element) {
       get$height: function(receiver) {
         return receiver.height;
       },
+      set$height: function(receiver, value) {
+        receiver.height = value;
+      },
       get$width: function(receiver) {
         return receiver.width;
+      },
+      set$width: function(receiver, value) {
+        receiver.width = value;
       },
       get$x: function(receiver) {
         return receiver.x;
@@ -47660,6 +48950,12 @@ self._domRemove = function(element) {
     },
     CssRect: {
       "^": "MutableRectangle;_element<",
+      set$height: function(_, newHeight) {
+        throw H.wrapException(new P.UnsupportedError("Can only set height for content rect."));
+      },
+      set$width: function(_, newWidth) {
+        throw H.wrapException(new P.UnsupportedError("Can only set width for content rect."));
+      },
       _addOrSubtractToBoxModel$2: function(dimensions, augmentingMeasurement) {
         var styles, t1, t2, t3, t4, t5, val, _i, measurement, propValue, t6;
         styles = J.getComputedStyle$0$x(this._element);
@@ -47697,6 +48993,65 @@ self._domRemove = function(element) {
       },
       $asRectangle: function() {
         return [P.num];
+      }
+    },
+    _MultiElementCssClassSet: {
+      "^": "CssClassSetImpl;_elementIterable,_sets",
+      readClasses$0: function() {
+        var s = P.LinkedHashSet_LinkedHashSet(null, null, null, P.String);
+        C.JSArray_methods.forEach$1(this._sets, new W._MultiElementCssClassSet_readClasses_closure(s));
+        return s;
+      },
+      writeClasses$1: function(s) {
+        var classes, t1;
+        classes = s.join$1(0, " ");
+        for (t1 = this._elementIterable, t1 = t1.get$iterator(t1); t1.moveNext$0();)
+          J.set$className$x(t1.__internal$_current, classes);
+      },
+      modify$1: function(f) {
+        C.JSArray_methods.forEach$1(this._sets, new W._MultiElementCssClassSet_modify_closure(f));
+      },
+      toggle$2: function(_, value, shouldAdd) {
+        return C.JSArray_methods.fold$2(this._sets, false, new W._MultiElementCssClassSet_toggle_closure(value, shouldAdd));
+      },
+      toggle$1: function($receiver, value) {
+        return this.toggle$2($receiver, value, null);
+      },
+      remove$1: function(_, value) {
+        return C.JSArray_methods.fold$2(this._sets, false, new W._MultiElementCssClassSet_remove_closure(value));
+      },
+      static: {_MultiElementCssClassSet__MultiElementCssClassSet: function(elements) {
+          return new W._MultiElementCssClassSet(elements, elements.map$1(elements, new W.closure2()).toList$0(0));
+        }}
+    },
+    closure2: {
+      "^": "Closure:118;",
+      call$1: [function(e) {
+        return J.get$classes$x(e);
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    _MultiElementCssClassSet_readClasses_closure: {
+      "^": "Closure:42;s",
+      call$1: function(e) {
+        return this.s.addAll$1(0, e.readClasses$0());
+      }
+    },
+    _MultiElementCssClassSet_modify_closure: {
+      "^": "Closure:42;f",
+      call$1: function(e) {
+        return e.modify$1(this.f);
+      }
+    },
+    _MultiElementCssClassSet_toggle_closure: {
+      "^": "Closure:43;value,shouldAdd",
+      call$2: function(changed, e) {
+        return J.toggle$2$x(e, this.value, this.shouldAdd) === true || changed === true;
+      }
+    },
+    _MultiElementCssClassSet_remove_closure: {
+      "^": "Closure:43;value",
+      call$2: function(changed, e) {
+        return J.remove$1$ax(e, this.value) === true || changed === true;
       }
     },
     _ElementCssClassSet: {
@@ -47821,6 +49176,28 @@ self._domRemove = function(element) {
     _ElementEventStreamImpl: {
       "^": "_EventStream;_html$_target,_eventType,_useCapture"
     },
+    _ElementListEventStreamImpl: {
+      "^": "Stream;_targetList,_useCapture,_eventType",
+      listen$4$cancelOnError$onDone$onError: function(onData, cancelOnError, onDone, onError) {
+        var pool, t1, t2;
+        pool = H.setRuntimeTypeInfo(new W._StreamPool(null, H.setRuntimeTypeInfo(new H.JsLinkedHashMap(0, null, null, null, null, null, 0), [P.Stream, P.StreamSubscription])), [null]);
+        pool._html$_controller = P.StreamController_StreamController$broadcast(pool.get$close(pool), null, true, null);
+        for (t1 = this._targetList, t1 = t1.get$iterator(t1), t2 = this._eventType; t1.moveNext$0();)
+          pool.add$1(0, H.setRuntimeTypeInfo(new W._EventStream(t1.__internal$_current, t2, false), [null]));
+        t1 = pool._html$_controller;
+        t1.toString;
+        return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$4$cancelOnError$onDone$onError(onData, cancelOnError, onDone, onError);
+      },
+      listen$1: function(onData) {
+        return this.listen$4$cancelOnError$onDone$onError(onData, null, null, null);
+      },
+      listen$3$onDone$onError: function(onData, onDone, onError) {
+        return this.listen$4$cancelOnError$onDone$onError(onData, null, onDone, onError);
+      },
+      listen$2$onDone: function(onData, onDone) {
+        return this.listen$4$cancelOnError$onDone$onError(onData, null, onDone, null);
+      }
+    },
     _EventStreamSubscription: {
       "^": "StreamSubscription;_pauseCount,_html$_target,_eventType,_html$_onData,_useCapture",
       cancel$0: function() {
@@ -47850,27 +49227,44 @@ self._domRemove = function(element) {
         this._tryResume$0();
       },
       _tryResume$0: function() {
-        var t1, t2, t3;
-        t1 = this._html$_onData;
-        t2 = t1 != null;
-        if (t2 && this._pauseCount <= 0) {
-          t3 = this._html$_target;
-          t3.toString;
-          if (t2)
-            J._addEventListener$3$x(t3, this._eventType, t1, false);
-        }
+        var t1 = this._html$_onData;
+        if (t1 != null && this._pauseCount <= 0)
+          J.addEventListener$3$x(this._html$_target, this._eventType, t1, false);
       },
       _unlisten$0: function() {
-        var t1, t2, t3;
-        t1 = this._html$_onData;
-        t2 = t1 != null;
-        if (t2) {
-          t3 = this._html$_target;
-          t3.toString;
-          if (t2)
-            J._removeEventListener$3$x(t3, this._eventType, t1, false);
-        }
+        var t1 = this._html$_onData;
+        if (t1 != null)
+          J.removeEventListener$3$x(this._html$_target, this._eventType, t1, false);
       }
+    },
+    _StreamPool: {
+      "^": "Object;_html$_controller,_html$_subscriptions",
+      add$1: function(_, stream) {
+        var t1, t2;
+        t1 = this._html$_subscriptions;
+        if (t1.containsKey$1(0, stream))
+          return;
+        t2 = this._html$_controller;
+        t1.$indexSet(0, stream, stream.listen$3$onDone$onError(t2.get$add(t2), new W._StreamPool_add_closure(this, stream), this._html$_controller.get$addError()));
+      },
+      remove$1: function(_, stream) {
+        var subscription = this._html$_subscriptions.remove$1(0, stream);
+        if (subscription != null)
+          subscription.cancel$0();
+      },
+      close$0: [function(_) {
+        var t1, t2;
+        for (t1 = this._html$_subscriptions, t2 = t1.get$values(t1), t2 = t2.get$iterator(t2); t2.moveNext$0();)
+          t2.get$current().cancel$0();
+        t1.clear$0(0);
+        this._html$_controller.close$0(0);
+      }, "call$0", "get$close", 0, 0, 2]
+    },
+    _StreamPool_add_closure: {
+      "^": "Closure:1;$this,stream",
+      call$0: [function() {
+        return this.$this.remove$1(0, this.stream);
+      }, null, null, 0, 0, null, "call"]
     },
     _Html5NodeValidator: {
       "^": "Object;uriPolicy<",
@@ -47905,7 +49299,7 @@ self._domRemove = function(element) {
           return t1;
         }, _Html5NodeValidator__standardAttributeValidator: [function(element, attributeName, value, context) {
           return true;
-        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 45, 19, 59, 8, 22], _Html5NodeValidator__uriAttributeValidator: [function(element, attributeName, value, context) {
+        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 36, 21, 53, 8, 31], _Html5NodeValidator__uriAttributeValidator: [function(element, attributeName, value, context) {
           var t1, t2, t3, t4, t5;
           t1 = context.get$uriPolicy();
           t2 = t1._hiddenAnchor;
@@ -47936,7 +49330,7 @@ self._domRemove = function(element) {
           else
             t1 = true;
           return t1;
-        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 45, 19, 59, 8, 22]}
+        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 36, 21, 53, 8, 31]}
     },
     ImmutableListMixin: {
       "^": "Object;",
@@ -48120,6 +49514,12 @@ self._domRemove = function(element) {
       get$parent: function(_) {
         return W._DOMWindowCrossFrame__createSafe(this._window.parent);
       },
+      addEventListener$3: function(_, type, listener, useCapture) {
+        return H.throwExpression(new P.UnsupportedError("You can only attach EventListeners to your own window."));
+      },
+      removeEventListener$3: function(_, type, listener, useCapture) {
+        return H.throwExpression(new P.UnsupportedError("You can only attach EventListeners to your own window."));
+      },
       $isEventTarget: 1,
       $isInterceptor: 1,
       static: {_DOMWindowCrossFrame__createSafe: function(w) {
@@ -48258,7 +49658,7 @@ self._domRemove = function(element) {
       }
     },
     _ValidatingTreeSanitizer_sanitizeTree_walk: {
-      "^": "Closure:116;$this",
+      "^": "Closure:121;$this",
       call$2: function(node, $parent) {
         var t1, child, nextChild;
         t1 = this.$this;
@@ -48291,13 +49691,13 @@ self._domRemove = function(element) {
   }], ["dart.dom.svg", "dart:svg",, P, {
     "^": "",
     AElement: {
-      "^": "GraphicsElement;",
+      "^": "GraphicsElement;href=",
       $isInterceptor: 1,
       $isObject: 1,
       "%": "SVGAElement"
     },
     AltGlyphElement: {
-      "^": "TextPositioningElement;",
+      "^": "TextPositioningElement;href=",
       format$4$lineLength: function($receiver, arg0, arg1, arg2, arg3) {
         return $receiver.format.call$4$lineLength(arg0, arg1, arg2, arg3);
       },
@@ -48366,7 +49766,7 @@ self._domRemove = function(element) {
       "%": "SVGFEGaussianBlurElement"
     },
     FEImageElement: {
-      "^": "SvgElement;result=,x=,y=",
+      "^": "SvgElement;result=,x=,y=,href=",
       $isInterceptor: 1,
       $isObject: 1,
       "%": "SVGFEImageElement"
@@ -48416,7 +49816,7 @@ self._domRemove = function(element) {
       "%": "SVGFETurbulenceElement"
     },
     FilterElement: {
-      "^": "SvgElement;x=,y=",
+      "^": "SvgElement;x=,y=,href=",
       $isInterceptor: 1,
       $isObject: 1,
       "%": "SVGFilterElement"
@@ -48436,7 +49836,7 @@ self._domRemove = function(element) {
       "%": "SVGClipPathElement|SVGDefsElement|SVGGElement|SVGSwitchElement;SVGGraphicsElement"
     },
     ImageElement0: {
-      "^": "GraphicsElement;x=,y=",
+      "^": "GraphicsElement;x=,y=,href=",
       $isInterceptor: 1,
       $isObject: 1,
       "%": "SVGImageElement"
@@ -48454,7 +49854,7 @@ self._domRemove = function(element) {
       "%": "SVGMaskElement"
     },
     PatternElement: {
-      "^": "SvgElement;x=,y=",
+      "^": "SvgElement;x=,y=,href=",
       $isInterceptor: 1,
       $isObject: 1,
       "%": "SVGPatternElement"
@@ -48464,7 +49864,7 @@ self._domRemove = function(element) {
       "%": "SVGRectElement"
     },
     ScriptElement: {
-      "^": "SvgElement;type=",
+      "^": "SvgElement;type=,href=",
       $isScriptElement: 1,
       $isInterceptor: 1,
       $isObject: 1,
@@ -48575,7 +49975,7 @@ self._domRemove = function(element) {
       "%": ";SVGTextContentElement"
     },
     TextPathElement: {
-      "^": "TextContentElement;",
+      "^": "TextContentElement;href=",
       $isInterceptor: 1,
       $isObject: 1,
       "%": "SVGTextPathElement"
@@ -48585,7 +49985,7 @@ self._domRemove = function(element) {
       "%": "SVGTSpanElement|SVGTextElement;SVGTextPositioningElement"
     },
     UseElement: {
-      "^": "GraphicsElement;x=,y=",
+      "^": "GraphicsElement;x=,y=,href=",
       $isInterceptor: 1,
       $isObject: 1,
       "%": "SVGUseElement"
@@ -48597,7 +49997,7 @@ self._domRemove = function(element) {
       "%": "SVGViewElement"
     },
     _GradientElement: {
-      "^": "SvgElement;",
+      "^": "SvgElement;href=",
       $isInterceptor: 1,
       $isObject: 1,
       "%": "SVGGradientElement|SVGLinearGradientElement|SVGRadialGradientElement"
@@ -48684,7 +50084,7 @@ self._domRemove = function(element) {
       if (!!t1.$isFunction)
         return P._getJsProxy(o, "$dart_jsFunction", new P._convertToJS_closure());
       return P._getJsProxy(o, "_$dart_jsObject", new P._convertToJS_closure0($.$get$_dartProxyCtor()));
-    }, "call$1", "js___convertToJS$closure", 2, 0, 0, 24],
+    }, "call$1", "js___convertToJS$closure", 2, 0, 0, 29],
     _getJsProxy: function(o, propertyName, createProxy) {
       var jsProxy = P._getOwnProperty(o, propertyName);
       if (jsProxy == null) {
@@ -48712,7 +50112,7 @@ self._domRemove = function(element) {
         else
           return P._wrapToDart(o);
       }
-    }, "call$1", "js___convertToDart$closure", 2, 0, 39, 24],
+    }, "call$1", "js___convertToDart$closure", 2, 0, 32, 29],
     _wrapToDart: function(o) {
       if (typeof o == "function")
         return P._getDartProxy(o, $.$get$DART_CLOSURE_PROPERTY_NAME(), new P._wrapToDart_closure());
@@ -48819,7 +50219,7 @@ self._domRemove = function(element) {
           return convertedList;
         } else
           return P._convertToJS(o);
-      }, null, null, 2, 0, null, 24, "call"]
+      }, null, null, 2, 0, null, 29, "call"]
     },
     JsFunction: {
       "^": "JsObject;_jsObject",
@@ -49093,10 +50493,20 @@ self._domRemove = function(element) {
     _RectangleBase: {
       "^": "Object;",
       get$right: function(_) {
-        return this.get$left(this) + this.get$width(this);
+        var t1, t2;
+        t1 = this.get$left(this);
+        t2 = this.get$width(this);
+        if (typeof t2 !== "number")
+          return H.iae(t2);
+        return t1 + t2;
       },
       get$bottom: function(_) {
-        return this.get$top(this) + this.get$height(this);
+        var t1, t2;
+        t1 = this.get$top(this);
+        t2 = this.get$height(this);
+        if (typeof t2 !== "number")
+          return H.iae(t2);
+        return t1 + t2;
       },
       toString$0: function(_) {
         return "Rectangle (" + H.S(this.get$left(this)) + ", " + H.S(this.get$top(this)) + ") " + H.S(this.get$width(this)) + " x " + H.S(this.get$height(this));
@@ -49111,7 +50521,25 @@ self._domRemove = function(element) {
         if (this.get$left(this) === t1.get$left(other)) {
           t2 = this.get$top(this);
           t3 = t1.get$top(other);
-          t1 = (t2 == null ? t3 == null : t2 === t3) && this.get$left(this) + this.get$width(this) === t1.get$right(other) && this.get$top(this) + this.get$height(this) === t1.get$bottom(other);
+          if (t2 == null ? t3 == null : t2 === t3) {
+            t2 = this.get$left(this);
+            t3 = this.get$width(this);
+            if (typeof t2 !== "number")
+              return t2.$add();
+            if (typeof t3 !== "number")
+              return H.iae(t3);
+            if (t2 + t3 === t1.get$right(other)) {
+              t2 = this.get$top(this);
+              t3 = this.get$height(this);
+              if (typeof t2 !== "number")
+                return t2.$add();
+              if (typeof t3 !== "number")
+                return H.iae(t3);
+              t1 = t2 + t3 === t1.get$bottom(other);
+            } else
+              t1 = false;
+          } else
+            t1 = false;
         } else
           t1 = false;
         return t1;
@@ -49122,8 +50550,16 @@ self._domRemove = function(element) {
         t2 = this.get$top(this);
         t3 = this.get$left(this);
         t4 = this.get$width(this);
+        if (typeof t3 !== "number")
+          return t3.$add();
+        if (typeof t4 !== "number")
+          return H.iae(t4);
         t5 = this.get$top(this);
         t6 = this.get$height(this);
+        if (typeof t5 !== "number")
+          return t5.$add();
+        if (typeof t6 !== "number")
+          return H.iae(t6);
         return P._JenkinsSmiHash_finish0(P._JenkinsSmiHash_combine0(P._JenkinsSmiHash_combine0(P._JenkinsSmiHash_combine0(P._JenkinsSmiHash_combine0(0, t1 & 0x1FFFFFFF), t2 & 0x1FFFFFFF), t3 + t4 & 0x1FFFFFFF), t5 + t6 & 0x1FFFFFFF));
       },
       get$topLeft: function(_) {
@@ -49143,8 +50579,14 @@ self._domRemove = function(element) {
       get$width: function(_) {
         return this._width;
       },
+      set$width: function(_, width) {
+        this._width = C.JSString_methods.$lt(width, 0) ? C.JSString_methods.$negate(width) * 0 : width;
+      },
       get$height: function(_) {
         return this._height;
+      },
+      set$height: function(_, height) {
+        this._height = C.JSString_methods.$lt(height, 0) ? C.JSString_methods.$negate(height) * 0 : height;
       },
       $isRectangle: 1,
       $asRectangle: null
@@ -49628,7 +51070,7 @@ self._domRemove = function(element) {
       _gettingStarted$1: [function(_) {
         $.$get$shell().toString;
         $.$get$_shell().callMethod$2("openExternal", ["http://flutter.io/getting-started/"]);
-      }, "call$1", "get$_gettingStarted", 2, 0, 9],
+      }, "call$1", "get$_gettingStarted", 2, 0, 10],
       $isDisposable: 1
     }
   }], ["haikunator", "package:haikunator/haikunator.dart",, D, {
@@ -49826,7 +51268,7 @@ self._domRemove = function(element) {
         if ($.$get$CssClassSetImpl__validTokenRE()._nativeRegExp.test(H.checkString(value)))
           return value;
         throw H.wrapException(P.ArgumentError$value(value, "value", "Not a valid class token"));
-      }, "call$1", "get$_validateToken", 2, 0, 30, 8],
+      }, "call$1", "get$_validateToken", 2, 0, 44, 8],
       toString$0: function(_) {
         return this.readClasses$0().join$1(0, " ");
       },
@@ -49924,11 +51366,11 @@ self._domRemove = function(element) {
         this.writeClasses$1(s);
         return ret;
       },
-      $isEfficientLength: 1,
       $isIterable: 1,
       $asIterable: function() {
         return [P.String];
-      }
+      },
+      $isEfficientLength: 1
     },
     CssClassSetImpl_add_closure: {
       "^": "Closure:0;value",
@@ -50631,7 +52073,7 @@ self._domRemove = function(element) {
       }
     },
     ListSyntax_parse_tryMatch: {
-      "^": "Closure:118;_box_0,parser",
+      "^": "Closure:123;_box_0,parser",
       call$1: function(pattern) {
         var t1, match;
         t1 = this.parser;
@@ -51182,6 +52624,166 @@ self._domRemove = function(element) {
         return;
       }
     }
+  }], ["", "package:atom_dartlang/material.dart",, M, {
+    "^": "",
+    MIconButton: {
+      "^": "CoreElement;iconName,element"
+    },
+    MTabGroup: {
+      "^": "CoreElement;tabs,_tabContainer,_contentContainer,_activeTab,element",
+      _handleTabAdd$1: [function(tab) {
+        var t1;
+        this._tabContainer.add$1(0, tab.get$_tabElement().element);
+        t1 = J.getInterceptor$x(tab);
+        this._contentContainer.add$1(0, t1.get$content(tab));
+        J.hidden$1$x(t1.get$content(tab), true);
+        tab.get$_tabElement().click$1(0, new M.MTabGroup__handleTabAdd_closure(this, tab));
+      }, "call$1", "get$_handleTabAdd", 2, 0, 45, 41],
+      _handleTabActivate$1: [function(tab) {
+        var t1;
+        if (J.$eq$(this._activeTab, tab))
+          return;
+        t1 = this._activeTab;
+        if (t1 != null) {
+          J.hidden$1$x(J.get$content$x(t1), true);
+          J.toggle$2$x(J.get$classes$x(this._activeTab.get$_tabElement().element), "tab-selected", false);
+          t1 = this._activeTab.get$active();
+          t1._utils$_value = false;
+          t1 = t1._utils$_controller;
+          if (!t1.get$_mayAddEvent())
+            H.throwExpression(t1._addEventError$0());
+          t1._sendData$1(false);
+        }
+        this._activeTab = tab;
+        if (tab != null) {
+          J.hidden$1$x(J.get$content$x(tab), false);
+          J.toggle$2$x(J.get$classes$x(this._activeTab.get$_tabElement().element), "tab-selected", true);
+          J.scrollIntoView$0$x(this._activeTab.get$_tabElement().element);
+          t1 = this._activeTab.get$active();
+          t1._utils$_value = true;
+          t1 = t1._utils$_controller;
+          if (!t1.get$_mayAddEvent())
+            H.throwExpression(t1._addEventError$0());
+          t1._sendData$1(true);
+        }
+      }, "call$1", "get$_handleTabActivate", 2, 0, 45, 41],
+      MTabGroup$0: function() {
+        var t1, t2, t3, t4;
+        t1 = this.element;
+        t2 = J.getInterceptor$x(t1);
+        t2.setAttribute$2(t1, "layout", "");
+        t2.setAttribute$2(t1, "vertical", "");
+        t1 = K.CoreElement$("div", null, "material-tab-container", null);
+        this._tabContainer = t1;
+        t2 = K.CoreElement$("div", null, null, null);
+        t3 = t2.element;
+        t4 = J.getInterceptor$x(t3);
+        t4.setAttribute$2(t3, "layout", "");
+        t4.setAttribute$2(t3, "vertical", "");
+        t2.flex$0(0);
+        this._contentContainer = t2;
+        this.add$1(0, [t1, t2]);
+        t2 = this.tabs;
+        t1 = t2._addedController;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(this.get$_handleTabAdd());
+        t2 = t2._selectionChangedController;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(this.get$_handleTabActivate());
+      },
+      static: {MTabGroup$: function() {
+          var t1 = new M.MTabGroup(H.setRuntimeTypeInfo(new G.SelectionGroup(null, [], P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null)), [null]), null, null, null, W._ElementFactoryProvider_createElement_tag("div", null));
+          t1.CoreElement$4$attributes$classes$text("div", null, "material-tabgroup", null);
+          t1.MTabGroup$0();
+          return t1;
+        }}
+    },
+    MTabGroup__handleTabAdd_closure: {
+      "^": "Closure:1;$this,tab",
+      call$0: function() {
+        return this.$this.tabs.setSelection$1(this.tab);
+      }
+    },
+    MTab: {
+      "^": "Object;id>,name>,_tabElement<,content>,active<",
+      toString$0: function(_) {
+        return this.id + " " + this.name;
+      },
+      MTab$2: function(id, $name) {
+        var t1;
+        J.set$text$x(this._tabElement.element, this.name);
+        t1 = this.enabled._utils$_controller;
+        H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new M.MTab_closure(this));
+      }
+    },
+    MTab_closure: {
+      "^": "Closure:0;$this",
+      call$1: [function(val) {
+        var t1 = this.$this;
+        P.print(t1.name + " enabled " + H.S(val));
+        t1._tabElement.attribute$2("disabled", val !== true);
+      }, null, null, 2, 0, null, 13, "call"]
+    },
+    MList: {
+      "^": "CoreElement;renderer,selectedItem,_ul,_itemToElement,_material$_doubleClick,element",
+      update$1: function(modelObjects) {
+        var t1, _sel, t2, t3, _i, item, element;
+        J.clear$0$ax(J.get$children$x(this._ul.element));
+        t1 = this._itemToElement;
+        t1.clear$0(0);
+        _sel = this.selectedItem._utils$_value;
+        for (t2 = modelObjects.length, t3 = J.getInterceptor(_sel), _i = 0; _i < modelObjects.length; modelObjects.length === t2 || (0, H.throwConcurrentModificationError)(modelObjects), ++_i) {
+          item = modelObjects[_i];
+          element = this._ul.add$1(0, K.CoreElement$("li", null, null, null));
+          this.renderer$2(item, element);
+          t1.$indexSet(0, item, element);
+          J.click$1$x(element, new M.MList_update_closure(this, item));
+          element.dblclick$1(new M.MList_update_closure0(this, item));
+          if (t3.$eq(_sel, item))
+            element.toggleClass$2("material-list-selected", true);
+        }
+      },
+      get$onDoubleClick: function(_) {
+        var t1 = this._material$_doubleClick;
+        return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
+      },
+      renderer$2: function(arg0, arg1) {
+        return this.renderer.call$2(arg0, arg1);
+      }
+    },
+    MList_update_closure: {
+      "^": "Closure:1;$this,item",
+      call$0: function() {
+        var t1, item, t2, t3, oldSelected, element;
+        t1 = this.$this;
+        item = this.item;
+        t2 = t1.selectedItem;
+        t3 = t2._utils$_value;
+        if (t3 != null) {
+          oldSelected = t1._itemToElement.$index(0, t3);
+          if (oldSelected != null)
+            oldSelected.toggleClass$2("material-list-selected", false);
+        }
+        element = t1._itemToElement.$index(0, item);
+        t1 = element == null;
+        if (t1)
+          item = null;
+        t2._utils$_value = item;
+        t2 = t2._utils$_controller;
+        if (!t2.get$_mayAddEvent())
+          H.throwExpression(t2._addEventError$0());
+        t2._sendData$1(item);
+        if (!t1)
+          element.toggleClass$2("material-list-selected", true);
+      }
+    },
+    MList_update_closure0: {
+      "^": "Closure:1;$this,item",
+      call$0: function() {
+        var t1 = this.$this._material$_doubleClick;
+        if (!t1.get$_mayAddEvent())
+          H.throwExpression(t1._addEventError$0());
+        t1._sendData$1(this.item);
+      }
+    }
   }], ["", "package:atom_dartlang/impl/navigation.dart",, O, {
     "^": "",
     NavigationManager: {
@@ -51193,6 +52795,9 @@ self._domRemove = function(element) {
       jumpToLocation$4: function(path, line, column, $length) {
         this._pushCurrentLocation$0();
         return Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4(path, line, column, $length);
+      },
+      jumpToLocation$3: function(path, line, column) {
+        return this.jumpToLocation$4(path, line, column, null);
       },
       jumpToLocation$1: function(path) {
         return this.jumpToLocation$4(path, null, null, null);
@@ -51554,7 +53159,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(arg) {
         return arg == null ? "null" : "\"" + H.S(arg) + "\"";
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     }
   }], ["path.internal_style", "package:path/src/internal_style.dart",, E, {
     "^": "",
@@ -52022,7 +53627,7 @@ self._domRemove = function(element) {
           else
             throw exception;
         }
-      }, null, null, 2, 0, null, 125, "call"]
+      }, null, null, 2, 0, null, 126, "call"]
     }
   }], ["", "package:collection/src/queue_list.dart",, Q, {
     "^": "",
@@ -52215,10 +53820,10 @@ self._domRemove = function(element) {
         return G._FileSpan$(this, start, end == null ? this._decodedChars.length - 1 : end);
       }, function($receiver, start) {
         return this.span$2($receiver, start, null);
-      }, "span$1", "call$2", "call$1", "get$span", 2, 2, 119, 3, 126, 127],
+      }, "span$1", "call$2", "call$1", "get$span", 2, 2, 125, 3, 127, 128],
       location$1: [function(_, offset) {
         return G.FileLocation$_(this, offset);
-      }, "call$1", "get$location", 2, 0, 120],
+      }, "call$1", "get$location", 2, 0, 126],
       getLine$1: function(offset) {
         var t1, t2;
         t1 = J.getInterceptor$n(offset);
@@ -52648,7 +54253,7 @@ self._domRemove = function(element) {
         return t1.charCodeAt(0) == 0 ? t1 : t1;
       }, function($receiver, message) {
         return this.message$2$color($receiver, message, null);
-      }, "message$1", "call$2$color", "call$1", "get$message", 2, 3, 121, 3, 10, 128],
+      }, "message$1", "call$2$color", "call$1", "get$message", 2, 3, 127, 3, 10, 129],
       $eq: ["super$SourceSpanMixin$$eq", function(_, other) {
         var t1;
         if (other == null)
@@ -52714,6 +54319,362 @@ self._domRemove = function(element) {
         index = C.JSString_methods.indexOf$2(context, text, index + 1);
       }
       return;
+    }
+  }], ["", "package:atom_dartlang/impl/status.dart",, E, {
+    "^": "",
+    _getPlatformVersions: function() {
+      return S.getPackageVersion().then$1(new E._getPlatformVersions_closure());
+    },
+    StatusViewManager: {
+      "^": "Object;disposables",
+      dispose$0: [function() {
+        return this.disposables.dispose$0();
+      }, "call$0", "get$dispose", 0, 0, 2],
+      toggleView$0: function() {
+        if (Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).hasViewId$1("dartlang"))
+          if (Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).isActiveId$1("dartlang"))
+            Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).removeViewId$1("dartlang");
+          else
+            Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).activateView$1("dartlang");
+        else
+          Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).addView$2("right", E.StatusView$());
+      },
+      StatusViewManager$0: function() {
+        this.disposables._disposables.push($.$get$atom()._commands.add$3(0, "atom-workspace", "dartlang:show-plugin-status", new E.StatusViewManager_closure(this)));
+        if (J.$eq$(J.$index$asx($.$get$state()._pluginState, "statusOpen"), true))
+          this.toggleView$0();
+      },
+      $isDisposable: 1,
+      static: {StatusViewManager$: function() {
+          var t1 = new E.StatusViewManager(new G.Disposables(null, []));
+          t1.StatusViewManager$0();
+          return t1;
+        }}
+    },
+    StatusViewManager_closure: {
+      "^": "Closure:0;$this",
+      call$1: function(_) {
+        this.$this.toggleView$0();
+      }
+    },
+    StatusView: {
+      "^": "View;subs,root,toolbar,content,tabElement,_closeButton,group",
+      _createPluginSection$1: function(container) {
+        var section, header, t1, text, t2, link, buttons;
+        section = container.add$1(0, K.CoreElement$("div", null, "view-section", null));
+        header = E.StatusHeader$(section);
+        J.set$text$x(header.title, "dartlang plugin");
+        S.getPackageVersion().then$1(new E.StatusView__createPluginSection_closure(header));
+        t1 = J.getInterceptor$ax(section);
+        text = t1.add$1(section, K.CoreElement$("div", null, null, null));
+        J.setInnerHtml$2$treeSanitizer$x(text.get$element(), "For help using this plugin, please see our getting started <a href=\"https://dart-atom.github.io/dartlang/\">guide</a>. Please file feature requests and bugs on the <a href=\"https://github.com/dart-atom/dartlang/issues\">issue tracker</a>.", new S.TrustedHtmlTreeSanitizer());
+        for (t2 = J.querySelectorAll$1$x(text.get$element(), "a"), t2 = t2.get$iterator(t2); t2.moveNext$0();) {
+          link = t2.__internal$_current;
+          J.get$onClick$x(link).listen$1(new E.StatusView__createPluginSection_closure0(link));
+        }
+        buttons = t1.add$1(section, K.CoreElement$("div", null, "view-section-buttons", null));
+        t1 = K.CoreElement$("button", null, "btn", "Check for Updates");
+        t1.click$1(0, new E.StatusView__createPluginSection_closure1());
+        t2 = J.getInterceptor$ax(buttons);
+        t2.add$1(buttons, t1);
+        t1 = K.CoreElement$("button", null, "btn", "Feedback\u2026");
+        t1.click$1(0, new E.StatusView__createPluginSection_closure2());
+        t2.add$1(buttons, t1);
+        return section;
+      },
+      _createDartSdkSection$1: function(container) {
+        var t1, section, header, pathElement, t2, text, t3, update, buttons;
+        t1 = {};
+        section = container.add$1(0, K.CoreElement$("div", null, "view-section", null));
+        header = E.StatusHeader$(section);
+        J.set$text$x(header.title, "Dart SDK");
+        t1.pathElement = null;
+        pathElement = K.CoreElement$("div", null, "overflow-hidden-ellipsis bottom-margin", null);
+        J.set$alignSelf$x(J.get$style$x(pathElement.element), "flex-end");
+        t1.pathElement = pathElement;
+        t2 = J.getInterceptor$ax(section);
+        t2.add$1(section, [pathElement]);
+        text = t2.add$1(section, K.CoreElement$("div", null, null, null));
+        J.setInnerHtml$2$treeSanitizer$x(text.get$element(), "Visit <a>dartlang.org</a> for information on installing a Dart SDK for your platform.", new S.TrustedHtmlTreeSanitizer());
+        t3 = J.get$onClick$x(J.querySelector$1$x(text.get$element(), "a"));
+        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t3._html$_target, t3._eventType, W._wrapZone(new E.StatusView__createDartSdkSection_closure()), false), [H.getTypeArgumentByIndex(t3, 0)])._tryResume$0();
+        update = new E.StatusView__createDartSdkSection_closure0(t1, header);
+        update.call$1(Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$sdk());
+        this.subs._subscriptions.push(Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).get$onSdkChange().listen$1(update));
+        buttons = t2.add$1(section, K.CoreElement$("div", null, "view-section-buttons", null));
+        t2 = K.CoreElement$("button", null, "btn", "Browse\u2026");
+        t2.click$1(0, this.get$_handleSdkBrowse());
+        t1 = J.getInterceptor$ax(buttons);
+        t1.add$1(buttons, t2);
+        t2 = K.CoreElement$("button", null, "btn", "Auto-locate");
+        t2.click$1(0, new E.StatusView__createDartSdkSection_closure1());
+        t1.add$1(buttons, t2);
+        return section;
+      },
+      _createAnalysisServerSection$1: function(container) {
+        var t1, section, header, update, buttons, start, reanalyze, $stop, t2;
+        t1 = {};
+        section = container.add$1(0, K.CoreElement$("div", null, "view-section", null));
+        header = E.StatusHeader$(section);
+        t1.start = null;
+        t1.reanalyze = null;
+        t1.stop = null;
+        J.set$text$x(header.title, "Analysis server");
+        t1.version = null;
+        update = new E.StatusView__createAnalysisServerSection_closure(t1, header);
+        buttons = J.add$1$ax(section, K.CoreElement$("div", null, "view-section-buttons", null));
+        start = K.CoreElement$("button", null, "btn", "Start");
+        start.click$1(0, this.get$_handleServerStart());
+        t1.start = start;
+        reanalyze = K.CoreElement$("button", null, "btn", "Reanalyze");
+        reanalyze.click$1(0, this.get$_handleReanalyze());
+        t1.reanalyze = reanalyze;
+        $stop = K.CoreElement$("button", null, "btn", "Shutdown");
+        $stop.click$1(0, this.get$_handleServerStop());
+        t1.stop = $stop;
+        J.add$1$ax(buttons, [start, reanalyze, $stop]);
+        update.call$0();
+        t2 = this.subs._subscriptions;
+        t2.push(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$onBusy().listen$1(update));
+        t2.push(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$onActive().listen$1(new E.StatusView__createAnalysisServerSection_closure0(t1, update)));
+        return section;
+      },
+      _createAnalyticsSection$1: function(container) {
+        var section, t1, buttons;
+        section = container.add$1(0, K.CoreElement$("div", null, "view-section", null));
+        J.set$text$x(E.StatusHeader$(section).title, "Google Analytics");
+        t1 = J.getInterceptor$ax(section);
+        J.set$text$x(t1.add$1(section, K.CoreElement$("div", null, null, null)), "The Dart plugin anonymously reports feature usage statistics and basic crash reports to improve the tool over time. Please visit the plugin's settings page to configure this behavior.");
+        buttons = t1.add$1(section, K.CoreElement$("div", null, "view-section-buttons", null));
+        t1 = K.CoreElement$("button", null, "btn", "Settings");
+        t1.click$1(0, new E.StatusView__createAnalyticsSection_closure());
+        J.add$1$ax(buttons, t1);
+        return section;
+      },
+      get$label: function(_) {
+        return "Dart plugin status";
+      },
+      get$id: function(_) {
+        return "dartlang";
+      },
+      handleClose$0: [function() {
+        this.super$View$handleClose();
+        $.$get$state().$indexSet(0, "statusOpen", false);
+      }, "call$0", "get$handleClose", 0, 0, 2],
+      dispose$0: [function() {
+        this.subs.cancel$0();
+      }, "call$0", "get$dispose", 0, 0, 2],
+      _handleSdkBrowse$0: [function() {
+        $.$get$atom().pickFolder$0().then$1(new E.StatusView__handleSdkBrowse_closure());
+      }, "call$0", "get$_handleSdkBrowse", 0, 0, 2],
+      _handleServerStart$0: [function() {
+        E.trackCommand("dartlang:analysis-server-start");
+        J.start$0$x(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC));
+      }, "call$0", "get$_handleServerStart", 0, 0, 2],
+      _handleReanalyze$0: [function() {
+        E.trackCommand("dartlang:reanalyze-sources");
+        Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).reanalyzeSources$0();
+      }, "call$0", "get$_handleReanalyze", 0, 0, 2],
+      _handleServerStop$0: [function() {
+        E.trackCommand("dartlang:analysis-server-stop");
+        Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).shutdown$0();
+      }, "call$0", "get$_handleServerStop", 0, 0, 2],
+      StatusView$0: function(_box_0) {
+        var t1, t2, t3, subtitle, container;
+        _box_0.subtitle = null;
+        t1 = this.content;
+        t2 = t1.element;
+        t3 = J.getInterceptor$x(t2);
+        J.toggle$2$x(t3.get$classes(t2), "tab-scrollable-container", null);
+        J.toggle$2$x(t3.get$classes(t2), "plugin-status", null);
+        t2 = K.CoreElement$("div", null, "view-header view-header-static", null);
+        t3 = K.CoreElement$("div", null, "view-title", "Dart plugin status");
+        subtitle = K.CoreElement$("div", null, "view-subtitle", null);
+        _box_0.subtitle = subtitle;
+        t2.add$1(0, [t3, subtitle]);
+        container = K.CoreElement$("div", null, "tab-scrollable", null);
+        t1.add$1(0, [t2, container]);
+        E._getPlatformVersions().then$1(new E.StatusView_closure(_box_0));
+        this._createPluginSection$1(container);
+        this._createDartSdkSection$1(container);
+        this._createAnalysisServerSection$1(container);
+        this._createAnalyticsSection$1(container).toggleClass$1("view-section-last");
+        $.$get$state().$indexSet(0, "statusOpen", true);
+      },
+      static: {StatusView$: function() {
+          var t1 = new E.StatusView(new G.StreamSubscriptions(null, []), K.CoreElement$("div", null, "tab-content", null), K.CoreElement$("div", null, "button-bar", null), K.CoreElement$("div", null, null, null), null, null, null);
+          t1.View$0();
+          t1.StatusView$0({});
+          return t1;
+        }}
+    },
+    StatusView_closure: {
+      "^": "Closure:0;_box_0",
+      call$1: [function(str) {
+        J.set$text$x(this._box_0.subtitle.element, str);
+      }, null, null, 2, 0, null, 6, "call"]
+    },
+    StatusView__createPluginSection_closure: {
+      "^": "Closure:0;header",
+      call$1: [function(str) {
+        J.set$text$x(this.header.subtitle.element, " - " + H.S(str));
+      }, null, null, 2, 0, null, 6, "call"]
+    },
+    StatusView__createPluginSection_closure0: {
+      "^": "Closure:0;link",
+      call$1: [function(_) {
+        var t1, t2;
+        t1 = $.$get$shell();
+        t2 = J.get$href$x(this.link);
+        t1.toString;
+        return $.$get$_shell().callMethod$2("openExternal", [t2]);
+      }, null, null, 2, 0, null, 1, "call"]
+    },
+    StatusView__createPluginSection_closure1: {
+      "^": "Closure:1;",
+      call$0: function() {
+        $.$get$atom()._workspace.open$1(0, "atom://config/updates");
+      }
+    },
+    StatusView__createPluginSection_closure2: {
+      "^": "Closure:1;",
+      call$0: function() {
+        S.getSystemDescription(false).then$1(new E.StatusView__createPluginSection__closure());
+      }
+    },
+    StatusView__createPluginSection__closure: {
+      "^": "Closure:3;",
+      call$1: [function(description) {
+        var t1, t2;
+        t1 = $.$get$shell();
+        t2 = "https://github.com/dart-atom/dartlang/issues/new?body=" + H.S(P.Uri__uriEncode(C.List_KIf, description, C.Utf8Codec_false, false));
+        t1.toString;
+        $.$get$_shell().callMethod$2("openExternal", [t2]);
+      }, null, null, 2, 0, null, 30, "call"]
+    },
+    StatusView__createDartSdkSection_closure: {
+      "^": "Closure:0;",
+      call$1: [function(_) {
+        $.$get$shell().toString;
+        $.$get$_shell().callMethod$2("openExternal", ["https://www.dartlang.org/downloads/"]);
+      }, null, null, 2, 0, null, 1, "call"]
+    },
+    StatusView__createDartSdkSection_closure0: {
+      "^": "Closure:128;_box_0,header",
+      call$1: [function(sdk) {
+        var t1, t2, t3, t4;
+        t1 = this.header;
+        t2 = this._box_0;
+        if (sdk == null) {
+          J.set$text$x(t1.subtitle.element, " - no SDK configured");
+          J.set$text$x(t2.pathElement.element, "");
+          J.set$title$x(t2.pathElement.element, "");
+        } else {
+          sdk.getVersion$0().then$1(new E.StatusView__createDartSdkSection__closure(t1));
+          t1 = t2.pathElement;
+          t3 = J.getInterceptor$x(sdk);
+          t4 = t3.get$path(sdk);
+          J.set$text$x(t1.element, t4);
+          t2 = t2.pathElement;
+          t3 = t3.get$path(sdk);
+          J.set$title$x(t2.element, t3);
+        }
+      }, null, null, 2, 0, null, 130, "call"]
+    },
+    StatusView__createDartSdkSection__closure: {
+      "^": "Closure:0;header",
+      call$1: [function(ver) {
+        J.set$text$x(this.header.subtitle.element, " - " + H.S(ver));
+      }, null, null, 2, 0, null, 23, "call"]
+    },
+    StatusView__createDartSdkSection_closure1: {
+      "^": "Closure:1;",
+      call$0: function() {
+        Q.Dependencies_instance().getDependency$1(C.Type_SdkManager_OHH).tryToAutoConfigure$0();
+      }
+    },
+    StatusView__createAnalysisServerSection_closure: {
+      "^": "Closure:129;_box_0,header",
+      call$1: [function(_) {
+        var t1, t2, f;
+        t1 = this._box_0;
+        t1.start.attribute$2("disabled", Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive());
+        t1.reanalyze.attribute$2("disabled", !Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive());
+        t1.stop.attribute$2("disabled", !Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive());
+        if (!Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive())
+          J.set$text$x(this.header.subtitle.element, " - not active");
+        else {
+          t2 = t1.version;
+          if (t2 != null) {
+            f = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
+            f._asyncComplete$1(t2);
+          } else
+            f = Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$server().get$server().getVersion$0().then$1(new E.StatusView__createAnalysisServerSection__closure());
+          f.then$1(new E.StatusView__createAnalysisServerSection__closure0(t1, this.header));
+        }
+      }, function() {
+        return this.call$1(null);
+      }, "call$0", null, null, null, 0, 2, null, 3, 1, "call"]
+    },
+    StatusView__createAnalysisServerSection__closure: {
+      "^": "Closure:0;",
+      call$1: [function(v) {
+        return J.get$version$x(v);
+      }, null, null, 2, 0, null, 16, "call"]
+    },
+    StatusView__createAnalysisServerSection__closure0: {
+      "^": "Closure:0;_box_0,header",
+      call$1: [function(v) {
+        var t1, $status;
+        t1 = this._box_0;
+        t1.version = v;
+        $status = Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isBusy() ? "analyzing\u2026" : "idle";
+        J.set$text$x(this.header.subtitle.element, " - " + H.S(t1.version) + "; " + $status);
+      }, null, null, 2, 0, null, 16, "call"]
+    },
+    StatusView__createAnalysisServerSection_closure0: {
+      "^": "Closure:0;_box_0,update",
+      call$1: [function(_) {
+        this._box_0.version = null;
+        this.update.call$0();
+      }, null, null, 2, 0, null, 1, "call"]
+    },
+    StatusView__createAnalyticsSection_closure: {
+      "^": "Closure:1;",
+      call$0: function() {
+        $.$get$atom()._workspace.open$1(0, "atom://config/packages/dartlang");
+      }
+    },
+    StatusView__handleSdkBrowse_closure: {
+      "^": "Closure:0;",
+      call$1: [function(path) {
+        if (typeof path === "string")
+          $.$get$atom()._config.invoke$3("set", "dartlang.sdkLocation", path);
+      }, null, null, 2, 0, null, 22, "call"]
+    },
+    StatusHeader: {
+      "^": "Object;title*,subtitle<",
+      StatusHeader$1: function(section) {
+        var t1, t2, t3;
+        t1 = K.CoreElement$("div", null, "status-header", null);
+        t2 = K.CoreElement$("span", null, "view-title", null);
+        this.title = t2;
+        t3 = K.CoreElement$("span", null, "view-subtitle", null);
+        this.subtitle = t3;
+        t1.add$1(0, [t2, t3]);
+        J.add$1$ax(section, [t1]);
+      },
+      static: {StatusHeader$: function(section) {
+          var t1 = new E.StatusHeader(null, null);
+          t1.StatusHeader$1(section);
+          return t1;
+        }}
+    },
+    _getPlatformVersions_closure: {
+      "^": "Closure:0;",
+      call$1: [function(pluginVer) {
+        return "Atom " + H.S($.$get$atom().invoke$1("getVersion")) + ", dartlang " + H.S(pluginVer);
+      }, null, null, 2, 0, null, 131, "call"]
     }
   }], ["string_scanner.eager_span_scanner", "package:string_scanner/src/eager_span_scanner.dart",, O, {
     "^": "",
@@ -52838,7 +54799,7 @@ self._domRemove = function(element) {
         return this.error$4$length$match$position($receiver, message, $length, null, null);
       }, "error$2$length", function($receiver, message, $length, position) {
         return this.error$4$length$match$position($receiver, message, $length, null, position);
-      }, "error$3$length$position", "call$4$length$match$position", "call$1", "call$2$length", "call$3$length$position", "get$error", 2, 7, 29, 3, 3, 3, 10, 61, 26, 38]
+      }, "error$3$length$position", "call$4$length$match$position", "call$1", "call$2$length", "call$3$length$position", "get$error", 2, 7, 46, 3, 3, 3, 10, 39, 35, 51]
     }
   }], ["string_scanner.string_scanner", "package:string_scanner/src/string_scanner.dart",, S, {
     "^": "",
@@ -52924,7 +54885,7 @@ self._domRemove = function(element) {
         return this.error$4$length$match$position($receiver, message, $length, null, null);
       }, "error$2$length", function($receiver, message, $length, position) {
         return this.error$4$length$match$position($receiver, message, $length, null, position);
-      }, "error$3$length$position", "call$4$length$match$position", "call$1", "call$2$length", "call$3$length$position", "get$error", 2, 7, 29, 3, 3, 3, 10, 61, 26, 38],
+      }, "error$3$length$position", "call$4$length$match$position", "call$1", "call$2$length", "call$3$length$position", "get$error", 2, 7, 46, 3, 3, 3, 10, 39, 35, 51],
       StringScanner$3$position$sourceUrl: function(string, position, sourceUrl) {
       }
     }
@@ -53012,7 +54973,7 @@ self._domRemove = function(element) {
       call$1: [function(key) {
         var value = H.S(this.map.$index(0, key));
         return H.S(key) + "=" + H.S(P.Uri__uriEncode(C.List_KIf, value, C.Utf8Codec_false, false));
-      }, null, null, 2, 0, null, 48, "call"]
+      }, null, null, 2, 0, null, 62, "call"]
     },
     ThrottlingBucket: {
       "^": "Object;startingCount,drops,_lastReplenish",
@@ -53284,7 +55245,7 @@ self._domRemove = function(element) {
           s = H.getTraceFromException(exception);
           this._vm_service_lib$_log.severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e) + "\n" + H.S(s));
         }
-      }, "call$1", "get$_vm_service_lib$_processMessage", 2, 0, 8, 10],
+      }, "call$1", "get$_vm_service_lib$_processMessage", 2, 0, 9, 10],
       _vm_service_lib$_writeMessage$1: function(arg0) {
         return this._vm_service_lib$_writeMessage.call$1(arg0);
       }
@@ -53316,7 +55277,7 @@ self._domRemove = function(element) {
           t1.decl = S._createObject(t2.$index(json, "decl"));
           t1.value = S._createObject(t2.$index(json, "value"));
           return t1;
-        }, "call$1", "vm_service_lib_BoundField_parse$closure", 2, 0, 160]}
+        }, "call$1", "vm_service_lib_BoundField_parse$closure", 2, 0, 168]}
     },
     BoundVariable: {
       "^": "Object;name>,value>",
@@ -53330,7 +55291,7 @@ self._domRemove = function(element) {
           t1.name = t2.$index(json, "name");
           t1.value = S._createObject(t2.$index(json, "value"));
           return t1;
-        }, "call$1", "vm_service_lib_BoundVariable_parse$closure", 2, 0, 161]}
+        }, "call$1", "vm_service_lib_BoundVariable_parse$closure", 2, 0, 169]}
     },
     Breakpoint: {
       "^": "Obj;breakpointNumber,resolved,location>,id,classRef,size,json,type",
@@ -53355,7 +55316,7 @@ self._domRemove = function(element) {
           t1.resolved = t2.$index(json, "resolved");
           t1.location = S._createObject(t2.$index(json, "location"));
           return t1;
-        }, "call$1", "vm_service_lib_Breakpoint_parse$closure", 2, 0, 162]}
+        }, "call$1", "vm_service_lib_Breakpoint_parse$closure", 2, 0, 170]}
     },
     ClassRef: {
       "^": "ObjRef;name>,id,json,type",
@@ -53378,7 +55339,7 @@ self._domRemove = function(element) {
           t1.id = t2.$index(json, "id");
           t1.name = t2.$index(json, "name");
           return t1;
-        }, "call$1", "vm_service_lib_ClassRef_parse$closure", 2, 0, 163]}
+        }, "call$1", "vm_service_lib_ClassRef_parse$closure", 2, 0, 171]}
     },
     Class: {
       "^": "Obj;name>,error>,isAbstract,isConst,library,location>,superClass,interfaces<,fields,functions,subclasses<,id,classRef,size,json,type",
@@ -53411,7 +55372,7 @@ self._domRemove = function(element) {
           t1.functions = H.subtypeCast(S._createObject(t2.$index(json, "functions")), "$isList", [S.FuncRef], "$asList");
           t1.subclasses = H.subtypeCast(S._createObject(t2.$index(json, "subclasses")), "$isList", [S.ClassRef], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_Class_parse$closure", 2, 0, 164]}
+        }, "call$1", "vm_service_lib_Class_parse$closure", 2, 0, 172]}
     },
     ClassList: {
       "^": "Response;classes>,json,type",
@@ -53423,7 +55384,7 @@ self._domRemove = function(element) {
           t1.type = J.$index$asx(json, "type");
           t1.classes = H.subtypeCast(S._createObject(J.$index$asx(json, "classes")), "$isList", [S.ClassRef], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_ClassList_parse$closure", 2, 0, 165]}
+        }, "call$1", "vm_service_lib_ClassList_parse$closure", 2, 0, 173]}
     },
     CodeRef: {
       "^": "ObjRef;name>,kind>,id,json,type",
@@ -53447,7 +55408,7 @@ self._domRemove = function(element) {
           t1.name = t2.$index(json, "name");
           t1.kind = t2.$index(json, "kind");
           return t1;
-        }, "call$1", "vm_service_lib_CodeRef_parse$closure", 2, 0, 166]}
+        }, "call$1", "vm_service_lib_CodeRef_parse$closure", 2, 0, 174]}
     },
     Code: {
       "^": "ObjRef;name>,kind>,id,json,type",
@@ -53471,7 +55432,7 @@ self._domRemove = function(element) {
           t1.name = t2.$index(json, "name");
           t1.kind = t2.$index(json, "kind");
           return t1;
-        }, "call$1", "vm_service_lib_Code_parse$closure", 2, 0, 167]}
+        }, "call$1", "vm_service_lib_Code_parse$closure", 2, 0, 175]}
     },
     ContextRef: {
       "^": "ObjRef;length>,id,json,type",
@@ -53494,7 +55455,7 @@ self._domRemove = function(element) {
           t1.id = t2.$index(json, "id");
           t1.length = t2.$index(json, "length");
           return t1;
-        }, "call$1", "vm_service_lib_ContextRef_parse$closure", 2, 0, 168]}
+        }, "call$1", "vm_service_lib_ContextRef_parse$closure", 2, 0, 176]}
     },
     Context0: {
       "^": "Obj;length>,parent>,variables,id,classRef,size,json,type",
@@ -53519,7 +55480,7 @@ self._domRemove = function(element) {
           t1.parent = S._createObject(t2.$index(json, "parent"));
           t1.variables = H.subtypeCast(S._createObject(t2.$index(json, "variables")), "$isList", [S.ContextElement], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_Context_parse$closure", 2, 0, 169]}
+        }, "call$1", "vm_service_lib_Context_parse$closure", 2, 0, 177]}
     },
     ContextElement: {
       "^": "Object;value>",
@@ -53530,7 +55491,7 @@ self._domRemove = function(element) {
           var t1 = new S.ContextElement(null);
           t1.value = S._createObject(J.$index$asx(json, "value"));
           return t1;
-        }, "call$1", "vm_service_lib_ContextElement_parse$closure", 2, 0, 170]}
+        }, "call$1", "vm_service_lib_ContextElement_parse$closure", 2, 0, 178]}
     },
     ErrorRef: {
       "^": "ObjRef;kind>,message>,id,json,type",
@@ -53554,7 +55515,7 @@ self._domRemove = function(element) {
           t1.kind = t2.$index(json, "kind");
           t1.message = t2.$index(json, "message");
           return t1;
-        }, "call$1", "vm_service_lib_ErrorRef_parse$closure", 2, 0, 171]}
+        }, "call$1", "vm_service_lib_ErrorRef_parse$closure", 2, 0, 179]}
     },
     Error0: {
       "^": "Obj;kind>,message>,exception<,stacktrace,id,classRef,size,json,type",
@@ -53580,7 +55541,7 @@ self._domRemove = function(element) {
           t1.exception = S._createObject(t2.$index(json, "exception"));
           t1.stacktrace = S._createObject(t2.$index(json, "stacktrace"));
           return t1;
-        }, "call$1", "vm_service_lib_Error_parse$closure", 2, 0, 172]}
+        }, "call$1", "vm_service_lib_Error_parse$closure", 2, 0, 180]}
     },
     Event1: {
       "^": "Response;kind>,isolate<,vm,timestamp<,breakpoint,pauseBreakpoints,topFrame<,exception<,bytes<,inspectee<,json,type",
@@ -53603,7 +55564,7 @@ self._domRemove = function(element) {
           t1.bytes = t2.$index(json, "bytes");
           t1.inspectee = S._createObject(t2.$index(json, "inspectee"));
           return t1;
-        }, "call$1", "vm_service_lib_Event_parse$closure", 2, 0, 173]}
+        }, "call$1", "vm_service_lib_Event_parse$closure", 2, 0, 181]}
     },
     FieldRef: {
       "^": "ObjRef;name>,owner<,declaredType,isConst,isFinal,isStatic,id,json,type",
@@ -53631,7 +55592,7 @@ self._domRemove = function(element) {
           t1.isFinal = t2.$index(json, "final");
           t1.isStatic = t2.$index(json, "static");
           return t1;
-        }, "call$1", "vm_service_lib_FieldRef_parse$closure", 2, 0, 174]}
+        }, "call$1", "vm_service_lib_FieldRef_parse$closure", 2, 0, 182]}
     },
     Field: {
       "^": "Obj;name>,owner<,declaredType,isConst,isFinal,isStatic,staticValue,location>,id,classRef,size,json,type",
@@ -53661,7 +55622,7 @@ self._domRemove = function(element) {
           t1.staticValue = S._createObject(t2.$index(json, "staticValue"));
           t1.location = S._createObject(t2.$index(json, "location"));
           return t1;
-        }, "call$1", "vm_service_lib_Field_parse$closure", 2, 0, 175]}
+        }, "call$1", "vm_service_lib_Field_parse$closure", 2, 0, 183]}
     },
     Flag: {
       "^": "Object;name>,comment,modified,valueAsString<",
@@ -53677,7 +55638,7 @@ self._domRemove = function(element) {
           t1.modified = t2.$index(json, "modified");
           t1.valueAsString = t2.$index(json, "valueAsString");
           return t1;
-        }, "call$1", "vm_service_lib_Flag_parse$closure", 2, 0, 176]}
+        }, "call$1", "vm_service_lib_Flag_parse$closure", 2, 0, 184]}
     },
     FlagList: {
       "^": "Response;flags<,json,type",
@@ -53689,7 +55650,7 @@ self._domRemove = function(element) {
           t1.type = J.$index$asx(json, "type");
           t1.flags = H.subtypeCast(S._createObject(J.$index$asx(json, "flags")), "$isList", [S.Flag], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_FlagList_parse$closure", 2, 0, 177]}
+        }, "call$1", "vm_service_lib_FlagList_parse$closure", 2, 0, 185]}
     },
     Frame: {
       "^": "Response;index>,$function<,code,location>,vars<,json,type",
@@ -53707,7 +55668,7 @@ self._domRemove = function(element) {
           t1.location = S._createObject(t2.$index(json, "location"));
           t1.vars = H.subtypeCast(S._createObject(t2.$index(json, "vars")), "$isList", [S.BoundVariable], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_Frame_parse$closure", 2, 0, 178]}
+        }, "call$1", "vm_service_lib_Frame_parse$closure", 2, 0, 186]}
     },
     FuncRef: {
       "^": "ObjRef;name>,owner<,isStatic,isConst,id,json,type",
@@ -53733,7 +55694,7 @@ self._domRemove = function(element) {
           t1.isStatic = t2.$index(json, "static");
           t1.isConst = t2.$index(json, "const");
           return t1;
-        }, "call$1", "vm_service_lib_FuncRef_parse$closure", 2, 0, 179]}
+        }, "call$1", "vm_service_lib_FuncRef_parse$closure", 2, 0, 187]}
     },
     Func: {
       "^": "Obj;name>,owner<,location>,code,id,classRef,size,json,type",
@@ -53759,7 +55720,7 @@ self._domRemove = function(element) {
           t1.location = S._createObject(t2.$index(json, "location"));
           t1.code = S._createObject(t2.$index(json, "code"));
           return t1;
-        }, "call$1", "vm_service_lib_Func_parse$closure", 2, 0, 180]}
+        }, "call$1", "vm_service_lib_Func_parse$closure", 2, 0, 188]}
     },
     InstanceRef: {
       "^": "ObjRef;kind>,classRef,valueAsString@,valueAsStringIsTruncated,length>,name>,typeClass,parameterizedClass,pattern,id,json,type",
@@ -53790,7 +55751,7 @@ self._domRemove = function(element) {
       },
       static: {InstanceRef_parse: [function(json) {
           return json == null ? null : S.InstanceRef$_fromJson(json);
-        }, "call$1", "vm_service_lib_InstanceRef_parse$closure", 2, 0, 181], InstanceRef$_fromJson: function(json) {
+        }, "call$1", "vm_service_lib_InstanceRef_parse$closure", 2, 0, 189], InstanceRef$_fromJson: function(json) {
           var t1 = new S.InstanceRef(null, null, null, null, null, null, null, null, null, null, json, null);
           t1.type = J.$index$asx(json, "type");
           t1.id = J.$index$asx(json, "id");
@@ -53844,7 +55805,7 @@ self._domRemove = function(element) {
       },
       static: {Instance_parse: [function(json) {
           return S.Instance$_fromJson(json);
-        }, "call$1", "vm_service_lib_Instance_parse$closure", 2, 0, 182], Instance$_fromJson: function(json) {
+        }, "call$1", "vm_service_lib_Instance_parse$closure", 2, 0, 190], Instance$_fromJson: function(json) {
           var t1 = new S.Instance(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, json, null);
           t1.type = J.$index$asx(json, "type");
           t1.Obj$_fromJson$1(json);
@@ -53874,7 +55835,7 @@ self._domRemove = function(element) {
           t1.number = t2.$index(json, "number");
           t1.name = t2.$index(json, "name");
           return t1;
-        }, "call$1", "vm_service_lib_IsolateRef_parse$closure", 2, 0, 183]}
+        }, "call$1", "vm_service_lib_IsolateRef_parse$closure", 2, 0, 191]}
     },
     Isolate: {
       "^": "Response;id>,number,name>,startTime,livePorts,pauseOnExit,pauseEvent>,rootLib,libraries,breakpoints<,error>,exceptionPauseMode,json,type",
@@ -53907,7 +55868,7 @@ self._domRemove = function(element) {
           t1.error = S._createObject(t2.$index(json, "error"));
           t1.exceptionPauseMode = t2.$index(json, "exceptionPauseMode");
           return t1;
-        }, "call$1", "vm_service_lib_Isolate_parse$closure", 2, 0, 184]}
+        }, "call$1", "vm_service_lib_Isolate_parse$closure", 2, 0, 192]}
     },
     LibraryRef: {
       "^": "ObjRef;name>,uri<,id,json,type",
@@ -53931,7 +55892,7 @@ self._domRemove = function(element) {
           t1.name = t2.$index(json, "name");
           t1.uri = t2.$index(json, "uri");
           return t1;
-        }, "call$1", "vm_service_lib_LibraryRef_parse$closure", 2, 0, 185]}
+        }, "call$1", "vm_service_lib_LibraryRef_parse$closure", 2, 0, 193]}
     },
     Library: {
       "^": "Obj;name>,uri<,debuggable,dependencies,scripts,variables,functions,classes>,id,classRef,size,json,type",
@@ -53961,7 +55922,7 @@ self._domRemove = function(element) {
           t1.functions = H.subtypeCast(S._createObject(t2.$index(json, "functions")), "$isList", [S.FuncRef], "$asList");
           t1.classes = H.subtypeCast(S._createObject(t2.$index(json, "classes")), "$isList", [S.ClassRef], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_Library_parse$closure", 2, 0, 186]}
+        }, "call$1", "vm_service_lib_Library_parse$closure", 2, 0, 194]}
     },
     LibraryDependency: {
       "^": "Object;isImport,isDeferred,prefix<,target",
@@ -53977,7 +55938,7 @@ self._domRemove = function(element) {
           t1.prefix = t2.$index(json, "prefix");
           t1.target = S._createObject(t2.$index(json, "target"));
           return t1;
-        }, "call$1", "vm_service_lib_LibraryDependency_parse$closure", 2, 0, 187]}
+        }, "call$1", "vm_service_lib_LibraryDependency_parse$closure", 2, 0, 195]}
     },
     MapAssociation: {
       "^": "Object;key,value>",
@@ -53991,7 +55952,7 @@ self._domRemove = function(element) {
           t1.key = S._createObject(t2.$index(json, "key"));
           t1.value = S._createObject(t2.$index(json, "value"));
           return t1;
-        }, "call$1", "vm_service_lib_MapAssociation_parse$closure", 2, 0, 188]}
+        }, "call$1", "vm_service_lib_MapAssociation_parse$closure", 2, 0, 196]}
     },
     Message: {
       "^": "Response;index>,name>,messageObjectId,size,handler,location>,json,type",
@@ -54010,7 +55971,7 @@ self._domRemove = function(element) {
           t1.handler = S._createObject(t2.$index(json, "handler"));
           t1.location = S._createObject(t2.$index(json, "location"));
           return t1;
-        }, "call$1", "vm_service_lib_Message_parse$closure", 2, 0, 189]}
+        }, "call$1", "vm_service_lib_Message_parse$closure", 2, 0, 197]}
     },
     NullRef: {
       "^": "InstanceRef;valueAsString:NullRef_valueAsString@,kind,classRef,valueAsString,valueAsStringIsTruncated,length,name,typeClass,parameterizedClass,pattern,id,json,type",
@@ -54034,7 +55995,7 @@ self._domRemove = function(element) {
           t1.InstanceRef$_fromJson$1(json);
           t1.NullRef_valueAsString = t2.$index(json, "valueAsString");
           return t1;
-        }, "call$1", "vm_service_lib_NullRef_parse$closure", 2, 0, 190]}
+        }, "call$1", "vm_service_lib_NullRef_parse$closure", 2, 0, 198]}
     },
     Null0: {
       "^": "Instance;valueAsString:Null_valueAsString@,kind,Instance_classRef,valueAsString,valueAsStringIsTruncated,length,offset,count,name,typeClass,parameterizedClass,fields,elements,associations,bytes,closureFunction,closureContext,mirrorReferent,pattern,isCaseSensitive,isMultiLine,propertyKey,propertyValue,typeArguments,parameterIndex,targetType,bound,id,classRef,size,json,type",
@@ -54056,7 +56017,7 @@ self._domRemove = function(element) {
           t1.Instance$_fromJson$1(json);
           t1.Null_valueAsString = J.$index$asx(json, "valueAsString");
           return t1;
-        }, "call$1", "vm_service_lib_Null_parse$closure", 2, 0, 191]}
+        }, "call$1", "vm_service_lib_Null_parse$closure", 2, 0, 199]}
     },
     ObjRef: {
       "^": "Response;id>,json,type",
@@ -54076,7 +56037,7 @@ self._domRemove = function(element) {
           t1.type = J.$index$asx(json, "type");
           t1.id = J.$index$asx(json, "id");
           return t1;
-        }, "call$1", "vm_service_lib_ObjRef_parse$closure", 2, 0, 192]}
+        }, "call$1", "vm_service_lib_ObjRef_parse$closure", 2, 0, 200]}
     },
     Obj: {
       "^": "Response;id>,classRef?,size,json,type",
@@ -54099,7 +56060,7 @@ self._domRemove = function(element) {
       },
       static: {Obj_parse: [function(json) {
           return S.Obj$_fromJson(json);
-        }, "call$1", "vm_service_lib_Obj_parse$closure", 2, 0, 193], Obj$_fromJson: function(json) {
+        }, "call$1", "vm_service_lib_Obj_parse$closure", 2, 0, 201], Obj$_fromJson: function(json) {
           var t1 = new S.Obj(null, null, null, json, null);
           t1.type = J.$index$asx(json, "type");
           t1.Obj$_fromJson$1(json);
@@ -54115,7 +56076,7 @@ self._domRemove = function(element) {
           var t1 = new S.Response(json, null);
           t1.type = J.$index$asx(json, "type");
           return t1;
-        }, "call$1", "vm_service_lib_Response_parse$closure", 2, 0, 194]}
+        }, "call$1", "vm_service_lib_Response_parse$closure", 2, 0, 202]}
     },
     Sentinel: {
       "^": "Response;kind>,valueAsString<,json,type",
@@ -54130,7 +56091,7 @@ self._domRemove = function(element) {
           t1.kind = t2.$index(json, "kind");
           t1.valueAsString = t2.$index(json, "valueAsString");
           return t1;
-        }, "call$1", "vm_service_lib_Sentinel_parse$closure", 2, 0, 195]}
+        }, "call$1", "vm_service_lib_Sentinel_parse$closure", 2, 0, 203]}
     },
     ScriptRef: {
       "^": "ObjRef;uri<,id,json,type",
@@ -54153,7 +56114,7 @@ self._domRemove = function(element) {
           t1.id = t2.$index(json, "id");
           t1.uri = t2.$index(json, "uri");
           return t1;
-        }, "call$1", "vm_service_lib_ScriptRef_parse$closure", 2, 0, 196]}
+        }, "call$1", "vm_service_lib_ScriptRef_parse$closure", 2, 0, 204]}
     },
     Script: {
       "^": "Obj;uri<,library,source,tokenPosTable<,id,classRef,size,json,type",
@@ -54179,7 +56140,7 @@ self._domRemove = function(element) {
           t1.source = t2.$index(json, "source");
           t1.tokenPosTable = H.subtypeCast(S._createObject(t2.$index(json, "tokenPosTable")), "$isList", [[P.List, P.$int]], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_Script_parse$closure", 2, 0, 197]}
+        }, "call$1", "vm_service_lib_Script_parse$closure", 2, 0, 205]}
     },
     SourceLocation0: {
       "^": "Response;script<,tokenPos<,endTokenPos,json,type",
@@ -54195,7 +56156,7 @@ self._domRemove = function(element) {
           t1.tokenPos = t2.$index(json, "tokenPos");
           t1.endTokenPos = t2.$index(json, "endTokenPos");
           return t1;
-        }, "call$1", "vm_service_lib_SourceLocation_parse$closure", 2, 0, 198]}
+        }, "call$1", "vm_service_lib_SourceLocation_parse$closure", 2, 0, 206]}
     },
     Stack: {
       "^": "Response;frames,messages,json,type",
@@ -54210,7 +56171,7 @@ self._domRemove = function(element) {
           t1.frames = H.subtypeCast(S._createObject(t2.$index(json, "frames")), "$isList", [S.Frame], "$asList");
           t1.messages = H.subtypeCast(S._createObject(t2.$index(json, "messages")), "$isList", [S.Message], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_Stack_parse$closure", 2, 0, 199]}
+        }, "call$1", "vm_service_lib_Stack_parse$closure", 2, 0, 207]}
     },
     Success: {
       "^": "Response;json,type",
@@ -54221,7 +56182,7 @@ self._domRemove = function(element) {
           var t1 = new S.Success(json, null);
           t1.type = J.$index$asx(json, "type");
           return t1;
-        }, "call$1", "vm_service_lib_Success_parse$closure", 2, 0, 200]}
+        }, "call$1", "vm_service_lib_Success_parse$closure", 2, 0, 208]}
     },
     TypeArgumentsRef: {
       "^": "ObjRef;name>,id,json,type",
@@ -54244,7 +56205,7 @@ self._domRemove = function(element) {
           t1.id = t2.$index(json, "id");
           t1.name = t2.$index(json, "name");
           return t1;
-        }, "call$1", "vm_service_lib_TypeArgumentsRef_parse$closure", 2, 0, 201]}
+        }, "call$1", "vm_service_lib_TypeArgumentsRef_parse$closure", 2, 0, 209]}
     },
     TypeArguments: {
       "^": "Obj;name>,types,id,classRef,size,json,type",
@@ -54268,7 +56229,7 @@ self._domRemove = function(element) {
           t1.name = t2.$index(json, "name");
           t1.types = H.subtypeCast(S._createObject(t2.$index(json, "types")), "$isList", [S.InstanceRef], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_TypeArguments_parse$closure", 2, 0, 202]}
+        }, "call$1", "vm_service_lib_TypeArguments_parse$closure", 2, 0, 210]}
     },
     UnresolvedSourceLocation: {
       "^": "Response;script<,scriptUri,tokenPos<,line<,column<,json,type",
@@ -54286,7 +56247,7 @@ self._domRemove = function(element) {
           t1.line = t2.$index(json, "line");
           t1.column = t2.$index(json, "column");
           return t1;
-        }, "call$1", "vm_service_lib_UnresolvedSourceLocation_parse$closure", 2, 0, 203]}
+        }, "call$1", "vm_service_lib_UnresolvedSourceLocation_parse$closure", 2, 0, 211]}
     },
     Version: {
       "^": "Response;major<,minor<,json,type",
@@ -54301,7 +56262,7 @@ self._domRemove = function(element) {
           t1.major = t2.$index(json, "major");
           t1.minor = t2.$index(json, "minor");
           return t1;
-        }, "call$1", "vm_service_lib_Version_parse$closure", 2, 0, 204]}
+        }, "call$1", "vm_service_lib_Version_parse$closure", 2, 0, 212]}
     },
     VMRef: {
       "^": "Response;name>,json,type",
@@ -54313,7 +56274,7 @@ self._domRemove = function(element) {
           t1.type = J.$index$asx(json, "type");
           t1.name = J.$index$asx(json, "name");
           return t1;
-        }, "call$1", "vm_service_lib_VMRef_parse$closure", 2, 0, 205]}
+        }, "call$1", "vm_service_lib_VMRef_parse$closure", 2, 0, 213]}
     },
     VM: {
       "^": "Response;architectureBits<,targetCPU<,hostCPU<,version>,pid,startTime,isolates<,json,type",
@@ -54333,7 +56294,7 @@ self._domRemove = function(element) {
           t1.startTime = t2.$index(json, "startTime");
           t1.isolates = H.subtypeCast(S._createObject(t2.$index(json, "isolates")), "$isList", [S.IsolateRef], "$asList");
           return t1;
-        }, "call$1", "vm_service_lib_VM_parse$closure", 2, 0, 206]}
+        }, "call$1", "vm_service_lib_VM_parse$closure", 2, 0, 214]}
     }
   }], ["yaml", "package:yaml/yaml.dart",, O, {
     "^": "",
@@ -54375,10 +56336,10 @@ self._domRemove = function(element) {
     "^": "",
     deepEquals: [function(obj1, obj2) {
       return new E._DeepEquals([], []).equals$2(obj1, obj2);
-    }, "call$2", "equality__deepEquals$closure", 4, 0, 207, 99, 88],
+    }, "call$2", "equality__deepEquals$closure", 4, 0, 215, 134, 89],
     deepHashCode: [function(obj) {
       return new E.deepHashCode__deepHashCode([]).call$1(obj);
-    }, "call$1", "equality__deepHashCode$closure", 2, 0, 138, 4],
+    }, "call$1", "equality__deepHashCode$closure", 2, 0, 144, 4],
     _DeepEquals: {
       "^": "Object;_parents1,_parents2",
       equals$2: function(obj1, obj2) {
@@ -56825,8 +58786,8 @@ self._domRemove = function(element) {
         return "(" + H.S(this.first) + ", " + H.S(this.last) + ")";
       }
     },
-    closure2: {
-      "^": "Closure:23;",
+    closure3: {
+      "^": "Closure:21;",
       call$2: function(message, span) {
         P.print(span.message$1(0, message));
       },
@@ -56891,7 +58852,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(node) {
         return J.get$value$x(node);
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 15, "call"]
     },
     YamlList: {
       "^": "YamlNode_ListMixin;nodes>,style>,_yaml_node$_span",
@@ -57022,6 +58983,12 @@ self._domRemove = function(element) {
       return receiver;
     return J.getNativeInterceptor(receiver);
   };
+  J.set$alignSelf$x = function(receiver, value) {
+    return J.getInterceptor$x(receiver).set$alignSelf(receiver, value);
+  };
+  J.set$className$x = function(receiver, value) {
+    return J.getInterceptor$x(receiver).set$className(receiver, value);
+  };
   J.set$disabled$x = function(receiver, value) {
     return J.getInterceptor$x(receiver).set$disabled(receiver, value);
   };
@@ -57064,6 +59031,9 @@ self._domRemove = function(element) {
   J.get$classes$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$classes(receiver);
   };
+  J.get$content$x = function(receiver) {
+    return J.getInterceptor$x(receiver).get$content(receiver);
+  };
   J.get$data$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$data(receiver);
   };
@@ -57084,6 +59054,9 @@ self._domRemove = function(element) {
   };
   J.get$first$ax = function(receiver) {
     return J.getInterceptor$ax(receiver).get$first(receiver);
+  };
+  J.get$href$x = function(receiver) {
+    return J.getInterceptor$x(receiver).get$href(receiver);
   };
   J.get$id$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$id(receiver);
@@ -57138,6 +59111,9 @@ self._domRemove = function(element) {
   };
   J.get$onClick$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$onClick(receiver);
+  };
+  J.get$onDoubleClick$x = function(receiver) {
+    return J.getInterceptor$x(receiver).get$onDoubleClick(receiver);
   };
   J.get$parent$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$parent(receiver);
@@ -57261,14 +59237,8 @@ self._domRemove = function(element) {
       return (receiver ^ a0) >>> 0;
     return J.getInterceptor$n(receiver).$xor(receiver, a0);
   };
-  J._addEventListener$3$x = function(receiver, a0, a1, a2) {
-    return J.getInterceptor$x(receiver)._addEventListener$3(receiver, a0, a1, a2);
-  };
   J._clearChildren$0$x = function(receiver) {
     return J.getInterceptor$x(receiver)._clearChildren$0(receiver);
-  };
-  J._removeEventListener$3$x = function(receiver, a0, a1, a2) {
-    return J.getInterceptor$x(receiver)._removeEventListener$3(receiver, a0, a1, a2);
   };
   J._replaceChild$2$x = function(receiver, a0, a1) {
     return J.getInterceptor$x(receiver)._replaceChild$2(receiver, a0, a1);
@@ -57281,6 +59251,9 @@ self._domRemove = function(element) {
   };
   J.addAll$1$ax = function(receiver, a0) {
     return J.getInterceptor$ax(receiver).addAll$1(receiver, a0);
+  };
+  J.addEventListener$3$x = function(receiver, a0, a1, a2) {
+    return J.getInterceptor$x(receiver).addEventListener$3(receiver, a0, a1, a2);
   };
   J.append$1$x = function(receiver, a0) {
     return J.getInterceptor$x(receiver).append$1(receiver, a0);
@@ -57333,6 +59306,9 @@ self._domRemove = function(element) {
   J.getComputedStyle$0$x = function(receiver) {
     return J.getInterceptor$x(receiver).getComputedStyle$0(receiver);
   };
+  J.getPropertyValue$1$x = function(receiver, a0) {
+    return J.getInterceptor$x(receiver).getPropertyValue$1(receiver, a0);
+  };
   J.hash$1$x = function(receiver, a0) {
     return J.getInterceptor$x(receiver).hash$1(receiver, a0);
   };
@@ -57360,11 +59336,17 @@ self._domRemove = function(element) {
   J.querySelector$1$x = function(receiver, a0) {
     return J.getInterceptor$x(receiver).querySelector$1(receiver, a0);
   };
+  J.querySelectorAll$1$x = function(receiver, a0) {
+    return J.getInterceptor$x(receiver).querySelectorAll$1(receiver, a0);
+  };
   J.remove$0$ax = function(receiver) {
     return J.getInterceptor$ax(receiver).remove$0(receiver);
   };
   J.remove$1$ax = function(receiver, a0) {
     return J.getInterceptor$ax(receiver).remove$1(receiver, a0);
+  };
+  J.removeEventListener$3$x = function(receiver, a0, a1, a2) {
+    return J.getInterceptor$x(receiver).removeEventListener$3(receiver, a0, a1, a2);
   };
   J.removeWhere$1$ax = function(receiver, a0) {
     return J.getInterceptor$ax(receiver).removeWhere$1(receiver, a0);
@@ -57387,8 +59369,14 @@ self._domRemove = function(element) {
   J.setAttribute$2$x = function(receiver, a0, a1) {
     return J.getInterceptor$x(receiver).setAttribute$2(receiver, a0, a1);
   };
+  J.setInnerHtml$2$treeSanitizer$x = function(receiver, a0, a1) {
+    return J.getInterceptor$x(receiver).setInnerHtml$2$treeSanitizer(receiver, a0, a1);
+  };
   J.setInnerHtml$2$validator$x = function(receiver, a0, a1) {
     return J.getInterceptor$x(receiver).setInnerHtml$2$validator(receiver, a0, a1);
+  };
+  J.setProperty$3$x = function(receiver, a0, a1, a2) {
+    return J.getInterceptor$x(receiver).setProperty$3(receiver, a0, a1, a2);
   };
   J.skip$1$ax = function(receiver, a0) {
     return J.getInterceptor$ax(receiver).skip$1(receiver, a0);
@@ -57756,6 +59744,7 @@ self._domRemove = function(element) {
   C.Type_RebuildJob_uti = H.createRuntimeType("RebuildJob");
   C.Type_RunApplicationManager_vVm = H.createRuntimeType("RunApplicationManager");
   C.Type_SdkManager_OHH = H.createRuntimeType("SdkManager");
+  C.Type_StatusViewManager_tnX = H.createRuntimeType("StatusViewManager");
   C.Type_String_k8F = H.createRuntimeType("String");
   C.Type_TestManager_OzB = H.createRuntimeType("TestManager");
   C.Type_Uint16List_2bx = H.createRuntimeType("Uint16List");
@@ -58043,6 +60032,8 @@ self._domRemove = function(element) {
     return H.NativeInt8List__create1(H._ensureNativeList([-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -1, -2, -2, -2, -2, -2, 62, -2, 62, -2, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -2, -2, -2, -1, -2, -2, -2, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -2, -2, -2, -2, 63, -2, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -2, -2, -2, -2, -2]));
   }, "Uri__needsNoEncoding", "$get$Uri__needsNoEncoding", "_needsNoEncoding", function() {
     return P.RegExp_RegExp("^[\\-\\.0-9A-Z_a-z~]*$", true, false);
+  }, "CssStyleDeclaration__propertyCache", "$get$CssStyleDeclaration__propertyCache", "_propertyCache", function() {
+    return {};
   }, "_HEIGHT", "$get$_HEIGHT", "_HEIGHT", function() {
     return ["top", "bottom"];
   }, "_WIDTH", "$get$_WIDTH", "_WIDTH", function() {
@@ -58118,12 +60109,12 @@ self._domRemove = function(element) {
   }, "_typeFactories", "$get$_typeFactories", "_typeFactories", function() {
     return P.LinkedHashMap__makeLiteral(["BoundField", S.vm_service_lib_BoundField_parse$closure(), "BoundVariable", S.vm_service_lib_BoundVariable_parse$closure(), "Breakpoint", S.vm_service_lib_Breakpoint_parse$closure(), "@Class", S.vm_service_lib_ClassRef_parse$closure(), "Class", S.vm_service_lib_Class_parse$closure(), "ClassList", S.vm_service_lib_ClassList_parse$closure(), "@Code", S.vm_service_lib_CodeRef_parse$closure(), "Code", S.vm_service_lib_Code_parse$closure(), "@Context", S.vm_service_lib_ContextRef_parse$closure(), "Context", S.vm_service_lib_Context_parse$closure(), "ContextElement", S.vm_service_lib_ContextElement_parse$closure(), "@Error", S.vm_service_lib_ErrorRef_parse$closure(), "Error", S.vm_service_lib_Error_parse$closure(), "Event", S.vm_service_lib_Event_parse$closure(), "@Field", S.vm_service_lib_FieldRef_parse$closure(), "Field", S.vm_service_lib_Field_parse$closure(), "Flag", S.vm_service_lib_Flag_parse$closure(), "FlagList", S.vm_service_lib_FlagList_parse$closure(), "Frame", S.vm_service_lib_Frame_parse$closure(), "@Function", S.vm_service_lib_FuncRef_parse$closure(), "Function", S.vm_service_lib_Func_parse$closure(), "@Instance", S.vm_service_lib_InstanceRef_parse$closure(), "Instance", S.vm_service_lib_Instance_parse$closure(), "@Isolate", S.vm_service_lib_IsolateRef_parse$closure(), "Isolate", S.vm_service_lib_Isolate_parse$closure(), "@Library", S.vm_service_lib_LibraryRef_parse$closure(), "Library", S.vm_service_lib_Library_parse$closure(), "LibraryDependency", S.vm_service_lib_LibraryDependency_parse$closure(), "MapAssociation", S.vm_service_lib_MapAssociation_parse$closure(), "Message", S.vm_service_lib_Message_parse$closure(), "@Null", S.vm_service_lib_NullRef_parse$closure(), "Null", S.vm_service_lib_Null_parse$closure(), "@Object", S.vm_service_lib_ObjRef_parse$closure(), "Object", S.vm_service_lib_Obj_parse$closure(), "Response", S.vm_service_lib_Response_parse$closure(), "Sentinel", S.vm_service_lib_Sentinel_parse$closure(), "@Script", S.vm_service_lib_ScriptRef_parse$closure(), "Script", S.vm_service_lib_Script_parse$closure(), "SourceLocation", S.vm_service_lib_SourceLocation_parse$closure(), "Stack", S.vm_service_lib_Stack_parse$closure(), "Success", S.vm_service_lib_Success_parse$closure(), "@TypeArguments", S.vm_service_lib_TypeArgumentsRef_parse$closure(), "TypeArguments", S.vm_service_lib_TypeArguments_parse$closure(), "UnresolvedSourceLocation", S.vm_service_lib_UnresolvedSourceLocation_parse$closure(), "Version", S.vm_service_lib_Version_parse$closure(), "@VM", S.vm_service_lib_VMRef_parse$closure(), "VM", S.vm_service_lib_VM_parse$closure()]);
   }, "yamlWarningCallback", "$get$yamlWarningCallback", "yamlWarningCallback", function() {
-    return new O.closure2();
+    return new O.closure3();
   }]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
-  init.metadata = ["e", "_", "result", null, "obj", "m", "str", "editor", "value", "error", "message", "stackTrace", "data", "val", "code", "response", "s", "node", "r", "element", "l", "ver", "context", "bp", "o", "path", "position", "event", "dir", "arg", "pos", "each", "version", "change", "edit", "view", "v", "navInfo", "length", "isolate", "invocation", "options", "name", "launch", "entry", "contextId", "line", "x", "key", "sdkPath", "id", "project", "uris", "vmBreakpoint", "exitCode", "description", "object", "i", "status", "attributeName", "item", "match", "c", "nb", "suspended", "location", "arg1", "currentProjects", "newSdk", "suggestions", "analysisErrors", "analysisFlushResults", "errors", "arg4", "suggestion", "cs", "evt", "errorCallback", "resolve", "reject", "_this", "info", "_e", "json", "jsEditor", "vm", "arg2", "didFormat", "obj2", "sender", "active", "pluginState", "busy", "currentVersion", "allPaths", "p", "projects", "assists", "diagnostics", "obj1", "contents", "_newName", "a", "b", "aIndex", "bIndex", "file", "command", "log", "ed", "script", "errorCode", "ignored", "numberOfArguments", 0, "encodedComponent", "byteString", "closure", "xhr", "attr", "callback", "captureThis", "self", "arguments", "text", "part", "start", "end", "color", "arg3", "connection", "choice", "map"];
-  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [P.String]}, {func: 1, args: [,,]}, {func: 1, v: true, args: [E.TextEditor]}, {func: 1, args: [E.TextEditor]}, {func: 1, v: true, args: [E.AtomEvent]}, {func: 1, v: true, args: [P.String]}, {func: 1, v: true, args: [,]}, {func: 1, args: [E.AtomEvent]}, {func: 1, ret: P.bool}, {func: 1, args: [P.JsObject]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, args: [A.AtomBreakpoint]}, {func: 1, v: true, opt: [,]}, {func: 1, v: true, args: [T.Node0]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, v: true, args: [P.bool]}, {func: 1, v: true, args: [T.View]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, args: [E.CompletionSuggestion]}, {func: 1, args: [P.String, P.Function]}, {func: 1, args: [E.SourceEdit]}, {func: 1, v: true, args: [P.String], named: {length: P.$int, match: P.Match, position: P.$int}}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [P.bool]}, {func: 1, args: [, P.StackTrace]}, {func: 1, args: [W.Event]}, {func: 1, args: [P.$int]}, {func: 1, args: [W.MouseEvent]}, {func: 1, args: [M._Change]}, {func: 1, args: [E.SourceChange]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, args: [S.Breakpoint]}, {func: 1, args: [[P.List, P.String]]}, {func: 1, v: true, args: [S.Event1]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, args: [E.AnalysisError]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, args: [N.LogRecord]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, ret: [P.Future, X.Launch]}, {func: 1, ret: P.Future}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [X.Launch]}, {func: 1, args: [E.DiagnosticsResult]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, args: [W.MessageEvent]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, args: [S.Event1]}, {func: 1, args: [S.Version]}, {func: 1, args: [S.VM]}, {func: 1, args: [S.Isolate]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [Z.DebugLocation]}, {func: 1, args: [E.ContextData]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, args: [E.Point]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, args: [E.ServerStatus]}, {func: 1, v: true, args: [P.Map]}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, args: [E.ServerError]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, args: [E.FixesResult]}, {func: 1, args: [E.AssistsResult]}, {func: 1, args: [Z.DebugConnection]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, args: [E.ExecutionLaunchData]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, args: [E.FindElementReferencesResult]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, args: [[P.List, E.SearchResult]]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, args: [P.String, K.StateStorable]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.$int, P.$int]}, {func: 1, args: [E.HoverResult]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, args: [P.$int, T.Node0]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [E.File]}, {func: 1, args: [P.$int,,]}, {func: 1, args: [, K.OverlayInfo]}, {func: 1, args: [S.Script]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, args: [E.NotificationButton]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, args: [P.Object]}, {func: 1, ret: P.$int, args: [, P.$int]}, {func: 1, v: true, args: [P.$int, P.$int]}, {func: 1, args: [P.Symbol,,]}, {func: 1, ret: P.$int, args: [,,]}, {func: 1, v: true, args: [P.String], opt: [,]}, {func: 1, ret: P.$int, args: [P.$int, P.$int]}, {func: 1, args: [W.HttpRequest]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, args: [P.RegExp]}, {func: 1, ret: G.FileSpan, args: [P.$int], opt: [P.$int]}, {func: 1, ret: G.FileLocation, args: [P.$int]}, {func: 1, ret: P.String, args: [P.String], named: {color: null}}, {func: 1, args: [, P.String]}, {func: 1, ret: P.num}, {func: 1, ret: E.ServerError, args: [P.Map]}, {func: 1, ret: E.ServerStatus, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: P.$int, args: [,]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.ExecutionLaunchData, args: [P.Map]}, {func: 1, ret: E.CreateContextResult, args: [P.Map]}, {func: 1, ret: E.MapUriResult, args: [P.Map]}, {func: 1, ret: E.DiagnosticsResult, args: [P.Map]}, {func: 1, ret: P.$int, args: [E.CompletionSuggestion, E.CompletionSuggestion]}, {func: 1, ret: T.Node1, args: [P.String]}, {func: 1, ret: P.bool, args: [E.TextEditor]}, {func: 1, ret: P.$int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, args: [P.Map]}, {func: 1, args: [E.Range]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.bool, args: [P.Object, P.Object]}, {func: 1, ret: P.$int, args: [P.Object]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, args: [P.String,,]}, {func: 1, ret: S.BoundField, args: [P.Map]}, {func: 1, ret: S.BoundVariable, args: [P.Map]}, {func: 1, ret: S.Breakpoint, args: [P.Map]}, {func: 1, ret: S.ClassRef, args: [P.Map]}, {func: 1, ret: S.Class, args: [P.Map]}, {func: 1, ret: S.ClassList, args: [P.Map]}, {func: 1, ret: S.CodeRef, args: [P.Map]}, {func: 1, ret: S.Code, args: [P.Map]}, {func: 1, ret: S.ContextRef, args: [P.Map]}, {func: 1, ret: S.Context0, args: [P.Map]}, {func: 1, ret: S.ContextElement, args: [P.Map]}, {func: 1, ret: S.ErrorRef, args: [P.Map]}, {func: 1, ret: S.Error0, args: [P.Map]}, {func: 1, ret: S.Event1, args: [P.Map]}, {func: 1, ret: S.FieldRef, args: [P.Map]}, {func: 1, ret: S.Field, args: [P.Map]}, {func: 1, ret: S.Flag, args: [P.Map]}, {func: 1, ret: S.FlagList, args: [P.Map]}, {func: 1, ret: S.Frame, args: [P.Map]}, {func: 1, ret: S.FuncRef, args: [P.Map]}, {func: 1, ret: S.Func, args: [P.Map]}, {func: 1, ret: S.InstanceRef, args: [P.Map]}, {func: 1, ret: S.Instance, args: [P.Map]}, {func: 1, ret: S.IsolateRef, args: [P.Map]}, {func: 1, ret: S.Isolate, args: [P.Map]}, {func: 1, ret: S.LibraryRef, args: [P.Map]}, {func: 1, ret: S.Library, args: [P.Map]}, {func: 1, ret: S.LibraryDependency, args: [P.Map]}, {func: 1, ret: S.MapAssociation, args: [P.Map]}, {func: 1, ret: S.Message, args: [P.Map]}, {func: 1, ret: S.NullRef, args: [P.Map]}, {func: 1, ret: S.Null0, args: [P.Map]}, {func: 1, ret: S.ObjRef, args: [P.Map]}, {func: 1, ret: S.Obj, args: [P.Map]}, {func: 1, ret: S.Response, args: [P.Map]}, {func: 1, ret: S.Sentinel, args: [P.Map]}, {func: 1, ret: S.ScriptRef, args: [P.Map]}, {func: 1, ret: S.Script, args: [P.Map]}, {func: 1, ret: S.SourceLocation0, args: [P.Map]}, {func: 1, ret: S.Stack, args: [P.Map]}, {func: 1, ret: S.Success, args: [P.Map]}, {func: 1, ret: S.TypeArgumentsRef, args: [P.Map]}, {func: 1, ret: S.TypeArguments, args: [P.Map]}, {func: 1, ret: S.UnresolvedSourceLocation, args: [P.Map]}, {func: 1, ret: S.Version, args: [P.Map]}, {func: 1, ret: S.VMRef, args: [P.Map]}, {func: 1, ret: S.VM, args: [P.Map]}, {func: 1, ret: P.bool, args: [,,]}, {func: 1, ret: E.AssistsResult, args: [P.Map]}];
+  init.metadata = ["e", "_", "result", null, "obj", "m", "str", "editor", "value", "error", "message", "stackTrace", "data", "val", "code", "node", "v", "s", "response", "r", "l", "element", "path", "ver", "bp", "pos", "edit", "change", "each", "o", "description", "context", "view", "dir", "event", "position", "arg", "options", "entry", "match", "isolate", "tab", "vmBreakpoint", "i", "uris", "invocation", "item", "project", "id", "sdkPath", "name", "length", "exitCode", "attributeName", "version", "object", "navInfo", "x", "launch", "status", "contextId", "line", "key", "vm", "suspended", "location", "file", "contents", "currentVersion", "active", "c", "analysisErrors", "analysisFlushResults", "errors", "didFormat", "json", "cs", "evt", "errorCallback", "resolve", "reject", "_this", "suggestion", "_e", "suggestions", "jsEditor", "text", "map", "info", "obj2", "diagnostics", "pluginState", "busy", "allPaths", "p", "projects", "assists", "newSdk", "choice", "currentProjects", "_newName", "a", "b", "nb", "aIndex", "bIndex", "ed", "command", "log", "arg4", "connection", "errorCode", "ignored", "script", 0, "encodedComponent", "byteString", "arg2", "xhr", "attr", "callback", "captureThis", "self", "arguments", "arg1", "numberOfArguments", "part", "start", "end", "color", "sdk", "pluginVer", "closure", "sender", "obj1", "arg3"];
+  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [P.String]}, {func: 1, args: [,,]}, {func: 1, v: true, args: [E.TextEditor]}, {func: 1, args: [E.TextEditor]}, {func: 1, v: true, args: [E.AtomEvent]}, {func: 1, args: [E.AtomEvent]}, {func: 1, v: true, args: [P.String]}, {func: 1, v: true, args: [,]}, {func: 1, v: true, opt: [,]}, {func: 1, ret: P.bool}, {func: 1, args: [P.JsObject]}, {func: 1, args: [A.AtomBreakpoint]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, v: true, args: [T.Node0]}, {func: 1, v: true, args: [T.View]}, {func: 1, v: true, args: [P.bool]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, v: true, args: [S.Event1]}, {func: 1, args: [[P.List, P.String]]}, {func: 1, args: [S.Breakpoint]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [E.AnalysisError]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, args: [M._Change]}, {func: 1, args: [P.$int]}, {func: 1, args: [P.String, P.Function]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [W.Event]}, {func: 1, args: [, P.StackTrace]}, {func: 1, args: [E.CompletionSuggestion]}, {func: 1, args: [P.bool]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, v: true, args: [M.MTab]}, {func: 1, v: true, args: [P.String], named: {length: P.$int, match: P.Match, position: P.$int}}, {func: 1, args: [W.MouseEvent]}, {func: 1, args: [E.SourceChange]}, {func: 1, args: [S.Script]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, args: [N.LogRecord]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, args: [P.Map]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, ret: [P.Future, X.Launch]}, {func: 1, ret: P.Future}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [X.Launch]}, {func: 1, args: [E.Range]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, args: [W.MessageEvent]}, {func: 1, args: [, P.String]}, {func: 1, args: [S.Event1]}, {func: 1, args: [S.Version]}, {func: 1, args: [S.VM]}, {func: 1, args: [S.Isolate]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, args: [E.Point]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, args: [E.SearchResults]}, {func: 1, v: true, args: [P.Map]}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, args: [E.DiagnosticsResult]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, args: [E.FixesResult]}, {func: 1, args: [E.AssistsResult]}, {func: 1, args: [, K.OverlayInfo]}, {func: 1, args: [E.File]}, {func: 1, args: [E.ContextData]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, args: [E.FindElementReferencesResult]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, args: [[P.List, E.SearchResult]]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, args: [P.String, K.StateStorable]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.$int, P.$int]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, args: [E.ServerStatus]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, args: [P.$int, T.Node0]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [Z.DebugConnection]}, {func: 1, args: [P.$int,,]}, {func: 1, args: [E.ServerError]}, {func: 1, args: [Z.DebugLocation]}, {func: 1, args: [E.ExecutionLaunchData]}, {func: 1, args: [E.HoverResult]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, args: [P.Object]}, {func: 1, ret: P.$int, args: [, P.$int]}, {func: 1, v: true, args: [P.$int, P.$int]}, {func: 1, args: [P.Symbol,,]}, {func: 1, ret: P.$int, args: [,,]}, {func: 1, v: true, args: [P.String], opt: [,]}, {func: 1, ret: P.$int, args: [P.$int, P.$int]}, {func: 1, args: [W.HttpRequest]}, {func: 1, args: [W.Element]}, {func: 1, v: true, args: [A.AtomBreakpoint, K.CoreElement]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, args: [E.NotificationButton]}, {func: 1, args: [P.RegExp]}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, ret: G.FileSpan, args: [P.$int], opt: [P.$int]}, {func: 1, ret: G.FileLocation, args: [P.$int]}, {func: 1, ret: P.String, args: [P.String], named: {color: null}}, {func: 1, args: [V.Sdk]}, {func: 1, opt: [,]}, {func: 1, args: [P.String,,]}, {func: 1, ret: P.num}, {func: 1, ret: E.ServerError, args: [P.Map]}, {func: 1, ret: E.ServerStatus, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: P.$int, args: [,]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AssistsResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.ExecutionLaunchData, args: [P.Map]}, {func: 1, ret: E.CreateContextResult, args: [P.Map]}, {func: 1, ret: E.MapUriResult, args: [P.Map]}, {func: 1, ret: E.DiagnosticsResult, args: [P.Map]}, {func: 1, ret: P.$int, args: [E.CompletionSuggestion, E.CompletionSuggestion]}, {func: 1, ret: T.Node1, args: [P.String]}, {func: 1, ret: P.bool, args: [E.TextEditor]}, {func: 1, ret: P.$int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.bool, args: [P.Object, P.Object]}, {func: 1, ret: P.$int, args: [P.Object]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, v: true, opt: [P.$int]}, {func: 1, ret: S.BoundField, args: [P.Map]}, {func: 1, ret: S.BoundVariable, args: [P.Map]}, {func: 1, ret: S.Breakpoint, args: [P.Map]}, {func: 1, ret: S.ClassRef, args: [P.Map]}, {func: 1, ret: S.Class, args: [P.Map]}, {func: 1, ret: S.ClassList, args: [P.Map]}, {func: 1, ret: S.CodeRef, args: [P.Map]}, {func: 1, ret: S.Code, args: [P.Map]}, {func: 1, ret: S.ContextRef, args: [P.Map]}, {func: 1, ret: S.Context0, args: [P.Map]}, {func: 1, ret: S.ContextElement, args: [P.Map]}, {func: 1, ret: S.ErrorRef, args: [P.Map]}, {func: 1, ret: S.Error0, args: [P.Map]}, {func: 1, ret: S.Event1, args: [P.Map]}, {func: 1, ret: S.FieldRef, args: [P.Map]}, {func: 1, ret: S.Field, args: [P.Map]}, {func: 1, ret: S.Flag, args: [P.Map]}, {func: 1, ret: S.FlagList, args: [P.Map]}, {func: 1, ret: S.Frame, args: [P.Map]}, {func: 1, ret: S.FuncRef, args: [P.Map]}, {func: 1, ret: S.Func, args: [P.Map]}, {func: 1, ret: S.InstanceRef, args: [P.Map]}, {func: 1, ret: S.Instance, args: [P.Map]}, {func: 1, ret: S.IsolateRef, args: [P.Map]}, {func: 1, ret: S.Isolate, args: [P.Map]}, {func: 1, ret: S.LibraryRef, args: [P.Map]}, {func: 1, ret: S.Library, args: [P.Map]}, {func: 1, ret: S.LibraryDependency, args: [P.Map]}, {func: 1, ret: S.MapAssociation, args: [P.Map]}, {func: 1, ret: S.Message, args: [P.Map]}, {func: 1, ret: S.NullRef, args: [P.Map]}, {func: 1, ret: S.Null0, args: [P.Map]}, {func: 1, ret: S.ObjRef, args: [P.Map]}, {func: 1, ret: S.Obj, args: [P.Map]}, {func: 1, ret: S.Response, args: [P.Map]}, {func: 1, ret: S.Sentinel, args: [P.Map]}, {func: 1, ret: S.ScriptRef, args: [P.Map]}, {func: 1, ret: S.Script, args: [P.Map]}, {func: 1, ret: S.SourceLocation0, args: [P.Map]}, {func: 1, ret: S.Stack, args: [P.Map]}, {func: 1, ret: S.Success, args: [P.Map]}, {func: 1, ret: S.TypeArgumentsRef, args: [P.Map]}, {func: 1, ret: S.TypeArguments, args: [P.Map]}, {func: 1, ret: S.UnresolvedSourceLocation, args: [P.Map]}, {func: 1, ret: S.Version, args: [P.Map]}, {func: 1, ret: S.VMRef, args: [P.Map]}, {func: 1, ret: S.VM, args: [P.Map]}, {func: 1, ret: P.bool, args: [,,]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }

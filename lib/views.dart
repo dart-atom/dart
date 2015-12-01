@@ -337,9 +337,9 @@ abstract class View implements Disposable {
     root.add([toolbar, content]);
 
     tabElement = li(c: 'tab')..add([
-      div(text: label, c: 'title')..click(_handleTab),
+      div(text: label, c: 'title'),
       div(c: 'close-icon')..click(handleClose)
-    ]);
+    ])..click(_handleTab)..element.attributes['data-type'] = 'ViewPartEditor';
 
     _closeButton = toolbar.add(new CloseButton()..click(handleClose));
   }
@@ -368,6 +368,18 @@ abstract class View implements Disposable {
   }
 
   String toString() => '[${label} ${id}]';
+}
+
+class ViewSection extends CoreElement {
+  CoreElement title;
+  CoreElement subtitle;
+
+  ViewSection() : super('div', classes: 'view-section') {
+    title = add(title = div(c: 'view-title'));
+    subtitle = add(div(c: 'view-subtitle'));
+
+    layoutVertical();
+  }
 }
 
 class ListTreeBuilder extends CoreElement {
