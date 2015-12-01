@@ -353,11 +353,13 @@ class ErrorsStatusElement implements Disposable {
     int len = errors.length;
     int errorCount = 0;
     int warningCount = 0;
+    int infoCount = 0;
 
     for (int i = 0; i < len; i++) {
       AnalysisError error = errors[i];
       if (error.severity == 'ERROR') errorCount++;
       if (error.severity == 'WARNING') warningCount++;
+      if (error.severity == 'INFO') infoCount++;
     }
 
     bool hasIssues = errorCount != 0 || warningCount != 0;
@@ -377,7 +379,8 @@ class ErrorsStatusElement implements Disposable {
         _badgeSpan.text = '${warningCount} ${pluralize('warning', warningCount)}';
       }
     } else {
-      _badgeSpan.text = 'no errors';
+      _badgeSpan.text = infoCount == 0
+          ? 'no errors' : '${infoCount} ${pluralize('item', infoCount)}';
       _badgeSpan.toggleClass('badge-error', false);
       _badgeSpan.toggleClass('badge-warning', false);
       _badgeSpan.toggleClass('subtle', true);

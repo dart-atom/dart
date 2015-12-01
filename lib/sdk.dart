@@ -19,8 +19,6 @@ import 'utils.dart';
 
 export 'process.dart' show ProcessResult;
 
-// TODO: print the sdk version on successful auto-location (and path)
-
 final String _prefPath = '${pluginId}.sdkLocation';
 
 final Version _minSdkVersion = new Version.parse('1.12.0');
@@ -63,7 +61,7 @@ class SdkManager implements Disposable {
     String currentPath = atom.config.getValue(_prefPath);
 
     if (currentPath == null || currentPath.isEmpty) {
-      tryToAutoConfigure(complainOnFailure: false);
+      tryToAutoConfigure();
     } else {
       Sdk sdk = new Sdk.fromPath(currentPath);
       if (sdk != null && sdk.isValidSdk) _setSdk(sdk);
@@ -76,9 +74,6 @@ class SdkManager implements Disposable {
 
     _commands.add(atom.commands.add('atom-workspace', 'dartlang:auto-locate-sdk', (_) {
       new SdkLocationJob(sdkManager).schedule();
-    }));
-    _commands.add(atom.commands.add('atom-workspace', 'dartlang:show-sdk-info', (_) {
-      _handleShowSdkInfo();
     }));
   }
 
@@ -95,13 +90,23 @@ class SdkManager implements Disposable {
         dismissable: true);
   }
 
-  Future<bool> tryToAutoConfigure({bool complainOnFailure: true}) {
+  Future<bool> tryToAutoConfigure({bool verbose: true}) {
     return new SdkDiscovery().discoverSdk().then((String sdkPath) {
       if (sdkPath != null) {
         atom.config.setValue(_prefPath, sdkPath);
+        if (verbose) {
+          Timer.run(() {
+            if (sdk == null) return;
+
+            sdk.getVersion().then((String version) {
+              atom.notifications.addSuccess(
+                "Dart SDK found at ${sdk.directory.path}. Version ${version}.");
+            });
+          });
+        }
         return true;
       } else {
-        if (complainOnFailure) {
+        if (verbose) {
           atom.notifications.addWarning('Unable to auto-locate a Dart SDK.');
         }
         return false;
@@ -173,22 +178,6 @@ class SdkManager implements Disposable {
         }
       }
     } catch (e) { }
-  }
-
-  void _handleShowSdkInfo() {
-    getSystemDescription(sdkPath: true).then((String description) {
-      Notification notification;
-
-      var openSettings = () {
-        notification.dismiss();
-        atom.workspace.open('atom://config/packages/dartlang');
-      };
-
-      notification = atom.notifications.addInfo('SDK and Plugin info',
-          detail: description,
-          dismissable: true,
-          buttons: [new NotificationButton('Configure SDK…', openSettings)]);
-    });
   }
 }
 
@@ -335,8 +324,10 @@ class SdkLocationJob extends Job {
 
   SdkLocationJob(this.sdkManager) : super('Auto locate SDK');
 
+  bool get quiet => true;
+
   Future run() {
-    sdkManager.tryToAutoConfigure(complainOnFailure: true);
+    sdkManager.tryToAutoConfigure(verbose: true);
     return new Future.delayed(new Duration(milliseconds: 500));
   }
 }

@@ -10,10 +10,8 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import 'analysis/analysis_server_dialog.dart';
 import 'analysis/analysis_server_lib.dart';
 import 'atom.dart';
-import 'dependencies.dart';
 import 'jobs.dart';
 import 'process.dart';
 import 'projects.dart';
@@ -78,10 +76,6 @@ class AnalysisServer implements Disposable {
         }
       }
     });
-
-    disposables.add(atom.commands.add('atom-workspace',
-      '${pluginId}:analysis-server-diagnostics', (_) => _showDiagnostics()
-    ));
   }
 
   Stream<bool> get onActive => _serverActiveController.stream;
@@ -110,9 +104,6 @@ class AnalysisServer implements Disposable {
     knownRoots.addAll(projectManager.projects);
 
     _checkTrigger();
-
-    // Create the analysis server diagnostics dialog.
-    disposables.add(deps[AnalysisServerDialog] = new AnalysisServerDialog());
 
     var trim = (String str) => str.length > 260 ? str.substring(0, 260) + '…' : str;
 
@@ -377,49 +368,6 @@ class AnalysisServer implements Disposable {
       errorRepository.clearAll();
     }
   }
-
-  void _showDiagnostics() {
-    if (!isActive) {
-      atom.notifications.addWarning('Analysis server not running.');
-      return;
-    }
-
-    _server.diagnostic.getDiagnostics().then((DiagnosticsResult diagnostics) {
-      List<ContextData> contexts = diagnostics.contexts;
-
-      String info = '${contexts.length} ${pluralize('context', contexts.length)}\n\n';
-      info = info + contexts.map((ContextData context) {
-        int fileCount = context.explicitFileCount + context.implicitFileCount;
-        List<String> exceptions = context.cacheEntryExceptions ?? [];
-
-        return ('${context.name}\n'
-          '  ${fileCount} total analyzed files (${context.explicitFileCount} explicit), '
-          'queue length ${context.workItemQueueLength}\n  '
-          + exceptions.join('\n  ')
-        ).trim();
-      }).join('\n\n');
-
-      atom.notifications.addInfo(
-        'Analysis server diagnostics',
-        detail: info,
-        dismissable: true
-      );
-    }).catchError((e) {
-      if (e is RequestError) {
-        atom.notifications.addError(
-          'Diagnostics Error',
-          description: '${e.code} ${e.message}',
-          dismissable: true
-        );
-      } else {
-        atom.notifications.addError(
-          'Diagnostics Error',
-          description: '${e}',
-          dismissable: true
-        );
-      }
-    });
-  }
 }
 
 class _AnalyzingJob extends Job {
@@ -430,7 +378,7 @@ class _AnalyzingJob extends Job {
 
   _AnalyzingJob() : super('Analyzing source') {
     _infoAction = () {
-      deps[AnalysisServerDialog].showDialog();
+      statusViewManager.showSection('analysis-server');
     };
   }
 

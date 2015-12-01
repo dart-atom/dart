@@ -267,4 +267,14 @@ atom-notification.dartlang {
 .overflow-hidden-ellipsis {
   overflow-x: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.strobe {
+  color: @text-color-subtle;
+  transition: color 0.1s;
+}
+
+.strobe.strobe-flash {
+  color: @text-color-highlight;
 }

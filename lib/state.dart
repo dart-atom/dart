@@ -14,6 +14,7 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'impl/navigation.dart';
+import 'impl/status.dart';
 import 'jobs.dart';
 import 'launch/launch.dart';
 import 'launch/launch_configs.dart';
@@ -37,6 +38,7 @@ ProjectManager get projectManager => deps[ProjectManager];
 SdkManager get sdkManager => deps[SdkManager];
 ViewGroupManager get viewGroupManager => deps[ViewGroupManager];
 NavigationManager get navigationManager => deps[NavigationManager];
+StatusViewManager get statusViewManager => deps[StatusViewManager];
 
 final State state = new State();
 

@@ -11,6 +11,8 @@ import '../state.dart';
 import '../usage.dart' show trackCommand;
 import '../utils.dart';
 
+// TODO: remove this class
+
 class AnalysisServerDialog implements Disposable {
   final Disposables _disposables = new Disposables();
 
