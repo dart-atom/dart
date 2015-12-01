@@ -630,6 +630,15 @@ class _AnalysisServerWrapper extends Server {
   }
 }
 
+class ExtractLocalVariableOptions extends RefactoringOptions {
+  final String name;
+  final bool extractAll;
+
+  ExtractLocalVariableOptions(this.name, {this.extractAll : false});
+
+  Map toMap() => {'name': name, 'extractAll': extractAll};
+}
+
 class RenameRefactoringOptions extends RefactoringOptions {
   final String newName;
 
