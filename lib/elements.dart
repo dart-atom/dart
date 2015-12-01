@@ -191,6 +191,10 @@ class CoreElement {
 
   void clear() => element.children.clear();
 
+  void setInnerHtml(String str) {
+    element.setInnerHtml(str, treeSanitizer: new TrustedHtmlTreeSanitizer());
+  }
+
   /// Listen for a user copy event (ctrl-c / cmd-c) and copy the selected DOM
   /// bits into the user's paste buffer.
   void listenForUserCopy() {
@@ -271,5 +275,25 @@ class TitledModelDialog implements Disposable {
   void dispose() {
     _panel.invoke('destroy');
     _cancelCommand.dispose();
+  }
+}
+
+class Strobe extends CoreElement {
+  static Duration _halfDuration = new Duration(milliseconds: 100);
+  static Duration _fullDuration = new Duration(milliseconds: 200);
+
+  Timer _timer;
+
+  Strobe({String text, String classes}) :
+      super('span', text: text, classes: classes) {
+    toggleClass('strobe');
+  }
+
+  void strobe() {
+    if (_timer != null) return;
+
+    toggleClass('strobe-flash', true);
+    new Timer(_halfDuration, () => toggleClass('strobe-flash', false));
+    _timer = new Timer(_fullDuration, () => _timer = null);
   }
 }

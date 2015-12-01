@@ -2,10 +2,18 @@
 
 .plugin-status {
   .view-section {
+    transition: color 0.4s, background-color 0.4s;
+
     .status-header {
       margin-bottom: 6px;
       overflow-x: hidden;
       text-overflow: ellipsis;
+      display: flex;
+      align-items: baseline;
+
+      .view-subtitle {
+        margin-left: 0.3em;
+      }
     }
 
     button {
@@ -14,6 +22,14 @@
 
     div.bottom-margin {
       margin-bottom: 6px;
+    }
+  }
+
+  .view-section.status-emphasis {
+    background-color: @background-color-highlight;
+
+    .status-header {
+      color: @text-color-highlight;
     }
   }
 }

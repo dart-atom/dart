@@ -254,9 +254,7 @@ class AtomDartPackage extends AtomPackage {
     }
   }
 
-  void _showFirstRun() {
-    deps[StatusViewManager].toggleView();
-  }
+  void _showFirstRun() => statusViewManager.toggleView();
 
   void _handleSendFeedback() {
     getSystemDescription().then((String description) {
