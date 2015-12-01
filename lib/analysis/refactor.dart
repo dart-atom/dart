@@ -56,7 +56,7 @@ class RefactoringHelper implements Disposable {
       // to better select the ID being renamed.
       String oldName = '';
 
-      promptUser('Extract local variable: enter the new name.',
+      promptUser('Extract local variable - enter the variable name:',
           defaultText: oldName, selectText: true).then((String newName) {
         // Abort if user cancels the operation or nothing to do
         if (newName == null) return;
@@ -79,7 +79,7 @@ class RefactoringHelper implements Disposable {
       // TODO: use the rename refactoring feedback
       // to better select the ID being renamed.
 
-      promptUser('Rename refactor: enter the new name.',
+      promptUser('Rename refactor - enter the new name:',
           defaultText: oldName, selectText: true).then((String newName) {
         // Abort if user cancels the operation or nothing to do
         if (newName == null) return;
