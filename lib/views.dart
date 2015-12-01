@@ -370,6 +370,18 @@ abstract class View implements Disposable {
   String toString() => '[${label} ${id}]';
 }
 
+class ViewSection extends CoreElement {
+  CoreElement title;
+  CoreElement subtitle;
+
+  ViewSection() : super('div', classes: 'view-section') {
+    title = add(title = div(c: 'view-title'));
+    subtitle = add(div(c: 'view-subtitle'));
+
+    layoutVertical();
+  }
+}
+
 class ListTreeBuilder extends CoreElement {
   final StreamController<Node> _clickController = new StreamController.broadcast();
   final StreamController<Node> _doubleClickController = new StreamController.broadcast();

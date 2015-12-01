@@ -10,6 +10,7 @@
 - fixed an exception when restoring saved settings
 - pass the route parameter to flutter launch configurations
 - add the ability to launch mojo apps from the flutter launch configuration
+- added a getting started and plugin status view
 
 ## 0.4.15
 - create hyperlinks from exception traces in the console view

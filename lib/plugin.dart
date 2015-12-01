@@ -44,6 +44,7 @@ import 'impl/navigation.dart';
 import 'impl/outline.dart';
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
+import 'impl/status.dart';
 import 'impl/status_display.dart';
 import 'impl/tests.dart';
 import 'impl/toolbar.dart';
@@ -140,6 +141,7 @@ class AtomDartPackage extends AtomPackage {
 
     disposables.add(analysisOptionsManager);
     disposables.add(new ChangelogManager());
+    disposables.add(deps[StatusViewManager] = new StatusViewManager());
     disposables.add(new CreateProjectManager());
     disposables.add(new DartdocHelper());
     disposables.add(errorsController = new ErrorsController());
@@ -223,9 +225,11 @@ class AtomDartPackage extends AtomPackage {
     runOnce('_initialized', () {
       // This is fairly drastic. We're disabling a setting in another plugin.
       atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
+    });
 
+    runOnce('_firstRun', () {
       // Show a welcome toast.
-      _showWelcomeToast();
+      _showFirstRun();
     });
 
     runOnce('_initializedSymLinks', () {
@@ -250,19 +254,8 @@ class AtomDartPackage extends AtomPackage {
     }
   }
 
-  void _showWelcomeToast() {
-    getPackageVersion().then((String version) {
-      // Show where to find more info and the analytics disclaimer.
-      atom.notifications.addSuccess('Welcome to the dartlang plugin for Atom!',
-        detail: 'v${version}',
-        description:
-          "For help using this plugin, please see our getting started guide, "
-          "available from the `Packages` > `Dart` > `Getting Started` menu item.\n\n"
-          "The Dart plugin anonymously reports feature usage statistics and "
-          "basic crash reports to improve the tool over time. Please visit the "
-          "plugin's settings page to configure this behavior.",
-        dismissable: true);
-    });
+  void _showFirstRun() {
+    deps[StatusViewManager].toggleView();
   }
 
   void _handleSendFeedback() {
