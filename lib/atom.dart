@@ -147,6 +147,19 @@ class Atom extends ProxyHolder {
 
   /// Reload the current window.
   void reload() => invoke('reload');
+
+  /// Prompt the user to select one or more folders.
+  Future<String> pickFolder() {
+    Completer<String> completer = new Completer();
+    invoke('pickFolder', (result) {
+      if (result is List && result.isNotEmpty) {
+        completer.complete(result.first);
+      } else {
+        completer.complete(null);
+      }
+    });
+    return completer.future;
+  }
 }
 
 /// ViewRegistry handles the association between model and view types in Atom.

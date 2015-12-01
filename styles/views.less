@@ -56,41 +56,32 @@ div.atom-view {
       width: 14px;
       height: 14px;
     }
-
-    // button {
-    //   margin-top: 2px;
-    // }
-    //
-    // div.close-button {
-    //   margin-top: 4px;
-    // }
-    //
-    // div.badge {
-    //   margin-top: 2px;
-    // }
   }
 
   .view-header {
-    // margin-top: 4px;
     padding-bottom: 6px;
     border-bottom: 1px solid @base-border-color;
     flex-shrink: 0;
 
-    .view-title {
-      font-size: 1.25em;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
     .view-subtitle {
       margin-top: 2px;
-      color: @text-color-subtle;
-      // TODO: Overflow or not?
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      margin-bottom: 0;
     }
+  }
+
+  .view-title {
+    font-size: 1.25em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .view-subtitle {
+    color: @text-color-subtle;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-bottom: 8px;
   }
 
   .view-header-static {
@@ -114,6 +105,31 @@ div.atom-view {
     right: 0;
     top: 0;
     height: 8px;
+  }
+
+  .view-section {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid @base-border-color;
+
+    .view-title {
+      font-size: 1.1em;
+    }
+
+    .view-section-buttons {
+      text-align: end;
+      margin-top: 6px;
+
+      button {
+        margin-left: 6px;
+      }
+    }
+  }
+
+  .view-section.view-section-last {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
   }
 }
 
