@@ -534,6 +534,16 @@ class _AnalysisServerWrapper extends Server {
   /// Creates a process.
   static ProcessRunner _createProcess(Sdk sdk) {
     String path = sdk.getSnapshotPath('analysis_server.dart.snapshot');
+    // Run from source if local config points to analysis_server/bin/server.dart
+    final String pathPref = '${pluginId}.analysisServerPath';
+    var serverPath = atom.config.getValue(pathPref);
+    if (serverPath is String) {
+      atom.notifications.addSuccess('Running analysis server from source',
+          detail: serverPath);
+      path = serverPath;
+    } else if (serverPath != null) {
+      atom.notifications.addError('$pathPref is defined but not a String');
+    }
     List<String> arguments = [path, '--sdk=${sdk.path}'];
 
     if (AnalysisServer.startWithDebugging) {
