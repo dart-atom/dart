@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.16
 - re-worked the UI for the errors, console, type hierarchy, and find references
   views
 - added styled headers for the console, type hierarchy, and find references views
