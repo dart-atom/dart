@@ -21,8 +21,9 @@ class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 
   RefactoringHelper() {
-    _addCommand('dartlang:refactor-rename', _handleRenameRefactor);
     _addCommand('dartlang:refactor-extract-local', _handleExtractLocal);
+    _addCommand('dartlang:refactor-inline-local', _handleInlineLocal);
+    _addCommand('dartlang:refactor-rename', _handleRenameRefactor);
   }
 
   void dispose() => _commands.dispose();
@@ -71,6 +72,15 @@ class RefactoringHelper implements Disposable {
             offset, end, "Extracted '${newName}'.");
       });
     });
+  }
+
+  void _handleInlineLocal(String path, int offset, int end, String text) {
+    String name = _findIdentifier(text, offset);
+
+    // Perform the refactoring
+    RefactoringOptions options = null;
+    _performRefactoring(Refactorings.INLINE_LOCAL_VARIABLE, options, path, offset, end,
+        "Inlined local variable '${name}'.");
   }
 
   void _handleRenameRefactor(String path, int offset, int end, String text) {
