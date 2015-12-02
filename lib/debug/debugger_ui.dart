@@ -11,6 +11,7 @@ import '../utils.dart';
 import '../views.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
+import 'model.dart';
 import 'utils.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui');
@@ -50,7 +51,8 @@ class DebuggerView extends View {
 
   MTabGroup primaryTabGroup;
   MTabGroup secondaryTabGroup;
-  BreakpointsTab breakpointsTab;
+
+  final Disposables disposables = new Disposables();
 
   DebuggerView(this.connection) {
     // Close the debugger view on termination.
@@ -167,7 +169,7 @@ class DebuggerView extends View {
     ]);
 
     // Set up the tab group.
-    primaryTabGroup.tabs.add(new _MockTab('Execution'));
+    primaryTabGroup.tabs.add(new ExecutionTab(this, connection));
     primaryTabGroup.tabs.add(new _MockTab('Libraries'));
     primaryTabGroup.tabs.add(new _MockTab('Isolates'));
   }
@@ -187,7 +189,10 @@ class DebuggerView extends View {
     // Set up the tab group.
     secondaryTabGroup.tabs.add(new _MockTab('Eval'));
     secondaryTabGroup.tabs.add(new _MockTab('Watchpoints'));
-    secondaryTabGroup.tabs.add(breakpointsTab = new BreakpointsTab());
+    secondaryTabGroup.tabs.add(new BreakpointsTab());
+
+    disposables.addAll(primaryTabGroup.tabs.items);
+    disposables.addAll(secondaryTabGroup.tabs.items);
   }
 
   // TODO: Shorter title.
@@ -196,8 +201,8 @@ class DebuggerView extends View {
   String get id => viewIdForConnection(connection);
 
   void dispose() {
-    // TODO:
-    breakpointsTab.dispose();
+    primaryTabGroup.dispose();
+    secondaryTabGroup.dispose();
   }
 
   // TODO: This is temporary.
@@ -209,40 +214,41 @@ class DebuggerView extends View {
   _terminate() => connection.terminate();
 
   void _jumpToLocation(DebugLocation location, {bool addExecMarker: false}) {
-    if (statSync(location.path).isFile()) {
-      // TODO: Do we also want to adjust the cursor position?
-      editorManager.jumpToLocation(location.path).then((TextEditor editor) {
-        // Ensure that the execution point is visible.
-        editor.scrollToBufferPosition(
-            new Point.coords(location.line - 1, location.column - 1), center: true);
-
-        if (addExecMarker) {
-          _execMarker?.destroy();
-
-          // Update the execution location markers.
-          _execMarker = editor.markBufferRange(
-              debuggerCoordsToEditorRange(location.line, location.column),
-              persistent: false);
-
-          // The executing line color.
-          editor.decorateMarker(_execMarker, {
-            'type': 'line', 'class': 'debugger-executionpoint-line'
-          });
-
-          // The right-arrow.
-          editor.decorateMarker(_execMarker, {
-            'type': 'line-number', 'class': 'debugger-executionpoint-linenumber'
-          });
-
-          // The column marker.
-          editor.decorateMarker(_execMarker, {
-            'type': 'highlight', 'class': 'debugger-executionpoint-highlight'
-          });
-        }
-      });
-    } else {
+    if (!statSync(location.path).isFile()) {
       atom.notifications.addWarning("Cannot find file '${location.path}'.");
+      return;
     }
+
+    editorManager.jumpToLocation(location.path, location.line - 1, location.column - 1).then(
+        (TextEditor editor) {
+      // Ensure that the execution point is visible.
+      editor.scrollToBufferPosition(
+          new Point.coords(location.line - 1, location.column - 1), center: true);
+
+      if (addExecMarker) {
+        _execMarker?.destroy();
+
+        // Update the execution location markers.
+        _execMarker = editor.markBufferRange(
+            debuggerCoordsToEditorRange(location.line, location.column),
+            persistent: false);
+
+        // The executing line color.
+        editor.decorateMarker(_execMarker, {
+          'type': 'line', 'class': 'debugger-executionpoint-line'
+        });
+
+        // The right-arrow.
+        editor.decorateMarker(_execMarker, {
+          'type': 'line-number', 'class': 'debugger-executionpoint-linenumber'
+        });
+
+        // The column marker.
+        editor.decorateMarker(_execMarker, {
+          'type': 'highlight', 'class': 'debugger-executionpoint-highlight'
+        });
+      }
+    });
   }
 
   void _removeExecutionMarker() {
@@ -262,11 +268,79 @@ class _MockTab extends MTab {
       print(val ? 'activated $this' : 'deactivated $this');
     });
   }
+
+  void dispose() { }
+}
+
+class ExecutionTab extends MTab {
+  final DebuggerView view;
+  final DebugConnection connection;
+  MList<DebugFrame> list;
+  StreamSubscriptions subs = new StreamSubscriptions();
+
+  ExecutionTab(this.view, this.connection) : super('execution', 'Execution') {
+    content..layoutVertical()..flex();
+    content.add([
+      list = new MList(_render)..flex()
+    ]);
+
+    list.selectedItem.onChanged.listen(_selectFrame);
+    list.onDoubleClick.listen(_selectFrame);
+
+    if (connection.isSuspended) {
+      // TODO: temp
+      updateFrames(connection.topFrame == null ? [] : [connection.topFrame]);
+    }
+
+    connection.onSuspendChanged.listen((bool suspend) {
+      if (suspend) {
+        // TODO: temp
+        updateFrames(connection.topFrame == null ? [] : [connection.topFrame]);
+      } else {
+        // TODO: if suspend == false, then remove the frames after a delay
+
+      }
+    });
+  }
+
+  void updateFrames(List<DebugFrame> frames, {bool selectTop: true}) {
+    list.update(frames);
+
+    if (selectTop && frames.isNotEmpty) {
+      list.selectItem(frames.first);
+    }
+  }
+
+  void _render(DebugFrame frame, CoreElement element) {
+    // TODO:
+    // frame.getLocation() is async!
+    // keep it async, but make sure things are efficient?
+    // Only resolve the location info when it needs to be displayed?
+    String locationText = 'main.dart, line 12:10';
+
+    element..add([
+      span(text: frame.title),
+      span(
+        text: locationText,
+        c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
+      )..flex()
+    ])..layoutHorizontal();
+  }
+
+  void _selectFrame(DebugFrame frame) {
+    if (frame == null) return;
+
+    frame.getLocation().then((DebugLocation location) {
+      if (location != null) view._jumpToLocation(location);
+    });
+  }
+
+  void dispose() => subs.dispose();
 }
 
 class BreakpointsTab extends MTab {
   _TabTitlebar titlebar;
-  MList list;
+  MList<AtomBreakpoint> list;
   StreamSubscriptions subs = new StreamSubscriptions();
 
   BreakpointsTab() : super('breakpoints', 'Breakpoints') {
@@ -310,7 +384,7 @@ class BreakpointsTab extends MTab {
       pathText = basename(rel[0]) + ' ' + rel[1];
     }
 
-    String lineText = ' line ${bp.line}';
+    String lineText = 'line ${bp.line}';
     if (bp.column != null) lineText += ':${bp.column}';
 
     var handleDelete = () {
@@ -321,7 +395,7 @@ class BreakpointsTab extends MTab {
       span(c: 'icon-primitive-dot debugger-breakpoint-icon'),
       div(c: 'overflow-hidden-ellipsis')..flex()..add([
         span(text: pathText, c: 'debugger-breakpoint-path')..tooltip = bp.path,
-        span(text: lineText, c: 'text-subtle')
+        span(text: lineText, c: 'debugger-secondary-info')
       ]),
       new MIconButton('icon-x')..click(handleDelete)
     ])..layoutHorizontal();

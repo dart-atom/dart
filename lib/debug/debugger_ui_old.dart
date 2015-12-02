@@ -13,6 +13,7 @@ import '../elements.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'debugger.dart';
+import 'model.dart';
 import 'utils.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui_old');

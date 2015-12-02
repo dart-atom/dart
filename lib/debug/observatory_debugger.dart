@@ -12,6 +12,7 @@ import '../state.dart';
 import '../utils.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
+import 'model.dart';
 
 final Logger _logger = new Logger('atom.observatory');
 

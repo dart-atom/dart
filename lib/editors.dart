@@ -101,13 +101,34 @@ class EditorManager implements Disposable {
     if (column != null) options['initialColumn'] = column;
 
     // If we're editing the target file, then use the current editor.
-    var ed = atom.workspace.getActiveTextEditor();
-    if (ed != null && ed.getPath() == path) options['searchAllPanes'] = false;
+    var editor = atom.workspace.getActiveTextEditor();
+    if (editor != null && editor.getPath() == path) {
+      _select(editor, line, column, length);
+      return new Future.value(editor);
+    }
+
+    for (TextEditor editor in atom.workspace.getTextEditors()) {
+      if (editor.getPath() == path) {
+        _select(editor, line, column, length);
+        return new Future.value(editor);
+      }
+    }
 
     return atom.workspace.open(path, options: options).then((TextEditor editor) {
       if (length != null) editor.selectRight(length);
       return editor;
     });
+  }
+
+  void _select(TextEditor editor, [int line, int column, int length]) {
+    if (line == null) return;
+
+    Point pos = new Point.coords(line, column == null ? 0 : column);
+
+    editor.setCursorBufferPosition(pos);
+    editor.scrollToBufferPosition(pos);
+
+    if (length != null) editor.selectRight(length);
   }
 
   Future<TextEditor> jumpToLine(String path, int line, {bool selectLine: true}) {

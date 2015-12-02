@@ -68,6 +68,8 @@ class Disposables implements Disposable {
 
   void add(Disposable disposable) => _disposables.add(disposable);
 
+  void addAll(Iterable<Disposable> list) => _disposables.addAll(list);
+
   bool remove(Disposable disposable) => _disposables.remove(disposable);
 
   void dispose() {

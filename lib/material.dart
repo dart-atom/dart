@@ -63,7 +63,7 @@ class MTabGroup extends CoreElement {
   }
 }
 
-abstract class MTab {
+abstract class MTab implements Disposable {
   final String id;
   final String name;
   final CoreElement _tabElement;
@@ -76,10 +76,11 @@ abstract class MTab {
       content = div() {
     _tabElement.text = name;
     enabled.onChanged.listen((val) {
-      print('$name enabled $val');
       _tabElement.enabled = val;
     });
   }
+
+  void dispose();
 
   String toString() => '$id $name';
 }

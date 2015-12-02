@@ -10,6 +10,7 @@ import '../launch/launch.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'debugger_ui.dart';
+import 'model.dart';
 
 final Logger _logger = new Logger('atom.debugger');
 
@@ -109,51 +110,6 @@ abstract class DebugConnection {
   Future get onTerminated;
 
   void dispose();
-}
-
-/// A representation of a VM Isolate.
-abstract class DebugIsolate {
-  DebugIsolate();
-
-  String get name;
-}
-
-abstract class DebugFrame {
-  DebugFrame();
-
-  String get title;
-
-  String get cursorDescription;
-
-  List<DebugVariable> get locals;
-
-  Future<DebugLocation> getLocation();
-
-  Future<String> eval(String expression);
-
-  String toString() => title;
-}
-
-abstract class DebugVariable {
-  DebugVariable();
-
-  String get name;
-  String get valueDescription;
-
-  String toString() => name;
-}
-
-class DebugLocation {
-  /// A file path;
-  final String path;
-  /// 1-based line number.
-  final int line;
-  /// 1-based column number.
-  final int column;
-
-  DebugLocation(this.path, this.line, this.column);
-
-  String toString() => '${path} ${line}:${column}';
 }
 
 /// A class to translate from one name-space to another.
