@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:html' show InputElement;
 
+import '../analysis/analysis_server_lib.dart' show DiagnosticsResult;
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../elements.dart';
@@ -117,16 +118,14 @@ class StatusView extends View {
     CoreElement text = section.add(div());
     text.setInnerHtml(
       'For help using this plugin, please see our getting started '
-      '<a href="https://dart-atom.github.io/dartlang/">guide</a>. '
-      'Please file feature requests and bugs on the '
-      '<a href="https://github.com/dart-atom/dartlang/issues">issue tracker</a>.'
+      '<a href="https://dart-atom.github.io/dartlang/">guide</a>.'
     );
 
     CoreElement buttons = _addButtons(section);
     buttons.add(button(text: 'Check for Updates', c: 'btn')..click(() {
       atom.workspace.open('atom://config/updates');
     }));
-    buttons.add(button(text: 'Feedback…', c: 'btn')..click(() {
+    buttons.add(button(text: 'Report Issue…', c: 'btn')..click(() {
       getSystemDescription().then((String description) {
         shell.openExternal('https://github.com/dart-atom/dartlang/issues/new?'
             'body=${Uri.encodeComponent(description)}');
@@ -179,8 +178,6 @@ class StatusView extends View {
     return section;
   }
 
-  // TODO: diagnostics page; enable diagnostics port; graphs
-
   ViewSection _createAnalysisServerSection(CoreElement container) {
     CoreElement section = container.add(div(c: 'view-section'));
     StatusHeader header = new StatusHeader(section);
@@ -215,37 +212,35 @@ class StatusView extends View {
     // Hook up the strobes.
     final Duration _duration = new Duration(seconds: 3);
 
-    Strobe commandStrobe;
-    CoreElement command;
-    Timer commandTimer;
-
-    Strobe responseStrobe;
+    Strobe strobe;
     CoreElement response;
-    Timer responseTimer;
+    Timer timer;
 
     section.add([
-      div(c: 'overflow-hidden-ellipsis')..add([
-        commandStrobe = new Strobe(classes: 'icon-triangle-right'),
-        command = span(c: 'text-subtle')
-      ]),
       div(c: 'overflow-hidden-ellipsis bottom-margin')..add([
-        responseStrobe = new Strobe(classes: 'icon-triangle-left'),
+        strobe = new Strobe(text: ' ', classes: 'icon-pulse'),
         response = span(c: 'text-subtle overflow-hidden-ellipsis')
       ])
     ]);
 
-    subs.add(analysisServer.onSend.listen((str) {
-      commandStrobe.strobe();
-      command.text = str;
-      commandTimer?.cancel();
-      commandTimer = new Timer(_duration, () => command.text = '');
-    }));
-    subs.add(analysisServer.onReceive.listen((str) {
-      responseStrobe.strobe();
+    var updateTraffic = (str) {
+      strobe.strobe();
+
+      // Don't show the text for the diagnostic command.
+      if (str.contains('"diagnostic.getDiagnostics"')) return;
+      if (str.contains('"result":{"contexts":')) return;
+
       response.text = str;
-      responseTimer?.cancel();
-      responseTimer = new Timer(_duration, () => response.text = '');
-    }));
+      timer?.cancel();
+      timer = new Timer(_duration, () => response.text = '');
+    };
+
+    subs.add(analysisServer.onSend.listen(updateTraffic));
+    subs.add(analysisServer.onReceive.listen(updateTraffic));
+
+    // Show diagnostics.
+    CoreElement diagnostics = section.add(div(c: 'bottom-margin'));
+    _createDiagnostics(diagnostics);
 
     CoreElement buttons = _addButtons(section);
     buttons.add([
@@ -264,16 +259,82 @@ class StatusView extends View {
     return section;
   }
 
+  Timer _diagnosticTimer;
+
+  void _createDiagnostics(CoreElement diagnostics) {
+    CoreElement contextCount;
+    CoreElement fileCount;
+    CoreElement taskQueueCount;
+
+    var updateUI = (DiagnosticsResult result) {
+      // context count, explicitFileCount + implicitFileCount, workItemQueueLengthAverage
+
+      if (result == null) {
+        contextCount.text = '—';
+        fileCount.text = '—';
+        taskQueueCount.text = '—';
+      } else {
+        contextCount.text = commas(result.contexts.length);
+        int count = result.contexts
+          .map((c) => c.explicitFileCount + c.implicitFileCount)
+          .fold(0, (a, b) => a + b);
+        fileCount.text = commas(count);
+        num queue = result.contexts
+          .map((c) => c.workItemQueueLengthAverage)
+          .fold(0.0, (a, b) => a + (b == null ? 0.0 : num.parse(b)));
+        taskQueueCount.text = queue.toStringAsFixed(1);
+      }
+    };
+
+    var handleActive = (bool active) {
+      if (active) {
+        _diagnosticTimer = new Timer.periodic(new Duration(seconds: 1), (_) {
+          analysisServer.server.diagnostic.getDiagnostics().then((result) {
+            updateUI(result);
+          }).catchError((e, st) {
+            _diagnosticTimer?.cancel();
+            _diagnosticTimer = null;
+            updateUI(null);
+          });
+        });
+      } else {
+        _diagnosticTimer?.cancel();
+        _diagnosticTimer = null;
+        updateUI(null);
+      }
+    };
+
+    subs.add(analysisServer.onActive.listen(handleActive));
+
+    diagnostics.add([
+      div()..add([
+        span(text: 'contexts:', c: 'diagnostics-title'),
+        contextCount = span(c: 'diagnostics-data')
+      ]),
+      div()..add([
+        span(text: 'analyzed files:', c: 'diagnostics-title'),
+        fileCount = span(c: 'diagnostics-data')
+      ]),
+      div()..add([
+        span(text: 'task queue:', c: 'diagnostics-title'),
+        taskQueueCount = span(c: 'diagnostics-data')
+      ])
+    ]);
+
+    handleActive(analysisServer.isActive);
+  }
+
   CoreElement _createAnalyticsSection(CoreElement container) {
     CoreElement section = container.add(div(c: 'view-section'));
     StatusHeader header = new StatusHeader(section);
     header.title.text = 'Google Analytics';
 
     CoreElement text = section.add(div(c: 'bottom-margin'));
-    text.text =
-      "The Dart plugin anonymously reports feature usage statistics and basic "
-      "crash reports to improve the tool over time. See our privacy "
-      "<a href='http://www.google.com/intl/en/policies/privacy/'>policy</a>.";
+    text.setInnerHtml(
+      'The Dart plugin anonymously reports feature usage statistics and basic '
+      'crash reports to improve the tool over time. See our privacy '
+      '<a href="http://www.google.com/intl/en/policies/privacy/">policy</a>.'
+    );
 
     CoreElement analyticsCheck = new CoreElement('input')
       ..element.attributes['type'] = 'checkbox';
@@ -298,7 +359,7 @@ class StatusView extends View {
     return section;
   }
 
-  String get label => 'Dart plugin status';
+  String get label => 'Plugin status';
 
   String get id => pluginId;
 
@@ -322,6 +383,7 @@ class StatusView extends View {
   }
 
   void dispose() {
+    _diagnosticTimer?.cancel();
     subs.cancel();
   }
 
@@ -376,48 +438,3 @@ Future<String> _getPlatformVersions() {
     return 'Atom ${atomVer}, ${pluginId} ${pluginVer}';
   });
 }
-
-// TODO: old diagnostics code
-
-// void _showDiagnostics() {
-//   if (!isActive) {
-//     atom.notifications.addWarning('Analysis server not running.');
-//     return;
-//   }
-//
-//   _server.diagnostic.getDiagnostics().then((DiagnosticsResult diagnostics) {
-//     List<ContextData> contexts = diagnostics.contexts;
-//
-//     String info = '${contexts.length} ${pluralize('context', contexts.length)}\n\n';
-//     info = info + contexts.map((ContextData context) {
-//       int fileCount = context.explicitFileCount + context.implicitFileCount;
-//       List<String> exceptions = context.cacheEntryExceptions ?? [];
-//
-//       return ('${context.name}\n'
-//         '  ${fileCount} total analyzed files (${context.explicitFileCount} explicit), '
-//         'queue length ${context.workItemQueueLength}\n  '
-//         + exceptions.join('\n  ')
-//       ).trim();
-//     }).join('\n\n');
-//
-//     atom.notifications.addInfo(
-//       'Analysis server diagnostics',
-//       detail: info,
-//       dismissable: true
-//     );
-//   }).catchError((e) {
-//     if (e is RequestError) {
-//       atom.notifications.addError(
-//         'Diagnostics Error',
-//         description: '${e.code} ${e.message}',
-//         dismissable: true
-//       );
-//     } else {
-//       atom.notifications.addError(
-//         'Diagnostics Error',
-//         description: '${e}',
-//         dismissable: true
-//       );
-//     }
-//   });
-// }
