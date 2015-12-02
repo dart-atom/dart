@@ -2,6 +2,8 @@
 
 ## unreleased
 - added an analysis server section to the plugin status view
+- add inline local refactoring
+- move extract and inline local refactorings into submenu
 
 ## 0.4.16
 - re-worked the UI for the errors, console, type hierarchy, and find references

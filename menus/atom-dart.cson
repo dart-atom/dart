@@ -35,9 +35,12 @@
     {label: 'Find References…', command: 'dartlang:find-references' }
     {label: 'Format', command: 'dartlang:dart-format' }
     {label: 'Organize Directives', command: 'dartlang:organize-directives' }
+    # TODO(danrubel) should rename be moved into the Refactor submenu ?
     {label: 'Rename…', command: 'dartlang:refactor-rename' }
-    # TODO(danrubel) should this be placed in a Refactor submenu ?
-    {label: 'Extract Local…', command: 'dartlang:refactor-extract-local' }
+    {label: 'Refactor', submenu: [
+        {label: 'Extract Local…', command: 'dartlang:refactor-extract-local' }
+        {label: 'Inline Local…', command: 'dartlang:refactor-inline-local' }
+    ]}
     {label: 'Sort Members', command: 'dartlang:sort-members' }
     {label: 'Type Hierarchy', command: 'dartlang:type-hierarchy' }
     {type: 'separator'}

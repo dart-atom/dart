@@ -29,6 +29,7 @@
   'alt-enter': 'dartlang:quick-fix'
   'f1': 'dartlang:show-dartdoc'
   'f4': 'dartlang:type-hierarchy'
+  'alt-shift-i': 'dartlang:refactor-inline-local'
   'alt-shift-l': 'dartlang:refactor-extract-local'
   'alt-shift-r': 'dartlang:refactor-rename'
   'enter': 'dartlang:newline'
