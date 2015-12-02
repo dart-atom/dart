@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- added an analysis server section to the plugin status view
+
 ## 0.4.16
 - re-worked the UI for the errors, console, type hierarchy, and find references
   views
