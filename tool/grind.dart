@@ -110,6 +110,7 @@ self.clearInterval = function(id) { window.clearInterval(id); };
 
 // Work around interop issues.
 self.getTextEditorForElement = function(element) { return element.o.getModel(); };
+self.uncrackDart2js = function(obj) { return obj.o; };
 
 self._domHoist = function(element, targetQuery) {
   var target = document.querySelector(targetQuery);

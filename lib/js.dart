@@ -30,8 +30,10 @@ JsObject jsify(obj) {
 
 JsObject require(String input) => context.callMethod('require', [input]);
 
-/// Attempts to convert a JsObject to a List or Map based on `JSON.stringify`
-/// and dart:convert's `JSON.decode`.
+JsObject uncrackDart2js(dynamic obj) => context.callMethod('uncrackDart2js', [obj]);
+
+/// Convert a JsObject to a List or Map based on `JSON.stringify` and
+/// dart:convert's `JSON.decode`.
 dynamic jsObjectToDart(JsObject obj) {
   if (obj == null) return null;
 
@@ -39,7 +41,18 @@ dynamic jsObjectToDart(JsObject obj) {
     String str = _browserJson.callMethod('stringify', [obj]);
     return JSON.decode(str);
   } catch (e, st) {
-    _logger.severe('toDartObjectViaWizardy', e, st);
+    _logger.severe('jsObjectToDart', e, st);
+  }
+}
+
+dynamic dartObjectToJS(dynamic obj) {
+  if (obj == null) return null;
+
+  try {
+    String str = JSON.encode(obj);
+    return _browserJson.callMethod('parse', [str]);
+  } catch (e, st) {
+    _logger.severe('dartObjectToJS', e, st);
   }
 }
 
