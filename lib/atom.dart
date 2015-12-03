@@ -180,6 +180,8 @@ class ViewRegistry extends ProxyHolder {
 /// with this object to open files, be notified of current and future editors,
 /// and manipulate panes.
 class Workspace extends ProxyHolder {
+  FutureSerializer<TextEditor> _openSerializer = new FutureSerializer();
+
   Workspace(JsObject object) : super(object);
 
   /// Returns a list of [TextEditor]s.
@@ -223,6 +225,8 @@ class Workspace extends ProxyHolder {
   /// Get the Pane containing the given item.
   Pane paneForItem(dynamic item) => new Pane(invoke('paneForItem', item));
 
+  // TODO: serialize calls to `atom.workspace.open`.
+
   /// Opens the given URI in Atom asynchronously. If the URI is already open,
   /// the existing item for that URI will be activated. If no URI is given, or
   /// no registered opener can open the URI, a new empty TextEditor will be
@@ -231,11 +235,13 @@ class Workspace extends ProxyHolder {
   /// [options] can include initialLine, initialColumn, split, activePane, and
   /// searchAllPanes.
   Future<TextEditor> open(String url, {Map options}) {
-    Future future = promiseToFuture(invoke('open', url, options));
-    return future.then((result) {
-      if (result == null) throw 'unable to open ${url}';
-      TextEditor editor = new TextEditor(result);
-      return editor.isValid() ? editor : null;
+    return _openSerializer.perform(() {
+      Future future = promiseToFuture(invoke('open', url, options));
+      return future.then((result) {
+        if (result == null) throw 'unable to open ${url}';
+        TextEditor editor = new TextEditor(result);
+        return editor.isValid() ? editor : null;
+      });
     });
   }
 
