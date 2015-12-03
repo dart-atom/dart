@@ -1,5 +1,7 @@
 import 'dart:async';
 
+// TODO: clean up this model
+
 /// A representation of a VM Isolate.
 abstract class DebugIsolate {
   DebugIsolate();

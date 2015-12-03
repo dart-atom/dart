@@ -110,6 +110,11 @@ class EditorManager implements Disposable {
     for (TextEditor editor in atom.workspace.getTextEditors()) {
       if (editor.getPath() == path) {
         _select(editor, line, column, length);
+
+        // Activate this item.
+        Pane pane = atom.workspace.paneForItem(editor);
+        pane?.activateItem(editor);
+
         return new Future.value(editor);
       }
     }
@@ -124,10 +129,8 @@ class EditorManager implements Disposable {
     if (line == null) return;
 
     Point pos = new Point.coords(line, column == null ? 0 : column);
-
     editor.setCursorBufferPosition(pos);
     editor.scrollToBufferPosition(pos);
-
     if (length != null) editor.selectRight(length);
   }
 

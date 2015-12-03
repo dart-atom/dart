@@ -185,6 +185,8 @@ class SelectionGroup<T> {
 
   List<T> get items => _items;
 
+  bool get isEmpty => _items.isEmpty;
+  bool get isNotEmpty => _items.isNotEmpty;
   int get length => _items.length;
 
   Stream<T> get onAdded => _addedController.stream;

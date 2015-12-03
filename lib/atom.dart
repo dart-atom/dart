@@ -220,6 +220,9 @@ class Workspace extends ProxyHolder {
   Panel addRightPanel({dynamic item, bool visible, int priority}) =>
       new Panel(invoke('addRightPanel', _panelOptions(item, visible, priority)));
 
+  /// Get the Pane containing the given item.
+  Pane paneForItem(dynamic item) => new Pane(invoke('paneForItem', item));
+
   /// Opens the given URI in Atom asynchronously. If the URI is already open,
   /// the existing item for that URI will be activated. If no URI is given, or
   /// no registered opener can open the URI, a new empty TextEditor will be
@@ -274,6 +277,15 @@ class Panel extends ProxyHolder {
   void show() => invoke('show');
   void hide() => invoke('hide');
   void destroy() => invoke('destroy');
+}
+
+class Pane extends ProxyHolder {
+  factory Pane(JsObject object) => object == null ? null : new Pane._(object);
+
+  Pane._(JsObject object) : super(object);
+
+  /// Make the given item active, causing it to be displayed by the pane's view.
+  void activateItem(dynamic item) => invoke('activateItem', item);
 }
 
 class CommandRegistry extends ProxyHolder {
