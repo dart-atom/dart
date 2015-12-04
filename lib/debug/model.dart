@@ -5,8 +5,9 @@ import '../utils.dart';
 
 abstract class DebugConnection {
   final Launch launch;
-  final SelectionGroup<DebugIsolate> isolates = new SelectionGroup();
   final Property<String> metadata = new Property();
+
+  final SelectionGroup<DebugIsolate> isolates = new SelectionGroup();
 
   DebugConnection(this.launch);
 
@@ -14,6 +15,9 @@ abstract class DebugConnection {
 
   // TODO: remove
   DebugIsolate get isolate;
+
+  Stream<DebugIsolate> get onPaused;
+  Stream<DebugIsolate> get onResumed;
 
   Future terminate();
 
@@ -34,6 +38,8 @@ abstract class DebugIsolate {
   DebugIsolate();
 
   String get name;
+
+  bool get isSuspended => suspended.value;
 
   // TODO: state
 

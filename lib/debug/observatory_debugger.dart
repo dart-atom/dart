@@ -63,6 +63,8 @@ class ObservatoryConnection extends DebugConnection {
   final bool isolatesStartPaused;
 
   Map<String, ObservatoryIsolate> _isolateMap = {};
+  StreamController<DebugIsolate> _isolatePaused = new StreamController.broadcast();
+  StreamController<DebugIsolate> _isolateResumed = new StreamController.broadcast();
 
   StreamSubscriptions subs = new StreamSubscriptions();
   UriResolver uriResolver;
@@ -85,6 +87,9 @@ class ObservatoryConnection extends DebugConnection {
   }
 
   bool get isAlive => !completer.isCompleted;
+
+  Stream<DebugIsolate> get onPaused => _isolatePaused.stream;
+  Stream<DebugIsolate> get onResumed => _isolateResumed.stream;
 
   // TODO: Temp.
   ObservatoryIsolate __isolate;
@@ -441,7 +446,14 @@ class ObservatoryIsolate extends DebugIsolate {
 
   void _suspend(bool value) {
     if (!value) frames = null;
+
     suspended.value = value;
+
+    if (value) {
+      connection._isolatePaused.add(this);
+    } else {
+      connection._isolateResumed.add(this);
+    }
   }
 
   pause() => service.pause(isolateRef.id);
@@ -455,8 +467,6 @@ class ObservatoryIsolate extends DebugIsolate {
   Future _updateIsolateInfo() {
     return service.getIsolate(isolateRef.id).then((Isolate isolate) {
       this.isolate = isolate;
-
-      print('isolate: ${isolate}, pauseEvent: ${isolate.pauseEvent}');
     });
   }
 
@@ -483,6 +493,8 @@ class ObservatoryIsolate extends DebugIsolate {
       return scriptManager.loadAllScripts(scriptRefs);
     });
   }
+
+  String toString() => 'Isolate ${name}';
 }
 
 class ObservatoryFrame extends DebugFrame {

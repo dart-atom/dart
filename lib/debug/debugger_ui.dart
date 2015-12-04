@@ -88,6 +88,10 @@ class DebuggerView extends View {
     _createFlowControlSection(flowControlSection);
     _createPrimarySection(primarySection);
     _createSecondarySection(secondarySection);
+
+    subs.add(connection.onPaused.listen(_handleIsolatePaused));
+    subs.add(connection.onResumed.listen(_handleIsolateResumed));
+    subs.add(connection.isolates.onRemoved.listen(_handleIsolateTerminated));
   }
 
   void _createTitleSection(CoreElement section) {
@@ -109,8 +113,9 @@ class DebuggerView extends View {
   }
 
   void _createFlowControlSection(CoreElement section) {
+    // TODO: listen for current isolate change
+
     CoreElement resume = button(c: 'btn icon-playback-play')..click(_resume);
-    // CoreElement pause = button(c: 'btn icon-playback-pause')..click(_pause);
     CoreElement stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
     CoreElement stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
     CoreElement stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
@@ -135,15 +140,7 @@ class DebuggerView extends View {
     ]);
 
     void updateUi(bool suspended) {
-      if (suspended) {
-        currentIsolate.value = connection.isolate;
-      } else {
-        // TODO: Clear this out on isolate death.
-        // currentIsolate.value = null;
-      }
-
       resume.enabled = suspended;
-      // pause.enabled = !suspended;
       stepIn.enabled = suspended;
       stepOut.enabled = suspended;
       stepOver.enabled = suspended;
@@ -182,7 +179,6 @@ class DebuggerView extends View {
   void _createPrimarySection(CoreElement section) {
     section.layoutVertical();
 
-
     section.add([
       primaryTabGroup = new MTabGroup()..flex()
     ]);
@@ -212,6 +208,22 @@ class DebuggerView extends View {
 
     disposables.addAll(primaryTabGroup.tabs.items);
     disposables.addAll(secondaryTabGroup.tabs.items);
+  }
+
+  void _handleIsolatePaused(DebugIsolate isolate) {
+    currentIsolate.value = isolate;
+  }
+
+  void _handleIsolateResumed(DebugIsolate isolate) {
+    // TODO:
+
+  }
+
+  void _handleIsolateTerminated(DebugIsolate isolate) {
+    if (currentIsolate.value == isolate) {
+      // TODO: find the next paused isolate; find any other isolate
+      currentIsolate.value = null;
+    }
   }
 
   // TODO: Shorter title.
@@ -292,10 +304,6 @@ class _MockTab extends MTab {
   _MockTab(String name) : super(name.toLowerCase(), name) {
     content.toggleClass('under-construction');
     content.text = '${name}: under construction';
-
-    active.onChanged.listen((val) {
-      print(val ? 'activated $this' : 'deactivated $this');
-    });
   }
 
   void dispose() { }
