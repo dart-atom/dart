@@ -6,11 +6,12 @@ import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
-import '../launch/launch.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'debugger_ui.dart';
 import 'model.dart';
+
+export 'model.dart' show DebugConnection;
 
 final Logger _logger = new Logger('atom.debugger');
 
@@ -43,9 +44,9 @@ class DebugManager implements Disposable {
     };
     add('debug-run', _handleDebugRun);
     add('debug-terminate', () => activeConnection?.terminate());
-    add('debug-stepout', () => activeConnection?.stepOut());
-    add('debug-step', () => activeConnection?.stepOver());
     add('debug-stepin', () => activeConnection?.stepIn());
+    add('debug-step', () => activeConnection?.stepOver());
+    add('debug-stepout', () => activeConnection?.stepOut());
   }
 
   Stream<DebugConnection> get onAdded => _addedController.stream;
@@ -83,33 +84,6 @@ class DebugManager implements Disposable {
     disposables.dispose();
     connections.toList().forEach((c) => c.dispose());
   }
-}
-
-abstract class DebugConnection {
-  final Launch launch;
-
-  DebugConnection(this.launch);
-
-  bool get isAlive;
-  bool get isSuspended;
-
-  // TODO: temporary
-  DebugIsolate get isolate;
-
-  DebugFrame get topFrame;
-
-  pause();
-  Future resume();
-  stepIn();
-  stepOver();
-  stepOut();
-  terminate();
-
-  Stream<bool> get onSuspendChanged;
-
-  Future get onTerminated;
-
-  void dispose();
 }
 
 /// A class to translate from one name-space to another.

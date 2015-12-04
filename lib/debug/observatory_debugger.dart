@@ -37,7 +37,7 @@ class ObservatoryDebugger {
       );
 
       _logger.info('Connected to observatory on ${url}.');
-      launch.addDebugConnection(new ObservatoryDebugConnection(
+      launch.addDebugConnection(new ObservatoryConnection(
           launch,
           service,
           finishedCompleter,
@@ -56,23 +56,21 @@ class ObservatoryDebugger {
   }
 }
 
-class ObservatoryDebugConnection extends DebugConnection {
+class ObservatoryConnection extends DebugConnection {
   final VmService service;
   final Completer completer;
   final bool pipeStdio;
   final bool isolatesStartPaused;
 
-  IsolateRef _currentIsolate;
+  Map<String, ObservatoryIsolate> _isolateMap = {};
+
   StreamSubscriptions subs = new StreamSubscriptions();
   UriResolver uriResolver;
 
   bool stdoutSupported = true;
   bool stderrSupported = true;
 
-  Property<bool> _suspended = new Property();
-  ObservatoryDebugFrame topFrame;
-
-  ObservatoryDebugConnection(Launch launch, this.service, this.completer, {
+  ObservatoryConnection(Launch launch, this.service, this.completer, {
     this.pipeStdio: false,
     this.isolatesStartPaused: false,
     UriTranslator uriTranslator
@@ -87,25 +85,30 @@ class ObservatoryDebugConnection extends DebugConnection {
   }
 
   bool get isAlive => !completer.isCompleted;
-  bool get isSuspended => _suspended.value;
 
   // TODO: Temp.
-  DebugIsolate get isolate {
-    if (_currentIsolate == null) return null;
-    return new ObservatoryDebugIsolate(_currentIsolate);
+  ObservatoryIsolate __isolate;
+  ObservatoryIsolate get _isolate {
+    if (__isolate == null) {
+      // TODO: remove this
+      __isolate = new ObservatoryIsolate._(service, null);
+    }
+    return __isolate;
   }
+  set _currentIsolate(IsolateRef val) {
+    _isolate.isolateRef = val;
+    if (_isolate.isolate == null) _isolate._updateIsolateInfo();
+    //__isolate = _isolateMap[val.id];
+  }
+  IsolateRef get _currentIsolate => _isolate.isolateRef;
+  DebugIsolate get isolate => _isolate; //isolates.items.first;
 
-  Stream<bool> get onSuspendChanged => _suspended.onChanged;
+  Future resume() => isolate.resume();
+  stepIn() => isolate.stepIn();
+  stepOver() => isolate.stepOver();
+  stepOut() => isolate.stepOut();
 
-  pause() => service.pause(_currentIsolate.id);
-  Future resume() => service.resume(_currentIsolate.id);
-
-  // TODO: only on suspend.
-  stepIn() => service.resume(_currentIsolate.id, step: StepOption.kInto);
-  stepOver() => service.resume(_currentIsolate.id, step: StepOption.kOver);
-  stepOut() => service.resume(_currentIsolate.id, step: StepOption.kOut);
-
-  terminate() => launch.kill();
+  Future terminate() => launch.kill();
 
   Future get onTerminated => completer.future;
 
@@ -174,12 +177,19 @@ class ObservatoryDebugConnection extends DebugConnection {
     }
 
     service.getVM().then((VM vm) {
-      _logger.info('Connected to ${vm.architectureBits}/${vm.targetCPU}/'
-          '${vm.hostCPU}/${vm.version}');
+      String dartVersion = vm.version;
+      if (dartVersion.contains(' ')) {
+        dartVersion = dartVersion.substring(0, dartVersion.indexOf(' '));
+      }
+      metadata.value = '${vm.targetCPU} • ${vm.hostCPU} • Dart ${dartVersion}';
+      _logger.info('Connected to ${metadata.value}');
+
+      _registerNewIsolates(vm.isolates);
+
       if (!isolatesStartPaused && vm.isolates.isNotEmpty) {
         _currentIsolate = vm.isolates.first;
         _installInto(_currentIsolate).then((_) {
-          _suspend(false);
+          _isolate._suspend(false);
         });
       } else if (isolatesStartPaused && vm.isolates.isNotEmpty) {
         if (_currentIsolate == null) {
@@ -187,7 +197,7 @@ class ObservatoryDebugConnection extends DebugConnection {
           _installInto(_currentIsolate).then((_) {
             service.getIsolate(_currentIsolate.id).then((Isolate isolate) {
               if (isolate.pauseEvent.kind == EventKind.kPauseStart) {
-                resume();
+                _isolate.resume();
               } else {
                 _startIt = true;
               }
@@ -246,6 +256,14 @@ class ObservatoryDebugConnection extends DebugConnection {
 
     launch.pipeStdio('${e}\n', subtle: true);
 
+    if (e.kind == EventKind.kIsolateStart) {
+      _registerNewIsolates([e.isolate]);
+    } else if (e.kind == EventKind.kIsolateRunnable) {
+      _handleIsolateRunnable(e.isolate);
+    } else if (e.kind == EventKind.kIsolateExit) {
+      _handleIsolateDeath(e.isolate);
+    }
+
     // IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
     if (e.kind == EventKind.kIsolateRunnable) {
       // Don't re-init if it is already inited.
@@ -253,12 +271,12 @@ class ObservatoryDebugConnection extends DebugConnection {
         _currentIsolate = e.isolate;
         _installInto(_currentIsolate).then((_) {
           if (isolatesStartPaused) {
-            resume();
+            _isolate.resume();
           }
         });
       } else if (_startIt) {
         _startIt = false;
-        resume();
+        _isolate.resume();
       }
     } else if (e.kind == EventKind.kIsolateExit) {
       _currentIsolate = null;
@@ -271,21 +289,18 @@ class ObservatoryDebugConnection extends DebugConnection {
     // TODO:
     if (e.kind == EventKind.kInspect) {
       InstanceRef ref = e.inspectee;
-      if (ref.valueAsString != null)
+      if (ref.valueAsString != null) {
         launch.pipeStdio('${ref.valueAsString}\n');
+      }
       launch.pipeStdio('${ref}\n');
-
-      // service.callServiceExtension('foo', {'baz': 'woot'}).then((response) {
-      //   print(response);
-      // });
     }
 
     if (e.kind == EventKind.kResume) {
-      _suspend(false);
+      this._isolate._suspend(false);
     } else if (e.kind == EventKind.kPauseStart || e.kind == EventKind.kPauseExit ||
         e.kind == EventKind.kPauseBreakpoint || e.kind == EventKind.kPauseInterrupted ||
         e.kind == EventKind.kPauseException) {
-      _suspend(true);
+      this._isolate._suspend(true);
     }
 
     if (e.kind == EventKind.kResume || e.kind == EventKind.kIsolateExit) {
@@ -294,10 +309,11 @@ class ObservatoryDebugConnection extends DebugConnection {
     }
 
     if (e.kind != EventKind.kResume && e.topFrame != null) {
-      topFrame = new ObservatoryDebugFrame(this, service, isolate, e.topFrame);
+      ObservatoryFrame topFrame = new ObservatoryFrame(this, service, isolate, e.topFrame);
       topFrame.locals = new List.from(
-          e.topFrame.vars.map((v) => new ObservatoryDebugVariable(v)));
-      topFrame.tokenPos = e.topFrame.location.tokenPos;
+        e.topFrame.vars.map((v) => new ObservatoryVariable(v))
+      );
+      this._isolate.topFrame = topFrame;
     }
 
     if (e.kind != EventKind.kResume && e.topFrame != null) {
@@ -325,9 +341,39 @@ class ObservatoryDebugConnection extends DebugConnection {
     });
   }
 
-  void _suspend(bool value) {
-    if (!value) topFrame = null;
-    _suspended.value = value;
+  Future _registerNewIsolates(List<IsolateRef> refs) {
+    List<Future> futures = [];
+
+    for (IsolateRef ref in refs) {
+      if (_isolateMap.containsKey(ref.id)) continue;
+
+      ObservatoryIsolate isolate = new ObservatoryIsolate._(service, ref);
+      _isolateMap[ref.id] = isolate;
+      isolates.add(isolate);
+
+      // Get isolate metadata.
+      futures.add(isolate._updateIsolateInfo());
+    }
+
+    return Future.wait(futures);
+  }
+
+  Future _handleIsolateRunnable(IsolateRef ref) {
+    ObservatoryIsolate isolate = _isolateMap[ref.id];
+
+    if (isolate == null) {
+      isolate = new ObservatoryIsolate._(service, ref);
+      _isolateMap[ref.id] = isolate;
+      isolates.add(isolate);
+    }
+
+    // Update the libraries list for the isolate.
+    return isolate._updateIsolateInfo();
+  }
+
+  void _handleIsolateDeath(IsolateRef ref) {
+    ObservatoryIsolate isolate = _isolateMap.remove(ref.id);
+    if (isolate != null) isolates.remove(isolate);
   }
 
   void dispose() {
@@ -339,6 +385,7 @@ class ObservatoryDebugConnection extends DebugConnection {
 
 String printFunctionName(FuncRef ref, {bool terse: false}) {
   String name = terse ? ref.name : '${ref.name}()';
+  name = name.replaceAll('<anonymous closure>', '<anon>');
 
   if (ref.owner is ClassRef) {
     return '${ref.owner.name}.${name}';
@@ -391,50 +438,72 @@ class ObservatoryLog extends Log {
   void severe(String message) => logger.severe(message);
 }
 
-class ObservatoryDebugIsolate extends DebugIsolate {
-  final IsolateRef isolateRef;
+class ObservatoryIsolate extends DebugIsolate {
+  final VmService service;
+  /*final*/ IsolateRef isolateRef;
+  Isolate isolate;
 
-  ObservatoryDebugIsolate(this.isolateRef);
+  ObservatoryIsolate._(this.service, this.isolateRef);
 
-  String get name => isolateRef.name;
+  String get name => isolateRef?.name;
+
+  ObservatoryFrame topFrame;
+
+  // TODO:
+  List<DebugFrame> get frames => [];
+
+  List<ObservatoryLibrary> get libraries {
+    if (isolate == null) return [];
+    if (isolate.libraries == null) return [];
+
+    return isolate.libraries.map(
+      (libraryRef) => new ObservatoryLibrary._(libraryRef)).toList();
+  }
+
+  void _suspend(bool value) {
+    if (!value) {
+      topFrame = null;
+    }
+    suspended.value = value;
+  }
+
+  pause() => service.pause(isolateRef.id);
+  Future resume() => service.resume(isolateRef.id);
+
+  // TODO: only on suspend.
+  stepIn() => service.resume(isolateRef.id, step: StepOption.kInto);
+  stepOver() => service.resume(isolateRef.id, step: StepOption.kOver);
+  stepOut() => service.resume(isolateRef.id, step: StepOption.kOut);
+
+  Future _updateIsolateInfo() {
+    return service.getIsolate(isolateRef.id).then((Isolate isolate) {
+      this.isolate = isolate;
+
+      print('isolate: ${isolate}, pauseEvent: ${isolate.pauseEvent}');
+    });
+  }
 }
 
-class ObservatoryDebugFrame extends DebugFrame {
-  final ObservatoryDebugConnection connection;
+class ObservatoryFrame extends DebugFrame {
+  final ObservatoryConnection connection;
   final VmService service;
   final IsolateRef isolate;
   final Frame frame;
 
-  // TODO: Resolve to line:col.
-  int tokenPos;
-
   List<DebugVariable> locals;
 
-  ObservatoryDebugFrame(this.connection, this.service, this.isolate, this.frame);
+  ObservatoryLocation _location;
+
+  ObservatoryFrame(this.connection, this.service, this.isolate, this.frame);
 
   String get title => printFunctionName(frame.function);
 
-  String get cursorDescription {
-    return 'token ${tokenPos}';
-  }
+  DebugLocation get location {
+    if (_location == null) {
+      _location = new ObservatoryLocation(connection, isolate, frame.location);
+    }
 
-  Future<DebugLocation> getLocation() {
-    ScriptRef scriptRef = frame.location.script;
-
-    return connection._resolveScript(isolate, scriptRef).then((Script script) {
-      int tokenPos = frame.location.tokenPos;
-      Point pos = _calcPos(script, tokenPos);
-      String uri = script.uri;
-
-      if (pos != null) {
-        return connection.uriResolver.resolveUriToPath(uri).then((String path) {
-          return new DebugLocation(path, pos.row, pos.column);
-        }).catchError((e) {
-          atom.notifications.addWarning(
-              "Unable to resolve '${uri}' (${pos.row}:${pos.column}).");
-        });
-      }
-    });
+    return _location;
   }
 
   @override
@@ -450,12 +519,87 @@ class ObservatoryDebugFrame extends DebugFrame {
   }
 }
 
-class ObservatoryDebugVariable extends DebugVariable {
+class ObservatoryVariable extends DebugVariable {
   final BoundVariable variable;
 
-  ObservatoryDebugVariable(this.variable);
+  ObservatoryVariable(this.variable);
 
   String get name => variable.name;
 
   String get valueDescription => _refToString(variable.value);
+}
+
+class ObservatoryLocation extends DebugLocation {
+  final ObservatoryConnection connection;
+  final IsolateRef isolate;
+  final SourceLocation location;
+
+  Completer _completer;
+
+  ObservatoryLocation(this.connection, this.isolate, this.location);
+
+  String get path => _path;
+
+  int get line => _pos?.row;
+  int get column => _pos?.column;
+
+  String get displayPath => location.script.uri;
+
+  String _path;
+  Point _pos;
+
+  Future<DebugLocation> resolve() {
+    if (_completer == null) {
+      _completer = new Completer();
+
+      _resolve().then((val) {
+        _completer.complete(val);
+      }).catchError((e) {
+        _logger.info('${e}');
+        _completer.complete(this);
+      }).whenComplete(() {
+        resolved = true;
+      });
+    }
+
+    return _completer.future;
+  }
+
+  Future<DebugLocation> _resolve() {
+    ScriptRef scriptRef = location.script;
+
+    // Get the line and column info.
+    return connection._resolveScript(isolate, scriptRef).then((Script script) {
+      _pos = _calcPos(script, location.tokenPos);
+
+      // Get the local path.
+      return connection.uriResolver.resolveUriToPath(script.uri).then((String path) {
+        _path = path;
+        return this;
+      });
+    });
+  }
+}
+
+class ObservatoryLibrary implements Comparable<ObservatoryLibrary> {
+  final LibraryRef _ref;
+
+  ObservatoryLibrary._(LibraryRef ref) : _ref = ref;
+
+  String get name => _ref.name;
+  String get uri => _ref.uri;
+
+  bool get private => uri.startsWith('dart:_');
+
+  int get _kind {
+    if (uri.startsWith('dart:')) return 2;
+    if (uri.startsWith('package:') || uri.startsWith('package/')) return 1;
+    return 0;
+  }
+
+  int compareTo(ObservatoryLibrary other) {
+    int val = _kind - other._kind;
+    if (val != 0) return val;
+    return uri.compareTo(other.uri);
+  }
 }

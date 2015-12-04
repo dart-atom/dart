@@ -12,6 +12,7 @@ import '../views.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
 import 'model.dart';
+import 'observatory_debugger.dart';
 import 'utils.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui');
@@ -22,6 +23,8 @@ final Logger _logger = new Logger('atom.debugger_ui');
 // TODO: ensure that the debugger ui exists over the course of the debug connection,
 // and that a new one is not created after a debugger tab is closed, and that
 // closing a debugger tab doesn't tear down any listening state.
+
+// TODO: current connection (can be null)
 
 class DebuggerView extends View {
   static String viewIdForConnection(DebugConnection connection) {
@@ -46,6 +49,11 @@ class DebuggerView extends View {
   }
 
   final DebugConnection connection;
+
+  final Property<DebugIsolate> currentIsolate = new Property();
+  final Property<DebugFrame> currentFrame = new Property();
+
+  StreamSubscriptions subs = new StreamSubscriptions();
 
   Marker _execMarker;
 
@@ -94,8 +102,10 @@ class DebuggerView extends View {
     title.text = 'Debugging ${connection.launch.name}';
     title.tooltip = title.text;
 
-    // TODO:
-    subtitle.text = 'Under construction';
+    subs.add(connection.metadata.observe.listen((val) {
+      subtitle.text = val == null ? ' ' : val;
+      subtitle.tooltip = subtitle.text;
+    }));
   }
 
   void _createFlowControlSection(CoreElement section) {
@@ -104,7 +114,7 @@ class DebuggerView extends View {
     CoreElement stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
     CoreElement stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
     CoreElement stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
-    CoreElement stopOut = button(c: 'btn icon-primitive-square')..click(_terminate);
+    CoreElement stop = button(c: 'btn icon-primitive-square')..click(_terminate);
 
     CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
       resume,
@@ -113,7 +123,7 @@ class DebuggerView extends View {
       stepOver,
       stepOut,
       div()..flex(),
-      stopOut
+      stop
     ]);
 
     // TODO: Pull down menu for switching between isolates.
@@ -125,19 +135,28 @@ class DebuggerView extends View {
     ]);
 
     void updateUi(bool suspended) {
+      if (suspended) {
+        currentIsolate.value = connection.isolate;
+      } else {
+        // TODO: Clear this out on isolate death.
+        // currentIsolate.value = null;
+      }
+
       resume.enabled = suspended;
       // pause.enabled = !suspended;
       stepIn.enabled = suspended;
       stepOut.enabled = suspended;
       stepOver.enabled = suspended;
-      stopOut.enabled = connection.isAlive;
+      stop.enabled = connection.isAlive;
 
       // Update the execution point.
-      if (suspended && connection.topFrame != null) {
-        connection.topFrame.getLocation().then((DebugLocation location) {
+      if (suspended && connection.isolate.topFrame != null) {
+        _showTab('execution');
+
+        connection.isolate.topFrame.location.resolve().then((DebugLocation location) {
           _removeExecutionMarker();
 
-          if (location != null) {
+          if (location.resolvedPath) {
             _jumpToLocation(location, addExecMarker: true);
           }
         });
@@ -156,8 +175,8 @@ class DebuggerView extends View {
       }
     }
 
-    updateUi(connection.isSuspended);
-    connection.onSuspendChanged.listen(updateUi);
+    updateUi(connection.isolate.suspended.value);
+    connection.isolate.suspended.onChanged.listen(updateUi);
   }
 
   void _createPrimarySection(CoreElement section) {
@@ -170,8 +189,8 @@ class DebuggerView extends View {
 
     // Set up the tab group.
     primaryTabGroup.tabs.add(new ExecutionTab(this, connection));
-    primaryTabGroup.tabs.add(new _MockTab('Libraries'));
-    primaryTabGroup.tabs.add(new _MockTab('Isolates'));
+    primaryTabGroup.tabs.add(new LibrariesTab(this, connection));
+    primaryTabGroup.tabs.add(new IsolatesTab(connection));
   }
 
   void _createSecondarySection(CoreElement section) {
@@ -201,6 +220,7 @@ class DebuggerView extends View {
   String get id => viewIdForConnection(connection);
 
   void dispose() {
+    subs.cancel();
     primaryTabGroup.dispose();
     secondaryTabGroup.dispose();
   }
@@ -212,6 +232,15 @@ class DebuggerView extends View {
   _stepOver() => connection.stepOver();
   _stepOut() => connection.stepOut();
   _terminate() => connection.terminate();
+
+  void _showTab(String id) {
+    if (primaryTabGroup.hasTabId(id)) {
+      primaryTabGroup.activateTabId(id);
+    }
+    if (secondaryTabGroup.hasTabId(id)) {
+      secondaryTabGroup.activateTabId(id);
+    }
+  }
 
   void _jumpToLocation(DebugLocation location, {bool addExecMarker: false}) {
     if (!statSync(location.path).isFile()) {
@@ -287,15 +316,15 @@ class ExecutionTab extends MTab {
     list.selectedItem.onChanged.listen(_selectFrame);
     list.onDoubleClick.listen(_selectFrame);
 
-    if (connection.isSuspended) {
+    if (connection.isolate.suspended.value) {
       // TODO: temp
-      updateFrames(connection.topFrame == null ? [] : [connection.topFrame]);
+      updateFrames(connection.isolate.topFrame == null ? [] : [connection.isolate.topFrame]);
     }
 
-    connection.onSuspendChanged.listen((bool suspend) {
+    connection.isolate.suspended.onChanged.listen((bool suspend) {
       if (suspend) {
         // TODO: temp
-        updateFrames(connection.topFrame == null ? [] : [connection.topFrame]);
+        updateFrames(connection.isolate.topFrame == null ? [] : [connection.isolate.topFrame]);
       } else {
         // TODO: if suspend == false, then remove the frames after a delay
 
@@ -313,13 +342,12 @@ class ExecutionTab extends MTab {
 
   void _render(DebugFrame frame, CoreElement element) {
     // TODO:
-    // frame.getLocation() is async!
-    // keep it async, but make sure things are efficient?
-    // Only resolve the location info when it needs to be displayed?
-    String locationText = 'main.dart, line 12:10';
+    String locationText = _displayUri(frame.location.displayPath);
+
+    // TODO: when the location resolves, update the icon?
 
     element..add([
-      span(text: frame.title),
+      span(text: frame.title, c: 'icon icon-code'),
       span(
         text: locationText,
         c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
@@ -330,9 +358,104 @@ class ExecutionTab extends MTab {
   void _selectFrame(DebugFrame frame) {
     if (frame == null) return;
 
-    frame.getLocation().then((DebugLocation location) {
-      if (location != null) view._jumpToLocation(location);
+    frame.location.resolve().then((DebugLocation location) {
+      if (location.resolvedPath) view._jumpToLocation(location);
     });
+  }
+
+  void dispose() => subs.dispose();
+}
+
+// TODO: Show (expandable) library properties as well.
+class LibrariesTab extends MTab {
+  final DebuggerView view;
+  final DebugConnection connection;
+  MList<ObservatoryLibrary> list;
+
+  LibrariesTab(this.view, this.connection) : super('libraries', 'Libraries') {
+    content..layoutVertical()..flex();
+    content.add([
+      list = new MList(
+        _render,
+        sort: _sort,
+        filter: _filter
+      )..flex()
+    ]);
+
+    // TODO: On double click, jump to the library source.
+    // list.onDoubleClick.listen(_selectIsolate);
+
+    view.currentIsolate.observe.listen(_updateLibraries);
+  }
+
+  void _updateLibraries([_]) {
+    if (view.currentIsolate.value is ObservatoryIsolate) {
+      ObservatoryIsolate obsIsolate = view.currentIsolate.value;
+      List<ObservatoryLibrary> libraries = obsIsolate.libraries;
+      list.update(libraries == null ? [] : libraries);
+    } else {
+      list.update([]);
+    }
+  }
+
+  void _render(ObservatoryLibrary lib, CoreElement element) {
+    element..add([
+      span(text: lib.name, c: 'icon icon-repo'),
+      span(
+        text: _displayUri(lib.uri),
+        c: 'debugger-secondary-info overflow-hidden-ellipsis'
+      )..flex()
+    ])..layoutHorizontal();
+  }
+
+  // TODO: sort by short uri name
+  int _sort(ObservatoryLibrary a, ObservatoryLibrary b) => a.compareTo(b);
+
+  bool _filter(ObservatoryLibrary lib) => lib.private;
+
+  void dispose() { }
+}
+
+class IsolatesTab extends MTab {
+  final DebugConnection connection;
+  MList<DebugIsolate> list;
+  StreamSubscriptions subs = new StreamSubscriptions();
+
+  IsolatesTab(this.connection) : super('isolates', 'Isolates') {
+    content..layoutVertical()..flex();
+    content.add([
+      list = new MList(_render)..flex()
+    ]);
+
+    list.onDoubleClick.listen(_selectIsolate);
+
+    // TODO: listen for changes
+    _updateIsolates(connection.isolate == null ? [] : [connection.isolate]);
+    subs.add(connection.isolate.suspended.onChanged.listen((_) {
+      _updateIsolates(connection.isolate == null ? [] : [connection.isolate]);
+    }));
+  }
+
+  void _updateIsolates(List<DebugIsolate> isolates) {
+    list.update(isolates);
+  }
+
+  void _render(DebugIsolate isolate, CoreElement element) {
+    // TODO: pause button
+    // TODO: pause state
+
+    element..add([
+      span(text: isolate.name, c: 'icon icon-versions')
+      //span(text: isolate.userId, c: 'debugger-secondary-info')
+    ]);
+  }
+
+  void _selectIsolate(DebugIsolate isolate) {
+    // TODO:
+
+    // frame.getLocation().then((DebugLocation location) {
+    //   if (location != null) view._jumpToLocation(location);
+    // });
   }
 
   void dispose() => subs.dispose();
@@ -425,4 +548,15 @@ class _TabTitlebar extends CoreElement {
   set title(String value) {
     titleElement.text = value;
   }
+}
+
+String _displayUri(String uri) {
+  if (uri == null) return null;
+
+  if (uri.startsWith('file:')) {
+    String path = Uri.parse(uri).toFilePath();
+    return atom.project.relativizePath(path)[1];
+  }
+
+  return uri;
 }

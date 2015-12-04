@@ -164,6 +164,13 @@ class Property<T> {
 
   Stream<T> get onChanged => _controller.stream;
 
+  Stream<T> get observe {
+    StreamController controller = new StreamController();
+    controller.add(value);
+    _controller.stream.pipe(controller);
+    return controller.stream;
+  }
+
   String toString() => '${_value}';
 }
 
@@ -220,6 +227,41 @@ class SelectionGroup<T> {
       _selection = null;
       _selectionChangedController.add(null);
     }
+  }
+}
+
+class FutureSerializer<T> {
+  List _operations = [];
+  List _completers = [];
+
+  Future<T> perform(Function operation) {
+    Completer<T> completer = new Completer();
+
+    _operations.add(operation);
+    _completers.add(completer);
+
+    if (_operations.length == 1) {
+      _serviceQueue();
+    }
+
+    return completer.future;
+  }
+
+  void _serviceQueue() {
+    Function operation = _operations.first;
+    Completer<T> completer = _completers.first;
+
+    Future future = operation();
+    future.then((value) {
+      completer.complete(value);
+    }).catchError((e) {
+      completer.completeError(e);
+    }).whenComplete(() {
+      _operations.removeAt(0);
+      _completers.removeAt(0);
+
+      if (_operations.isNotEmpty) _serviceQueue();
+    });
   }
 }
 

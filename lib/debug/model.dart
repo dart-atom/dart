@@ -1,12 +1,52 @@
 import 'dart:async';
 
-// TODO: clean up this model
+import '../launch/launch.dart';
+import '../utils.dart';
+
+abstract class DebugConnection {
+  final Launch launch;
+  final SelectionGroup<DebugIsolate> isolates = new SelectionGroup();
+  final Property<String> metadata = new Property();
+
+  DebugConnection(this.launch);
+
+  bool get isAlive;
+
+  // TODO: remove
+  DebugIsolate get isolate;
+
+  Future terminate();
+
+  Future get onTerminated;
+
+  Future resume();
+  stepIn();
+  stepOver();
+  stepOut();
+
+  void dispose();
+}
 
 /// A representation of a VM Isolate.
 abstract class DebugIsolate {
+  final Property<bool> suspended = new Property(false);
+
   DebugIsolate();
 
   String get name;
+
+  // TODO: state
+
+  // TODO: remove
+  DebugFrame get topFrame;
+
+  List<DebugFrame> get frames;
+
+  pause();
+  Future resume();
+  stepIn();
+  stepOver();
+  stepOut();
 }
 
 abstract class DebugFrame {
@@ -14,11 +54,9 @@ abstract class DebugFrame {
 
   String get title;
 
-  String get cursorDescription;
-
   List<DebugVariable> get locals;
 
-  Future<DebugLocation> getLocation();
+  DebugLocation get location;
 
   Future<String> eval(String expression);
 
@@ -34,15 +72,26 @@ abstract class DebugVariable {
   String toString() => name;
 }
 
-class DebugLocation {
-  /// A file path;
-  final String path;
-  /// 1-based line number.
-  final int line;
-  /// 1-based column number.
-  final int column;
+abstract class DebugLocation {
+  /// A file path.
+  String get path;
 
-  DebugLocation(this.path, this.line, this.column);
+  /// 1-based line number.
+  int get line;
+
+  /// 1-based column number.
+  int get column;
+
+  /// A display file path.
+  String get displayPath;
+
+  bool get resolvedPath => path != null;
+
+  bool resolved = false;
+
+  DebugLocation();
+
+  Future<DebugLocation> resolve();
 
   String toString() => '${path} ${line}:${column}';
 }
