@@ -15,6 +15,10 @@ void main(List<String> args) {
   Cat pebbles;
   Dog fido = new Dog(Dog.FIDO_NAME);
 
+  Timer.run(() => print('timer 1'));
+
+  Timer.run(_handleTimer);
+
   dev.registerExtension('foo', _fooHandler);
 
   // dev.log('log from test');
@@ -114,6 +118,10 @@ void hanoi(int discs, String a, String b, String c) {
 //
 //   return names.map((name) => new Dog(name)).toList();
 // }
+
+void _handleTimer() {
+  print('timer 2');
+}
 
 Future<dev.ServiceExtensionResponse> _fooHandler(String method, Map parameters) {
   print('handling ${method}');

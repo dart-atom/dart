@@ -91,7 +91,7 @@ class ObservatoryConnection extends DebugConnection {
   ObservatoryIsolate get _isolate {
     if (__isolate == null) {
       // TODO: remove this
-      __isolate = new ObservatoryIsolate._(service, null);
+      __isolate = new ObservatoryIsolate._(this, service, null);
     }
     return __isolate;
   }
@@ -284,8 +284,6 @@ class ObservatoryConnection extends DebugConnection {
   }
 
   void _handleDebugEvent(Event e) {
-    IsolateRef isolate = e.isolate;
-
     // TODO:
     if (e.kind == EventKind.kInspect) {
       InstanceRef ref = e.inspectee;
@@ -300,20 +298,14 @@ class ObservatoryConnection extends DebugConnection {
     } else if (e.kind == EventKind.kPauseStart || e.kind == EventKind.kPauseExit ||
         e.kind == EventKind.kPauseBreakpoint || e.kind == EventKind.kPauseInterrupted ||
         e.kind == EventKind.kPauseException) {
-      this._isolate._suspend(true);
+      this._isolate._populateFrames().then((_) {
+        this._isolate._suspend(true);
+      });
     }
 
     if (e.kind == EventKind.kResume || e.kind == EventKind.kIsolateExit) {
       // TODO: isolate is resumed
 
-    }
-
-    if (e.kind != EventKind.kResume && e.topFrame != null) {
-      ObservatoryFrame frame = new ObservatoryFrame(this, service, isolate, e.topFrame);
-      frame.locals = new List.from(
-        e.topFrame.vars.map((v) => new ObservatoryVariable(v))
-      );
-      this._isolate.frames = [frame];
     }
 
     if (e.kind != EventKind.kResume && e.topFrame != null) {
@@ -325,29 +317,13 @@ class ObservatoryConnection extends DebugConnection {
     launch.pipeStdio('exception: ${_refToString(exception)}\n', error: true);
   }
 
-  Map<String, Script> _scripts = {};
-
-  Future<Script> _resolveScript(IsolateRef isolate, ScriptRef scriptRef) {
-    String id = scriptRef.id;
-
-    if (_scripts[id] != null) return new Future.value(_scripts[id]);
-
-    return service.getObject(isolate.id, id).then((result) {
-      if (result is Script) {
-        _scripts[id] = result;
-        return result;
-      }
-      throw result;
-    });
-  }
-
   Future _registerNewIsolates(List<IsolateRef> refs) {
     List<Future> futures = [];
 
     for (IsolateRef ref in refs) {
       if (_isolateMap.containsKey(ref.id)) continue;
 
-      ObservatoryIsolate isolate = new ObservatoryIsolate._(service, ref);
+      ObservatoryIsolate isolate = new ObservatoryIsolate._(this, service, ref);
       _isolateMap[ref.id] = isolate;
       isolates.add(isolate);
 
@@ -362,7 +338,7 @@ class ObservatoryConnection extends DebugConnection {
     ObservatoryIsolate isolate = _isolateMap[ref.id];
 
     if (isolate == null) {
-      isolate = new ObservatoryIsolate._(service, ref);
+      isolate = new ObservatoryIsolate._(this, service, ref);
       _isolateMap[ref.id] = isolate;
       isolates.add(isolate);
     }
@@ -439,13 +415,19 @@ class ObservatoryLog extends Log {
 }
 
 class ObservatoryIsolate extends DebugIsolate {
+  final ObservatoryConnection connection;
   final VmService service;
   /*final*/ IsolateRef isolateRef;
   Isolate isolate;
+  ScriptManager scriptManager;
 
-  ObservatoryIsolate._(this.service, this.isolateRef);
+  ObservatoryIsolate._(this.connection, this.service, this.isolateRef) {
+    scriptManager = new ScriptManager(service, this);
+  }
 
   String get name => isolateRef?.name;
+
+  String get id => isolateRef.id;
 
   List<DebugFrame> frames;
 
@@ -458,9 +440,7 @@ class ObservatoryIsolate extends DebugIsolate {
   }
 
   void _suspend(bool value) {
-    if (!value) {
-      frames = null;
-    }
+    if (!value) frames = null;
     suspended.value = value;
   }
 
@@ -479,25 +459,47 @@ class ObservatoryIsolate extends DebugIsolate {
       print('isolate: ${isolate}, pauseEvent: ${isolate.pauseEvent}');
     });
   }
+
+  // Populate the frames for the current isolate; populate the Scripts for any
+  // referenced ScriptRefs.
+  Future _populateFrames() {
+    return service.getStack(id).then((Stack stack) {
+      List<ScriptRef> scriptRefs = [];
+
+      frames = stack.frames.map((Frame frame) {
+        scriptRefs.add(frame.location.script);
+
+        ObservatoryFrame obsFrame = new ObservatoryFrame(this, frame);
+        obsFrame.locals = new List.from(
+          frame.vars.map((v) => new ObservatoryVariable(v))
+        );
+        return obsFrame;
+      }).toList();
+
+      // TODO: Convert the messages into frames as well. The FuncRef will likely
+      // be something like `Timer._handleMessage`. The 'locals' will be the
+      // message data object; a closure reference?
+
+      return scriptManager.loadAllScripts(scriptRefs);
+    });
+  }
 }
 
 class ObservatoryFrame extends DebugFrame {
-  final ObservatoryConnection connection;
-  final VmService service;
-  final IsolateRef isolate;
+  final ObservatoryIsolate isolate;
   final Frame frame;
 
   List<DebugVariable> locals;
 
   ObservatoryLocation _location;
 
-  ObservatoryFrame(this.connection, this.service, this.isolate, this.frame);
+  ObservatoryFrame(this.isolate, this.frame);
 
   String get title => printFunctionName(frame.function);
 
   DebugLocation get location {
     if (_location == null) {
-      _location = new ObservatoryLocation(connection, isolate, frame.location);
+      _location = new ObservatoryLocation(isolate, frame.location);
     }
 
     return _location;
@@ -514,6 +516,8 @@ class ObservatoryFrame extends DebugFrame {
       }
     });
   }
+
+  VmService get service => isolate.service;
 }
 
 class ObservatoryVariable extends DebugVariable {
@@ -527,13 +531,12 @@ class ObservatoryVariable extends DebugVariable {
 }
 
 class ObservatoryLocation extends DebugLocation {
-  final ObservatoryConnection connection;
-  final IsolateRef isolate;
+  final ObservatoryIsolate isolate;
   final SourceLocation location;
 
   Completer _completer;
 
-  ObservatoryLocation(this.connection, this.isolate, this.location);
+  ObservatoryLocation(this.isolate, this.location);
 
   String get path => _path;
 
@@ -541,6 +544,8 @@ class ObservatoryLocation extends DebugLocation {
   int get column => _pos?.column;
 
   String get displayPath => location.script.uri;
+
+  VmService get service => isolate.service;
 
   String _path;
   Point _pos;
@@ -562,18 +567,18 @@ class ObservatoryLocation extends DebugLocation {
     return _completer.future;
   }
 
+  // TODO: Pre-populate the uri resolution - make this method synchronous.
   Future<DebugLocation> _resolve() {
-    ScriptRef scriptRef = location.script;
+    // This Script was already loaded when we populated the frames.
+    Script script = isolate.scriptManager.getResolvedScript(location.script);
 
     // Get the line and column info.
-    return connection._resolveScript(isolate, scriptRef).then((Script script) {
-      _pos = _calcPos(script, location.tokenPos);
+    _pos = _calcPos(script, location.tokenPos);
 
-      // Get the local path.
-      return connection.uriResolver.resolveUriToPath(script.uri).then((String path) {
-        _path = path;
-        return this;
-      });
+    // Get the local path.
+    return isolate.connection.uriResolver.resolveUriToPath(script.uri).then((String path) {
+      _path = path;
+      return this;
     });
   }
 }
@@ -598,5 +603,67 @@ class ObservatoryLibrary implements Comparable<ObservatoryLibrary> {
     int val = _kind - other._kind;
     if (val != 0) return val;
     return uri.compareTo(other.uri);
+  }
+}
+
+class ScriptManager {
+  final VmService service;
+  final ObservatoryIsolate isolate;
+
+  /// A Map from ScriptRef ids to retrieved Scripts.
+  Map<String, Script> _scripts = {};
+  Map<String, Completer<Script>> _scriptCompleters = {};
+
+  ScriptManager(this.service, this.isolate);
+
+  bool isScriptResolved(ScriptRef ref) => _scripts.containsKey(ref.id);
+
+  /// Return an already resolved [Script]. This can return `null` if the script
+  /// has not yet been loaded.
+  Script getResolvedScript(ScriptRef scriptRef) {
+    return _scripts[scriptRef.id];
+  }
+
+  Future<Script> resolveScript(ScriptRef scriptRef) {
+    if (isScriptResolved(scriptRef)) {
+      return new Future.value(getResolvedScript(scriptRef));
+    }
+
+    String refId = scriptRef.id;
+
+    if (_scriptCompleters[refId] != null) {
+      return _scriptCompleters[refId].future;
+    }
+
+    Completer<Script> completer = new Completer();
+    _scriptCompleters[refId] = completer;
+
+    service.getObject(isolate.id, refId).then((result) {
+      if (result is Script) {
+        _scripts[refId] = result;
+        completer.complete(result);
+      } else {
+        completer.completeError(result);
+      }
+    }).catchError((e) {
+      completer.completeError(e);
+    }).whenComplete(() {
+      _scriptCompleters.remove(refId);
+    });
+
+    return completer.future;
+  }
+
+  // Load all the given scripts.
+  Future loadAllScripts(List<ScriptRef> refs) {
+    List<Future> futures = [];
+
+    for (ScriptRef ref in refs) {
+      if (!_scripts.containsKey(ref.id)) {
+        futures.add(resolveScript(ref));
+      }
+    }
+
+    return Future.wait(futures);
   }
 }
