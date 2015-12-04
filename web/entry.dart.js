@@ -7422,11 +7422,11 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.ObservatoryLog[1];
     ObservatoryLog.prototype = $desc;
     ObservatoryLog.$__fields__ = ["logger"];
-    function ObservatoryIsolate(service, isolateRef, isolate, topFrame, suspended) {
+    function ObservatoryIsolate(service, isolateRef, isolate, frames, suspended) {
       this.service = service;
       this.isolateRef = isolateRef;
       this.isolate = isolate;
-      this.topFrame = topFrame;
+      this.frames = frames;
       this.suspended = suspended;
       this.$deferredAction();
     }
@@ -7435,12 +7435,12 @@ self._domRemove = function(element) {
       ObservatoryIsolate.name = "ObservatoryIsolate";
     $desc = $collectedClasses$.ObservatoryIsolate[1];
     ObservatoryIsolate.prototype = $desc;
-    ObservatoryIsolate.$__fields__ = ["service", "isolateRef", "isolate", "topFrame", "suspended"];
+    ObservatoryIsolate.$__fields__ = ["service", "isolateRef", "isolate", "frames", "suspended"];
     ObservatoryIsolate.prototype.get$isolate = function() {
       return this.isolate;
     };
-    ObservatoryIsolate.prototype.get$topFrame = function() {
-      return this.topFrame;
+    ObservatoryIsolate.prototype.get$frames = function() {
+      return this.frames;
     };
     function ObservatoryIsolate_libraries_closure() {
       this.$deferredAction();
@@ -19080,6 +19080,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.Stack[1];
     Stack.prototype = $desc;
     Stack.$__fields__ = ["frames", "messages", "json", "type"];
+    Stack.prototype.get$frames = function() {
+      return this.frames;
+    };
     function Success(json, type) {
       this.json = json;
       this.type = type;
@@ -29970,12 +29973,12 @@ self._domRemove = function(element) {
         t2 = this.$this;
         t3 = t2.connection;
         this.stop.attribute$2("disabled", !t3.get$isAlive());
-        if (t1 && t3.get$isolate().get$topFrame() != null) {
+        if (t1 && t3.get$isolate().get$hasFrames()) {
           if (t2.primaryTabGroup.hasTabId$1("execution"))
             t2.primaryTabGroup.activateTabId$1("execution");
           if (t2.secondaryTabGroup.hasTabId$1("execution"))
             t2.secondaryTabGroup.activateTabId$1("execution");
-          J.get$location$x(t3.get$isolate().get$topFrame()).resolve$0().then$1(new G.DebuggerView__createFlowControlSection_updateUi_closure(t2));
+          J.get$location$x(J.get$first$ax(t3.get$isolate().get$frames())).resolve$0().then$1(new G.DebuggerView__createFlowControlSection_updateUi_closure(t2));
         } else
           t2._removeExecutionMarker$0();
         if (t1) {
@@ -30066,9 +30069,11 @@ self._domRemove = function(element) {
     ExecutionTab: {
       "^": "MTab;view>,connection,list,subs,id,name,_tabElement,content,enabled,active",
       updateFrames$2$selectTop: function($frames, selectTop) {
+        if ($frames == null)
+          $frames = [];
         this.list.update$1($frames);
-        if ($frames.length !== 0)
-          this.list.selectItem$1(C.JSArray_methods.get$first($frames));
+        if (J.get$isNotEmpty$asx($frames))
+          this.list.selectItem$1(J.get$first$ax($frames));
       },
       updateFrames$1: function($frames) {
         return this.updateFrames$2$selectTop($frames, true);
@@ -30109,7 +30114,7 @@ self._domRemove = function(element) {
         H.setRuntimeTypeInfo(new P._BroadcastStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(this.get$_selectFrame());
         t1 = this.connection;
         if (t1.get$isolate().get$suspended()._utils$_value === true)
-          this.updateFrames$1(t1.get$isolate().get$topFrame() == null ? [] : [t1.get$isolate().get$topFrame()]);
+          this.updateFrames$1(t1.get$isolate().get$frames());
         t1 = t1.get$isolate().get$suspended()._utils$_controller;
         H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new G.ExecutionTab_closure(this));
       },
@@ -30128,11 +30133,10 @@ self._domRemove = function(element) {
     ExecutionTab_closure: {
       "^": "Closure:16;$this",
       call$1: [function(suspend) {
-        var t1, t2;
+        var t1;
         if (suspend === true) {
           t1 = this.$this;
-          t2 = t1.connection;
-          t1.updateFrames$1(t2.get$isolate().get$topFrame() == null ? [] : [t2.get$isolate().get$topFrame()]);
+          t1.updateFrames$1(t1.connection.get$isolate().get$frames());
         }
       }, null, null, 2, 0, null, 116, "call"]
     },
@@ -34156,7 +34160,7 @@ self._domRemove = function(element) {
           this.set$_currentIsolate(null);
       }, "call$1", "get$_handleIsolateEvent", 2, 0, 50, 1],
       _handleDebugEvent$1: [function(e) {
-        var isolate, t1, ref, t2, t3, topFrame;
+        var isolate, t1, ref, t2, t3, frame;
         isolate = e.get$isolate();
         t1 = J.getInterceptor$x(e);
         if (J.$eq$(t1.get$kind(e), "Inspect")) {
@@ -34181,9 +34185,9 @@ self._domRemove = function(element) {
         if (J.$eq$(t1.get$kind(e), "Resume") || J.$eq$(t1.get$kind(e), "IsolateExit"))
           ;
         if (!J.$eq$(t1.get$kind(e), "Resume") && e.get$topFrame() != null) {
-          topFrame = new D.ObservatoryFrame(this, this.service, isolate, e.get$topFrame(), null, null);
-          topFrame.locals = P.List_List$from(J.map$1$ax(e.get$topFrame().get$vars(), new D.ObservatoryConnection__handleDebugEvent_closure()), true, null);
-          this.get$_isolate().topFrame = topFrame;
+          frame = new D.ObservatoryFrame(this, this.service, isolate, e.get$topFrame(), null, null);
+          frame.locals = P.List_List$from(J.map$1$ax(e.get$topFrame().get$vars(), new D.ObservatoryConnection__handleDebugEvent_closure()), true, null);
+          this.get$_isolate().frames = [frame];
         }
         if (!J.$eq$(t1.get$kind(e), "Resume") && e.get$topFrame() != null)
           if (e.get$exception() != null) {
@@ -34490,7 +34494,7 @@ self._domRemove = function(element) {
       }
     },
     ObservatoryIsolate: {
-      "^": "DebugIsolate;service,isolateRef,isolate<,topFrame<,suspended",
+      "^": "DebugIsolate;service,isolateRef,isolate<,frames<,suspended",
       get$name: function(_) {
         var t1 = this.isolateRef;
         return t1 == null ? t1 : J.get$name$x(t1);
@@ -34506,7 +34510,7 @@ self._domRemove = function(element) {
       _suspend$1: function(value) {
         var t1;
         if (!value)
-          this.topFrame = null;
+          this.frames = null;
         t1 = this.suspended;
         t1._utils$_value = value;
         t1 = t1._utils$_controller;
@@ -53979,7 +53983,16 @@ self._domRemove = function(element) {
       "^": "Object;launch<,isolates<,metadata<"
     },
     DebugIsolate: {
-      "^": "Object;suspended<"
+      "^": "Object;suspended<",
+      get$hasFrames: function() {
+        var t1 = this.frames;
+        if (t1 != null) {
+          t1.length;
+          t1 = true;
+        } else
+          t1 = false;
+        return t1;
+      }
     },
     DebugFrame: {
       "^": "Object;",
@@ -57622,7 +57635,7 @@ self._domRemove = function(element) {
         }, "call$1", "vm_service_lib_SourceLocation_parse$closure", 2, 0, 213]}
     },
     Stack: {
-      "^": "Response;frames,messages,json,type",
+      "^": "Response;frames<,messages,json,type",
       toString$0: function(_) {
         return "[Stack type: " + H.S(this.type) + ", frames: " + H.S(this.frames) + ", messages: " + H.S(this.messages) + "]";
       },

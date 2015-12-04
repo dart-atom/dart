@@ -150,10 +150,10 @@ class DebuggerView extends View {
       stop.enabled = connection.isAlive;
 
       // Update the execution point.
-      if (suspended && connection.isolate.topFrame != null) {
+      if (suspended && connection.isolate.hasFrames) {
         _showTab('execution');
 
-        connection.isolate.topFrame.location.resolve().then((DebugLocation location) {
+        connection.isolate.frames.first.location.resolve().then((DebugLocation location) {
           _removeExecutionMarker();
 
           if (location.resolvedPath) {
@@ -317,14 +317,12 @@ class ExecutionTab extends MTab {
     list.onDoubleClick.listen(_selectFrame);
 
     if (connection.isolate.suspended.value) {
-      // TODO: temp
-      updateFrames(connection.isolate.topFrame == null ? [] : [connection.isolate.topFrame]);
+      updateFrames(connection.isolate.frames);
     }
 
     connection.isolate.suspended.onChanged.listen((bool suspend) {
       if (suspend) {
-        // TODO: temp
-        updateFrames(connection.isolate.topFrame == null ? [] : [connection.isolate.topFrame]);
+        updateFrames(connection.isolate.frames);
       } else {
         // TODO: if suspend == false, then remove the frames after a delay
 
@@ -333,6 +331,7 @@ class ExecutionTab extends MTab {
   }
 
   void updateFrames(List<DebugFrame> frames, {bool selectTop: true}) {
+    if (frames == null) frames = [];
     list.update(frames);
 
     if (selectTop && frames.isNotEmpty) {

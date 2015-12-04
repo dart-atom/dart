@@ -37,8 +37,7 @@ abstract class DebugIsolate {
 
   // TODO: state
 
-  // TODO: remove
-  DebugFrame get topFrame;
+  bool get hasFrames => frames != null && frames.isNotEmpty;
 
   List<DebugFrame> get frames;
 

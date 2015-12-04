@@ -309,11 +309,11 @@ class ObservatoryConnection extends DebugConnection {
     }
 
     if (e.kind != EventKind.kResume && e.topFrame != null) {
-      ObservatoryFrame topFrame = new ObservatoryFrame(this, service, isolate, e.topFrame);
-      topFrame.locals = new List.from(
+      ObservatoryFrame frame = new ObservatoryFrame(this, service, isolate, e.topFrame);
+      frame.locals = new List.from(
         e.topFrame.vars.map((v) => new ObservatoryVariable(v))
       );
-      this._isolate.topFrame = topFrame;
+      this._isolate.frames = [frame];
     }
 
     if (e.kind != EventKind.kResume && e.topFrame != null) {
@@ -447,10 +447,7 @@ class ObservatoryIsolate extends DebugIsolate {
 
   String get name => isolateRef?.name;
 
-  ObservatoryFrame topFrame;
-
-  // TODO:
-  List<DebugFrame> get frames => [];
+  List<DebugFrame> frames;
 
   List<ObservatoryLibrary> get libraries {
     if (isolate == null) return [];
@@ -462,7 +459,7 @@ class ObservatoryIsolate extends DebugIsolate {
 
   void _suspend(bool value) {
     if (!value) {
-      topFrame = null;
+      frames = null;
     }
     suspended.value = value;
   }
