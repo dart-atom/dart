@@ -13,9 +13,6 @@ abstract class DebugConnection {
 
   bool get isAlive;
 
-  // TODO: remove
-  DebugIsolate get isolate;
-
   Stream<DebugIsolate> get onPaused;
   Stream<DebugIsolate> get onResumed;
 

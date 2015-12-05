@@ -37,7 +37,7 @@ void main(List<String> args) {
   print('foo 2');
   print('foo 3');
 
-  startIsolates(5);
+  // startIsolates(4);
 
   // dev.log('log from test', name: 'test', level: 1);
   // dev.Timeline.timeSync('frame', _mockFrame);
@@ -134,29 +134,14 @@ void startIsolates(int count) {
   startIsolates(count - 1);
 }
 
-void startIsolate(int seconds) {
-  ReceivePort port = new ReceivePort();
-
-  Isolate.spawn(isolateEntryPoint, port.sendPort);
-
-  port.first.then((SendPort sendPort) {
-    sendPort.send(seconds);
-    port.listen(print);
-  });
+Future<Isolate> startIsolate(int seconds) {
+  return Isolate.spawn(isolateEntryPoint, seconds);
 }
 
-void isolateEntryPoint(SendPort port) {
-  print('[isolate ${Isolate.current}] starting');
-
-  ReceivePort receivePort = new ReceivePort();
-  port.send(receivePort.sendPort);
-
-  receivePort.first.then((seconds) {
-    port.send('[isolate ${Isolate.current}] running for ${seconds} seconds');
-
-    new Timer(new Duration(seconds: seconds), () {
-      port.send('[isolate ${Isolate.current}] exiting');
-      receivePort.close();
-    });
+void isolateEntryPoint(int seconds) {
+  print('[${Isolate.current}] starting');
+  print('[${Isolate.current}] running for ${seconds} seconds...');
+  new Timer(new Duration(seconds: seconds), () {
+    print('[${Isolate.current}] exiting');
   });
 }

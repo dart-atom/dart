@@ -303,7 +303,6 @@ class FlowControlSection implements Disposable {
     }
 
     bool suspended = isolate.suspended;
-    print('isolate ${isolate?.name} suspended $suspended');
 
     resume.enabled = suspended;
     stepIn.enabled = suspended;

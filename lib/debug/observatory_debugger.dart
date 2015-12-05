@@ -91,34 +91,20 @@ class ObservatoryConnection extends DebugConnection {
   Stream<DebugIsolate> get onPaused => _isolatePaused.stream;
   Stream<DebugIsolate> get onResumed => _isolateResumed.stream;
 
-  // TODO: Temp.
-  ObservatoryIsolate __isolate;
-  ObservatoryIsolate get _isolate {
-    if (__isolate == null) {
-      // TODO: remove this
-      __isolate = new ObservatoryIsolate._(this, service, null);
-    }
-    return __isolate;
-  }
-  set _currentIsolate(IsolateRef val) {
-    _isolate.isolateRef = val;
-    if (_isolate.isolate == null) _isolate._updateIsolateInfo();
-    //__isolate = _isolateMap[val.id];
-  }
-  IsolateRef get _currentIsolate => _isolate.isolateRef;
-  DebugIsolate get isolate => _isolate; //isolates.items.first;
+  // TODO: The UI should be in charge of servicing the connection level flow
+  // control commands.
+  DebugIsolate get _selectedIsolate => isolates.selection;
 
-  // TODO: What's the current isolate? Ask the UI? Ask the isolates list?
-  // TODO: Have pausing change the isolates selection.
-
-  Future resume() => isolate.resume();
-  stepIn() => isolate.stepIn();
-  stepOver() => isolate.stepOver();
-  stepOut() => isolate.stepOut();
+  Future resume() => _selectedIsolate?.resume();
+  stepIn() => _selectedIsolate?.stepIn();
+  stepOver() => _selectedIsolate?.stepOver();
+  stepOut() => _selectedIsolate?.stepOut();
 
   Future terminate() => launch.kill();
 
   Future get onTerminated => completer.future;
+
+  ObservatoryIsolate _getIsolate(IsolateRef ref) => _isolateMap[ref.id];
 
   void _init() {
     var trim = (String str) => str.length > 1000 ? str.substring(0, 1000) + '…' : str;
@@ -155,13 +141,6 @@ class ObservatoryConnection extends DebugConnection {
     });
     service.streamListen('_Logging');
 
-    // TODO: Recommended boot-up sequence (done synchronously):
-    // 1) getVersion.
-    // 2) streamListen(Debug)
-    // 3) streamListen(Isolate)
-    // 4) getVM()
-    // 5) getIsolate(id)
-
     service.getVersion().then((Version ver) {
       _logger.fine('Observatory version ${ver.major}.${ver.minor}.');
     });
@@ -185,45 +164,22 @@ class ObservatoryConnection extends DebugConnection {
     }
 
     service.getVM().then((VM vm) {
-      String dartVersion = vm.version;
-      if (dartVersion.contains(' ')) {
-        dartVersion = dartVersion.substring(0, dartVersion.indexOf(' '));
-      }
-      metadata.value = '${vm.targetCPU} • ${vm.hostCPU} • Dart ${dartVersion}';
+      String dart = vm.version;
+      if (dart.contains(' ')) dart = dart.substring(0, dart.indexOf(' '));
+      metadata.value = '${vm.targetCPU} • ${vm.hostCPU} • Dart ${dart}';
       _logger.info('Connected to ${metadata.value}');
-
       _registerNewIsolates(vm.isolates);
-
-      if (!isolatesStartPaused && vm.isolates.isNotEmpty) {
-        _currentIsolate = vm.isolates.first;
-        _installInto(_currentIsolate).then((_) {
-          _isolate._suspend(false);
-        });
-      } else if (isolatesStartPaused && vm.isolates.isNotEmpty) {
-        if (_currentIsolate == null) {
-          _currentIsolate = vm.isolates.first;
-          _installInto(_currentIsolate).then((_) {
-            service.getIsolate(_currentIsolate.id).then((Isolate isolate) {
-              if (isolate.pauseEvent.kind == EventKind.kPauseStart) {
-                _isolate.resume();
-              } else {
-                _startIt = true;
-              }
-            });
-          });
-        }
-      }
     });
   }
 
-  Future _installInto(IsolateRef isolate) {
+  Future _installBreakpoints(IsolateRef isolate) {
     Map<AtomBreakpoint, Breakpoint> _bps = {};
 
     subs.add(breakpointManager.onAdd.listen((bp) {
       uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
         // TODO: Use both returned values.
         return service.addBreakpointWithScriptUri(
-            _currentIsolate.id, uris.first, bp.line, column: bp.column);
+            isolate.id, uris.first, bp.line, column: bp.column);
       }).then((Breakpoint vmBreakpoint) {
         _bps[bp] = vmBreakpoint;
       }).catchError((e) {
@@ -234,7 +190,7 @@ class ObservatoryConnection extends DebugConnection {
     subs.add(breakpointManager.onRemove.listen((bp) {
       Breakpoint vmBreakpoint = _bps[bp];
       if (vmBreakpoint != null) {
-        service.removeBreakpoint(_currentIsolate.id, vmBreakpoint.id);
+        service.removeBreakpoint(isolate.id, vmBreakpoint.id);
       }
     }));
 
@@ -245,7 +201,7 @@ class ObservatoryConnection extends DebugConnection {
       return uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
         // TODO: Use both returned values.
         return service.addBreakpointWithScriptUri(
-            _currentIsolate.id, uris.first, bp.line, column: bp.column);
+            isolate.id, uris.first, bp.line, column: bp.column);
       }).then((Breakpoint vmBreakpoint) {
         _bps[bp] = vmBreakpoint;
       }).catchError((e) {
@@ -253,67 +209,64 @@ class ObservatoryConnection extends DebugConnection {
       });
     }).then((_) {
       return service.setExceptionPauseMode(
-        _currentIsolate.id, ExceptionPauseMode.kUnhandled);
+          isolate.id, ExceptionPauseMode.kUnhandled);
     });
   }
 
-  bool _startIt = false;
+  void _handleIsolateEvent(Event event) {
+    // IsolateStart, IsolateRunnable, IsolateUpdate, IsolateExit
+    IsolateRef ref = event.isolate;
 
-  void _handleIsolateEvent(Event e) {
-    if (e.kind == EventKind.kIsolateStart) {
-      _registerNewIsolates([e.isolate]);
-    } else if (e.kind == EventKind.kIsolateRunnable) {
-      _handleIsolateRunnable(e.isolate);
-    } else if (e.kind == EventKind.kIsolateExit) {
-      _handleIsolateDeath(e.isolate);
-    }
-
-    // IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
-    if (e.kind == EventKind.kIsolateRunnable) {
-      // Don't re-init if it is already inited.
-      if (_currentIsolate == null) {
-        _currentIsolate = e.isolate;
-        _installInto(_currentIsolate).then((_) {
-          if (isolatesStartPaused) {
-            _isolate.resume();
-          }
-        });
-      } else if (_startIt) {
-        _startIt = false;
-        _isolate.resume();
-      }
-    } else if (e.kind == EventKind.kIsolateExit) {
-      _currentIsolate = null;
+    switch (event.kind) {
+      case EventKind.kIsolateStart:
+        _registerNewIsolate(ref);
+        break;
+      case EventKind.kIsolateRunnable:
+      case EventKind.kIsolateUpdate:
+        _updateIsolateMetadata(ref);
+        break;
+      case EventKind.kIsolateExit:
+        _handleIsolateDeath(ref);
+        break;
     }
   }
 
-  void _handleDebugEvent(Event e) {
-    // TODO:
-    if (e.kind == EventKind.kInspect) {
-      InstanceRef ref = e.inspectee;
-      if (ref.valueAsString != null) {
-        launch.pipeStdio('${ref.valueAsString}\n');
-      }
-      launch.pipeStdio('${ref}\n');
-    }
+  // PauseStart, PauseExit, PauseBreakpoint, PauseInterrupted, PauseException,
+  // Resume, BreakpointAdded, BreakpointResolved, BreakpointRemoved, Inspect
+  void _handleDebugEvent(Event event) {
+    String kind = event.kind;
+    IsolateRef ref = event.isolate;
 
-    if (e.kind == EventKind.kResume) {
-      this._isolate._suspend(false);
-    } else if (e.kind == EventKind.kPauseStart || e.kind == EventKind.kPauseExit ||
-        e.kind == EventKind.kPauseBreakpoint || e.kind == EventKind.kPauseInterrupted ||
-        e.kind == EventKind.kPauseException) {
-      this._isolate._populateFrames().then((_) {
-        this._isolate._suspend(true);
-      });
-    }
+    switch (kind) {
+      case EventKind.kPauseStart:
+        // TODO: There's a race condition here with setting breakpoints. Use a
+        // Completer when registering isolates.
+        _getIsolate(ref)?._performInitialResume();
+        break;
+      case EventKind.kPauseExit:
+      case EventKind.kPauseBreakpoint:
+      case EventKind.kPauseInterrupted:
+      case EventKind.kPauseException:
+        ObservatoryIsolate isolate = _getIsolate(ref);
 
-    if (e.kind == EventKind.kResume || e.kind == EventKind.kIsolateExit) {
-      // TODO: isolate is resumed
+        // TODO:
+        if (event.exception != null) _printException(event.exception);
 
-    }
-
-    if (e.kind != EventKind.kResume && e.topFrame != null) {
-      if (e.exception != null) _printException(e.exception);
+        isolate._populateFrames().then((_) {
+          isolate._suspend(true);
+        });
+        break;
+      case EventKind.kResume:
+        _getIsolate(ref)?._suspend(false);
+        break;
+      case EventKind.kInspect:
+        InstanceRef inspectee = event.inspectee;
+        if (inspectee.valueAsString != null) {
+          launch.pipeStdio('${inspectee.valueAsString}\n');
+        } else {
+          launch.pipeStdio('${inspectee}\n');
+        }
+        break;
     }
   }
 
@@ -321,34 +274,45 @@ class ObservatoryConnection extends DebugConnection {
     launch.pipeStdio('exception: ${_refToString(exception)}\n', error: true);
   }
 
-  Future _registerNewIsolates(List<IsolateRef> refs) {
-    List<Future> futures = [];
+  // TODO: Move much of the isolate lifecycle code into a manager class.
+
+  Future<ObservatoryIsolate> _registerNewIsolate(IsolateRef ref) {
+    if (_isolateMap.containsKey(ref.id)) return new Future.value(_isolateMap[ref.id]);
+
+    ObservatoryIsolate isolate = new ObservatoryIsolate._(this, service, ref);
+    _isolateMap[ref.id] = isolate;
+    isolates.add(isolate);
+
+    return _installBreakpoints(ref).then((_) {
+      // Get isolate metadata.
+      return isolate._updateIsolateInfo();
+    }).then((_) {
+      if (isolate.isolate.pauseEvent.kind == EventKind.kPauseStart) {
+        isolate._performInitialResume();
+      }
+      return isolate;
+    });
+  }
+
+  Future<List<ObservatoryIsolate>> _registerNewIsolates(List<IsolateRef> refs) {
+    List<Future<ObservatoryIsolate>> futures = [];
 
     for (IsolateRef ref in refs) {
-      if (_isolateMap.containsKey(ref.id)) continue;
-
-      ObservatoryIsolate isolate = new ObservatoryIsolate._(this, service, ref);
-      _isolateMap[ref.id] = isolate;
-      isolates.add(isolate);
-
-      // Get isolate metadata.
-      futures.add(isolate._updateIsolateInfo());
+      futures.add(_registerNewIsolate(ref));
     }
 
     return Future.wait(futures);
   }
 
-  Future _handleIsolateRunnable(IsolateRef ref) {
+  Future _updateIsolateMetadata(IsolateRef ref) {
     ObservatoryIsolate isolate = _isolateMap[ref.id];
 
     if (isolate == null) {
-      isolate = new ObservatoryIsolate._(this, service, ref);
-      _isolateMap[ref.id] = isolate;
-      isolates.add(isolate);
+      return _registerNewIsolate(ref);
+    } else {
+      // Update the libraries list for the isolate.
+      return isolate._updateIsolateInfo();
     }
-
-    // Update the libraries list for the isolate.
-    return isolate._updateIsolateInfo();
   }
 
   void _handleIsolateDeath(IsolateRef ref) {
@@ -421,10 +385,13 @@ class ObservatoryLog extends Log {
 class ObservatoryIsolate extends DebugIsolate {
   final ObservatoryConnection connection;
   final VmService service;
-  /*final*/ IsolateRef isolateRef;
+  final IsolateRef isolateRef;
+
   Isolate isolate;
   ScriptManager scriptManager;
+
   bool suspended = false;
+  bool _didInitialResume = false;
 
   ObservatoryIsolate._(this.connection, this.service, this.isolateRef) {
     scriptManager = new ScriptManager(service, this);
@@ -456,6 +423,11 @@ class ObservatoryIsolate extends DebugIsolate {
     } else {
       connection._isolateResumed.add(this);
     }
+
+    // TODO: Remove this.
+    if (suspended) {
+      connection.isolates.setSelection(this);
+    }
   }
 
   pause() => service.pause(isolateRef.id);
@@ -465,9 +437,13 @@ class ObservatoryIsolate extends DebugIsolate {
   stepOver() => service.resume(isolateRef.id, step: StepOption.kOver);
   stepOut() => service.resume(isolateRef.id, step: StepOption.kOut);
 
-  Future _updateIsolateInfo() {
+  Future<ObservatoryIsolate> _updateIsolateInfo() {
     return service.getIsolate(isolateRef.id).then((Isolate isolate) {
+      // TODO: Update the state info.
+
       this.isolate = isolate;
+
+      return this;
     });
   }
 
@@ -501,6 +477,13 @@ class ObservatoryIsolate extends DebugIsolate {
   }
 
   String toString() => 'Isolate ${name}';
+
+  void _performInitialResume() {
+    if (!_didInitialResume) {
+      _didInitialResume = true;
+      resume();
+    }
+  }
 }
 
 class ObservatoryFrame extends DebugFrame {
