@@ -225,8 +225,6 @@ class Workspace extends ProxyHolder {
   /// Get the Pane containing the given item.
   Pane paneForItem(dynamic item) => new Pane(invoke('paneForItem', item));
 
-  // TODO: serialize calls to `atom.workspace.open`.
-
   /// Opens the given URI in Atom asynchronously. If the URI is already open,
   /// the existing item for that URI will be activated. If no URI is given, or
   /// no registered opener can open the URI, a new empty TextEditor will be
