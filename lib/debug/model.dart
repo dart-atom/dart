@@ -39,6 +39,8 @@ abstract class DebugIsolate {
 
   String get name;
 
+  String get detail;
+
   bool get isSuspended => suspended.value;
 
   // TODO: state

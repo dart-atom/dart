@@ -22,10 +22,7 @@ void main(List<String> args) {
   dev.registerExtension('foo', _fooHandler);
 
   // dev.log('log from test');
-
-  // TODO: Handle this.
   // dev.Timeline.timeSync('frame', _mockFrame);
-
   // dev.inspect(fido);
 
   // int i = 0;
@@ -87,7 +84,6 @@ class Dog extends Animal {
   Dog(String name) : super(name);
 
   void bark() {
-    // dev.debugger();
     print('woof!');
   }
 }

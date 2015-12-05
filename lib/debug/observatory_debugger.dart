@@ -108,6 +108,8 @@ class ObservatoryConnection extends DebugConnection {
   IsolateRef get _currentIsolate => _isolate.isolateRef;
   DebugIsolate get isolate => _isolate; //isolates.items.first;
 
+  // TODO: What's the current isolate? Ask the UI? Ask the isolates list?
+  // TODO: Have pausing change the isolates selection.
   Future resume() => isolate.resume();
   stepIn() => isolate.stepIn();
   stepOver() => isolate.stepOver();
@@ -257,10 +259,6 @@ class ObservatoryConnection extends DebugConnection {
   bool _startIt = false;
 
   void _handleIsolateEvent(Event e) {
-    // TODO: Create an isolate handler.
-
-    launch.pipeStdio('${e}\n', subtle: true);
-
     if (e.kind == EventKind.kIsolateStart) {
       _registerNewIsolates([e.isolate]);
     } else if (e.kind == EventKind.kIsolateRunnable) {
@@ -431,6 +429,8 @@ class ObservatoryIsolate extends DebugIsolate {
   }
 
   String get name => isolateRef?.name;
+
+  String get detail => isolateRef?.number;
 
   String get id => isolateRef.id;
 

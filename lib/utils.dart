@@ -164,11 +164,9 @@ class Property<T> {
 
   Stream<T> get onChanged => _controller.stream;
 
-  Stream<T> get observe {
-    StreamController controller = new StreamController();
-    controller.add(value);
-    _controller.stream.pipe(controller);
-    return controller.stream;
+  StreamSubscription<T> observe(callback(T t)) {
+    callback(value);
+    return onChanged.listen(callback);
   }
 
   String toString() => '${_value}';
@@ -185,6 +183,7 @@ class SelectionGroup<T> {
   StreamController<T> _addedController = new StreamController.broadcast();
   StreamController<T> _selectionChangedController = new StreamController.broadcast();
   StreamController<T> _removedController = new StreamController.broadcast();
+  StreamController<T> _mutationController = new StreamController.broadcast();
 
   SelectionGroup();
 
@@ -200,9 +199,15 @@ class SelectionGroup<T> {
   Stream<T> get onSelectionChanged => _selectionChangedController.stream;
   Stream<T> get onRemoved => _removedController.stream;
 
+  StreamSubscription<List<T>> observeMutation(callback(List<T> list)) {
+    callback(items);
+    return _mutationController.stream.map((_) => items).listen(callback);
+  }
+
   void add(T item) {
     _items.add(item);
     _addedController.add(item);
+    _mutationController.add(item);
 
     if (_selection == null) {
       _selection = item;
@@ -222,6 +227,7 @@ class SelectionGroup<T> {
 
     _items.remove(item);
     _removedController.add(item);
+    _mutationController.add(item);
 
     if (_selection == item) {
       _selection = null;

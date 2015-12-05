@@ -57,6 +57,7 @@ class DebuggerView extends View {
 
   Marker _execMarker;
 
+  FlowControlSection flowControlSection;
   MTabGroup primaryTabGroup;
   MTabGroup secondaryTabGroup;
 
@@ -65,12 +66,13 @@ class DebuggerView extends View {
   DebuggerView(this.connection) {
     // Close the debugger view on termination.
     connection.onTerminated.then((_) {
+      _removeExecutionMarker();
       handleClose();
       dispose();
     });
 
     CoreElement titleSection;
-    CoreElement flowControlSection;
+    CoreElement flowControlElement;
     CoreElement primarySection;
     CoreElement secondarySection;
 
@@ -78,20 +80,24 @@ class DebuggerView extends View {
 
     content..toggleClass('tab-non-scrollable')..layoutVertical()..add([
       titleSection = div(c: 'debugger-section view-header'),
-      flowControlSection = div(c: 'debugger-section'),
+      flowControlElement = div(c: 'debugger-section'),
       primarySection = div(c: 'debugger-section resizable')..layoutVertical()..flex(),
       secondarySection = div(c: 'debugger-section resizable debugger-section-last')
         ..layoutVertical()
     ]);
 
     _createTitleSection(titleSection);
-    _createFlowControlSection(flowControlSection);
+    _createFlowControlSection(flowControlElement);
     _createPrimarySection(primarySection);
     _createSecondarySection(secondarySection);
 
     subs.add(connection.onPaused.listen(_handleIsolatePaused));
     subs.add(connection.onResumed.listen(_handleIsolateResumed));
     subs.add(connection.isolates.onRemoved.listen(_handleIsolateTerminated));
+
+    // currentIsolate.observe((DebugIsolate isolate) {
+    //   print('current isolate: ${isolate}');
+    // });
   }
 
   void _createTitleSection(CoreElement section) {
@@ -106,74 +112,14 @@ class DebuggerView extends View {
     title.text = 'Debugging ${connection.launch.name}';
     title.tooltip = title.text;
 
-    subs.add(connection.metadata.observe.listen((val) {
+    subs.add(connection.metadata.observe((val) {
       subtitle.text = val == null ? ' ' : val;
       subtitle.tooltip = subtitle.text;
     }));
   }
 
   void _createFlowControlSection(CoreElement section) {
-    // TODO: listen for current isolate change
-
-    CoreElement resume = button(c: 'btn icon-playback-play')..click(_resume);
-    CoreElement stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
-    CoreElement stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
-    CoreElement stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
-    CoreElement stop = button(c: 'btn icon-primitive-square')..click(_terminate);
-
-    CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
-      resume,
-      div()..flex(),
-      stepIn,
-      stepOver,
-      stepOut,
-      div()..flex(),
-      stop
-    ]);
-
-    // TODO: Pull down menu for switching between isolates.
-    CoreElement subtitle;
-
-    section.add([
-      executionControlToolbar,
-      subtitle = div(c: 'debugger-section-subtitle', text: ' ')
-    ]);
-
-    void updateUi(bool suspended) {
-      resume.enabled = suspended;
-      stepIn.enabled = suspended;
-      stepOut.enabled = suspended;
-      stepOver.enabled = suspended;
-      stop.enabled = connection.isAlive;
-
-      // Update the execution point.
-      if (suspended && connection.isolate.hasFrames) {
-        _showTab('execution');
-
-        connection.isolate.frames.first.location.resolve().then((DebugLocation location) {
-          _removeExecutionMarker();
-
-          if (location.resolvedPath) {
-            _jumpToLocation(location, addExecMarker: true);
-          }
-        });
-      } else {
-        _removeExecutionMarker();
-      }
-
-      if (suspended) {
-        subtitle.text = 'Isolate ${connection.isolate.name} (paused)';
-      } else {
-        if (connection.isolate != null) {
-          subtitle.text = 'Isolate ${connection.isolate.name}';
-        } else {
-          subtitle.text = ' ';
-        }
-      }
-    }
-
-    updateUi(connection.isolate.suspended.value);
-    connection.isolate.suspended.onChanged.listen(updateUi);
+    flowControlSection = new FlowControlSection(this, connection, section);
   }
 
   void _createPrimarySection(CoreElement section) {
@@ -186,7 +132,7 @@ class DebuggerView extends View {
     // Set up the tab group.
     primaryTabGroup.tabs.add(new ExecutionTab(this, connection));
     primaryTabGroup.tabs.add(new LibrariesTab(this, connection));
-    primaryTabGroup.tabs.add(new IsolatesTab(connection));
+    primaryTabGroup.tabs.add(new IsolatesTab(this, connection));
   }
 
   void _createSecondarySection(CoreElement section) {
@@ -215,8 +161,8 @@ class DebuggerView extends View {
   }
 
   void _handleIsolateResumed(DebugIsolate isolate) {
-    // TODO:
-
+    // TODO: Instead of this, invoke registered callbacks.
+    currentIsolate.value = isolate;
   }
 
   void _handleIsolateTerminated(DebugIsolate isolate) {
@@ -233,17 +179,9 @@ class DebuggerView extends View {
 
   void dispose() {
     subs.cancel();
-    primaryTabGroup.dispose();
-    secondaryTabGroup.dispose();
+    flowControlSection.dispose();
+    disposables.dispose();
   }
-
-  // TODO: This is temporary.
-  // _pause() => connection.pause();
-  _resume() => connection.resume();
-  _stepIn() => connection.stepIn();
-  _stepOver() => connection.stepOver();
-  _stepOut() => connection.stepOut();
-  _terminate() => connection.terminate();
 
   void _showTab(String id) {
     if (primaryTabGroup.hasTabId(id)) {
@@ -309,11 +247,116 @@ class _MockTab extends MTab {
   void dispose() { }
 }
 
+class FlowControlSection implements Disposable {
+  final DebuggerView view;
+  final ObservatoryConnection connection;
+  final StreamSubscriptions subs = new StreamSubscriptions();
+
+  CoreElement resume;
+  CoreElement stepIn;
+  CoreElement stepOver;
+  CoreElement stepOut;
+  CoreElement stop;
+
+  CoreElement subtitle;
+
+  DebugIsolate _isolate;
+
+  FlowControlSection(this.view, this.connection, CoreElement element) {
+    resume = button(c: 'btn icon-playback-play')..click(_resume);
+    stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
+    stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
+    stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
+    stop = button(c: 'btn icon-primitive-square')..click(_terminate);
+
+    CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
+      resume,
+      div()..flex(),
+      stepIn,
+      stepOver,
+      stepOut,
+      div()..flex(),
+      stop
+    ]);
+
+    // TODO: Pull down menu for switching between isolates.
+    element.add([
+      executionControlToolbar,
+      subtitle = div(c: 'debugger-section-subtitle', text: ' ')
+    ]);
+
+    view.currentIsolate.observe(_handleIsolateChange);
+  }
+
+  void _handleIsolateChange(DebugIsolate isolate) {
+    // The current isolate has changed.
+    _isolate = isolate;
+
+    _updateUI();
+  }
+
+  void _updateUI() {
+    stop.enabled = connection.isAlive;
+
+    if (_isolate == null) {
+      resume.enabled = false;
+      stepIn.enabled = false;
+      stepOut.enabled = false;
+      stepOver.enabled = false;
+
+      subtitle.text = ' ';
+      view._removeExecutionMarker();
+
+      return;
+    }
+
+    bool suspended = _isolate.isSuspended;
+
+    resume.enabled = suspended;
+    stepIn.enabled = suspended;
+    stepOut.enabled = suspended;
+    stepOver.enabled = suspended;
+
+    // Update the execution point.
+    if (suspended && _isolate.hasFrames) {
+      // TODO: Do we always want to jump to this tab? Perhaps not when stepping.
+      view._showTab('execution');
+
+      // TODO: Select currentFrame instead.
+      _isolate.frames.first.location.resolve().then((DebugLocation location) {
+        view._removeExecutionMarker();
+
+        if (location.resolvedPath) {
+          view._jumpToLocation(location, addExecMarker: true);
+        }
+      });
+    } else {
+      view._removeExecutionMarker();
+    }
+
+    if (suspended) {
+      subtitle.text = 'Isolate ${_isolate.name} (paused)';
+    } else {
+      subtitle.text = 'Isolate ${_isolate.name}';
+    }
+  }
+
+  _resume() => _isolate?.resume();
+  _stepIn() => _isolate?.stepIn();
+  _stepOver() => _isolate?.stepOver();
+  _stepOut() => _isolate?.stepOut();
+
+  _terminate() => connection.terminate();
+
+  void dispose() => subs.cancel();
+}
+
 class ExecutionTab extends MTab {
   final DebuggerView view;
   final DebugConnection connection;
+  final StreamSubscriptions subs = new StreamSubscriptions();
+
   MList<DebugFrame> list;
-  StreamSubscriptions subs = new StreamSubscriptions();
 
   ExecutionTab(this.view, this.connection) : super('execution', 'Execution') {
     content..layoutVertical()..flex();
@@ -324,21 +367,29 @@ class ExecutionTab extends MTab {
     list.selectedItem.onChanged.listen(_selectFrame);
     list.onDoubleClick.listen(_selectFrame);
 
-    if (connection.isolate.suspended.value) {
-      updateFrames(connection.isolate.frames);
-    }
+    // if (connection.isolate.suspended.value) {
+    //   updateFrames(connection.isolate.frames);
+    // }
+    //
+    // connection.isolate.suspended.onChanged.listen((bool suspend) {
+    //   if (suspend) {
+    //     updateFrames(connection.isolate.frames);
+    //   } else {
+    //     // TODO: if suspend == false, then remove the frames after a delay
+    //
+    //   }
+    // });
 
-    connection.isolate.suspended.onChanged.listen((bool suspend) {
-      if (suspend) {
-        updateFrames(connection.isolate.frames);
-      } else {
-        // TODO: if suspend == false, then remove the frames after a delay
+    // ***
+    // TODO: add a util method in view, observeIsolateState
+    // ***
 
-      }
-    });
+    // TODO: Listen to currentIsolate.
+    view.currentIsolate.observe(_updateFrames);
   }
 
-  void updateFrames(List<DebugFrame> frames, {bool selectTop: true}) {
+  void _updateFrames(DebugIsolate isolate, {bool selectTop: true}) {
+    List<DebugFrame> frames = isolate?.frames;
     if (frames == null) frames = [];
     list.update(frames);
 
@@ -392,7 +443,7 @@ class LibrariesTab extends MTab {
     // TODO: On double click, jump to the library source.
     // list.onDoubleClick.listen(_selectIsolate);
 
-    view.currentIsolate.observe.listen(_updateLibraries);
+    view.currentIsolate.observe(_updateLibraries);
   }
 
   void _updateLibraries([_]) {
@@ -424,45 +475,38 @@ class LibrariesTab extends MTab {
 }
 
 class IsolatesTab extends MTab {
+  final DebuggerView view;
   final DebugConnection connection;
+
   MList<DebugIsolate> list;
   StreamSubscriptions subs = new StreamSubscriptions();
 
-  IsolatesTab(this.connection) : super('isolates', 'Isolates') {
+  IsolatesTab(this.view, this.connection) : super('isolates', 'Isolates') {
     content..layoutVertical()..flex();
     content.add([
       list = new MList(_render)..flex()
     ]);
 
-    list.onDoubleClick.listen(_selectIsolate);
+    list.onDoubleClick.listen(_handleSelectIsolate);
 
-    // TODO: listen for changes
-    _updateIsolates(connection.isolate == null ? [] : [connection.isolate]);
-    subs.add(connection.isolate.suspended.onChanged.listen((_) {
-      _updateIsolates(connection.isolate == null ? [] : [connection.isolate]);
-    }));
+    subs.add(connection.isolates.observeMutation((_) => _updateIsolates()));
   }
 
-  void _updateIsolates(List<DebugIsolate> isolates) {
-    list.update(isolates);
+  void _updateIsolates() {
+    list.update(connection.isolates.items);
   }
 
   void _render(DebugIsolate isolate, CoreElement element) {
-    // TODO: pause button
-    // TODO: pause state
-
+    // TODO: pause button, pause state
     element..add([
-      span(text: isolate.name, c: 'icon icon-versions')
-      //span(text: isolate.userId, c: 'debugger-secondary-info')
+      span(text: isolate.name, c: 'icon icon-versions'),
+      span(text: isolate.detail, c: 'debugger-secondary-info overflow-hidden-ellipsis')
     ]);
   }
 
-  void _selectIsolate(DebugIsolate isolate) {
-    // TODO:
-
-    // frame.getLocation().then((DebugLocation location) {
-    //   if (location != null) view._jumpToLocation(location);
-    // });
+  void _handleSelectIsolate(DebugIsolate isolate) {
+    // TODO: Not all parts of the UI listen to currentIsolate.
+    // view.currentIsolate.value = isolate;
   }
 
   void dispose() => subs.dispose();
@@ -489,7 +533,8 @@ class BreakpointsTab extends MTab {
     // Set up the list.
     _update();
 
-    // TODO: Support listening for breakpoint change events.
+    // TODO: Support listening for breakpoint property change events.
+
     subs.add(breakpointManager.onAdd.listen(_update));
     subs.add(breakpointManager.onRemove.listen(_update));
   }
