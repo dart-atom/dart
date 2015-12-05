@@ -239,7 +239,7 @@ class ObservatoryConnection extends DebugConnection {
 
     switch (kind) {
       case EventKind.kPauseStart:
-        // TODO: There's a race condition here with setting breakpoints. Use a
+        // TODO: There's a race condition here with setting breakpoints; use a
         // Completer when registering isolates.
         _getIsolate(ref)?._performInitialResume();
         break;
@@ -250,7 +250,10 @@ class ObservatoryConnection extends DebugConnection {
         ObservatoryIsolate isolate = _getIsolate(ref);
 
         // TODO:
-        if (event.exception != null) _printException(event.exception);
+        if (event.exception != null) {
+          launch.pipeStdio('exception: ${_refToString(event.exception)}\n',
+              error: true);
+        }
 
         isolate._populateFrames().then((_) {
           isolate._suspend(true);
@@ -268,10 +271,6 @@ class ObservatoryConnection extends DebugConnection {
         }
         break;
     }
-  }
-
-  void _printException(InstanceRef exception) {
-    launch.pipeStdio('exception: ${_refToString(exception)}\n', error: true);
   }
 
   // TODO: Move much of the isolate lifecycle code into a manager class.
