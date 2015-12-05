@@ -239,11 +239,9 @@ class OutlineView implements Disposable {
     analysis.Element e = item.element;
 
     // static class members
+    bool isStatic = false;
     if (((e.flags & 0x08) != 0) && !_topLevel.contains(item)) {
-      intoElement.children.add(new html.SpanElement()
-        ..classes.add('comment')
-        ..text = '▪'
-      );
+      isStatic = true;
     }
 
     if (e.kind == 'CLASS') {
@@ -271,7 +269,8 @@ class OutlineView implements Disposable {
     }
 
     html.Element span = new html.AnchorElement();
-    if ((e.flags & 0x20) != 0) span.classes.add('deprecated');
+    if ((e.flags & 0x20) != 0) span.classes.add('outline-deprecated');
+    if (isStatic) span.classes.add('outline-static');
     intoElement.children.add(span);
 
     String name = e.name;

@@ -61,9 +61,19 @@ class MTabGroup extends CoreElement {
       _activeTab.active.value = true;
     }
   }
+
+  bool hasTabId(String id) {
+    return tabs.items.any((tab) => tab.id == id);
+  }
+
+  void activateTabId(String id) {
+    for (MTab tab in tabs.items) {
+      if (tab.id == id) tabs.setSelection(tab);
+    }
+  }
 }
 
-abstract class MTab {
+abstract class MTab implements Disposable {
   final String id;
   final String name;
   final CoreElement _tabElement;
@@ -76,18 +86,26 @@ abstract class MTab {
       content = div() {
     _tabElement.text = name;
     enabled.onChanged.listen((val) {
-      print('$name enabled $val');
       _tabElement.enabled = val;
     });
   }
 
+  void dispose();
+
   String toString() => '$id $name';
 }
 
-typedef void ListRenderer(dynamic modelObject, CoreElement element);
+typedef void ListRenderer(dynamic obj, CoreElement element);
+typedef bool ListFilter(dynamic obj);
+typedef int ListSort(dynamic obj1, dynamic obj2);
+
+// TODO: use cmd, ctrl to toggle list items
 
 class MList<T> extends CoreElement {
   final ListRenderer renderer;
+  final ListSort sort;
+  final ListFilter filter;
+
   final Property<T> selectedItem = new Property();
 
   CoreElement _ul;
@@ -95,14 +113,25 @@ class MList<T> extends CoreElement {
 
   StreamController<T> _doubleClick = new StreamController.broadcast();
 
-  MList(this.renderer) : super('div', classes: 'material-list') {
+  MList(this.renderer, {this.sort, this.filter}) : super('div', classes: 'material-list') {
     layoutVertical();
     add([
-      _ul = ul()..flex
+      _ul = ul()..flex()
     ]);
+    click(() => selectItem(null));
   }
 
   void update(List<T> modelObjects) {
+    if (filter != null || sort != null) {
+      if (filter != null) {
+        modelObjects = modelObjects.where((o) => !filter(o)).toList();
+      } else {
+        modelObjects = modelObjects.toList();
+      }
+
+      if (sort != null) modelObjects.sort(sort);
+    }
+
     // TODO: optimize this
     _ul.clear();
     _itemToElement.clear();

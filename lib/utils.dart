@@ -68,6 +68,8 @@ class Disposables implements Disposable {
 
   void add(Disposable disposable) => _disposables.add(disposable);
 
+  void addAll(Iterable<Disposable> list) => _disposables.addAll(list);
+
   bool remove(Disposable disposable) => _disposables.remove(disposable);
 
   void dispose() {
@@ -154,13 +156,20 @@ class Property<T> {
 
   T get value => _value;
   set value(T v) {
-    _value = v;
-    _controller.add(_value);
+    if (_value != v) {
+      _value = v;
+      _controller.add(_value);
+    }
   }
 
   bool get hasValue => _value != null;
 
   Stream<T> get onChanged => _controller.stream;
+
+  StreamSubscription<T> observe(callback(T t)) {
+    callback(value);
+    return onChanged.listen(callback);
+  }
 
   String toString() => '${_value}';
 }
@@ -176,6 +185,7 @@ class SelectionGroup<T> {
   StreamController<T> _addedController = new StreamController.broadcast();
   StreamController<T> _selectionChangedController = new StreamController.broadcast();
   StreamController<T> _removedController = new StreamController.broadcast();
+  StreamController<T> _mutationController = new StreamController.broadcast();
 
   SelectionGroup();
 
@@ -183,15 +193,23 @@ class SelectionGroup<T> {
 
   List<T> get items => _items;
 
+  bool get isEmpty => _items.isEmpty;
+  bool get isNotEmpty => _items.isNotEmpty;
   int get length => _items.length;
 
   Stream<T> get onAdded => _addedController.stream;
   Stream<T> get onSelectionChanged => _selectionChangedController.stream;
   Stream<T> get onRemoved => _removedController.stream;
 
+  StreamSubscription<List<T>> observeMutation(callback(List<T> list)) {
+    callback(items);
+    return _mutationController.stream.map((_) => items).listen(callback);
+  }
+
   void add(T item) {
     _items.add(item);
     _addedController.add(item);
+    _mutationController.add(item);
 
     if (_selection == null) {
       _selection = item;
@@ -211,11 +229,47 @@ class SelectionGroup<T> {
 
     _items.remove(item);
     _removedController.add(item);
+    _mutationController.add(item);
 
     if (_selection == item) {
       _selection = null;
       _selectionChangedController.add(null);
     }
+  }
+}
+
+class FutureSerializer<T> {
+  List _operations = [];
+  List _completers = [];
+
+  Future<T> perform(Function operation) {
+    Completer<T> completer = new Completer();
+
+    _operations.add(operation);
+    _completers.add(completer);
+
+    if (_operations.length == 1) {
+      _serviceQueue();
+    }
+
+    return completer.future;
+  }
+
+  void _serviceQueue() {
+    Function operation = _operations.first;
+    Completer<T> completer = _completers.first;
+
+    Future future = operation();
+    future.then((value) {
+      completer.complete(value);
+    }).catchError((e) {
+      completer.completeError(e);
+    }).whenComplete(() {
+      _operations.removeAt(0);
+      _completers.removeAt(0);
+
+      if (_operations.isNotEmpty) _serviceQueue();
+    });
   }
 }
 

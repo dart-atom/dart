@@ -12,6 +12,7 @@ import '../state.dart';
 import '../utils.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
+import 'model.dart';
 
 final Logger _logger = new Logger('atom.observatory');
 
@@ -36,7 +37,7 @@ class ObservatoryDebugger {
       );
 
       _logger.info('Connected to observatory on ${url}.');
-      launch.addDebugConnection(new ObservatoryDebugConnection(
+      launch.addDebugConnection(new ObservatoryConnection(
           launch,
           service,
           finishedCompleter,
@@ -55,23 +56,23 @@ class ObservatoryDebugger {
   }
 }
 
-class ObservatoryDebugConnection extends DebugConnection {
+class ObservatoryConnection extends DebugConnection {
   final VmService service;
   final Completer completer;
   final bool pipeStdio;
   final bool isolatesStartPaused;
 
-  IsolateRef _currentIsolate;
+  Map<String, ObservatoryIsolate> _isolateMap = {};
+  StreamController<DebugIsolate> _isolatePaused = new StreamController.broadcast();
+  StreamController<DebugIsolate> _isolateResumed = new StreamController.broadcast();
+
   StreamSubscriptions subs = new StreamSubscriptions();
   UriResolver uriResolver;
 
   bool stdoutSupported = true;
   bool stderrSupported = true;
 
-  Property<bool> _suspended = new Property();
-  ObservatoryDebugFrame topFrame;
-
-  ObservatoryDebugConnection(Launch launch, this.service, this.completer, {
+  ObservatoryConnection(Launch launch, this.service, this.completer, {
     this.pipeStdio: false,
     this.isolatesStartPaused: false,
     UriTranslator uriTranslator
@@ -86,27 +87,24 @@ class ObservatoryDebugConnection extends DebugConnection {
   }
 
   bool get isAlive => !completer.isCompleted;
-  bool get isSuspended => _suspended.value;
 
-  // TODO: Temp.
-  DebugIsolate get isolate {
-    if (_currentIsolate == null) return null;
-    return new ObservatoryDebugIsolate(_currentIsolate);
-  }
+  Stream<DebugIsolate> get onPaused => _isolatePaused.stream;
+  Stream<DebugIsolate> get onResumed => _isolateResumed.stream;
 
-  Stream<bool> get onSuspendChanged => _suspended.onChanged;
+  // TODO: The UI should be in charge of servicing the connection level flow
+  // control commands.
+  DebugIsolate get _selectedIsolate => isolates.selection;
 
-  pause() => service.pause(_currentIsolate.id);
-  Future resume() => service.resume(_currentIsolate.id);
+  Future resume() => _selectedIsolate?.resume();
+  stepIn() => _selectedIsolate?.stepIn();
+  stepOver() => _selectedIsolate?.stepOver();
+  stepOut() => _selectedIsolate?.stepOut();
 
-  // TODO: only on suspend.
-  stepIn() => service.resume(_currentIsolate.id, step: StepOption.kInto);
-  stepOver() => service.resume(_currentIsolate.id, step: StepOption.kOver);
-  stepOut() => service.resume(_currentIsolate.id, step: StepOption.kOut);
-
-  terminate() => launch.kill();
+  Future terminate() => launch.kill();
 
   Future get onTerminated => completer.future;
+
+  ObservatoryIsolate _getIsolate(IsolateRef ref) => _isolateMap[ref.id];
 
   void _init() {
     var trim = (String str) => str.length > 1000 ? str.substring(0, 1000) + '…' : str;
@@ -143,13 +141,6 @@ class ObservatoryDebugConnection extends DebugConnection {
     });
     service.streamListen('_Logging');
 
-    // TODO: Recommended boot-up sequence (done synchronously):
-    // 1) getVersion.
-    // 2) streamListen(Debug)
-    // 3) streamListen(Isolate)
-    // 4) getVM()
-    // 5) getIsolate(id)
-
     service.getVersion().then((Version ver) {
       _logger.fine('Observatory version ${ver.major}.${ver.minor}.');
     });
@@ -173,38 +164,22 @@ class ObservatoryDebugConnection extends DebugConnection {
     }
 
     service.getVM().then((VM vm) {
-      _logger.info('Connected to ${vm.architectureBits}/${vm.targetCPU}/'
-          '${vm.hostCPU}/${vm.version}');
-      if (!isolatesStartPaused && vm.isolates.isNotEmpty) {
-        _currentIsolate = vm.isolates.first;
-        _installInto(_currentIsolate).then((_) {
-          _suspend(false);
-        });
-      } else if (isolatesStartPaused && vm.isolates.isNotEmpty) {
-        if (_currentIsolate == null) {
-          _currentIsolate = vm.isolates.first;
-          _installInto(_currentIsolate).then((_) {
-            service.getIsolate(_currentIsolate.id).then((Isolate isolate) {
-              if (isolate.pauseEvent.kind == EventKind.kPauseStart) {
-                resume();
-              } else {
-                _startIt = true;
-              }
-            });
-          });
-        }
-      }
+      String dart = vm.version;
+      if (dart.contains(' ')) dart = dart.substring(0, dart.indexOf(' '));
+      metadata.value = '${vm.targetCPU} • ${vm.hostCPU} • Dart ${dart}';
+      _logger.info('Connected to ${metadata.value}');
+      _registerNewIsolates(vm.isolates);
     });
   }
 
-  Future _installInto(IsolateRef isolate) {
+  Future _installBreakpoints(IsolateRef isolate) {
     Map<AtomBreakpoint, Breakpoint> _bps = {};
 
     subs.add(breakpointManager.onAdd.listen((bp) {
       uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
         // TODO: Use both returned values.
         return service.addBreakpointWithScriptUri(
-            _currentIsolate.id, uris.first, bp.line, column: bp.column);
+            isolate.id, uris.first, bp.line, column: bp.column);
       }).then((Breakpoint vmBreakpoint) {
         _bps[bp] = vmBreakpoint;
       }).catchError((e) {
@@ -215,7 +190,7 @@ class ObservatoryDebugConnection extends DebugConnection {
     subs.add(breakpointManager.onRemove.listen((bp) {
       Breakpoint vmBreakpoint = _bps[bp];
       if (vmBreakpoint != null) {
-        service.removeBreakpoint(_currentIsolate.id, vmBreakpoint.id);
+        service.removeBreakpoint(isolate.id, vmBreakpoint.id);
       }
     }));
 
@@ -226,7 +201,7 @@ class ObservatoryDebugConnection extends DebugConnection {
       return uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
         // TODO: Use both returned values.
         return service.addBreakpointWithScriptUri(
-            _currentIsolate.id, uris.first, bp.line, column: bp.column);
+            isolate.id, uris.first, bp.line, column: bp.column);
       }).then((Breakpoint vmBreakpoint) {
         _bps[bp] = vmBreakpoint;
       }).catchError((e) {
@@ -234,99 +209,114 @@ class ObservatoryDebugConnection extends DebugConnection {
       });
     }).then((_) {
       return service.setExceptionPauseMode(
-        _currentIsolate.id, ExceptionPauseMode.kUnhandled);
+          isolate.id, ExceptionPauseMode.kUnhandled);
     });
   }
 
-  bool _startIt = false;
+  void _handleIsolateEvent(Event event) {
+    // IsolateStart, IsolateRunnable, IsolateUpdate, IsolateExit
+    IsolateRef ref = event.isolate;
 
-  void _handleIsolateEvent(Event e) {
-    // TODO: Create an isolate handler.
+    switch (event.kind) {
+      case EventKind.kIsolateStart:
+        _registerNewIsolate(ref);
+        break;
+      case EventKind.kIsolateRunnable:
+      case EventKind.kIsolateUpdate:
+        _updateIsolateMetadata(ref);
+        break;
+      case EventKind.kIsolateExit:
+        _handleIsolateDeath(ref);
+        break;
+    }
+  }
 
-    launch.pipeStdio('${e}\n', subtle: true);
+  // PauseStart, PauseExit, PauseBreakpoint, PauseInterrupted, PauseException,
+  // Resume, BreakpointAdded, BreakpointResolved, BreakpointRemoved, Inspect
+  void _handleDebugEvent(Event event) {
+    String kind = event.kind;
+    IsolateRef ref = event.isolate;
 
-    // IsolateStart, IsolateRunnable, IsolateExit, IsolateUpdate
-    if (e.kind == EventKind.kIsolateRunnable) {
-      // Don't re-init if it is already inited.
-      if (_currentIsolate == null) {
-        _currentIsolate = e.isolate;
-        _installInto(_currentIsolate).then((_) {
-          if (isolatesStartPaused) {
-            resume();
-          }
+    switch (kind) {
+      case EventKind.kPauseStart:
+        // TODO: There's a race condition here with setting breakpoints; use a
+        // Completer when registering isolates.
+        _getIsolate(ref)?._performInitialResume();
+        break;
+      case EventKind.kPauseExit:
+      case EventKind.kPauseBreakpoint:
+      case EventKind.kPauseInterrupted:
+      case EventKind.kPauseException:
+        ObservatoryIsolate isolate = _getIsolate(ref);
+
+        // TODO:
+        if (event.exception != null) {
+          launch.pipeStdio('exception: ${_refToString(event.exception)}\n',
+              error: true);
+        }
+
+        isolate._populateFrames().then((_) {
+          isolate._suspend(true);
         });
-      } else if (_startIt) {
-        _startIt = false;
-        resume();
+        break;
+      case EventKind.kResume:
+        _getIsolate(ref)?._suspend(false);
+        break;
+      case EventKind.kInspect:
+        InstanceRef inspectee = event.inspectee;
+        if (inspectee.valueAsString != null) {
+          launch.pipeStdio('${inspectee.valueAsString}\n');
+        } else {
+          launch.pipeStdio('${inspectee}\n');
+        }
+        break;
+    }
+  }
+
+  // TODO: Move much of the isolate lifecycle code into a manager class.
+
+  Future<ObservatoryIsolate> _registerNewIsolate(IsolateRef ref) {
+    if (_isolateMap.containsKey(ref.id)) return new Future.value(_isolateMap[ref.id]);
+
+    ObservatoryIsolate isolate = new ObservatoryIsolate._(this, service, ref);
+    _isolateMap[ref.id] = isolate;
+    isolates.add(isolate);
+
+    return _installBreakpoints(ref).then((_) {
+      // Get isolate metadata.
+      return isolate._updateIsolateInfo();
+    }).then((_) {
+      if (isolate.isolate.pauseEvent.kind == EventKind.kPauseStart) {
+        isolate._performInitialResume();
       }
-    } else if (e.kind == EventKind.kIsolateExit) {
-      _currentIsolate = null;
-    }
-  }
-
-  void _handleDebugEvent(Event e) {
-    IsolateRef isolate = e.isolate;
-
-    // TODO:
-    if (e.kind == EventKind.kInspect) {
-      InstanceRef ref = e.inspectee;
-      if (ref.valueAsString != null)
-        launch.pipeStdio('${ref.valueAsString}\n');
-      launch.pipeStdio('${ref}\n');
-
-      // service.callServiceExtension('foo', {'baz': 'woot'}).then((response) {
-      //   print(response);
-      // });
-    }
-
-    if (e.kind == EventKind.kResume) {
-      _suspend(false);
-    } else if (e.kind == EventKind.kPauseStart || e.kind == EventKind.kPauseExit ||
-        e.kind == EventKind.kPauseBreakpoint || e.kind == EventKind.kPauseInterrupted ||
-        e.kind == EventKind.kPauseException) {
-      _suspend(true);
-    }
-
-    if (e.kind == EventKind.kResume || e.kind == EventKind.kIsolateExit) {
-      // TODO: isolate is resumed
-
-    }
-
-    if (e.kind != EventKind.kResume && e.topFrame != null) {
-      topFrame = new ObservatoryDebugFrame(this, service, isolate, e.topFrame);
-      topFrame.locals = new List.from(
-          e.topFrame.vars.map((v) => new ObservatoryDebugVariable(v)));
-      topFrame.tokenPos = e.topFrame.location.tokenPos;
-    }
-
-    if (e.kind != EventKind.kResume && e.topFrame != null) {
-      if (e.exception != null) _printException(e.exception);
-    }
-  }
-
-  void _printException(InstanceRef exception) {
-    launch.pipeStdio('exception: ${_refToString(exception)}\n', error: true);
-  }
-
-  Map<String, Script> _scripts = {};
-
-  Future<Script> _resolveScript(IsolateRef isolate, ScriptRef scriptRef) {
-    String id = scriptRef.id;
-
-    if (_scripts[id] != null) return new Future.value(_scripts[id]);
-
-    return service.getObject(isolate.id, id).then((result) {
-      if (result is Script) {
-        _scripts[id] = result;
-        return result;
-      }
-      throw result;
+      return isolate;
     });
   }
 
-  void _suspend(bool value) {
-    if (!value) topFrame = null;
-    _suspended.value = value;
+  Future<List<ObservatoryIsolate>> _registerNewIsolates(List<IsolateRef> refs) {
+    List<Future<ObservatoryIsolate>> futures = [];
+
+    for (IsolateRef ref in refs) {
+      futures.add(_registerNewIsolate(ref));
+    }
+
+    return Future.wait(futures);
+  }
+
+  Future _updateIsolateMetadata(IsolateRef ref) {
+    ObservatoryIsolate isolate = _isolateMap[ref.id];
+
+    if (isolate == null) {
+      return _registerNewIsolate(ref);
+    } else {
+      // Update the libraries list for the isolate.
+      return isolate._updateIsolateInfo();
+    }
+  }
+
+  void _handleIsolateDeath(IsolateRef ref) {
+    ObservatoryIsolate isolate = _isolateMap.remove(ref.id);
+    if (isolate != null) isolates.remove(isolate);
   }
 
   void dispose() {
@@ -338,6 +328,7 @@ class ObservatoryDebugConnection extends DebugConnection {
 
 String printFunctionName(FuncRef ref, {bool terse: false}) {
   String name = terse ? ref.name : '${ref.name}()';
+  name = name.replaceAll('<anonymous closure>', '<anon>');
 
   if (ref.owner is ClassRef) {
     return '${ref.owner.name}.${name}';
@@ -390,50 +381,128 @@ class ObservatoryLog extends Log {
   void severe(String message) => logger.severe(message);
 }
 
-class ObservatoryDebugIsolate extends DebugIsolate {
+class ObservatoryIsolate extends DebugIsolate {
+  final ObservatoryConnection connection;
+  final VmService service;
   final IsolateRef isolateRef;
 
-  ObservatoryDebugIsolate(this.isolateRef);
+  Isolate isolate;
+  ScriptManager scriptManager;
 
-  String get name => isolateRef.name;
+  bool suspended = false;
+  bool _didInitialResume = false;
+
+  ObservatoryIsolate._(this.connection, this.service, this.isolateRef) {
+    scriptManager = new ScriptManager(service, this);
+  }
+
+  String get name => isolateRef?.name;
+
+  String get detail => isolateRef?.number;
+
+  String get id => isolateRef?.id;
+
+  List<DebugFrame> frames;
+
+  List<ObservatoryLibrary> get libraries {
+    if (isolate == null) return [];
+    if (isolate.libraries == null) return [];
+
+    return isolate.libraries.map(
+      (libraryRef) => new ObservatoryLibrary._(libraryRef)).toList();
+  }
+
+  void _suspend(bool value) {
+    if (!value) frames = null;
+
+    suspended = value;
+
+    if (value) {
+      connection._isolatePaused.add(this);
+    } else {
+      connection._isolateResumed.add(this);
+    }
+
+    // TODO: Remove this.
+    if (suspended) {
+      connection.isolates.setSelection(this);
+    }
+  }
+
+  pause() => service.pause(isolateRef.id);
+  Future resume() => service.resume(isolateRef.id);
+
+  stepIn() => service.resume(isolateRef.id, step: StepOption.kInto);
+  stepOver() => service.resume(isolateRef.id, step: StepOption.kOver);
+  stepOut() => service.resume(isolateRef.id, step: StepOption.kOut);
+
+  Future<ObservatoryIsolate> _updateIsolateInfo() {
+    return service.getIsolate(isolateRef.id).then((Isolate isolate) {
+      // TODO: Update the state info.
+
+      this.isolate = isolate;
+
+      return this;
+    });
+  }
+
+  // Populate the frames for the current isolate; populate the Scripts for any
+  // referenced ScriptRefs.
+  Future _populateFrames() {
+    return service.getStack(id).then((Stack stack) {
+      List<ScriptRef> scriptRefs = [];
+
+      frames = stack.frames.map((Frame frame) {
+        scriptRefs.add(frame.location.script);
+
+        ObservatoryFrame obsFrame = new ObservatoryFrame(this, frame);
+        obsFrame.locals = new List.from(
+          frame.vars.map((v) => new ObservatoryVariable(v))
+        );
+        return obsFrame;
+      }).toList();
+
+      // TODO: Convert the messages into frames as well. The FuncRef will likely
+      // be something like `Timer._handleMessage`. The 'locals' will be the
+      // message data object; a closure reference?
+
+      return scriptManager.loadAllScripts(scriptRefs);
+    });
+  }
+
+  bool operator==(other) {
+    if (other is! ObservatoryIsolate) return false;
+    return id == other.id;
+  }
+
+  String toString() => 'Isolate ${name}';
+
+  void _performInitialResume() {
+    if (!_didInitialResume) {
+      _didInitialResume = true;
+      resume();
+    }
+  }
 }
 
-class ObservatoryDebugFrame extends DebugFrame {
-  final ObservatoryDebugConnection connection;
-  final VmService service;
-  final IsolateRef isolate;
+class ObservatoryFrame extends DebugFrame {
+  final ObservatoryIsolate isolate;
   final Frame frame;
-
-  // TODO: Resolve to line:col.
-  int tokenPos;
 
   List<DebugVariable> locals;
 
-  ObservatoryDebugFrame(this.connection, this.service, this.isolate, this.frame);
+  ObservatoryLocation _location;
+
+  ObservatoryFrame(this.isolate, this.frame);
 
   String get title => printFunctionName(frame.function);
 
-  String get cursorDescription {
-    return 'token ${tokenPos}';
-  }
+  DebugLocation get location {
+    if (_location == null) {
+      _location = new ObservatoryLocation(isolate, frame.location);
+    }
 
-  Future<DebugLocation> getLocation() {
-    ScriptRef scriptRef = frame.location.script;
-
-    return connection._resolveScript(isolate, scriptRef).then((Script script) {
-      int tokenPos = frame.location.tokenPos;
-      Point pos = _calcPos(script, tokenPos);
-      String uri = script.uri;
-
-      if (pos != null) {
-        return connection.uriResolver.resolveUriToPath(uri).then((String path) {
-          return new DebugLocation(path, pos.row, pos.column);
-        }).catchError((e) {
-          atom.notifications.addWarning(
-              "Unable to resolve '${uri}' (${pos.row}:${pos.column}).");
-        });
-      }
-    });
+    return _location;
   }
 
   @override
@@ -447,14 +516,154 @@ class ObservatoryDebugFrame extends DebugFrame {
       }
     });
   }
+
+  VmService get service => isolate.service;
 }
 
-class ObservatoryDebugVariable extends DebugVariable {
+class ObservatoryVariable extends DebugVariable {
   final BoundVariable variable;
 
-  ObservatoryDebugVariable(this.variable);
+  ObservatoryVariable(this.variable);
 
   String get name => variable.name;
 
   String get valueDescription => _refToString(variable.value);
+}
+
+class ObservatoryLocation extends DebugLocation {
+  final ObservatoryIsolate isolate;
+  final SourceLocation location;
+
+  Completer _completer;
+
+  ObservatoryLocation(this.isolate, this.location);
+
+  String get path => _path;
+
+  int get line => _pos?.row;
+  int get column => _pos?.column;
+
+  String get displayPath => location.script.uri;
+
+  VmService get service => isolate.service;
+
+  String _path;
+  Point _pos;
+
+  Future<DebugLocation> resolve() {
+    if (_completer == null) {
+      _completer = new Completer();
+
+      _resolve().then((val) {
+        _completer.complete(val);
+      }).catchError((e) {
+        _logger.info('${e}');
+        _completer.complete(this);
+      }).whenComplete(() {
+        resolved = true;
+      });
+    }
+
+    return _completer.future;
+  }
+
+  // TODO: Pre-populate the uri resolution - make this method synchronous.
+  Future<DebugLocation> _resolve() {
+    // This Script was already loaded when we populated the frames.
+    Script script = isolate.scriptManager.getResolvedScript(location.script);
+
+    // Get the line and column info.
+    _pos = _calcPos(script, location.tokenPos);
+
+    // Get the local path.
+    return isolate.connection.uriResolver.resolveUriToPath(script.uri).then((String path) {
+      _path = path;
+      return this;
+    });
+  }
+}
+
+class ObservatoryLibrary implements Comparable<ObservatoryLibrary> {
+  final LibraryRef _ref;
+
+  ObservatoryLibrary._(LibraryRef ref) : _ref = ref;
+
+  String get name => _ref.name;
+  String get uri => _ref.uri;
+
+  bool get private => uri.startsWith('dart:_');
+
+  int get _kind {
+    if (uri.startsWith('dart:')) return 2;
+    if (uri.startsWith('package:') || uri.startsWith('package/')) return 1;
+    return 0;
+  }
+
+  int compareTo(ObservatoryLibrary other) {
+    int val = _kind - other._kind;
+    if (val != 0) return val;
+    return uri.compareTo(other.uri);
+  }
+}
+
+class ScriptManager {
+  final VmService service;
+  final ObservatoryIsolate isolate;
+
+  /// A Map from ScriptRef ids to retrieved Scripts.
+  Map<String, Script> _scripts = {};
+  Map<String, Completer<Script>> _scriptCompleters = {};
+
+  ScriptManager(this.service, this.isolate);
+
+  bool isScriptResolved(ScriptRef ref) => _scripts.containsKey(ref.id);
+
+  /// Return an already resolved [Script]. This can return `null` if the script
+  /// has not yet been loaded.
+  Script getResolvedScript(ScriptRef scriptRef) {
+    return _scripts[scriptRef.id];
+  }
+
+  Future<Script> resolveScript(ScriptRef scriptRef) {
+    if (isScriptResolved(scriptRef)) {
+      return new Future.value(getResolvedScript(scriptRef));
+    }
+
+    String refId = scriptRef.id;
+
+    if (_scriptCompleters[refId] != null) {
+      return _scriptCompleters[refId].future;
+    }
+
+    Completer<Script> completer = new Completer();
+    _scriptCompleters[refId] = completer;
+
+    service.getObject(isolate.id, refId).then((result) {
+      if (result is Script) {
+        _scripts[refId] = result;
+        completer.complete(result);
+      } else {
+        completer.completeError(result);
+      }
+    }).catchError((e) {
+      completer.completeError(e);
+    }).whenComplete(() {
+      _scriptCompleters.remove(refId);
+    });
+
+    return completer.future;
+  }
+
+  // Load all the given scripts.
+  Future loadAllScripts(List<ScriptRef> refs) {
+    List<Future> futures = [];
+
+    for (ScriptRef ref in refs) {
+      if (!_scripts.containsKey(ref.id)) {
+        futures.add(resolveScript(ref));
+      }
+    }
+
+    return Future.wait(futures);
+  }
 }

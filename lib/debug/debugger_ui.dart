@@ -11,6 +11,8 @@ import '../utils.dart';
 import '../views.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
+import 'model.dart';
+import 'observatory_debugger.dart';
 import 'utils.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui');
@@ -21,6 +23,8 @@ final Logger _logger = new Logger('atom.debugger_ui');
 // TODO: ensure that the debugger ui exists over the course of the debug connection,
 // and that a new one is not created after a debugger tab is closed, and that
 // closing a debugger tab doesn't tear down any listening state.
+
+// TODO: current connection (can be null)
 
 class DebuggerView extends View {
   static String viewIdForConnection(DebugConnection connection) {
@@ -46,21 +50,29 @@ class DebuggerView extends View {
 
   final DebugConnection connection;
 
+  FocusManager focusManager = new FocusManager();
+  // final Property<DebugFrame> currentFrame = new Property();
+
+  StreamSubscriptions subs = new StreamSubscriptions();
+
   Marker _execMarker;
 
+  FlowControlSection flowControlSection;
   MTabGroup primaryTabGroup;
   MTabGroup secondaryTabGroup;
-  BreakpointsTab breakpointsTab;
+
+  final Disposables disposables = new Disposables();
 
   DebuggerView(this.connection) {
     // Close the debugger view on termination.
     connection.onTerminated.then((_) {
+      _removeExecutionMarker();
       handleClose();
       dispose();
     });
 
     CoreElement titleSection;
-    CoreElement flowControlSection;
+    CoreElement flowControlElement;
     CoreElement primarySection;
     CoreElement secondarySection;
 
@@ -68,16 +80,20 @@ class DebuggerView extends View {
 
     content..toggleClass('tab-non-scrollable')..layoutVertical()..add([
       titleSection = div(c: 'debugger-section view-header'),
-      flowControlSection = div(c: 'debugger-section'),
+      flowControlElement = div(c: 'debugger-section'),
       primarySection = div(c: 'debugger-section resizable')..layoutVertical()..flex(),
       secondarySection = div(c: 'debugger-section resizable debugger-section-last')
         ..layoutVertical()
     ]);
 
     _createTitleSection(titleSection);
-    _createFlowControlSection(flowControlSection);
+    _createFlowControlSection(flowControlElement);
     _createPrimarySection(primarySection);
     _createSecondarySection(secondarySection);
+
+    subs.add(connection.onPaused.listen(_handleIsolatePaused));
+    subs.add(connection.onResumed.listen(_handleIsolateResumed));
+    subs.add(connection.isolates.onRemoved.listen(_handleIsolateTerminated));
   }
 
   void _createTitleSection(CoreElement section) {
@@ -92,84 +108,27 @@ class DebuggerView extends View {
     title.text = 'Debugging ${connection.launch.name}';
     title.tooltip = title.text;
 
-    // TODO:
-    subtitle.text = 'Under construction';
+    subs.add(connection.metadata.observe((val) {
+      subtitle.text = val == null ? ' ' : val;
+      subtitle.tooltip = subtitle.text;
+    }));
   }
 
   void _createFlowControlSection(CoreElement section) {
-    CoreElement resume = button(c: 'btn icon-playback-play')..click(_resume);
-    // CoreElement pause = button(c: 'btn icon-playback-pause')..click(_pause);
-    CoreElement stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
-    CoreElement stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
-    CoreElement stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
-    CoreElement stopOut = button(c: 'btn icon-primitive-square')..click(_terminate);
-
-    CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
-      resume,
-      div()..flex(),
-      stepIn,
-      stepOver,
-      stepOut,
-      div()..flex(),
-      stopOut
-    ]);
-
-    // TODO: Pull down menu for switching between isolates.
-    CoreElement subtitle;
-
-    section.add([
-      executionControlToolbar,
-      subtitle = div(c: 'debugger-section-subtitle', text: ' ')
-    ]);
-
-    void updateUi(bool suspended) {
-      resume.enabled = suspended;
-      // pause.enabled = !suspended;
-      stepIn.enabled = suspended;
-      stepOut.enabled = suspended;
-      stepOver.enabled = suspended;
-      stopOut.enabled = connection.isAlive;
-
-      // Update the execution point.
-      if (suspended && connection.topFrame != null) {
-        connection.topFrame.getLocation().then((DebugLocation location) {
-          _removeExecutionMarker();
-
-          if (location != null) {
-            _jumpToLocation(location, addExecMarker: true);
-          }
-        });
-      } else {
-        _removeExecutionMarker();
-      }
-
-      if (suspended) {
-        subtitle.text = 'Isolate ${connection.isolate.name} (paused)';
-      } else {
-        if (connection.isolate != null) {
-          subtitle.text = 'Isolate ${connection.isolate.name}';
-        } else {
-          subtitle.text = ' ';
-        }
-      }
-    }
-
-    updateUi(connection.isSuspended);
-    connection.onSuspendChanged.listen(updateUi);
+    flowControlSection = new FlowControlSection(this, connection, section);
   }
 
   void _createPrimarySection(CoreElement section) {
     section.layoutVertical();
-
 
     section.add([
       primaryTabGroup = new MTabGroup()..flex()
     ]);
 
     // Set up the tab group.
-    primaryTabGroup.tabs.add(new _MockTab('Execution'));
-    primaryTabGroup.tabs.add(new _MockTab('Libraries'));
-    primaryTabGroup.tabs.add(new _MockTab('Isolates'));
+    primaryTabGroup.tabs.add(new ExecutionTab(this, connection));
+    primaryTabGroup.tabs.add(new LibrariesTab(this, connection));
+    primaryTabGroup.tabs.add(new IsolatesTab(this, connection));
   }
 
   void _createSecondarySection(CoreElement section) {
@@ -187,7 +146,25 @@ class DebuggerView extends View {
     // Set up the tab group.
     secondaryTabGroup.tabs.add(new _MockTab('Eval'));
     secondaryTabGroup.tabs.add(new _MockTab('Watchpoints'));
-    secondaryTabGroup.tabs.add(breakpointsTab = new BreakpointsTab());
+    secondaryTabGroup.tabs.add(new BreakpointsTab());
+
+    disposables.addAll(primaryTabGroup.tabs.items);
+    disposables.addAll(secondaryTabGroup.tabs.items);
+  }
+
+  void _handleIsolatePaused(DebugIsolate isolate) {
+    focusManager.focusOn(isolate);
+  }
+
+  void _handleIsolateResumed(DebugIsolate isolate) {
+    focusManager.handleResumed(isolate);
+  }
+
+  void _handleIsolateTerminated(DebugIsolate isolate) {
+    if (focusManager.isolate == isolate) {
+      // TODO: find the next paused isolate; find any other isolate
+      focusManager.focusOn(null);
+    }
   }
 
   // TODO: Shorter title.
@@ -195,54 +172,63 @@ class DebuggerView extends View {
 
   String get id => viewIdForConnection(connection);
 
-  void dispose() {
-    // TODO:
-    breakpointsTab.dispose();
+  DebugIsolate get currentIsolate => focusManager.isolate;
+
+  void observeIsolate(callback(DebugIsolate isolate)) {
+    focusManager.observeIsolate(callback);
   }
 
-  // TODO: This is temporary.
-  // _pause() => connection.pause();
-  _resume() => connection.resume();
-  _stepIn() => connection.stepIn();
-  _stepOver() => connection.stepOver();
-  _stepOut() => connection.stepOut();
-  _terminate() => connection.terminate();
+  void dispose() {
+    subs.cancel();
+    flowControlSection.dispose();
+    disposables.dispose();
+  }
+
+  void _showTab(String id) {
+    if (primaryTabGroup.hasTabId(id)) {
+      primaryTabGroup.activateTabId(id);
+    }
+    if (secondaryTabGroup.hasTabId(id)) {
+      secondaryTabGroup.activateTabId(id);
+    }
+  }
 
   void _jumpToLocation(DebugLocation location, {bool addExecMarker: false}) {
-    if (statSync(location.path).isFile()) {
-      // TODO: Do we also want to adjust the cursor position?
-      editorManager.jumpToLocation(location.path).then((TextEditor editor) {
-        // Ensure that the execution point is visible.
-        editor.scrollToBufferPosition(
-            new Point.coords(location.line - 1, location.column - 1), center: true);
-
-        if (addExecMarker) {
-          _execMarker?.destroy();
-
-          // Update the execution location markers.
-          _execMarker = editor.markBufferRange(
-              debuggerCoordsToEditorRange(location.line, location.column),
-              persistent: false);
-
-          // The executing line color.
-          editor.decorateMarker(_execMarker, {
-            'type': 'line', 'class': 'debugger-executionpoint-line'
-          });
-
-          // The right-arrow.
-          editor.decorateMarker(_execMarker, {
-            'type': 'line-number', 'class': 'debugger-executionpoint-linenumber'
-          });
-
-          // The column marker.
-          editor.decorateMarker(_execMarker, {
-            'type': 'highlight', 'class': 'debugger-executionpoint-highlight'
-          });
-        }
-      });
-    } else {
+    if (!statSync(location.path).isFile()) {
       atom.notifications.addWarning("Cannot find file '${location.path}'.");
+      return;
     }
+
+    editorManager.jumpToLocation(location.path, location.line - 1, location.column - 1).then(
+        (TextEditor editor) {
+      // Ensure that the execution point is visible.
+      editor.scrollToBufferPosition(
+          new Point.coords(location.line - 1, location.column - 1), center: true);
+
+      if (addExecMarker) {
+        _execMarker?.destroy();
+
+        // Update the execution location markers.
+        _execMarker = editor.markBufferRange(
+            debuggerCoordsToEditorRange(location.line, location.column),
+            persistent: false);
+
+        // The executing line color.
+        editor.decorateMarker(_execMarker, {
+          'type': 'line', 'class': 'debugger-executionpoint-line'
+        });
+
+        // The right-arrow.
+        editor.decorateMarker(_execMarker, {
+          'type': 'line-number', 'class': 'debugger-executionpoint-linenumber'
+        });
+
+        // The column marker.
+        editor.decorateMarker(_execMarker, {
+          'type': 'highlight', 'class': 'debugger-executionpoint-highlight'
+        });
+      }
+    });
   }
 
   void _removeExecutionMarker() {
@@ -257,16 +243,254 @@ class _MockTab extends MTab {
   _MockTab(String name) : super(name.toLowerCase(), name) {
     content.toggleClass('under-construction');
     content.text = '${name}: under construction';
+  }
 
-    active.onChanged.listen((val) {
-      print(val ? 'activated $this' : 'deactivated $this');
+  void dispose() { }
+}
+
+class FlowControlSection implements Disposable {
+  final DebuggerView view;
+  final ObservatoryConnection connection;
+  final StreamSubscriptions subs = new StreamSubscriptions();
+
+  CoreElement resume;
+  CoreElement stepIn;
+  CoreElement stepOver;
+  CoreElement stepOut;
+  CoreElement stop;
+
+  CoreElement subtitle;
+
+  FlowControlSection(this.view, this.connection, CoreElement element) {
+    resume = button(c: 'btn icon-playback-play')..click(_resume);
+    stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
+    stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
+    stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
+    stop = button(c: 'btn icon-primitive-square')..click(_terminate);
+
+    CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
+      resume,
+      div()..flex(),
+      stepIn,
+      stepOver,
+      stepOut,
+      div()..flex(),
+      stop
+    ]);
+
+    // TODO: Pull down menu for switching between isolates.
+    element.add([
+      executionControlToolbar,
+      subtitle = div(c: 'debugger-section-subtitle', text: ' ')
+    ]);
+
+    view.observeIsolate(_handleIsolateChange);
+  }
+
+  void _handleIsolateChange(DebugIsolate isolate) {
+    stop.enabled = connection.isAlive;
+
+    if (isolate == null) {
+      resume.enabled = false;
+      stepIn.enabled = false;
+      stepOut.enabled = false;
+      stepOver.enabled = false;
+
+      subtitle.text = ' ';
+      view._removeExecutionMarker();
+
+      return;
+    }
+
+    bool suspended = isolate.suspended;
+
+    resume.enabled = suspended;
+    stepIn.enabled = suspended;
+    stepOut.enabled = suspended;
+    stepOver.enabled = suspended;
+
+    // Update the execution point.
+    if (suspended && isolate.hasFrames) {
+      // TODO: Do we always want to jump to this tab? Perhaps not when stepping.
+      view._showTab('execution');
+
+      // TODO: Select currentFrame instead.
+      isolate.frames.first.location.resolve().then((DebugLocation location) {
+        view._removeExecutionMarker();
+
+        if (location.resolvedPath) {
+          view._jumpToLocation(location, addExecMarker: true);
+        }
+      });
+    } else {
+      view._removeExecutionMarker();
+    }
+
+    if (suspended) {
+      subtitle.text = 'Isolate ${isolate.name} (paused)';
+    } else {
+      subtitle.text = 'Isolate ${isolate.name}';
+    }
+  }
+
+  _resume() => view.currentIsolate?.resume();
+  _stepIn() => view.currentIsolate?.stepIn();
+  _stepOver() => view.currentIsolate?.stepOver();
+  _stepOut() => view.currentIsolate?.stepOut();
+
+  _terminate() => connection.terminate();
+
+  void dispose() => subs.cancel();
+}
+
+class ExecutionTab extends MTab {
+  final DebuggerView view;
+  final DebugConnection connection;
+  final StreamSubscriptions subs = new StreamSubscriptions();
+
+  MList<DebugFrame> list;
+
+  ExecutionTab(this.view, this.connection) : super('execution', 'Execution') {
+    content..layoutVertical()..flex();
+    content.add([
+      list = new MList(_render)..flex()
+    ]);
+
+    list.selectedItem.onChanged.listen(_selectFrame);
+    list.onDoubleClick.listen(_selectFrame);
+
+    view.observeIsolate(_updateFrames);
+  }
+
+  void _updateFrames(DebugIsolate isolate) {
+    // TODO: When stepping, only remove the frames after a short delay.
+
+    List<DebugFrame> frames = isolate?.frames;
+    if (frames == null) frames = [];
+    list.update(frames);
+
+    // TODO: Listen to a frame focus manager for this.
+    if (frames.isNotEmpty) {
+      list.selectItem(frames.first);
+    }
+  }
+
+  void _render(DebugFrame frame, CoreElement element) {
+    // TODO:
+    String locationText = _displayUri(frame.location.displayPath);
+
+    // TODO: when the location resolves, update the icon?
+
+    element..add([
+      span(text: frame.title, c: 'icon icon-code'),
+      span(
+        text: locationText,
+        c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
+      )..flex()
+    ])..layoutHorizontal();
+  }
+
+  void _selectFrame(DebugFrame frame) {
+    if (frame == null) return;
+
+    frame.location.resolve().then((DebugLocation location) {
+      if (location.resolvedPath) view._jumpToLocation(location);
     });
   }
+
+  void dispose() => subs.dispose();
+}
+
+// TODO: Show (expandable) library properties as well.
+class LibrariesTab extends MTab {
+  final DebuggerView view;
+  final DebugConnection connection;
+  MList<ObservatoryLibrary> list;
+
+  LibrariesTab(this.view, this.connection) : super('libraries', 'Libraries') {
+    content..layoutVertical()..flex();
+    content.add([
+      list = new MList(
+        _render,
+        sort: _sort,
+        filter: _filter
+      )..flex()
+    ]);
+
+    // TODO: On double click, jump to the library source.
+    // list.onDoubleClick.listen(_selectIsolate);
+
+    view.observeIsolate(_updateLibraries);
+  }
+
+  void _updateLibraries(DebugIsolate isolate) {
+    if (isolate is ObservatoryIsolate) {
+      ObservatoryIsolate obsIsolate = isolate;
+      List<ObservatoryLibrary> libraries = obsIsolate.libraries;
+      list.update(libraries == null ? [] : libraries);
+    } else {
+      list.update([]);
+    }
+  }
+
+  void _render(ObservatoryLibrary lib, CoreElement element) {
+    element..add([
+      span(text: lib.name, c: 'icon icon-repo'),
+      span(
+        text: _displayUri(lib.uri),
+        c: 'debugger-secondary-info overflow-hidden-ellipsis'
+      )..flex()
+    ])..layoutHorizontal();
+  }
+
+  // TODO: sort by short uri name
+  int _sort(ObservatoryLibrary a, ObservatoryLibrary b) => a.compareTo(b);
+
+  bool _filter(ObservatoryLibrary lib) => lib.private;
+
+  void dispose() { }
+}
+
+class IsolatesTab extends MTab {
+  final DebuggerView view;
+  final DebugConnection connection;
+
+  MList<DebugIsolate> list;
+  StreamSubscriptions subs = new StreamSubscriptions();
+
+  IsolatesTab(this.view, this.connection) : super('isolates', 'Isolates') {
+    content..layoutVertical()..flex();
+    content.add([
+      list = new MList(_render)..flex()
+    ]);
+
+    list.onDoubleClick.listen(_handleSelectIsolate);
+
+    subs.add(connection.isolates.observeMutation((_) => _updateIsolates()));
+  }
+
+  void _updateIsolates() {
+    list.update(connection.isolates.items);
+  }
+
+  void _render(DebugIsolate isolate, CoreElement element) {
+    // TODO: pause button, pause state
+    element..add([
+      span(text: isolate.name, c: 'icon icon-versions'),
+      span(text: isolate.detail, c: 'debugger-secondary-info overflow-hidden-ellipsis')
+    ]);
+  }
+
+  void _handleSelectIsolate(DebugIsolate isolate) {
+    view.focusManager.focusOn(isolate);
+  }
+
+  void dispose() => subs.dispose();
 }
 
 class BreakpointsTab extends MTab {
   _TabTitlebar titlebar;
-  MList list;
+  MList<AtomBreakpoint> list;
   StreamSubscriptions subs = new StreamSubscriptions();
 
   BreakpointsTab() : super('breakpoints', 'Breakpoints') {
@@ -285,7 +509,8 @@ class BreakpointsTab extends MTab {
     // Set up the list.
     _update();
 
-    // TODO: Support listening for breakpoint change events.
+    // TODO: Support listening for breakpoint property change events.
+
     subs.add(breakpointManager.onAdd.listen(_update));
     subs.add(breakpointManager.onRemove.listen(_update));
   }
@@ -310,7 +535,7 @@ class BreakpointsTab extends MTab {
       pathText = basename(rel[0]) + ' ' + rel[1];
     }
 
-    String lineText = ' line ${bp.line}';
+    String lineText = 'line ${bp.line}';
     if (bp.column != null) lineText += ':${bp.column}';
 
     var handleDelete = () {
@@ -321,7 +546,7 @@ class BreakpointsTab extends MTab {
       span(c: 'icon-primitive-dot debugger-breakpoint-icon'),
       div(c: 'overflow-hidden-ellipsis')..flex()..add([
         span(text: pathText, c: 'debugger-breakpoint-path')..tooltip = bp.path,
-        span(text: lineText, c: 'text-subtle')
+        span(text: lineText, c: 'debugger-secondary-info')
       ]),
       new MIconButton('icon-x')..click(handleDelete)
     ])..layoutHorizontal();
@@ -333,6 +558,40 @@ class BreakpointsTab extends MTab {
   }
 
   void dispose() => subs.dispose();
+}
+
+class FocusManager {
+  DebugIsolate _isolate;
+  List _listeners = [];
+
+  FocusManager();
+
+  DebugIsolate get isolate => _isolate;
+
+  void observeIsolate(callback(DebugIsolate isolate)) {
+    callback(isolate);
+    _listeners.add(callback);
+  }
+
+  void focusOn(DebugIsolate isolate) {
+    _isolate = isolate;
+    _notifyIsolateListeners();
+  }
+
+  void handleResumed(DebugIsolate isolate) {
+    if (_isolate == isolate) {
+      _notifyIsolateListeners();
+    }
+  }
+
+  void _notifyIsolateListeners() {
+    for (dynamic callback in _listeners) {
+      callback(isolate);
+    }
+  }
+
+  // TODO: frame focus
+
 }
 
 class _TabTitlebar extends CoreElement {
@@ -351,4 +610,15 @@ class _TabTitlebar extends CoreElement {
   set title(String value) {
     titleElement.text = value;
   }
+}
+
+String _displayUri(String uri) {
+  if (uri == null) return null;
+
+  if (uri.startsWith('file:')) {
+    String path = Uri.parse(uri).toFilePath();
+    return atom.project.relativizePath(path)[1];
+  }
+
+  return uri;
 }

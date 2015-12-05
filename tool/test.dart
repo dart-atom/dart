@@ -3,6 +3,7 @@ library foo_test;
 import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:io';
+import 'dart:isolate';
 
 void main(List<String> args) {
   print('args: ${args}');
@@ -14,13 +15,14 @@ void main(List<String> args) {
   Cat pebbles;
   Dog fido = new Dog(Dog.FIDO_NAME);
 
+  Timer.run(() => print('timer 1'));
+
+  Timer.run(_handleTimer);
+
   dev.registerExtension('foo', _fooHandler);
 
   // dev.log('log from test');
-
-  // TODO: Handle this.
   // dev.Timeline.timeSync('frame', _mockFrame);
-
   // dev.inspect(fido);
 
   // int i = 0;
@@ -34,6 +36,8 @@ void main(List<String> args) {
   print('foo 1');
   print('foo 2');
   print('foo 3');
+
+  // startIsolates(4);
 
   // dev.log('log from test', name: 'test', level: 1);
   // dev.Timeline.timeSync('frame', _mockFrame);
@@ -55,6 +59,9 @@ void main(List<String> args) {
   print(animals);
 
   fido.bark();
+
+  // Demonstrates a game with 3 discs on pegs labeled '1', '2' and '3'.
+  hanoi(4, '1', '2', '3');
 }
 
 abstract class Animal {
@@ -76,7 +83,28 @@ class Dog extends Animal {
 
   Dog(String name) : super(name);
 
-  void bark() => print('woof!');
+  void bark() {
+    print('woof!');
+  }
+}
+
+String say(String from, String to) => "move $from -> $to";
+
+// Makes a move and recursively triggers next moves, if any.
+void hanoi(int discs, String a, String b, String c) {
+  // Makes a move only if there are discs.
+  if (discs > 0) {
+    if (discs == 1 && a == '1') dev.debugger();
+
+    // Announces this move, from A to C.
+    print('[${discs}] ${say(a, c)}');
+
+    // Triggers the next step: from A to B.
+    hanoi(discs - 1, a, c, b);
+
+    // Triggers the last step: from B to C.
+    hanoi(discs - 1, b, a, c);
+  }
 }
 
 // dynamic _mockFrame() {
@@ -87,8 +115,33 @@ class Dog extends Animal {
 //   return names.map((name) => new Dog(name)).toList();
 // }
 
+void _handleTimer() {
+  print('timer 2');
+}
+
 Future<dev.ServiceExtensionResponse> _fooHandler(String method, Map parameters) {
   print('handling ${method}');
   print('params: ${parameters}');
   return new Future.value(new dev.ServiceExtensionResponse.result('bar'));
+}
+
+void startIsolates(int count) {
+  if (count == 0) return;
+
+  startIsolate(count * 4);
+
+  startIsolates(count - 1);
+  startIsolates(count - 1);
+}
+
+Future<Isolate> startIsolate(int seconds) {
+  return Isolate.spawn(isolateEntryPoint, seconds);
+}
+
+void isolateEntryPoint(int seconds) {
+  print('[${Isolate.current}] starting');
+  print('[${Isolate.current}] running for ${seconds} seconds...');
+  new Timer(new Duration(seconds: seconds), () {
+    print('[${Isolate.current}] exiting');
+  });
 }

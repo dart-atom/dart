@@ -6,10 +6,12 @@ import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
-import '../launch/launch.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'debugger_ui.dart';
+import 'model.dart';
+
+export 'model.dart' show DebugConnection;
 
 final Logger _logger = new Logger('atom.debugger');
 
@@ -42,9 +44,9 @@ class DebugManager implements Disposable {
     };
     add('debug-run', _handleDebugRun);
     add('debug-terminate', () => activeConnection?.terminate());
-    add('debug-stepout', () => activeConnection?.stepOut());
-    add('debug-step', () => activeConnection?.stepOver());
     add('debug-stepin', () => activeConnection?.stepIn());
+    add('debug-step', () => activeConnection?.stepOver());
+    add('debug-stepout', () => activeConnection?.stepOut());
   }
 
   Stream<DebugConnection> get onAdded => _addedController.stream;
@@ -82,78 +84,6 @@ class DebugManager implements Disposable {
     disposables.dispose();
     connections.toList().forEach((c) => c.dispose());
   }
-}
-
-abstract class DebugConnection {
-  final Launch launch;
-
-  DebugConnection(this.launch);
-
-  bool get isAlive;
-  bool get isSuspended;
-
-  // TODO: temporary
-  DebugIsolate get isolate;
-
-  DebugFrame get topFrame;
-
-  pause();
-  Future resume();
-  stepIn();
-  stepOver();
-  stepOut();
-  terminate();
-
-  Stream<bool> get onSuspendChanged;
-
-  Future get onTerminated;
-
-  void dispose();
-}
-
-/// A representation of a VM Isolate.
-abstract class DebugIsolate {
-  DebugIsolate();
-
-  String get name;
-}
-
-abstract class DebugFrame {
-  DebugFrame();
-
-  String get title;
-
-  String get cursorDescription;
-
-  List<DebugVariable> get locals;
-
-  Future<DebugLocation> getLocation();
-
-  Future<String> eval(String expression);
-
-  String toString() => title;
-}
-
-abstract class DebugVariable {
-  DebugVariable();
-
-  String get name;
-  String get valueDescription;
-
-  String toString() => name;
-}
-
-class DebugLocation {
-  /// A file path;
-  final String path;
-  /// 1-based line number.
-  final int line;
-  /// 1-based column number.
-  final int column;
-
-  DebugLocation(this.path, this.line, this.column);
-
-  String toString() => '${path} ${line}:${column}';
 }
 
 /// A class to translate from one name-space to another.
