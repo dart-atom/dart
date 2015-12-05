@@ -110,6 +110,7 @@ class ObservatoryConnection extends DebugConnection {
 
   // TODO: What's the current isolate? Ask the UI? Ask the isolates list?
   // TODO: Have pausing change the isolates selection.
+
   Future resume() => isolate.resume();
   stepIn() => isolate.stepIn();
   stepOver() => isolate.stepOver();
@@ -423,6 +424,7 @@ class ObservatoryIsolate extends DebugIsolate {
   /*final*/ IsolateRef isolateRef;
   Isolate isolate;
   ScriptManager scriptManager;
+  bool suspended = false;
 
   ObservatoryIsolate._(this.connection, this.service, this.isolateRef) {
     scriptManager = new ScriptManager(service, this);
@@ -432,7 +434,7 @@ class ObservatoryIsolate extends DebugIsolate {
 
   String get detail => isolateRef?.number;
 
-  String get id => isolateRef.id;
+  String get id => isolateRef?.id;
 
   List<DebugFrame> frames;
 
@@ -447,7 +449,7 @@ class ObservatoryIsolate extends DebugIsolate {
   void _suspend(bool value) {
     if (!value) frames = null;
 
-    suspended.value = value;
+    suspended = value;
 
     if (value) {
       connection._isolatePaused.add(this);
@@ -459,7 +461,6 @@ class ObservatoryIsolate extends DebugIsolate {
   pause() => service.pause(isolateRef.id);
   Future resume() => service.resume(isolateRef.id);
 
-  // TODO: only on suspend.
   stepIn() => service.resume(isolateRef.id, step: StepOption.kInto);
   stepOver() => service.resume(isolateRef.id, step: StepOption.kOver);
   stepOut() => service.resume(isolateRef.id, step: StepOption.kOut);
@@ -492,6 +493,11 @@ class ObservatoryIsolate extends DebugIsolate {
 
       return scriptManager.loadAllScripts(scriptRefs);
     });
+  }
+
+  bool operator==(other) {
+    if (other is! ObservatoryIsolate) return false;
+    return id == other.id;
   }
 
   String toString() => 'Isolate ${name}';

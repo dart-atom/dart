@@ -156,8 +156,10 @@ class Property<T> {
 
   T get value => _value;
   set value(T v) {
-    _value = v;
-    _controller.add(_value);
+    if (_value != v) {
+      _value = v;
+      _controller.add(_value);
+    }
   }
 
   bool get hasValue => _value != null;

@@ -50,8 +50,8 @@ class DebuggerView extends View {
 
   final DebugConnection connection;
 
-  final Property<DebugIsolate> currentIsolate = new Property();
-  final Property<DebugFrame> currentFrame = new Property();
+  FocusManager focusManager = new FocusManager();
+  // final Property<DebugFrame> currentFrame = new Property();
 
   StreamSubscriptions subs = new StreamSubscriptions();
 
@@ -94,10 +94,6 @@ class DebuggerView extends View {
     subs.add(connection.onPaused.listen(_handleIsolatePaused));
     subs.add(connection.onResumed.listen(_handleIsolateResumed));
     subs.add(connection.isolates.onRemoved.listen(_handleIsolateTerminated));
-
-    // currentIsolate.observe((DebugIsolate isolate) {
-    //   print('current isolate: ${isolate}');
-    // });
   }
 
   void _createTitleSection(CoreElement section) {
@@ -157,18 +153,17 @@ class DebuggerView extends View {
   }
 
   void _handleIsolatePaused(DebugIsolate isolate) {
-    currentIsolate.value = isolate;
+    focusManager.focusOn(isolate);
   }
 
   void _handleIsolateResumed(DebugIsolate isolate) {
-    // TODO: Instead of this, invoke registered callbacks.
-    currentIsolate.value = isolate;
+    focusManager.handleResumed(isolate);
   }
 
   void _handleIsolateTerminated(DebugIsolate isolate) {
-    if (currentIsolate.value == isolate) {
+    if (focusManager.isolate == isolate) {
       // TODO: find the next paused isolate; find any other isolate
-      currentIsolate.value = null;
+      focusManager.focusOn(null);
     }
   }
 
@@ -176,6 +171,12 @@ class DebuggerView extends View {
   String get label => 'Debug ${connection.launch.name}';
 
   String get id => viewIdForConnection(connection);
+
+  DebugIsolate get currentIsolate => focusManager.isolate;
+
+  void observeIsolate(callback(DebugIsolate isolate)) {
+    focusManager.observeIsolate(callback);
+  }
 
   void dispose() {
     subs.cancel();
@@ -260,8 +261,6 @@ class FlowControlSection implements Disposable {
 
   CoreElement subtitle;
 
-  DebugIsolate _isolate;
-
   FlowControlSection(this.view, this.connection, CoreElement element) {
     resume = button(c: 'btn icon-playback-play')..click(_resume);
     stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
@@ -285,20 +284,13 @@ class FlowControlSection implements Disposable {
       subtitle = div(c: 'debugger-section-subtitle', text: ' ')
     ]);
 
-    view.currentIsolate.observe(_handleIsolateChange);
+    view.observeIsolate(_handleIsolateChange);
   }
 
   void _handleIsolateChange(DebugIsolate isolate) {
-    // The current isolate has changed.
-    _isolate = isolate;
-
-    _updateUI();
-  }
-
-  void _updateUI() {
     stop.enabled = connection.isAlive;
 
-    if (_isolate == null) {
+    if (isolate == null) {
       resume.enabled = false;
       stepIn.enabled = false;
       stepOut.enabled = false;
@@ -310,7 +302,8 @@ class FlowControlSection implements Disposable {
       return;
     }
 
-    bool suspended = _isolate.isSuspended;
+    bool suspended = isolate.suspended;
+    print('isolate ${isolate?.name} suspended $suspended');
 
     resume.enabled = suspended;
     stepIn.enabled = suspended;
@@ -318,12 +311,12 @@ class FlowControlSection implements Disposable {
     stepOver.enabled = suspended;
 
     // Update the execution point.
-    if (suspended && _isolate.hasFrames) {
+    if (suspended && isolate.hasFrames) {
       // TODO: Do we always want to jump to this tab? Perhaps not when stepping.
       view._showTab('execution');
 
       // TODO: Select currentFrame instead.
-      _isolate.frames.first.location.resolve().then((DebugLocation location) {
+      isolate.frames.first.location.resolve().then((DebugLocation location) {
         view._removeExecutionMarker();
 
         if (location.resolvedPath) {
@@ -335,16 +328,16 @@ class FlowControlSection implements Disposable {
     }
 
     if (suspended) {
-      subtitle.text = 'Isolate ${_isolate.name} (paused)';
+      subtitle.text = 'Isolate ${isolate.name} (paused)';
     } else {
-      subtitle.text = 'Isolate ${_isolate.name}';
+      subtitle.text = 'Isolate ${isolate.name}';
     }
   }
 
-  _resume() => _isolate?.resume();
-  _stepIn() => _isolate?.stepIn();
-  _stepOver() => _isolate?.stepOver();
-  _stepOut() => _isolate?.stepOut();
+  _resume() => view.currentIsolate?.resume();
+  _stepIn() => view.currentIsolate?.stepIn();
+  _stepOver() => view.currentIsolate?.stepOver();
+  _stepOut() => view.currentIsolate?.stepOut();
 
   _terminate() => connection.terminate();
 
@@ -367,33 +360,18 @@ class ExecutionTab extends MTab {
     list.selectedItem.onChanged.listen(_selectFrame);
     list.onDoubleClick.listen(_selectFrame);
 
-    // if (connection.isolate.suspended.value) {
-    //   updateFrames(connection.isolate.frames);
-    // }
-    //
-    // connection.isolate.suspended.onChanged.listen((bool suspend) {
-    //   if (suspend) {
-    //     updateFrames(connection.isolate.frames);
-    //   } else {
-    //     // TODO: if suspend == false, then remove the frames after a delay
-    //
-    //   }
-    // });
-
-    // ***
-    // TODO: add a util method in view, observeIsolateState
-    // ***
-
-    // TODO: Listen to currentIsolate.
-    view.currentIsolate.observe(_updateFrames);
+    view.observeIsolate(_updateFrames);
   }
 
-  void _updateFrames(DebugIsolate isolate, {bool selectTop: true}) {
+  void _updateFrames(DebugIsolate isolate) {
+    // TODO: When stepping, only remove the frames after a short delay.
+
     List<DebugFrame> frames = isolate?.frames;
     if (frames == null) frames = [];
     list.update(frames);
 
-    if (selectTop && frames.isNotEmpty) {
+    // TODO: Listen to a frame focus manager for this.
+    if (frames.isNotEmpty) {
       list.selectItem(frames.first);
     }
   }
@@ -443,12 +421,12 @@ class LibrariesTab extends MTab {
     // TODO: On double click, jump to the library source.
     // list.onDoubleClick.listen(_selectIsolate);
 
-    view.currentIsolate.observe(_updateLibraries);
+    view.observeIsolate(_updateLibraries);
   }
 
-  void _updateLibraries([_]) {
-    if (view.currentIsolate.value is ObservatoryIsolate) {
-      ObservatoryIsolate obsIsolate = view.currentIsolate.value;
+  void _updateLibraries(DebugIsolate isolate) {
+    if (isolate is ObservatoryIsolate) {
+      ObservatoryIsolate obsIsolate = isolate;
       List<ObservatoryLibrary> libraries = obsIsolate.libraries;
       list.update(libraries == null ? [] : libraries);
     } else {
@@ -505,8 +483,7 @@ class IsolatesTab extends MTab {
   }
 
   void _handleSelectIsolate(DebugIsolate isolate) {
-    // TODO: Not all parts of the UI listen to currentIsolate.
-    // view.currentIsolate.value = isolate;
+    view.focusManager.focusOn(isolate);
   }
 
   void dispose() => subs.dispose();
@@ -582,6 +559,40 @@ class BreakpointsTab extends MTab {
   }
 
   void dispose() => subs.dispose();
+}
+
+class FocusManager {
+  DebugIsolate _isolate;
+  List _listeners = [];
+
+  FocusManager();
+
+  DebugIsolate get isolate => _isolate;
+
+  void observeIsolate(callback(DebugIsolate isolate)) {
+    callback(isolate);
+    _listeners.add(callback);
+  }
+
+  void focusOn(DebugIsolate isolate) {
+    _isolate = isolate;
+    _notifyIsolateListeners();
+  }
+
+  void handleResumed(DebugIsolate isolate) {
+    if (_isolate == isolate) {
+      _notifyIsolateListeners();
+    }
+  }
+
+  void _notifyIsolateListeners() {
+    for (dynamic callback in _listeners) {
+      callback(isolate);
+    }
+  }
+
+  // TODO: frame focus
+
 }
 
 class _TabTitlebar extends CoreElement {

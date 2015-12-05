@@ -37,7 +37,7 @@ void main(List<String> args) {
   print('foo 2');
   print('foo 3');
 
-  // startIsolates(5);
+  startIsolates(5);
 
   // dev.log('log from test', name: 'test', level: 1);
   // dev.Timeline.timeSync('frame', _mockFrame);

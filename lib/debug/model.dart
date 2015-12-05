@@ -31,19 +31,17 @@ abstract class DebugConnection {
   void dispose();
 }
 
+// TODO: Add an IsolateState class.
+
 /// A representation of a VM Isolate.
 abstract class DebugIsolate {
-  final Property<bool> suspended = new Property(false);
-
   DebugIsolate();
 
   String get name;
 
   String get detail;
 
-  bool get isSuspended => suspended.value;
-
-  // TODO: state
+  bool get suspended;
 
   bool get hasFrames => frames != null && frames.isNotEmpty;
 
