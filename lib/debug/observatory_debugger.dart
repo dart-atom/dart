@@ -400,11 +400,11 @@ class ObservatoryIsolate extends DebugIsolate {
     _detail = '#${connection._nextIsolateId++}';
   }
 
-  String get name => isolateRef?.name;
+  String get name => isolateRef.name;
 
   String get detail => _detail;
 
-  String get id => isolateRef?.id;
+  String get id => isolateRef.id;
 
   List<DebugFrame> frames;
 
@@ -474,6 +474,8 @@ class ObservatoryIsolate extends DebugIsolate {
     });
   }
 
+  int get hashCode => id.hashCode;
+
   bool operator==(other) {
     if (other is! ObservatoryIsolate) return false;
     return id == other.id;
@@ -540,7 +542,7 @@ class ObservatoryVariable extends DebugVariable {
     if (variable.value is InstanceRef) {
       return new ObservatoryValue(isolate, variable.value);
     } else if (variable.value is Sentinel) {
-      return new SentenalValue(variable.value);
+      return new SentinelDebugValue(variable.value);
     } else {
       return null;
     }
@@ -561,7 +563,7 @@ class ObservatoryFieldVariable extends DebugVariable {
     if (field.value is InstanceRef) {
       return new ObservatoryValue(isolate, field.value);
     } else if (field.value is Sentinel) {
-      return new SentenalValue(field.value);
+      return new SentinelDebugValue(field.value);
     } else {
       return null;
     }
@@ -609,10 +611,10 @@ class ObservatoryValue extends DebugValue {
   String get valueAsString => value.valueAsString;
 }
 
-class SentenalValue extends DebugValue {
+class SentinelDebugValue extends DebugValue {
   final Sentinel sentenial;
 
-  SentenalValue(this.sentenial);
+  SentinelDebugValue(this.sentenial);
 
   String get className => null;
 

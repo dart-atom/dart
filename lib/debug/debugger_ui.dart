@@ -403,7 +403,7 @@ class ExecutionTab extends MTab {
     });
 
     List<DebugVariable> vars = frame.locals;
-    locals.update(vars == null ? [] : vars);
+    locals.update(vars ?? []);
   }
 
   void _renderVariable(DebugVariable local, CoreElement element) {
