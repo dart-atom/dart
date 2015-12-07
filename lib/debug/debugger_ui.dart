@@ -14,6 +14,7 @@ import 'debugger.dart';
 import 'model.dart';
 import 'observatory_debugger.dart';
 import 'utils.dart';
+import 'dart:async';
 
 final Logger _logger = new Logger('atom.debugger_ui');
 
@@ -263,9 +264,9 @@ class FlowControlSection implements Disposable {
 
   FlowControlSection(this.view, this.connection, CoreElement element) {
     resume = button(c: 'btn icon-playback-play')..click(_resume);
-    stepIn = button(c: 'btn icon-chevron-down')..click(_stepIn);
-    stepOver = button(c: 'btn icon-chevron-right')..click(_stepOver);
-    stepOut = button(c: 'btn icon-chevron-up')..click(_stepOut);
+    stepIn = button(c: 'btn icon-jump-down')..click(_stepIn);
+    stepOver = button(c: 'btn icon-jump-right')..click(_stepOver);
+    stepOut = button(c: 'btn icon-jump-up')..click(_stepOut);
     stop = button(c: 'btn icon-primitive-square')..click(_terminate);
 
     CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
@@ -349,11 +350,13 @@ class ExecutionTab extends MTab {
   final StreamSubscriptions subs = new StreamSubscriptions();
 
   MList<DebugFrame> list;
+  MTree<DebugVariable> locals;
 
   ExecutionTab(this.view, this.connection) : super('execution', 'Execution') {
     content..layoutVertical()..flex();
     content.add([
-      list = new MList(_render)..flex()
+      list = new MList(_renderFrame)..toggleClass('debugger-frame-area'),
+      locals = new MTree(new _LocalTreeModel(), _renderVariable)..flex()
     ]);
 
     list.selectedItem.onChanged.listen(_selectFrame);
@@ -375,14 +378,13 @@ class ExecutionTab extends MTab {
     }
   }
 
-  void _render(DebugFrame frame, CoreElement element) {
-    // TODO:
+  void _renderFrame(DebugFrame frame, CoreElement element) {
+    String style = frame.isSystem ? 'icon icon-diff-removed' : 'icon icon-diff-modified';
     String locationText = _displayUri(frame.location.displayPath);
 
-    // TODO: when the location resolves, update the icon?
-
     element..add([
-      span(text: frame.title, c: 'icon icon-code'),
+      span(c: style),
+      span(text: frame.title),
       span(
         text: locationText,
         c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
@@ -391,14 +393,56 @@ class ExecutionTab extends MTab {
   }
 
   void _selectFrame(DebugFrame frame) {
-    if (frame == null) return;
+    if (frame == null) {
+      locals.update([]);
+      return;
+    }
 
     frame.location.resolve().then((DebugLocation location) {
       if (location.resolvedPath) view._jumpToLocation(location);
     });
+
+    List<DebugVariable> vars = frame.locals;
+    locals.update(vars == null ? [] : vars);
+  }
+
+  void _renderVariable(DebugVariable local, CoreElement element) {
+    DebugValue value = local.value;
+    String valueText;
+
+    if (value.isString) {
+      // TODO: Escape quotes?
+      valueText = "'${value.valueAsString}'";
+    } else if (value.isList) {
+      valueText = 'List[${value.itemsLength}]';
+    } else if (value.isMap) {
+      valueText = 'Map{${value.itemsLength}}';
+    } else if (value.itemsLength != null) {
+      valueText = '${value.className}[${value.itemsLength}]';
+    } else if (value.isPlainInstance) {
+      valueText = '[${value.className}]';
+    } else {
+      valueText = value.valueAsString;
+    }
+
+    element..add([
+      span(text: local.name),
+      span(text: valueText, c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned')..flex()
+    ])..layoutHorizontal();
   }
 
   void dispose() => subs.dispose();
+}
+
+class _LocalTreeModel extends TreeModel<DebugVariable> {
+  bool canHaveChildren(DebugVariable variable) {
+    DebugValue value = variable.value;
+    return !value.isPrimitive;
+  }
+
+  Future<List<DebugVariable>> getChildren(DebugVariable obj) {
+    return obj.value.getChildren();
+  }
 }
 
 // TODO: Show (expandable) library properties as well.

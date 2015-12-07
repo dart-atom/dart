@@ -56,6 +56,8 @@ abstract class DebugFrame {
 
   String get title;
 
+  bool get isSystem;
+
   List<DebugVariable> get locals;
 
   DebugLocation get location;
@@ -66,12 +68,29 @@ abstract class DebugFrame {
 }
 
 abstract class DebugVariable {
-  DebugVariable();
-
   String get name;
-  String get valueDescription;
+  DebugValue get value;
 
   String toString() => name;
+}
+
+abstract class DebugValue {
+  String get className;
+
+  String get valueAsString;
+
+  bool get isPrimitive;
+  bool get isString;
+  bool get isPlainInstance;
+  bool get isList;
+  bool get isMap;
+
+  int get itemsLength;
+
+  // TODO: This will need to be iterated on to better handle things like arrays.
+  Future<List<DebugVariable>> getChildren();
+
+  String toString() => valueAsString;
 }
 
 abstract class DebugLocation {

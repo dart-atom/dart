@@ -35,6 +35,7 @@
   .material-tab-container {
     overflow-x: hidden;
     display: flex;
+    margin-bottom: 2px;
   }
 
   .material-tab {
@@ -104,6 +105,15 @@
   {
     color: @text-color-selected;
     background-color: @background-color-selected;
+  }
+
+  ul.material-list-indent {
+    margin-left: @component-icon-padding + @component-icon-size;
+  }
+
+  .icon-triangle-right::before {
+    position: relative;
+    left: 3px;
   }
 }
 

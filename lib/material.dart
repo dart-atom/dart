@@ -138,22 +138,14 @@ class MList<T> extends CoreElement {
 
     T _sel = selectedItem.value;
 
-    for (T item in modelObjects) {
-      CoreElement element = _ul.add(li());
+    _populateChildren(modelObjects, _ul);
 
-      renderer(item, element);
-      _itemToElement[item] = element;
-
-      element.click(() {
-        selectItem(item);
-      });
-
-      element.dblclick(() {
-        _doubleClick.add(item);
-      });
-
-      if (_sel == item) {
-        element.toggleClass('material-list-selected', true);
+    if (_sel != null) {
+      if (_itemToElement[_sel] != null) {
+        CoreElement e = _itemToElement[_sel];
+        e.toggleClass('material-list-selected', true);
+      } else {
+        selectedItem.value = null;
       }
     }
   }
@@ -174,5 +166,75 @@ class MList<T> extends CoreElement {
     }
   }
 
+  void _populateChildren(List<T> modelObjects, CoreElement container) {
+    for (T item in modelObjects) {
+      CoreElement element = container.add(li());
+
+      _render(item, element);
+      _itemToElement[item] = element;
+
+      element.click(() {
+        selectItem(item);
+      });
+
+      element.dblclick(() {
+        _doubleClick.add(item);
+      });
+    }
+  }
+
+  void _render(T item, CoreElement element) {
+    renderer(item, element);
+  }
+
   Stream<T> get onDoubleClick => _doubleClick.stream;
+}
+
+abstract class TreeModel<T> {
+  bool canHaveChildren(T obj);
+  Future<List<T>> getChildren(T obj);
+}
+
+// TODO: restore expansion state between update() calls
+
+class MTree<T> extends MList<T> {
+  final TreeModel treeModel;
+
+  MTree(this.treeModel, ListRenderer renderer, {ListFilter filter}) :
+      super(renderer, filter: filter);
+
+  void _render(T item, CoreElement element) {
+    if (treeModel.canHaveChildren(item)) {
+      CoreElement e;
+      CoreElement childContainer;
+
+      element.add(
+        e = span(c: 'icon-triangle-right')
+      );
+
+      e.click(() {
+        e.toggleClass('icon-triangle-right');
+        e.toggleClass('icon-triangle-down');
+
+        if (childContainer == null) {
+          childContainer = ul(c: 'material-list-indent');
+          // TODO: show feedback during an expansion
+          // TODO: handle errors
+          treeModel.getChildren(item).then((List<T> items) {
+            _populateChildren(items, childContainer);
+          });
+          int index = element.element.parent.children.indexOf(element.element);
+          element.element.parent.children.insert(index + 1, childContainer.element);
+        } else {
+          childContainer.hidden(!childContainer.hasAttribute('hidden'));
+        }
+      });
+    } else {
+      element.add(
+        span(c: 'icon-triangle-right visibility-hidden')
+      );
+    }
+
+    super._render(item, element);
+  }
 }

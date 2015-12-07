@@ -13,7 +13,7 @@ void main(List<String> args) {
   int count = 78;
 
   Cat pebbles;
-  Dog fido = new Dog(Dog.FIDO_NAME);
+  Dog fido = new Dog(Dog.FIDO_NAME, parent: new Dog('Sam'));
 
   Timer.run(() => print('timer 1'));
 
@@ -36,6 +36,8 @@ void main(List<String> args) {
   print('foo 1');
   print('foo 2');
   print('foo 3');
+
+  print('calcRecursive: ${calcRecursive(300)}');
 
   // startIsolates(4);
 
@@ -66,8 +68,9 @@ void main(List<String> args) {
 
 abstract class Animal {
   final String name;
+  final Animal parent;
 
-  Animal(this.name);
+  Animal(this.name, {this.parent});
 
   String toString() => '[${runtimeType} ${name}]';
 }
@@ -81,7 +84,7 @@ class Cat extends Animal {
 class Dog extends Animal {
   static String FIDO_NAME = 'Fido';
 
-  Dog(String name) : super(name);
+  Dog(String name, {Dog parent}) : super(name, parent: parent);
 
   void bark() {
     print('woof!');
@@ -144,4 +147,12 @@ void isolateEntryPoint(int seconds) {
   new Timer(new Duration(seconds: seconds), () {
     print('[${Isolate.current}] exiting');
   });
+}
+
+int calcRecursive(int depth) {
+  if (depth == 0) {
+    return 1;
+  } else {
+    return depth + calcRecursive(depth - 1);
+  }
 }
