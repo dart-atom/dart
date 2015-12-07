@@ -243,7 +243,7 @@ class _ProjectConfigurations implements Disposable {
   StreamSubscription _sub;
 
   _ProjectConfigurations(this.projectPath, this.launchDir) {
-    _sub = launchDir.onDidChange.listen((_) => _configs = null);
+    _listenToLaunchDir();
   }
 
   List<LaunchConfiguration> getConfigs() {
@@ -268,10 +268,18 @@ class _ProjectConfigurations implements Disposable {
     } else {
       file.create().then((_) {
         file.writeSync(contents);
+
+        _listenToLaunchDir();
       });
     }
 
     return new LaunchConfiguration._parse(projectPath, file, contents);
+  }
+
+  void _listenToLaunchDir() {
+    if (_sub == null && launchDir.existsSync()) {
+      _sub = launchDir.onDidChange.listen((_) => _configs = null);
+    }
   }
 
   void _reparse() {
@@ -291,6 +299,6 @@ class _ProjectConfigurations implements Disposable {
   }
 
   void dispose() {
-    _sub.cancel();
+    _sub?.cancel();
   }
 }
