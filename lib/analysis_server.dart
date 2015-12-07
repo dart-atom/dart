@@ -533,30 +533,38 @@ class _AnalysisServerWrapper extends Server {
 
   /// Creates a process.
   static ProcessRunner _createProcess(Sdk sdk) {
+    List<String> arguments = [];
+
+    // Start in checked mode?
+    if (AnalysisServer.useChecked) {
+      arguments.add('--checked');
+    }
+
     String path = sdk.getSnapshotPath('analysis_server.dart.snapshot');
 
     // Run from source if local config points to analysis_server/bin/server.dart.
     final String pathPref = '${pluginId}.analysisServerPath';
-    var serverPath = atom.config.getValue(pathPref);
+    String serverPath = atom.config.getValue(pathPref);
     if (serverPath is String) {
-      atom.notifications.addSuccess('Running analysis server from source',
-          detail: serverPath);
+      atom.notifications.addSuccess(
+        'Running analysis server from source',
+        detail: serverPath
+      );
       path = serverPath;
     } else if (serverPath != null) {
       atom.notifications.addError('$pathPref is defined but not a String');
     }
-    List<String> arguments = [path, '--sdk=${sdk.path}'];
+
+    arguments.add(path);
+
+    // Specify the path to the SDK.
+    arguments.add('--sdk=${sdk.path}');
 
     // Check to see if we should start with diagnostics enabled.
     if (AnalysisServer.startWithDiagnostics) {
       arguments.add('--port=${AnalysisServer.DIAGNOSTICS_PORT}');
       _logger.info('analysis server diagnostics available at '
           '${AnalysisServer.diagnosticsUrl}.');
-    }
-
-    // Start in checked mode?
-    if (AnalysisServer.useChecked) {
-      arguments.add('--checked');
     }
 
     // Allow arbitrary CLI options to the analysis server.

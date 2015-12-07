@@ -26535,9 +26535,12 @@ self._domRemove = function(element) {
           t1._AnalysisServerWrapper$4(process, _processCompleter, inStream, writeMessage);
           return t1;
         }, _AnalysisServerWrapper__createProcess: function(sdk) {
-          var path, t1, serverPath, t2, $arguments, options;
-          path = sdk.getSnapshotPath$1("analysis_server.dart.snapshot");
+          var $arguments, t1, path, serverPath, t2, options;
+          $arguments = [];
           t1 = $.$get$atom();
+          if (J.$eq$(t1._config.getValue$2$scope("dartlang.analysisServerUseChecked", null), true))
+            $arguments.push("--checked");
+          path = sdk.getSnapshotPath$1("analysis_server.dart.snapshot");
           serverPath = t1._config.getValue$1("dartlang.analysisServerPath");
           if (typeof serverPath === "string") {
             t2 = t1._notifications;
@@ -26547,13 +26550,12 @@ self._domRemove = function(element) {
             t2 = t1._notifications;
             t2.invoke$3("addError", "dartlang.analysisServerPath is defined but not a String", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
           }
-          $arguments = [path, "--sdk=" + H.S(sdk.get$path(sdk))];
+          $arguments.push(path);
+          $arguments.push("--sdk=" + H.S(sdk.get$path(sdk)));
           if (J.$eq$(t1._config.getValue$2$scope("dartlang.debugAnalysisServer", null), true)) {
             $arguments.push("--port=23072");
             $.$get$_logger4().info$1("analysis server diagnostics available at http://localhost:23072/.");
           }
-          if (J.$eq$(t1._config.getValue$2$scope("dartlang.analysisServerUseChecked", null), true))
-            $arguments.push("--checked");
           if (t1._config.getValue$1("dartlang.analysisServerOptions") != null) {
             options = t1._config.getValue$1("dartlang.analysisServerOptions");
             if (!!J.getInterceptor(options).$isList)
