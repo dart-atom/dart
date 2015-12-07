@@ -72,6 +72,8 @@ class ObservatoryConnection extends DebugConnection {
   bool stdoutSupported = true;
   bool stderrSupported = true;
 
+  int _nextIsolateId = 1;
+
   ObservatoryConnection(Launch launch, this.service, this.completer, {
     this.pipeStdio: false,
     this.isolatesStartPaused: false,
@@ -391,16 +393,18 @@ class ObservatoryIsolate extends DebugIsolate {
 
   bool suspended = false;
   bool _didInitialResume = false;
+  String _detail;
 
   ObservatoryIsolate._(this.connection, this.service, this.isolateRef) {
     scriptManager = new ScriptManager(service, this);
+    _detail = '#${connection._nextIsolateId++}';
   }
 
-  String get name => isolateRef?.name;
+  String get name => isolateRef.name;
 
-  String get detail => isolateRef?.number;
+  String get detail => _detail;
 
-  String get id => isolateRef?.id;
+  String get id => isolateRef.id;
 
   List<DebugFrame> frames;
 
@@ -457,7 +461,7 @@ class ObservatoryIsolate extends DebugIsolate {
 
         ObservatoryFrame obsFrame = new ObservatoryFrame(this, frame);
         obsFrame.locals = new List.from(
-          frame.vars.map((v) => new ObservatoryVariable(v))
+          frame.vars.map((v) => new ObservatoryVariable(this, v))
         );
         return obsFrame;
       }).toList();
@@ -469,6 +473,8 @@ class ObservatoryIsolate extends DebugIsolate {
       return scriptManager.loadAllScripts(scriptRefs);
     });
   }
+
+  int get hashCode => id.hashCode;
 
   bool operator==(other) {
     if (other is! ObservatoryIsolate) return false;
@@ -497,6 +503,8 @@ class ObservatoryFrame extends DebugFrame {
 
   String get title => printFunctionName(frame.function);
 
+  bool get isSystem => (location as ObservatoryLocation).isSystem;
+
   DebugLocation get location {
     if (_location == null) {
       _location = new ObservatoryLocation(isolate, frame.location);
@@ -521,13 +529,108 @@ class ObservatoryFrame extends DebugFrame {
 }
 
 class ObservatoryVariable extends DebugVariable {
-  final BoundVariable variable;
+  final ObservatoryIsolate _isolate;
+  final BoundVariable _variable;
+  final DebugValue value;
 
-  ObservatoryVariable(this.variable);
+  ObservatoryVariable(ObservatoryIsolate isolate, BoundVariable variable) :
+    _isolate = isolate, _variable = variable, value = _createValue(isolate, variable);
 
-  String get name => variable.name;
+  String get name => _variable.name;
 
-  String get valueDescription => _refToString(variable.value);
+  static DebugValue _createValue(ObservatoryIsolate isolate, BoundVariable variable) {
+    if (variable.value is InstanceRef) {
+      return new ObservatoryValue(isolate, variable.value);
+    } else if (variable.value is Sentinel) {
+      return new SentinelDebugValue(variable.value);
+    } else {
+      return null;
+    }
+  }
+}
+
+class ObservatoryFieldVariable extends DebugVariable {
+  final ObservatoryIsolate _isolate;
+  final BoundField _field;
+  final DebugValue value;
+
+  ObservatoryFieldVariable(ObservatoryIsolate isolate, BoundField field) :
+    _isolate = isolate, _field = field, value = _createValue(isolate, field);
+
+  String get name => _field.decl.name;
+
+  static DebugValue _createValue(ObservatoryIsolate isolate, BoundField field) {
+    if (field.value is InstanceRef) {
+      return new ObservatoryValue(isolate, field.value);
+    } else if (field.value is Sentinel) {
+      return new SentinelDebugValue(field.value);
+    } else {
+      return null;
+    }
+  }
+}
+
+class ObservatoryValue extends DebugValue {
+  final ObservatoryIsolate isolate;
+  final InstanceRef value;
+
+  ObservatoryValue(this.isolate, this.value);
+
+  String get className => value.classRef.name;
+
+  bool get isPrimitive {
+    String kind = value.kind;
+    return kind == InstanceKind.kNull ||
+      kind == InstanceKind.kBool ||
+      kind == InstanceKind.kDouble ||
+      kind == InstanceKind.kInt ||
+      kind == InstanceKind.kString;
+  }
+
+  bool get isString => value.kind == InstanceKind.kString;
+  bool get isPlainInstance => value.kind == InstanceKind.kPlainInstance;
+  bool get isList => value.kind == InstanceKind.kList;
+  bool get isMap => value.kind == InstanceKind.kMap;
+
+  int get itemsLength => value.length;
+
+  Future<List<DebugVariable>> getChildren() {
+    return isolate.service.getObject(isolate.id, value.id).then((ret) {
+      if (ret is Instance) {
+        // TODO: Handle arrays and other strange types.
+        return ret.fields.map((BoundField field) {
+          return new ObservatoryFieldVariable(isolate, field);
+        });
+      } else {
+        return [];
+      }
+    });
+  }
+
+  // TODO: handle truncated
+  String get valueAsString => value.valueAsString;
+}
+
+class SentinelDebugValue extends DebugValue {
+  final Sentinel sentenial;
+
+  SentinelDebugValue(this.sentenial);
+
+  String get className => null;
+
+  bool get isPrimitive => true;
+  bool get isString => false;
+  bool get isPlainInstance => false;
+  bool get isList => false;
+  bool get isMap => false;
+
+  int get itemsLength => null;
+
+  Future<List<DebugVariable>> getChildren() {
+    return new Future.value([]);
+  }
+
+  String get valueAsString => sentenial.valueAsString;
 }
 
 class ObservatoryLocation extends DebugLocation {
@@ -546,6 +649,8 @@ class ObservatoryLocation extends DebugLocation {
   String get displayPath => location.script.uri;
 
   VmService get service => isolate.service;
+
+  bool get isSystem => location.script.uri.startsWith('dart:');
 
   String _path;
   Point _pos;
