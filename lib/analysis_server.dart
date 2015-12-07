@@ -29,7 +29,7 @@ export 'jobs.dart' show Job;
 final Logger _logger = new Logger('analysis-server');
 
 class AnalysisServer implements Disposable {
-  static bool get startWithDebugging =>
+  static bool get startWithDiagnostics =>
       atom.config.getBoolValue('${pluginId}.debugAnalysisServer');
   static bool get useChecked =>
       atom.config.getBoolValue('${pluginId}.analysisServerUseChecked');
@@ -456,7 +456,7 @@ class _AnalysisServerWrapper extends Server {
 
       _logger.info(error.message, null, st);
 
-      if (AnalysisServer.startWithDebugging) {
+      if (AnalysisServer.startWithDiagnostics) {
         if (error.isFatal) {
           atom.notifications.addError(
             'Error from the analysis server: ${error.message}',
@@ -533,27 +533,49 @@ class _AnalysisServerWrapper extends Server {
 
   /// Creates a process.
   static ProcessRunner _createProcess(Sdk sdk) {
+    List<String> arguments = [];
+
+    // Start in checked mode?
+    if (AnalysisServer.useChecked) {
+      arguments.add('--checked');
+    }
+
     String path = sdk.getSnapshotPath('analysis_server.dart.snapshot');
-    // Run from source if local config points to analysis_server/bin/server.dart
+
+    // Run from source if local config points to analysis_server/bin/server.dart.
     final String pathPref = '${pluginId}.analysisServerPath';
-    var serverPath = atom.config.getValue(pathPref);
+    String serverPath = atom.config.getValue(pathPref);
     if (serverPath is String) {
-      atom.notifications.addSuccess('Running analysis server from source',
-          detail: serverPath);
+      atom.notifications.addSuccess(
+        'Running analysis server from source',
+        detail: serverPath
+      );
       path = serverPath;
     } else if (serverPath != null) {
       atom.notifications.addError('$pathPref is defined but not a String');
     }
-    List<String> arguments = [path, '--sdk=${sdk.path}'];
 
-    if (AnalysisServer.startWithDebugging) {
+    arguments.add(path);
+
+    // Specify the path to the SDK.
+    arguments.add('--sdk=${sdk.path}');
+
+    // Check to see if we should start with diagnostics enabled.
+    if (AnalysisServer.startWithDiagnostics) {
       arguments.add('--port=${AnalysisServer.DIAGNOSTICS_PORT}');
       _logger.info('analysis server diagnostics available at '
           '${AnalysisServer.diagnosticsUrl}.');
     }
 
-    if (AnalysisServer.useChecked) {
-      arguments.insert(0, '--checked');
+    // Allow arbitrary CLI options to the analysis server.
+    final String optionsPrefPath = '${pluginId}.analysisServerOptions';
+    if (atom.config.getValue(optionsPrefPath) != null) {
+      dynamic options = atom.config.getValue(optionsPrefPath);
+      if (options is List) {
+        arguments.addAll(options);
+      } else if (options is String) {
+        arguments.addAll(options.split('\n'));
+      }
     }
 
     return new ProcessRunner(sdk.dartVm.path, args: arguments);
