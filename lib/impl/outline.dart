@@ -65,6 +65,16 @@ class OutlineController implements Disposable {
   bool _removeView(OutlineView outlineView) => views.remove(outlineView);
 
   void _close() => atom.config.setValue(_keyPath, !showView);
+
+  analysis.AnalysisOutline _getLastOutlineData(String path) {
+    for (OutlineView view in views) {
+      if (path == view.path && view.lastOutline != null) {
+        return view.lastOutline;
+      }
+    }
+
+    return null;
+  }
 }
 
 class OutlineView implements Disposable {
@@ -93,6 +103,8 @@ class OutlineView implements Disposable {
 
   bool get installed => content != null;
 
+  String get path => editor.getPath();
+
   void _install() {
     if (content != null) return;
 
@@ -107,7 +119,8 @@ class OutlineView implements Disposable {
         div(c: 'close-button')..click(controller._close)
       ]),
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
-          ..toggleClass('outline-tree')..toggleClass('selection'),
+        ..toggleClass('outline-tree')
+        ..toggleClass('selection'),
       resizer = new ViewResizer.createVertical()
     ]);
 
@@ -117,7 +130,12 @@ class OutlineView implements Disposable {
 
     root.append(content.element);
 
-    if (lastOutline != null) _handleOutline(lastOutline);
+    if (lastOutline != null) {
+      _handleOutline(lastOutline);
+    } else {
+      // Ask the manager for the outline data.
+      _handleOutline(controller._getLastOutlineData(path));
+    }
   }
 
   void _setupResizer(ViewResizer resizer) {
@@ -159,7 +177,7 @@ class OutlineView implements Disposable {
   }
 
   void _handleOutline(AnalysisOutline data) {
-    if (data.file != editor.getPath()) return;
+    if (data == null || data.file != editor.getPath()) return;
 
     lastOutline = data;
 
@@ -307,12 +325,12 @@ class OutlineView implements Disposable {
   }
 
   void _jumpTo(Node node) {
-    Outline outline = node.data;
-    analysis.Location location = outline.element.location;
-    editorManager.jumpToLocation(location.file,
-        location.startLine - 1, location.startColumn - 1, location.length);
-    editor.setCursorBufferPosition(
-        editor.getBuffer().positionForCharacterIndex(outline.offset));
+    analysis.Location location = node.data.element.location;
+    Range range = new Range.fromPoints(
+      new Point.coords(location.startLine - 1, location.startColumn - 1),
+      new Point.coords(location.startLine - 1, location.startColumn - 1 + location.length)
+    );
+    editor.setSelectedBufferRange(range);
   }
 
   // void _scrollSync() {

@@ -5,6 +5,7 @@
 - add inline local refactoring
 - move extract and inline local refactorings into submenu
 - fixed an exception when removing a Dart project
+- fixed an issue with the outline view when using side-by-side editors
 
 ## 0.4.16
 - re-worked the UI for the errors, console, type hierarchy, and find references
