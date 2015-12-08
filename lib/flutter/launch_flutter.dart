@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import '../atom.dart';
 import '../atom_utils.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
@@ -18,8 +19,6 @@ final Logger _logger = new Logger('atom.flutter_launch');
 const String _toolName = 'flutter';
 
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
-
-// TODO: Flutter apps now use absolute paths, not file: uris.
 
 class FlutterLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -234,11 +233,7 @@ class FlutterUriTranslator implements UriTranslator {
 
   final String root;
 
-  //String _rootPrefix;
-
-  FlutterUriTranslator(this.root) {
-    //_rootPrefix = new Uri.directory(root, windows: isWindows).toString();
-  }
+  FlutterUriTranslator(this.root);
 
   String targetToClient(String str) {
     String result = _targetToClient(str);
@@ -250,6 +245,8 @@ class FlutterUriTranslator implements UriTranslator {
     if (str.startsWith(_packagesPrefix)) {
       // Convert packages/ prefix to package: one.
       return _packagePrefix + str.substring(_packagesPrefix.length);
+    } else if (existsSync(str)) {
+      return new Uri.file(str).toString();
     } else {
       return str;
     }
@@ -265,6 +262,8 @@ class FlutterUriTranslator implements UriTranslator {
     if (str.startsWith(_packagePrefix)) {
       // Convert package: prefix to packages/ one.
       return _packagesPrefix + str.substring(_packagePrefix.length);
+    } else if (str.startsWith('file:')) {
+      return Uri.parse(str).toFilePath();
     } else {
       return str;
     }

@@ -195,7 +195,7 @@ class DebuggerView extends View {
   }
 
   void _jumpToLocation(DebugLocation location, {bool addExecMarker: false}) {
-    if (!statSync(location.path).isFile()) {
+    if (!existsSync(location.path)) {
       atom.notifications.addWarning("Cannot find file '${location.path}'.");
       return;
     }
@@ -282,7 +282,10 @@ class FlowControlSection implements Disposable {
     // TODO: Pull down menu for switching between isolates.
     element.add([
       executionControlToolbar,
-      subtitle = div(c: 'debugger-section-subtitle', text: ' ')
+      subtitle = div(
+        text: 'no isolate selected',
+        c: 'debugger-section-subtitle font-style-italic'
+      )
     ]);
 
     view.observeIsolate(_handleIsolateChange);
@@ -297,7 +300,9 @@ class FlowControlSection implements Disposable {
       stepOut.enabled = false;
       stepOver.enabled = false;
 
-      subtitle.text = ' ';
+      subtitle.text = 'no isolate selected';
+      subtitle.toggleClass('font-style-italic', true);
+
       view._removeExecutionMarker();
 
       return;
@@ -327,6 +332,7 @@ class FlowControlSection implements Disposable {
       view._removeExecutionMarker();
     }
 
+    subtitle.toggleClass('font-style-italic', false);
     if (suspended) {
       subtitle.text = 'Isolate ${isolate.name} (paused)';
     } else {
@@ -379,8 +385,8 @@ class ExecutionTab extends MTab {
   }
 
   void _renderFrame(DebugFrame frame, CoreElement element) {
-    String style = frame.isSystem ? 'icon icon-diff-removed' : 'icon icon-diff-modified';
-    String locationText = _displayUri(frame.location.displayPath);
+    String style = frame.isSystem ? 'icon icon-git-commit' : 'icon icon-three-bars';
+    String locationText = getDisplayUri(frame.location.displayPath);
 
     element..add([
       span(c: style),
@@ -479,15 +485,14 @@ class LibrariesTab extends MTab {
 
   void _render(ObservatoryLibrary lib, CoreElement element) {
     element..add([
-      span(text: lib.name, c: 'icon icon-repo'),
+      span(text: lib.displayUri, c: 'icon icon-repo'),
       span(
-        text: _displayUri(lib.uri),
+        text: lib.name,
         c: 'debugger-secondary-info overflow-hidden-ellipsis'
       )..flex()
     ])..layoutHorizontal();
   }
 
-  // TODO: sort by short uri name
   int _sort(ObservatoryLibrary a, ObservatoryLibrary b) => a.compareTo(b);
 
   bool _filter(ObservatoryLibrary lib) => lib.private;
@@ -654,15 +659,4 @@ class _TabTitlebar extends CoreElement {
   set title(String value) {
     titleElement.text = value;
   }
-}
-
-String _displayUri(String uri) {
-  if (uri == null) return null;
-
-  if (uri.startsWith('file:')) {
-    String path = Uri.parse(uri).toFilePath();
-    return atom.project.relativizePath(path)[1];
-  }
-
-  return uri;
 }
