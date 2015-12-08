@@ -1,7 +1,7 @@
 {
   "name": "dartlang",
   "main": "./web/entry.dart.js",
-  "version": "0.4.16",
+  "version": "0.4.17",
   "description": "A Dart plugin for Atom.",
   "keywords": [
     "dart",
