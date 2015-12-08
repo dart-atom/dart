@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.4.17
 - added an analysis server section to the plugin status view
 - add inline local refactoring
 - move extract and inline local refactorings into submenu
