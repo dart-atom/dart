@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:html' show InputElement;
 
-import '../analysis/analysis_server_lib.dart' show DiagnosticsResult;
+import '../analysis/analysis_server_lib.dart' show DiagnosticsResult, ContextData;
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../elements.dart';
@@ -267,8 +267,7 @@ class StatusView extends View {
     CoreElement taskQueueCount;
 
     var updateUI = (DiagnosticsResult result) {
-      // context count, explicitFileCount + implicitFileCount, workItemQueueLengthAverage
-
+      // context count, explicitFileCount + implicitFileCount, workItemQueueLength
       if (result == null) {
         contextCount.text = '—';
         fileCount.text = '—';
@@ -279,10 +278,10 @@ class StatusView extends View {
           .map((c) => c.explicitFileCount + c.implicitFileCount)
           .fold(0, (a, b) => a + b);
         fileCount.text = commas(count);
-        num queue = result.contexts
-          .map((c) => c.workItemQueueLengthAverage)
-          .fold(0.0, (a, b) => a + (b == null ? 0.0 : num.parse(b)));
-        taskQueueCount.text = queue.toStringAsFixed(1);
+        int queue = result.contexts
+          .map((ContextData c) => c.workItemQueueLength)
+          .fold(0, (a, b) => a + b);
+        taskQueueCount.text = commas(queue);
       }
     };
 
