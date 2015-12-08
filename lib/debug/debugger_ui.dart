@@ -387,6 +387,14 @@ class ExecutionTab extends MTab {
   void _renderFrame(DebugFrame frame, CoreElement element) {
     String style = frame.isSystem ? 'icon icon-git-commit' : 'icon icon-three-bars';
     String locationText = getDisplayUri(frame.location.displayPath);
+    String tooltipText = frame.location.displayPath;
+
+    // TODO: The plan is for the location resolution code to become more synchronous.
+    if (frame.location.line != null) {
+      tooltipText = '${tooltipText}, '
+        'line ${frame.location.line}, '
+        'column ${frame.location.column}';
+    }
 
     element..add([
       span(c: style),
@@ -395,7 +403,7 @@ class ExecutionTab extends MTab {
         text: locationText,
         c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
       )..flex()
-    ])..layoutHorizontal();
+    ])..layoutHorizontal()..tooltip = tooltipText;
   }
 
   void _selectFrame(DebugFrame frame) {
@@ -417,8 +425,9 @@ class ExecutionTab extends MTab {
     String valueText;
 
     if (value.isString) {
-      // TODO: Escape quotes?
-      valueText = "'${value.valueAsString}'";
+      // We choose not to escape double quotes here; it doesn't work well visually.
+      String str = value.valueAsString;
+      valueText = value.valueIsTruncated ? '"${str}…' : '"${str}"';
     } else if (value.isList) {
       valueText = 'List[${value.itemsLength}]';
     } else if (value.isMap) {
@@ -433,7 +442,10 @@ class ExecutionTab extends MTab {
 
     element..add([
       span(text: local.name),
-      span(text: valueText, c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned')..flex()
+      span(
+        text: valueText,
+        c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
+      )..flex()..tooltip = valueText
     ])..layoutHorizontal();
   }
 

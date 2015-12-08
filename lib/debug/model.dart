@@ -85,6 +85,8 @@ abstract class DebugValue {
   bool get isList;
   bool get isMap;
 
+  bool get valueIsTruncated;
+
   int get itemsLength;
 
   // TODO: This will need to be iterated on to better handle things like arrays.

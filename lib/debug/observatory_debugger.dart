@@ -599,6 +599,10 @@ class ObservatoryValue extends DebugValue {
   bool get isList => value.kind == InstanceKind.kList;
   bool get isMap => value.kind == InstanceKind.kMap;
 
+  bool get valueIsTruncated {
+    return value.valueAsStringIsTruncated == null ? false : value.valueAsStringIsTruncated;
+  }
+
   int get itemsLength => value.length;
 
   Future<List<DebugVariable>> getChildren() {
@@ -630,6 +634,8 @@ class SentinelDebugValue extends DebugValue {
   bool get isPlainInstance => false;
   bool get isList => false;
   bool get isMap => false;
+
+  bool get valueIsTruncated => false;
 
   int get itemsLength => null;
 

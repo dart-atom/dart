@@ -18764,6 +18764,9 @@ self._domRemove = function(element) {
     InstanceRef.prototype.set$valueAsString = function(v) {
       return this.valueAsString = v;
     };
+    InstanceRef.prototype.get$valueAsStringIsTruncated = function() {
+      return this.valueAsStringIsTruncated;
+    };
     InstanceRef.prototype.get$length = function(receiver) {
       return this.length;
     };
@@ -18824,6 +18827,9 @@ self._domRemove = function(element) {
     };
     Instance.prototype.set$valueAsString = function(v) {
       return this.valueAsString = v;
+    };
+    Instance.prototype.get$valueAsStringIsTruncated = function() {
+      return this.valueAsStringIsTruncated;
     };
     Instance.prototype.get$length = function(receiver) {
       return this.length;
@@ -30309,16 +30315,20 @@ self._domRemove = function(element) {
           this.list.selectItem$1(t1.get$first($frames));
       }, "call$1", "get$_updateFrames", 2, 0, 7, 11],
       _renderFrame$2: [function(frame, element) {
-        var style, t1, locationText, t2, t3;
+        var style, t1, locationText, tooltipText, t2, t3;
         style = frame.get$isSystem() ? "icon icon-git-commit" : "icon icon-three-bars";
         t1 = J.getInterceptor$x(frame);
         locationText = B.getDisplayUri(t1.get$location(frame).get$displayPath());
+        tooltipText = t1.get$location(frame).get$displayPath();
+        if (t1.get$location(frame).get$line() != null)
+          tooltipText = H.S(tooltipText) + ", line " + H.S(t1.get$location(frame).get$line()) + ", column " + H.S(t1.get$location(frame).get$column());
         t2 = K.CoreElement$("span", null, style, null);
         t1 = K.CoreElement$("span", null, null, t1.get$title(frame));
         t3 = K.CoreElement$("span", null, "debugger-secondary-info overflow-hidden-ellipsis right-aligned", locationText);
         t3.flex$0(0);
         J.add$1$ax(element, [t2, t1, t3]);
         element.layoutHorizontal$0();
+        element.set$tooltip(tooltipText);
       }, "call$2", "get$_renderFrame", 4, 0, 117],
       _selectFrame$1: [function(frame) {
         var vars, t1;
@@ -30332,12 +30342,13 @@ self._domRemove = function(element) {
         t1.update$1(vars == null ? [] : vars);
       }, "call$1", "get$_selectFrame", 2, 0, 115, 49],
       _renderVariable$2: [function(local, element) {
-        var t1, value, valueText, t2;
+        var t1, value, str, valueText, t2;
         t1 = J.getInterceptor$x(local);
         value = t1.get$value(local);
-        if (value.get$isString())
-          valueText = "'" + H.S(value.get$valueAsString()) + "'";
-        else if (value.get$isList())
+        if (value.get$isString()) {
+          str = value.get$valueAsString();
+          valueText = value.get$valueIsTruncated() === true ? "\"" + H.S(str) + "\u2026" : "\"" + H.S(str) + "\"";
+        } else if (value.get$isList())
           valueText = "List[" + H.S(value.get$itemsLength()) + "]";
         else {
           t2 = J.getInterceptor$x(value);
@@ -30351,6 +30362,7 @@ self._domRemove = function(element) {
         t1 = K.CoreElement$("span", null, null, t1.get$name(local));
         t2 = K.CoreElement$("span", null, "debugger-secondary-info overflow-hidden-ellipsis right-aligned", valueText);
         t2.flex$0(0);
+        J.set$title$x(t2.element, valueText);
         J.add$1$ax(element, [t1, t2]);
         element.layoutHorizontal$0();
       }, "call$2", "get$_renderVariable", 4, 0, 113],
@@ -34841,6 +34853,10 @@ self._domRemove = function(element) {
       get$isMap: function(_) {
         return J.$eq$(J.get$kind$x(this.value), "Map");
       },
+      get$valueIsTruncated: function() {
+        var t1 = this.value;
+        return t1.get$valueAsStringIsTruncated() == null ? false : t1.get$valueAsStringIsTruncated();
+      },
       get$itemsLength: function() {
         return J.get$length$asx(this.value);
       },
@@ -34886,6 +34902,9 @@ self._domRemove = function(element) {
         return false;
       },
       get$isMap: function(_) {
+        return false;
+      },
+      get$valueIsTruncated: function() {
         return false;
       },
       get$itemsLength: function() {
@@ -57684,7 +57703,7 @@ self._domRemove = function(element) {
         }, "call$1", "vm_service_lib_Func_parse$closure", 2, 0, 200]}
     },
     InstanceRef: {
-      "^": "ObjRef;kind>,classRef<,valueAsString@,valueAsStringIsTruncated,length>,name>,typeClass,parameterizedClass,pattern,id,json,type",
+      "^": "ObjRef;kind>,classRef<,valueAsString@,valueAsStringIsTruncated<,length>,name>,typeClass,parameterizedClass,pattern,id,json,type",
       get$hashCode: function(_) {
         return J.get$hashCode$(this.id);
       },
@@ -57721,7 +57740,7 @@ self._domRemove = function(element) {
         }}
     },
     Instance: {
-      "^": "Obj;kind>,classRef:Instance_classRef@,valueAsString@,valueAsStringIsTruncated,length>,offset>,count,name>,typeClass,parameterizedClass,fields,elements,associations,bytes<,closureFunction,closureContext,mirrorReferent,pattern,isCaseSensitive,isMultiLine,propertyKey,propertyValue,typeArguments,parameterIndex,targetType,bound,id,classRef,size,json,type",
+      "^": "Obj;kind>,classRef:Instance_classRef@,valueAsString@,valueAsStringIsTruncated<,length>,offset>,count,name>,typeClass,parameterizedClass,fields,elements,associations,bytes<,closureFunction,closureContext,mirrorReferent,pattern,isCaseSensitive,isMultiLine,propertyKey,propertyValue,typeArguments,parameterIndex,targetType,bound,id,classRef,size,json,type",
       get$hashCode: function(_) {
         return J.get$hashCode$(this.id);
       },
