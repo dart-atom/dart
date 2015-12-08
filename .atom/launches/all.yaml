@@ -1,0 +1,8 @@
+# Cli launch configuration for test/all.dart.
+type: cli
+path: test/all.dart
+
+cli:
+  args:
+  checked: true
+  debug: true

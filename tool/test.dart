@@ -1,6 +1,7 @@
 library foo_test;
 
 import 'dart:async';
+import 'dart:convert' show JSON;
 import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:isolate';
@@ -16,12 +17,12 @@ void main(List<String> args) {
   Dog fido = new Dog(Dog.FIDO_NAME, parent: new Dog('Sam'));
 
   Timer.run(() => print('timer 1'));
-
   Timer.run(_handleTimer);
 
-  dev.registerExtension('foo', _fooHandler);
+  dev.registerExtension('foo', fooHandler);
 
-  // dev.log('log from test');
+  dev.log('log from test');
+
   // dev.Timeline.timeSync('frame', _mockFrame);
   // dev.inspect(fido);
 
@@ -97,7 +98,7 @@ String say(String from, String to) => "move $from -> $to";
 void hanoi(int discs, String a, String b, String c) {
   // Makes a move only if there are discs.
   if (discs > 0) {
-    if (discs == 1 && a == '1') dev.debugger();
+    // if (discs == 1 && a == '1') dev.debugger();
 
     // Announces this move, from A to C.
     print('[${discs}] ${say(a, c)}');
@@ -122,10 +123,13 @@ void _handleTimer() {
   print('timer 2');
 }
 
-Future<dev.ServiceExtensionResponse> _fooHandler(String method, Map parameters) {
-  print('handling ${method}');
-  print('params: ${parameters}');
-  return new Future.value(new dev.ServiceExtensionResponse.result('bar'));
+Future<dev.ServiceExtensionResponse> fooHandler(String method, Map parameters) {
+  String result = JSON.encode({
+    'type': '_extensionType',
+    'method': method,
+    'parameters': parameters,
+  });
+  return new Future.value(new dev.ServiceExtensionResponse.result(result));
 }
 
 void startIsolates(int count) {

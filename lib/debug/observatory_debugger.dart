@@ -13,6 +13,7 @@ import '../utils.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
 import 'model.dart';
+import 'utils.dart';
 
 final Logger _logger = new Logger('atom.observatory');
 
@@ -276,6 +277,12 @@ class ObservatoryConnection extends DebugConnection {
   }
 
   // TODO: Move much of the isolate lifecycle code into a manager class.
+  // TODO: Make the isolate bring-up lifecycle clearer.
+  //  - create
+  //  - get meta data
+  //  - install breakpoints
+  //  - exception pause mode
+  //  - resume from pause
 
   Future<ObservatoryIsolate> _registerNewIsolate(IsolateRef ref) {
     if (_isolateMap.containsKey(ref.id)) return new Future.value(_isolateMap[ref.id]);
@@ -690,11 +697,19 @@ class ObservatoryLocation extends DebugLocation {
 
 class ObservatoryLibrary implements Comparable<ObservatoryLibrary> {
   final LibraryRef _ref;
+  String _displayUri;
 
   ObservatoryLibrary._(LibraryRef ref) : _ref = ref;
 
   String get name => _ref.name;
   String get uri => _ref.uri;
+
+  String get displayUri {
+    if (_displayUri == null) {
+      _displayUri = getDisplayUri(uri);
+    }
+    return _displayUri;
+  }
 
   bool get private => uri.startsWith('dart:_');
 
@@ -707,7 +722,7 @@ class ObservatoryLibrary implements Comparable<ObservatoryLibrary> {
   int compareTo(ObservatoryLibrary other) {
     int val = _kind - other._kind;
     if (val != 0) return val;
-    return uri.compareTo(other.uri);
+    return displayUri.compareTo(other.displayUri);
   }
 }
 
