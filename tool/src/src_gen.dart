@@ -15,6 +15,12 @@ String collapseWhitespace(String str) => str.replaceAll(_wsRegexp, ' ');
 String titleCase(String str) =>
     str.substring(0, 1).toUpperCase() + str.substring(1);
 
+/// FOO ==> Foo
+String forceTitleCase(String str) {
+  if (str == null || str.isEmpty) return str;
+  return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+}
+
 String joinLast(Iterable<String> strs, String join, [String last]) {
   if (strs.isEmpty) return '';
   List list = strs.toList();

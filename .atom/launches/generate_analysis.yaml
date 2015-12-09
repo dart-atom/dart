@@ -1,0 +1,7 @@
+# Cli launch configuration for tool/analysis/generate_analysis.dart.
+type: cli
+path: tool/analysis/generate_analysis.dart
+
+cli:
+  args: 
+  checked: true

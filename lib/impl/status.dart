@@ -289,7 +289,7 @@ class StatusView extends View {
         int queue = result.contexts
           .map((ContextData c) => c.workItemQueueLength)
           .fold(0, (a, b) => a + b);
-        taskQueueCount.text = commas(queue);
+        taskQueueCount.text = (queue == 0 && !analysisServer.isBusy) ? '—' : commas(queue);
       }
     };
 

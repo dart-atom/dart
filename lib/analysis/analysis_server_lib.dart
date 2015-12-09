@@ -16,7 +16,7 @@ const String experimental = 'experimental';
 
 final Logger _logger = new Logger('analysis_server_lib');
 
-const String generatedProtocolVersion = '1.12.0';
+const String generatedProtocolVersion = '1.14.0';
 
 class Server {
   StreamSubscription _streamSub;
@@ -156,6 +156,8 @@ abstract class Domain {
 abstract class Jsonable {
   Map toMap();
 }
+
+abstract class RefactoringOptions implements Jsonable {}
 
 Map _mapify(Map m) {
   Map copy = {};
@@ -301,6 +303,12 @@ class AnalysisDomain extends Domain {
   Future<HoverResult> getHover(String file, int offset) {
     Map m = {'file': file, 'offset': offset};
     return _call('analysis.getHover', m).then(HoverResult.parse);
+  }
+
+  Future<ReachableSourcesResult> getReachableSources(String file) {
+    Map m = {'file': file};
+    return _call('analysis.getReachableSources', m)
+        .then(ReachableSourcesResult.parse);
   }
 
   Future<LibraryDependenciesResult> getLibraryDependencies() =>
@@ -503,6 +511,15 @@ class HoverResult {
   final List<HoverInformation> hovers;
 
   HoverResult(this.hovers);
+}
+
+class ReachableSourcesResult {
+  static ReachableSourcesResult parse(Map m) =>
+      new ReachableSourcesResult(m['sources']);
+
+  final Map<String, List<String>> sources;
+
+  ReachableSourcesResult(this.sources);
 }
 
 class LibraryDependenciesResult {
@@ -913,7 +930,6 @@ class MapUriResult {
 
 // diagnostic domain
 
-@experimental
 class DiagnosticDomain extends Domain {
   DiagnosticDomain(Server server) : super(server, 'diagnostic');
 
@@ -1147,7 +1163,6 @@ class CompletionSuggestion {
       '[CompletionSuggestion kind: ${kind}, relevance: ${relevance}, completion: ${completion}, selectionOffset: ${selectionOffset}, selectionLength: ${selectionLength}, isDeprecated: ${isDeprecated}, isPotential: ${isPotential}]';
 }
 
-@experimental
 class ContextData {
   static ContextData parse(Map m) {
     if (m == null) return null;
@@ -1156,7 +1171,6 @@ class ContextData {
         m['explicitFileCount'],
         m['implicitFileCount'],
         m['workItemQueueLength'],
-        m['workItemQueueLengthAverage'],
         m['cacheEntryExceptions'] == null
             ? null
             : new List.from(m['cacheEntryExceptions']));
@@ -1166,16 +1180,10 @@ class ContextData {
   final int explicitFileCount;
   final int implicitFileCount;
   final int workItemQueueLength;
-  final String workItemQueueLengthAverage;
   final List<String> cacheEntryExceptions;
 
-  ContextData(
-      this.name,
-      this.explicitFileCount,
-      this.implicitFileCount,
-      this.workItemQueueLength,
-      this.workItemQueueLengthAverage,
-      this.cacheEntryExceptions);
+  ContextData(this.name, this.explicitFileCount, this.implicitFileCount,
+      this.workItemQueueLength, this.cacheEntryExceptions);
 }
 
 class Element {
@@ -1521,26 +1529,6 @@ class RefactoringMethodParameter {
       {this.id, this.parameters});
 }
 
-/*abstract*/ class RefactoringFeedback {
-  static RefactoringFeedback parse(Map m) {
-    if (m == null) return null;
-    return new RefactoringFeedback();
-  }
-
-  RefactoringFeedback();
-}
-
-/*abstract*/ class RefactoringOptions implements Jsonable {
-  static RefactoringOptions parse(Map m) {
-    if (m == null) return null;
-    return new RefactoringOptions();
-  }
-
-  Map toMap() => _mapify({});
-
-  RefactoringOptions();
-}
-
 class RefactoringProblem {
   static RefactoringProblem parse(Map m) {
     if (m == null) return null;
@@ -1718,4 +1706,106 @@ class Refactorings {
   static const String INLINE_METHOD = 'INLINE_METHOD';
   static const String MOVE_FILE = 'MOVE_FILE';
   static const String RENAME = 'RENAME';
+}
+
+class ExtractLocalVariableRefactoringOptions extends RefactoringOptions {
+  final String name;
+  final bool extractAll;
+
+  ExtractLocalVariableRefactoringOptions({this.name, this.extractAll});
+
+  Map toMap() => _mapify({'name': name, 'extractAll': extractAll});
+}
+
+class ExtractMethodRefactoringOptions extends RefactoringOptions {
+  final String returnType;
+  final bool createGetter;
+  final String name;
+  final List<RefactoringMethodParameter> parameters;
+  final bool extractAll;
+
+  ExtractMethodRefactoringOptions(
+      {this.returnType,
+      this.createGetter,
+      this.name,
+      this.parameters,
+      this.extractAll});
+
+  Map toMap() => _mapify({
+        'returnType': returnType,
+        'createGetter': createGetter,
+        'name': name,
+        'parameters': parameters,
+        'extractAll': extractAll
+      });
+}
+
+class InlineMethodRefactoringOptions extends RefactoringOptions {
+  final bool deleteSource;
+  final bool inlineAll;
+
+  InlineMethodRefactoringOptions({this.deleteSource, this.inlineAll});
+
+  Map toMap() =>
+      _mapify({'deleteSource': deleteSource, 'inlineAll': inlineAll});
+}
+
+class MoveFileRefactoringOptions extends RefactoringOptions {
+  final String newFile;
+
+  MoveFileRefactoringOptions({this.newFile});
+
+  Map toMap() => _mapify({'newFile': newFile});
+}
+
+class RenameRefactoringOptions extends RefactoringOptions {
+  final String newName;
+
+  RenameRefactoringOptions({this.newName});
+
+  Map toMap() => _mapify({'newName': newName});
+}
+
+// EXTRACT_LOCAL_VARIABLE:
+//   @optional coveringExpressionOffsets → List<int>
+//   @optional coveringExpressionLengths → List<int>
+//   names → List<String>
+//   offsets → List<int>
+//   lengths → List<int>
+
+// EXTRACT_METHOD:
+//   offset → int
+//   length → int
+//   returnType → String
+//   names → List<String>
+//   canCreateGetter → bool
+//   parameters → List<RefactoringMethodParameter>
+//   offsets → List<int>
+//   lengths → List<int>
+
+// INLINE_LOCAL_VARIABLE:
+//   name → String
+//   occurrences → int
+
+// INLINE_METHOD:
+//   @optional className → String
+//   methodName → String
+//   isDeclaration → bool
+
+// RENAME:
+//   offset → int
+//   length → int
+//   elementKindName → String
+//   oldName → String
+
+class RefactoringFeedback {
+  static RefactoringFeedback parse(Map m) {
+    return m == null ? null : new RefactoringFeedback(m);
+  }
+
+  final Map _m;
+
+  RefactoringFeedback(this._m);
+
+  operator [](String key) => _m[key];
 }
