@@ -157,6 +157,8 @@ abstract class Jsonable {
   Map toMap();
 }
 
+abstract class RefactoringOptions implements Jsonable {}
+
 Map _mapify(Map m) {
   Map copy = {};
 
@@ -1527,26 +1529,6 @@ class RefactoringMethodParameter {
       {this.id, this.parameters});
 }
 
-/*abstract*/ class RefactoringFeedback {
-  static RefactoringFeedback parse(Map m) {
-    if (m == null) return null;
-    return new RefactoringFeedback();
-  }
-
-  RefactoringFeedback();
-}
-
-class RefactoringOptions implements Jsonable {
-  static RefactoringOptions parse(Map m) {
-    if (m == null) return null;
-    return new RefactoringOptions();
-  }
-
-  Map toMap() => _mapify({});
-
-  RefactoringOptions();
-}
-
 class RefactoringProblem {
   static RefactoringProblem parse(Map m) {
     if (m == null) return null;
@@ -1732,12 +1714,7 @@ class ExtractLocalVariableRefactoringOptions extends RefactoringOptions {
 
   ExtractLocalVariableRefactoringOptions({this.name, this.extractAll});
 
-  Map toMap() {
-    Map m = {};
-    if (name != null) m['name'] = name;
-    if (extractAll != null) m['extractAll'] = extractAll;
-    return m;
-  }
+  Map toMap() => _mapify({'name': name, 'extractAll': extractAll});
 }
 
 class ExtractMethodRefactoringOptions extends RefactoringOptions {
@@ -1754,15 +1731,13 @@ class ExtractMethodRefactoringOptions extends RefactoringOptions {
       this.parameters,
       this.extractAll});
 
-  Map toMap() {
-    Map m = {};
-    if (returnType != null) m['returnType'] = returnType;
-    if (createGetter != null) m['createGetter'] = createGetter;
-    if (name != null) m['name'] = name;
-    if (parameters != null) m['parameters'] = parameters;
-    if (extractAll != null) m['extractAll'] = extractAll;
-    return m;
-  }
+  Map toMap() => _mapify({
+        'returnType': returnType,
+        'createGetter': createGetter,
+        'name': name,
+        'parameters': parameters,
+        'extractAll': extractAll
+      });
 }
 
 class InlineMethodRefactoringOptions extends RefactoringOptions {
@@ -1771,12 +1746,8 @@ class InlineMethodRefactoringOptions extends RefactoringOptions {
 
   InlineMethodRefactoringOptions({this.deleteSource, this.inlineAll});
 
-  Map toMap() {
-    Map m = {};
-    if (deleteSource != null) m['deleteSource'] = deleteSource;
-    if (inlineAll != null) m['inlineAll'] = inlineAll;
-    return m;
-  }
+  Map toMap() =>
+      _mapify({'deleteSource': deleteSource, 'inlineAll': inlineAll});
 }
 
 class MoveFileRefactoringOptions extends RefactoringOptions {
@@ -1784,11 +1755,7 @@ class MoveFileRefactoringOptions extends RefactoringOptions {
 
   MoveFileRefactoringOptions({this.newFile});
 
-  Map toMap() {
-    Map m = {};
-    if (newFile != null) m['newFile'] = newFile;
-    return m;
-  }
+  Map toMap() => _mapify({'newFile': newFile});
 }
 
 class RenameRefactoringOptions extends RefactoringOptions {
@@ -1796,9 +1763,49 @@ class RenameRefactoringOptions extends RefactoringOptions {
 
   RenameRefactoringOptions({this.newName});
 
-  Map toMap() {
-    Map m = {};
-    if (newName != null) m['newName'] = newName;
-    return m;
+  Map toMap() => _mapify({'newName': newName});
+}
+
+// EXTRACT_LOCAL_VARIABLE:
+//   @optional coveringExpressionOffsets → List<int>
+//   @optional coveringExpressionLengths → List<int>
+//   names → List<String>
+//   offsets → List<int>
+//   lengths → List<int>
+
+// EXTRACT_METHOD:
+//   offset → int
+//   length → int
+//   returnType → String
+//   names → List<String>
+//   canCreateGetter → bool
+//   parameters → List<RefactoringMethodParameter>
+//   offsets → List<int>
+//   lengths → List<int>
+
+// INLINE_LOCAL_VARIABLE:
+//   name → String
+//   occurrences → int
+
+// INLINE_METHOD:
+//   @optional className → String
+//   methodName → String
+//   isDeclaration → bool
+
+// RENAME:
+//   offset → int
+//   length → int
+//   elementKindName → String
+//   oldName → String
+
+class RefactoringFeedback {
+  static RefactoringFeedback parse(Map m) {
+    return m == null ? null : new RefactoringFeedback(m);
   }
+
+  final Map _m;
+
+  RefactoringFeedback(this._m);
+
+  operator [](String key) => _m[key];
 }

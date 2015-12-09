@@ -116,6 +116,30 @@ class Api {
     gen.writeStatement('}');
 
     refactorings.forEach((Refactoring refactor) => refactor.generate(gen));
+
+    // Refactoring feedback.
+    gen.writeln();
+    refactorings.forEach((Refactoring refactor) {
+      if (refactor.feedbackFields.isEmpty) return;
+
+      gen.writeln("// ${refactor.kind}:");
+      for (Field field in refactor.feedbackFields) {
+        gen.writeln(
+          "//   ${field.optional ? '@optional ' : ''}${field.name} → ${field.type}");
+      }
+      gen.writeln();
+    });
+    gen.writeStatement('class RefactoringFeedback {');
+    gen.writeStatement('static RefactoringFeedback parse(Map m) {');
+    gen.writeStatement('return m == null ? null : new RefactoringFeedback(m);');
+    gen.writeStatement('}');
+    gen.writeln();
+    gen.writeStatement('final Map _m;');
+    gen.writeln();
+    gen.writeStatement('RefactoringFeedback(this._m);');
+    gen.writeln();
+    gen.writeStatement('operator[](String key) => _m[key];');
+    gen.writeStatement('}');
   }
 
   String toString() => domains.toString();
@@ -392,6 +416,11 @@ class Field implements Comparable {
     if (optional && !other.optional) return 1;
     return 0;
   }
+
+  void generate(DartGenerator gen) {
+    if (optional) gen.write('@optional ');
+    gen.writeStatement('final ${type} ${name};');
+  }
 }
 
 class Refactoring {
@@ -429,41 +458,27 @@ class Refactoring {
   }
 
   void generate(DartGenerator gen) {
-    // class RenameRefactoringOptions extends RefactoringOptions {
-    //   final String newName;
-    //   RenameRefactoringOptions(this.newName);
-    //   Map toMap() => {'newName': newName};
-    // }
-
-    // TODO: generate the options
+    // Generate the refactoring options.
     if (optionsFields.isNotEmpty) {
       gen.writeln();
       gen.writeStatement('class ${className}RefactoringOptions extends RefactoringOptions {');
       // fields
       for (Field field in optionsFields) {
-        gen.writeStatement('final ${field.type} ${field.name};');
+        field.generate(gen);
       }
 
       gen.writeln();
       gen.writeStatement('${className}RefactoringOptions({'
         '${optionsFields.map((f) => 'this.${f.name}').join(', ')}'
         '});');
-
       gen.writeln();
-      // toMap
-      gen.writeStatement('Map toMap() {');
-      gen.writeStatement('Map m = {};');
-      for (Field field in optionsFields) {
-        gen.writeStatement("if (${field.name} != null) m['${field.name}'] = ${field.name};");
-      }
-      gen.writeStatement('return m;');
-      gen.writeStatement('}');
 
+      // toMap
+      gen.write("Map toMap() => _mapify({");
+      gen.write(optionsFields.map((f) => "'${f.name}': ${f.name}").join(', '));
+      gen.writeStatement("});");
       gen.writeStatement('}');
     }
-
-    // TODO: generate feedback
-
   }
 }
 
@@ -532,8 +547,6 @@ class TypeDef {
 
   bool get isObject => fields != null;
 
-  bool get isAbstract => name == 'RefactoringFeedback';
-
   bool get callParam => _callParam;
 
   void setCallParam() {
@@ -541,10 +554,11 @@ class TypeDef {
   }
 
   void generate(DartGenerator gen) {
+    if (name == 'RefactoringOptions' || name == 'RefactoringFeedback') return;
+
     gen.writeln();
     if (experimental) gen.writeln('@experimental');
-    String abs = isAbstract ? '/*abstract*/ ' : '';
-    gen.writeln('${abs}class ${name} ${callParam ? "implements Jsonable " : ""}{');
+    gen.writeln('class ${name} ${callParam ? "implements Jsonable " : ""}{');
     gen.writeln('static ${name} parse(Map m) {');
     gen.writeln('if (m == null) return null;');
     gen.write('return new ${name}(');
@@ -855,6 +869,9 @@ abstract class Domain {
 
 abstract class Jsonable {
   Map toMap();
+}
+
+abstract class RefactoringOptions implements Jsonable {
 }
 
 Map _mapify(Map m) {
