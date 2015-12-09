@@ -610,23 +610,6 @@ class _AnalysisServerWrapper extends Server {
   }
 }
 
-class ExtractLocalVariableOptions extends RefactoringOptions {
-  final String name;
-  final bool extractAll;
-
-  ExtractLocalVariableOptions(this.name, {this.extractAll : false});
-
-  Map toMap() => {'name': name, 'extractAll': extractAll};
-}
-
-class RenameRefactoringOptions extends RefactoringOptions {
-  final String newName;
-
-  RenameRefactoringOptions(this.newName);
-
-  Map toMap() => {'newName': newName};
-}
-
 // TODO: We need more visible progress for this job - it should put up a toast
 // after a ~400ms delay.
 

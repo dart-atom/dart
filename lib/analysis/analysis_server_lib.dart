@@ -1536,7 +1536,7 @@ class RefactoringMethodParameter {
   RefactoringFeedback();
 }
 
-/*abstract*/ class RefactoringOptions implements Jsonable {
+class RefactoringOptions implements Jsonable {
   static RefactoringOptions parse(Map m) {
     if (m == null) return null;
     return new RefactoringOptions();
@@ -1724,4 +1724,81 @@ class Refactorings {
   static const String INLINE_METHOD = 'INLINE_METHOD';
   static const String MOVE_FILE = 'MOVE_FILE';
   static const String RENAME = 'RENAME';
+}
+
+class ExtractLocalVariableRefactoringOptions extends RefactoringOptions {
+  final String name;
+  final bool extractAll;
+
+  ExtractLocalVariableRefactoringOptions({this.name, this.extractAll});
+
+  Map toMap() {
+    Map m = {};
+    if (name != null) m['name'] = name;
+    if (extractAll != null) m['extractAll'] = extractAll;
+    return m;
+  }
+}
+
+class ExtractMethodRefactoringOptions extends RefactoringOptions {
+  final String returnType;
+  final bool createGetter;
+  final String name;
+  final List<RefactoringMethodParameter> parameters;
+  final bool extractAll;
+
+  ExtractMethodRefactoringOptions(
+      {this.returnType,
+      this.createGetter,
+      this.name,
+      this.parameters,
+      this.extractAll});
+
+  Map toMap() {
+    Map m = {};
+    if (returnType != null) m['returnType'] = returnType;
+    if (createGetter != null) m['createGetter'] = createGetter;
+    if (name != null) m['name'] = name;
+    if (parameters != null) m['parameters'] = parameters;
+    if (extractAll != null) m['extractAll'] = extractAll;
+    return m;
+  }
+}
+
+class InlineMethodRefactoringOptions extends RefactoringOptions {
+  final bool deleteSource;
+  final bool inlineAll;
+
+  InlineMethodRefactoringOptions({this.deleteSource, this.inlineAll});
+
+  Map toMap() {
+    Map m = {};
+    if (deleteSource != null) m['deleteSource'] = deleteSource;
+    if (inlineAll != null) m['inlineAll'] = inlineAll;
+    return m;
+  }
+}
+
+class MoveFileRefactoringOptions extends RefactoringOptions {
+  final String newFile;
+
+  MoveFileRefactoringOptions({this.newFile});
+
+  Map toMap() {
+    Map m = {};
+    if (newFile != null) m['newFile'] = newFile;
+    return m;
+  }
+}
+
+class RenameRefactoringOptions extends RefactoringOptions {
+  final String newName;
+
+  RenameRefactoringOptions({this.newName});
+
+  Map toMap() {
+    Map m = {};
+    if (newName != null) m['newName'] = newName;
+    return m;
+  }
 }

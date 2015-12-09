@@ -4,8 +4,9 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import '../analysis/analysis_server_lib.dart'
-    show Refactorings, SourceChange, SourceEdit, SourceFileEdit;
+import '../analysis/analysis_server_lib.dart' show
+    Refactorings, SourceChange, SourceEdit, SourceFileEdit,
+    RenameRefactoringOptions, ExtractLocalVariableRefactoringOptions;
 import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
@@ -66,8 +67,10 @@ class RefactoringHelper implements Disposable {
         newName = newName.trim();
         if (newName == '' || newName == oldName) return;
 
-        RefactoringOptions options =
-            new ExtractLocalVariableOptions(newName, extractAll: extractAll);
+        RefactoringOptions options = new ExtractLocalVariableRefactoringOptions(
+          name: newName,
+          extractAll: extractAll
+        );
         _performRefactoring(Refactorings.EXTRACT_LOCAL_VARIABLE, options, path,
             offset, end, "Extracted '${newName}'.");
       });
@@ -100,7 +103,7 @@ class RefactoringHelper implements Disposable {
         if (newName == '' || newName == oldName) return;
 
         // Perform the refactoring
-        RefactoringOptions options = new RenameRefactoringOptions(newName);
+        RefactoringOptions options = new RenameRefactoringOptions(newName: newName);
         _performRefactoring(Refactorings.RENAME, options, path, offset, end,
             "Renamed '${oldName}' to '${newName}'.");
       });

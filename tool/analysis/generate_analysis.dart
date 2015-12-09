@@ -105,16 +105,17 @@ class Api {
         .where((t) => t.isObject)
         .forEach((TypeDef def) => def.generate(gen));
 
-    // TODO: Handle the refactorings items.
+    // Handle the refactorings items.
     gen.writeln();
     gen.writeln('// refactorings');
     gen.writeln();
     gen.writeStatement('class Refactorings {');
     refactorings.forEach((Refactoring refactor) {
-      print('todo: handle the ${refactor.kind} refactoring');
       gen.writeStatement("static const String ${refactor.kind} = '${refactor.kind}';");
     });
     gen.writeStatement('}');
+
+    refactorings.forEach((Refactoring refactor) => refactor.generate(gen));
   }
 
   String toString() => domains.toString();
@@ -395,11 +396,73 @@ class Field implements Comparable {
 
 class Refactoring {
   String kind;
+  List<Field> optionsFields = [];
+  List<Field> feedbackFields = [];
 
   Refactoring(Element element) {
     kind = element.attributes['kind'];
 
-    // TODO: parse feedback and options
+    // Parse <options>
+    // <field name="deleteSource"><ref>bool</ref></field>
+    Element options = element.querySelector('options');
+    if (options != null) {
+      optionsFields = options
+        .getElementsByTagName('field')
+        .map((field) => new Field(field))
+        .toList();
+    }
+
+    // Parse <feedback>
+    // <field name="className" optional="true"><ref>String</ref></field>
+    Element feedback = element.querySelector('feedback');
+    if (feedback != null) {
+      feedbackFields = feedback
+        .getElementsByTagName('field')
+        .map((field) => new Field(field))
+        .toList();
+    }
+  }
+
+  String get className {
+    // MOVE_FILE ==> MoveFile
+    return kind.split('_').map((s) => forceTitleCase(s)).join('');
+  }
+
+  void generate(DartGenerator gen) {
+    // class RenameRefactoringOptions extends RefactoringOptions {
+    //   final String newName;
+    //   RenameRefactoringOptions(this.newName);
+    //   Map toMap() => {'newName': newName};
+    // }
+
+    // TODO: generate the options
+    if (optionsFields.isNotEmpty) {
+      gen.writeln();
+      gen.writeStatement('class ${className}RefactoringOptions extends RefactoringOptions {');
+      // fields
+      for (Field field in optionsFields) {
+        gen.writeStatement('final ${field.type} ${field.name};');
+      }
+
+      gen.writeln();
+      gen.writeStatement('${className}RefactoringOptions({'
+        '${optionsFields.map((f) => 'this.${f.name}').join(', ')}'
+        '});');
+
+      gen.writeln();
+      // toMap
+      gen.writeStatement('Map toMap() {');
+      gen.writeStatement('Map m = {};');
+      for (Field field in optionsFields) {
+        gen.writeStatement("if (${field.name} != null) m['${field.name}'] = ${field.name};");
+      }
+      gen.writeStatement('return m;');
+      gen.writeStatement('}');
+
+      gen.writeStatement('}');
+    }
+
+    // TODO: generate feedback
 
   }
 }
@@ -469,7 +532,7 @@ class TypeDef {
 
   bool get isObject => fields != null;
 
-  bool get isAbstract => name == 'RefactoringFeedback' || name == 'RefactoringOptions';
+  bool get isAbstract => name == 'RefactoringFeedback';
 
   bool get callParam => _callParam;
 
