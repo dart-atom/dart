@@ -16,7 +16,7 @@ const String experimental = 'experimental';
 
 final Logger _logger = new Logger('analysis_server_lib');
 
-const String generatedProtocolVersion = '1.12.0';
+const String generatedProtocolVersion = '1.13.0';
 
 class Server {
   StreamSubscription _streamSub;
@@ -303,6 +303,12 @@ class AnalysisDomain extends Domain {
     return _call('analysis.getHover', m).then(HoverResult.parse);
   }
 
+  Future<ReachableSourcesResult> getReachableSources(String file) {
+    Map m = {'file': file};
+    return _call('analysis.getReachableSources', m)
+        .then(ReachableSourcesResult.parse);
+  }
+
   Future<LibraryDependenciesResult> getLibraryDependencies() =>
       _call('analysis.getLibraryDependencies')
           .then(LibraryDependenciesResult.parse);
@@ -503,6 +509,15 @@ class HoverResult {
   final List<HoverInformation> hovers;
 
   HoverResult(this.hovers);
+}
+
+class ReachableSourcesResult {
+  static ReachableSourcesResult parse(Map m) =>
+      new ReachableSourcesResult(m['sources']);
+
+  final Map<String, List<String>> sources;
+
+  ReachableSourcesResult(this.sources);
 }
 
 class LibraryDependenciesResult {
