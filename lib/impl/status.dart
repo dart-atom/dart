@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:html' show InputElement;
 
+import 'package:logging/logging.dart';
+
 import '../analysis/analysis_server_lib.dart' show DiagnosticsResult, ContextData;
 import '../atom.dart';
 import '../atom_utils.dart';
@@ -13,6 +15,8 @@ import '../utils.dart';
 import '../views.dart';
 
 final String _statusOpenKey = 'statusOpen';
+
+final Logger _logger = new Logger('atom.status');
 
 class StatusViewManager implements Disposable {
   Disposables disposables = new Disposables();
@@ -184,9 +188,15 @@ class StatusView extends View {
     CoreElement start;
     CoreElement reanalyze;
     CoreElement stop;
+    String version;
 
     header.title.text = 'Analysis server';
-    String version;
+
+    Strobe strobe = new Strobe(
+      text: ' ',
+      classes: 'icon-pulse'
+    )..element.style.marginLeft = '0.3em';
+    header.toolbar.element.parent.children.add(strobe.element);
 
     var update = ([_]) {
       start.disabled = analysisServer.isActive;
@@ -210,29 +220,27 @@ class StatusView extends View {
     };
 
     // Hook up the strobes.
-    final Duration _duration = new Duration(seconds: 3);
+    // final Duration _duration = new Duration(seconds: 3);
 
-    Strobe strobe;
-    CoreElement response;
-    Timer timer;
+    // CoreElement response;
+    // Timer timer;
 
-    section.add([
-      div(c: 'overflow-hidden-ellipsis bottom-margin')..add([
-        strobe = new Strobe(text: ' ', classes: 'icon-pulse'),
-        response = span(c: 'text-subtle overflow-hidden-ellipsis')
-      ])
-    ]);
+    // section.add([
+    //   div(c: 'overflow-hidden-ellipsis bottom-margin')..add([
+    //     response = span(c: 'text-subtle overflow-hidden-ellipsis')
+    //   ])
+    // ]);
 
     var updateTraffic = (str) {
-      strobe.strobe();
-
       // Don't show the text for the diagnostic command.
       if (str.contains('"diagnostic.getDiagnostics"')) return;
       if (str.contains('"result":{"contexts":')) return;
 
-      response.text = str;
-      timer?.cancel();
-      timer = new Timer(_duration, () => response.text = '');
+      strobe.strobe();
+
+      // response.text = str;
+      // timer?.cancel();
+      // timer = new Timer(_duration, () => response.text = '');
     };
 
     subs.add(analysisServer.onSend.listen(updateTraffic));
@@ -291,6 +299,7 @@ class StatusView extends View {
           analysisServer.server.diagnostic.getDiagnostics().then((result) {
             updateUI(result);
           }).catchError((e, st) {
+            _logger.info('error from diagnostic.getDiagnostics()', e);
             _diagnosticTimer?.cancel();
             _diagnosticTimer = null;
             updateUI(null);
