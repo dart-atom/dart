@@ -16,7 +16,7 @@ const String experimental = 'experimental';
 
 final Logger _logger = new Logger('analysis_server_lib');
 
-const String generatedProtocolVersion = '1.13.0';
+const String generatedProtocolVersion = '1.14.0';
 
 class Server {
   StreamSubscription _streamSub;
@@ -928,7 +928,6 @@ class MapUriResult {
 
 // diagnostic domain
 
-@experimental
 class DiagnosticDomain extends Domain {
   DiagnosticDomain(Server server) : super(server, 'diagnostic');
 
@@ -1162,7 +1161,6 @@ class CompletionSuggestion {
       '[CompletionSuggestion kind: ${kind}, relevance: ${relevance}, completion: ${completion}, selectionOffset: ${selectionOffset}, selectionLength: ${selectionLength}, isDeprecated: ${isDeprecated}, isPotential: ${isPotential}]';
 }
 
-@experimental
 class ContextData {
   static ContextData parse(Map m) {
     if (m == null) return null;
@@ -1171,7 +1169,6 @@ class ContextData {
         m['explicitFileCount'],
         m['implicitFileCount'],
         m['workItemQueueLength'],
-        m['workItemQueueLengthAverage'],
         m['cacheEntryExceptions'] == null
             ? null
             : new List.from(m['cacheEntryExceptions']));
@@ -1181,16 +1178,10 @@ class ContextData {
   final int explicitFileCount;
   final int implicitFileCount;
   final int workItemQueueLength;
-  final String workItemQueueLengthAverage;
   final List<String> cacheEntryExceptions;
 
-  ContextData(
-      this.name,
-      this.explicitFileCount,
-      this.implicitFileCount,
-      this.workItemQueueLength,
-      this.workItemQueueLengthAverage,
-      this.cacheEntryExceptions);
+  ContextData(this.name, this.explicitFileCount, this.implicitFileCount,
+      this.workItemQueueLength, this.cacheEntryExceptions);
 }
 
 class Element {
