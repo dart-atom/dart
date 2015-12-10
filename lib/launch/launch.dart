@@ -177,10 +177,10 @@ class Launch implements Disposable {
   final Function killHandler;
   final String cwd;
 
-  StreamController<TextFragment> _stdio = new StreamController.broadcast();
   final Property<int> exitCode = new Property();
-
   final Property<int> servicePort = new Property();
+
+  StreamController<TextFragment> _stdio = new StreamController.broadcast();
   DebugConnection _debugConnection;
   _PathResolver _pathResolver;
 

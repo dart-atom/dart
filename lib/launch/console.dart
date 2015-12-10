@@ -2,7 +2,7 @@
 /// A console output view.
 library atom.console;
 
-import 'dart:js' as js;
+import 'dart:html' show ScrollAlignment;
 
 import '../atom.dart';
 import '../atom_statusbar.dart';
@@ -12,6 +12,8 @@ import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
 import 'launch.dart';
+
+final String _viewGroup = ViewGroup.bottom;
 
 class ConsoleController implements Disposable {
   ConsoleStatusElement statusElement;
@@ -42,7 +44,7 @@ class ConsoleController implements Disposable {
 
   void _launchAdded(Launch launch) {
     // Check if we should auto-toggle hide the errors view.
-    ViewGroup group = viewGroupManager.getGroup('bottom');
+    ViewGroup group = viewGroupManager.getGroup(_viewGroup);
     if (group.views.length == 1 && group.hasViewId(errorViewId)) {
       _errorsView = group.getViewById(errorViewId);
       group.removeView(_errorsView);
@@ -50,14 +52,14 @@ class ConsoleController implements Disposable {
 
     ConsoleView view = new ConsoleView(this, launch);
     _allViews.add(view);
-    viewGroupManager.addView('bottom', view);
+    viewGroupManager.addView(_viewGroup, view);
   }
 
   void _launchRemoved(Launch launch) {
     // Re-show the errors view if we auto-hide it.
     if (_errorsView != null && launchManager.launches.isEmpty) {
       if (!viewGroupManager.hasViewId(errorViewId)) {
-        viewGroupManager.addView('bottom', _errorsView);
+        viewGroupManager.addView(_viewGroup, _errorsView);
       }
       _errorsView = null;
     }
@@ -72,7 +74,7 @@ class ConsoleController implements Disposable {
     for (View view in _allViews) {
       if (!viewGroupManager.hasViewId(view.id)) {
         viewShown = true;
-        viewGroupManager.addView('bottom', view);
+        viewGroupManager.addView(_viewGroup, view);
       }
     }
 
@@ -119,6 +121,7 @@ class ConsoleView extends View {
   String _lastText = '';
 
   CoreElement _debugButton;
+  CoreElement _observatoryButton;
   CoreElement _terminateButton;
 
   ConsoleView(this.controller, this.launch) {
@@ -144,6 +147,15 @@ class ConsoleView extends View {
     _subs.add(launch.onStdio.listen((text) => _emitText(
         text.text, error: text.error, subtle: text.subtle, highlight: text.highlight)));
 
+    // Terminate
+    if (launch.canKill()) {
+      _terminateButton = toolbar.add(
+        button(text: 'Stop', c: 'btn icon icon-primitive-square')
+      );
+      _terminateButton.tooltip = 'Terminate process';
+      _terminateButton.click(() => launch.kill());
+    }
+
     // Configure
     if (launch.launchConfiguration != null) {
       CoreElement e = toolbar.add(
@@ -167,26 +179,8 @@ class ConsoleView extends View {
     //   });
     // }
 
-    // Terminate
-    if (launch.canKill()) {
-      _terminateButton = toolbar.add(
-        button(text: 'Terminate', c: 'btn icon icon-primitive-square')
-      );
-      _terminateButton.tooltip = 'Terminate process';
-      _terminateButton.click(() => launch.kill());
-    }
-
     // Observatory
-    // TODO: Listen for obs. port being provided after a delay.
-    if (launch.canDebug()) {
-      _debugButton = toolbar.add(
-        button(text: 'Observatory', c: 'btn icon icon-dashboard')
-      );
-      _debugButton.tooltip = 'Open the Observatory';
-      _debugButton.click(() {
-        shell.openExternal('http://localhost:${launch.servicePort}/');
-      });
-    }
+    launch.servicePort.observe(_watchServicePort);
 
     // Emit a header.
     CoreElement header = div(c: 'console-header');
@@ -217,8 +211,38 @@ class ConsoleView extends View {
       if (viewGroupManager.hasViewId(id)) {
         viewGroupManager.activate(this);
       } else {
-        viewGroupManager.addView('bottom', this);
+        viewGroupManager.addView(_viewGroup, this);
       }
+    }
+  }
+
+  void _watchServicePort(int port) {
+    if (!launch.isRunning) return;
+
+    if (_observatoryButton != null && port == null) {
+      _observatoryButton.dispose();
+      _observatoryButton = null;
+    } else if (_observatoryButton == null && port != null) {
+      _observatoryButton = toolbar.add(
+        button(text: 'Observatory', c: 'btn icon icon-dashboard')
+      );
+      _observatoryButton.tooltip = 'Open the Observatory';
+      _observatoryButton.click(() {
+        shell.openExternal('http://localhost:${launch.servicePort}/');
+      });
+    }
+
+    if (_debugButton != null && port == null) {
+      _debugButton.dispose();
+      _debugButton = null;
+    } else if (_debugButton == null && port != null) {
+      _debugButton = toolbar.add(
+        button(text: 'Debug', c: 'btn icon icon-bug')
+      );
+      _debugButton.tooltip = 'Open the debugger';
+      _debugButton.click(() {
+        debugManager.showViewForConnection(launch.debugConnection);
+      });
     }
   }
 
@@ -229,7 +253,8 @@ class ConsoleView extends View {
       CoreElement footer =
         div(text: 'exited with code ${launch.exitCode}', c: 'console-footer');
       _emitElement(footer);
-      _debugButton?.disabled = true;
+      _observatoryButton?.disabled = true;
+      // _debugButton?.disabled = true;
       _terminateButton?.disabled = true;
     }
   }
@@ -324,9 +349,9 @@ class ConsoleView extends View {
   void _emitElement(CoreElement e) {
     output.add(e);
 
-    //e.element.scrollIntoView(ScrollAlignment.BOTTOM);
-    js.JsObject obj = new js.JsObject.fromBrowserObject(e.element);
-    obj.callMethod('scrollIntoView', [true]);
+    e.element.scrollIntoView(ScrollAlignment.BOTTOM);
+    // js.JsObject obj = new js.JsObject.fromBrowserObject(e.element);
+    // obj.callMethod('scrollIntoView', [true]);
   }
 }
 

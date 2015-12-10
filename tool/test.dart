@@ -26,9 +26,9 @@ void main(List<String> args) {
   Timer.run(() => print('timer 1'));
   Timer.run(_handleTimer);
 
-  dev.registerExtension('foo', fooHandler);
-
-  dev.log('log from test');
+  // dev.registerExtension('foo', fooHandler);
+  //
+  // dev.log('log from test');
 
   // dev.Timeline.timeSync('frame', _mockFrame);
   // dev.inspect(fido);
@@ -44,6 +44,8 @@ void main(List<String> args) {
   print('foo 1');
   print('foo 2');
   print('foo 3');
+
+  dev.debugger();
 
   print('calcRecursive: ${calcRecursive(300)}');
 

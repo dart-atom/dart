@@ -188,15 +188,20 @@ class StatusView extends View {
     CoreElement start;
     CoreElement reanalyze;
     CoreElement stop;
+    CoreElement status;
+
     String version;
 
     header.title.text = 'Analysis server';
 
-    Strobe strobe = new Strobe(
-      text: ' ',
-      classes: 'icon-pulse'
+    Strobe strobeIncoming = new Strobe(
+      text: ' ', classes: 'icon-triangle-left'
     )..element.style.marginLeft = '0.3em';
-    header.toolbar.element.parent.children.add(strobe.element);
+    Strobe strobeOutgoing = new Strobe(
+      text: ' ', classes: 'icon-triangle-right'
+    );
+    header.toolbar.add(strobeIncoming);
+    header.toolbar.add(strobeOutgoing);
 
     var update = ([_]) {
       start.disabled = analysisServer.isActive;
@@ -205,9 +210,9 @@ class StatusView extends View {
 
       if (!analysisServer.isActive) {
         header.subtitle.text = '';
-        header.toolbar.text = 'not active';
+        status.text = 'not active';
       } else {
-        header.toolbar.text = analysisServer.isBusy ? 'analyzing…' : 'idle';
+        status.text = analysisServer.isBusy ? 'analyzing…' : 'idle';
 
         Future f = version != null
           ? new Future.value(version)
@@ -231,22 +236,25 @@ class StatusView extends View {
     //   ])
     // ]);
 
-    var updateTraffic = (str) {
+    var updateTrafficIncoming = (str) {
+      // Don't show the text for the diagnostic command.
+      if (str.contains('"result":{"contexts":')) return;
+      strobeIncoming.strobe();
+    };
+    subs.add(analysisServer.onReceive.listen(updateTrafficIncoming));
+
+    var updateTrafficOutgoing = (str) {
       // Don't show the text for the diagnostic command.
       if (str.contains('"diagnostic.getDiagnostics"')) return;
-      if (str.contains('"result":{"contexts":')) return;
-
-      strobe.strobe();
-
-      // response.text = str;
-      // timer?.cancel();
-      // timer = new Timer(_duration, () => response.text = '');
+      strobeOutgoing.strobe();
     };
-
-    subs.add(analysisServer.onSend.listen(updateTraffic));
-    subs.add(analysisServer.onReceive.listen(updateTraffic));
+    subs.add(analysisServer.onSend.listen(updateTrafficOutgoing));
 
     // Show diagnostics.
+    section.add(div()..add([
+      span(text: 'status:', c: 'diagnostics-title'),
+      status = span(c: 'diagnostics-data')
+    ]));
     CoreElement diagnostics = section.add(div(c: 'bottom-margin'));
     _createDiagnostics(diagnostics);
 
@@ -289,7 +297,7 @@ class StatusView extends View {
         int queue = result.contexts
           .map((ContextData c) => c.workItemQueueLength)
           .fold(0, (a, b) => a + b);
-        taskQueueCount.text = (queue == 0 && !analysisServer.isBusy) ? '—' : commas(queue);
+        taskQueueCount.text = commas(queue);
       }
     };
 

@@ -140,8 +140,8 @@ class ErrorsView extends View {
     root.toggleClass('dartlang', true);
 
     toolbar.add([
-      focusElement = div(c: 'badge focus-title'),
-      countElement = div(c: 'errors-count')
+      countElement = div(c: 'errors-count'),
+      focusElement = div(c: 'badge focus-title')
     ]);
 
     content.toggleClass('tab-scrollable');

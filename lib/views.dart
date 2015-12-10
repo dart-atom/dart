@@ -18,8 +18,9 @@ class ViewResizer extends CoreElement {
   StreamSubscription _moveSub;
   StreamSubscription _upSub;
 
-  ViewResizer.createHorizontal() : super('div') {
+  ViewResizer.createHorizontal({bool top: false}) : super('div') {
     horizontalSplitter = true;
+    if (top) attribute('top');
     _init();
   }
 
@@ -182,6 +183,10 @@ class ViewGroupManager implements Disposable {
 }
 
 class ViewGroup implements Disposable {
+  static const String top = 'top';
+  static const String right = 'right';
+  static const String bottom = 'bottom';
+
   static const int _defaultWidth = 250;
   static const int _defaultHeight = 125;
 
@@ -198,7 +203,10 @@ class ViewGroup implements Disposable {
   List<View> _history = [];
 
   ViewGroup(this.name) {
-    bool rightPanel = name == 'right';
+    bool topPanel = name == top;
+    bool rightPanel = name == right;
+    // TODO: the resizer
+    bool bottomPanel = name == bottom;
 
     String c = 'atom-view tree-view';
     root = div(c: c)..layoutVertical();
@@ -209,14 +217,15 @@ class ViewGroup implements Disposable {
       tabContainer = div(c: 'tab-container')..flex(),
       resizer = rightPanel
           ? new ViewResizer.createVertical()
-          : new ViewResizer.createHorizontal()
+          : new ViewResizer.createHorizontal(top: !bottomPanel)
     ]);
 
     if (rightPanel) {
       _panel = atom.workspace.addRightPanel(item: root.element, visible: false);
+    } else if (topPanel) {
+      _panel = atom.workspace.addTopPanel(item: root.element, visible: false);
     } else {
       _panel = atom.workspace.addBottomPanel(item: root.element, visible: false);
-      // root.toggleAttribute('compact', true);
     }
 
     _setupResizer(
@@ -332,16 +341,22 @@ abstract class View implements Disposable {
 
   View() :
       root = div(c: 'tab-content'),
-      toolbar = div(c: 'button-bar'),
+      toolbar = div(),
       content = div() {
-    root.add([toolbar, content]);
+    root.add([
+      div(c: 'button-bar')..flex()..add([
+        toolbar,
+        _closeButton = new CloseButton()..click(handleClose)
+      ]),
+      content
+    ]);
 
     tabElement = li(c: 'tab')..add([
       div(text: label, c: 'title'),
       div(c: 'close-icon')..click(handleClose)
     ])..click(_handleTab)..element.attributes['data-type'] = 'ViewPartEditor';
 
-    _closeButton = toolbar.add(new CloseButton()..click(handleClose));
+    // _closeButton = toolbar.add(new CloseButton()..click(handleClose));
   }
 
   String get id;
