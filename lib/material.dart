@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'atom.dart';
 import 'elements.dart';
 import 'utils.dart';
 
@@ -218,10 +219,11 @@ class MTree<T> extends MList<T> {
 
         if (childContainer == null) {
           childContainer = ul(c: 'material-list-indent');
-          // TODO: show feedback during an expansion
-          // TODO: handle errors
+          // TODO: Show feedback during an expansion.
           treeModel.getChildren(item).then((List<T> items) {
             _populateChildren(items, childContainer);
+          }).catchError((e) {
+            atom.notifications.addError('${e}');
           });
           int index = element.element.parent.children.indexOf(element.element);
           element.element.parent.children.insert(index + 1, childContainer.element);

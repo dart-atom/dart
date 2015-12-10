@@ -89,7 +89,6 @@ abstract class DebugValue {
 
   int get itemsLength;
 
-  // TODO: This will need to be iterated on to better handle things like arrays.
   Future<List<DebugVariable>> getChildren();
 
   String toString() => valueAsString;

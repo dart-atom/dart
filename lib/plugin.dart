@@ -413,6 +413,7 @@ class AtomDartPackage extends AtomPackage {
     var flushController = new StreamController<AnalysisFlushResults>.broadcast();
     errorRepository.initStreams(errorController.stream, flushController.stream);
     _consumer = new DartLinterConsumer(errorRepository);
+    deps[DartLinterConsumer] = _consumer;
 
     // Proxy error messages from analysis server to ErrorRepository when the
     // analysis server becomes active.

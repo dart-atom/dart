@@ -287,12 +287,10 @@ bool listIdentical(List a, List b) {
   return true;
 }
 
-// TODO: Implement this.
-
 /// Diff the two strings and return the list of edits to convert [oldText] to
 /// [newText].
 List<Edit> simpleDiff(String oldText, String newText) {
-  // TODO: Optimize this. Look for a single deletion, addition, or replacement
+  // TODO: Implement this. Look for a single deletion, addition, or replacement
   // edit that will convert oldtext to newText, or do a wholesale replacement.
 
   // int oldLen = oldText.length;

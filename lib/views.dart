@@ -18,6 +18,7 @@ class ViewResizer extends CoreElement {
   StreamSubscription _moveSub;
   StreamSubscription _upSub;
 
+  // TODO: Implement the resizer for the top panel.
   ViewResizer.createHorizontal({bool top: false}) : super('div') {
     horizontalSplitter = true;
     if (top) attribute('top');
@@ -205,7 +206,6 @@ class ViewGroup implements Disposable {
   ViewGroup(this.name) {
     bool topPanel = name == top;
     bool rightPanel = name == right;
-    // TODO: the resizer
     bool bottomPanel = name == bottom;
 
     String c = 'atom-view tree-view';

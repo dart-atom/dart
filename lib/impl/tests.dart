@@ -28,8 +28,6 @@ class TestManager implements Disposable {
       return;
     }
 
-    // TODO: Show output in the console.
-
     PubAppLocal testApp = new PubAppLocal('test', project.path);
     testApp.run(
       title: 'Running ${project.name} tests',

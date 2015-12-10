@@ -8,6 +8,7 @@ import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../elements.dart';
+import '../linter.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -15,9 +16,7 @@ import '../views.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';
 
-// TODO: Have a scroll sync button: <span class='badge icon icon-diff-renamed'>
-
-// TODO: Or, scroll-sync to the document automatically.
+// TODO: Implement auto scroll-sync with the document.
 
 class OutlineController implements Disposable {
   Disposables disposables = new Disposables();
@@ -86,6 +85,8 @@ class OutlineView implements Disposable {
   CoreElement fileType;
   CoreElement title;
   ListTreeBuilder treeBuilder;
+  CoreElement errorArea;
+  _ErrorsList errorsList;
   AnalysisOutline lastOutline;
   StreamSubscriptions subs = new StreamSubscriptions();
 
@@ -95,6 +96,7 @@ class OutlineView implements Disposable {
     subs.add(editor.onDidDestroy.listen((_) => dispose()));
     subs.add(editor.onDidChangeCursorPosition.listen(_cursorChanged));
     subs.add(analysisServer.onOutline.listen(_handleOutline));
+    subs.add(onProcessedErrorsChanged.listen(_handleErrorsChanged));
 
     root = editor.view['shadowRoot'];
 
@@ -121,6 +123,9 @@ class OutlineView implements Disposable {
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
         ..toggleClass('outline-tree')
         ..toggleClass('selection'),
+      errorArea = div(c: 'outline-errors')..hidden(true)..add([
+        errorsList = new _ErrorsList(this)
+      ]),
       resizer = new ViewResizer.createVertical()
     ]);
 
@@ -136,6 +141,8 @@ class OutlineView implements Disposable {
       // Ask the manager for the outline data.
       _handleOutline(controller._getLastOutlineData(path));
     }
+
+    _handleErrorsChanged();
   }
 
   void _setupResizer(ViewResizer resizer) {
@@ -210,6 +217,14 @@ class OutlineView implements Disposable {
     }
 
     _cursorChanged(editor.getCursorBufferPosition());
+  }
+
+  void _handleErrorsChanged([List<analysis.AnalysisError> errors]) {
+    if (errorsList == null) return;
+
+    if (errors == null) errors = deps[DartLinterConsumer].errors;
+    errorsList.updateWith(errors);
+    errorArea.hidden(!errorsList.hasErrors);
   }
 
   // TODO: handle multiple cursors
@@ -324,8 +339,9 @@ class OutlineView implements Disposable {
     }
   }
 
-  void _jumpTo(Node node) {
-    analysis.Location location = node.data.element.location;
+  void _jumpTo(Node node) => _jumpToLocation(node.data.element.location);
+
+  void _jumpToLocation(analysis.Location location) {
     Range range = new Range.fromPoints(
       new Point.coords(location.startLine - 1, location.startColumn - 1),
       new Point.coords(location.startLine - 1, location.startColumn - 1 + location.length)
@@ -334,11 +350,39 @@ class OutlineView implements Disposable {
   }
 
   // void _scrollSync() {
-  //   // TODO: get the current top visible line
-  //   // TODO: get the char index
-  //   // TODO: get the last node the overlaps that index
-  //   // TODO: scroll the cooresponding element into view
+  //   // get the current top visible line
+  //   // get the char index
+  //   // get the last node the overlaps that index
+  //   // scroll the cooresponding element into view
   //
   //   if (treeBuilder != null) treeBuilder.scrollToSelection();
   // }
+}
+
+class _ErrorsList extends CoreElement {
+  final OutlineView view;
+  final String path;
+
+  _ErrorsList(OutlineView inView) :
+    view = inView,
+    path = inView.path,
+    super('div', classes: 'errors-list');
+
+  bool get hasErrors => element.children.isNotEmpty;
+
+  void updateWith(List<analysis.AnalysisError> errors) {
+    clear();
+
+    for (analysis.AnalysisError error in errors) {
+      if (path != error.location.file) continue;
+
+      add(div(c: 'outline-error-item')..add([
+        span(
+          text: error.severity.toLowerCase(),
+          c: 'item-${error.severity.toLowerCase()}'
+        ),
+        span(text: ' ${error.message}', c: 'comment')
+      ])..click(() => view._jumpToLocation(error.location)));
+    }
+  }
 }

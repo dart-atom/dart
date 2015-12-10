@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- we now show errors in the outline view
+
 ## 0.4.17
 - added an analysis server section to the plugin status view
 - add inline local refactoring

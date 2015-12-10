@@ -104,22 +104,6 @@ class ProxyHolder {
     return controller.stream;
   }
 
-  // TODO: This seems to be buggy.
-  // Stream eventStream2Args(String eventName, arg1, arg2) {
-  //   Disposable disposable;
-  //   StreamController<List<String>> controller = new StreamController.broadcast(
-  //       onCancel: () => disposable.dispose());
-  //
-  //   try {
-  //     disposable = new JsDisposable(
-  //       invoke(eventName, arg1, arg2, (evt) => controller.add(evt)));
-  //   } catch (e, st) {
-  //     _logger.warning('error listening to ${eventName}', e, st);
-  //   }
-  //
-  //   return controller.stream;
-  // }
-
   int get hashCode => obj.hashCode;
 
   bool operator==(other) => other is ProxyHolder && obj == other.obj;

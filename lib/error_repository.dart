@@ -58,6 +58,8 @@ class ErrorRepository implements Disposable {
     }
   }
 
+  List<AnalysisError> getForPath(String path) => knownErrors[path];
+
   void dispose() => subs.cancel();
 
   void _handleAddErrors(AnalysisErrors analysisErrors) {

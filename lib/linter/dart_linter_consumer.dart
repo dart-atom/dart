@@ -1,9 +1,5 @@
 part of atom.linter_impl;
 
-// TODO: Show that an error has an associated quick-fix.
-
-// TODO: We should cap on a per-project basis, rather than a per-workspace basis.
-
 const int maxIssuesPerFile = 200;
 const int maxTotalIssues = 500;
 
@@ -33,6 +29,8 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
     //     _errorRepository.onChange).debounce(_reportingDelay);
     // errorStream.listen((_) => _regenErrors());
   }
+
+  List<AnalysisError> get errors => _oldIssues;
 
   void consume(LinterService service) {
     _service = service;
