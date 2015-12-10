@@ -49,6 +49,10 @@ class DebugManager implements Disposable {
     add('debug-stepout', () => activeConnection?.stepOut());
   }
 
+  DebuggerView showViewForConnection(DebugConnection connection) {
+    return DebuggerView.showViewForConnection(connection);
+  }
+
   Stream<DebugConnection> get onAdded => _addedController.stream;
 
   Stream<DebugConnection> get onRemoved => _removedController.stream;

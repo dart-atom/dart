@@ -1,5 +1,7 @@
 library atom.debugger_ui;
 
+import 'dart:async';
+
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
@@ -14,7 +16,6 @@ import 'debugger.dart';
 import 'model.dart';
 import 'observatory_debugger.dart';
 import 'utils.dart';
-import 'dart:async';
 
 final Logger _logger = new Logger('atom.debugger_ui');
 
@@ -26,6 +27,8 @@ final Logger _logger = new Logger('atom.debugger_ui');
 // closing a debugger tab doesn't tear down any listening state.
 
 // TODO: current connection (can be null)
+
+// TODO: have a contributed Flutter section
 
 class DebuggerView extends View {
   static String viewIdForConnection(DebugConnection connection) {
@@ -65,12 +68,16 @@ class DebuggerView extends View {
   final Disposables disposables = new Disposables();
 
   DebuggerView(this.connection) {
+    // Close the debugger view when the launch is collected?
+
     // Close the debugger view on termination.
-    connection.onTerminated.then((_) {
-      _removeExecutionMarker();
-      handleClose();
-      dispose();
-    });
+    if (connection.isAlive) {
+      connection.onTerminated.then((_) {
+        _removeExecutionMarker();
+        handleClose();
+        dispose();
+      });
+    }
 
     CoreElement titleSection;
     CoreElement flowControlElement;
@@ -183,6 +190,7 @@ class DebuggerView extends View {
     subs.cancel();
     flowControlSection.dispose();
     disposables.dispose();
+    _removeExecutionMarker();
   }
 
   void _showTab(String id) {
@@ -251,7 +259,7 @@ class _MockTab extends MTab {
 
 class FlowControlSection implements Disposable {
   final DebuggerView view;
-  final ObservatoryConnection connection;
+  final DebugConnection connection;
   final StreamSubscriptions subs = new StreamSubscriptions();
 
   CoreElement resume;
@@ -271,7 +279,7 @@ class FlowControlSection implements Disposable {
 
     CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
       resume,
-      div()..flex(),
+      div()..element.style.width = '1em',
       stepIn,
       stepOver,
       stepOut,
@@ -281,11 +289,11 @@ class FlowControlSection implements Disposable {
 
     // TODO: Pull down menu for switching between isolates.
     element.add([
-      executionControlToolbar,
       subtitle = div(
         text: 'no isolate selected',
-        c: 'debugger-section-subtitle font-style-italic'
-      )
+        c: 'overflow-hidden-ellipsis font-style-italic'
+      ),
+      executionControlToolbar
     ]);
 
     view.observeIsolate(_handleIsolateChange);
@@ -387,14 +395,14 @@ class ExecutionTab extends MTab {
   void _renderFrame(DebugFrame frame, CoreElement element) {
     String style = frame.isSystem ? 'icon icon-git-commit' : 'icon icon-three-bars';
     String locationText = getDisplayUri(frame.location.displayPath);
-    String tooltipText = frame.location.displayPath;
+    // String tooltipText = frame.location.displayPath;
 
-    // TODO: The plan is for the location resolution code to become more synchronous.
-    if (frame.location.line != null) {
-      tooltipText = '${tooltipText}, '
-        'line ${frame.location.line}, '
-        'column ${frame.location.column}';
-    }
+    // // TODO: The plan is for the location resolution code to become more synchronous.
+    // if (frame.location.line != null) {
+    //   tooltipText = '${tooltipText}, '
+    //     'line ${frame.location.line}, '
+    //     'column ${frame.location.column}';
+    // }
 
     element..add([
       span(c: style),
@@ -403,7 +411,7 @@ class ExecutionTab extends MTab {
         text: locationText,
         c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
       )..flex()
-    ])..layoutHorizontal()..tooltip = tooltipText;
+    ])..layoutHorizontal();
   }
 
   void _selectFrame(DebugFrame frame) {
@@ -445,7 +453,7 @@ class ExecutionTab extends MTab {
       span(
         text: valueText,
         c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
-      )..flex()..tooltip = valueText
+      )..flex()
     ])..layoutHorizontal();
   }
 

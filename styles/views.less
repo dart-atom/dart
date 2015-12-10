@@ -47,7 +47,6 @@ div.atom-view {
     top: 8px;
     right: 0;
     display: flex;
-    flex-flow: row-reverse;
     align-items: center;
     z-index: 1;
 
@@ -103,6 +102,11 @@ div.atom-view {
     right: 0;
     top: 0;
     height: 8px;
+  }
+
+  .view-resize[horizontal][top] {
+    top: inherit;
+    bottom: 0;
   }
 
   .view-section {
