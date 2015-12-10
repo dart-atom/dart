@@ -16,7 +16,7 @@ final Logger _logger = new Logger('atom.launch_configs');
 
 // TODO: We need to update the launch configs in place - not create new objects.
 
-// TODO: watch the directory; update on changes.
+// TODO: Watch the directory; update on changes.
 
 class LaunchConfigurationManager implements Disposable, StateStorable {
   Map<String, _ProjectConfigurations> _projectConfigs = {};

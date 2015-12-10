@@ -90,11 +90,6 @@ void smokeTest() {
   // p.write('lorem\n');
   // p.write('ipsum\n');
 
-  // TODO: events
-  // atom.project.onDidChangePaths.listen((e) {
-  //   print("dirs = ${e}");
-  // });
-
   // launches
   Launch launch = new Launch(launchManager, new CliLaunchType(), null, 'launch_test.sh');
   launchManager.addLaunch(launch);

@@ -38,8 +38,39 @@ atom-text-editor::shadow .outline-view {
 
   .outline-tree {
     flex: 20;
-    padding: 6px;
+    padding: 0 6px 6px 6px;
     overflow-y: auto;
+  }
+
+  .outline-errors {
+    margin: 6px;
+    border-top: 1px solid @tool-panel-border-color;
+    padding-top: 6px;
+  }
+
+  .errors-list {
+    max-height: 104px;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .outline-error-item {
+      cursor: pointer;
+      overflow-x: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      .item-info {
+        color: @syntax-color-renamed;
+      }
+
+      .item-warning {
+        color: @syntax-color-modified;
+      }
+
+      .item-error {
+        color: @syntax-color-removed;
+      }
+    }
   }
 
   ul,

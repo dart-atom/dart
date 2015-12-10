@@ -336,13 +336,6 @@ class Config extends ProxyHolder {
     return new JsDisposable(invoke('observe', keyPath, options, callback));
   }
 
-  // TODO: This throws exceptions - eventStream2Args is buggy?
-  // /// Add a listener for changes to a given key path.
-  // Stream<dynamic> onDidChange(String keyPath, [Map options]) {
-  //   if (options == null) options = {};
-  //   return eventStream2Args('onDidChangePaths', keyPath, options);
-  // }
-
   Stream<dynamic> onDidChange(String keyPath, [Map options]) {
     Disposable disposable;
     StreamController controller = new StreamController.broadcast(onCancel: () {
@@ -1132,7 +1125,6 @@ class AtomEvent extends ProxyHolder {
 
   // /// Return the currently selected file item. This call will only be meaningful
   // /// if the event target is the Tree View.
-  // // TODO: deprecate?
   // Element get selectedFileItem {
   //   Element element = currentTarget;
   //   return element.querySelector('li[is=tree-view-file].selected span.name');
@@ -1259,8 +1251,8 @@ JsObject _create(String className, dynamic arg1, [dynamic arg2]) {
 
 JsObject _cvt(JsObject object) {
   if (object == null) return null;
-  // TODO: We really shouldn't have to be wrapping objects we've already gotten
-  // from JS interop.
+  // We really shouldn't have to be wrapping objects we've already gotten from
+  // JS interop.
   return new JsObject.fromBrowserObject(object);
 }
 

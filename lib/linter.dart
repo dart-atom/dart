@@ -24,7 +24,6 @@ LintMessage _errorToLintMessage(String filePath, AnalysisError error) {
 }
 
 Rn _locationToRange(Location location) {
-  // TODO: This does not correctly handle multi-line errors.
   return new Rn(
       new Pt(location.startLine - 1, location.startColumn - 1),
       new Pt(location.startLine - 1, location.startColumn - 1 + location.length)

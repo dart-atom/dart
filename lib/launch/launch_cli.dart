@@ -1,6 +1,7 @@
 library atom.launch_cli;
 
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:logging/logging.dart';
 
@@ -15,7 +16,7 @@ import 'launch.dart';
 
 final Logger _logger = new Logger('atom.launch_cli');
 
-const int _observePort = 16161;
+final String _observatoryPrefix = 'Observatory listening on ';
 
 class CliLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -84,12 +85,13 @@ class CliLaunchType extends LaunchType {
 
     List<String> _args = [];
 
+    int observatoryPort;
+
     if (withDebug) {
-      // TODO: Find an open port.
-      //http://127.0.0.1:8181/
-      // todo: --pause_isolates_on_start=true
+      observatoryPort = _getOpenPort();
+
+      _args.add('--enable-vm-service:${observatoryPort}');
       _args.add('--pause_isolates_on_start=true');
-      _args.add('--enable-vm-service=${_observePort}');
     }
 
     if (configuration.checked) _args.add('--checked');
@@ -110,19 +112,24 @@ class CliLaunchType extends LaunchType {
       project: project,
       title: description
     );
-    if (withDebug) launch.servicePort.value = _observePort;
     manager.addLaunch(launch);
 
     runner.execStreaming();
     runner.onStdout.listen((str) {
-      // Observatory listening on http://127.0.0.1:16161
-      if (str.startsWith('Observatory listening on ')) {
-        Future f = ObservatoryDebugger.connect(
-            launch, 'localhost', _observePort, isolatesStartPaused: true);
-        f.catchError((e) {
+      // "Observatory listening on http://127.0.0.1:16161\n"
+      if (str.startsWith(_observatoryPrefix)) {
+        // str is 'http://127.0.0.1:16161'.
+        str = str.substring(_observatoryPrefix.length).trim();
+
+        launch.servicePort.value = observatoryPort;
+
+        ObservatoryDebugger.connect(
+          launch, 'localhost', observatoryPort, isolatesStartPaused: true
+        ).catchError((e) {
           launch.pipeStdio(
-              'Unable to connect to the observatory (port ${_observePort}).\n',
-              error: true);
+            'Unable to connect to the observatory (port ${observatoryPort}).\n',
+            error: true
+          );
         });
       } else {
         launch.pipeStdio(str);
@@ -139,7 +146,7 @@ class CliLaunchType extends LaunchType {
   }
 }
 
-// TODO: Move more launching functionality into this class
+// TODO: Move more launching functionality into this class.
 class _CliLaunch extends Launch {
   CachingServerResolver _resolver;
 
@@ -168,3 +175,9 @@ class _CliLaunch extends Launch {
 
   Future<String> resolve(String url) => _resolver.resolve(url);
 }
+
+final math.Random _rand = new math.Random();
+
+/// This guesses for a likely open port. We could also use the technique of
+/// opening a server socket, recording the port number, and closing the socket.
+int _getOpenPort() => 16161 + _rand.nextInt(100);
