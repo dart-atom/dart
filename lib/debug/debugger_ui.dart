@@ -429,18 +429,6 @@ class ExecutionTab extends MTab {
   }
 
   void _renderVariable(DebugVariable local, CoreElement element) {
-    // if (local is! DebugVariable) {
-    //   print('$local is not a DebugVariable');
-    //   print('${local}');
-    //   return;
-    // }
-    //
-    // if (local.value is! DebugValue) {
-    //   print('${local} value is not a DebugValue');
-    //   print('${local.value}');
-    //   return;
-    // }
-
     DebugValue value = local.value;
     String valueText;
 
