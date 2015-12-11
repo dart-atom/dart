@@ -98,7 +98,11 @@ class ObservatoryConnection extends DebugConnection {
   // control commands.
   DebugIsolate get _selectedIsolate => isolates.selection;
 
-  Future resume() => _selectedIsolate?.resume();
+  Future resume() {
+    if (_selectedIsolate != null) return _selectedIsolate?.resume();
+    return new Future.value();
+  }
+
   stepIn() => _selectedIsolate?.stepIn();
   stepOver() => _selectedIsolate?.stepOver();
   stepOut() => _selectedIsolate?.stepOut();
@@ -468,10 +472,10 @@ class ObservatoryIsolate extends DebugIsolate {
     return service.getStack(id).then((Stack stack) {
       List<ScriptRef> scriptRefs = [];
 
+      int index = stack.frames.length;
       frames = stack.frames.map((Frame frame) {
         scriptRefs.add(frame.location.script);
-
-        ObservatoryFrame obsFrame = new ObservatoryFrame(this, frame);
+        ObservatoryFrame obsFrame = new ObservatoryFrame(this, frame, index--);
         obsFrame.locals = new List.from(
           frame.vars.map((v) => new ObservatoryVariable(this, v))
         );
@@ -506,12 +510,13 @@ class ObservatoryIsolate extends DebugIsolate {
 class ObservatoryFrame extends DebugFrame {
   final ObservatoryIsolate isolate;
   final Frame frame;
+  final int frameIndex;
 
   List<DebugVariable> locals;
 
   ObservatoryLocation _location;
 
-  ObservatoryFrame(this.isolate, this.frame);
+  ObservatoryFrame(this.isolate, this.frame, this.frameIndex);
 
   String get title => printFunctionNameRecursive(frame.function);
 

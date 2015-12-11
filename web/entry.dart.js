@@ -7487,7 +7487,8 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.ObservatoryIsolate__populateFrames_closure[1];
     ObservatoryIsolate__populateFrames_closure.prototype = $desc;
     ObservatoryIsolate__populateFrames_closure.$__fields__ = ["$this"];
-    function ObservatoryIsolate__populateFrames__closure($this, scriptRefs) {
+    function ObservatoryIsolate__populateFrames__closure(_box_0, $this, scriptRefs) {
+      this._box_0 = _box_0;
       this.$this = $this;
       this.scriptRefs = scriptRefs;
       this.$deferredAction();
@@ -7497,7 +7498,7 @@ self._domRemove = function(element) {
       ObservatoryIsolate__populateFrames__closure.name = "ObservatoryIsolate__populateFrames__closure";
     $desc = $collectedClasses$.ObservatoryIsolate__populateFrames__closure[1];
     ObservatoryIsolate__populateFrames__closure.prototype = $desc;
-    ObservatoryIsolate__populateFrames__closure.$__fields__ = ["$this", "scriptRefs"];
+    ObservatoryIsolate__populateFrames__closure.$__fields__ = ["_box_0", "$this", "scriptRefs"];
     function ObservatoryIsolate__populateFrames___closure($this) {
       this.$this = $this;
       this.$deferredAction();
@@ -7508,9 +7509,10 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.ObservatoryIsolate__populateFrames___closure[1];
     ObservatoryIsolate__populateFrames___closure.prototype = $desc;
     ObservatoryIsolate__populateFrames___closure.$__fields__ = ["$this"];
-    function ObservatoryFrame(isolate, frame, locals, _location) {
+    function ObservatoryFrame(isolate, frame, frameIndex, locals, _location) {
       this.isolate = isolate;
       this.frame = frame;
+      this.frameIndex = frameIndex;
       this.locals = locals;
       this._location = _location;
       this.$deferredAction();
@@ -7520,9 +7522,12 @@ self._domRemove = function(element) {
       ObservatoryFrame.name = "ObservatoryFrame";
     $desc = $collectedClasses$.ObservatoryFrame[1];
     ObservatoryFrame.prototype = $desc;
-    ObservatoryFrame.$__fields__ = ["isolate", "frame", "locals", "_location"];
+    ObservatoryFrame.$__fields__ = ["isolate", "frame", "frameIndex", "locals", "_location"];
     ObservatoryFrame.prototype.get$isolate = function() {
       return this.isolate;
+    };
+    ObservatoryFrame.prototype.get$frameIndex = function() {
+      return this.frameIndex;
     };
     ObservatoryFrame.prototype.get$locals = function() {
       return this.locals;
@@ -29842,11 +29847,9 @@ self._domRemove = function(element) {
         var t1, connection, editor;
         t1 = this.connections;
         connection = t1.length === 0 ? null : C.JSArray_methods.get$first(t1);
-        if (connection != null) {
-          t1 = connection.isolates._selection;
-          t1 = t1 == null ? t1 : t1.resume$0();
-          t1.catchError$1(Z.debugger___displayError$closure());
-        } else {
+        if (connection != null)
+          connection.resume$0().catchError$1(Z.debugger___displayError$closure());
+        else {
           t1 = $.$get$atom();
           editor = t1._workspace.getActiveTextEditor$0();
           if (editor != null)
@@ -30532,7 +30535,7 @@ self._domRemove = function(element) {
         t1 = K.CoreElement$("span", null, null, t1.get$title(frame));
         t3 = K.CoreElement$("span", null, "debugger-secondary-info overflow-hidden-ellipsis right-aligned", locationText);
         t3.flex$0(0);
-        J.add$1$ax(element, [t2, t1, t3]);
+        J.add$1$ax(element, [t2, t1, t3, K.CoreElement$("span", null, "debugger-secondary-info", "#" + frame.get$frameIndex())]);
         element.layoutHorizontal$0();
       }, "call$2", "get$_renderFrame", 4, 0, 120],
       _selectFrame$1: [function(frame) {
@@ -34543,7 +34546,11 @@ self._domRemove = function(element) {
       },
       resume$0: function() {
         var t1 = this.isolates._selection;
-        return t1 == null ? t1 : t1.resume$0();
+        if (t1 != null)
+          return t1.resume$0();
+        t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
+        t1._asyncComplete$1(null);
+        return t1;
       },
       stepIn$0: function() {
         var t1 = this.isolates._selection;
@@ -34989,20 +34996,22 @@ self._domRemove = function(element) {
     ObservatoryIsolate__populateFrames_closure: {
       "^": "Closure:80;$this",
       call$1: [function(stack) {
-        var scriptRefs, t1;
+        var t1, scriptRefs, t2;
+        t1 = {};
         scriptRefs = [];
-        t1 = this.$this;
-        t1.frames = J.map$1$ax(stack.get$frames(), new D.ObservatoryIsolate__populateFrames__closure(t1, scriptRefs)).toList$0(0);
-        return t1.scriptManager.loadAllScripts$1(scriptRefs);
+        t1.index = J.get$length$asx(stack.get$frames());
+        t2 = this.$this;
+        t2.frames = J.map$1$ax(stack.get$frames(), new D.ObservatoryIsolate__populateFrames__closure(t1, t2, scriptRefs)).toList$0(0);
+        return t2.scriptManager.loadAllScripts$1(scriptRefs);
       }, null, null, 2, 0, null, 89, "call"]
     },
     ObservatoryIsolate__populateFrames__closure: {
-      "^": "Closure:81;$this,scriptRefs",
+      "^": "Closure:81;_box_0,$this,scriptRefs",
       call$1: [function(frame) {
         var t1, obsFrame;
         this.scriptRefs.push(J.get$location$x(frame).get$script());
         t1 = this.$this;
-        obsFrame = new D.ObservatoryFrame(t1, frame, null, null);
+        obsFrame = new D.ObservatoryFrame(t1, frame, this._box_0.index--, null, null);
         obsFrame.locals = P.List_List$from(J.map$1$ax(frame.get$vars(), new D.ObservatoryIsolate__populateFrames___closure(t1)), true, null);
         return obsFrame;
       }, null, null, 2, 0, null, 49, "call"]
@@ -35015,7 +35024,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 20, "call"]
     },
     ObservatoryFrame: {
-      "^": "DebugFrame;isolate<,frame,locals<,_location",
+      "^": "DebugFrame;isolate<,frame,frameIndex<,locals<,_location",
       get$title: function(_) {
         return D.printFunctionNameRecursive(this.frame.get$$function(), false);
       },
