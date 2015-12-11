@@ -12,24 +12,26 @@ import 'utils.dart';
 
 final Logger _logger = new Logger('atom.breakpoints');
 
-// TODO: track changes to breakpoint files
+// TODO: Allow files outside the workspace?
 
-// TODO: allow files outside the workspace?
+// TODO: Error message when they explicitly set a breakpoint, but not if an
+// existing one fails to apply.
 
-// TODO: error message when they explicitly set a breakpoint, but not if an
-// existing one fails to apply
+// TODO: When setting breakpoints, adjust to where the VM actually set the
+// breakpoint.
 
-// TODO: when setting breakpoints, adjust to where the VM actually set the
-// breakpoint
+// TODO: No breakpoints on ws or comment lines.
 
-// TODO: no breakpoints on ws or comment lines
+// TODO: listen to clicks / double clicks on the line number getter.
 
 class BreakpointManager implements Disposable, StateStorable {
   Disposables disposables = new Disposables();
 
   List<AtomBreakpoint> _breakpoints = [];
   List<_EditorBreakpoint> _editorBreakpoints = [];
+
   StreamController<AtomBreakpoint> _addController = new StreamController.broadcast();
+  StreamController<AtomBreakpoint> _changeController = new StreamController.broadcast();
   StreamController<AtomBreakpoint> _removeController = new StreamController.broadcast();
 
   BreakpointManager() {
@@ -74,6 +76,9 @@ class BreakpointManager implements Disposable, StateStorable {
 
   Stream<AtomBreakpoint> get onAdd => _addController.stream;
 
+  /// Fired when a breakpoint changes position (line or column).
+  Stream<AtomBreakpoint> get onChange => _changeController.stream;
+
   Stream<AtomBreakpoint> get onRemove => _removeController.stream;
 
   void _processEditor(TextEditor editor) {
@@ -113,10 +118,10 @@ class BreakpointManager implements Disposable, StateStorable {
 
     // Check to see if we need to toggle it.
     if (other != null) {
-      atom.notifications.addInfo('Removed breakpoint at ${other.display}.');
+      atom.notifications.addInfo('Removed ${other.display}');
       removeBreakpoint(other);
     } else {
-      atom.notifications.addSuccess('Added breakpoint at ${bp.display}.');
+      atom.notifications.addSuccess('Added ${bp.display}');
       addBreakpoint(bp);
     }
   }
@@ -133,20 +138,24 @@ class BreakpointManager implements Disposable, StateStorable {
     _editorBreakpoints.remove(bp);
   }
 
+  void _updateBreakpointLocation(AtomBreakpoint bp, Range range) {
+    LineColumn lineCol = editorRangeToDebuggerCoords(range);
+    bp.updateLocation(lineCol);
+    _changeController.add(bp);
+  }
+
   void initFromStored(dynamic storedData) {
     if (storedData is List) {
-      storedData.map((json) {
+      for (var json in storedData) {
         addBreakpoint(new AtomBreakpoint.fromJson(json));
-      }).toList();
+      }
 
       _logger.fine('restored ${_breakpoints.length} breakpoints');
     }
   }
 
   dynamic toStorable() {
-    return _breakpoints.map((AtomBreakpoint bp) {
-      return bp.toJsonable();
-    }).toList();
+    return _breakpoints.map((AtomBreakpoint bp) => bp.toJsonable()).toList();
   }
 
   void dispose() => disposables.dispose();
@@ -154,13 +163,19 @@ class BreakpointManager implements Disposable, StateStorable {
 
 class AtomBreakpoint implements Comparable {
   final String path;
-  final int line;
-  final int column;
+  int _line;
+  int _column;
 
-  AtomBreakpoint(this.path, this.line, {this.column});
+  AtomBreakpoint(this.path, int line, {int column}) {
+    _line = line;
+    _column = column;
+  }
 
   AtomBreakpoint.fromJson(json) :
-      path = json['path'], line = json['line'], column = json['column'];
+      path = json['path'], _line = json['line'], _column = json['column'];
+
+  int get line => _line;
+  int get column => _column;
 
   String get asUrl => 'file://${path}';
 
@@ -168,10 +183,15 @@ class AtomBreakpoint implements Comparable {
 
   String get display {
     if (column == null) {
-      return '${path}, line ${line}';
+      return '${getWorkspaceRelativeDescription(path)}, ${line}';
     } else {
-      return '${path}, line ${line}, column ${column}';
+      return '${getWorkspaceRelativeDescription(path)}, ${line}:${column}';
     }
+  }
+
+  void updateLocation(LineColumn lineCol) {
+    _line = lineCol.line;
+    _column = lineCol.column;
   }
 
   int get hashCode => id.hashCode;
@@ -208,24 +228,38 @@ class _EditorBreakpoint implements Disposable {
   final AtomBreakpoint bp;
   final Marker marker;
 
-  StreamSubscription _sub;
+  Range _range;
+
+  StreamSubscriptions subs = new StreamSubscriptions();
 
   _EditorBreakpoint(this.manager, this.editor, this.bp, this.marker) {
+    _range = marker.getBufferRange();
+
     editor.decorateMarker(marker, {
       'type': 'line-number',
       'class': 'debugger-breakpoint'
     });
 
-    _sub = marker.onDidDestroy.listen((_) {
-      manager._removeEditorBreakpoint(this);
-    });
+    subs.add(marker.onDidChange.listen((e) {
+      if (!marker.isValid()) {
+        manager.removeBreakpoint(bp);
+      } else {
+        _checkForLocationChange();
+      }
+    }));
+  }
 
-    // TODO: on invalidate, remove the AtomBreakpoint
+  void _checkForLocationChange() {
+    Range newRange = marker.getBufferRange();
+    if (_range != newRange) {
 
+      _range = newRange;
+      manager._updateBreakpointLocation(bp, newRange);
+    }
   }
 
   void dispose() {
-    _sub.cancel();
+    subs.cancel();
     marker.destroy();
   }
 }

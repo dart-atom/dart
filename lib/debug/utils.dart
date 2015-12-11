@@ -7,7 +7,13 @@ Range debuggerCoordsToEditorRange(int line, int column) {
   int c = column == null ? 0 : column - 1;
 
   return new Range.fromPoints(
-    new Point.coords(l, c), new Point.coords(l, c + 1));
+    new Point.coords(l, c), new Point.coords(l, c + 1)
+  );
+}
+
+LineColumn editorRangeToDebuggerCoords(Range range) {
+  Point p = range.start;
+  return new LineColumn(p.row + 1, p.column + 1);
 }
 
 String getDisplayUri(String uri) {
@@ -23,4 +29,11 @@ String getDisplayUri(String uri) {
   }
 
   return uri;
+}
+
+class LineColumn {
+  final int line;
+  final int column;
+
+  LineColumn(this.line, this.column);
 }
