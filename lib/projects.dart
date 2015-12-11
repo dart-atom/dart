@@ -26,6 +26,12 @@ bool isDartFile(String path) {
   return path == null ? false : path.endsWith('.dart');
 }
 
+String getWorkspaceRelativeDescription(String path) {
+  List<String> relPaths = atom.project.relativizePath(path);
+  if (relPaths[0] == null) return path;
+  return '${basename(relPaths[0])} ${relPaths[1]}';
+}
+
 /// A class to locate Dart projects in Atom and listen for new or removed Dart
 /// projects.
 class ProjectManager implements Disposable, ContextMenuContributor {

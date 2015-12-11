@@ -1024,7 +1024,7 @@ class Marker extends ProxyHolder {
 
   /// Returns a Boolean indicating whether the marker is valid. Markers can be
   /// invalidated when a region surrounding them in the buffer is changed.
-  void isValid() => invoke('isValid');
+  bool isValid() => invoke('isValid');
 
   /// Returns a Boolean indicating whether the marker has been destroyed. A
   /// marker can be invalid without being destroyed, in which case undoing the
@@ -1094,6 +1094,9 @@ class Range extends ProxyHolder {
   Point get start => new Point(obj['start']);
   Point get end => new Point(obj['end']);
 
+  operator==(other) => other is Range && start == other.start && end == other.end;
+  int get hashCode => start.hashCode ^ end.hashCode;
+
   String toString() => invoke('toString');
 }
 
@@ -1106,6 +1109,9 @@ class Point extends ProxyHolder {
   int get row => obj['row'];
   /// A zero-indexed Number representing the column of the Point.
   int get column => obj['column'];
+
+  operator==(other) => other is Point && row == other.row && column == other.column;
+  int get hashCode => (row << 4) ^ column;
 
   String toString() => invoke('toString');
 }
