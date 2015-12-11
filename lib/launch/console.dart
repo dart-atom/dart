@@ -2,8 +2,6 @@
 /// A console output view.
 library atom.console;
 
-import 'dart:html' show ScrollAlignment;
-
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../elements.dart';
@@ -348,10 +346,7 @@ class ConsoleView extends View {
 
   void _emitElement(CoreElement e) {
     output.add(e);
-
-    e.element.scrollIntoView(ScrollAlignment.BOTTOM);
-    // js.JsObject obj = new js.JsObject.fromBrowserObject(e.element);
-    // obj.callMethod('scrollIntoView', [true]);
+    e.scrollIntoView(bottom: true);
   }
 }
 

@@ -5,6 +5,7 @@ import 'dart:convert' show JSON;
 import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:typed_data';
 
 void main(List<String> args) {
   print('args: ${args}');
@@ -22,6 +23,11 @@ void main(List<String> args) {
 
   Cat pebbles;
   Dog fido = new Dog(Dog.FIDO_NAME, parent: new Dog('Sam'));
+
+  Map pets = {
+    'pebbles': pebbles,
+    fido.name: fido
+  };
 
   Timer.run(() => print('timer 1'));
   Timer.run(_handleTimer);
@@ -45,6 +51,8 @@ void main(List<String> args) {
   print('foo 2');
   print('foo 3');
 
+  var typedList = new Int32List.fromList([1, 2, 3, 23476234]);
+
   dev.debugger();
 
   print('calcRecursive: ${calcRecursive(300)}');
@@ -55,11 +63,13 @@ void main(List<String> args) {
   // dev.Timeline.timeSync('frame', _mockFrame);
   // dev.Timeline.timeSync('frame', _mockFrame);
 
-  print('${abc} ${count}');
+  print('${abc} ${count}, ${pets.length}, ${typedList.length}');
 
   pebbles = new Cat('Pebbles');
 
-  List animals = [pebbles, fido];
+  List animals = [
+    pebbles, fido, pebbles, fido, pebbles, fido, pebbles, fido, pebbles, fido
+  ];
 
   print(pebbles);
   print(fido);

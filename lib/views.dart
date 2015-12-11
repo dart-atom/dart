@@ -188,7 +188,7 @@ class ViewGroup implements Disposable {
   static const String right = 'right';
   static const String bottom = 'bottom';
 
-  static const int _defaultWidth = 250;
+  static const int _defaultWidth = 300;
   static const int _defaultHeight = 125;
 
   final String name;

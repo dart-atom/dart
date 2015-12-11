@@ -429,19 +429,33 @@ class ExecutionTab extends MTab {
   }
 
   void _renderVariable(DebugVariable local, CoreElement element) {
+    // if (local is! DebugVariable) {
+    //   print('$local is not a DebugVariable');
+    //   print('${local}');
+    //   return;
+    // }
+    //
+    // if (local.value is! DebugValue) {
+    //   print('${local} value is not a DebugValue');
+    //   print('${local.value}');
+    //   return;
+    // }
+
     DebugValue value = local.value;
     String valueText;
 
-    if (value.isString) {
+    if (value == null) {
+      valueText = '';
+    } else if (value.isString) {
       // We choose not to escape double quotes here; it doesn't work well visually.
       String str = value.valueAsString;
       valueText = value.valueIsTruncated ? '"${str}…' : '"${str}"';
     } else if (value.isList) {
-      valueText = 'List[${value.itemsLength}]';
+      valueText = 'List [${value.itemsLength}]';
     } else if (value.isMap) {
-      valueText = 'Map{${value.itemsLength}}';
+      valueText = 'Map {${value.itemsLength}}';
     } else if (value.itemsLength != null) {
-      valueText = '${value.className}[${value.itemsLength}]';
+      valueText = '${value.className} [${value.itemsLength}]';
     } else if (value.isPlainInstance) {
       valueText = '[${value.className}]';
     } else {
@@ -463,6 +477,7 @@ class ExecutionTab extends MTab {
 class _LocalTreeModel extends TreeModel<DebugVariable> {
   bool canHaveChildren(DebugVariable variable) {
     DebugValue value = variable.value;
+    // print(value);
     return !value.isPrimitive;
   }
 
