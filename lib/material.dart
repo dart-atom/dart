@@ -1,8 +1,12 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import 'atom.dart';
 import 'elements.dart';
 import 'utils.dart';
+
+final Logger _logger = new Logger('atom.material');
 
 class MIconButton extends CoreElement {
   final String iconName;
@@ -171,7 +175,12 @@ class MList<T> extends CoreElement {
     for (T item in modelObjects) {
       CoreElement element = container.add(li());
 
-      _render(item, element);
+      try {
+        _render(item, element);
+      } catch (e, st) {
+        print('${e}: ${st}');
+      }
+
       _itemToElement[item] = element;
 
       element.click(() {
@@ -206,31 +215,39 @@ class MTree<T> extends MList<T> {
 
   void _render(T item, CoreElement element) {
     if (treeModel.canHaveChildren(item)) {
-      CoreElement e;
+      CoreElement expansionTriangle;
       CoreElement childContainer;
 
       element.add(
-        e = span(c: 'icon-triangle-right')
+        expansionTriangle = span(c: 'icon-triangle-right')
       );
 
-      e.click(() {
-        e.toggleClass('icon-triangle-right');
-        e.toggleClass('icon-triangle-down');
+      var toggleExpand = () {
+        expansionTriangle.toggleClass('icon-triangle-right');
+        expansionTriangle.toggleClass('icon-triangle-down');
 
         if (childContainer == null) {
           childContainer = ul(c: 'material-list-indent');
           // TODO: Show feedback during an expansion.
           treeModel.getChildren(item).then((List<T> items) {
             _populateChildren(items, childContainer);
-          }).catchError((e) {
+            _makeFirstChildVisible(childContainer);
+          }).catchError((e, st) {
             atom.notifications.addError('${e}');
+            _logger.info('unable to expand child', e, st);
           });
           int index = element.element.parent.children.indexOf(element.element);
           element.element.parent.children.insert(index + 1, childContainer.element);
         } else {
           childContainer.hidden(!childContainer.hasAttribute('hidden'));
+          if (!childContainer.hasAttribute('hidden')) {
+            _makeFirstChildVisible(childContainer);
+          }
         }
-      });
+      };
+
+      element.dblclick(toggleExpand);
+      expansionTriangle.click(toggleExpand);
     } else {
       element.add(
         span(c: 'icon-triangle-right visibility-hidden')
@@ -238,5 +255,10 @@ class MTree<T> extends MList<T> {
     }
 
     super._render(item, element);
+  }
+
+  void _makeFirstChildVisible(CoreElement element) {
+    List children = element.element.children;
+    if (children.isNotEmpty) children.first.scrollIntoView();
   }
 }

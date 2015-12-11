@@ -191,6 +191,14 @@ class CoreElement {
 
   void clear() => element.children.clear();
 
+  void scrollIntoView({bool bottom: false}) {
+    if (bottom) {
+      element.scrollIntoView(ScrollAlignment.BOTTOM);
+    } else {
+      element.scrollIntoView();
+    }
+  }
+
   void setInnerHtml(String str) {
     element.setInnerHtml(str, treeSanitizer: new TrustedHtmlTreeSanitizer());
   }

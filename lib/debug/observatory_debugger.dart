@@ -337,12 +337,17 @@ class ObservatoryConnection extends DebugConnection {
 
 String printFunctionName(FuncRef ref, {bool terse: false}) {
   String name = terse ? ref.name : '${ref.name}()';
+  return name = name.replaceAll('<anonymous closure>', '<anon>');
+}
+
+String printFunctionNameRecursive(FuncRef ref, {bool terse: false}) {
+  String name = terse ? ref.name : '${ref.name}()';
   name = name.replaceAll('<anonymous closure>', '<anon>');
 
   if (ref.owner is ClassRef) {
     return '${ref.owner.name}.${name}';
   } else if (ref.owner is FuncRef) {
-    return '${printFunctionName(ref.owner, terse: true)}.${name}';
+    return '${printFunctionNameRecursive(ref.owner, terse: true)}.${name}';
   } else {
     return name;
   }
@@ -508,7 +513,7 @@ class ObservatoryFrame extends DebugFrame {
 
   ObservatoryFrame(this.isolate, this.frame);
 
-  String get title => printFunctionName(frame.function);
+  String get title => printFunctionNameRecursive(frame.function);
 
   bool get isSystem => (location as ObservatoryLocation).isSystem;
 
@@ -547,13 +552,15 @@ class ObservatoryVariable extends DebugVariable {
 
   static DebugValue _createValue(ObservatoryIsolate isolate, BoundVariable variable) {
     if (variable.value is InstanceRef) {
-      return new ObservatoryValue(isolate, variable.value);
+      return new ObservatoryInstanceRefValue(isolate, variable.value);
     } else if (variable.value is Sentinel) {
       return new SentinelDebugValue(variable.value);
     } else {
       return null;
     }
   }
+
+  String toString() => 'ObservatoryVariable ${name}';
 }
 
 class ObservatoryFieldVariable extends DebugVariable {
@@ -568,7 +575,7 @@ class ObservatoryFieldVariable extends DebugVariable {
 
   static DebugValue _createValue(ObservatoryIsolate isolate, BoundField field) {
     if (field.value is InstanceRef) {
-      return new ObservatoryValue(isolate, field.value);
+      return new ObservatoryInstanceRefValue(isolate, field.value);
     } else if (field.value is Sentinel) {
       return new SentinelDebugValue(field.value);
     } else {
@@ -577,11 +584,70 @@ class ObservatoryFieldVariable extends DebugVariable {
   }
 }
 
-class ObservatoryValue extends DebugValue {
+class ObservatoryMapVariable extends DebugVariable {
+  final ObservatoryIsolate isolate;
+  final MapAssociation association;
+
+  ObservatoryInstanceRefValue _value;
+
+  ObservatoryMapVariable(this.isolate, this.association) {
+    _value = new ObservatoryInstanceRefValue(isolate, association.value);
+  }
+
+  String get name => '${_instanceToString(association.key)}:';
+
+  DebugValue get value => _value;
+}
+
+class ObservatoryArrayVariable extends DebugVariable {
+  final ObservatoryIsolate isolate;
+  final int index;
+  DebugValue _value;
+
+  ObservatoryArrayVariable(this.isolate, this.index, dynamic value) {
+    if (value is InstanceRef) {
+      _value = new ObservatoryInstanceRefValue(isolate, value);
+    } else if (value is Sentinel) {
+      _value = new SentinelDebugValue(value);
+    }
+  }
+
+  String get name => '[${index}]';
+
+  DebugValue get value => _value;
+}
+
+class ObservatoryCustomVariable extends DebugVariable {
+  final String name;
+  final DebugValue value;
+
+  ObservatoryCustomVariable(this.name, dynamic inValue) :
+    value = new SimpleDebugValue(inValue);
+}
+
+class ObservatoryObjRefVariable extends DebugVariable {
+  final ObservatoryIsolate isolate;
+  final String name;
+  DebugValue _value;
+
+  ObservatoryObjRefVariable(this.isolate, this.name, dynamic ref) {
+    if (ref is Sentinel) {
+      _value = new SentinelDebugValue(ref);
+    } else if (ref is ObjRef) {
+      _value = new ObservatoryObjRefValue(isolate, ref);
+    } else {
+      _logger.severe('Invalid ObservatoryObjRefVariable ref: ${ref}');
+    }
+  }
+
+  DebugValue get value => _value;
+}
+
+class ObservatoryInstanceRefValue extends DebugValue {
   final ObservatoryIsolate isolate;
   final InstanceRef value;
 
-  ObservatoryValue(this.isolate, this.value);
+  ObservatoryInstanceRefValue(this.isolate, this.value);
 
   String get className => value.classRef.name;
 
@@ -606,20 +672,140 @@ class ObservatoryValue extends DebugValue {
   int get itemsLength => value.length;
 
   Future<List<DebugVariable>> getChildren() {
+    // TODO: Handle typed lists (bytes).
+    // TODO: Handle regex values (pattern).
+    // TODO: Handle mirrors (mirrorReferent).
+
     return isolate.service.getObject(isolate.id, value.id).then((ret) {
       if (ret is Instance) {
-        // TODO: Handle arrays and other strange types.
-        return ret.fields.map((BoundField field) {
-          return new ObservatoryFieldVariable(isolate, field);
-        });
+        if (ret.kind == InstanceKind.kMap) {
+          return ret.associations.map((MapAssociation association) {
+            return new ObservatoryMapVariable(isolate, association);
+          }).toList();
+        } else if (ret.kind == InstanceKind.kList) {
+          // TODO: Handle lists with lots of entries.
+          List<DebugVariable> results = [];
+          List elements = ret.elements;
+          for (int i = 0; i < elements.length; i++) {
+            results.add(
+              new ObservatoryArrayVariable(isolate, i, elements[i])
+            );
+          }
+          return results;
+        } else if (ret.kind == InstanceKind.kPlainInstance) {
+          return ret.fields.map((BoundField field) {
+            return new ObservatoryFieldVariable(isolate, field);
+          }).toList();
+        } else if (ret.kind == InstanceKind.kClosure) {
+          // TODO: load the Obj instead (show location, code).
+          List<DebugVariable> results = [];
+          FuncRef function = ret.closureFunction;
+          results.add(new ObservatoryCustomVariable('name', printFunctionName(function)));
+          results.add(new ObservatoryObjRefVariable(isolate, 'owner', function.owner));
+          return results;
+        } else {
+          _logger.info('unhandled debugger type: ${ret.kind}');
+          return ret.fields.map((BoundField field) {
+            return new ObservatoryFieldVariable(isolate, field);
+          }).toList();
+        }
       } else {
         return [];
       }
     });
   }
 
-  // TODO: handle truncated
-  String get valueAsString => value.valueAsString;
+  String get valueAsString {
+    if (value.valueAsString != null) {
+      return value.valueAsString;
+    }
+
+    if (value.kind == InstanceKind.kClosure) {
+      return '() =>';
+    }
+
+    return null;
+  }
+
+  String toString() => 'ObservatoryValue ${className}';
+}
+
+// TODO: For LibraryRef, FuncRef, also include the location to jump to.
+
+class ObservatoryObjRefValue extends DebugValue {
+  final ObservatoryIsolate isolate;
+  final ObjRef ref;
+
+  ObservatoryObjRefValue(this.isolate, this.ref);
+
+  String get className => ref.runtimeType.toString();
+
+  bool get isPrimitive {
+    if (ref is FuncRef) return false;
+
+    return true;
+  }
+
+  bool get isString => false;
+  bool get isPlainInstance => false;
+  bool get isList => false;
+  bool get isMap => false;
+
+  bool get valueIsTruncated => false;
+
+  int get itemsLength => null;
+
+  // ClassRef, Code, CodeRef, ContextRef, ErrorRef, FieldRef, FuncRef,
+  // InstanceRef?, LibraryRef, ScriptRef, TypeArgumentsRef
+
+  Future<List<DebugVariable>> getChildren() {
+    if (ref is FuncRef) {
+      FuncRef function = ref;
+
+      List<DebugVariable> results = [];
+      results.add(new ObservatoryCustomVariable('name', printFunctionName(function)));
+      results.add(new ObservatoryObjRefVariable(isolate, 'owner', function.owner));
+      return new Future.value(results);
+    } else if (ref is LibraryRef) {
+      LibraryRef lib = ref;
+
+      List<DebugVariable> results = [];
+      results.add(new ObservatoryCustomVariable('name', lib.name));
+      results.add(new ObservatoryCustomVariable('uri', lib.uri));
+      return new Future.value(results);
+    } else {
+      return new Future.value([]);
+    }
+  }
+
+  String get valueAsString {
+    if (ref is FuncRef) return printFunctionName(ref);
+    if (ref is LibraryRef) return 'Library ${getDisplayUri((ref as LibraryRef).uri)}';
+
+    return '${className} ${ref.id}';
+  }
+}
+
+class SimpleDebugValue extends DebugValue {
+  final dynamic value;
+
+  SimpleDebugValue(this.value);
+
+  String get className => value.runtimeType.toString();
+
+  String get valueAsString => value is String ? value : '${value}';
+
+  bool get isPrimitive => true;
+  bool get isString => false; //value is String;
+  bool get isPlainInstance => false;
+  bool get isList => false;
+  bool get isMap => false;
+
+  bool get valueIsTruncated => false;
+
+  int get itemsLength => null;
+
+  Future<List<DebugVariable>> getChildren() => new Future.value([]);
 }
 
 class SentinelDebugValue extends DebugValue {
@@ -639,9 +825,7 @@ class SentinelDebugValue extends DebugValue {
 
   int get itemsLength => null;
 
-  Future<List<DebugVariable>> getChildren() {
-    return new Future.value([]);
-  }
+  Future<List<DebugVariable>> getChildren() => new Future.value([]);
 
   String get valueAsString => sentenial.valueAsString;
 }
@@ -791,5 +975,22 @@ class ScriptManager {
     }
 
     return Future.wait(futures);
+  }
+}
+
+/// [instance] is either an [Instance] or a [Sentinel].
+String _instanceToString(dynamic instance) {
+  if (instance is InstanceRef || instance is Instance) {
+    if (instance.kind == InstanceKind.kString) {
+      return '"${instance.valueAsString}"';
+    } else if (instance.valueAsString != null) {
+      return instance.valueAsString;
+    } else {
+      return '[${instance.classRef.name}]';
+    }
+  } else if (instance is Sentinel) {
+    return instance.valueAsString;
+  } else {
+    return '';
   }
 }

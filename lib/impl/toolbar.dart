@@ -8,8 +8,6 @@ import '../js.dart';
 import '../state.dart';
 import '../utils.dart';
 
-// device-mobile
-
 class ToolbarContribution implements Disposable {
   ToolbarTile leftTile;
   ToolbarTile rightTile;
@@ -27,7 +25,7 @@ class ToolbarContribution implements Disposable {
 
   CoreElement _buildLeftTile() {
     CoreElement e = div(c: 'btn-group btn-group-sm dartlang-toolbar')..add([
-      run = button(c: 'btn icon icon-playback-play')
+      run = button(c: 'btn icon icon-playback-play')..tooltip = "Run"
     ]);
 
     run.click(() {
@@ -49,10 +47,16 @@ class ToolbarContribution implements Disposable {
   }
 
   CoreElement _buildRightTile() {
-    // <kbd class='key-binding'>⌘⌥A</kbd>
-    CoreElement e = div(c: 'btn-group btn-group-sm dartlang-toolbar')..add([
-      back = button(c: 'btn icon icon-arrow-left'),
-      forward = button(c: 'btn icon icon-arrow-right')
+    CoreElement e = div()..add([
+      div(c: 'btn-group btn-group-sm dartlang-toolbar')..add([
+        button(c: 'btn icon icon-list-unordered')
+          ..click(_toggleOutline)
+          ..tooltip = "Toggle Outline View"
+      ]),
+      div(c: 'btn-group btn-group-sm dartlang-toolbar')..add([
+        back = button(c: 'btn icon icon-arrow-left')..tooltip = "Back",
+        forward = button(c: 'btn icon icon-arrow-right')..tooltip = "Forward"
+      ])
     ]);
 
     back.disabled = true;
@@ -66,6 +70,11 @@ class ToolbarContribution implements Disposable {
     });
 
     return e;
+  }
+
+  void _toggleOutline() {
+    final String keyPath = '${pluginId}.showOutlineView';
+    atom.config.setValue(keyPath, !atom.config.getBoolValue(keyPath));
   }
 
   void dispose() {
