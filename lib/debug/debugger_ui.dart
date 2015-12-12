@@ -19,16 +19,16 @@ import 'utils.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui');
 
-// TODO: do something about the outline view - it and the debugger view
-// fight for real estate
+// TODO: Do something about the outline view - it and the debugger view
+// fight for real estate.
 
-// TODO: ensure that the debugger ui exists over the course of the debug connection,
+// TODO: Ensure that the debugger ui exists over the course of the debug connection,
 // and that a new one is not created after a debugger tab is closed, and that
 // closing a debugger tab doesn't tear down any listening state.
 
-// TODO: current connection (can be null)
+// TODO: Allow the current connection to be null.
 
-// TODO: have a contributed Flutter section
+// TODO: Have a contributed Flutter section.
 
 class DebuggerView extends View {
   static String viewIdForConnection(DebugConnection connection) {
@@ -62,6 +62,7 @@ class DebuggerView extends View {
   Marker _execMarker;
 
   FlowControlSection flowControlSection;
+  DetailSection detailSection;
   MTabGroup primaryTabGroup;
   MTabGroup secondaryTabGroup;
 
@@ -82,6 +83,7 @@ class DebuggerView extends View {
     CoreElement titleSection;
     CoreElement flowControlElement;
     CoreElement primarySection;
+    CoreElement detailsElement;
     CoreElement secondarySection;
 
     root.toggleClass('debugger');
@@ -90,6 +92,7 @@ class DebuggerView extends View {
       titleSection = div(c: 'debugger-section view-header'),
       flowControlElement = div(c: 'debugger-section'),
       primarySection = div(c: 'debugger-section resizable')..layoutVertical()..flex(),
+      detailsElement = div(c: 'debugger-section'),
       secondarySection = div(c: 'debugger-section resizable debugger-section-last')
         ..layoutVertical()
     ]);
@@ -97,6 +100,7 @@ class DebuggerView extends View {
     _createTitleSection(titleSection);
     _createFlowControlSection(flowControlElement);
     _createPrimarySection(primarySection);
+    detailSection = new DetailSection(detailsElement);
     _createSecondarySection(secondarySection);
 
     subs.add(connection.onPaused.listen(_handleIsolatePaused));
@@ -376,6 +380,8 @@ class ExecutionTab extends MTab {
     list.selectedItem.onChanged.listen(_selectFrame);
     list.onDoubleClick.listen(_selectFrame);
 
+    locals.selectedItem.onChanged.listen(_showObjectDetails);
+
     view.observeIsolate(_updateFrames);
   }
 
@@ -460,6 +466,10 @@ class ExecutionTab extends MTab {
     ])..layoutHorizontal();
   }
 
+  void _showObjectDetails(DebugVariable variable) {
+    view.detailSection.showDetails(variable);
+  }
+
   void dispose() => subs.dispose();
 }
 
@@ -472,6 +482,39 @@ class _LocalTreeModel extends TreeModel<DebugVariable> {
 
   Future<List<DebugVariable>> getChildren(DebugVariable obj) {
     return obj.value.getChildren();
+  }
+}
+
+class DetailSection {
+  final CoreElement sectionElement;
+
+  CoreElement _detailsElement;
+
+  DetailSection(this.sectionElement) {
+    sectionElement..add([
+      _detailsElement = div(c: 'debugger-object-details')
+    ])..hidden(true);
+  }
+
+  void showDetails(DebugVariable variable) {
+    sectionElement.hidden(variable == null);
+    _detailsElement.toggleClass('text-error', false);
+    _detailsElement.element.innerHtml = '&nbsp;';
+
+    if (variable != null) {
+      variable.value.invokeToString().then((DebugValue result) {
+        String str = result.valueAsString;
+        if (result.valueIsTruncated) str += '…';
+        if (str == null || str.isEmpty) {
+          _detailsElement.element.innerHtml = '&nbsp;';
+        } else {
+          _detailsElement.text = str;
+        }
+      }).catchError((e) {
+        _detailsElement.text = '${e}';
+        _detailsElement.toggleClass('text-error', true);
+      });
+    }
   }
 }
 

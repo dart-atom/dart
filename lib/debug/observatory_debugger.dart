@@ -720,6 +720,21 @@ class ObservatoryInstanceRefValue extends DebugValue {
     });
   }
 
+  Future<DebugValue> invokeToString() {
+    return isolate.service.evaluate(isolate.id, value.id, 'toString()').then((result) {
+      // [InstanceRef], [ErrorRef] or [Sentinel]
+      if (result is Sentinel) {
+        return new SentinelDebugValue(result);
+      } else if (result is InstanceRef) {
+        return new ObservatoryInstanceRefValue(isolate, result);
+      } else if (result is ErrorRef) {
+        return new Future.error(result.message);
+      } else {
+        return new Future.error('unexpected result type: ${result}');
+      }
+    });
+  }
+
   String get valueAsString {
     if (value.valueAsString != null) {
       return value.valueAsString;
@@ -736,7 +751,6 @@ class ObservatoryInstanceRefValue extends DebugValue {
 }
 
 // TODO: For LibraryRef, FuncRef, also include the location to jump to.
-
 class ObservatoryObjRefValue extends DebugValue {
   final ObservatoryIsolate isolate;
   final ObjRef ref;
@@ -783,6 +797,11 @@ class ObservatoryObjRefValue extends DebugValue {
     }
   }
 
+  Future<DebugValue> invokeToString() {
+    return new Future.value(new SimpleDebugValue(valueAsString));
+  }
+
+  // TODO: Handle more ObjRef types here.
   String get valueAsString {
     if (ref is FuncRef) return printFunctionName(ref);
     if (ref is LibraryRef) return 'Library ${getDisplayUri((ref as LibraryRef).uri)}';
@@ -811,6 +830,8 @@ class SimpleDebugValue extends DebugValue {
   int get itemsLength => null;
 
   Future<List<DebugVariable>> getChildren() => new Future.value([]);
+
+  Future<DebugValue> invokeToString() => new Future.value(this);
 }
 
 class SentinelDebugValue extends DebugValue {
@@ -831,6 +852,9 @@ class SentinelDebugValue extends DebugValue {
   int get itemsLength => null;
 
   Future<List<DebugVariable>> getChildren() => new Future.value([]);
+
+  Future<DebugValue> invokeToString() =>
+    new Future.value(new SimpleDebugValue(valueAsString));
 
   String get valueAsString => sentenial.valueAsString;
 }
