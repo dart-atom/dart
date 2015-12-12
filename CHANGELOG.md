@@ -3,6 +3,7 @@
 ## unreleased
 - we now show errors in the outline view
 - display lists and maps in the debugger
+- call `toString()` on an object when selected in the debugger
 
 ## 0.4.17
 - added an analysis server section to the plugin status view

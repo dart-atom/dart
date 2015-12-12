@@ -93,6 +93,8 @@ abstract class DebugValue {
 
   Future<List<DebugVariable>> getChildren();
 
+  Future<DebugValue> invokeToString();
+
   String toString() => valueAsString;
 }
 
