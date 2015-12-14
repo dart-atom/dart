@@ -1,13 +1,14 @@
 
 library atom.type_hierarchy;
 
-import 'dart:html' as html show Element, SpanElement;
+import 'dart:html' as html;
 
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../atom.dart';
 import '../elements.dart';
+import '../material.dart';
 import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
@@ -81,6 +82,12 @@ class TypeHierarchyView extends View {
     ]);
     treeBuilder.toggleClass('tab-scrollable');
     treeBuilder.onClickNode.listen(_jumpTo);
+
+    toolbar.add([
+      new MIconButton('icon-clippy')
+        ..click(_copyHierarchy)
+        ..tooltip = "Copy to clipboard"
+    ]);
 
     disposables.add(new DoubleCancelCommand(handleClose));
   }
@@ -199,5 +206,21 @@ class TypeHierarchyView extends View {
       span.classes.add('hierarchy-muted');
       intoElement.children.add(span);
     }
+  }
+
+  void _copyHierarchy() {
+    // TODO: The copied text doesn't have enough structure.
+
+    treeBuilder.element.focus();
+
+    html.Range range = html.document.createRange();
+    range.selectNodeContents(treeBuilder.element);
+    html.Selection selection = html.window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    html.document.execCommand('copy', false, null);
+    selection.removeAllRanges();
+
+    atom.notifications.addSuccess('Copied type hierarchy to clipboard.');
   }
 }
