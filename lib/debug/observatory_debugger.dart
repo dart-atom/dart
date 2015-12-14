@@ -7,12 +7,14 @@ import 'package:logging/logging.dart';
 import 'package:vm_service_lib/vm_service_lib.dart';
 
 import '../atom.dart';
+import '../flutter/flutter_ext.dart';
 import '../launch/launch.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
 import 'model.dart';
+import 'observatory.dart';
 import 'utils.dart';
 
 final Logger _logger = new Logger('atom.observatory');
@@ -64,6 +66,7 @@ class ObservatoryConnection extends DebugConnection {
   final bool isolatesStartPaused;
 
   Map<String, ObservatoryIsolate> _isolateMap = {};
+
   StreamController<DebugIsolate> _isolatePaused = new StreamController.broadcast();
   StreamController<DebugIsolate> _isolateResumed = new StreamController.broadcast();
 
@@ -74,6 +77,7 @@ class ObservatoryConnection extends DebugConnection {
   bool stderrSupported = true;
 
   int _nextIsolateId = 1;
+  FlutterExt flutterExtension;
 
   ObservatoryConnection(Launch launch, this.service, this.completer, {
     this.pipeStdio: false,
@@ -130,8 +134,7 @@ class ObservatoryConnection extends DebugConnection {
 
     // Handle the dart:developer log() calls.
     service.onEvent('_Logging').listen((Event e) {
-      var json = e.json['logRecord'];
-
+      Map<String, dynamic> json = e.json['logRecord'];
       // num time = json['time'];
       // num level = json['level'];
       // InstanceRef error = InstanceRef.parse(json['error']);
@@ -170,12 +173,14 @@ class ObservatoryConnection extends DebugConnection {
       service.streamListen('Stderr').catchError((_) => stderrSupported = false);
     }
 
+    flutterExtension = new FlutterExt(new _ObservatoryServiceWrapper(this));
+
     service.getVM().then((VM vm) {
       String dart = vm.version;
       if (dart.contains(' ')) dart = dart.substring(0, dart.indexOf(' '));
       metadata.value = '${vm.targetCPU} • ${vm.hostCPU} • Dart ${dart}';
       _logger.info('Connected to ${metadata.value}');
-      _registerNewIsolates(vm.isolates);
+      return _registerNewIsolates(vm.isolates);
     });
   }
 
@@ -750,6 +755,7 @@ class ObservatoryInstanceRefValue extends DebugValue {
   String toString() => 'ObservatoryValue ${className}';
 }
 
+// TODO: We probably shouldn't expose these values directly to the user.
 // TODO: For LibraryRef, FuncRef, also include the location to jump to.
 class ObservatoryObjRefValue extends DebugValue {
   final ObservatoryIsolate isolate;
@@ -1005,6 +1011,23 @@ class ScriptManager {
 
     return Future.wait(futures);
   }
+}
+
+class _ObservatoryServiceWrapper implements ServiceWrapper {
+  final ObservatoryConnection connection;
+
+  _ObservatoryServiceWrapper(this.connection);
+
+  VmService get service => connection.service;
+
+  Iterable<IsolateRef> get allIsolates =>
+    connection.isolates.items.map((i) => i.isolateRef);
+
+  Stream<IsolateRef> get onIsolateCreated =>
+    connection.isolates.onAdded.map((i) => i.isolateRef);
+
+  Stream<IsolateRef> get onIsolateFinished =>
+    connection.isolates.onRemoved.map((i) => i.isolateRef);
 }
 
 /// [instance] is either an [Instance] or a [Sentinel].

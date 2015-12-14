@@ -26,7 +26,8 @@ void main(List<String> args) {
 
   Map pets = {
     'pebbles': pebbles,
-    fido.name: fido
+    fido.name: fido,
+    'type': fido.runtimeType
   };
 
   Timer.run(() => print('timer 1'));

@@ -760,6 +760,9 @@ class TextEditor extends ProxyHolder {
 
   void backspace() => invoke('backspace');
 
+  /// Replaces the entire contents of the buffer with the given String.
+  void setText(String text) => invoke('setText', text);
+
   /// Returns a [Range] when the text has been inserted. Returns a `bool`
   /// (`false`) when the text has not been inserted.
   ///
