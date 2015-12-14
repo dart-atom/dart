@@ -147,7 +147,6 @@ class _LaunchInstance {
     int code = await _runner.onExit;
     if (code == 0) {
       int port = 8181;
-      _launch.servicePort.value = port;
 
       if (_withDebug) {
         // TODO: Figure out this timing (https://github.com/flutter/tools/issues/110).
@@ -157,12 +156,16 @@ class _LaunchInstance {
           Future f = ObservatoryDebugger.connect(_launch, 'localhost', port,
               isolatesStartPaused: false,
               uriTranslator: translator);
-          f.catchError((e) {
+          return f.catchError((e) {
             _launch.pipeStdio(
                 'Unable to connect to the observatory (port ${port}).\n',
                 error: true);
           });
+        }).whenComplete(() {
+          _launch.servicePort.value = port;
         });
+      } else {
+        _launch.servicePort.value = port;
       }
 
       // Chain 'flutter logs'.

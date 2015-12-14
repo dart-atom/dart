@@ -26,6 +26,9 @@ CoreElement div({String text, String c, String a}) =>
 CoreElement span({String text, String c, String a}) =>
     new CoreElement('span', text: text, classes: c, attributes: a);
 
+CoreElement italic({String text, String c, String a}) =>
+    new CoreElement('i', text: text, classes: c, attributes: a);
+
 CoreElement em({String text, String c, String a}) =>
     new CoreElement('em', text: text, classes: c, attributes: a);
 

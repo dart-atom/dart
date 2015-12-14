@@ -4,6 +4,9 @@
 - we now show errors in the outline view
 - display lists and maps in the debugger
 - call `toString()` on an object when selected in the debugger
+- added a Flutter section to the debugger UI; you can toggle debug drawing there,
+  as well as toggle on and off slower animations
+- added a 'Toggle Outline View' menu item to the View menu
 
 ## 0.4.17
 - added an analysis server section to the plugin status view

@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../elements.dart';
+import '../flutter/flutter_ui.dart';
 import '../material.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -28,7 +29,9 @@ final Logger _logger = new Logger('atom.debugger_ui');
 
 // TODO: Allow the current connection to be null.
 
-// TODO: Have a contributed Flutter section.
+// TODO: Breakpoints move to its own section.
+
+// TODO: Debugger view gets some settings.
 
 class DebuggerView extends View {
   static String viewIdForConnection(DebugConnection connection) {
@@ -81,6 +84,7 @@ class DebuggerView extends View {
     }
 
     CoreElement titleSection;
+    CoreElement flutterElement;
     CoreElement flowControlElement;
     CoreElement primarySection;
     CoreElement detailsElement;
@@ -90,6 +94,7 @@ class DebuggerView extends View {
 
     content..toggleClass('tab-non-scrollable')..layoutVertical()..add([
       titleSection = div(c: 'debugger-section view-header'),
+      flutterElement = div(c: 'debugger-section')..hidden(true),
       flowControlElement = div(c: 'debugger-section'),
       primarySection = div(c: 'debugger-section resizable')..layoutVertical()..flex(),
       detailsElement = div(c: 'debugger-section'),
@@ -98,6 +103,7 @@ class DebuggerView extends View {
     ]);
 
     _createTitleSection(titleSection);
+    /*FlutterSection flutter =*/ new FlutterSection(connection, flutterElement);
     _createFlowControlSection(flowControlElement);
     _createPrimarySection(primarySection);
     detailSection = new DetailSection(detailsElement);
@@ -436,34 +442,32 @@ class ExecutionTab extends MTab {
   }
 
   void _renderVariable(DebugVariable local, CoreElement element) {
+    final String valueClass = 'debugger-secondary-info overflow-hidden-ellipsis right-aligned';
+
     DebugValue value = local.value;
-    String valueText;
+
+    element.add(span(text: local.name));
 
     if (value == null) {
-      valueText = '';
+      element.add(span(text: '', c: valueClass));
     } else if (value.isString) {
       // We choose not to escape double quotes here; it doesn't work well visually.
       String str = value.valueAsString;
-      valueText = value.valueIsTruncated ? '"${str}…' : '"${str}"';
+      str = value.valueIsTruncated ? '"${str}…' : '"${str}"';
+      element.add(span(text: str, c: valueClass));
     } else if (value.isList) {
-      valueText = 'List [${value.itemsLength}]';
+      element.add(span(text: '[ ${value.itemsLength} ]', c: valueClass));
     } else if (value.isMap) {
-      valueText = 'Map {${value.itemsLength}}';
+      element.add(span(text: '{ ${value.itemsLength} }', c: valueClass));
     } else if (value.itemsLength != null) {
-      valueText = '${value.className} [${value.itemsLength}]';
+      element.add(span(text: '${value.className} [ ${value.itemsLength} ]', c: valueClass));
     } else if (value.isPlainInstance) {
-      valueText = '[${value.className}]';
+      element.add(italic(text: value.className, c: valueClass));
     } else {
-      valueText = value.valueAsString;
+      element.add(span(text: value.valueAsString, c: valueClass));
     }
 
-    element..add([
-      span(text: local.name),
-      span(
-        text: valueText,
-        c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
-      )..flex()
-    ])..layoutHorizontal();
+    element.layoutHorizontal();
   }
 
   void _showObjectDetails(DebugVariable variable) {
@@ -497,22 +501,22 @@ class DetailSection {
   }
 
   void showDetails(DebugVariable variable) {
-    sectionElement.hidden(variable == null);
-    _detailsElement.toggleClass('text-error', false);
-    _detailsElement.element.innerHtml = '&nbsp;';
-
     if (variable != null) {
       variable.value.invokeToString().then((DebugValue result) {
         String str = result.valueAsString;
         if (result.valueIsTruncated) str += '…';
-        if (str == null || str.isEmpty) {
-          _detailsElement.element.innerHtml = '&nbsp;';
-        } else {
-          _detailsElement.text = str;
-        }
+        _detailsElement.clear();
+        _detailsElement.add([
+          italic(text: variable.value.className),
+          span(text: ': '),
+          span(text: str, c: 'text-subtle')
+        ]);
+        _detailsElement.toggleClass('text-error', false);
       }).catchError((e) {
         _detailsElement.text = '${e}';
         _detailsElement.toggleClass('text-error', true);
+      }).whenComplete(() {
+        sectionElement.hidden(variable == null);
       });
     }
   }

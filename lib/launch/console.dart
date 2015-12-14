@@ -233,7 +233,7 @@ class ConsoleView extends View {
     if (_debugButton != null && port == null) {
       _debugButton.dispose();
       _debugButton = null;
-    } else if (_debugButton == null && port != null) {
+    } else if (_debugButton == null && port != null && launch.hasDebugConnection) {
       _debugButton = toolbar.add(
         button(text: 'Debug', c: 'btn icon icon-bug')
       );

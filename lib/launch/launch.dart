@@ -235,6 +235,8 @@ class Launch implements Disposable {
 
   bool canDebug() => isRunning && servicePort.hasValue;
 
+  bool get hasDebugConnection => debugConnection != null;
+
   bool canKill() => killHandler != null;
 
   Future kill() {
