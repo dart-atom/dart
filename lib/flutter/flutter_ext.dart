@@ -5,8 +5,6 @@ import 'package:vm_service_lib/vm_service_lib.dart';
 import '../debug/observatory.dart';
 import '../utils.dart';
 
-// TODO: be notified when isolates are discovered
-
 class FlutterExt {
   final ServiceWrapper serviceWrapper;
   final Property<bool> enabled = new Property(false);
