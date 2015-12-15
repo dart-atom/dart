@@ -163,9 +163,9 @@ class LaunchConfiguration {
     }
   }
 
-  bool get debug => typeArgs['debug'] == true;
+  bool get debug => (typeArgs['debug'] is bool) ? typeArgs['debug'] : true;
 
-  bool get checked => typeArgs['checked'] == true;
+  bool get checked => (typeArgs['checked'] is bool) ? typeArgs['checked'] : true;
 
   String get argsAsString {
     var val = typeArgs['args'];

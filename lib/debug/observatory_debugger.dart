@@ -202,7 +202,9 @@ class ObservatoryConnection extends DebugConnection {
     subs.add(breakpointManager.onRemove.listen((bp) {
       Breakpoint vmBreakpoint = _bps[bp];
       if (vmBreakpoint != null) {
-        service.removeBreakpoint(isolate.id, vmBreakpoint.id);
+        service.removeBreakpoint(isolate.id, vmBreakpoint.id).catchError((e) {
+          _logger.info('error removing breakpoint', e);
+        });
       }
     }));
 
@@ -251,9 +253,10 @@ class ObservatoryConnection extends DebugConnection {
 
     switch (kind) {
       case EventKind.kPauseStart:
-        // TODO: There's a race condition here with setting breakpoints; use a
-        // Completer when registering isolates.
-        _getIsolate(ref)?._performInitialResume();
+        ObservatoryIsolate obsIsolate = _getIsolate(ref);
+        obsIsolate._isolateInitializedCompleter.future.then((_) {
+          obsIsolate._performInitialResume();
+        });
         break;
       case EventKind.kPauseExit:
       case EventKind.kPauseBreakpoint:
@@ -261,7 +264,7 @@ class ObservatoryConnection extends DebugConnection {
       case EventKind.kPauseException:
         ObservatoryIsolate isolate = _getIsolate(ref);
 
-        // TODO:
+        // TODO: Add this exception to the top-most frame.
         if (event.exception != null) {
           launch.pipeStdio('exception: ${_refToString(event.exception)}\n',
               error: true);
@@ -287,11 +290,6 @@ class ObservatoryConnection extends DebugConnection {
 
   // TODO: Move much of the isolate lifecycle code into a manager class.
   // TODO: Make the isolate bring-up lifecycle clearer.
-  //  - create
-  //  - get meta data
-  //  - install breakpoints
-  //  - exception pause mode
-  //  - resume from pause
 
   Future<ObservatoryIsolate> _registerNewIsolate(IsolateRef ref) {
     if (_isolateMap.containsKey(ref.id)) return new Future.value(_isolateMap[ref.id]);
@@ -304,6 +302,8 @@ class ObservatoryConnection extends DebugConnection {
       // Get isolate metadata.
       return isolate._updateIsolateInfo();
     }).then((_) {
+      isolate._isolateInitializedCompleter.complete();
+
       if (isolate.isolate.pauseEvent.kind == EventKind.kPauseStart) {
         isolate._performInitialResume();
       }
@@ -408,6 +408,8 @@ class ObservatoryIsolate extends DebugIsolate {
   final ObservatoryConnection connection;
   final VmService service;
   final IsolateRef isolateRef;
+
+  Completer _isolateInitializedCompleter = new Completer();
 
   Isolate isolate;
   ScriptManager scriptManager;
@@ -659,6 +661,25 @@ class ObservatoryInstanceRefValue extends DebugValue {
 
   ObservatoryInstanceRefValue(this.isolate, this.value);
 
+  factory ObservatoryInstanceRefValue.fromInstance(
+    ObservatoryIsolate isolate,
+    Instance instance
+  ) {
+    InstanceRef ref = new InstanceRef();
+    ref.type = instance.type; // TODO:
+    ref.id = instance.id;
+    ref.kind = instance.kind;
+    ref.classRef = instance.classRef;
+    ref.valueAsString = instance.valueAsString;
+    ref.valueAsStringIsTruncated = instance.valueAsStringIsTruncated;
+    ref.length = instance.length;
+    ref.name = instance.name;
+    ref.typeClass = instance.typeClass;
+    ref.parameterizedClass = instance.parameterizedClass;
+    // ref.pattern = instance.pattern;
+    return new ObservatoryInstanceRefValue(isolate, ref);
+  }
+
   String get className => value.classRef.name;
 
   bool get isPrimitive {
@@ -731,7 +752,25 @@ class ObservatoryInstanceRefValue extends DebugValue {
       if (result is Sentinel) {
         return new SentinelDebugValue(result);
       } else if (result is InstanceRef) {
-        return new ObservatoryInstanceRefValue(isolate, result);
+        InstanceRef ref = result;
+        if (ref.kind == InstanceKind.kString
+            && ref.valueAsStringIsTruncated == true) {
+          return isolate.service.getObject(isolate.id, result.id).then((result) {
+            if (result is Sentinel) {
+              return new SentinelDebugValue(result);
+            } else if (result is InstanceRef) {
+              return new ObservatoryInstanceRefValue(isolate, result);
+            } else if (result is Instance) {
+              return new ObservatoryInstanceRefValue.fromInstance(isolate, result);
+            } else if (result is ErrorRef) {
+              return new Future.error(result.message);
+            } else {
+              return new Future.error('unexpected result type: ${result}');
+            }
+          });
+        } else {
+          return new ObservatoryInstanceRefValue(isolate, result);
+        }
       } else if (result is ErrorRef) {
         return new Future.error(result.message);
       } else {

@@ -1,6 +1,8 @@
 library atom.debugger_ui;
 
 import 'dart:async';
+import 'dart:html' show Element;
+import 'dart:js' show context, JsFunction;
 
 import 'package:logging/logging.dart';
 
@@ -158,12 +160,12 @@ class DebuggerView extends View {
     ]);
 
     // Set up the splitter.
-    resizer.position = state['debuggerSplitter'] == null ? 225 : state['debuggerSplitter'];
+    resizer.position = state['debuggerSplitter'] == null ? 144 : state['debuggerSplitter'];
     resizer.onPositionChanged.listen((pos) => state['debuggerSplitter'] = pos);
 
     // Set up the tab group.
-    secondaryTabGroup.tabs.add(new _MockTab('Eval'));
-    secondaryTabGroup.tabs.add(new _MockTab('Watchpoints'));
+    // secondaryTabGroup.tabs.add(new EvalTab(this, connection));
+    // secondaryTabGroup.tabs.add(new _MockTab('Watchpoints'));
     secondaryTabGroup.tabs.add(new BreakpointsTab());
 
     disposables.addAll(primaryTabGroup.tabs.items);
@@ -258,14 +260,14 @@ class DebuggerView extends View {
   }
 }
 
-class _MockTab extends MTab {
-  _MockTab(String name) : super(name.toLowerCase(), name) {
-    content.toggleClass('under-construction');
-    content.text = '${name}: under construction';
-  }
-
-  void dispose() { }
-}
+// class _MockTab extends MTab {
+//   _MockTab(String name) : super(name.toLowerCase(), name) {
+//     content.toggleClass('under-construction');
+//     content.text = '${name}: under construction';
+//   }
+//
+//   void dispose() { }
+// }
 
 class FlowControlSection implements Disposable {
   final DebuggerView view;
@@ -606,6 +608,50 @@ class IsolatesTab extends MTab {
   }
 
   void dispose() => subs.dispose();
+}
+
+// TODO: Finish implementing this; the textfield will not retain event focus.
+class EvalTab extends MTab {
+  final DebuggerView view;
+  final DebugConnection connection;
+
+  final Disposables disposables = new Disposables();
+
+  TextEditor editor;
+
+  EvalTab(this.view, this.connection) : super('eval', 'Eval') {
+    CoreElement editorContainer;
+
+    content..add([
+      div()..flex(),
+      editorContainer = div()
+    ])..layoutVertical()..flex();
+
+    editorContainer.element.setInnerHtml(
+      '<atom-text-editor mini '
+        'data-grammar="source dart" '
+        'placeholder-text="evaluate:"></atom-text-editor>',
+      treeSanitizer: new TrustedHtmlTreeSanitizer()
+    );
+
+    Element editorElement = editorContainer.element.querySelector('atom-text-editor');
+    JsFunction editorConverter = context['getTextEditorForElement'];
+    editor = new TextEditor(editorConverter.apply([editorElement]));
+    editor.setGrammar(atom.grammars.grammarForScopeName('source.dart'));
+    editor.selectAll();
+
+    enabled.onChanged.listen((val) {
+      // Focus the element.
+      if (val) editorElement.focus();
+    });
+
+    disposables.add(atom.commands.add(editorElement, 'core:confirm', (_) {
+      // TODO:
+      print('[${editor.getText()}]');
+    }));
+  }
+
+  void dispose() => disposables.dispose();
 }
 
 class BreakpointsTab extends MTab {

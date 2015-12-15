@@ -142,7 +142,7 @@ class CliLaunchType extends LaunchType {
   }
 
   String getDefaultConfigText() {
-    return 'args: \nchecked: true\n';
+    return 'args: \nchecked: true\ndebug: true\n';
   }
 }
 
