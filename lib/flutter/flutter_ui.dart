@@ -26,7 +26,7 @@ class FlutterSection {
         new CoreElement('input')
           ..setAttribute('type', 'checkbox')
           ..click(_toggleSlowAnimations),
-        span(text: 'slower animations', c: 'text-subtle')
+        span(text: ' slower animations', c: 'text-subtle')
       ])
     ]);
 

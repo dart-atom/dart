@@ -958,6 +958,10 @@ class TextEditor extends ProxyHolder {
   /// Get the position of all the cursor positions in buffer coordinates.
   /// Returns Array of Points in the order they were added
   //List<Point> getCursorBufferPositions() =>
+
+  /// Set the greyed out placeholder of a mini editor. Placeholder text will be
+  /// displayed when the editor has no content.
+  void setPlaceholderText(String placeholderText) => invoke('setPlaceholderText', placeholderText);
 }
 
 class TextBuffer extends ProxyHolder {

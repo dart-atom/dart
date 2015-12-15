@@ -7,6 +7,9 @@
 - added a Flutter section to the debugger UI; you can toggle debug drawing there,
   as well as toggle on and off slower animations
 - added a 'Toggle Outline View' menu item to the View menu
+- enable the debugger by default. The debugger can be disabled per launch by
+  editing the launch configuration file (<project>/.atom/launches/foo_launch.yaml)
+  and changing `debug: true` to `false`.
 
 ## 0.4.17
 - added an analysis server section to the plugin status view

@@ -72,7 +72,7 @@ class FlutterLaunchType extends LaunchType {
   }
 
   String getDefaultConfigText() {
-    return 'checked: true\nroute:\n';
+    return 'checked: true\ndebug: true\nroute:\n';
   }
 
   Future _killLastLaunch() {

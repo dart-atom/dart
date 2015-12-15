@@ -3,5 +3,6 @@ type: cli
 path: tool/analysis/generate_analysis.dart
 
 cli:
-  args: 
+  args:
   checked: true
+  debug: true

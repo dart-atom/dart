@@ -982,7 +982,8 @@ class AnalysisError {
   AnalysisError(this.severity, this.type, this.location, this.message,
       {this.correction, this.hasFix});
 
-  operator ==(o) => o is AnalysisError &&
+  operator ==(o) =>
+      o is AnalysisError &&
       severity == o.severity &&
       type == o.type &&
       location == o.location &&
@@ -1365,14 +1366,16 @@ class Location {
   Location(
       this.file, this.offset, this.length, this.startLine, this.startColumn);
 
-  operator ==(o) => o is Location &&
+  operator ==(o) =>
+      o is Location &&
       file == o.file &&
       offset == o.offset &&
       length == o.length &&
       startLine == o.startLine &&
       startColumn == o.startColumn;
 
-  get hashCode => file.hashCode ^
+  get hashCode =>
+      file.hashCode ^
       offset.hashCode ^
       length.hashCode ^
       startLine.hashCode ^
