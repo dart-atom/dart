@@ -383,9 +383,9 @@ class AtomDartPackage extends AtomPackage {
       },
       'debugAnalysisServer': {
         'title': 'Start the analysis server with debug flags.',
-        'description': 'This is for plugin development only! The analysis server '
-            'will be started with the observatory port and AS diagnostics ports '
-            'turned on. A restart is required.',
+        'description':
+          'Start the analysis server with its diagnostics port enabled. A '
+          'restart is required.',
         'type': 'boolean',
         'default': false,
         'order': 11
