@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.5.0
 - we now show errors in the outline view
 - display lists and maps in the debugger
 - call `toString()` on an object when selected in the debugger
