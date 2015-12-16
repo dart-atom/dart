@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:vm_service_lib/vm_service_lib.dart';
 
 import '../atom.dart';
+import '../atom_utils.dart';
 import '../flutter/flutter_ext.dart';
 import '../launch/launch.dart';
 import '../state.dart';
@@ -69,6 +70,8 @@ class ObservatoryConnection extends DebugConnection {
 
   StreamController<DebugIsolate> _isolatePaused = new StreamController.broadcast();
   StreamController<DebugIsolate> _isolateResumed = new StreamController.broadcast();
+
+  _VmSourceCache sourceCache = new _VmSourceCache();
 
   StreamSubscriptions subs = new StreamSubscriptions();
   UriResolver uriResolver;
@@ -366,7 +369,6 @@ String _refToString(dynamic value) {
   if (value is InstanceRef) {
     InstanceRef ref = value as InstanceRef;
     if (ref.kind == InstanceKind.kString) {
-      // TODO: escape string chars
       return "'${ref.valueAsString}'";
     } else if (ref.valueAsString != null) {
       return ref.valueAsString;
@@ -909,6 +911,7 @@ class ObservatoryLocation extends DebugLocation {
   final SourceLocation location;
 
   Completer _completer;
+  bool _unableToResolve = false;
 
   ObservatoryLocation(this.isolate, this.location);
 
@@ -921,7 +924,7 @@ class ObservatoryLocation extends DebugLocation {
 
   VmService get service => isolate.service;
 
-  bool get isSystem => location.script.uri.startsWith('dart:');
+  bool get isSystem => location.script.uri.startsWith('dart:') || _unableToResolve;
 
   String _path;
   Point _pos;
@@ -933,10 +936,10 @@ class ObservatoryLocation extends DebugLocation {
       _resolve().then((val) {
         _completer.complete(val);
       }).catchError((e) {
-        _logger.info('${e}');
         _completer.complete(this);
       }).whenComplete(() {
         resolved = true;
+        _checkCreateSystemScript();
       });
     }
 
@@ -951,11 +954,26 @@ class ObservatoryLocation extends DebugLocation {
     // Get the line and column info.
     _pos = _calcPos(script, location.tokenPos);
 
+    _path = script.uri;
+
     // Get the local path.
     return isolate.connection.uriResolver.resolveUriToPath(script.uri).then((String path) {
       _path = path;
       return this;
     });
+  }
+
+  void _checkCreateSystemScript() {
+    if (existsSync(_path)) return;
+
+    _unableToResolve = true;
+
+    // Load the script from the VM.
+    Script script = isolate.scriptManager.getResolvedScript(location.script);
+
+    String cachedPath = isolate.connection.sourceCache.createRetrieveCachePath(
+      _path, script.source);
+    _path = cachedPath;
   }
 }
 
@@ -1083,5 +1101,72 @@ String _instanceToString(dynamic instance) {
     return instance.valueAsString;
   } else {
     return '';
+  }
+}
+
+/// A class to cache source loaded from the VM.
+class _VmSourceCache {
+  final String cacheDir;
+
+  Map<String, String> _pathMappings = {};
+
+  _VmSourceCache() : cacheDir = join(tmpdir(), 'vm_cache');
+
+  _VmSourceCache.withDir(this.cacheDir);
+
+  String createRetrieveCachePath(String originalPath, String source) {
+    if (!_pathMappings.containsKey(originalPath)) {
+      List<String> safeNames = _createSafePathNames(originalPath);
+      String filePath;
+      if (safeNames.length == 2) {
+        filePath = join(cacheDir, safeNames[0], safeNames[1]);
+      } else {
+        filePath = join(cacheDir, safeNames[0]);
+      }
+      _createFile(filePath, source);
+      _pathMappings[originalPath] = filePath;
+    }
+
+    return _pathMappings[originalPath];
+  }
+
+  void _createFile(String filePath, String source) {
+    new File.fromPath(filePath).writeSync(source);
+  }
+
+  /// Create a safe dir name and a safe file name based on the given file path or
+  /// url.
+  ///
+  ///  - dart:isolate-patch/isolate_patch.dart
+  ///  - /home/travis/build/flutter/bui...elease/gen/sky/bindings/Customhooks.dart
+  ///  - dart:_builtin
+  static List<String> _createSafePathNames(String path) {
+    if (path.indexOf(':') > 1) {
+      try {
+        Uri uri = Uri.parse(path);
+        String temp = uri.path;
+        if (temp.contains('/')) {
+          return [dirname(temp), basename(temp)];
+        } else {
+          return temp.contains('.') ? [temp] : [temp + '.dart'];
+        }
+      } catch (e) { }
+    }
+
+    if (path.indexOf('\\') != -1) {
+      List l = path.split('\\');
+      if (l.length == 1) {
+        return l;
+      } else {
+        return [l[l.length - 2], l[l.length - 1]];
+      }
+    }
+
+    List l = path.split('/');
+    if (l.length == 1) {
+      return l;
+    } else {
+      return [l[l.length - 2], l[l.length - 1]];
+    }
   }
 }

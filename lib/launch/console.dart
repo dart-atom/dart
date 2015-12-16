@@ -121,6 +121,7 @@ class ConsoleView extends View {
   CoreElement _debugButton;
   CoreElement _observatoryButton;
   CoreElement _terminateButton;
+  CoreElement _clearButton;
 
   ConsoleView(this.controller, this.launch) {
     _launchId = _idCount++;
@@ -153,6 +154,13 @@ class ConsoleView extends View {
       _terminateButton.tooltip = 'Terminate process';
       _terminateButton.click(() => launch.kill());
     }
+
+    _clearButton = toolbar.add(
+      button(text: 'Clear', c: 'btn icon icon-circle-slash')
+    );
+    _clearButton.tooltip = 'Clear console';
+    _clearButton.click(() => _clearConsole());
+    _clearButton.disabled = true;
 
     // Configure
     if (launch.launchConfiguration != null) {
@@ -235,7 +243,7 @@ class ConsoleView extends View {
       _debugButton = null;
     } else if (_debugButton == null && port != null && launch.hasDebugConnection) {
       _debugButton = toolbar.add(
-        button(text: 'Debug', c: 'btn icon icon-bug')
+        button(text: 'Debugger', c: 'btn icon icon-bug')
       );
       _debugButton.tooltip = 'Open the debugger';
       _debugButton.click(() {
@@ -252,7 +260,7 @@ class ConsoleView extends View {
         div(text: 'exited with code ${launch.exitCode}', c: 'console-footer');
       _emitElement(footer);
       _observatoryButton?.disabled = true;
-      // _debugButton?.disabled = true;
+      _debugButton?.disabled = true;
       _terminateButton?.disabled = true;
     }
   }
@@ -347,6 +355,19 @@ class ConsoleView extends View {
   void _emitElement(CoreElement e) {
     output.add(e);
     e.scrollIntoView(bottom: true);
+    if (_clearButton.disabled) _clearButton.disabled = false;
+  }
+
+  void _clearConsole() {
+    List children = output.element.children;
+    if (children.length > 1) {
+      // Don't remove the console header.
+      while (children.length > 1) {
+        children.removeLast();
+      }
+
+      _clearButton.disabled = true;
+    }
   }
 }
 
