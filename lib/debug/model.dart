@@ -111,8 +111,6 @@ abstract class DebugLocation {
   /// A display file path.
   String get displayPath;
 
-  bool get resolvedPath => path != null;
-
   bool resolved = false;
 
   DebugLocation();

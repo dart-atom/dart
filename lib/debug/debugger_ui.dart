@@ -29,8 +29,6 @@ final Logger _logger = new Logger('atom.debugger_ui');
 // and that a new one is not created after a debugger tab is closed, and that
 // closing a debugger tab doesn't tear down any listening state.
 
-// TODO: Allow the current connection to be null.
-
 // TODO: Breakpoints move to its own section.
 
 // TODO: Debugger view gets some settings.
@@ -105,7 +103,7 @@ class DebuggerView extends View {
     ]);
 
     _createTitleSection(titleSection);
-    /*FlutterSection flutter =*/ new FlutterSection(connection, flutterElement);
+    new FlutterSection(connection, flutterElement);
     _createFlowControlSection(flowControlElement);
     _createPrimarySection(primarySection);
     detailSection = new DetailSection(detailsElement);
@@ -344,7 +342,7 @@ class FlowControlSection implements Disposable {
       isolate.frames.first.location.resolve().then((DebugLocation location) {
         view._removeExecutionMarker();
 
-        if (location.resolvedPath) {
+        if (location.resolved) {
           view._jumpToLocation(location, addExecMarker: true);
         }
       });
@@ -409,22 +407,16 @@ class ExecutionTab extends MTab {
   void _renderFrame(DebugFrame frame, CoreElement element) {
     String style = frame.isSystem ? 'icon icon-git-commit' : 'icon icon-three-bars';
     String locationText = getDisplayUri(frame.location.displayPath);
-    // String tooltipText = frame.location.displayPath;
-
-    // // TODO: The plan is for the location resolution code to become more synchronous.
-    // if (frame.location.line != null) {
-    //   tooltipText = '${tooltipText}, '
-    //     'line ${frame.location.line}, '
-    //     'column ${frame.location.column}';
-    // }
 
     element..add([
       span(c: style),
-      span(text: frame.title),
-      span(
-        text: locationText,
-        c: 'debugger-secondary-info overflow-hidden-ellipsis right-aligned'
-      )..flex(),
+      span()..layoutHorizontal()..add([
+        span(text: frame.title, c: 'overflow-hidden-ellipsis'),
+        span(
+          text: locationText,
+          c: 'debugger-secondary-info right-aligned overflow-hidden-ellipsis'
+        )..flex()
+      ])..flex(),
       span(text: '#${frame.frameIndex}', c: 'debugger-secondary-info')
     ])..layoutHorizontal();
   }
@@ -436,7 +428,7 @@ class ExecutionTab extends MTab {
     }
 
     frame.location.resolve().then((DebugLocation location) {
-      if (location.resolvedPath) view._jumpToLocation(location);
+      if (location.resolved) view._jumpToLocation(location);
     });
 
     List<DebugVariable> vars = frame.locals;

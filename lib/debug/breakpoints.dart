@@ -110,10 +110,10 @@ class BreakpointManager implements Disposable, StateStorable {
       return;
     }
 
-    // TODO: if the user has their cursor at the end of the line, they still
-    // want the bp on that line
+    // For now, we just create line breakpoints; use the column (`p.column`)
+    // when we have a context menu item.
     Point p = editor.getCursorBufferPosition();
-    AtomBreakpoint bp = new AtomBreakpoint(path, p.row + 1, column: p.column + 1);
+    AtomBreakpoint bp = new AtomBreakpoint(path, p.row + 1);
     AtomBreakpoint other = _findSimilar(bp);
 
     // Check to see if we need to toggle it.
