@@ -8,6 +8,7 @@ class FlutterSection {
 
   bool isDebugDrawing = false;
   bool isSlowAnimations = false;
+  bool isFPSOverlay = false;
 
   FlutterSection(this.connection, CoreElement element) {
     element.add([
@@ -28,6 +29,13 @@ class FlutterSection {
           ..click(_toggleSlowAnimations),
         span(text: ' slower animations', c: 'text-subtle')
       ])
+      // , span(text: ' '), // so sad
+      // new CoreElement('label')..add([
+      //   new CoreElement('input')
+      //     ..setAttribute('type', 'checkbox')
+      //     ..click(_toggleFPSOverlay),
+      //   span(text: ' FPS overlay', c: 'text-subtle')
+      // ])
     ]);
 
     element.hidden(true);
@@ -54,4 +62,9 @@ class FlutterSection {
     isSlowAnimations = !isSlowAnimations;
     flutterExtension.timeDilation(isSlowAnimations ? 5.0 : 1.0);
   }
+
+  // void _toggleFPSOverlay() {
+  //   isFPSOverlay = !isFPSOverlay;
+  //   flutterExtension.fpsOverlay(isFPSOverlay);
+  // }
 }

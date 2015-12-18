@@ -240,7 +240,7 @@ class SelectionGroup<T> {
 
 class FutureSerializer<T> {
   List _operations = [];
-  List _completers = [];
+  List<Completer<T>> _completers = [];
 
   Future<T> perform(Function operation) {
     Completer<T> completer = new Completer();
