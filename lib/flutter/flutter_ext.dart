@@ -46,6 +46,14 @@ class FlutterExt {
     );
   }
 
+  Future fpsOverlay(bool showOverlay) {
+    return service.callServiceExtension(
+      'flutter.fpsOverlay',
+      _isolateId,
+      args: { 'showOverlay': showOverlay }
+    );
+  }
+
   Future _checkForFlutter(String isolateId) {
     return flutter(isolateId).then((_) {
         _isolateId = isolateId;

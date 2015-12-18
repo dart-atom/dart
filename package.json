@@ -15,7 +15,8 @@
   },
   "dependencies": {},
   "required-packages": [
-    "linter"
+    "linter",
+    "synced-sidebar"
   ],
   "consumedServices": {
     "status-bar": {
