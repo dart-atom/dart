@@ -121,8 +121,9 @@ class StatusView extends View {
 
     CoreElement text = section.add(div());
     text.setInnerHtml(
-      'For help using this plugin, please see our getting started '
-      '<a href="https://dart-atom.github.io/dartlang/">guide</a>.'
+      'For help using this plugin, please see our '
+      '<a href="https://dart-atom.github.io/dartlang/">getting started</a> '
+      'guide.'
     );
 
     CoreElement buttons = _addButtons(section);

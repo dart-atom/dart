@@ -188,45 +188,62 @@ class ObservatoryConnection extends DebugConnection {
   }
 
   Future _installBreakpoints(IsolateRef isolate) {
-    Map<AtomBreakpoint, Breakpoint> _bps = {};
+    // TODO: Create an observatory breakpoint manager class.
+    Map<AtomBreakpoint, List<Breakpoint>> _bps = {};
 
-    subs.add(breakpointManager.onAdd.listen((bp) {
+    var addBreakpoint = (AtomBreakpoint atomBreakpoint, Breakpoint vmBreakpoint) {
+      if (!_bps.containsKey(atomBreakpoint)) _bps[atomBreakpoint] = <Breakpoint>[];
+      _bps[atomBreakpoint].add(vmBreakpoint);
+    };
+
+    subs.add(breakpointManager.onAdd.listen((AtomBreakpoint bp) {
       uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
-        // TODO: Use both returned values.
-        return service.addBreakpointWithScriptUri(
-            isolate.id, uris.first, bp.line, column: bp.column);
-      }).then((Breakpoint vmBreakpoint) {
-        _bps[bp] = vmBreakpoint;
-      }).catchError((e) {
-        // ignore
+        return Future.forEach(uris, (String uri) {
+          return service.addBreakpointWithScriptUri(
+            isolate.id,
+            uri,
+            bp.line,
+            column: bp.column
+          ).then((Breakpoint vmBreakpoint) {
+            addBreakpoint(bp, vmBreakpoint);
+          }).catchError((e) {
+            // ignore
+          });
+        });
       });
     }));
 
-    subs.add(breakpointManager.onRemove.listen((bp) {
-      Breakpoint vmBreakpoint = _bps[bp];
-      if (vmBreakpoint != null) {
-        service.removeBreakpoint(isolate.id, vmBreakpoint.id).catchError((e) {
-          _logger.info('error removing breakpoint', e);
-        });
+    subs.add(breakpointManager.onRemove.listen((AtomBreakpoint bp) {
+      List<Breakpoint> breakpoints = _bps[bp];
+      if (breakpoints != null) {
+        for (Breakpoint vmBreakpoint in breakpoints) {
+          service.removeBreakpoint(isolate.id, vmBreakpoint.id).catchError((e) {
+            _logger.info('error removing breakpoint', e);
+          });
+        }
       }
     }));
 
-    // TODO: Run these in parallel.
-    // TODO: Need to handle self-references and editor breakpoints multiplexed
-    // over several VM breakpoints.
+    // This handles self-references and editor breakpoints multiplexed over
+    // several VM breakpoints.
     return Future.forEach(breakpointManager.breakpoints, (AtomBreakpoint bp) {
       return uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
-        // TODO: Use both returned values.
-        return service.addBreakpointWithScriptUri(
-            isolate.id, uris.first, bp.line, column: bp.column);
-      }).then((Breakpoint vmBreakpoint) {
-        _bps[bp] = vmBreakpoint;
-      }).catchError((e) {
-        // ignore
+        return Future.forEach(uris, (String uri) {
+          return service.addBreakpointWithScriptUri(
+            isolate.id,
+            uri,
+            bp.line,
+            column: bp.column
+          ).then((Breakpoint vmBreakpoint) {
+            addBreakpoint(bp, vmBreakpoint);
+          }).catchError((e) {
+            // ignore
+          });
+        });
       });
     }).then((_) {
       return service.setExceptionPauseMode(
-          isolate.id, ExceptionPauseMode.kUnhandled);
+        isolate.id, ExceptionPauseMode.kUnhandled);
     });
   }
 
