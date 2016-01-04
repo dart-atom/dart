@@ -4,6 +4,7 @@
 - added a 'clear' button to the console view
 - improved the view of debugger stack frames
 - show source for system libraries when debugging
+- handle breakpoints in libraries loaded as self-references
 
 ## 0.5.0
 - we now show errors in the outline view
