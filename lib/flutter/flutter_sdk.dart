@@ -9,10 +9,10 @@ import '../atom_utils.dart';
 import '../impl/debounce.dart';
 import '../jobs.dart';
 import '../process.dart';
-import '../state.dart';
 import '../utils.dart';
 
-final String _prefKey = '${pluginId}.flutterSdkLocation';
+final String _prefKey = 'flutter.flutterRoot';
+final String _oldPrefKey = 'dartlang.flutterSdkLocation';
 
 final Logger _logger = new Logger('flutter.sdk');
 
@@ -25,6 +25,8 @@ class FlutterSdkManager implements Disposable {
   FlutterSdk _sdk;
 
   FlutterSdkManager() {
+    _migrateFlutterRootSetting();
+
     // Load the existing setting and initiate auto-discovery if necessary.
     String currentPath = atom.config.getValue(_prefKey);
 
@@ -147,6 +149,17 @@ class FlutterSdkManager implements Disposable {
         new NotificationButton('Plugin Settings', openSettings)
       ]
     );
+  }
+
+  // Move any Flutter root setting from the old location to the new one.
+  void _migrateFlutterRootSetting() {
+    String newLocationValue = atom.config.getValue(_prefKey);
+    String oldLocationValue = atom.config.getValue(_oldPrefKey);
+
+    if (newLocationValue == null && oldLocationValue != null) {
+      atom.config.setValue(_oldPrefKey, null);
+      atom.config.setValue(_prefKey, oldLocationValue);
+    }
   }
 }
 
