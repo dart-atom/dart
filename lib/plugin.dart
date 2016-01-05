@@ -33,7 +33,6 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'flutter/create_project.dart';
-import 'flutter/flutter_dev.dart';
 import 'flutter/flutter_sdk.dart';
 import 'flutter/launch_flutter.dart';
 import 'flutter/launch_mojo.dart';
@@ -158,7 +157,6 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(consoleController = new ConsoleController());
     disposables.add(deps[TestManager] = new TestManager());
 
-    disposables.add(new FlutterDev());
     disposables.add(deps[FlutterSdkManager] = new FlutterSdkManager());
 
     disposables.add(new UsageManager());
@@ -281,13 +279,6 @@ class AtomDartPackage extends AtomPackage {
         'type': 'string',
         'default': '',
         'order': 1
-      },
-      'flutterSdkLocation': {
-        'title': 'Flutter SDK Location',
-        'description': 'The location of the Flutter SDK.',
-        'type': 'string',
-        'default': '',
-        'order': 2
       },
 
       // custom views
