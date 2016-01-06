@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.5.1
 - added a 'clear' button to the console view
 - improved the view of debugger stack frames
 - show source for system libraries when debugging
