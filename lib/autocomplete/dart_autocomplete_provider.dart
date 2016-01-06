@@ -1,8 +1,5 @@
 part of atom.autocomplete_impl;
 
-// TODO: The code completion popup can be very sticky - perhaps due to the
-// latency involved in using the analysis server?
-
 class DartAutocompleteProvider extends AutocompleteProvider {
   static final _suggestionKindMap = {
     'IMPORT': 'import',
@@ -87,12 +84,6 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
   void onDidInsertSuggestion(TextEditor editor, Point triggerPosition,
       Map suggestion) {
-    String requiredImport = suggestion['requiredImport'];
-    if (requiredImport != null) {
-      // TODO: Insert it.
-      _logger.info('TODO: add an import for ${requiredImport}');
-    }
-
     int selectionOffset = suggestion['selectionOffset'];
     if (selectionOffset != null) {
       Point pt = editor.getBuffer().positionForCharacterIndex(selectionOffset);
@@ -136,29 +127,29 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     Iterable<Suggestion> suggestions = results.map((CompletionSuggestion cs) {
       String text = cs.completion;
       String snippet = null;
+      String displayText = null;
 
       // We have something that might take params.
       if (cs.parameterNames != null) {
-        // If it takes none, then just append `()`.
+        // If it takes no parameters, then just append `()`.
         if (cs.parameterNames.isEmpty) {
           text += '()';
-        } else if (cs.requiredParameterCount != null && cs.requiredParameterCount > 0) {
-          // TODO: (dynamic) → dynamic? and () -> dynamic
+        } else {
+          text = null;
 
           // If it has required params, then use a snippet: func(${1:arg}).
           int count = 0;
           String names = cs.parameterNames.take(cs.requiredParameterCount).map(
               (name) => '\${${++count}:${name}}').join(', ');
 
-          //bool hasOptional = cs.requiredParameterCount != cs.parameterNames.length;
+          bool hasOptional = cs.requiredParameterCount != cs.parameterNames.length;
 
-          text = null;
-          //snippet = '${cs.completion}(${names}, \${${count + 1}:…})\$${count + 2}';
+          if (hasOptional) {
+            // Create a display string with the optional params.
+            displayText = _describe(cs, useDocs: false);
+          }
+
           snippet = '${cs.completion}(${names})\$${++count}';
-        } else {
-          // Else, leave the cursor within the parans.
-          text = null;
-          snippet = '${cs.completion}(\$1)\$2';
         }
       }
 
@@ -194,6 +185,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
       );
       if (text != null) suggestion.text = text;
       if (snippet != null) suggestion.snippet = snippet;
+      if (displayText != null) suggestion.displayText = displayText;
       if (_prefix != null) suggestion.replacementPrefix = _prefix;
       if (selectionOffset != null) suggestion.selectionOffset = selectionOffset;
       return suggestion;
@@ -216,18 +208,18 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     return null;
   }
 
-  String _describe(CompletionSuggestion cs) {
+  String _describe(CompletionSuggestion cs, {bool useDocs: true}) {
     if (cs.importUri != null) return "Requires '${cs.importUri}'";
+
+    if (useDocs) {
+      if (cs.docSummary != null) return cs.docSummary;
+    }
 
     var element = cs.element;
     if (element != null && element.parameters != null) {
       String str = '${element.name}${element.parameters}';
       return element.returnType != null ? '${str} → ${element.returnType}' : str;
     }
-
-    // TODO: But, docSummary is always null...
-    // See https://github.com/dart-lang/sdk/issues/23694.
-    if (cs.docSummary != null) return cs.docSummary;
 
     return cs.completion;
   }

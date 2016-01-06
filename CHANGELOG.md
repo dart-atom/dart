@@ -6,6 +6,7 @@
 - show source for system libraries when debugging
 - handle breakpoints in libraries loaded as self-references
 - have this plugin depend on the `flutter` plugin
+- show optional parameters in code completion
 
 ## 0.5.0
 - we now show errors in the outline view

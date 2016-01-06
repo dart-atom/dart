@@ -159,7 +159,7 @@ class Suggestion {
   /// not set, snippet || text is displayed. This is useful when snippet or text
   /// displays too much, and you want to simplify. e.g.
   /// `{type: 'attribute', snippet: 'class="$0"$1', displayText: 'class'}`
-  final String displayText;
+  String displayText;
 
   /// (optional): The text immediately preceding the cursor, which will be
   /// replaced by the text. If not provided, the prefix passed into

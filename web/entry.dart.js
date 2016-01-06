@@ -28604,7 +28604,7 @@ self._domRemove = function(element) {
         return H.setRuntimeTypeInfo(new K.Promise(K.Promise__jsObjectFromFuture(f)), [null]).obj;
       }, "call$1", "get$_getSuggestions", 2, 0, 44, 42],
       _onDidInsertSuggestion$1: [function(options) {
-        var t1, t2, t3, index, requiredImport, selectionOffset;
+        var t1, t2, t3, index, selectionOffset;
         t1 = $._override;
         t2 = t1 != null && t1.hasShown;
         t3 = J.getInterceptor$asx(options);
@@ -28626,12 +28626,7 @@ self._domRemove = function(element) {
         } else {
           t1 = new E.TextEditor(E._cvt(t3.$index(options, "editor")));
           E._cvt(t3.$index(options, "triggerPosition"));
-          t3 = K.jsObjectToDart(t3.$index(options, "suggestion"));
-          t2 = J.getInterceptor$asx(t3);
-          requiredImport = t2.$index(t3, "requiredImport");
-          if (requiredImport != null)
-            $.$get$_logger26().info$1("TODO: add an import for " + H.S(requiredImport));
-          selectionOffset = t2.$index(t3, "selectionOffset");
+          selectionOffset = J.$index$asx(K.jsObjectToDart(t3.$index(options, "suggestion")), "selectionOffset");
           if (selectionOffset != null)
             t1.invoke$2("setCursorBufferPosition", new E.Point(E._cvt(new E.TextBuffer(E._cvt(t1.invoke$1("getBuffer"))).invoke$2("positionForCharacterIndex", selectionOffset))));
         }
@@ -28648,7 +28643,7 @@ self._domRemove = function(element) {
       "^": "Closure:73;timer",
       call$1: [function(suggestions) {
         var t1 = J.getInterceptor$asx(suggestions);
-        $.$get$_logger27().finer$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this.timer.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
+        $.$get$_logger26().finer$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this.timer.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
         return t1.map$1(suggestions, new X.AutocompleteProvider__getSuggestions__closure()).toList$0(0);
       }, null, null, 2, 0, null, 94, "call"]
     },
@@ -28810,18 +28805,22 @@ self._domRemove = function(element) {
           return t1.$index(0, elementKind);
         return;
       },
-      _describe$1: function(cs) {
+      _describe$2$useDocs: function(cs, useDocs) {
         var element, str;
         if (cs.get$importUri() != null)
           return "Requires '" + H.S(cs.get$importUri()) + "'";
+        if (useDocs)
+          if (cs.get$docSummary() != null)
+            return cs.get$docSummary();
         element = cs.get$element();
         if (element != null && element.get$parameters() != null) {
           str = H.S(J.get$name$x(element)) + H.S(element.get$parameters());
           return element.get$returnType() != null ? str + " \u2192 " + H.S(element.get$returnType()) : str;
         }
-        if (cs.get$docSummary() != null)
-          return cs.get$docSummary();
         return cs.get$completion();
+      },
+      _describe$1: function(cs) {
+        return this._describe$2$useDocs(cs, true);
       },
       _rightLabel$1: function(str) {
         var t1, t2;
@@ -28905,27 +28904,28 @@ self._domRemove = function(element) {
     DartAutocompleteProvider__handleCompletionResults_closure3: {
       "^": "Closure:41;_box_1,$this,prefixLower,replacementOffset",
       call$1: [function(cs) {
-        var t1, text, snippet, t2, t3, names, completionPrefix, t4, selectionOffset, potential, t5, t6, suggestion;
+        var t1, text, snippet, displayText, t2, t3, names, completionPrefix, t4, selectionOffset, potential, t5, t6, suggestion;
         t1 = {};
         text = cs.get$completion();
         if (cs.get$parameterNames() != null)
           if (cs.get$parameterNames().length === 0) {
             text = J.$add$ns(text, "()");
             snippet = null;
+            displayText = null;
           } else {
-            if (cs.get$requiredParameterCount() != null && J.$gt$n(cs.get$requiredParameterCount(), 0)) {
-              t1.count = 0;
-              t2 = cs.get$parameterNames();
-              t3 = cs.get$requiredParameterCount();
-              t2.toString;
-              names = H.setRuntimeTypeInfo(new H.MappedListIterable(H.SubListIterable$(t2, 0, t3, H.getTypeArgumentByIndex(t2, 0)), new F.DartAutocompleteProvider__handleCompletionResults__closure(t1)), [null, null]).join$1(0, ", ");
-              snippet = H.S(cs.get$completion()) + "(" + names + ")$" + ++t1.count;
-            } else
-              snippet = H.S(cs.get$completion()) + "($1)$2";
+            t1.count = 0;
+            t2 = cs.get$parameterNames();
+            t3 = cs.get$requiredParameterCount();
+            t2.toString;
+            names = H.setRuntimeTypeInfo(new H.MappedListIterable(H.SubListIterable$(t2, 0, t3, H.getTypeArgumentByIndex(t2, 0)), new F.DartAutocompleteProvider__handleCompletionResults__closure(t1)), [null, null]).join$1(0, ", ");
+            displayText = !J.$eq$(cs.get$requiredParameterCount(), cs.get$parameterNames().length) ? this.$this._describe$2$useDocs(cs, false) : null;
+            snippet = H.S(cs.get$completion()) + "(" + names + ")$" + ++t1.count;
             text = null;
           }
-        else
+        else {
           snippet = null;
+          displayText = null;
+        }
         t1 = this._box_1;
         t2 = t1._prefix;
         completionPrefix = t2 != null ? t2.toLowerCase() : this.prefixLower;
@@ -28960,6 +28960,8 @@ self._domRemove = function(element) {
           suggestion.text = text;
         if (snippet != null)
           suggestion.snippet = snippet;
+        if (displayText != null)
+          suggestion.displayText = displayText;
         t1 = t1._prefix;
         if (t1 != null)
           suggestion.replacementPrefix = t1;
@@ -63612,10 +63614,8 @@ self._domRemove = function(element) {
     return J.$eq$($.$get$platform(), "darwin");
   }, "separator", "$get$separator", "separator", function() {
     return $.$get$isWindows() === true ? "\\" : "/";
-  }, "_logger27", "$get$_logger27", "_logger", function() {
-    return N.Logger_Logger("atom.autocomplete");
   }, "_logger26", "$get$_logger26", "_logger", function() {
-    return N.Logger_Logger("autocomplete");
+    return N.Logger_Logger("atom.autocomplete");
   }, "DartAutocompleteProvider__suggestionKindMap", "$get$DartAutocompleteProvider__suggestionKindMap", "_suggestionKindMap", function() {
     return P.LinkedHashMap__makeLiteral(["IMPORT", "import", "KEYWORD", "keyword", "PARAMETER", "property", "NAMED_ARGUMENT", "property"]);
   }, "DartAutocompleteProvider__elementKindMap", "$get$DartAutocompleteProvider__elementKindMap", "_elementKindMap", function() {
