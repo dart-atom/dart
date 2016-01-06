@@ -5,7 +5,7 @@
 - improved the view of debugger stack frames
 - show source for system libraries when debugging
 - handle breakpoints in libraries loaded as self-references
-- have this plugin depend on the `flutter` plugin
+- have this plugin depend on the `flutter` plugin, and install it if it doesn't exist
 - show optional parameters in code completion
 
 ## 0.5.0
