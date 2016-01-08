@@ -18,7 +18,7 @@ class RebuildManager implements Disposable {
 
   RebuildManager() {
     disposables.add(atom.commands.add('atom-workspace', 'dartlang:rebuild-restart-dev', (_) {
-      new RebuildJob("Rebuilding dartlang").schedule();
+      new RebuildJob("Rebuilding Atom plugins").schedule();
     }));
     disposables.add(atom.commands.add('atom-workspace', 'dartlang:rebuild-run-tests-dev', (_) {
       new RebuildJob("Building dartlang tests", runTests: true).schedule();
@@ -40,33 +40,48 @@ class RebuildJob extends Job {
       return new Future.value();
     }
 
-    // Find the `dartlang` project.
-    Directory proj = atom.project.getDirectories().firstWhere(
-        (d) => d.getBaseName().endsWith(pluginId), orElse: () => null
-    );
-    if (proj == null) {
-      atom.notifications.addWarning("Unable to find project '${pluginId}'.");
-      return new Future.value();
-    }
-
     // Save any dirty editors.
     atom.workspace.getTextEditors().forEach((editor) {
       if (editor.isModified()) editor.save();
     });
 
-    List<String> args = ['grinder', runTests ? 'build-atom-tests' : 'build'];
+    // Determine names of plugins to build
+    List<String> projNames = atom.config.getValue('$pluginId.buildAtomPlugins');
+    if (projNames == null) projNames = [pluginId];
 
-    return new PubRunJob.local(proj.getPath(), args, title: name).schedule().then(
-        (JobStatus status) {
-      // Check for an exit code of `0` from grind build.
-      if (status.isOk && status.result == 0) {
+    // Build plugins and aggregate the results
+    var builds = projNames.map((String name) => _runBuild(name, runTests));
+    Future<bool> result = Future.wait(builds).then((List<bool> results) =>
+        results.reduce((bool value, bool success) => value && success));
+
+    return result.then((bool success) {
+      if (success) {
         if (runTests) {
           _runTests();
         } else {
-          new Future.delayed(new Duration(seconds: 2)).then((_) => atom.reload());
+          new Future.delayed(new Duration(seconds: 2))
+              .then((_) => atom.reload());
         }
       }
     });
+  }
+
+  /// Locate and build the specified project.
+  Future<bool> _runBuild(String projName, bool runTests) {
+    // Find the project to be built.
+    Directory proj = atom.project.getDirectories().firstWhere(
+        (d) => d.getBaseName().endsWith(projName), orElse: () => null
+    );
+    if (proj == null) {
+      atom.notifications.addWarning("Unable to find project '${projName}'.");
+      return new Future.value(false);
+    }
+
+    List<String> args = ['grinder', runTests ? 'build-atom-tests' : 'build'];
+
+    // Run the build and check for an exit code of `0` from grind build.
+    return new PubRunJob.local(proj.getPath(), args, title: projName)
+      .schedule().then((JobStatus status) => status.isOk && status.result == 0);
   }
 
   void _runTests() {
