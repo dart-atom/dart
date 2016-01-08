@@ -436,9 +436,8 @@ class _AnalysisServerWrapper extends Server {
     _executables.clear();
     execution.setSubscriptions(['LAUNCH_DATA']);
 
-    // Tracking `enableSuperMixins` here: github.com/dart-lang/sdk/issues/23772.
     analysis.updateOptions(new AnalysisOptions(
-      //enableSuperMixins: true
+      // override Analysis Server defaults here
     ));
 
     server.getVersion().then((v) => _logger.info('version ${v.version}'));
