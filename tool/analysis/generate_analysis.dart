@@ -67,6 +67,7 @@ class Api {
     gen.writeStatement('Function _writeMessage;');
     gen.writeStatement('int _id = 0;');
     gen.writeStatement('Map<String, Completer> _completers = {};');
+    gen.writeStatement('Map<String, String> _methodNames = {};');
     gen.writeln(
         'JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);');
     gen.writeStatement('Map<String, Domain> _domains = {};');
@@ -484,7 +485,6 @@ class Refactoring {
 
 class TypeDef {
   static final Set<String> _shouldHaveToString = new Set.from([
-    'RequestError',
     'SourceEdit',
     'PubStatus',
     'Location',
@@ -554,7 +554,9 @@ class TypeDef {
   }
 
   void generate(DartGenerator gen) {
-    if (name == 'RefactoringOptions' || name == 'RefactoringFeedback') return;
+    if (name == 'RefactoringOptions' || name == 'RefactoringFeedback' || name == 'RequestError') {
+      return;
+    }
 
     gen.writeln();
     if (experimental) gen.writeln('@experimental');
@@ -807,11 +809,12 @@ final String _serverCode = r'''
         }
       } else {
         Completer completer = _completers.remove(json['id']);
+        String methodName = _methodNames.remove(json['id']);
 
         if (completer == null) {
           _logger.severe('unmatched request response: ${message}');
         } else if (json['error'] != null) {
-          completer.completeError(RequestError.parse(json['error']));
+          completer.completeError(RequestError.parse(methodName, json['error']));
         } else {
           completer.complete(json['result']);
         }
@@ -824,6 +827,7 @@ final String _serverCode = r'''
   Future _call(String method, [Map args]) {
     String id = '${++_id}';
     _completers[id] = new Completer();
+    _methodNames[id] = method;
     Map m = {'id': id, 'method': method};
     if (args != null) m['params'] = args;
     String message = _jsonEncoder.encode(m);
@@ -872,6 +876,22 @@ abstract class Jsonable {
 }
 
 abstract class RefactoringOptions implements Jsonable {
+}
+
+class RequestError {
+  static RequestError parse(String method, Map m) {
+    if (m == null) return null;
+    return new RequestError(method, m['code'], m['message'], stackTrace: m['stackTrace']);
+  }
+
+  final String method;
+  final String code;
+  final String message;
+  @optional final String stackTrace;
+
+  RequestError(this.method, this.code, this.message, {this.stackTrace});
+
+  String toString() => '[RequestError method: ${method}, code: ${code}, message: ${message}]';
 }
 
 Map _mapify(Map m) {
