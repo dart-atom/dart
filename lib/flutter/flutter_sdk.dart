@@ -41,8 +41,9 @@ class FlutterSdkManager implements Disposable {
 
     // Listen to changes to the sdk pref setting; debounce the changes.
     _prefSub = atom.config.onDidChange(_prefKey)
-        .transform(new Debounce(new Duration(seconds: 1)))
-        .listen((value) => _setSdkPath(value));
+      .skip(1)
+      .transform(new Debounce(new Duration(seconds: 1)))
+      .listen((value) => _setSdkPath(value));
 
     _disposables.add(atom.commands.add(
         'atom-workspace', 'dartlang:auto-locate-flutter-sdk', (_) {

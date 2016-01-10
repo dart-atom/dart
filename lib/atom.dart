@@ -336,6 +336,8 @@ class Config extends ProxyHolder {
     return new JsDisposable(invoke('observe', keyPath, options, callback));
   }
 
+  /// This acts similarly to [observe] - it will invoke once on first call, and
+  /// then subsequnetly on each config change.
   Stream<dynamic> onDidChange(String keyPath, [Map options]) {
     Disposable disposable;
     StreamController controller = new StreamController.broadcast(onCancel: () {
