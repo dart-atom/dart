@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue where we warned too aggressively about the absence of the Flutter SDK
+
 ## 0.5.1
 - added a 'clear' button to the console view
 - improved the view of debugger stack frames
