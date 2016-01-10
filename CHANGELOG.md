@@ -1,7 +1,10 @@
 # dartlang plugin changelog
 
 ## unreleased
-- fixed an issue where we warned too aggressively about the absence of the Flutter SDK
+- fixed an issue where we warned too aggressively about the absence of the
+  Flutter SDK
+- fixed an exception when launching files and there where breakpoints set for
+  files that didn't exist
 
 ## 0.5.1
 - added a 'clear' button to the console view

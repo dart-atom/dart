@@ -116,9 +116,9 @@ class CliLaunchType extends LaunchType {
 
     runner.execStreaming();
     runner.onStdout.listen((str) {
-      // "Observatory listening on http://127.0.0.1:16161\n"
+      // "Observatory listening on http://127.0.0.1:xxx\n"
       if (str.startsWith(_observatoryPrefix)) {
-        // str is 'http://127.0.0.1:16161'.
+        // str is 'http://127.0.0.1:xxx'.
         str = str.substring(_observatoryPrefix.length).trim();
 
         launch.servicePort.value = observatoryPort;
