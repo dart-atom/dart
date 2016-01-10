@@ -210,6 +210,8 @@ class ObservatoryConnection extends DebugConnection {
             // ignore
           });
         });
+      }).catchError((e) {
+        _logger.info('error resolving uri: ${bp.path}', '${e}');
       });
     }));
 
@@ -227,6 +229,8 @@ class ObservatoryConnection extends DebugConnection {
     // This handles self-references and editor breakpoints multiplexed over
     // several VM breakpoints.
     return Future.forEach(breakpointManager.breakpoints, (AtomBreakpoint bp) {
+      if (!bp.fileExists()) return null;
+
       return uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
         return Future.forEach(uris, (String uri) {
           return service.addBreakpointWithScriptUri(

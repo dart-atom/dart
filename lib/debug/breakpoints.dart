@@ -147,7 +147,8 @@ class BreakpointManager implements Disposable, StateStorable {
   void initFromStored(dynamic storedData) {
     if (storedData is List) {
       for (var json in storedData) {
-        addBreakpoint(new AtomBreakpoint.fromJson(json));
+        AtomBreakpoint bp = new AtomBreakpoint.fromJson(json);
+        if (bp.fileExists()) addBreakpoint(bp);
       }
 
       _logger.fine('restored ${_breakpoints.length} breakpoints');
@@ -188,6 +189,9 @@ class AtomBreakpoint implements Comparable {
       return '${getWorkspaceRelativeDescription(path)}, ${line}:${column}';
     }
   }
+
+  /// Return whether the file associated with this breakpoint exists.
+  bool fileExists() => existsSync(path);
 
   void updateLocation(LineColumn lineCol) {
     _line = lineCol.line;

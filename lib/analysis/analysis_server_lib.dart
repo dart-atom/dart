@@ -23,6 +23,7 @@ class Server {
   Function _writeMessage;
   int _id = 0;
   Map<String, Completer> _completers = {};
+  Map<String, String> _methodNames = {};
   JsonCodec _jsonEncoder = new JsonCodec(toEncodable: _toEncodable);
   Map<String, Domain> _domains = {};
   StreamController<String> _onSend = new StreamController.broadcast();
@@ -94,11 +95,12 @@ class Server {
         }
       } else {
         Completer completer = _completers.remove(json['id']);
+        String methodName = _methodNames.remove(json['id']);
 
         if (completer == null) {
           _logger.severe('unmatched request response: ${message}');
         } else if (json['error'] != null) {
-          completer.completeError(RequestError.parse(json['error']));
+          completer.completeError(RequestError.parse(methodName, json['error']));
         } else {
           completer.complete(json['result']);
         }
@@ -111,6 +113,7 @@ class Server {
   Future _call(String method, [Map args]) {
     String id = '${++_id}';
     _completers[id] = new Completer();
+    _methodNames[id] = method;
     Map m = {'id': id, 'method': method};
     if (args != null) m['params'] = args;
     String message = _jsonEncoder.encode(m);
@@ -159,6 +162,23 @@ abstract class Jsonable {
 
 abstract class RefactoringOptions implements Jsonable {}
 
+class RequestError {
+  static RequestError parse(String method, Map m) {
+    if (m == null) return null;
+    return new RequestError(method, m['code'], m['message'], stackTrace: m['stackTrace']);
+  }
+
+  final String method;
+  final String code;
+  final String message;
+  @optional final String stackTrace;
+
+  RequestError(this.method, this.code, this.message, {this.stackTrace});
+
+  String toString() =>
+      '[RequestError method: ${method}, code: ${code}, message: ${message}]';
+}
+
 Map _mapify(Map m) {
   Map copy = {};
 
@@ -176,8 +196,7 @@ class ServerDomain extends Domain {
   ServerDomain(Server server) : super(server, 'server');
 
   Stream<ServerConnected> get onConnected {
-    return _listen('server.connected', ServerConnected.parse)
-        as Stream<ServerConnected>;
+    return _listen('server.connected', ServerConnected.parse) as Stream<ServerConnected>;
   }
 
   Stream<ServerError> get onError {
@@ -218,8 +237,7 @@ class ServerError {
 
 class ServerStatus {
   static ServerStatus parse(Map m) => new ServerStatus(
-      analysis: AnalysisStatus.parse(m['analysis']),
-      pub: PubStatus.parse(m['pub']));
+      analysis: AnalysisStatus.parse(m['analysis']), pub: PubStatus.parse(m['pub']));
 
   @optional final AnalysisStatus analysis;
   @optional final PubStatus pub;
@@ -246,8 +264,7 @@ class AnalysisDomain extends Domain {
   }
 
   Stream<AnalysisErrors> get onErrors {
-    return _listen('analysis.errors', AnalysisErrors.parse)
-        as Stream<AnalysisErrors>;
+    return _listen('analysis.errors', AnalysisErrors.parse) as Stream<AnalysisErrors>;
   }
 
   Stream<AnalysisFlushResults> get onFlushResults {
@@ -256,8 +273,7 @@ class AnalysisDomain extends Domain {
   }
 
   Stream<AnalysisFolding> get onFolding {
-    return _listen('analysis.folding', AnalysisFolding.parse)
-        as Stream<AnalysisFolding>;
+    return _listen('analysis.folding', AnalysisFolding.parse) as Stream<AnalysisFolding>;
   }
 
   Stream<AnalysisHighlights> get onHighlights {
@@ -286,8 +302,7 @@ class AnalysisDomain extends Domain {
   }
 
   Stream<AnalysisOutline> get onOutline {
-    return _listen('analysis.outline', AnalysisOutline.parse)
-        as Stream<AnalysisOutline>;
+    return _listen('analysis.outline', AnalysisOutline.parse) as Stream<AnalysisOutline>;
   }
 
   Stream<AnalysisOverrides> get onOverrides {
@@ -307,13 +322,11 @@ class AnalysisDomain extends Domain {
 
   Future<ReachableSourcesResult> getReachableSources(String file) {
     Map m = {'file': file};
-    return _call('analysis.getReachableSources', m)
-        .then(ReachableSourcesResult.parse);
+    return _call('analysis.getReachableSources', m).then(ReachableSourcesResult.parse);
   }
 
   Future<LibraryDependenciesResult> getLibraryDependencies() =>
-      _call('analysis.getLibraryDependencies')
-          .then(LibraryDependenciesResult.parse);
+      _call('analysis.getLibraryDependencies').then(LibraryDependenciesResult.parse);
 
   Future<NavigationResult> getNavigation(String file, int offset, int length) {
     Map m = {'file': file, 'offset': offset, 'length': length};
@@ -333,8 +346,8 @@ class AnalysisDomain extends Domain {
     return _call('analysis.setAnalysisRoots', m);
   }
 
-  Future setGeneralSubscriptions(List<String> subscriptions) => _call(
-      'analysis.setGeneralSubscriptions', {'subscriptions': subscriptions});
+  Future setGeneralSubscriptions(List<String> subscriptions) =>
+      _call('analysis.setGeneralSubscriptions', {'subscriptions': subscriptions});
 
   Future setPriorityFiles(List<String> files) =>
       _call('analysis.setPriorityFiles', {'files': files});
@@ -372,8 +385,8 @@ class AnalysisErrors {
 }
 
 class AnalysisFlushResults {
-  static AnalysisFlushResults parse(Map m) => new AnalysisFlushResults(
-      m['files'] == null ? null : new List.from(m['files']));
+  static AnalysisFlushResults parse(Map m) =>
+      new AnalysisFlushResults(m['files'] == null ? null : new List.from(m['files']));
 
   final List<String> files;
 
@@ -514,8 +527,7 @@ class HoverResult {
 }
 
 class ReachableSourcesResult {
-  static ReachableSourcesResult parse(Map m) =>
-      new ReachableSourcesResult(m['sources']);
+  static ReachableSourcesResult parse(Map m) => new ReachableSourcesResult(m['sources']);
 
   final Map<String, List<String>> sources;
 
@@ -523,10 +535,8 @@ class ReachableSourcesResult {
 }
 
 class LibraryDependenciesResult {
-  static LibraryDependenciesResult parse(Map m) =>
-      new LibraryDependenciesResult(
-          m['libraries'] == null ? null : new List.from(m['libraries']),
-          m['packageMap']);
+  static LibraryDependenciesResult parse(Map m) => new LibraryDependenciesResult(
+      m['libraries'] == null ? null : new List.from(m['libraries']), m['packageMap']);
 
   final List<String> libraries;
   final Map<String, Map<String, List<String>>> packageMap;
@@ -583,8 +593,8 @@ class CompletionResults {
   final List<CompletionSuggestion> results;
   final bool isLast;
 
-  CompletionResults(this.id, this.replacementOffset, this.replacementLength,
-      this.results, this.isLast);
+  CompletionResults(
+      this.id, this.replacementOffset, this.replacementLength, this.results, this.isLast);
 }
 
 class SuggestionsResult {
@@ -601,17 +611,12 @@ class SearchDomain extends Domain {
   SearchDomain(Server server) : super(server, 'search');
 
   Stream<SearchResults> get onResults {
-    return _listen('search.results', SearchResults.parse)
-        as Stream<SearchResults>;
+    return _listen('search.results', SearchResults.parse) as Stream<SearchResults>;
   }
 
   Future<FindElementReferencesResult> findElementReferences(
       String file, int offset, bool includePotential) {
-    Map m = {
-      'file': file,
-      'offset': offset,
-      'includePotential': includePotential
-    };
+    Map m = {'file': file, 'offset': offset, 'includePotential': includePotential};
     return _call('search.findElementReferences', m)
         .then(FindElementReferencesResult.parse);
   }
@@ -624,12 +629,10 @@ class SearchDomain extends Domain {
 
   Future<FindMemberReferencesResult> findMemberReferences(String name) {
     Map m = {'name': name};
-    return _call('search.findMemberReferences', m)
-        .then(FindMemberReferencesResult.parse);
+    return _call('search.findMemberReferences', m).then(FindMemberReferencesResult.parse);
   }
 
-  Future<FindTopLevelDeclarationsResult> findTopLevelDeclarations(
-      String pattern) {
+  Future<FindTopLevelDeclarationsResult> findTopLevelDeclarations(String pattern) {
     Map m = {'pattern': pattern};
     return _call('search.findTopLevelDeclarations', m)
         .then(FindTopLevelDeclarationsResult.parse);
@@ -660,8 +663,7 @@ class SearchResults {
 
 class FindElementReferencesResult {
   static FindElementReferencesResult parse(Map m) =>
-      new FindElementReferencesResult(
-          id: m['id'], element: Element.parse(m['element']));
+      new FindElementReferencesResult(id: m['id'], element: Element.parse(m['element']));
 
   @optional final String id;
   @optional final Element element;
@@ -700,9 +702,7 @@ class TypeHierarchyResult {
   static TypeHierarchyResult parse(Map m) => new TypeHierarchyResult(
       hierarchyItems: m['hierarchyItems'] == null
           ? null
-          : m['hierarchyItems']
-              .map((obj) => TypeHierarchyItem.parse(obj))
-              .toList());
+          : m['hierarchyItems'].map((obj) => TypeHierarchyItem.parse(obj)).toList());
 
   @optional final List<TypeHierarchyItem> hierarchyItems;
 
@@ -714,8 +714,7 @@ class TypeHierarchyResult {
 class EditDomain extends Domain {
   EditDomain(Server server) : super(server, 'edit');
 
-  Future<FormatResult> format(
-      String file, int selectionOffset, int selectionLength,
+  Future<FormatResult> format(String file, int selectionOffset, int selectionLength,
       {int lineLength}) {
     Map m = {
       'file': file,
@@ -764,16 +763,13 @@ class EditDomain extends Domain {
 
   Future<OrganizeDirectivesResult> organizeDirectives(String file) {
     Map m = {'file': file};
-    return _call('edit.organizeDirectives', m)
-        .then(OrganizeDirectivesResult.parse);
+    return _call('edit.organizeDirectives', m).then(OrganizeDirectivesResult.parse);
   }
 }
 
 class FormatResult {
   static FormatResult parse(Map m) => new FormatResult(
-      m['edits'] == null
-          ? null
-          : m['edits'].map((obj) => SourceEdit.parse(obj)).toList(),
+      m['edits'] == null ? null : m['edits'].map((obj) => SourceEdit.parse(obj)).toList(),
       m['selectionOffset'],
       m['selectionLength']);
 
@@ -795,9 +791,8 @@ class AssistsResult {
 }
 
 class AvailableRefactoringsResult {
-  static AvailableRefactoringsResult parse(Map m) =>
-      new AvailableRefactoringsResult(
-          m['kinds'] == null ? null : new List.from(m['kinds']));
+  static AvailableRefactoringsResult parse(Map m) => new AvailableRefactoringsResult(
+      m['kinds'] == null ? null : new List.from(m['kinds']));
 
   final List<String> kinds;
 
@@ -818,24 +813,17 @@ class RefactoringResult {
   static RefactoringResult parse(Map m) => new RefactoringResult(
       m['initialProblems'] == null
           ? null
-          : m['initialProblems']
-              .map((obj) => RefactoringProblem.parse(obj))
-              .toList(),
+          : m['initialProblems'].map((obj) => RefactoringProblem.parse(obj)).toList(),
       m['optionsProblems'] == null
           ? null
-          : m['optionsProblems']
-              .map((obj) => RefactoringProblem.parse(obj))
-              .toList(),
+          : m['optionsProblems'].map((obj) => RefactoringProblem.parse(obj)).toList(),
       m['finalProblems'] == null
           ? null
-          : m['finalProblems']
-              .map((obj) => RefactoringProblem.parse(obj))
-              .toList(),
+          : m['finalProblems'].map((obj) => RefactoringProblem.parse(obj)).toList(),
       feedback: RefactoringFeedback.parse(m['feedback']),
       change: SourceChange.parse(m['change']),
-      potentialEdits: m['potentialEdits'] == null
-          ? null
-          : new List.from(m['potentialEdits']));
+      potentialEdits:
+          m['potentialEdits'] == null ? null : new List.from(m['potentialEdits']));
 
   final List<RefactoringProblem> initialProblems;
   final List<RefactoringProblem> optionsProblems;
@@ -844,8 +832,7 @@ class RefactoringResult {
   @optional final SourceChange change;
   @optional final List<String> potentialEdits;
 
-  RefactoringResult(
-      this.initialProblems, this.optionsProblems, this.finalProblems,
+  RefactoringResult(this.initialProblems, this.optionsProblems, this.finalProblems,
       {this.feedback, this.change, this.potentialEdits});
 }
 
@@ -882,8 +869,7 @@ class ExecutionDomain extends Domain {
     return _call('execution.createContext', m).then(CreateContextResult.parse);
   }
 
-  Future deleteContext(String id) =>
-      _call('execution.deleteContext', {'id': id});
+  Future deleteContext(String id) => _call('execution.deleteContext', {'id': id});
 
   Future<MapUriResult> mapUri(String id, {String file, String uri}) {
     Map m = {'id': id};
@@ -899,9 +885,8 @@ class ExecutionDomain extends Domain {
 class ExecutionLaunchData {
   static ExecutionLaunchData parse(Map m) => new ExecutionLaunchData(m['file'],
       kind: m['kind'],
-      referencedFiles: m['referencedFiles'] == null
-          ? null
-          : new List.from(m['referencedFiles']));
+      referencedFiles:
+          m['referencedFiles'] == null ? null : new List.from(m['referencedFiles']));
 
   final String file;
   @optional final String kind;
@@ -919,8 +904,7 @@ class CreateContextResult {
 }
 
 class MapUriResult {
-  static MapUriResult parse(Map m) =>
-      new MapUriResult(file: m['file'], uri: m['uri']);
+  static MapUriResult parse(Map m) => new MapUriResult(file: m['file'], uri: m['uri']);
 
   @optional final String file;
   @optional final String uri;
@@ -938,10 +922,9 @@ class DiagnosticDomain extends Domain {
 }
 
 class DiagnosticsResult {
-  static DiagnosticsResult parse(Map m) =>
-      new DiagnosticsResult(m['contexts'] == null
-          ? null
-          : m['contexts'].map((obj) => ContextData.parse(obj)).toList());
+  static DiagnosticsResult parse(Map m) => new DiagnosticsResult(m['contexts'] == null
+      ? null
+      : m['contexts'].map((obj) => ContextData.parse(obj)).toList());
 
   final List<ContextData> contexts;
 
@@ -1062,8 +1045,7 @@ class AnalysisOptions implements Jsonable {
 class AnalysisStatus {
   static AnalysisStatus parse(Map m) {
     if (m == null) return null;
-    return new AnalysisStatus(m['isAnalyzing'],
-        analysisTarget: m['analysisTarget']);
+    return new AnalysisStatus(m['isAnalyzing'], analysisTarget: m['analysisTarget']);
   }
 
   final bool isAnalyzing;
@@ -1093,25 +1075,17 @@ class ChangeContentOverlay implements Jsonable {
 class CompletionSuggestion {
   static CompletionSuggestion parse(Map m) {
     if (m == null) return null;
-    return new CompletionSuggestion(
-        m['kind'],
-        m['relevance'],
-        m['completion'],
-        m['selectionOffset'],
-        m['selectionLength'],
-        m['isDeprecated'],
-        m['isPotential'],
+    return new CompletionSuggestion(m['kind'], m['relevance'], m['completion'],
+        m['selectionOffset'], m['selectionLength'], m['isDeprecated'], m['isPotential'],
         docSummary: m['docSummary'],
         docComplete: m['docComplete'],
         declaringType: m['declaringType'],
         element: Element.parse(m['element']),
         returnType: m['returnType'],
-        parameterNames: m['parameterNames'] == null
-            ? null
-            : new List.from(m['parameterNames']),
-        parameterTypes: m['parameterTypes'] == null
-            ? null
-            : new List.from(m['parameterTypes']),
+        parameterNames:
+            m['parameterNames'] == null ? null : new List.from(m['parameterNames']),
+        parameterTypes:
+            m['parameterTypes'] == null ? null : new List.from(m['parameterTypes']),
         requiredParameterCount: m['requiredParameterCount'],
         hasNamedParameters: m['hasNamedParameters'],
         parameterName: m['parameterName'],
@@ -1139,14 +1113,8 @@ class CompletionSuggestion {
   @optional final String parameterType;
   @optional final String importUri;
 
-  CompletionSuggestion(
-      this.kind,
-      this.relevance,
-      this.completion,
-      this.selectionOffset,
-      this.selectionLength,
-      this.isDeprecated,
-      this.isPotential,
+  CompletionSuggestion(this.kind, this.relevance, this.completion, this.selectionOffset,
+      this.selectionLength, this.isDeprecated, this.isPotential,
       {this.docSummary,
       this.docComplete,
       this.declaringType,
@@ -1208,8 +1176,7 @@ class Element {
   Element(this.kind, this.name, this.flags,
       {this.location, this.parameters, this.returnType, this.typeParameters});
 
-  String toString() =>
-      '[Element kind: ${kind}, name: ${name}, flags: ${flags}]';
+  String toString() => '[Element kind: ${kind}, name: ${name}, flags: ${flags}]';
 }
 
 class ExecutableFile {
@@ -1323,9 +1290,7 @@ class LinkedEditGroup {
         m['length'],
         m['suggestions'] == null
             ? null
-            : m['suggestions']
-                .map((obj) => LinkedEditSuggestion.parse(obj))
-                .toList());
+            : m['suggestions'].map((obj) => LinkedEditSuggestion.parse(obj)).toList());
   }
 
   final List<Position> positions;
@@ -1363,8 +1328,7 @@ class Location {
   final int startLine;
   final int startColumn;
 
-  Location(
-      this.file, this.offset, this.length, this.startLine, this.startColumn);
+  Location(this.file, this.offset, this.length, this.startLine, this.startColumn);
 
   operator ==(o) =>
       o is Location &&
@@ -1405,8 +1369,8 @@ class NavigationRegion {
 class NavigationTarget {
   static NavigationTarget parse(Map m) {
     if (m == null) return null;
-    return new NavigationTarget(m['kind'], m['fileIndex'], m['offset'],
-        m['length'], m['startLine'], m['startColumn']);
+    return new NavigationTarget(m['kind'], m['fileIndex'], m['offset'], m['length'],
+        m['startLine'], m['startColumn']);
   }
 
   final String kind;
@@ -1416,8 +1380,8 @@ class NavigationTarget {
   final int startLine;
   final int startColumn;
 
-  NavigationTarget(this.kind, this.fileIndex, this.offset, this.length,
-      this.startLine, this.startColumn);
+  NavigationTarget(this.kind, this.fileIndex, this.offset, this.length, this.startLine,
+      this.startColumn);
 
   String toString() =>
       '[NavigationTarget kind: ${kind}, fileIndex: ${fileIndex}, offset: ${offset}, length: ${length}, startLine: ${startLine}, startColumn: ${startColumn}]';
@@ -1461,9 +1425,7 @@ class Override {
         superclassMember: OverriddenMember.parse(m['superclassMember']),
         interfaceMembers: m['interfaceMembers'] == null
             ? null
-            : m['interfaceMembers']
-                .map((obj) => OverriddenMember.parse(obj))
-                .toList());
+            : m['interfaceMembers'].map((obj) => OverriddenMember.parse(obj)).toList());
   }
 
   final int offset;
@@ -1471,8 +1433,7 @@ class Override {
   @optional final OverriddenMember superclassMember;
   @optional final List<OverriddenMember> interfaceMembers;
 
-  Override(this.offset, this.length,
-      {this.superclassMember, this.interfaceMembers});
+  Override(this.offset, this.length, {this.superclassMember, this.interfaceMembers});
 }
 
 class OverriddenMember {
@@ -1511,8 +1472,7 @@ class PubStatus {
 
   PubStatus(this.isListingPackageDirs);
 
-  String toString() =>
-      '[PubStatus isListingPackageDirs: ${isListingPackageDirs}]';
+  String toString() => '[PubStatus isListingPackageDirs: ${isListingPackageDirs}]';
 }
 
 class RefactoringMethodParameter {
@@ -1528,8 +1488,7 @@ class RefactoringMethodParameter {
   @optional final String id;
   @optional final String parameters;
 
-  RefactoringMethodParameter(this.kind, this.type, this.name,
-      {this.id, this.parameters});
+  RefactoringMethodParameter(this.kind, this.type, this.name, {this.id, this.parameters});
 }
 
 class RefactoringProblem {
@@ -1559,32 +1518,11 @@ class RemoveContentOverlay implements Jsonable {
   RemoveContentOverlay(this.type);
 }
 
-class RequestError {
-  static RequestError parse(Map m) {
-    if (m == null) return null;
-    return new RequestError(m['code'], m['message'],
-        stackTrace: m['stackTrace']);
-  }
-
-  final String code;
-  final String message;
-  @optional final String stackTrace;
-
-  RequestError(this.code, this.message, {this.stackTrace});
-
-  String toString() => '[RequestError code: ${code}, message: ${message}]';
-}
-
 class SearchResult {
   static SearchResult parse(Map m) {
     if (m == null) return null;
-    return new SearchResult(
-        Location.parse(m['location']),
-        m['kind'],
-        m['isPotential'],
-        m['path'] == null
-            ? null
-            : m['path'].map((obj) => Element.parse(obj)).toList());
+    return new SearchResult(Location.parse(m['location']), m['kind'], m['isPotential'],
+        m['path'] == null ? null : m['path'].map((obj) => Element.parse(obj)).toList());
   }
 
   final Location location;
@@ -1608,9 +1546,7 @@ class SourceChange {
             : m['edits'].map((obj) => SourceFileEdit.parse(obj)).toList(),
         m['linkedEditGroups'] == null
             ? null
-            : m['linkedEditGroups']
-                .map((obj) => LinkedEditGroup.parse(obj))
-                .toList(),
+            : m['linkedEditGroups'].map((obj) => LinkedEditGroup.parse(obj)).toList(),
         selection: Position.parse(m['selection']));
   }
 
@@ -1619,8 +1555,7 @@ class SourceChange {
   final List<LinkedEditGroup> linkedEditGroups;
   @optional final Position selection;
 
-  SourceChange(this.message, this.edits, this.linkedEditGroups,
-      {this.selection});
+  SourceChange(this.message, this.edits, this.linkedEditGroups, {this.selection});
 
   String toString() =>
       '[SourceChange message: ${message}, edits: ${edits}, linkedEditGroups: ${linkedEditGroups}]';
@@ -1629,8 +1564,7 @@ class SourceChange {
 class SourceEdit implements Jsonable {
   static SourceEdit parse(Map m) {
     if (m == null) return null;
-    return new SourceEdit(m['offset'], m['length'], m['replacement'],
-        id: m['id']);
+    return new SourceEdit(m['offset'], m['length'], m['replacement'], id: m['id']);
   }
 
   final int offset;
@@ -1638,12 +1572,8 @@ class SourceEdit implements Jsonable {
   final String replacement;
   @optional final String id;
 
-  Map toMap() => _mapify({
-        'offset': offset,
-        'length': length,
-        'replacement': replacement,
-        'id': id
-      });
+  Map toMap() =>
+      _mapify({'offset': offset, 'length': length, 'replacement': replacement, 'id': id});
 
   SourceEdit(this.offset, this.length, this.replacement, {this.id});
 
@@ -1693,8 +1623,7 @@ class TypeHierarchyItem {
   @optional final Element memberElement;
   @optional final int superclass;
 
-  TypeHierarchyItem(
-      this.classElement, this.interfaces, this.mixins, this.subclasses,
+  TypeHierarchyItem(this.classElement, this.interfaces, this.mixins, this.subclasses,
       {this.displayName, this.memberElement, this.superclass});
 }
 
@@ -1728,11 +1657,7 @@ class ExtractMethodRefactoringOptions extends RefactoringOptions {
   final bool extractAll;
 
   ExtractMethodRefactoringOptions(
-      {this.returnType,
-      this.createGetter,
-      this.name,
-      this.parameters,
-      this.extractAll});
+      {this.returnType, this.createGetter, this.name, this.parameters, this.extractAll});
 
   Map toMap() => _mapify({
         'returnType': returnType,
@@ -1749,8 +1674,7 @@ class InlineMethodRefactoringOptions extends RefactoringOptions {
 
   InlineMethodRefactoringOptions({this.deleteSource, this.inlineAll});
 
-  Map toMap() =>
-      _mapify({'deleteSource': deleteSource, 'inlineAll': inlineAll});
+  Map toMap() => _mapify({'deleteSource': deleteSource, 'inlineAll': inlineAll});
 }
 
 class MoveFileRefactoringOptions extends RefactoringOptions {
