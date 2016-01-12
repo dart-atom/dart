@@ -164,23 +164,24 @@ class BufferUpdater extends BufferObserver {
 /// reporting the correct overlay information to the analysis server.
 class OverlayManager implements Disposable {
   final Map<String, OverlayInfo> overlays = {};
+
   StreamSubscription sub;
 
   OverlayManager() {
     _serverActive(analysisServer.isActive);
     sub = analysisServer.onActive.listen(_serverActive);
+    analysisServer.willSend = _willSend;
   }
 
   void addOverlay(String path, String data) {
     OverlayInfo overlay = overlays[path];
 
     if (overlay == null) {
-      overlay = overlays[path] = new OverlayInfo(path, data);
+      overlay = overlays[path] = new OverlayInfo(path, lastSent: data, toSend: data);
       if (analysisServer.isActive) {
         _logger.fine('addContentOverlay ${path}');
-        _log(analysisServer.updateContent(
-          path, new AddContentOverlay('add', data)
-        ));
+        _log(analysisServer.updateContent(path, new AddContentOverlay('add', data)));
+        overlay.reset();
       }
     } else {
       overlay.count++;
@@ -195,20 +196,10 @@ class OverlayManager implements Disposable {
       return;
     }
 
-    if (overlay.data != newData) {
-      List<Edit> edits = simpleDiff(overlay.data, newData);
-      int count = 1;
-      List<SourceEdit> diffs = edits
-          .map((e) => new SourceEdit(e.offset, e.length, e.replacement, id: '${count++}'))
-          .toList();
-
-      overlay.data = newData;
-
-      _logger.finer('changedOverlayContent ${path}');
+    if (overlay.toSend != newData) {
       if (analysisServer.isActive) {
-        _log(analysisServer.updateContent(
-            path, new ChangeContentOverlay('change', diffs)
-        ));
+        // On a content changed, start a timer instead of actually sending.
+        overlay.sendData(newData);
       }
     }
   }
@@ -223,11 +214,22 @@ class OverlayManager implements Disposable {
       overlays.remove(path);
 
       _logger.fine('removeContentOverlay ${path}');
+
       if (analysisServer.isActive) {
-        _log(analysisServer.updateContent(
-          path, new RemoveContentOverlay('remove')
-        ));
+        _log(analysisServer.updateContent(path, new RemoveContentOverlay('remove')));
+        overlay.reset();
       }
+    }
+  }
+
+  void _willSend(String methodName) {
+    // Flush any pending changes.
+    _flush();
+  }
+
+  void _flush() {
+    for (OverlayInfo overlay in overlays.values) {
+      if (overlay.isDirty) overlay._flush();
     }
   }
 
@@ -237,8 +239,9 @@ class OverlayManager implements Disposable {
     if (overlays.isNotEmpty) {
       Map<String, dynamic> toSend = {};
 
-      overlays.forEach((key, OverlayInfo info) {
-        toSend[key] = new AddContentOverlay('add', info.data);
+      overlays.forEach((key, OverlayInfo overlay) {
+        toSend[key] = new AddContentOverlay('add', overlay.toSend);
+        overlay.reset();
       });
 
       _log(analysisServer.server.analysis.updateContent(toSend));
@@ -246,19 +249,57 @@ class OverlayManager implements Disposable {
   }
 
   void dispose() {
+    analysisServer.willSend = null;
     sub.cancel();
   }
 }
 
-/// Store information about the number iof overlays we have for an open file.
+/// Store information about the number of overlays we have for an open file.
 /// Each file can be open in multiple editors.
 class OverlayInfo {
   final String path;
+
+  String lastSent;
+  String toSend;
+
   int count = 1;
-  String data;
 
-  OverlayInfo(this.path, [this.data]);
+  Timer _timer;
 
+  OverlayInfo(this.path, {this.lastSent, this.toSend});
+
+  bool get isDirty => lastSent != toSend;
+
+  void sendData(String newData) {
+    toSend = newData;
+    _timer?.cancel();
+    _timer = new Timer(new Duration(milliseconds: 400), _flush);
+  }
+
+  void _flush() {
+    if (!analysisServer.isActive) return;
+
+    _timer?.cancel();
+    _timer = null;
+
+    List<Edit> edits = simpleDiff(lastSent, toSend);
+    int count = 1;
+    List<SourceEdit> diffs = edits
+      .map((e) => new SourceEdit(e.offset, e.length, e.replacement, id: '${count++}'))
+      .toList();
+
+    lastSent = toSend;
+
+    _logger.finer('changedOverlayContent ${path}');
+
+    _log(analysisServer.updateContent(path, new ChangeContentOverlay('change', diffs)));
+  }
+
+  // Mark all data as sent and cancel any timers.
+  void reset() {
+    lastSent = toSend;
+    _timer?.cancel();
+  }
 }
 
 void _log(Future f) {

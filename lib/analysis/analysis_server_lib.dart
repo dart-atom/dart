@@ -28,6 +28,7 @@ class Server {
   Map<String, Domain> _domains = {};
   StreamController<String> _onSend = new StreamController.broadcast();
   StreamController<String> _onReceive = new StreamController.broadcast();
+  Function _willSend;
 
   ServerDomain _server;
   AnalysisDomain _analysis;
@@ -59,6 +60,10 @@ class Server {
 
   Stream<String> get onSend => _onSend.stream;
   Stream<String> get onReceive => _onReceive.stream;
+
+  set willSend(void fn(String methodName)) {
+    _willSend = fn;
+  }
 
   void configure(Stream<String> inStream, void writeMessage(String message)) {
     dispose();
@@ -117,6 +122,7 @@ class Server {
     Map m = {'id': id, 'method': method};
     if (args != null) m['params'] = args;
     String message = _jsonEncoder.encode(m);
+    if (_willSend != null) _willSend(method);
     _onSend.add(message);
     _writeMessage(message);
     return _completers[id].future;
