@@ -52,6 +52,8 @@ class AnalysisServer implements Disposable {
   _AnalysisServerWrapper _server;
   _AnalyzingJob _job;
 
+  Function _willSend;
+
   List<DartProject> knownRoots = [];
 
   AnalysisServer() {
@@ -93,6 +95,13 @@ class AnalysisServer implements Disposable {
       analysisServer._server.analysis.onFlushResults;
 
   Server get server => _server;
+
+  set willSend(void fn(String methodName)) {
+    _willSend = fn;
+    if (_server != null) {
+      _server.willSend = _willSend;
+    }
+  }
 
   void _setup() {
     subs.add(projectManager.onProjectsChanged.listen(_reconcileRoots));
@@ -356,6 +365,7 @@ class AnalysisServer implements Disposable {
   }
 
   void _initExistingServer(Server server) {
+    server.willSend = _willSend;
     _serverActiveController.add(true);
     _syncRoots();
     _focusedEditorChanged(editorManager.dartProjectEditors.activeEditor);
