@@ -5,7 +5,8 @@
   Flutter SDK
 - fixed an exception when launching files and there where breakpoints set for
   files that didn't exist
-- send fewer file deltas to the analysis server in an effort to reduce battery usage
+- send fewer file deltas to the analysis server in order to reduce cpu usage
+- changed the debugger over to using the newer service protocol extensions API
 
 ## 0.5.1
 - added a 'clear' button to the console view

@@ -22,14 +22,12 @@ class FlutterSection {
           ..click(_toggleDrawing),
         span(text: ' debug drawing', c: 'text-subtle')
       ]),
-      span(text: ' '), // so sad
       new CoreElement('label')..add([
         new CoreElement('input')
           ..setAttribute('type', 'checkbox')
           ..click(_toggleSlowAnimations),
         span(text: ' slower animations', c: 'text-subtle')
       ])
-      // , span(text: ' '), // so sad
       // new CoreElement('label')..add([
       //   new CoreElement('input')
       //     ..setAttribute('type', 'checkbox')

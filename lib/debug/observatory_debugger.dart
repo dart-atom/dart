@@ -71,6 +71,8 @@ class ObservatoryConnection extends DebugConnection {
   StreamController<DebugIsolate> _isolatePaused = new StreamController.broadcast();
   StreamController<DebugIsolate> _isolateResumed = new StreamController.broadcast();
 
+  StreamController<ObservatoryIsolate> _isolateCreatedController = new StreamController.broadcast();
+
   _VmSourceCache sourceCache = new _VmSourceCache();
 
   StreamSubscriptions subs = new StreamSubscriptions();
@@ -331,6 +333,9 @@ class ObservatoryConnection extends DebugConnection {
       if (isolate.isolate.pauseEvent.kind == EventKind.kPauseStart) {
         isolate._performInitialResume();
       }
+
+      _isolateCreatedController.add(isolate);
+
       return isolate;
     });
   }
@@ -1098,14 +1103,11 @@ class _ObservatoryServiceWrapper implements ServiceWrapper {
 
   VmService get service => connection.service;
 
-  Iterable<IsolateRef> get allIsolates =>
-    connection.isolates.items.map((i) => i.isolateRef);
+  Iterable<ObservatoryIsolate> get allIsolates => new List.from(connection.isolates.items);
 
-  Stream<IsolateRef> get onIsolateCreated =>
-    connection.isolates.onAdded.map((i) => i.isolateRef);
+  Stream<ObservatoryIsolate> get onIsolateCreated => connection._isolateCreatedController.stream;
 
-  Stream<IsolateRef> get onIsolateFinished =>
-    connection.isolates.onRemoved.map((i) => i.isolateRef);
+  Stream<ObservatoryIsolate> get onIsolateFinished => connection.isolates.onRemoved;
 }
 
 /// [instance] is either an [Instance] or a [Sentinel].
