@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.5.2
 - fixed an issue where we warned too aggressively about the absence of the
   Flutter SDK
 - fixed an exception when launching files and there where breakpoints set for
