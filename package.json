@@ -15,7 +15,6 @@
   },
   "dependencies": {},
   "required-packages": [
-    "flutter",
     "linter",
     "synced-sidebar"
   ],
