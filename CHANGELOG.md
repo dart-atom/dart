@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.5.3
+- re-enable the super-mixins analyzer setting
+
 ## 0.5.2
 - fixed an issue where we warned too aggressively about the absence of the
   Flutter SDK
