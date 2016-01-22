@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- improvements to our Bazel BUILD file support
+
 ## 0.5.3
 - re-enable the super-mixins analyzer setting
 

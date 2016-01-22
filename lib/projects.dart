@@ -438,12 +438,13 @@ class ProjectScanJob extends Job {
 }
 
 bool _isDartBuildFile(File file) {
-  const String marker1 = '//dart/build_defs';
+  const String marker1 = '/dart/build_defs';
   const String marker2 = 'dart_library(';
+  const String marker3 = 'dart_analyzed_library';
 
   try {
     String contents = file.readSync();
-    return contents.contains(marker1) || contents.contains(marker2);
+    return contents.contains(marker1) || contents.contains(marker2) || contents.contains(marker3);
   } catch (_) {
     return false;
   }
