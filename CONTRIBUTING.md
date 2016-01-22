@@ -14,6 +14,9 @@ To work on `dartlang` plugin:
 - install [Atom](https://atom.io/)
 - clone this repo
 - from the command line, run `pub get`
+- to use `grind` :
+  - from the command line, run `pub global activate grinder`
+  - or replace it by `pub run grinder` to run it locally
 - from the command line, run `grind build`; this will re-compile the javascript
 - from the repo directory, type `apm link` (you can install `apm` via the
   `Atom > Install Shell Commands` menu item)
