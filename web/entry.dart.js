@@ -27728,7 +27728,7 @@ self._domRemove = function(element) {
     Server__toEncodable: [function(obj) {
       return !!J.getInterceptor(obj).$isJsonable ? obj.toMap$0() : obj;
     }, "call$1", "analysis_server_lib_Server__toEncodable$closure", 2, 0, 0, 4],
-    _mapify: function(m) {
+    _stripNullValues: function(m) {
       var copy, t1, key, value;
       copy = P.LinkedHashMap__makeEmpty();
       for (t1 = m.get$keys(m), t1 = t1.get$iterator(t1); t1.moveNext$0();) {
@@ -28341,7 +28341,7 @@ self._domRemove = function(element) {
     AddContentOverlay: {
       "^": "Object;type>,content>",
       toMap$0: function() {
-        return E._mapify(P.LinkedHashMap__makeLiteral(["type", this.type, "content", this.content]));
+        return E._stripNullValues(P.LinkedHashMap__makeLiteral(["type", this.type, "content", this.content]));
       },
       $isJsonable: 1
     },
@@ -28396,7 +28396,7 @@ self._domRemove = function(element) {
     AnalysisOptions: {
       "^": "Object;enableAsync,enableDeferredLoading,enableEnums,enableNullAwareOperators,enableSuperMixins,generateDart2jsHints,generateHints,generateLints",
       toMap$0: function() {
-        return E._mapify(P.LinkedHashMap__makeLiteral(["enableAsync", this.enableAsync, "enableDeferredLoading", this.enableDeferredLoading, "enableEnums", this.enableEnums, "enableNullAwareOperators", this.enableNullAwareOperators, "enableSuperMixins", true, "generateDart2jsHints", this.generateDart2jsHints, "generateHints", this.generateHints, "generateLints", this.generateLints]));
+        return E._stripNullValues(P.LinkedHashMap__makeLiteral(["enableAsync", this.enableAsync, "enableDeferredLoading", this.enableDeferredLoading, "enableEnums", this.enableEnums, "enableNullAwareOperators", this.enableNullAwareOperators, "enableSuperMixins", true, "generateDart2jsHints", this.generateDart2jsHints, "generateHints", this.generateHints, "generateLints", this.generateLints]));
       },
       $isJsonable: 1
     },
@@ -28415,7 +28415,7 @@ self._domRemove = function(element) {
     ChangeContentOverlay: {
       "^": "Object;type>,edits<",
       toMap$0: function() {
-        return E._mapify(P.LinkedHashMap__makeLiteral(["type", this.type, "edits", this.edits]));
+        return E._stripNullValues(P.LinkedHashMap__makeLiteral(["type", this.type, "edits", this.edits]));
       },
       $isJsonable: 1
     },
@@ -28662,7 +28662,7 @@ self._domRemove = function(element) {
     RemoveContentOverlay: {
       "^": "Object;type>",
       toMap$0: function() {
-        return E._mapify(P.LinkedHashMap__makeLiteral(["type", this.type]));
+        return E._stripNullValues(P.LinkedHashMap__makeLiteral(["type", this.type]));
       },
       $isJsonable: 1
     },
@@ -28723,7 +28723,7 @@ self._domRemove = function(element) {
     SourceEdit: {
       "^": "Object;offset>,length>,replacement<,id>",
       toMap$0: function() {
-        return E._mapify(P.LinkedHashMap__makeLiteral(["offset", this.offset, "length", this.length, "replacement", this.replacement, "id", this.id]));
+        return E._stripNullValues(P.LinkedHashMap__makeLiteral(["offset", this.offset, "length", this.length, "replacement", this.replacement, "id", this.id]));
       },
       toString$0: function(_) {
         return "[SourceEdit offset: " + H.S(this.offset) + ", length: " + H.S(this.length) + ", replacement: " + H.S(this.replacement) + "]";
@@ -28781,13 +28781,13 @@ self._domRemove = function(element) {
     ExtractLocalVariableRefactoringOptions: {
       "^": "RefactoringOptions;name>,extractAll",
       toMap$0: function() {
-        return E._mapify(P.LinkedHashMap__makeLiteral(["name", this.name, "extractAll", false]));
+        return E._stripNullValues(P.LinkedHashMap__makeLiteral(["name", this.name, "extractAll", false]));
       }
     },
     RenameRefactoringOptions: {
       "^": "RefactoringOptions;newName",
       toMap$0: function() {
-        return E._mapify(P.LinkedHashMap__makeLiteral(["newName", this.newName]));
+        return E._stripNullValues(P.LinkedHashMap__makeLiteral(["newName", this.newName]));
       }
     },
     RefactoringFeedback: {

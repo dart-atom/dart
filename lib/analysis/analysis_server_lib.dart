@@ -185,7 +185,7 @@ class RequestError {
       '[RequestError method: ${method}, code: ${code}, message: ${message}]';
 }
 
-Map _mapify(Map m) {
+Map _stripNullValues(Map m) {
   Map copy = {};
 
   for (var key in m.keys) {
@@ -948,7 +948,7 @@ class AddContentOverlay implements Jsonable {
   final String type;
   final String content;
 
-  Map toMap() => _mapify({'type': type, 'content': content});
+  Map toMap() => _stripNullValues({'type': type, 'content': content});
 
   AddContentOverlay(this.type, this.content);
 }
@@ -1026,7 +1026,7 @@ class AnalysisOptions implements Jsonable {
   @optional final bool generateHints;
   @optional final bool generateLints;
 
-  Map toMap() => _mapify({
+  Map toMap() => _stripNullValues({
         'enableAsync': enableAsync,
         'enableDeferredLoading': enableDeferredLoading,
         'enableEnums': enableEnums,
@@ -1073,7 +1073,7 @@ class ChangeContentOverlay implements Jsonable {
   final String type;
   final List<SourceEdit> edits;
 
-  Map toMap() => _mapify({'type': type, 'edits': edits});
+  Map toMap() => _stripNullValues({'type': type, 'edits': edits});
 
   ChangeContentOverlay(this.type, this.edits);
 }
@@ -1519,7 +1519,7 @@ class RemoveContentOverlay implements Jsonable {
 
   final String type;
 
-  Map toMap() => _mapify({'type': type});
+  Map toMap() => _stripNullValues({'type': type});
 
   RemoveContentOverlay(this.type);
 }
@@ -1578,8 +1578,8 @@ class SourceEdit implements Jsonable {
   final String replacement;
   @optional final String id;
 
-  Map toMap() =>
-      _mapify({'offset': offset, 'length': length, 'replacement': replacement, 'id': id});
+  Map toMap() => _stripNullValues(
+      {'offset': offset, 'length': length, 'replacement': replacement, 'id': id});
 
   SourceEdit(this.offset, this.length, this.replacement, {this.id});
 
@@ -1652,7 +1652,7 @@ class ExtractLocalVariableRefactoringOptions extends RefactoringOptions {
 
   ExtractLocalVariableRefactoringOptions({this.name, this.extractAll});
 
-  Map toMap() => _mapify({'name': name, 'extractAll': extractAll});
+  Map toMap() => _stripNullValues({'name': name, 'extractAll': extractAll});
 }
 
 class ExtractMethodRefactoringOptions extends RefactoringOptions {
@@ -1665,7 +1665,7 @@ class ExtractMethodRefactoringOptions extends RefactoringOptions {
   ExtractMethodRefactoringOptions(
       {this.returnType, this.createGetter, this.name, this.parameters, this.extractAll});
 
-  Map toMap() => _mapify({
+  Map toMap() => _stripNullValues({
         'returnType': returnType,
         'createGetter': createGetter,
         'name': name,
@@ -1680,7 +1680,7 @@ class InlineMethodRefactoringOptions extends RefactoringOptions {
 
   InlineMethodRefactoringOptions({this.deleteSource, this.inlineAll});
 
-  Map toMap() => _mapify({'deleteSource': deleteSource, 'inlineAll': inlineAll});
+  Map toMap() => _stripNullValues({'deleteSource': deleteSource, 'inlineAll': inlineAll});
 }
 
 class MoveFileRefactoringOptions extends RefactoringOptions {
@@ -1688,7 +1688,7 @@ class MoveFileRefactoringOptions extends RefactoringOptions {
 
   MoveFileRefactoringOptions({this.newFile});
 
-  Map toMap() => _mapify({'newFile': newFile});
+  Map toMap() => _stripNullValues({'newFile': newFile});
 }
 
 class RenameRefactoringOptions extends RefactoringOptions {
@@ -1696,7 +1696,7 @@ class RenameRefactoringOptions extends RefactoringOptions {
 
   RenameRefactoringOptions({this.newName});
 
-  Map toMap() => _mapify({'newName': newName});
+  Map toMap() => _stripNullValues({'newName': newName});
 }
 
 // EXTRACT_LOCAL_VARIABLE:

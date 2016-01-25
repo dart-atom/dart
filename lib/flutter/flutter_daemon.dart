@@ -33,9 +33,9 @@ class FlutterDaemonManager implements Disposable {
     if (sdk == null) {
       if (_daemon != null) {
         _logger.info('Stopping Flutter daemon server');
+        _daemon.dispose();
+        _daemon = null;
       }
-      _daemon?.dispose();
-      _daemon = null;
     } else {
       FlutterTool flutter = sdk.flutterTool;
 
@@ -269,7 +269,8 @@ class RequestError {
   String toString() => '[RequestError ${error}]';
 }
 
-Map _mapify(Map m) {
+/// Create a copy of the given map with all `null` values stripped out.
+Map _stripNullValues(Map m) {
   Map copy = {};
 
   for (var key in m.keys) {
@@ -303,7 +304,7 @@ class AppDomain extends Domain {
     bool checked,
     String route
   }) {
-    return _call('app.start', _mapify({
+    return _call('app.start', _stripNullValues({
       'projectDirectory': projectDirectory,
       'target': target,
       'checked': checked,
