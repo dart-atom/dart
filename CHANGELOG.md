@@ -2,6 +2,7 @@
 
 ## unreleased
 - improvements to our Bazel BUILD file support
+- added a feature to watch for mobile device availability
 
 ## 0.5.3
 - re-enable the super-mixins analyzer setting

@@ -476,7 +476,7 @@ class Refactoring {
       gen.writeln();
 
       // toMap
-      gen.write("Map toMap() => _mapify({");
+      gen.write("Map toMap() => _stripNullValues({");
       gen.write(optionsFields.map((f) => "'${f.name}': ${f.name}").join(', '));
       gen.writeStatement("});");
       gen.writeStatement('}');
@@ -585,7 +585,7 @@ class TypeDef {
     if (callParam) {
       gen.writeln();
       String map = fields.map((f) => "'${f.name}': ${f.name}").join(', ');
-      gen.writeln("Map toMap() => _mapify({${map}});");
+      gen.writeln("Map toMap() => _stripNullValues({${map}});");
     }
     gen.writeln();
     gen.write('${name}(');
@@ -900,7 +900,7 @@ class RequestError {
   String toString() => '[RequestError method: ${method}, code: ${code}, message: ${message}]';
 }
 
-Map _mapify(Map m) {
+Map _stripNullValues(Map m) {
   Map copy = {};
 
   for (var key in m.keys) {

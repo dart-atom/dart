@@ -70,16 +70,16 @@ class ProcessRunner {
 
     try {
       _process = BufferedProcess.create(command, args: args, cwd: cwd, env: env,
-          stdout: (s) => _stdoutController.add(s),
-          stderr: (s) => _stderrController.add(s),
-          exit: (code) {
-            _logger.fine('exit code: ${code} (${command})');
-            _exit = code;
-            if (!_exitCompleter.isCompleted) _exitCompleter.complete(code);
-          },
-          onWillThrowError: (e) {
-            if (!_exitCompleter.isCompleted) _exitCompleter.completeError(e);
-          }
+        stdout: (s) => _stdoutController.add(s),
+        stderr: (s) => _stderrController.add(s),
+        exit: (code) {
+          _logger.fine('exit code: ${code} (${command})');
+          _exit = code;
+          if (!_exitCompleter.isCompleted) _exitCompleter.complete(code);
+        },
+        onWillThrowError: (e) {
+          if (!_exitCompleter.isCompleted) _exitCompleter.completeError(e);
+        }
       );
     } catch (e) {
       // TODO: We don't seem to be able to catch some JS exceptions.

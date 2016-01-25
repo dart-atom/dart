@@ -33,6 +33,7 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'flutter/create_project.dart';
+import 'flutter/flutter_daemon.dart';
 import 'flutter/flutter_sdk.dart';
 import 'flutter/launch_flutter.dart';
 import 'flutter/launch_mojo.dart';
@@ -158,6 +159,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[TestManager] = new TestManager());
 
     disposables.add(deps[FlutterSdkManager] = new FlutterSdkManager());
+    disposables.add(deps[FlutterDaemonManager] = new FlutterDaemonManager());
 
     disposables.add(new UsageManager());
     disposables.add(new RebuildManager());
