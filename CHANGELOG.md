@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.5.4
 - improvements to our Bazel BUILD file support
 - added a feature to watch for mobile device availability
 - fix a syntax highlighting issue with `sync`
