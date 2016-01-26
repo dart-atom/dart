@@ -3,6 +3,8 @@ library atom.outline;
 import 'dart:async';
 import 'dart:html' as html;
 
+import 'package:logging/logging.dart';
+
 import '../analysis/analysis_server_lib.dart' as analysis;
 import '../analysis_server.dart';
 import '../atom.dart';
@@ -15,6 +17,8 @@ import '../utils.dart';
 import '../views.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';
+
+final Logger _logger = new Logger('atom.outline');
 
 // TODO: Implement auto scroll-sync with the document.
 
@@ -99,6 +103,9 @@ class OutlineView implements Disposable {
     subs.add(onProcessedErrorsChanged.listen(_handleErrorsChanged));
 
     root = editor.view['shadowRoot'];
+    if (root == null) {
+      _logger.warning("The editor's shadow root is null");
+    }
 
     if (controller.showView) _install();
   }
@@ -108,6 +115,7 @@ class OutlineView implements Disposable {
   String get path => editor.getPath();
 
   void _install() {
+    if (root == null) return;
     if (content != null) return;
 
     ViewResizer resizer;
@@ -164,7 +172,7 @@ class OutlineView implements Disposable {
   }
 
   void _uninstall() {
-    if (content != null) {
+    if (content != null && root != null) {
       root.children.remove(content.element);
       content = null;
     }
