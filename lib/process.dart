@@ -72,7 +72,9 @@ class ProcessRunner {
       _process = BufferedProcess.create(command, args: args, cwd: cwd, env: env,
         stdout: (s) => _stdoutController.add(s),
         stderr: (s) => _stderrController.add(s),
-        exit: (code) {
+        exit: (num code) {
+          // On VM crashes, we can get an exit code of `null`.
+          if (code == null) code = 255;
           _logger.fine('exit code: ${code} (${command})');
           _exit = code;
           if (!_exitCompleter.isCompleted) _exitCompleter.complete(code);
