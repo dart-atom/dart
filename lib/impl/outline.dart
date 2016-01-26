@@ -37,10 +37,11 @@ class OutlineController implements Disposable {
       }
     }));
 
-    disposables.add(atom.commands.add(
-        'atom-workspace', '${pluginId}:toggle-outline-view', (_) {
-      _close();
-    }));
+    disposables.add(
+      atom.commands.add('atom-workspace', '${pluginId}:toggle-outline-view', (_) {
+        _close();
+      })
+    );
 
     Timer.run(() {
       disposables.add(atom.workspace.observeTextEditors(_handleEditor));

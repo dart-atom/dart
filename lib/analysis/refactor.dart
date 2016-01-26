@@ -144,14 +144,17 @@ class RefactoringHelper implements Disposable {
   _performRefactoring(String refactoringName, RefactoringOptions options,
       String path, int offset, int end, String successMsg) {
     Job job = new AnalysisRequestJob(_jobName(refactoringName), () {
-      return analysisServer
-          .getRefactoring(refactoringName, path, offset, end - offset, false,
-              options: options)
-          .then((RefactoringResult result) {
-        // Abort if refactoring failed
+      return analysisServer.getRefactoring(
+        refactoringName,
+        path, offset,
+        end - offset,
+        false,
+        options: options
+      ).then((RefactoringResult result) {
+        // Abort if refactoring failed.
         if (result == null) return;
 
-        // Apply refactoring
+        // Apply refactoring.
         _applyRefactoringResult(refactoringName, result, successMsg, path);
       });
     });
@@ -173,8 +176,10 @@ class RefactoringHelper implements Disposable {
 
     SourceChange change = result.change;
     if (change == null) {
-      atom.notifications.addError('Unable to ${_readableName(refactoringName)}',
-          detail: 'No change information returned.');
+      atom.notifications.addError(
+        'Unable to ${_readableName(refactoringName)}',
+        detail: 'No change information returned.'
+      );
       atom.beep();
       return;
     }
@@ -185,8 +190,7 @@ class RefactoringHelper implements Disposable {
     sourceFileEdits.forEach((SourceFileEdit fileEdit) {
       fileEdit.edits.removeWhere((SourceEdit edit) => edit.id != null);
     });
-    sourceFileEdits
-        .removeWhere((SourceFileEdit fileEdit) => fileEdit.edits.isEmpty);
+    sourceFileEdits.removeWhere((SourceFileEdit fileEdit) => fileEdit.edits.isEmpty);
 
     var apply = () {
       _applyEdits(sourceFileEdits, successMsg).then((_) {
@@ -225,21 +229,24 @@ class RefactoringHelper implements Disposable {
 
     var userCancelled = () => notification.dismiss();
 
-    notification =
-        atom.notifications.addInfo('Refactor ${sourceFileEdits.length} files?',
-            detail: fileSummary,
-            dismissable: true,
-            buttons: [
-              new NotificationButton('Continue', userConfirmed),
-              new NotificationButton('Cancel', userCancelled)
-            ]);
+    notification = atom.notifications.addInfo(
+      'Refactor ${sourceFileEdits.length} files?',
+      detail: fileSummary,
+      dismissable: true,
+      buttons: [
+        new NotificationButton('Continue', userConfirmed),
+        new NotificationButton('Cancel', userCancelled)
+      ]
+    );
   }
 
   /// Apply the source edits, displaying [successMsg] once complete.
   Future _applyEdits(List<SourceFileEdit> sourceFileEdits, String successMsg) {
     return Future.forEach(sourceFileEdits, (SourceFileEdit edit) {
-      return atom.workspace.open(edit.file, options: {'searchAllPanes': true})
-          .then((TextEditor editor) {
+      return atom.workspace.open(
+        edit.file,
+        options: {'searchAllPanes': true}
+      ).then((TextEditor editor) {
         applyEdits(editor, edit.edits);
       });
     }).then((_) {
