@@ -35,7 +35,7 @@ String getWorkspaceRelativeDescription(String path) {
 /// A class to locate Dart projects in Atom and listen for new or removed Dart
 /// projects.
 class ProjectManager implements Disposable, ContextMenuContributor {
-  static const int _recurse_depth = 2;
+  static const int _recurseDepth = 2;
 
   /// Return whether the given directory is a Dart project.
   static bool isDartProject(Directory dir) {
@@ -130,7 +130,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     for (Directory dir in atom.project.getDirectories()) {
       // Guard against synthetic project directories (like `config`).
       if (dir.existsSync()) {
-        allDirs.addAll(_findDartProjects(dir, _recurse_depth));
+        allDirs.addAll(_findDartProjects(dir, _recurseDepth));
       }
     }
 
@@ -247,7 +247,13 @@ class ProjectManager implements Disposable, ContextMenuContributor {
   List<Directory> _findDartProjects(Directory dir, int recurse) {
     if (isDartProject(dir)) {
       return [dir];
-    } else if (recurse > 0) {
+    }
+
+    if (_isHomeDir(dir)) {
+      return [];
+    }
+
+    if (recurse > 0) {
       List<Directory> found = [];
       try {
         for (Entry entry in dir.getEntriesSync()) {
@@ -449,6 +455,9 @@ bool _isDartBuildFile(File file) {
     return false;
   }
 }
+
+/// Return whether the given directory cooresponds to the user's home directory.
+bool _isHomeDir(Directory dir) => homedir() == dir.path;
 
 class _MarkDartProjectContextCommand extends ContextMenuItem {
   _MarkDartProjectContextCommand() :
