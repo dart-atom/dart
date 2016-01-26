@@ -38067,7 +38067,9 @@ self._domRemove = function(element) {
         var found, entry, e, t1, exception;
         if (L.ProjectManager_isDartProject(dir))
           return [dir];
-        else if (J.$gt$n(recurse, 0)) {
+        if (J.$eq$($.$get$_os().callMethod$1("homedir"), J.get$path$x(dir)))
+          return [];
+        if (J.$gt$n(recurse, 0)) {
           found = [];
           try {
             for (t1 = J.get$iterator$ax(dir.getEntriesSync$0()); t1.moveNext$0();) {
