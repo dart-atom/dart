@@ -136,7 +136,7 @@ class CliLaunchType extends LaunchType {
       }
     });
     runner.onStderr.listen((str) => launch.pipeStdio(str, error: true));
-    runner.onExit.then((code) => launch.launchTerminated(code));
+    runner.onExit.then((int code) => launch.launchTerminated(code));
 
     return new Future.value(launch);
   }
