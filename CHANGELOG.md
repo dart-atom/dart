@@ -6,6 +6,7 @@
 - fix a syntax highlighting issue with `sync`
 - we no long scan for Dart projects when Atom is opened from the user's home directory
 - improved the messaging in the console when the VM crashes while debugging
+- guard against an NPE when constructing the outline view
 
 ## 0.5.3
 - re-enable the super-mixins analyzer setting
