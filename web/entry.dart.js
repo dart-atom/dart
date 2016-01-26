@@ -30040,7 +30040,7 @@ self._domRemove = function(element) {
         return !J.$eq$(this.lastSent, this.toSend);
       },
       _flush$0: [function() {
-        var t1, t2, t3, diffs;
+        var t1, t2, edits, diffs;
         t1 = {};
         if (!Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive())
           return;
@@ -30050,11 +30050,9 @@ self._domRemove = function(element) {
         else
           t2.cancel$0();
         this._buffer_observer$_timer = null;
-        t2 = this.lastSent;
-        t3 = this.toSend;
-        t2 = J.get$length$asx(t2);
+        edits = G.simpleDiff(this.lastSent, this.toSend);
         t1.count = 1;
-        diffs = H.setRuntimeTypeInfo(new H.MappedListIterable([new G.Edit(0, t2, t3)], new K.OverlayInfo__flush_closure(t1)), [null, null]).toList$0(0);
+        diffs = H.setRuntimeTypeInfo(new H.MappedListIterable(edits, new K.OverlayInfo__flush_closure(t1)), [null, null]).toList$0(0);
         this.lastSent = this.toSend;
         t1 = this.path;
         $.$get$_logger15().finer$1("changedOverlayContent " + H.S(t1));
@@ -40924,6 +40922,47 @@ self._domRemove = function(element) {
       }
       return true;
     },
+    simpleDiff: function(a, b) {
+      var t1, endA, t2, endB, startA, startB, t3;
+      t1 = J.getInterceptor$asx(a);
+      if (t1.get$isEmpty(a) === true && J.get$isNotEmpty$asx(b) === true)
+        return [new G.Edit(0, 0, b)];
+      if (t1.get$isNotEmpty(a) === true && J.get$isEmpty$asx(b) === true)
+        return [new G.Edit(0, t1.get$length(a), b)];
+      if (t1.$eq(a, b))
+        return [new G.Edit(0, 0, "")];
+      endA = t1.get$length(a);
+      t2 = J.getInterceptor$asx(b);
+      endB = t2.get$length(b);
+      if (typeof endA !== "number")
+        return H.iae(endA);
+      startA = 0;
+      startB = 0;
+      while (true) {
+        if (startA < endA) {
+          if (typeof endB !== "number")
+            return H.iae(endB);
+          t3 = startB < endB && J.$eq$(t1.$index(a, startA), t2.$index(b, startB));
+        } else
+          t3 = false;
+        if (!t3)
+          break;
+        ++startA;
+        ++startB;
+      }
+      while (true) {
+        if (endA > startA) {
+          t3 = J.getInterceptor$n(endB);
+          t3 = t3.$gt(endB, startB) && J.$eq$(t1.$index(a, endA - 1), t2.$index(b, t3.$sub(endB, 1)));
+        } else
+          t3 = false;
+        if (!t3)
+          break;
+        --endA;
+        endB = J.$sub$n(endB, 1);
+      }
+      return [new G.Edit(startA, endA - startA, t2.substring$2(b, startB, endB))];
+    },
     Disposable: {
       "^": "Object;"
     },
@@ -41003,7 +41042,7 @@ self._domRemove = function(element) {
         return (this.offset ^ t1 ^ t2) >>> 0;
       },
       toString$0: function(_) {
-        return "[Edit offset: " + this.offset + ", length: " + H.S(this.length) + "]";
+        return "[Edit " + this.offset + ":" + H.S(this.length) + ":'" + H.S(this.replacement) + "']";
       }
     },
     Property: {

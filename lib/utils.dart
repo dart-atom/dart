@@ -142,7 +142,7 @@ class Edit {
 
   int get hashCode => offset ^ length ^ replacement.hashCode;
 
-  String toString() => '[Edit offset: ${offset}, length: ${length}]';
+  String toString() => "[Edit ${offset}:${length}:'${replacement}']";
 }
 
 /// A value that fires events when it changes.
@@ -287,37 +287,32 @@ bool listIdentical(List a, List b) {
   return true;
 }
 
-/// Diff the two strings and return the list of edits to convert [oldText] to
-/// [newText].
-List<Edit> simpleDiff(String oldText, String newText) {
-  // TODO: Implement this. Look for a single deletion, addition, or replacement
-  // edit that will convert oldtext to newText, or do a wholesale replacement.
+/// Diff the two strings and return the list of edits to convert [a] to [b].
+List<Edit> simpleDiff(String a, String b) {
+  if (a.isEmpty && b.isNotEmpty) return [new Edit(0, 0, b)];
+  if (a.isNotEmpty && b.isEmpty) return [new Edit(0, a.length, b)];
+  if (a == b) return [new Edit(0, 0, '')];
 
-  // int oldLen = oldText.length;
-  // int newLen = newText.length;
-  //
-  // int maxLen = math.min(oldLen, newLen);
-  // int prefixLen = 0;
-  //
-  // while (prefixLen < maxLen) {
-  //   if (oldText[prefixLen] == newText[prefixLen]) {
-  //     prefixLen++;
-  //   } else {
-  //     break;
-  //   }
-  // }
-  //
-  // int suffixLen = 0;
-  //
-  // while ((suffixLen + prefixLen) < maxLen) {
-  //   if (oldText[oldLen - suffixLen - 1] == newText[newLen - suffixLen - 1]) {
-  //     suffixLen++;
-  //   } else {
-  //     break;
-  //   }
-  // }
-  //
-  // print('maxlen=${maxLen}, prefixlen=${prefixLen}, suffixlen=${suffixLen}');
+  // Look for a single deletion, addition, or replacement edit that will convert
+  // [a] to [b]. Else do a wholesale replacement.
 
-  return [new Edit(0, oldText.length, newText)];
+  int startA = 0;
+  int startB = 0;
+
+  int endA = a.length;
+  int endB = b.length;
+
+  while (startA < endA && startB < endB && a[startA] == b[startB]) {
+    startA++;
+    startB++;
+  }
+
+  while (endA > startA && endB > startB && a[endA - 1] == b[endB - 1]) {
+    endA--;
+    endB--;
+  }
+
+  return [
+    new Edit(startA, endA - startA, b.substring(startB, endB))
+  ];
 }
