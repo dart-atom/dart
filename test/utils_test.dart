@@ -22,16 +22,32 @@ defineTests() {
     });
 
     test('simpleDiff 1', () {
-      _checkDiff(simpleDiff('aabcc', 'aacc'), new Edit(0, 5, 'aacc'));
+      _checkDiff(simpleDiff('aabcc', 'aacc'), new Edit(2, 1, ''));
     });
 
-    // test('simpleDiff 2', () {
-    //   _checkDiff(simpleDiff('aaa', 'bbb'), new Edit(0, 3, 'bbb'));
-    // });
-    //
-    // test('simpleDiff 3', () {
-    //   _checkDiff(simpleDiff('aabb', 'aabbc'), new Edit(4, 0, 'c'));
-    // });
+    test('simpleDiff 2', () {
+      _checkDiff(simpleDiff('aaa', 'bbb'), new Edit(0, 3, 'bbb'));
+    });
+
+    test('simpleDiff 3', () {
+      _checkDiff(simpleDiff('aabb', 'aabbc'), new Edit(4, 0, 'c'));
+    });
+
+    test('simpleDiff 4', () {
+      _checkDiff(simpleDiff('abbb', 'bbb'), new Edit(0, 1, ''));
+    });
+
+    test('simpleDiff 5', () {
+      _checkDiff(simpleDiff('aabb', 'aabb'), new Edit(0, 0, ''));
+    });
+
+    test('simpleDiff 6', () {
+      _checkDiff(simpleDiff('', 'aabb'), new Edit(0, 0, 'aabb'));
+    });
+
+    test('simpleDiff 7', () {
+      _checkDiff(simpleDiff('aabb', ''), new Edit(0, 4, ''));
+    });
   });
 
   group('Property', () {
