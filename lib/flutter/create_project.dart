@@ -14,8 +14,11 @@ class CreateProjectManager implements Disposable {
   Disposables disposables = new Disposables();
 
   CreateProjectManager() {
-    disposables.add(atom.commands
-        .add('atom-workspace', 'flutter:create-project', _createProject));
+    disposables.add(atom.commands.add(
+      'atom-workspace',
+      'flutter:create-project',
+      _createProject)
+    );
   }
 
   void _createProject(AtomEvent _) {
@@ -39,7 +42,9 @@ class CreateProjectManager implements Disposable {
 
       if (_response != null) {
         return flutter.runInJob(
-          ['init', '--out', _response], title: 'Creating Flutter Project');
+          ['create', '--out', _response],
+          title: 'Creating Flutter Project'
+        );
       }
     }).then((_) {
       if (_response != null) {

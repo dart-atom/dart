@@ -1,7 +1,11 @@
 # dartlang plugin changelog
 
+## unreleased
+- reduced the amount of data we send to the analysis server on file changes
+- updated to call `flutter create` instead of `flutter init`
+
 ## 0.5.4
-- improvements to our Bazel BUILD file support
+- improvements to our Bazel `BUILD` file support
 - added a feature to watch for mobile device availability
 - fix a syntax highlighting issue with `sync`
 - we no long scan for Dart projects when Atom is opened from the user's home directory
