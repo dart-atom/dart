@@ -33156,7 +33156,7 @@ self._domRemove = function(element) {
         var t1, job;
         this._box_0._response = response;
         if (response != null) {
-          t1 = ["init", "--out", response];
+          t1 = ["create", "--out", response];
           job = new Z._FlutterToolJob(this.flutter.sdk, null, null, null, "Flutter " + H.S(C.JSArray_methods.get$first(t1)), null);
           job._args = t1;
           return Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(job);
