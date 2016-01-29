@@ -41,12 +41,29 @@ class ProcessRunner {
 
   factory ProcessRunner.underShell(String command,
       {List<String> args, String cwd, Map<String, String> env}) {
-    List<String> _args = ['-l', '-c', command];
-    if (args != null) {
-      _args.addAll(args);
+    // This shouldn't be trusted for security.
+    final RegExp shellEscape = new RegExp('(["\'| \\\$!\\(\\)\\[\\]])');
+
+    final String shell = utils.env('SHELL');
+
+    if (shell == null) {
+      _logger.warning("Couldn't identify the user's shell");
+      return new ProcessRunner(command, args: args, cwd: cwd, env: env);
     }
-    return new ProcessRunner(utils.env('SHELL'),
-        args: _args, cwd: cwd, env: env);
+
+    if (args != null) {
+      // Escape the arguments:
+      List<String> escaped = args.map((String arg) {
+        return "'" +
+            arg.replaceAllMapped(shellEscape, (Match m) => '\\' + m.group(0)) +
+            "'";
+      });
+      command += ' ' + (escaped.join(' '));
+    }
+
+    args = ['-l', '-c', command];
+
+    return new ProcessRunner(shell, args: args, cwd: cwd, env: env);
   }
 
   bool get started => _process != null;
