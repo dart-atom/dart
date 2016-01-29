@@ -9,6 +9,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
+import 'atom_utils.dart' as utils;
 
 Logger _logger = new Logger("process");
 
@@ -37,6 +38,16 @@ class ProcessRunner {
   StreamController<String> _stderrController = new StreamController();
 
   ProcessRunner(this.command, {this.args, this.cwd, this.env});
+
+  factory ProcessRunner.underShell(String command,
+      {List<String> args, String cwd, Map<String, String> env}) {
+    List<String> _args = ['-l', '-c', command];
+    if (args != null) {
+      _args.addAll(args);
+    }
+    return new ProcessRunner(utils.env('SHELL'),
+        args: _args, cwd: cwd, env: env);
+  }
 
   bool get started => _process != null;
   bool get finished => _exit != null;
