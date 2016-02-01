@@ -38069,7 +38069,7 @@ self._domRemove = function(element) {
               if (!t3.contains$1(0, path)) {
                 t3.add$1(0, path);
                 t4 = $.$get$atom()._notifications;
-                t4.invoke$3("addWarning", "'lib'/ directory opened", t4._options$5$buttons$description$detail$dismissable$icon(null, "You've opened the " + H.S(path) + " directory directly; for Dart analysis to work well, you should instead open the parent, " + H.S(J.$index$asx(dir.getParent$0().obj, "path")) + ", directory.", null, true, null));
+                t4.invoke$3("addWarning", "'lib/' directory opened", t4._options$5$buttons$description$detail$dismissable$icon(null, "You've opened the " + H.S(path) + " directory directly; for Dart analysis to work well, you should instead open the parent, " + H.S(J.$index$asx(dir.getParent$0().obj, "path")) + ", directory.", null, true, null));
               }
             }
         }

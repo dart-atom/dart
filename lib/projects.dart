@@ -170,7 +170,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
             _warnedProjects.add(path);
 
             atom.notifications.addWarning(
-              "'lib'/ directory opened",
+              "'lib/' directory opened",
               description: "You've opened the ${path} directory directly; for Dart "
                 "analysis to work well, you should instead open the parent, "
                 "${dir.getParent().path}, directory.",
