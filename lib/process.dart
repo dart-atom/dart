@@ -39,31 +39,39 @@ class ProcessRunner {
 
   ProcessRunner(this.command, {this.args, this.cwd, this.env});
 
-  factory ProcessRunner.underShell(String command,
-      {List<String> args, String cwd, Map<String, String> env}) {
-    // This shouldn't be trusted for security.
-    final RegExp shellEscape = new RegExp('(["\'| \\\$!\\(\\)\\[\\]])');
+  /// Execute the command under the user's preferred shell. On the Mac, this
+  /// will determine the shell from the `$SHELL` env variable. On other platforms,
+  /// this will call through to the normal [ProcessRunner] constructor.
+  factory ProcessRunner.underShell(String command, {
+    List<String> args, String cwd, Map<String, String> env
+  }) {
+    if (utils.isMac) {
+      // This shouldn't be trusted for security.
+      final RegExp shellEscape = new RegExp('(["\'| \\\$!\\(\\)\\[\\]])');
 
-    final String shell = utils.env('SHELL');
+      final String shell = utils.env('SHELL');
 
-    if (shell == null) {
-      _logger.warning("Couldn't identify the user's shell");
-      return new ProcessRunner(command, args: args, cwd: cwd, env: env);
+      if (shell == null) {
+        _logger.warning("Couldn't identify the user's shell");
+      } else {
+        if (args != null) {
+          // Escape the arguments:
+          Iterable<String> escaped = args.map((String arg) {
+            return
+              "'" +
+              arg.replaceAllMapped(shellEscape, (Match m) => '\\' + m.group(0)) +
+              "'";
+          });
+          command += ' ' + (escaped.join(' '));
+        }
+
+        args = ['-l', '-c', command];
+
+        return new ProcessRunner(shell, args: args, cwd: cwd, env: env);
+      }
     }
 
-    if (args != null) {
-      // Escape the arguments:
-      List<String> escaped = args.map((String arg) {
-        return "'" +
-            arg.replaceAllMapped(shellEscape, (Match m) => '\\' + m.group(0)) +
-            "'";
-      });
-      command += ' ' + (escaped.join(' '));
-    }
-
-    args = ['-l', '-c', command];
-
-    return new ProcessRunner(shell, args: args, cwd: cwd, env: env);
+    return new ProcessRunner(command, args: args, cwd: cwd, env: env);
   }
 
   bool get started => _process != null;

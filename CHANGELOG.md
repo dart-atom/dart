@@ -3,6 +3,7 @@
 ## unreleased
 - reduced the amount of data we send to the analysis server on file changes
 - updated to call `flutter create` instead of `flutter init`
+- changed to using the user's preferred shell to spawn processes
 
 ## 0.5.4
 - improvements to our Bazel `BUILD` file support
