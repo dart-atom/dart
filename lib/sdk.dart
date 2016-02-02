@@ -241,9 +241,7 @@ class Sdk {
   Future<ProcessResult> execBinSimple(String binName, List<String> args, {cwd}) {
     if (cwd is Directory) cwd = cwd.path;
     String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
-
-    return new ProcessRunner.underShell(command, args: args, cwd: cwd)
-        .execSimple();
+    return new ProcessRunner.underShell(command, args: args, cwd: cwd).execSimple();
   }
 
   String toString() => directory.getPath();
