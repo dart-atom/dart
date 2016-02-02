@@ -72,7 +72,13 @@ String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
 /// Get the value of an environment variable. This is often not accurate on the
 /// mac since mac apps are launched in a different shell then the terminal
 /// default.
-String env(String key) => _process['env'][key];
+String env(String key) {
+  try {
+    return _process['env'][key];
+  } catch (err) {
+    return null;
+  }
+}
 
 /// Display a textual prompt to the user.
 Future<String> promptUser(String prompt,

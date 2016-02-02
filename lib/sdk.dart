@@ -230,20 +230,10 @@ class Sdk {
     if (cwd is Directory) cwd = cwd.path;
     String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
 
-    // Run process under bash on the mac, to capture the user's env variables.
-    if (isMac) {
-      //exec('/bin/bash', ['-l', '-c', 'which dart'])
-      String arg = args.join(' ');
-      arg = command + ' ' + arg;
-      ProcessRunner runner = new ProcessRunner(
-          '/bin/bash', args: ['-l', '-c', arg], cwd: cwd);
-      if (startProcess) runner.execStreaming();
-      return runner;
-    } else {
-      ProcessRunner runner = new ProcessRunner(command, args: args, cwd: cwd);
-      if (startProcess) runner.execStreaming();
-      return runner;
-    }
+    ProcessRunner runner =
+        new ProcessRunner.underShell(command, args: args, cwd: cwd);
+    if (startProcess) runner.execStreaming();
+    return runner;
   }
 
   /// Execute the given SDK binary (a command in the `bin/` folder). [cwd] can
@@ -251,16 +241,7 @@ class Sdk {
   Future<ProcessResult> execBinSimple(String binName, List<String> args, {cwd}) {
     if (cwd is Directory) cwd = cwd.path;
     String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
-
-    // Run process under bash on the mac, to capture the user's env variables.
-    if (isMac) {
-      //exec('/bin/bash', ['-l', '-c', 'which dart'])
-      String arg = args.join(' ');
-      arg = command + ' ' + arg;
-      return new ProcessRunner('/bin/bash', args: ['-l', '-c', arg], cwd: cwd).execSimple();
-    } else {
-      return new ProcessRunner(command, args: args, cwd: cwd).execSimple();
-    }
+    return new ProcessRunner.underShell(command, args: args, cwd: cwd).execSimple();
   }
 
   String toString() => directory.getPath();
@@ -277,7 +258,7 @@ class SdkDiscovery {
   Future<String> discoverSdk() {
     if (isMac) {
       // /bin/bash -c "which dart", /bin/bash -c "echo $PATH"
-      return exec('/bin/bash', ['-l', '-c', 'which dart']).then((result) {
+      return exec(env('SHELL'), ['-l', '-c', 'which dart']).then((result) {
         result = _resolveSdkFromVm(result);
         if (result != null) {
           // On mac, special case for homebrew. Replace the version specific

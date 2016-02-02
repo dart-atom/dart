@@ -232,23 +232,12 @@ class FlutterTool {
 
   FlutterTool(this.sdk, this.toolPath);
 
-  ProcessRunner runRaw(List<String> args, {
-    String cwd,
-    bool startProcess: true
-  }) {
-    // Run process under bash on the mac, to capture the user's env variables.
-    if (isMac) {
-      //exec('/bin/bash', ['-l', '-c', 'which dart'])
-      String arg = toolPath + ' ' + args.join(' ');
-      ProcessRunner runner = new ProcessRunner(
-          '/bin/bash', args: ['-l', '-c', arg], cwd: cwd);
-      if (startProcess) runner.execStreaming();
-      return runner;
-    } else {
-      ProcessRunner runner = new ProcessRunner(toolPath, args: args, cwd: cwd);
-      if (startProcess) runner.execStreaming();
-      return runner;
-    }
+  ProcessRunner runRaw(List<String> args,
+      {String cwd, bool startProcess: true}) {
+    ProcessRunner runner =
+        new ProcessRunner.underShell(toolPath, args: args, cwd: cwd);
+    if (startProcess) runner.execStreaming();
+    return runner;
   }
 
   Future runInJob(List<String> args, {String pwd, String title}) {
@@ -280,21 +269,10 @@ class _FlutterToolJob extends Job {
   }
 
   ProcessRunner _run() {
-    // Run process under bash on the mac, to capture the user's env variables.
-    if (isMac) {
-      //exec('/bin/bash', ['-l', '-c', 'which dart'])
-      String arg = _args.join(' ');
-      arg = sdk.flutterToolPath + ' ' + arg;
-      ProcessRunner runner = new ProcessRunner(
-          '/bin/bash', args: ['-l', '-c', arg], cwd: cwd);
-      runner.execStreaming();
-      return runner;
-    } else {
-      ProcessRunner runner = new ProcessRunner(
-          sdk.flutterToolPath, args: _args, cwd: cwd);
-      runner.execStreaming();
-      return runner;
-    }
+    ProcessRunner runner = new ProcessRunner.underShell(sdk.flutterToolPath,
+        args: _args, cwd: cwd);
+    runner.execStreaming();
+    return runner;
   }
 }
 

@@ -4,6 +4,7 @@
 - reduced the amount of data we send to the analysis server on file changes
 - updated to call `flutter create` instead of `flutter init`
 - warn when the user opens a `lib/` directory inside a Dart project
+- changed to using the user's preferred shell to spawn processes
 
 ## 0.5.4
 - improvements to our Bazel `BUILD` file support
