@@ -3,6 +3,7 @@
 ## unreleased
 - reduced the amount of data we send to the analysis server on file changes
 - updated to call `flutter create` instead of `flutter init`
+- warn when the user opens a `lib/` directory inside a Dart project
 
 ## 0.5.4
 - improvements to our Bazel `BUILD` file support

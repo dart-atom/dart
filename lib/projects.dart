@@ -18,7 +18,7 @@ import 'jobs.dart';
 import 'state.dart';
 import 'utils.dart';
 
-const String bazelBuildFileName = 'BUILD';
+const String _bazelBuildFileName = 'BUILD';
 
 final Logger _logger = new Logger('projects');
 
@@ -47,7 +47,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     if (dir.getFile(analysisOptionsFileName).existsSync()) return true;
 
     // Look for a `BUILD` file with some Dart build rules.
-    File buildFile = dir.getFile(bazelBuildFileName);
+    File buildFile = dir.getFile(_bazelBuildFileName);
     if (buildFile.existsSync()) {
       if (_isDartBuildFile(buildFile)) return true;
     }
@@ -64,6 +64,8 @@ class ProjectManager implements Disposable, ContextMenuContributor {
   final Map<String, StreamSubscription> _directoryListeners = {};
 
   final List<DartProject> projects = [];
+
+  Set<String> _warnedProjects = new Set();
 
   ProjectManager() {
     _sub = atom.project.onDidChangePaths.listen(_handleProjectPathsChanged);
@@ -154,6 +156,29 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     if (changed) {
       _logger.fine('${projects}');
       _projectsController.add(projects);
+    }
+
+    // Special case `lib/` directories. If the user opened a lib/ directory, and
+    // the parent directory is a Dart project, tell the user they could be doing
+    // something better.
+    for (Directory dir in atom.project.getDirectories()) {
+      if (dir.getBaseName() == 'lib') {
+        if (!isDartProject(dir) && isDartProject(dir.getParent())) {
+          String path = dir.path;
+
+          if (!_warnedProjects.contains(path)) {
+            _warnedProjects.add(path);
+
+            atom.notifications.addWarning(
+              "'lib/' directory opened",
+              description: "You've opened the ${path} directory directly; for Dart "
+                "analysis to work well, you should instead open the parent, "
+                "${dir.getParent().path}, directory.",
+              dismissable: true
+            );
+          }
+        }
+      }
     }
   }
 
