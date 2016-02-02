@@ -8539,7 +8539,7 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.ProcessNotifier_watch_closure2[1];
     ProcessNotifier_watch_closure2.prototype = $desc;
     ProcessNotifier_watch_closure2.$__fields__ = ["$this"];
-    function ProjectManager(_projectsController, _projectAddController, _projectRemoveController, _projects$_sub, disposables, _directoryListeners, projects) {
+    function ProjectManager(_projectsController, _projectAddController, _projectRemoveController, _projects$_sub, disposables, _directoryListeners, projects, _warnedProjects) {
       this._projectsController = _projectsController;
       this._projectAddController = _projectAddController;
       this._projectRemoveController = _projectRemoveController;
@@ -8547,6 +8547,7 @@ self._domRemove = function(element) {
       this.disposables = disposables;
       this._directoryListeners = _directoryListeners;
       this.projects = projects;
+      this._warnedProjects = _warnedProjects;
       this.$deferredAction();
     }
     ProjectManager.builtin$cls = "ProjectManager";
@@ -8554,7 +8555,7 @@ self._domRemove = function(element) {
       ProjectManager.name = "ProjectManager";
     $desc = $collectedClasses$.ProjectManager[1];
     ProjectManager.prototype = $desc;
-    ProjectManager.$__fields__ = ["_projectsController", "_projectAddController", "_projectRemoveController", "_projects$_sub", "disposables", "_directoryListeners", "projects"];
+    ProjectManager.$__fields__ = ["_projectsController", "_projectAddController", "_projectRemoveController", "_projects$_sub", "disposables", "_directoryListeners", "projects", "_warnedProjects"];
     ProjectManager.prototype.get$projects = function() {
       return this.projects;
     };
@@ -26506,6 +26507,9 @@ self._domRemove = function(element) {
       getPath$0: function() {
         return this.invoke$1("getPath");
       },
+      getParent$0: function() {
+        return new E.Directory(this.invoke$1("getParent"));
+      },
       toString$0: function(_) {
         return J.$index$asx(this.obj, "path");
       }
@@ -38087,7 +38091,7 @@ self._domRemove = function(element) {
       }
     },
     ProjectManager: {
-      "^": "Object;_projectsController,_projectAddController,_projectRemoveController,_projects$_sub,disposables,_directoryListeners,projects<",
+      "^": "Object;_projectsController,_projectAddController,_projectRemoveController,_projects$_sub,disposables,_directoryListeners,projects<,_warnedProjects",
       getTreeViewContributions$0: function() {
         return [new L._MarkDartProjectContextCommand("Mark as a Dart Project", "dartlang:mark-as-dart-project")];
       },
@@ -38126,7 +38130,7 @@ self._domRemove = function(element) {
         t1.get$values(t1).forEach$1(0, new L.ProjectManager_dispose_closure());
       }, "call$0", "get$dispose", 0, 0, 2],
       _fullScanForProjects$0: function() {
-        var t1, previousDirs, allDirs, t2, t3, _i, dir, changed, newDirs;
+        var t1, previousDirs, allDirs, t2, t3, _i, dir, changed, newDirs, path, t4;
         t1 = this.projects;
         previousDirs = P.LinkedHashSet_LinkedHashSet$from(H.setRuntimeTypeInfo(new H.MappedListIterable(t1, new L.ProjectManager__fullScanForProjects_closure()), [null, null]), null);
         allDirs = P.LinkedHashSet_LinkedHashSet(null, null, null, null);
@@ -38155,6 +38159,18 @@ self._domRemove = function(element) {
           if (!t2.get$_mayAddEvent())
             H.throwExpression(t2._addEventError$0());
           t2._sendData$1(t1);
+        }
+        for (t1 = $.$get$atom()._project.getDirectories$0(), t2 = t1.length, t3 = this._warnedProjects, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
+          dir = t1[_i];
+          if (J.$eq$(dir.getBaseName$0(), "lib"))
+            if (!L.ProjectManager_isDartProject(dir) && L.ProjectManager_isDartProject(dir.getParent$0())) {
+              path = J.get$path$x(dir);
+              if (!t3.contains$1(0, path)) {
+                t3.add$1(0, path);
+                t4 = $.$get$atom()._notifications;
+                t4.invoke$3("addWarning", "'lib/' directory opened", t4._options$5$buttons$description$detail$dismissable$icon(null, "You've opened the " + H.S(path) + " directory directly; for Dart analysis to work well, you should instead open the parent, " + H.S(J.$index$asx(dir.getParent$0().obj, "path")) + ", directory.", null, true, null));
+              }
+            }
         }
       },
       _handleProjectPathsChanged$1: [function(allPaths) {
@@ -38261,7 +38277,7 @@ self._domRemove = function(element) {
           return false;
         },
         ProjectManager$: function() {
-          var t1 = new L.ProjectManager(P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), null, new G.Disposables(true, []), P.LinkedHashMap__makeEmpty(), []);
+          var t1 = new L.ProjectManager(P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), P.StreamController_StreamController$broadcast(null, null, false, null), null, new G.Disposables(true, []), P.LinkedHashMap__makeEmpty(), [], P.LinkedHashSet_LinkedHashSet(null, null, null, null));
           t1.ProjectManager$0();
           return t1;
         }
