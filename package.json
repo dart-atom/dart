@@ -19,11 +19,6 @@
     "synced-sidebar"
   ],
   "consumedServices": {
-    "status-bar": {
-      "versions": {
-        "^1.0.0": "consumeStatusBar"
-      }
-    },
     "atom-toolbar": {
       "versions": {
         "^1.0.0": "consumeToolbar"
@@ -32,6 +27,11 @@
     "linter-plus-self": {
       "versions": {
         "0.1.0": "consumeLinter"
+      }
+    },
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
       }
     }
   },
