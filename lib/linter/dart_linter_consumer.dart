@@ -24,7 +24,7 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
 
     Stream errorStream = _errorRepository.onChange.transform(
        new Debounce(_reportingDelay));
-    errorStream.listen((_) => _regenErrors());
+    errorStream.listen(regen);
     // EventStream errorStream = new EventStream(
     //     _errorRepository.onChange).debounce(_reportingDelay);
     // errorStream.listen((_) => _regenErrors());
@@ -42,8 +42,7 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
     List<AnalysisError> allIssues = [];
 
     issuesMap.forEach((String path, List<AnalysisError> issues) {
-      issues = issues.toList()..sort(_errorComparer);
-      issues = _filter(issues);
+      issues = _filter(issues)..sort(_errorComparer);
       if (issues.length > maxIssuesPerFile) {
         // Create an issue to say we capped the number of issues.
         AnalysisError first = issues.first;
