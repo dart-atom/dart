@@ -345,11 +345,17 @@ class DartProject {
 
   AnalysisOptions _analysisOptions;
 
+  ReportFilter _reportFilter;
+
+  StreamController<ReportFilter> _reportScopeChanged = new StreamController.broadcast();
+
   DartProject(this.directory);
 
   String get path => directory.path;
 
   String get name => directory.getBaseName();
+
+  Stream<ReportFilter> get onReportScopeChanged => _reportScopeChanged.stream;
 
   /// Return the path from the workspace root to this project, inclusive of the
   /// project name.
@@ -406,6 +412,15 @@ class DartProject {
     return _analysisOptions;
   }
 
+   ReportFilter get reportFilter {
+    if (_reportFilter == null) {
+      // TODO(steelstyle): Load from a setting file.
+      _reportFilter = new ReportFilter();
+    }
+
+    return _reportFilter;
+  }
+
   void _saveOptions() {
     File file = directory.getFile(analysisOptionsFileName);
     file.writeSync(_analysisOptions.writeYaml());
@@ -432,6 +447,28 @@ class DartProject {
 
     return false;
   }
+
+  void setReportFilter(ReportScope scope, [String path]) {
+    if (scope == ReportScope.customDirectory) {
+      _reportFilter.customDirectory = path;
+    }
+
+    _reportFilter.scope = scope;
+    _reportScopeChanged.add(_reportFilter);
+  }
+}
+
+enum ReportScope {
+  currentFile,
+  currentProject,
+  customDirectory
+}
+
+class ReportFilter {
+  ReportScope scope;
+  String customDirectory;
+
+  ReportFilter([this.scope=ReportScope.currentProject, this.customDirectory]);
 }
 
 class ProjectScanJob extends Job {

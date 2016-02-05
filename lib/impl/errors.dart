@@ -12,6 +12,7 @@ import '../atom_statusbar.dart';
 import '../atom_utils.dart';
 import '../elements.dart';
 import '../linter.dart';
+import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
 import '../views.dart';
@@ -27,6 +28,9 @@ class ErrorsController implements Disposable {
   Disposables disposables = new Disposables();
   StreamSubscription _sub;
 
+  DartProject _project;
+  StreamSubscription _reportScopeSub;
+
   ErrorsView view;
   ErrorsStatusElement statusElement;
 
@@ -39,6 +43,9 @@ class ErrorsController implements Disposable {
     disposables.add(atom.commands.add(
       'atom-workspace', '${pluginId}:toggle-errors-view', (_) => toggleView()
     ));
+
+    disposables.add(atom.commands.add('atom-text-editor[data-grammar~="dart"]',
+        'dart-lang:filter-errors', (_) => _setFilterDirectory()));
 
     enabled = atom.config.getValue(_errorPref);
     view = new ErrorsView(enabled);
@@ -98,13 +105,40 @@ class ErrorsController implements Disposable {
     statusElement._init(statusBar);
   }
 
+  void _updateProject(DartProject project){
+    if (project != _project) {
+      if (_reportScopeSub != null) {
+        _reportScopeSub.cancel();
+      }
+
+      _reportScopeSub = project.onReportScopeChanged.listen(_focusChanged);
+      _project = project;
+    }
+  }
+
   void _focusChanged(_) {
-    TextEditor editor = atom.workspace.getActiveTextEditor();
-    if (editor == null) return;
-    String path = editor.getPath();
+    String path = atom.workspace.getActiveTextEditor()?.getPath();
     if (path == null) return;
 
-    final String newFocus = atom.project.relativizePath(path)[0];
+    String projectPath = atom.project.relativizePath(path)[0];
+    DartProject project = projectManager.getProjectFor(path);
+    _updateProject(project);
+
+    String newFocus;
+    ReportFilter reportFilter = project?.reportFilter;
+    ReportScope reportScope = reportFilter?.scope ?? ReportScope.currentProject;
+
+    switch(reportScope) {
+      case ReportScope.currentFile:
+        newFocus = path;
+        break;
+      case ReportScope.currentProject:
+        newFocus = projectPath;
+        break;
+      case ReportScope.customDirectory:
+        newFocus = '$projectPath/${reportFilter.customDirectory}';
+        break;
+    }
 
     if (newFocus != _focusedDir) {
       _focusedDir = newFocus;
@@ -128,6 +162,20 @@ class ErrorsController implements Disposable {
     statusElement._handleErrorsChanged(filteredErrors);
     view._handleErrorsChanged(filteredErrors, focus: shortName);
   }
+
+  Future _setFilterDirectory() async {
+    String path = atom.workspace.getActiveTextEditor()?.getPath();
+    if (path == null) return;
+
+    String directoryScope = _project?.reportFilter?.customDirectory ??
+      dirname(atom.project.relativizePath(path)[1]);
+    directoryScope  = await promptUser('Enter the filter directory',
+      defaultText: directoryScope);
+
+    if (directoryScope == null) return;
+
+    _project.setReportFilter(ReportScope.customDirectory, directoryScope);
+  }
 }
 
 class ErrorsView extends View {
@@ -142,6 +190,7 @@ class ErrorsView extends View {
     toolbar.add([
       countElement = div(c: 'errors-count'),
       focusElement = div(c: 'badge focus-title')
+          ..onClick.listen(_toggleFocus)
     ]);
 
     content.toggleClass('tab-scrollable');
@@ -300,6 +349,27 @@ class ErrorsView extends View {
       ));
       return editor;
     });
+  }
+
+  ReportScope _nextScope(ReportFilter reportingOptions) {
+    switch (reportingOptions.scope) {
+      case ReportScope.currentFile:
+        return ReportScope.currentProject;
+      case ReportScope.currentProject:
+        return reportingOptions.customDirectory != null
+          ? ReportScope.customDirectory
+          : ReportScope.currentFile;
+      case ReportScope.customDirectory:
+        return ReportScope.currentFile;
+      default:
+        throw new UnimplementedError();
+    }
+  }
+
+  void _toggleFocus(_) {
+    var editor = atom.workspace.getActiveTextEditor();
+    var project = projectManager.getProjectFor(editor.getPath());
+    project.setReportFilter(_nextScope(project.reportFilter));
   }
 }
 
