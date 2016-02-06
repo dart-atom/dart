@@ -10,7 +10,7 @@ permalink: / ## disables post output
 timezone: null
 lsi: false
 markdown: kramdown
-highlighter: rouge
+highlighter: pygments
 
 ### content configuration ###
 title:       "dartlang - Dart plugin for Atom"
