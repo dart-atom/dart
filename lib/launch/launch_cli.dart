@@ -101,10 +101,12 @@ class CliLaunchType extends LaunchType {
 
     String description = '${path} ${args == null ? '' : args.join(' ')}';
 
-    ProcessRunner runner = new ProcessRunner(
+    // Run in `underShell` to capture environment variables on the mac.
+    ProcessRunner runner = new ProcessRunner.underShell(
       sdk.dartVm.path,
       args: _args,
-      cwd: cwd);
+      cwd: cwd
+    );
 
     Launch launch = new _CliLaunch(manager, this, configuration, path,
       killHandler: () => runner.kill(),
@@ -142,7 +144,7 @@ class CliLaunchType extends LaunchType {
   }
 
   String getDefaultConfigText() {
-    return 'args: \nchecked: true\ndebug: true\n';
+    return 'args: \ncwd: \nchecked: true\ndebug: true\n';
   }
 }
 
