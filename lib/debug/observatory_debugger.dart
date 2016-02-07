@@ -316,6 +316,8 @@ class ObservatoryConnection extends DebugConnection {
 
   // TODO: Move much of the isolate lifecycle code into a manager class.
   // TODO: Make the isolate bring-up lifecycle clearer.
+  // TODO: Don't set breakpoints until the isolate runnable events is received
+  //       (with the caveat: don't resume isolate until we've set breakpoints).
 
   Future<ObservatoryIsolate> _registerNewIsolate(IsolateRef ref) {
     if (_isolateMap.containsKey(ref.id)) return new Future.value(_isolateMap[ref.id]);

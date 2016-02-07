@@ -218,6 +218,10 @@ class DebuggerView extends View {
       return;
     }
 
+    if (!location.resolved) {
+      _logger.fine('DebuggerView._jumpToLocation - location is not resolved ($location).');
+    }
+
     editorManager.jumpToLocation(location.path, location.line - 1, location.column - 1).then(
         (TextEditor editor) {
       // Ensure that the execution point is visible.

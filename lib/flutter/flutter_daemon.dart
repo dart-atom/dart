@@ -68,8 +68,6 @@ class FlutterDaemonManager implements Disposable {
 
       _daemon.daemon.onLogMessage.listen((LogMessage message) {
         switch (message.level) {
-          case 'severe':
-          case 'warning':
           case 'error':
             if (message.stackTrace != null) {
               _logger.severe(message.message, null, new StackTrace.fromString(message.stackTrace));
@@ -77,12 +75,12 @@ class FlutterDaemonManager implements Disposable {
               _logger.severe(message.message);
             }
             break;
-          case 'info':
           case 'status':
             _logger.info(message.message);
             break;
           default:
-            _logger.fine(message.message);
+            // 'trace'
+            _logger.finer(message.message);
             break;
         }
       });

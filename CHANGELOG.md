@@ -5,6 +5,7 @@
 - updated to call `flutter create` instead of `flutter init`
 - warn when the user opens a `lib/` directory inside a Dart project
 - changed to using the user's preferred shell to spawn processes
+- launch Dart command-line applications under the user's system shell on the Mac
 
 ## 0.5.4
 - improvements to our Bazel `BUILD` file support

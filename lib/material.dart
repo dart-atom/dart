@@ -116,6 +116,7 @@ class MList<T> extends CoreElement {
   CoreElement _ul;
   Map<T, CoreElement> _itemToElement = {};
 
+  StreamController<T> _singleClick = new StreamController.broadcast();
   StreamController<T> _doubleClick = new StreamController.broadcast();
 
   MList(this.renderer, {this.sort, this.filter}) : super('div', classes: 'material-list') {
@@ -185,6 +186,7 @@ class MList<T> extends CoreElement {
 
       element.click(() {
         selectItem(item);
+        _singleClick.add(item);
       });
 
       element.dblclick(() {
@@ -197,6 +199,7 @@ class MList<T> extends CoreElement {
     renderer(item, element);
   }
 
+  Stream<T> get onSingleClick => _singleClick.stream;
   Stream<T> get onDoubleClick => _doubleClick.stream;
 }
 
