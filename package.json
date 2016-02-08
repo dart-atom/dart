@@ -15,6 +15,7 @@
   },
   "dependencies": {},
   "required-packages": [
+    "atom-toolbar",
     "linter",
     "synced-sidebar"
   ],

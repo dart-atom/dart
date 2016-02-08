@@ -4,7 +4,6 @@ import 'dart:convert' show JSON, JsonCodec, LineSplitter;
 
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../process.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -12,11 +11,14 @@ import 'flutter_sdk.dart';
 
 final Logger _logger = new Logger('flutter_daemon');
 
-const bool _enableNotifications = false;
-
 class FlutterDaemonManager implements Disposable {
   FlutterDaemon _daemon;
   StreamSubscription _sub;
+
+  StreamController<FlutterDaemon> _daemonController = new StreamController.broadcast();
+  StreamController<Device> _deviceAddedController = new StreamController.broadcast();
+  StreamController<Device> _deviceChangedController = new StreamController.broadcast();
+  StreamController<Device> _deviceRemovedController = new StreamController.broadcast();
 
   FlutterDaemonManager() {
     _initSdk(_sdkManager.sdk);
@@ -25,16 +27,26 @@ class FlutterDaemonManager implements Disposable {
 
   FlutterDaemon get daemon => _daemon;
 
+  Stream<FlutterDaemon> get onDaemonAvailable => _daemonController.stream;
+
+  Stream<Device> get onDeviceAdded => _deviceAddedController.stream;
+  Stream<Device> get onDeviceChanged => _deviceChangedController.stream;
+  Stream<Device> get onDeviceRemoved => _deviceRemovedController.stream;
+
+  Future<List<Device>> getDevices() {
+    return daemon == null ? new Future.value([]) : daemon.device.getDevices();
+  }
+
   FlutterSdkManager get _sdkManager => deps[FlutterSdkManager];
 
   void _initSdk(FlutterSdk sdk) {
-    if (!_enableNotifications) return;
-
     if (sdk == null) {
       if (_daemon != null) {
         _logger.info('Stopping Flutter daemon server');
         _daemon.dispose();
         _daemon = null;
+
+        _daemonController.add(daemon);
       }
     } else {
       FlutterTool flutter = sdk.flutterTool;
@@ -51,13 +63,11 @@ class FlutterDaemonManager implements Disposable {
         .where((String str) => str.startsWith('[') && str.endsWith(']'))
         .map((String str) => str.substring(1, str.length - 1));
 
-      // process.onStderr.listen((String str) {
-      //   _logger.fine('stderr: $str');
-      // });
-
-      // TODO: Do we want to dispose on exit? Notify someone?
       process.onExit.then((_) {
         _daemon.dispose();
+        _daemon = null;
+
+        _daemonController.add(daemon);
       });
 
       _daemon = new FlutterDaemon(
@@ -85,15 +95,14 @@ class FlutterDaemonManager implements Disposable {
         }
       });
 
-      // TODO: Re-export these streams. Let the client display toasts.
       _daemon.device.onDeviceAdded.listen((Device device) {
-        atom.notifications.addSuccess("Found ${device.getLabel()}.");
+        _deviceAddedController.add(device);
       });
       _daemon.device.onDeviceChanged.listen((Device device) {
-        // print('changed: ${device}');
+        _deviceChangedController.add(device);
       });
       _daemon.device.onDeviceRemoved.listen((Device device) {
-        atom.notifications.addInfo("${device.getLabel()} removed.");
+        _deviceRemovedController.add(device);
       });
 
       _daemon.onSend.listen((String message) {
@@ -107,6 +116,8 @@ class FlutterDaemonManager implements Disposable {
           _logger.finer('<-- ${message}');
         }
       });
+
+      _daemonController.add(daemon);
     }
   }
 
@@ -353,6 +364,10 @@ class Device {
     if (name != null) return name;
     return '$platformLabel $id';
   }
+
+  operator == (other) => other is Device && id == other.id;
+
+  int get hashCode => id.hashCode;
 
   String toString() => '[$id, $name, $platform]';
 }
