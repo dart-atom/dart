@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.5.6
 - fixed an issue with node's os.homedir() call on linux
 
 ## 0.5.5
