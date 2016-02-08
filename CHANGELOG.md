@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue with node's os.homedir() call on linux
+
 ## 0.5.5
 - reduced the amount of data we send to the analysis server on file changes
 - updated to call `flutter create` instead of `flutter init`
