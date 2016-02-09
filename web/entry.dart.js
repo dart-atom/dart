@@ -38330,6 +38330,16 @@ self._domRemove = function(element) {
         return false;
       }
     },
+    _isHomeDir: function(dir) {
+      var t1, exception;
+      try {
+        t1 = J.$eq$($.$get$_os().callMethod$1("homedir"), J.get$path$x(dir));
+        return t1;
+      } catch (exception) {
+        H.unwrapException(exception);
+        return false;
+      }
+    },
     ProjectManager: {
       "^": "Object;_projectsController,_projectAddController,_projectRemoveController,_projects$_sub,disposables,_directoryListeners,projects<,_warnedProjects",
       getTreeViewContributions$0: function() {
@@ -38441,7 +38451,7 @@ self._domRemove = function(element) {
         var found, entry, e, t1, exception;
         if (L.ProjectManager_isDartProject(dir))
           return [dir];
-        if (J.$eq$($.$get$_os().callMethod$1("homedir"), J.get$path$x(dir)))
+        if (L._isHomeDir(dir) === true)
           return [];
         if (J.$gt$n(recurse, 0)) {
           found = [];
