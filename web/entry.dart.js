@@ -55634,14 +55634,14 @@ self._domRemove = function(element) {
       "^": "Closure:53;$this",
       call$1: [function($event) {
         if (J.$eq$(J.get$kind$x($event), "ServiceExtensionAdded"))
-          if (J.startsWith$1$s($event.get$extensionRPC(), "flutter."))
+          if (J.startsWith$1$s($event.get$extensionRPC(), "ext.flutter."))
             this.$this._registerExtension$2(J.get$id$x($event.get$isolate()), $event.get$extensionRPC());
       }, null, null, 2, 0, null, 15, "call"]
     },
     FlutterExt__checkIsolate_closure: {
       "^": "Closure:3;$this,isolate",
       call$1: function(ext) {
-        if (J.startsWith$1$s(ext, "flutter."))
+        if (J.startsWith$1$s(ext, "ext.flutter."))
           this.$this._registerExtension$2(J.get$id$x(this.isolate), ext);
       }
     }
@@ -55657,7 +55657,7 @@ self._domRemove = function(element) {
         t1 = !this.isDebugDrawing;
         this.isDebugDrawing = t1;
         t2 = H.interceptedTypeCast(this.connection, "$isObservatoryConnection").flutterExtension;
-        t2.serviceWrapper.connection.service.callServiceExtension$3$args("flutter.debugPaint", t2.isolateId, P.LinkedHashMap__makeLiteral(["enabled", t1]));
+        t2.serviceWrapper.connection.service.callServiceExtension$3$args("ext.flutter.debugPaint", t2.isolateId, P.LinkedHashMap__makeLiteral(["enabled", t1]));
       }, "call$0", "get$_toggleDrawing", 0, 0, 2],
       _toggleSlowAnimations$0: [function() {
         var t1, t2;
@@ -55665,7 +55665,7 @@ self._domRemove = function(element) {
         this.isSlowAnimations = t1;
         t2 = H.interceptedTypeCast(this.connection, "$isObservatoryConnection").flutterExtension;
         t1 = t1 ? 5 : 1;
-        t2.serviceWrapper.connection.service.callServiceExtension$3$args("flutter.timeDilation", t2.isolateId, P.LinkedHashMap__makeLiteral(["timeDilation", t1]));
+        t2.serviceWrapper.connection.service.callServiceExtension$3$args("ext.flutter.timeDilation", t2.isolateId, P.LinkedHashMap__makeLiteral(["timeDilation", t1]));
       }, "call$0", "get$_toggleSlowAnimations", 0, 0, 2],
       FlutterSection$2: function(connection, element) {
         var t1, t2, t3, t4;
