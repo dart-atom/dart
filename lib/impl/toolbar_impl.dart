@@ -1,8 +1,11 @@
+
 import 'dart:html' show SelectElement;
 
 import '../atom.dart';
 import '../elements.dart';
 import '../flutter/flutter_devices.dart';
+import '../launch/launch.dart';
+import '../launch/run.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'toolbar.dart';
@@ -12,7 +15,6 @@ class DartToolbarContribution implements Disposable {
   ToolbarTile rightTile;
   Disposable editorWatcher;
   StreamSubscriptions subs = new StreamSubscriptions();
-  _ProjectLaunchManager projectLaunchManager;
 
   // CoreElement back;
   // CoreElement forward;
@@ -22,6 +24,8 @@ class DartToolbarContribution implements Disposable {
     rightTile = toolbar.addRightTile(item: _buildRightTile().element);
   }
 
+  ProjectLaunchManager get projectLaunchManager => deps[ProjectLaunchManager];
+
   CoreElement _buildLeftTile() {
     CoreElement runButton;
     CoreElement appSelectList;
@@ -29,30 +33,22 @@ class DartToolbarContribution implements Disposable {
 
     // `settings-view` class added to get proper styling for select elements.
     CoreElement e = div(c: 'btn-group btn-group dartlang-toolbar settings-view')..add([
-      runButton = button(c: 'btn icon icon-playback-play')..tooltip = "Run",
+      runButton = button(c: 'btn icon icon-playback-play')
+        ..click(_handleRunLaunch)
+        ..tooltip = "Run",
       appSelectList = new CoreElement('select', classes: 'form-control'),
-      // TODO: add a 'pinned' checkbox?
       configureLaunchButton = button(c: 'btn icon icon-gear')
         ..click(_handleConfigureLaunch)
         ..tooltip = 'Configure launch'
     ]);
 
-    // Run button.
-    runButton.click(() {
-      TextEditor editor = atom.workspace.getActiveTextEditor();
-
-      if (editor == null) {
-        atom.notifications.addWarning('No active text editor.');
-      } else {
-        atom.commands.dispatch(atom.views.getView(editor), 'dartlang:run-application');
-      }
-    });
+    // TODO: Add a 'pinned' checkbox to the launch group?
 
     editorWatcher = atom.workspace.observeActivePaneItem((_) {
       runButton.enabled = atom.workspace.getActiveTextEditor() != null;
     });
 
-    _bindLaunchManager(appSelectList, configureLaunchButton);
+    _bindLaunchManager(runButton, appSelectList, configureLaunchButton);
 
     return e;
   }
@@ -95,15 +91,53 @@ class DartToolbarContribution implements Disposable {
     return e;
   }
 
-  void _bindLaunchManager(CoreElement selectList, CoreElement configureButton) {
+  void _bindLaunchManager(
+    CoreElement runButton,
+    CoreElement selectList,
+    CoreElement configureButton
+  ) {
     SelectElement element = selectList.element as SelectElement;
 
-    // TODO:
-    // launchManager;
+    // TODO: We have to move to a 'Launchable' type of some kind. Both realized
+    // and potential launches.
+    List<LaunchConfiguration> launches = [];
 
-    element.disabled = true;
-    selectList.add(new CoreElement('option')..text = 'No runnable apps');
-    configureButton.disabled = true;
+    var updateUI = ([_]) {
+      launches = projectLaunchManager.launches;
+
+      element.disabled = launches.isEmpty;
+      configureButton.disabled = launches.isEmpty;
+      selectList.disabled = launches.isEmpty;
+
+      selectList.clear();
+
+      if (launches.isEmpty) {
+        selectList.add(new CoreElement('option')..text = 'No runnable apps');
+      } else {
+        launches.sort(LaunchConfiguration.comparator);
+
+        for (LaunchConfiguration launch in launches) {
+          selectList.add(new CoreElement('option')..text = launch.getDisplayName());
+        }
+
+        int index = launches.indexOf(projectLaunchManager.selectedLaunch);
+        if (index != -1) {
+          element.selectedIndex = index;
+        }
+      }
+    };
+
+    subs.add(projectLaunchManager.onLaunchesChanged.listen(updateUI));
+    subs.add(projectLaunchManager.onSelectedLaunchChanged.listen(updateUI));
+
+    element.onChange.listen((e) {
+      int index = element.selectedIndex;
+      if (index >= 0 && index < launches.length) {
+        projectLaunchManager.setSelectedLaunch(launches[index]);
+      }
+    });
+
+    updateUI();
   }
 
   void _bindDevicesToSelect(FlutterDeviceManager deviceManager, CoreElement selectList) {
@@ -140,10 +174,25 @@ class DartToolbarContribution implements Disposable {
     });
   }
 
-  void _handleConfigureLaunch() {
-    // TODO:
+  void _handleRunLaunch() {
+    LaunchConfiguration config = projectLaunchManager.selectedLaunch;
 
-    atom.notifications.addWarning('TODO: handle configure launch button');
+    if (config != null) {
+      RunApplicationManager runApplicationManager = deps[RunApplicationManager];
+      runApplicationManager.run(config);
+    } else {
+      atom.notifications.addWarning('No current launchable resource.');
+    }
+  }
+
+  void _handleConfigureLaunch() {
+    LaunchConfiguration config = projectLaunchManager.selectedLaunch;
+
+    if (config != null) {
+      atom.workspace.open(config.configYamlPath);
+    } else {
+      atom.notifications.addWarning('No current launchable resource.');
+    }
   }
 
   void _toggleOutline() {
@@ -156,20 +205,5 @@ class DartToolbarContribution implements Disposable {
     rightTile.destroy();
     editorWatcher.dispose();
     subs.dispose();
-    projectLaunchManager?.dispose();
-  }
-}
-
-// TODO: have a selected launch
-
-// TODO: have a list of all launches
-
-// TODO: listen to active resource changes
-
-class _ProjectLaunchManager implements Disposable {
-
-  void dispose() {
-    // TODO: implement dispose
-
   }
 }

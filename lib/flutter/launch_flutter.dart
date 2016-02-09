@@ -9,6 +9,7 @@ import '../atom_utils.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../launch/launch.dart';
+import '../flutter/flutter_devices.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../state.dart';
@@ -109,6 +110,13 @@ class _LaunchInstance {
     if (route is String && route.isNotEmpty) {
       _args.add('--route');
       _args.add(route);
+    }
+
+    FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
+    Device device = deviceManager.currentSelectedDevice;
+    if (device != null) {
+      _args.add('--device-id');
+      _args.add(device.id);
     }
 
     String relPath = relativize(project.path, configuration.primaryResource);

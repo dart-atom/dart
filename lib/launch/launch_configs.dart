@@ -118,6 +118,12 @@ String _createUniqueFilename(Directory dir, String name, String ext) {
 
 /// A configuration for a particular launch type.
 class LaunchConfiguration {
+  static Function get comparator {
+    return (LaunchConfiguration a, LaunchConfiguration b) {
+      return a.getDisplayName().compareTo(b.getDisplayName());
+    };
+  }
+
   final String projectPath;
 
   File _file;
@@ -192,6 +198,8 @@ class LaunchConfiguration {
     // TODO: Handle args wrapped by quotes.
     return str.split(' ');
   }
+
+  String getDisplayName() => '${shortResourceName} (${type})';
 
   /// Update the timestamp for this launch configuration.
   void touch() {

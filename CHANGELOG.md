@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- added a toolbar to show runnable applications and available devices
+
 ## 0.5.6
 - fixed an issue with node's os.homedir() call on linux
 

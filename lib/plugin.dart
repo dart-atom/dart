@@ -130,6 +130,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
     disposables.add(deps[LaunchManager] = new LaunchManager());
     disposables.add(deps[LaunchConfigurationManager] = new LaunchConfigurationManager());
+    disposables.add(deps[ProjectLaunchManager] = new ProjectLaunchManager());
     disposables.add(deps[BreakpointManager] = new BreakpointManager());
     disposables.add(deps[DebugManager] = new DebugManager());
     disposables.add(deps[ViewGroupManager] = new ViewGroupManager());

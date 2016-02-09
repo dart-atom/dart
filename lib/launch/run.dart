@@ -1,5 +1,7 @@
 library atom.run;
 
+import 'dart:async';
+
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
@@ -186,6 +188,66 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
     }
 
     return config;
+  }
+}
+
+// TODO: store the current selection per project
+
+class ProjectLaunchManager implements Disposable {
+  Disposable disposeable;
+  LaunchConfiguration _selectedLaunch;
+  List<LaunchConfiguration> _launches = [];
+  String _currentFile;
+
+  StreamController<LaunchConfiguration> _selectedLaunchController = new StreamController.broadcast();
+  StreamController<List<LaunchConfiguration>> _launchesController = new StreamController.broadcast();
+
+  ProjectLaunchManager() {
+    disposeable = atom.workspace.observeActivePaneItem((_) => _updateFromActiveEditor());
+    _updateFromActiveEditor();
+  }
+
+  String get currentFile => _currentFile;
+
+  DartProject get currentProject => projectManager.getProjectFor(_currentFile);
+
+  LaunchConfiguration get selectedLaunch => _selectedLaunch;
+
+  List<LaunchConfiguration> get launches => _launches;
+
+  Stream<LaunchConfiguration> get onSelectedLaunchChanged => _selectedLaunchController.stream;
+  Stream<List<LaunchConfiguration>> get onLaunchesChanged => _launchesController.stream;
+
+  void setSelectedLaunch(LaunchConfiguration config) {
+    _selectedLaunch = config;
+    _selectedLaunchController.add(selectedLaunch);
+  }
+
+  void _updateFromActiveEditor() {
+    TextEditor editor = atom.workspace.getActiveTextEditor();
+    _currentFile = editor?.getPath();
+
+    if (currentProject == null) {
+      _selectedLaunch = null;
+      _launches.clear();
+
+      _selectedLaunchController.add(selectedLaunch);
+      _launchesController.add(launches);
+    } else {
+      // TODO: selected launch
+
+      _launches.clear();
+      _launches.addAll(launchConfigurationManager.getConfigsFor(currentProject.path));
+
+      // _launches.addAll(launchManager.getAllLaunchables(project));
+      // launchManager.getHandlerFor(path);
+
+      _launchesController.add(launches);
+    }
+  }
+
+  void dispose() {
+    disposeable.dispose();
   }
 }
 

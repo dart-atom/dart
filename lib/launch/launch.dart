@@ -160,7 +160,18 @@ class Launchable {
   final LaunchType type;
   final String relativePath;
 
+  LaunchConfiguration _launchConfiguration;
+
   Launchable(this.type, this.relativePath);
+
+  bool get hasLaunchConfiguration => _launchConfiguration != null;
+
+  int get timestamp => _launchConfiguration == null ? 0 : _launchConfiguration.timestamp;
+
+  // TODO: launch?
+
+  // TODO: createConfig()?
+
 }
 
 /// The instantiation of something that was launched.
