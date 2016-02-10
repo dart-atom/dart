@@ -5,6 +5,8 @@ import 'package:vm_service_lib/vm_service_lib.dart';
 import '../debug/observatory.dart';
 import '../utils.dart';
 
+const String _flutterPrefix = 'ext.flutter';
+
 /// Flutter specific debugging extensions.
 ///
 /// This includes things like adjusting the `debugPaint` and `timeDilation`
@@ -26,7 +28,7 @@ class FlutterExt {
 
   Future debugPaint(bool enabled) {
     return service.callServiceExtension(
-      'flutter.debugPaint',
+      '$_flutterPrefix.debugPaint',
       isolateId,
       args: { 'enabled': enabled }
     );
@@ -34,7 +36,7 @@ class FlutterExt {
 
   Future timeDilation(double dilation) {
     return service.callServiceExtension(
-      'flutter.timeDilation',
+      '$_flutterPrefix.timeDilation',
       isolateId,
       args: { 'timeDilation': dilation }
     );
@@ -42,7 +44,7 @@ class FlutterExt {
 
   Future fpsOverlay(bool showOverlay) {
     return service.callServiceExtension(
-      'flutter.fpsOverlay',
+      '$_flutterPrefix.fpsOverlay',
       isolateId,
       args: { 'showOverlay': showOverlay }
     );
@@ -54,7 +56,7 @@ class FlutterExt {
 
     serviceWrapper.service.onIsolateEvent.listen((Event event) {
       if (event.kind == EventKind.kServiceExtensionAdded) {
-        if (event.extensionRPC.startsWith('flutter.')) {
+        if (event.extensionRPC.startsWith('$_flutterPrefix.')) {
           _registerExtension(event.isolate.id, event.extensionRPC);
         }
       }
@@ -65,7 +67,7 @@ class FlutterExt {
     if (isolate.isolate.extensionRPCs == null) return;
 
     isolate.isolate.extensionRPCs.forEach((String ext) {
-      if (ext.startsWith('flutter.')) {
+      if (ext.startsWith('$_flutterPrefix.')) {
         _registerExtension(isolate.id, ext);
       }
     });

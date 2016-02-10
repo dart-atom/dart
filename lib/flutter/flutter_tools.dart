@@ -4,20 +4,26 @@ import 'package:haikunator/haikunator.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
+import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'flutter_sdk.dart';
 
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
 
-class CreateProjectManager implements Disposable {
+class FlutterToolsManager implements Disposable {
   Disposables disposables = new Disposables();
 
-  CreateProjectManager() {
+  FlutterToolsManager() {
     disposables.add(atom.commands.add(
       'atom-workspace',
       'flutter:create-project',
       _createProject)
+    );
+    disposables.add(atom.commands.add(
+      'atom-workspace',
+      'flutter:upgrade',
+      _upgrade)
     );
   }
 
@@ -35,9 +41,10 @@ class CreateProjectManager implements Disposable {
     String _response;
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
     promptUser(
-        'Enter the path to the project to create:',
-        defaultText: projectPath,
-        selectLastWord: true).then((String response) {
+      'Enter the path to the project to create:',
+      defaultText: projectPath,
+      selectLastWord: true
+    ).then((String response) {
       _response = response;
 
       if (_response != null) {
@@ -57,6 +64,32 @@ class CreateProjectManager implements Disposable {
         });
       }
     });
+  }
+
+  void _upgrade(AtomEvent _) {
+    if (!_flutterSdk.hasSdk) {
+      _flutterSdk.showInstallationInfo();
+      return;
+    }
+
+    TextEditor editor = atom.workspace.getActiveTextEditor();
+    if (editor == null) {
+      atom.notifications.addWarning('No active editor.');
+      return;
+    }
+
+    DartProject project = projectManager.getProjectFor(editor?.getPath());
+    if (project == null) {
+      atom.notifications.addWarning('The current project is not a Dart project.');
+      return;
+    }
+
+    FlutterTool flutter = _flutterSdk.sdk.flutterTool;
+    flutter.runInJob(
+      ['upgrade'],
+      title: 'Running Flutter upgrade…',
+      cwd: project.directory.path
+    );
   }
 
   void dispose() => disposables.dispose();

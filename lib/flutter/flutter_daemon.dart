@@ -48,7 +48,7 @@ class FlutterDaemonManager implements Disposable {
 
         _daemonController.add(daemon);
       }
-    } else {
+    } else if (_daemon == null) {
       FlutterTool flutter = sdk.flutterTool;
 
       _logger.info('Starting Flutter daemon server');
