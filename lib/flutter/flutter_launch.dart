@@ -49,6 +49,8 @@ class FlutterLaunchType extends LaunchType {
 
     return analysisServer.getExecutablesFor(project.path).where((String path) {
       return path.endsWith('dart');
+    }).map((String fullPath) {
+      return relativize(project.path, fullPath);
     }).toList();
 
     // File file = project.directory.getFile('lib${separator}main.dart');

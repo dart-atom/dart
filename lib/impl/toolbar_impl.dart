@@ -98,42 +98,40 @@ class DartToolbarContribution implements Disposable {
   ) {
     SelectElement element = selectList.element as SelectElement;
 
-    // TODO: We have to move to a 'Launchable' type of some kind. Both realized
-    // and potential launches.
-    List<LaunchConfiguration> launches = [];
+    List<RunnableConfig> runnables = [];
 
     var updateUI = ([_]) {
-      launches = projectLaunchManager.launches;
+      runnables = projectLaunchManager.runnables;
 
-      element.disabled = launches.isEmpty;
-      configureButton.disabled = launches.isEmpty;
-      selectList.disabled = launches.isEmpty;
+      element.disabled = runnables.isEmpty;
+      configureButton.disabled = runnables.isEmpty;
+      selectList.disabled = runnables.isEmpty;
 
       selectList.clear();
 
-      if (launches.isEmpty) {
+      if (runnables.isEmpty) {
         selectList.add(new CoreElement('option')..text = 'No runnable apps');
       } else {
-        launches.sort(LaunchConfiguration.comparator);
+        runnables.sort();
 
-        for (LaunchConfiguration launch in launches) {
-          selectList.add(new CoreElement('option')..text = launch.getDisplayName());
+        for (RunnableConfig runnable in runnables) {
+          selectList.add(new CoreElement('option')..text = runnable.getDisplayName());
         }
 
-        int index = launches.indexOf(projectLaunchManager.selectedLaunch);
+        int index = runnables.indexOf(projectLaunchManager.selectedRunnable);
         if (index != -1) {
           element.selectedIndex = index;
         }
       }
     };
 
-    subs.add(projectLaunchManager.onLaunchesChanged.listen(updateUI));
-    subs.add(projectLaunchManager.onSelectedLaunchChanged.listen(updateUI));
+    subs.add(projectLaunchManager.onRunnablesChanged.listen(updateUI));
+    subs.add(projectLaunchManager.onSelectedRunnableChanged.listen(updateUI));
 
     element.onChange.listen((e) {
       int index = element.selectedIndex;
-      if (index >= 0 && index < launches.length) {
-        projectLaunchManager.setSelectedLaunch(launches[index]);
+      if (index >= 0 && index < runnables.length) {
+        projectLaunchManager.setSelectedRunnable(runnables[index]);
       }
     });
 
@@ -175,10 +173,12 @@ class DartToolbarContribution implements Disposable {
   }
 
   void _handleRunLaunch() {
-    LaunchConfiguration config = projectLaunchManager.selectedLaunch;
+    RunnableConfig runnable = projectLaunchManager.selectedRunnable;
 
-    if (config != null) {
+    if (runnable != null) {
       RunApplicationManager runApplicationManager = deps[RunApplicationManager];
+
+      LaunchConfiguration config = runnable.getCreateLaunchConfig();
       runApplicationManager.run(config);
     } else {
       atom.notifications.addWarning('No current launchable resource.');
@@ -186,9 +186,10 @@ class DartToolbarContribution implements Disposable {
   }
 
   void _handleConfigureLaunch() {
-    LaunchConfiguration config = projectLaunchManager.selectedLaunch;
+    RunnableConfig runnable = projectLaunchManager.selectedRunnable;
 
-    if (config != null) {
+    if (runnable != null) {
+      LaunchConfiguration config = runnable.getCreateLaunchConfig();
       atom.workspace.open(config.configYamlPath);
     } else {
       atom.notifications.addWarning('No current launchable resource.');

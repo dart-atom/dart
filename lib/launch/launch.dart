@@ -160,18 +160,15 @@ class Launchable {
   final LaunchType type;
   final String relativePath;
 
-  LaunchConfiguration _launchConfiguration;
-
   Launchable(this.type, this.relativePath);
 
-  bool get hasLaunchConfiguration => _launchConfiguration != null;
+  String getDisplayName() => '${relativePath} (${type})';
 
-  int get timestamp => _launchConfiguration == null ? 0 : _launchConfiguration.timestamp;
+  operator ==(other) => other is Launchable && (type == other.type && relativePath == other.relativePath);
 
-  // TODO: launch?
+  int get hashCode => type.hashCode ^ (relativePath.hashCode << 37);
 
-  // TODO: createConfig()?
-
+  String toString() => getDisplayName();
 }
 
 /// The instantiation of something that was launched.
