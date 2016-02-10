@@ -9,7 +9,7 @@ import 'dart:io';
 import 'package:grinder/grinder.dart';
 import 'package:which/which.dart';
 
-import 'publish.dart';
+import 'package:atom/build/publish.dart';
 
 main(List<String> args) => grind(args);
 
