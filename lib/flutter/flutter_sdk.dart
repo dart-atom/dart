@@ -45,12 +45,10 @@ class FlutterSdkManager implements Disposable {
       .transform(new Debounce(new Duration(seconds: 1)))
       .listen((value) => _setSdkPath(value));
 
-    _disposables.add(atom.commands.add(
-        'atom-workspace', 'dartlang:auto-locate-flutter-sdk', (_) {
+    _disposables.add(atom.commands.add('atom-workspace', 'flutter:auto-locate-flutter-sdk', (_) {
       new SdkLocationJob(this).schedule();
     }));
-    _disposables.add(atom.commands.add(
-        'atom-workspace', 'dartlang:show-flutter-sdk-info', (_) {
+    _disposables.add(atom.commands.add('atom-workspace', 'flutter:show-flutter-sdk-info', (_) {
       showInstallationInfo();
     }));
   }
@@ -240,8 +238,8 @@ class FlutterTool {
     return runner;
   }
 
-  Future runInJob(List<String> args, {String pwd, String title}) {
-    Job job = new _FlutterToolJob(sdk, pwd, args);
+  Future runInJob(List<String> args, {String cwd, String title}) {
+    Job job = new _FlutterToolJob(sdk, cwd, args);
     return job.schedule();
   }
 }
