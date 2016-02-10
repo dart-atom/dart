@@ -4,14 +4,12 @@
 
 library atom.grind;
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:grinder/grinder.dart';
-import 'package:pub_semver/pub_semver.dart';
 import 'package:which/which.dart';
 
-part 'publish.dart';
+import 'publish.dart';
 
 main(List<String> args) => grind(args);
 
@@ -67,6 +65,10 @@ ddc() {
   return new DevCompiler().analyzeAsync(
     getFile('web/entry.dart'), htmlReport: true);
 }
+
+@Task()
+@Depends(build) //analyze, build, test, runAtomTests)
+publish() => publishAtomPlugin();
 
 @Task()
 test() => Dart.runAsync('test/all.dart');
