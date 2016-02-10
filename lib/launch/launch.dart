@@ -161,6 +161,14 @@ class Launchable {
   final String relativePath;
 
   Launchable(this.type, this.relativePath);
+
+  String getDisplayName() => '${relativePath} (${type})';
+
+  operator ==(other) => other is Launchable && (type == other.type && relativePath == other.relativePath);
+
+  int get hashCode => type.hashCode ^ (relativePath.hashCode << 37);
+
+  String toString() => getDisplayName();
 }
 
 /// The instantiation of something that was launched.

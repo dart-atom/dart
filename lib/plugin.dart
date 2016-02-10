@@ -33,10 +33,11 @@ import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'flutter/flutter_daemon.dart';
+import 'flutter/flutter_devices.dart';
+import 'flutter/flutter_launch.dart';
 import 'flutter/flutter_sdk.dart';
 import 'flutter/flutter_tools.dart';
-import 'flutter/launch_flutter.dart';
-import 'flutter/launch_mojo.dart';
+import 'flutter/mojo_launch.dart';
 import 'impl/changelog.dart';
 import 'impl/editing.dart' as editing;
 import 'impl/errors.dart';
@@ -48,6 +49,7 @@ import 'impl/status.dart';
 import 'impl/status_display.dart';
 import 'impl/tests.dart';
 import 'impl/toolbar.dart';
+import 'impl/toolbar_impl.dart';
 import 'jobs.dart';
 import 'js.dart';
 import 'launch/console.dart';
@@ -92,7 +94,7 @@ class AtomDartPackage extends AtomPackage {
 
     // Register a method to consume the `atom-toolbar` service API.
     registerServiceConsumer('consumeToolbar', (JsObject obj) {
-      ToolbarContribution toolbar = new ToolbarContribution(new Toolbar(obj));
+      DartToolbarContribution toolbar = new DartToolbarContribution(new Toolbar(obj));
       disposables.add(toolbar);
       return toolbar;
     });
@@ -128,6 +130,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[ErrorRepository] = new ErrorRepository());
     disposables.add(deps[LaunchManager] = new LaunchManager());
     disposables.add(deps[LaunchConfigurationManager] = new LaunchConfigurationManager());
+    disposables.add(deps[ProjectLaunchManager] = new ProjectLaunchManager());
     disposables.add(deps[BreakpointManager] = new BreakpointManager());
     disposables.add(deps[DebugManager] = new DebugManager());
     disposables.add(deps[ViewGroupManager] = new ViewGroupManager());
@@ -160,6 +163,7 @@ class AtomDartPackage extends AtomPackage {
 
     disposables.add(deps[FlutterSdkManager] = new FlutterSdkManager());
     disposables.add(deps[FlutterDaemonManager] = new FlutterDaemonManager());
+    disposables.add(deps[FlutterDeviceManager] = new FlutterDeviceManager());
 
     disposables.add(new UsageManager());
     disposables.add(new RebuildManager());

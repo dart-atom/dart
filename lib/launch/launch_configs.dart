@@ -118,6 +118,12 @@ String _createUniqueFilename(Directory dir, String name, String ext) {
 
 /// A configuration for a particular launch type.
 class LaunchConfiguration {
+  static Function get comparator {
+    return (LaunchConfiguration a, LaunchConfiguration b) {
+      return a.getDisplayName().compareTo(b.getDisplayName());
+    };
+  }
+
   final String projectPath;
 
   File _file;
@@ -193,6 +199,8 @@ class LaunchConfiguration {
     return str.split(' ');
   }
 
+  String getDisplayName() => '${shortResourceName} (${type})';
+
   /// Update the timestamp for this launch configuration.
   void touch() {
     int time = new DateTime.now().millisecondsSinceEpoch;
@@ -208,6 +216,13 @@ class LaunchConfiguration {
   String toString() {
     return '${launchFileName}: ${type}, ${shortResourceName}, ${type}: ${typeArgs}';
   }
+
+  bool operator ==(other) {
+    if (other is! LaunchConfiguration) return false;
+    return _file.path == other._file.path;
+  }
+
+  int get hashCode => _file.path.hashCode;
 
   String _getRelativeConfigPath() {
     String path = _file.path;

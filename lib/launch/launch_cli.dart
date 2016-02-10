@@ -52,6 +52,8 @@ class CliLaunchType extends LaunchType {
       String relativePath = relativize(project.path, path);
       if (relativePath.startsWith(libSuffix)) return false;
       return true;
+    }).map((String fullpath) {
+      return relativize(project.path, fullpath);
     }).toList();
   }
 

@@ -189,10 +189,6 @@ div.linter-tab.active {
   margin-left: 0;
 }
 
-div.dartlang-toolbar + div.dartlang-toolbar {
-  margin-left: @component-padding;
-}
-
 /* hmmm, this is adjusting a global atom style... */
 atom-notification.success code,
 atom-notification.info code {
@@ -284,4 +280,34 @@ atom-notification.dartlang {
 
 .font-style-italic {
   font-style: italic;
+}
+
+[flex-center] {
+  align-items: center;
+}
+
+// dartlang-toolbar
+
+div.dartlang-toolbar + div.dartlang-toolbar {
+  margin-left: @component-padding * 2;
+}
+
+div.dartlang-toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  #toolbar-mobile-icon::before {
+    position: relative;
+    top: 3px;
+
+    font-size: 20px;
+    width: 12px;
+  }
+
+  button + select,
+  select + button,
+  div + select {
+    margin-left: 4px;
+  }
 }

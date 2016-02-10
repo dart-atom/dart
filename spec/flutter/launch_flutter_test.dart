@@ -1,4 +1,4 @@
-import 'package:atom_dartlang/flutter/launch_flutter.dart';
+import 'package:atom_dartlang/flutter/flutter_launch.dart';
 
 import '../_spec/test.dart';
 
