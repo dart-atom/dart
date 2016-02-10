@@ -217,6 +217,13 @@ class LaunchConfiguration {
     return '${launchFileName}: ${type}, ${shortResourceName}, ${type}: ${typeArgs}';
   }
 
+  bool operator ==(other) {
+    if (other is! LaunchConfiguration) return false;
+    return _file.path == other._file.path;
+  }
+
+  int get hashCode => _file.path.hashCode;
+
   String _getRelativeConfigPath() {
     String path = _file.path;
     String parent = dirname(projectPath);

@@ -9,8 +9,6 @@ import 'flutter_daemon.dart';
 
 export 'flutter_daemon.dart' show Device;
 
-// TODO: only show if there's a flutter sdk available
-
 class FlutterDeviceManager implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
 

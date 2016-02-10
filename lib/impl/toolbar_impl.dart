@@ -59,7 +59,7 @@ class DartToolbarContribution implements Disposable {
     // `settings-view` class added to get proper styling for select elements.
     CoreElement e = div(c: 'settings-view', a: 'flex-center')..add([
       div(c: 'btn-group btn-group dartlang-toolbar')..add([
-        span(c: 'icon icon-device-mobile')..id = 'toolbar-mobile-icon'
+        div(c: 'icon icon-device-mobile')..id = 'toolbar-mobile-icon'
           ..tooltip = "Available devices",
         selectList = new CoreElement('select', classes: 'form-control')
       ]),

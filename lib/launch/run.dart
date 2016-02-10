@@ -245,8 +245,6 @@ class ProjectLaunchManager implements Disposable {
       _selectedRunnableController.add(selectedRunnable);
       _runnablesController.add(runnables);
     } else {
-      // TODO: Calculate and maintain the selected runnable.
-
       String projectPath = currentProject.path;
 
       List<LaunchConfiguration> configs = launchConfigurationManager.getConfigsFor(projectPath);
@@ -270,6 +268,13 @@ class ProjectLaunchManager implements Disposable {
       }));
 
       _runnablesController.add(runnables);
+
+      if (_selectedRunnable != null) {
+        if (!_runnables.contains(_selectedRunnable)) {
+          _selectedRunnable = null;
+          _selectedRunnableController.add(null);
+        }
+      }
     }
   }
 
@@ -320,6 +325,20 @@ class RunnableConfig implements Comparable<RunnableConfig> {
     if (!hasConfig && other.hasConfig) return 1;
     return getDisplayName().toLowerCase().compareTo(other.getDisplayName().toLowerCase());
   }
+
+  bool operator ==(other) {
+    if (other is! RunnableConfig) return false;
+
+    if (hasConfig) {
+      if (!other.hasConfig) return false;
+      return _config == other._config;
+    } else {
+      if (other.hasConfig) return false;
+      return _launchable == other._launchable;
+    }
+  }
+
+  int get hashCode => getDisplayName().hashCode;
 }
 
 class _RunAppContextCommand extends ContextMenuItem {

@@ -35587,6 +35587,16 @@ self._domRemove = function(element) {
       toString$0: function(_) {
         return H.S(S.basename(J.get$path$x(this._file))) + ": " + H.S(J.$index$asx(this._launch_configs$_map, "type")) + ", " + H.S(J.$index$asx(this._launch_configs$_map, "path")) + ", " + H.S(J.$index$asx(this._launch_configs$_map, "type")) + ": " + J.toString$0$(this.get$typeArgs());
       },
+      $eq: function(_, other) {
+        if (other == null)
+          return false;
+        if (!(other instanceof Q.LaunchConfiguration))
+          return false;
+        return J.$eq$(J.get$path$x(this._file), J.get$path$x(other._file));
+      },
+      get$hashCode: function(_) {
+        return J.get$hashCode$(J.get$path$x(this._file));
+      },
       _getRelativeConfigPath$0: function() {
         var path, $parent, t1;
         path = J.get$path$x(this._file);
@@ -40363,6 +40373,15 @@ self._domRemove = function(element) {
           if (!t2.get$_mayAddEvent())
             H.throwExpression(t2._addEventError$0());
           t2._sendData$1(t1);
+          t2 = this._selectedRunnable;
+          if (t2 != null)
+            if (!C.JSArray_methods.contains$1(t1, t2)) {
+              this._selectedRunnable = null;
+              t1 = this._selectedRunnableController;
+              if (!t1.get$_mayAddEvent())
+                H.throwExpression(t1._addEventError$0());
+              t1._sendData$1(null);
+            }
         }
       }, function() {
         return this._updateFromActiveEditor$1(null);
@@ -40418,6 +40437,27 @@ self._domRemove = function(element) {
         if (this._run$_config == null && other.get$hasConfig())
           return 1;
         return C.JSString_methods.compareTo$1(this.getDisplayName$0().toLowerCase(), other.getDisplayName$0().toLowerCase());
+      },
+      $eq: function(_, other) {
+        var t1, t2;
+        if (other == null)
+          return false;
+        if (!(other instanceof L.RunnableConfig))
+          return false;
+        t1 = this._run$_config;
+        if (t1 != null) {
+          t2 = other._run$_config;
+          if (t2 == null)
+            return false;
+          return J.$eq$(t1, t2);
+        } else {
+          if (other._run$_config != null)
+            return false;
+          return J.$eq$(this._launchable, other._launchable);
+        }
+      },
+      get$hashCode: function(_) {
+        return C.JSString_methods.get$hashCode(this.getDisplayName$0());
       },
       $isComparable: 1,
       $asComparable: function() {
@@ -63486,7 +63526,7 @@ self._domRemove = function(element) {
         var e, t1, t2, t3, t4, selectList;
         e = K.CoreElement$("div", "flex-center", "settings-view", null);
         t1 = K.CoreElement$("div", null, "btn-group btn-group dartlang-toolbar", null);
-        t2 = K.CoreElement$("span", null, "icon icon-device-mobile", null);
+        t2 = K.CoreElement$("div", null, "icon icon-device-mobile", null);
         t3 = t2.element;
         t4 = J.getInterceptor$x(t3);
         t4.setAttribute$2(t3, "id", "toolbar-mobile-icon");
