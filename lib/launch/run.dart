@@ -269,11 +269,12 @@ class ProjectLaunchManager implements Disposable {
 
       _runnablesController.add(runnables);
 
-      if (_selectedRunnable != null) {
-        if (!_runnables.contains(_selectedRunnable)) {
-          _selectedRunnable = _runnables.isNotEmpty ? _runnables.first : null;
-          _selectedRunnableController.add(_selectedRunnable);
-        }
+      if (_selectedRunnable != null && !_runnables.contains(_selectedRunnable)) {
+        _selectedRunnable = _runnables.isNotEmpty ? _runnables.first : null;
+        _selectedRunnableController.add(_selectedRunnable);
+      } else if (_selectedRunnable == null && _runnables.isNotEmpty) {
+        _selectedRunnable = _runnables.first;
+        _selectedRunnableController.add(_selectedRunnable);
       }
     }
   }
