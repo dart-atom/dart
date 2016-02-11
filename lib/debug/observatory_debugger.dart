@@ -21,18 +21,22 @@ import 'utils.dart';
 final Logger _logger = new Logger('atom.observatory');
 
 class ObservatoryDebugger {
+  /// Establish a connection to a service protocol server at the given port.
+  ///
+  /// If [pollForConnection] is provided, this call will continue polling for
+  /// the given duration until a connection is established.
   static Future<DebugConnection> connect(Launch launch, String host, int port, {
-    bool isolatesStartPaused: false,
     UriTranslator uriTranslator
   }) {
     String url = 'ws://${host}:${port}/ws';
+
     WebSocket ws = new WebSocket(url);
 
     Completer<DebugConnection> connectedCompleter = new Completer();
     Completer finishedCompleter = new Completer();
 
     ws.onOpen.listen((_) {
-      connectedCompleter.complete();
+      _logger.info('Connected to observatory on ${url}.');
 
       VmService service = new VmService(
         ws.onMessage.map((MessageEvent e) => e.data as String),
@@ -40,13 +44,15 @@ class ObservatoryDebugger {
         log: new ObservatoryLog(_logger)
       );
 
-      _logger.info('Connected to observatory on ${url}.');
-      launch.addDebugConnection(new ObservatoryConnection(
-          launch,
-          service,
-          finishedCompleter,
-          isolatesStartPaused: isolatesStartPaused,
-          uriTranslator: uriTranslator));
+      ObservatoryConnection connection = new ObservatoryConnection(
+        launch,
+        service,
+        finishedCompleter,
+        uriTranslator: uriTranslator
+      );
+
+      launch.addDebugConnection(connection);
+      connectedCompleter.complete(connection);
     });
 
     ws.onError.listen((e) {
@@ -64,7 +70,6 @@ class ObservatoryConnection extends DebugConnection {
   final VmService service;
   final Completer completer;
   final bool pipeStdio;
-  final bool isolatesStartPaused;
 
   Map<String, ObservatoryIsolate> _isolateMap = {};
 
@@ -86,7 +91,6 @@ class ObservatoryConnection extends DebugConnection {
 
   ObservatoryConnection(Launch launch, this.service, this.completer, {
     this.pipeStdio: false,
-    this.isolatesStartPaused: false,
     UriTranslator uriTranslator
   }) : super(launch) {
     String root = launch.primaryResource;
