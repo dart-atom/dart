@@ -1,7 +1,6 @@
 library atom.launch_cli;
 
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:logging/logging.dart';
 
@@ -90,8 +89,7 @@ class CliLaunchType extends LaunchType {
     int observatoryPort;
 
     if (withDebug) {
-      observatoryPort = _getOpenPort();
-
+      observatoryPort = getOpenPort();
       _args.add('--enable-vm-service:${observatoryPort}');
       _args.add('--pause_isolates_on_start=true');
     }
@@ -127,9 +125,7 @@ class CliLaunchType extends LaunchType {
 
         launch.servicePort.value = observatoryPort;
 
-        ObservatoryDebugger.connect(
-          launch, 'localhost', observatoryPort, isolatesStartPaused: true
-        ).catchError((e) {
+        ObservatoryDebugger.connect(launch, 'localhost', observatoryPort).catchError((e) {
           launch.pipeStdio(
             'Unable to connect to the observatory (port ${observatoryPort}).\n',
             error: true
@@ -179,9 +175,3 @@ class _CliLaunch extends Launch {
 
   Future<String> resolve(String url) => _resolver.resolve(url);
 }
-
-final math.Random _rand = new math.Random();
-
-/// This guesses for a likely open port. We could also use the technique of
-/// opening a server socket, recording the port number, and closing the socket.
-int _getOpenPort() => 16161 + _rand.nextInt(100);

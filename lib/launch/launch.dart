@@ -2,6 +2,7 @@
 library atom.launch;
 
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:logging/logging.dart';
 
@@ -17,6 +18,13 @@ import 'launch_configs.dart';
 export 'launch_configs.dart' show LaunchConfiguration;
 
 final Logger _logger = new Logger('atom.launch');
+
+
+final math.Random _rand = new math.Random();
+
+/// This guesses for a likely open port. We could also use the technique of
+/// opening a server socket, recording the port number, and closing the socket.
+int getOpenPort() => 16161 + _rand.nextInt(100);
 
 class LaunchManager implements Disposable {
   StreamController<Launch> _launchAdded = new StreamController.broadcast(sync: true);

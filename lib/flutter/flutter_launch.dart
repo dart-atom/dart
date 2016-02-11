@@ -8,8 +8,8 @@ import '../atom.dart';
 import '../atom_utils.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
-import '../launch/launch.dart';
 import '../flutter/flutter_devices.dart';
+import '../launch/launch.dart';
 import '../process.dart';
 import '../projects.dart';
 import '../state.dart';
@@ -90,7 +90,7 @@ class _LaunchInstance {
 
   Launch _launch;
   ProcessRunner _runner;
-  bool _withDebug;
+  int _observatoryPort;
   List<String> _args;
 
   _LaunchInstance(
@@ -106,6 +106,12 @@ class _LaunchInstance {
     var checked = configuration.typeArgs['checked'];
     if (checked is bool) {
       _args.add(checked ? '--checked' : '--no-checked');
+    }
+
+    if (configuration.debug) {
+      _observatoryPort = getOpenPort();
+      _args.add('--debug-port=${_observatoryPort}');
+      _args.add('--start-paused');
     }
 
     var route = configuration.typeArgs['route'];
@@ -142,7 +148,6 @@ class _LaunchInstance {
       title: description
     );
     launchManager.addLaunch(_launch);
-    _withDebug = configuration.debug;
   }
 
   Future<Launch> launch() async {
@@ -156,30 +161,27 @@ class _LaunchInstance {
 
     int code = await _runner.onExit;
     if (code == 0) {
-      int port = 8181;
-
-      if (_withDebug) {
-        // TODO: Figure out this timing (https://github.com/flutter/tools/issues/110).
-        new Future.delayed(new Duration(seconds: 4), () {
-          FlutterUriTranslator translator =
-              new FlutterUriTranslator(_launch.project?.path);
-          Future f = ObservatoryDebugger.connect(_launch, 'localhost', port,
-              isolatesStartPaused: false,
-              uriTranslator: translator);
-          return f.catchError((e) {
+      if (_observatoryPort != null) {
+        new Future.delayed(new Duration(milliseconds: 100), () {
+          FlutterUriTranslator translator = new FlutterUriTranslator(_launch.project?.path);
+          ObservatoryDebugger.connect(
+            _launch,
+            'localhost',
+            _observatoryPort,
+            uriTranslator: translator
+          ).then((_) {
+            _launch.servicePort.value = _observatoryPort;
+          }).catchError((e) {
             _launch.pipeStdio(
-                'Unable to connect to the observatory (port ${port}).\n',
-                error: true);
+              'Unable to connect to the Observatory at port ${_observatoryPort}.\n',
+              error: true
+            );
           });
-        }).whenComplete(() {
-          _launch.servicePort.value = port;
         });
-      } else {
-        _launch.servicePort.value = port;
       }
 
       // Chain 'flutter logs'.
-      _runner = _flutter(flutter, ['logs', '--clear'], project.path);
+      _runner = _flutter(flutter, ['logs'], project.path);
       _runner.execStreaming();
       _runner.onStdout.listen((str) => _launch.pipeStdio(str));
       _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
