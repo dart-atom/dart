@@ -40401,15 +40401,21 @@ self._domRemove = function(element) {
             H.throwExpression(t2._addEventError$0());
           t2._sendData$1(t1);
           t2 = this._selectedRunnable;
-          if (t2 != null)
-            if (!C.JSArray_methods.contains$1(t1, t2)) {
-              t1 = t1.length !== 0 ? C.JSArray_methods.get$first(t1) : null;
-              this._selectedRunnable = t1;
-              t2 = this._selectedRunnableController;
-              if (!t2.get$_mayAddEvent())
-                H.throwExpression(t2._addEventError$0());
-              t2._sendData$1(t1);
-            }
+          if (t2 != null && !C.JSArray_methods.contains$1(t1, t2)) {
+            t1 = t1.length !== 0 ? C.JSArray_methods.get$first(t1) : null;
+            this._selectedRunnable = t1;
+            t2 = this._selectedRunnableController;
+            if (!t2.get$_mayAddEvent())
+              H.throwExpression(t2._addEventError$0());
+            t2._sendData$1(t1);
+          } else if (this._selectedRunnable == null && t1.length !== 0) {
+            t1 = C.JSArray_methods.get$first(t1);
+            this._selectedRunnable = t1;
+            t2 = this._selectedRunnableController;
+            if (!t2.get$_mayAddEvent())
+              H.throwExpression(t2._addEventError$0());
+            t2._sendData$1(t1);
+          }
         }
       }, function() {
         return this._updateFromActiveEditor$1(null);
