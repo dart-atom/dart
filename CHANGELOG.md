@@ -4,6 +4,7 @@
 - added a toolbar to show runnable applications and available devices
 - use the `--start-paused` flag when starting Flutter apps so users can hit
   breakpoints early in the app life-cycle
+- added a `flutter version` command
 
 ## 0.5.6
 - fixed an issue with node's os.homedir() call on linux
