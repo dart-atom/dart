@@ -258,7 +258,8 @@ class SdkDiscovery {
   Future<String> discoverSdk() {
     if (isMac) {
       // /bin/bash -c "which dart", /bin/bash -c "echo $PATH"
-      return exec(env('SHELL'), ['-l', '-c', 'which dart']).then((result) {
+      String shell = env('SHELL') ?? '/bin/bash';
+      return exec(shell, ['-l', '-c', 'which dart']).then((result) {
         result = _resolveSdkFromVm(result);
         if (result != null) {
           // On mac, special case for homebrew. Replace the version specific

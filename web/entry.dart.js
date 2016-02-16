@@ -40792,9 +40792,12 @@ self._domRemove = function(element) {
     SdkDiscovery: {
       "^": "Object;",
       discoverSdk$0: function() {
-        if ($.$get$isMac() === true)
-          return Z.exec(S.env("SHELL"), ["-l", "-c", "which dart"]).then$1(new V.SdkDiscovery_discoverSdk_closure(this)).catchError$1(new V.SdkDiscovery_discoverSdk_closure0());
-        else if ($.$get$isWindows() === true)
+        if ($.$get$isMac() === true) {
+          var shell = S.env("SHELL");
+          if (shell == null)
+            shell = "/bin/bash";
+          return Z.exec(shell, ["-l", "-c", "which dart"]).then$1(new V.SdkDiscovery_discoverSdk_closure(this)).catchError$1(new V.SdkDiscovery_discoverSdk_closure0());
+        } else if ($.$get$isWindows() === true)
           return Z.exec("where", ["dart.exe"]).then$1(new V.SdkDiscovery_discoverSdk_closure1(this)).catchError$1(new V.SdkDiscovery_discoverSdk_closure2());
         else
           return Z.exec("which", ["dart"]).then$1(new V.SdkDiscovery_discoverSdk_closure3(this)).catchError$1(new V.SdkDiscovery_discoverSdk_closure4());
