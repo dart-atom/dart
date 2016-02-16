@@ -6,6 +6,7 @@
   breakpoints early in the app life-cycle
 - added a `flutter version` command
 - added `flutter ios --init`
+- fixed an exception that occured when trying to auto-locate the Dart SDK
 
 ## 0.5.6
 - fixed an issue with node's os.homedir() call on linux
