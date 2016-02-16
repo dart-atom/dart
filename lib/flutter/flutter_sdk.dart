@@ -51,6 +51,9 @@ class FlutterSdkManager implements Disposable {
     _disposables.add(atom.commands.add('atom-workspace', 'flutter:show-flutter-sdk-info', (_) {
       showInstallationInfo();
     }));
+    _disposables.add(atom.commands.add('atom-workspace', 'flutter:version', (_) {
+      showVersionInfo();
+    }));
   }
 
   Future tryToAutoConfigure({bool complainOnFailure: true}) {
@@ -113,7 +116,7 @@ class FlutterSdkManager implements Disposable {
     _disposables.dispose();
   }
 
-  void showInstallationInfo() {
+  void showInstallationInfo({bool justVersion: false}) {
     String description;
 
     if (!hasSdk) {
@@ -123,11 +126,6 @@ class FlutterSdkManager implements Disposable {
     }
 
     Notification notification;
-
-    var gettingStartedInfo = () {
-      notification.dismiss();
-      shell.openExternal('http://flutter.io/getting-started/');
-    };
 
     var autoLocate = () {
       notification.dismiss();
@@ -139,15 +137,29 @@ class FlutterSdkManager implements Disposable {
       atom.workspace.open('atom://config/packages/dartlang');
     };
 
-    notification = atom.notifications.addInfo('Flutter SDK info',
+    notification = atom.notifications.addSuccess('Flutter SDK info',
       detail: description,
       dismissable: true,
       buttons: [
-        new NotificationButton('View Getting Started Guide…', gettingStartedInfo),
         new NotificationButton('Auto-locate SDK', autoLocate),
-        new NotificationButton('Plugin Settings', openSettings)
+        new NotificationButton('Plugin Settings…', openSettings)
       ]
     );
+
+    if (hasSdk) {
+      sdk.flutterTool.runInJob(['--version']);
+    }
+  }
+
+  void showVersionInfo() {
+    if (hasSdk) {
+      sdk.flutterTool.runInJob(['--version']);
+    } else {
+      atom.notifications.addSuccess('Flutter SDK info',
+        detail: 'No Flutter SDK configured.',
+        dismissable: true
+      );
+    }
   }
 
   // Move any Flutter root setting from the old location to the new one.
@@ -230,8 +242,7 @@ class FlutterTool {
 
   FlutterTool(this.sdk, this.toolPath);
 
-  ProcessRunner runRaw(List<String> args,
-      {String cwd, bool startProcess: true}) {
+  ProcessRunner runRaw(List<String> args, {String cwd, bool startProcess: true}) {
     ProcessRunner runner =
         new ProcessRunner.underShell(toolPath, args: args, cwd: cwd);
     if (startProcess) runner.execStreaming();
