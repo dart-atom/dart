@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.0
 - added a toolbar to show runnable applications and available devices
 - use the `--start-paused` flag when starting Flutter apps so users can hit
   breakpoints early in the app life-cycle
