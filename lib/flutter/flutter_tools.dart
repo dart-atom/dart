@@ -25,6 +25,12 @@ class FlutterToolsManager implements Disposable {
       'flutter:upgrade',
       _upgrade)
     );
+    // TODO: Hopefully to be removed soon.
+    disposables.add(atom.commands.add(
+      'atom-workspace',
+      'flutter:iOS-init',
+      _iosInit)
+    );
   }
 
   void _createProject(AtomEvent _) {
@@ -33,13 +39,13 @@ class FlutterToolsManager implements Disposable {
       return;
     }
 
-    String root = atom.config.getValue('core.projectHome');
-    if (root.endsWith('github')) {
-      root = root.substring(0, root.length - 6) + 'flutter';
-    }
-    String projectPath = "${root}${separator}${Haikunator.haikunate(delimiter: '_')}";
+    String projectName = Haikunator.haikunate(delimiter: '_');
+    String parentPath = dirname(_flutterSdk.sdk.path);
+    String projectPath = join(parentPath, projectName);
+
     String _response;
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
+
     promptUser(
       'Enter the path to the project to create:',
       defaultText: projectPath,
@@ -88,6 +94,32 @@ class FlutterToolsManager implements Disposable {
     flutter.runInJob(
       ['upgrade'],
       title: 'Running Flutter upgrade…',
+      cwd: project.directory.path
+    );
+  }
+
+  void _iosInit(AtomEvent _) {
+    if (!_flutterSdk.hasSdk) {
+      _flutterSdk.showInstallationInfo();
+      return;
+    }
+
+    TextEditor editor = atom.workspace.getActiveTextEditor();
+    if (editor == null) {
+      atom.notifications.addWarning('No active editor.');
+      return;
+    }
+
+    DartProject project = projectManager.getProjectFor(editor?.getPath());
+    if (project == null) {
+      atom.notifications.addWarning('The current project is not a Dart project.');
+      return;
+    }
+
+    FlutterTool flutter = _flutterSdk.sdk.flutterTool;
+    flutter.runInJob(
+      <String>['ios', '--init'],
+      title: 'Running Flutter ios --init…',
       cwd: project.directory.path
     );
   }

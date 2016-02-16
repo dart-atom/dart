@@ -5,6 +5,7 @@
 - use the `--start-paused` flag when starting Flutter apps so users can hit
   breakpoints early in the app life-cycle
 - added a `flutter version` command
+- added `flutter ios --init`
 
 ## 0.5.6
 - fixed an issue with node's os.homedir() call on linux

@@ -201,7 +201,7 @@ class JobManager implements Disposable {
     jobInstance._running = true;
     _checkNotifyJobChanged();
 
-    job.run().then((result) {
+    new Future.sync(job.run).then((result) {
       if (!job.quiet) {
         String detail = result == null ? null : '${result}';
         _toasts.addSuccess('${jobInstance.name} completed.',
@@ -213,8 +213,7 @@ class JobManager implements Disposable {
       _complete(jobInstance);
     }).catchError((e) {
       jobInstance._completer.complete(new JobStatus.error(e));
-      _toasts.addError('${job.name} failed.',
-          description: '${e}', dismissable: true);
+      _toasts.addError('${job.name} failed.', description: '${e}', dismissable: true);
     });
   }
 
