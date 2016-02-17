@@ -89,16 +89,15 @@ class DartToolbarContribution implements Disposable {
     // Device pulldown.
     FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
     _bindDevicesToSelect(deviceManager, selectList);
-    DartProject project = projectManager.getProjectFor(
-      atom.workspace.getActiveTextEditor()?.getPath());
-    bool flutterProject = project != null && project.isFlutterProject();
-    flutterDiv.hidden(!flutterProject);
-    editorManager.dartProjectEditors.onActiveEditorChanged.listen((TextEditor editor) {
+
+    void updateToolbar([_]) {
       DartProject project = projectManager.getProjectFor(
         atom.workspace.getActiveTextEditor()?.getPath());
-      bool flutterProject = project != null && project.isFlutterProject();
-      flutterDiv.hidden(!flutterProject);
-    });
+      bool isFlutterProject = project != null && project.isFlutterProject();
+      flutterDiv.hidden(!isFlutterProject);
+    }
+    updateToolbar();
+    editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar);
 
     return e;
   }
