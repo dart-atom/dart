@@ -22,6 +22,11 @@ class FlutterToolsManager implements Disposable {
     );
     disposables.add(atom.commands.add(
       'atom-workspace',
+      'flutter:doctor',
+      _doctor)
+    );
+    disposables.add(atom.commands.add(
+      'atom-workspace',
       'flutter:upgrade',
       _upgrade)
     );
@@ -78,17 +83,33 @@ class FlutterToolsManager implements Disposable {
       return;
     }
 
-    DartProject project = projectManager.getProjectFor(editor?.getPath());
+    DartProject project = projectManager.getProjectFor(editor.getPath());
     if (project == null) {
       atom.notifications.addWarning('The current project is not a Dart project.');
       return;
     }
 
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
-    flutter.runInJob(
-      ['upgrade'],
+    flutter.runInJob(['upgrade'],
       title: 'Running Flutter upgrade…',
       cwd: project.directory.path
+    );
+  }
+
+  void _doctor(AtomEvent _) {
+    if (!_flutterSdk.hasSdk) {
+      _flutterSdk.showInstallationInfo();
+      return;
+    }
+
+    FlutterTool flutter = _flutterSdk.sdk.flutterTool;
+
+    TextEditor editor = atom.workspace.getActiveTextEditor();
+    DartProject project = projectManager.getProjectFor(editor?.getPath());
+
+    flutter.runInJob(['doctor'],
+      title: 'Running Flutter doctor…',
+      cwd: project?.directory?.path
     );
   }
 
