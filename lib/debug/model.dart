@@ -24,6 +24,8 @@ abstract class DebugConnection {
   stepIn();
   stepOver();
   stepOut();
+  stepOverAsyncSuspension();
+  autoStepOver();
 
   void dispose();
 }
@@ -49,6 +51,8 @@ abstract class DebugIsolate {
   stepIn();
   stepOver();
   stepOut();
+  stepOverAsyncSuspension();
+  autoStepOver();
 }
 
 abstract class DebugFrame {
