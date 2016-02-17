@@ -14,6 +14,7 @@ import 'package:logging/logging.dart';
 
 import 'atom.dart';
 import 'js.dart';
+import 'process.dart';
 import 'state.dart';
 import 'utils.dart';
 
@@ -181,4 +182,31 @@ Future<Map> loadPackageJson() {
 
 Future<String> getPackageVersion() {
   return loadPackageJson().then((map) => map['version']);
+}
+
+
+/// Look for the given executable; throw an error if we can't find it.
+///
+/// Note: on Windows, this assumes that we're looking for an `.exe` unless
+/// `isBatchScript` is specified.
+Future<String> which(String execName, {bool isBatchScript: false}) {
+  if (isMac) {
+    // /bin/bash -l -c 'which dart'
+    String shell = env('SHELL') ?? '/bin/bash';
+    return exec(shell, ['-l', '-c', 'which ${execName}']).then((String result) {
+      if (result.contains('\n')) result = result.split('\n').first.trim();
+      return result;
+    });
+  } else if (isWindows) {
+    String ext = isBatchScript ? 'bat' : 'exe';
+    return exec('where', ['${execName}.${ext}']).then((String result) {
+      if (result.contains('\n')) result = result.split('\n').first.trim();
+      return result;
+    });
+  } else {
+    return exec('which', [execName]).then((String result) {
+      if (result.contains('\n')) result = result.split('\n').first.trim();
+      return result;
+    });
+  }
 }

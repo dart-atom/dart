@@ -12,7 +12,6 @@ import '../process.dart';
 import '../utils.dart';
 
 final String _prefKey = 'flutter.flutterRoot';
-final String _oldPrefKey = 'dartlang.flutterSdkLocation';
 
 final Logger _logger = new Logger('flutter.sdk');
 
@@ -25,8 +24,6 @@ class FlutterSdkManager implements Disposable {
   FlutterSdk _sdk;
 
   FlutterSdkManager() {
-    _migrateFlutterRootSetting();
-
     // Load the existing setting and initiate auto-discovery if necessary.
     String currentPath = atom.config.getValue(_prefKey);
 
@@ -161,17 +158,6 @@ class FlutterSdkManager implements Disposable {
       );
     }
   }
-
-  // Move any Flutter root setting from the old location to the new one.
-  void _migrateFlutterRootSetting() {
-    String newLocationValue = atom.config.getValue(_prefKey);
-    String oldLocationValue = atom.config.getValue(_oldPrefKey);
-
-    if (newLocationValue == null && oldLocationValue != null) {
-      atom.config.setValue(_oldPrefKey, null);
-      atom.config.setValue(_prefKey, oldLocationValue);
-    }
-  }
 }
 
 Future<String> _discoverSdk() {
@@ -183,22 +169,19 @@ Future<String> _discoverSdk() {
 
   if (isMac) {
     // /bin/bash -c "which flutter"
-    return exec('/bin/bash', ['-l', '-c', 'which flutter']).then((result) {
+    return which('flutter').then((result) {
       return _resolveSdkFromFlutterPath(result);
     }).catchError((e) {
       return null;
     });
   } else if (isWindows) {
-    return exec('where', ['flutter.bat']).then((result) {
-      if (result != null && !result.isEmpty) {
-        if (result.contains('\n')) result = result.split('\n').first.trim();
-        return _resolveSdkFromFlutterPath(result);
-      }
+    return which('flutter', isBatchScript: true).then((result) {
+      return _resolveSdkFromFlutterPath(result);
     }).catchError((e) {
       return null;
     });
   } else {
-    return exec('which', ['flutter']).then((String result) {
+    return which('flutter').then((String result) {
       return _resolveSdkFromFlutterPath(result);
     }).catchError((e) {
       return null;
@@ -232,6 +215,14 @@ class FlutterSdk {
   }
 
   FlutterTool get flutterTool => new FlutterTool(this, flutterToolPath);
+
+  /// Return the path to the Dart SDK contained within the Flutter SDK, if the
+  /// Dart SDK is present.
+  String get dartSdkPath {
+    String p = join(path, 'bin', 'cache', 'dart-sdk');
+    if (new Directory.fromPath(p).existsSync()) return p;
+    return null;
+  }
 
   String toString() => "flutter sdk at ${path}";
 }

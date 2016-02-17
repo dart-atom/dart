@@ -11,6 +11,7 @@ import 'package:pub_semver/pub_semver.dart';
 
 import 'atom.dart';
 import 'atom_utils.dart';
+import 'flutter/flutter_sdk.dart' show FlutterSdkManager;
 import 'impl/debounce.dart';
 import 'jobs.dart';
 import 'process.dart';
@@ -248,18 +249,18 @@ class Sdk {
 }
 
 class SdkDiscovery {
-  // TODO: fallback to $DART_SDK
-  // static Future<String> getDartSdkEnvVar() {
-  //
-  // }
-
   /// Try and auto-discover an SDK based on platform specific heuristics. This
   /// will return `null` if no SDK is found.
   Future<String> discoverSdk() {
+    return _discoverSdk().then((String sdkPath) {
+      if (sdkPath != null) return sdkPath;
+      return _tryFlutterSdk();
+    });
+  }
+
+  Future<String> _discoverSdk() {
     if (isMac) {
-      // /bin/bash -c "which dart", /bin/bash -c "echo $PATH"
-      String shell = env('SHELL') ?? '/bin/bash';
-      return exec(shell, ['-l', '-c', 'which dart']).then((result) {
+      return which('dart').then((result) {
         result = _resolveSdkFromVm(result);
         if (result != null) {
           // On mac, special case for homebrew. Replace the version specific
@@ -275,22 +276,28 @@ class SdkDiscovery {
       });
     } else if (isWindows) {
       // TODO: Also use the PATH var?
-      return exec('where', ['dart.exe']).then((result) {
-        if (result != null && !result.isEmpty) {
-          if (result.contains('\n')) result = result.split('\n').first.trim();
-          return _resolveSdkFromVm(result);
-        }
+      return which('dart').then((result) {
+        return _resolveSdkFromVm(result);
       }).catchError((e) {
         return null;
       });
     } else {
-      return exec('which', ['dart']).then((String result) {
+      return which('dart').then((String result) {
         return _resolveSdkFromVm(result);
       }).catchError((e) {
         return null;
       });
     }
   }
+
+  /// Return the path to the Dart sdk contained within the Flutter sdk, if
+  /// either exist.
+  String _tryFlutterSdk() {
+    if (!_flutterSdkManager.hasSdk) return null;
+    return _flutterSdkManager.sdk.dartSdkPath;
+  }
+
+  FlutterSdkManager get _flutterSdkManager => deps[FlutterSdkManager];
 
   String _resolveSdkFromVm(String vmPath) {
     if (vmPath == null) return null;
