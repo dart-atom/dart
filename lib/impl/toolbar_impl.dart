@@ -153,7 +153,7 @@ class DartToolbarContribution implements Disposable {
         selectList.add(new CoreElement('option')..text = 'No devices connected');
       } else {
         for (Device device in devices) {
-          CoreElement option = selectList.add(new CoreElement('option')..text = device.getLabel());
+          /*CoreElement option =*/ selectList.add(new CoreElement('option')..text = device.getLabel());
           if (deviceManager.currentSelectedDevice == device) {
             element.selectedIndex = index;
           }

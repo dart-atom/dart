@@ -1,11 +1,15 @@
 # dartlang plugin changelog
 
+## unreleased
+- save all dirty editors before running an application
+- removed the `flutter ios --init` command
+
 ## 0.6.0
 - added a toolbar to show runnable applications and available devices
 - use the `--start-paused` flag when starting Flutter apps so users can hit
   breakpoints early in the app life-cycle
 - added a `flutter version` command
-- added `flutter ios --init`
+- added the `flutter ios --init` command
 - fixed an exception that occured when trying to auto-locate the Dart SDK
 
 ## 0.5.6

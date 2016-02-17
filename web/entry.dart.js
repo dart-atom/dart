@@ -31865,7 +31865,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 23, "call"]
     },
     DebuggerView__jumpToLocation_closure: {
-      "^": "Closure:8;$this,location,addExecMarker",
+      "^": "Closure:7;$this,location,addExecMarker",
       call$1: [function(editor) {
         var t1, t2, t3;
         t1 = this.location;
@@ -32315,7 +32315,7 @@ self._domRemove = function(element) {
       }, "call$1", "get$_navigationEvent", 2, 0, 159, 43],
       _handleNavigate$1: [function($event) {
         this._handleNavigateEditor$1($event.get$editor());
-      }, "call$1", "get$_handleNavigate", 2, 0, 7],
+      }, "call$1", "get$_handleNavigate", 2, 0, 8],
       _handleNavigateEditor$1: function(editor) {
         var path, range, offset;
         if (Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive()) {
@@ -32516,7 +32516,7 @@ self._domRemove = function(element) {
         $event.invoke$1("abortKeyBinding");
         $.$get$_logger18().severe$2("exception during enter key handling", e);
       }
-    }, "call$1", "editing__handleEnterKey$closure", 2, 0, 7],
+    }, "call$1", "editing__handleEnterKey$closure", 2, 0, 8],
     _handleEnterKey: function(editor, row, col) {
       var t1, line, t2, trimmedText, atEol, t3, leading, inComment, previousLine;
       t1 = {};
@@ -32757,7 +32757,7 @@ self._domRemove = function(element) {
       $isDisposable: 1
     },
     EditorManager_jumpToLocation_closure: {
-      "^": "Closure:8;length",
+      "^": "Closure:7;length",
       call$1: [function(editor) {
         var t1 = this.length;
         if (t1 != null)
@@ -32766,7 +32766,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 9, "call"]
     },
     EditorManager_jumpToLine_closure: {
-      "^": "Closure:8;selectLine",
+      "^": "Closure:7;selectLine",
       call$1: [function(editor) {
         if (this.selectLine)
           editor.selectLinesContainingCursors$0();
@@ -33450,7 +33450,7 @@ self._domRemove = function(element) {
       }
     },
     ErrorsView__cvtError__closure: {
-      "^": "Closure:8;",
+      "^": "Closure:7;",
       call$1: [function(editor) {
         var t1, t2;
         Q.Dependencies_instance().getDependency$1(C.Type_QuickFixHelper_idk).displayQuickFixes$1(editor);
@@ -33481,7 +33481,7 @@ self._domRemove = function(element) {
       }
     },
     ErrorsView__jumpTo_closure: {
-      "^": "Closure:8;location",
+      "^": "Closure:7;location",
       call$1: [function(editor) {
         var buffer, t1, t2;
         buffer = editor.getBuffer$0();
@@ -33569,7 +33569,7 @@ self._domRemove = function(element) {
         t1._response = null;
         flutter = $.$get$_flutterSdk0().get$sdk().get$flutterTool();
         S.promptUser("Enter the path to the project to create:", projectPath, true, false).then$1(new O.FlutterToolsManager__createProject_closure(t1, flutter)).then$1(new O.FlutterToolsManager__createProject_closure0(t1));
-      }, "call$1", "get$_createProject", 2, 0, 7],
+      }, "call$1", "get$_createProject", 2, 0, 8],
       _upgrade$1: [function(_) {
         var t1, editor, t2, project, job;
         if (!$.$get$_flutterSdk0().get$hasSdk()) {
@@ -33594,33 +33594,7 @@ self._domRemove = function(element) {
         job = new Z._FlutterToolJob($.$get$_flutterSdk0().get$sdk().get$flutterTool().sdk, J.get$path$x(J.get$directory$x(project)), null, null, "Flutter " + H.S(C.JSArray_methods.get$first(t1)), null);
         job._args = t1;
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(job);
-      }, "call$1", "get$_upgrade", 2, 0, 7],
-      _iosInit$1: [function(_) {
-        var t1, editor, t2, project, flutter, job;
-        if (!$.$get$_flutterSdk0().get$hasSdk()) {
-          $.$get$_flutterSdk0().showInstallationInfo$0();
-          return;
-        }
-        t1 = $.$get$atom();
-        editor = t1._workspace.getActiveTextEditor$0();
-        if (editor == null) {
-          t1 = t1._notifications;
-          t1.invoke$3("addWarning", "No active editor.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
-          return;
-        }
-        t2 = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ);
-        project = t2.getProjectFor$1(editor.invoke$1("getPath"));
-        if (project == null) {
-          t1 = t1._notifications;
-          t1.invoke$3("addWarning", "The current project is not a Dart project.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
-          return;
-        }
-        flutter = $.$get$_flutterSdk0().get$sdk().get$flutterTool();
-        t1 = H.setRuntimeTypeInfo(["ios", "--init"], [P.String]);
-        job = new Z._FlutterToolJob(flutter.sdk, J.get$path$x(J.get$directory$x(project)), null, null, "Flutter " + H.S(C.JSArray_methods.get$first(t1)), null);
-        job._args = t1;
-        Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(job);
-      }, "call$1", "get$_iosInit", 2, 0, 7],
+      }, "call$1", "get$_upgrade", 2, 0, 8],
       dispose$0: [function() {
         return this.disposables.dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
@@ -33654,7 +33628,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     FlutterToolsManager__createProject__closure: {
-      "^": "Closure:8;",
+      "^": "Closure:7;",
       call$1: [function(editor) {
         var t1 = $.$get$atom();
         t1._commands.invoke$4("dispatch", t1._views.invoke$2("getView", editor), "tree-view:reveal-active-file", null);
@@ -33771,7 +33745,7 @@ self._domRemove = function(element) {
         t5 = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK);
         t7 = t3.get$shortResourceName();
         t8 = t4.get$_kill();
-        t4._launch = M._FlutterLaunch$(t5, t1, t3, t7, t6.get$path(t2), t8, t2, description);
+        t4._launch = M._FlutterLaunch$(t5, t1, t3, t7, t2, t6.get$path(t2), t8, description);
         Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).addLaunch$1(t4._launch);
         t1._lastLaunch = t4;
         return t4.launch$0();
@@ -33931,15 +33905,15 @@ self._domRemove = function(element) {
       resolve$1: function(url) {
         return this._flutter_launch$_resolver.resolve$1(url);
       },
-      _FlutterLaunch$8$cwd$killHandler$project$title: function(manager, launchType, launchConfiguration, $name, cwd, killHandler, project, title) {
-        var t1 = project == null ? project : J.get$path$x(project);
-        this._flutter_launch$_resolver = X.CachingServerResolver$(t1, Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC));
+      _FlutterLaunch$8$cwd$killHandler$title: function(manager, launchType, launchConfiguration, $name, project, cwd, killHandler, title) {
+        var t1;
+        this._flutter_launch$_resolver = X.CachingServerResolver$(J.get$path$x(project), Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC));
         t1 = this.exitCode._utils$_controller;
         t1 = H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
         t1.get$first(t1).then$1(new M._FlutterLaunch_closure(this));
       },
       static: {
-        _FlutterLaunch$: function(manager, launchType, launchConfiguration, $name, cwd, killHandler, project, title) {
+        _FlutterLaunch$: function(manager, launchType, launchConfiguration, $name, project, cwd, killHandler, title) {
           var t1, t2, t3;
           t1 = $.Launch__id + 1;
           $.Launch__id = t1;
@@ -33950,7 +33924,7 @@ self._domRemove = function(element) {
           t3 = new M._FlutterLaunch(null, launchType, launchConfiguration, $name, title, manager, t1, killHandler, cwd, t2, t3, P.StreamController_StreamController$broadcast(null, null, false, null), null, null);
           if (cwd != null)
             t3._pathResolver = new X._PathResolver(cwd);
-          t3._FlutterLaunch$8$cwd$killHandler$project$title(manager, launchType, launchConfiguration, $name, cwd, killHandler, project, title);
+          t3._FlutterLaunch$8$cwd$killHandler$title(manager, launchType, launchConfiguration, $name, project, cwd, killHandler, title);
           return t3;
         }
       }
@@ -37935,7 +37909,6 @@ self._domRemove = function(element) {
         t3 = new O.FlutterToolsManager(new G.Disposables(true, t5));
         t5.push(t4._commands.add$3(0, "atom-workspace", "flutter:create-project", t3.get$_createProject()));
         t5.push(t4._commands.add$3(0, "atom-workspace", "flutter:upgrade", t3.get$_upgrade()));
-        t5.push(t4._commands.add$3(0, "atom-workspace", "flutter:iOS-init", t3.get$_iosInit()));
         t2.push(t3);
         t2.push(T.DartdocHelper$());
         t3 = G.ErrorsController$();
@@ -39477,7 +39450,7 @@ self._domRemove = function(element) {
       }
     },
     _applyChange__closure0: {
-      "^": "Closure:8;sourceFileEdits,linkedEditGroups,edit",
+      "^": "Closure:7;sourceFileEdits,linkedEditGroups,edit",
       call$1: [function(editor) {
         var t1, index;
         t1 = this.edit;
@@ -39887,7 +39860,7 @@ self._domRemove = function(element) {
       }
     },
     RefactoringHelper__applyEdits__closure0: {
-      "^": "Closure:8;edit",
+      "^": "Closure:7;edit",
       call$1: [function(editor) {
         F.applyEdits(editor, this.edit.get$edits());
       }, null, null, 2, 0, null, 9, "call"]
@@ -39927,7 +39900,7 @@ self._domRemove = function(element) {
       }, "call$0", "get$dispose", 0, 0, 2],
       _handleReferences$1: [function($event) {
         return this._handleReferencesEditor$1($event.get$editor());
-      }, "call$1", "get$_handleReferences", 2, 0, 7],
+      }, "call$1", "get$_handleReferences", 2, 0, 8],
       _handleReferencesEditor$1: function(editor) {
         var path, t1, range, offset;
         path = editor.invoke$1("getPath");
@@ -40301,13 +40274,15 @@ self._domRemove = function(element) {
         return t1[0];
       },
       run$1: function(config) {
-        var t1, launchType, t2;
+        var t1, t2, launchType;
+        t1 = $.$get$atom();
+        t1._workspace.saveAll$0();
         $.$get$_logger23().info$1("Launching '" + H.S(config) + "'.");
-        t1 = J.getInterceptor$x(config);
-        launchType = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getLaunchType$1(t1.get$type(config));
+        t2 = J.getInterceptor$x(config);
+        launchType = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getLaunchType$1(t2.get$type(config));
         if (launchType == null) {
-          t2 = $.$get$atom()._notifications;
-          t2.invoke$3("addError", "No handler for launch type '" + H.S(t1.get$type(config)) + "' found.", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+          t1 = t1._notifications;
+          t1.invoke$3("addError", "No handler for launch type '" + H.S(t2.get$type(config)) + "' found.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         } else {
           config.touch$0();
           launchType.performLaunch$2(Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK), config).catchError$1(new L.RunApplicationManager_run_closure(config));
@@ -41138,7 +41113,7 @@ self._domRemove = function(element) {
         }
         t1 = J.getInterceptor$x(project);
         new R.PubAppLocal(t1.get$path(project), "test").run$2$args$title(["-rexpanded", "--no-color"], "Running " + H.S(t1.get$name(project)) + " tests").then$1(new X.TestManager__runTests_closure());
-      }, "call$1", "get$_runTests", 2, 0, 7],
+      }, "call$1", "get$_runTests", 2, 0, 8],
       dispose$0: [function() {
         return this.disposables.dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
@@ -41159,7 +41134,7 @@ self._domRemove = function(element) {
       }, "call$0", "get$dispose", 0, 0, 2],
       _handleHierarchy$1: [function($event) {
         return this._handleHierarchyEditor$1($event.get$editor());
-      }, "call$1", "get$_handleHierarchy", 2, 0, 7],
+      }, "call$1", "get$_handleHierarchy", 2, 0, 8],
       _handleHierarchyEditor$1: function(editor) {
         var path, t1, range, offset;
         path = editor.invoke$1("getPath");
@@ -59389,7 +59364,7 @@ self._domRemove = function(element) {
           pos = t1.pop();
           Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4(pos.path, pos.line, pos.column, pos.length);
         }
-      }, "call$1", "get$_handleNavigateReturn", 2, 0, 7],
+      }, "call$1", "get$_handleNavigateReturn", 2, 0, 8],
       _pushCurrentLocation$0: function() {
         var editor, t1, range, t2, $length;
         editor = $.$get$atom()._workspace.getActiveTextEditor$0();
@@ -66854,7 +66829,7 @@ self._domRemove = function(element) {
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
   init.metadata = ["e", "_", "result", null, "obj", "m", "str", "value", "error", "editor", "message", "isolate", "stackTrace", "data", "val", "event", "device", "code", "element", "node", "response", "v", "s", "pos", "r", "path", "bp", "arg", "ver", "l", "position", "name", "edit", "view", "version", "each", "change", "o", "c", "dir", "entry", "location", "frame", "navInfo", "length", "line", "contextId", "errors", "match", "item", "sdkPath", "exitCode", "project", "uris", "vmBreakpoint", "field", "launch", "description", "options", "newName", "invocation", "i", "active", "key", "x", "attributeName", "context", "status", "sdk", "object", "tab", "st", "id", "contents", "fullPath", "didFormat", "sender", "evt", "errorCallback", "resolve", "reject", "_this", "currentVersion", "_e", "fullpath", "numberOfArguments", "jsEditor", "vm", "file", "arg1", "libraryRef", "stack", "ret", "association", "ed", "port", "pluginState", "text", "allPaths", "p", "projects", "assists", "arg2", "choice", "json", "results", "success", "connection", "a", "b", "config", "launchable", "newSdk", "aIndex", "bIndex", "info", "command", "log", "arg3", "map", "errorCode", "theError", "theStackTrace", "arg4", 0, "encodedComponent", "byteString", "variable", "nb", "xhr", "attr", "callback", "captureThis", "self", "arguments", "suggestions", "obj1", "obj2", "suggestion", "cs", "projectDirectory", "target", "checked", "route", "daemon", "analysisErrors", "items", "analysisFlushResults", "part", "start", "end", "offset", "color", "closure", "busy", "pluginVer", "currentProjects"];
-  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [P.String]}, {func: 1, args: [,,]}, {func: 1, ret: P.Future}, {func: 1, v: true, args: [E.TextEditor]}, {func: 1, v: true, args: [E.AtomEvent]}, {func: 1, args: [E.TextEditor]}, {func: 1, v: true, args: [P.String]}, {func: 1, args: [A.AtomBreakpoint]}, {func: 1, v: true, args: [Z.DebugIsolate]}, {func: 1, args: [E.AtomEvent]}, {func: 1, v: true, opt: [,]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, args: [P.JsObject]}, {func: 1, v: true, args: [,]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, ret: P.bool}, {func: 1, v: true, args: [T.Node0]}, {func: 1, args: [P.bool]}, {func: 1, opt: [,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, args: [P.$int]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, v: true, args: [P.String, P.$int, P.$int, P.String]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [T.View]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [T.Device]}, {func: 1, v: true, args: [T.Device]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, args: [P.String, P.Function]}, {func: 1, args: [E.CompletionSuggestion]}, {func: 1, args: [S.BoundField]}, {func: 1, ret: P.bool, args: [,]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, args: [E.SourceChange]}, {func: 1, args: [M._Change]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, v: true, args: [P.bool]}, {func: 1, args: [Z.DebugLocation]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [E.AnalysisError]}, {func: 1, args: [W.Event]}, {func: 1, args: [, P.StackTrace]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, args: [P.Object]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [,], opt: [,]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, args: [S.Event1]}, {func: 1, args: [[P.List, P.String]]}, {func: 1, v: true, args: [M.MTab]}, {func: 1, v: true, args: [P.String], named: {length: P.$int, match: P.Match, position: P.$int}}, {func: 1, args: [S.Breakpoint]}, {func: 1, args: [W.MouseEvent]}, {func: 1, v: true, args: [S.Event1]}, {func: 1, args: [S.Frame]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, args: [N.LogRecord]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, args: [[P.List, X.Suggestion]]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, ret: [P.Future, X.Launch]}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [X.Launch]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, args: [W.MessageEvent]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [E.NotificationButton]}, {func: 1, args: [S.Version]}, {func: 1, args: [S.VM]}, {func: 1, args: [A.AtomBreakpoint, S.Breakpoint]}, {func: 1, args: [E.ServerStatus]}, {func: 1, args: [, K.OverlayInfo]}, {func: 1, args: [S.Isolate]}, {func: 1, args: [S.Stack]}, {func: 1, args: [E.File]}, {func: 1, args: [S.MapAssociation]}, {func: 1, args: [E.ServerError]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, opt: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [E.Point]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, v: true, args: [P.$int]}, {func: 1, v: true, args: [P.Map]}, {func: 1, args: [P.Match]}, {func: 1, args: [P.num]}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, args: [E.FixesResult]}, {func: 1, args: [E.AssistsResult]}, {func: 1, args: [E.HoverResult]}, {func: 1, args: [E.ExecutionLaunchData]}, {func: 1, args: [Z.DebugConnection]}, {func: 1, args: [[P.List, P.bool]]}, {func: 1, args: [P.bool, P.bool]}, {func: 1, args: [P.String,,]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [E.Range]}, {func: 1, args: [P.Map]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, args: [E.FindElementReferencesResult]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, args: [[P.List, E.SearchResult]]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, args: [Q.LaunchConfiguration]}, {func: 1, args: [X.Launchable]}, {func: 1, args: [P.String, K.StateStorable]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.$int, P.$int]}, {func: 1, args: [, P.String]}, {func: 1, v: true, args: [Z.DebugFrame, K.CoreElement]}, {func: 1, v: true, args: [Z.DebugFrame]}, {func: 1, args: [P.$int, T.Node0]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [Z.DebugVariable, K.CoreElement]}, {func: 1, args: [P.$int,,]}, {func: 1, v: true, args: [Z.DebugVariable]}, {func: 1, v: true, args: [,,]}, {func: 1, ret: P.bool, args: [Z.DebugVariable]}, {func: 1, args: [Z.DebugValue]}, {func: 1, v: true, args: [D.ObservatoryLibrary, K.CoreElement]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, v: true, args: [,], opt: [,]}, {func: 1, args: [P.EventSink]}, {func: 1, ret: P.$int, args: [, P.$int]}, {func: 1, v: true, args: [P.$int, P.$int]}, {func: 1, args: [P.Symbol,,]}, {func: 1, ret: P.$int, args: [,,]}, {func: 1, v: true, args: [P.String], opt: [,]}, {func: 1, ret: P.$int, args: [P.$int, P.$int]}, {func: 1, args: [W.HttpRequest]}, {func: 1, args: [W.Element]}, {func: 1, ret: P.$int, args: [D.ObservatoryLibrary, D.ObservatoryLibrary]}, {func: 1, ret: P.bool, args: [D.ObservatoryLibrary]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, v: true, args: [Z.FlutterSdk]}, {func: 1, args: [T.LogMessage]}, {func: 1, v: true, args: [Z.DebugIsolate, K.CoreElement]}, {func: 1, ret: [P.Future, P.String]}, {func: 1, ret: P.Future, args: [P.String], named: {checked: P.bool, route: P.String, target: P.String}}, {func: 1, args: [P.List]}, {func: 1, v: true, args: [T.FlutterDaemon]}, {func: 1, v: true, args: [A.AtomBreakpoint, K.CoreElement]}, {func: 1, args: [[P.List, T.Device]]}, {func: 1, v: true, args: [D.ObservatoryIsolate]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, args: [P.RegExp]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, ret: G.FileSpan, args: [P.$int], opt: [P.$int]}, {func: 1, ret: G.FileLocation, args: [P.$int]}, {func: 1, ret: P.String, args: [P.String], named: {color: null}}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, args: [V.Sdk]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, args: [E.DiagnosticsResult]}, {func: 1, args: [E.ContextData]}, {func: 1, ret: P.num}, {func: 1, ret: E.ServerError, args: [P.Map]}, {func: 1, ret: S.VM, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AssistsResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.ExecutionLaunchData, args: [P.Map]}, {func: 1, ret: E.CreateContextResult, args: [P.Map]}, {func: 1, ret: E.MapUriResult, args: [P.Map]}, {func: 1, ret: E.DiagnosticsResult, args: [P.Map]}, {func: 1, ret: P.$int, args: [E.CompletionSuggestion, E.CompletionSuggestion]}, {func: 1, ret: T.Node1, args: [P.String]}, {func: 1, ret: P.bool, args: [E.TextEditor]}, {func: 1, ret: P.$int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.bool, args: [P.Object, P.Object]}, {func: 1, ret: P.$int, args: [P.Object]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, v: true, args: [P.String], opt: [P.bool]}, {func: 1, ret: P.bool, args: [,,]}, {func: 1, ret: P.$int, args: [,]}, {func: 1, ret: T.Device, args: [P.Map]}, {func: 1, ret: T.LogMessage, args: [P.Map]}, {func: 1, ret: S.ExtensionData, args: [P.Map]}, {func: 1, ret: S.BoundField, args: [P.Map]}, {func: 1, ret: S.BoundVariable, args: [P.Map]}, {func: 1, ret: S.Breakpoint, args: [P.Map]}, {func: 1, ret: S.ClassRef, args: [P.Map]}, {func: 1, ret: S.Class, args: [P.Map]}, {func: 1, ret: S.ClassList, args: [P.Map]}, {func: 1, ret: S.CodeRef, args: [P.Map]}, {func: 1, ret: S.Code, args: [P.Map]}, {func: 1, ret: S.ContextRef, args: [P.Map]}, {func: 1, ret: S.Context0, args: [P.Map]}, {func: 1, ret: S.ContextElement, args: [P.Map]}, {func: 1, ret: S.ErrorRef, args: [P.Map]}, {func: 1, ret: S.Error0, args: [P.Map]}, {func: 1, ret: S.Event1, args: [P.Map]}, {func: 1, ret: S.FieldRef, args: [P.Map]}, {func: 1, ret: S.Field, args: [P.Map]}, {func: 1, ret: S.Flag, args: [P.Map]}, {func: 1, ret: S.FlagList, args: [P.Map]}, {func: 1, ret: S.Frame, args: [P.Map]}, {func: 1, ret: S.FuncRef, args: [P.Map]}, {func: 1, ret: S.Func, args: [P.Map]}, {func: 1, ret: S.InstanceRef, args: [P.Map]}, {func: 1, ret: S.Instance, args: [P.Map]}, {func: 1, ret: S.IsolateRef, args: [P.Map]}, {func: 1, ret: S.Isolate, args: [P.Map]}, {func: 1, ret: S.LibraryRef, args: [P.Map]}, {func: 1, ret: S.Library, args: [P.Map]}, {func: 1, ret: S.LibraryDependency, args: [P.Map]}, {func: 1, ret: S.MapAssociation, args: [P.Map]}, {func: 1, ret: S.Message, args: [P.Map]}, {func: 1, ret: S.NullRef, args: [P.Map]}, {func: 1, ret: S.Null0, args: [P.Map]}, {func: 1, ret: S.ObjRef, args: [P.Map]}, {func: 1, ret: S.Obj, args: [P.Map]}, {func: 1, ret: S.Response, args: [P.Map]}, {func: 1, ret: S.Sentinel, args: [P.Map]}, {func: 1, ret: S.ScriptRef, args: [P.Map]}, {func: 1, ret: S.Script, args: [P.Map]}, {func: 1, ret: S.SourceLocation0, args: [P.Map]}, {func: 1, ret: S.Stack, args: [P.Map]}, {func: 1, ret: S.Success, args: [P.Map]}, {func: 1, ret: S.TypeArgumentsRef, args: [P.Map]}, {func: 1, ret: S.TypeArguments, args: [P.Map]}, {func: 1, ret: S.UnresolvedSourceLocation, args: [P.Map]}, {func: 1, ret: S.Version, args: [P.Map]}, {func: 1, ret: S.VMRef, args: [P.Map]}, {func: 1, ret: E.ServerStatus, args: [P.Map]}];
+  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [P.String]}, {func: 1, args: [,,]}, {func: 1, ret: P.Future}, {func: 1, v: true, args: [E.TextEditor]}, {func: 1, args: [E.TextEditor]}, {func: 1, v: true, args: [E.AtomEvent]}, {func: 1, v: true, args: [P.String]}, {func: 1, args: [A.AtomBreakpoint]}, {func: 1, v: true, args: [Z.DebugIsolate]}, {func: 1, args: [E.AtomEvent]}, {func: 1, v: true, opt: [,]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, args: [P.JsObject]}, {func: 1, v: true, args: [,]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, ret: P.bool}, {func: 1, v: true, args: [T.Node0]}, {func: 1, args: [P.bool]}, {func: 1, opt: [,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, args: [P.$int]}, {func: 1, args: [Z.ProcessResult]}, {func: 1, v: true, args: [P.String, P.$int, P.$int, P.String]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [T.View]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [T.Device]}, {func: 1, v: true, args: [T.Device]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, args: [P.String, P.Function]}, {func: 1, args: [E.CompletionSuggestion]}, {func: 1, args: [S.BoundField]}, {func: 1, ret: P.bool, args: [,]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, args: [E.SourceChange]}, {func: 1, args: [M._Change]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, v: true, args: [P.bool]}, {func: 1, args: [Z.DebugLocation]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [E.AnalysisError]}, {func: 1, args: [W.Event]}, {func: 1, args: [, P.StackTrace]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, args: [P.Object]}, {func: 1, v: true, args: [,], opt: [P.StackTrace]}, {func: 1, args: [,], opt: [,]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, args: [S.Event1]}, {func: 1, args: [[P.List, P.String]]}, {func: 1, v: true, args: [M.MTab]}, {func: 1, v: true, args: [P.String], named: {length: P.$int, match: P.Match, position: P.$int}}, {func: 1, args: [S.Breakpoint]}, {func: 1, args: [W.MouseEvent]}, {func: 1, v: true, args: [S.Event1]}, {func: 1, args: [S.Frame]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, args: [N.LogRecord]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, args: [[P.List, X.Suggestion]]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, ret: [P.Future, X.Launch]}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [X.Launch]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, args: [W.MessageEvent]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [E.NotificationButton]}, {func: 1, args: [S.Version]}, {func: 1, args: [S.VM]}, {func: 1, args: [A.AtomBreakpoint, S.Breakpoint]}, {func: 1, args: [E.ServerStatus]}, {func: 1, args: [, K.OverlayInfo]}, {func: 1, args: [S.Isolate]}, {func: 1, args: [S.Stack]}, {func: 1, args: [E.File]}, {func: 1, args: [S.MapAssociation]}, {func: 1, args: [E.ServerError]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, opt: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [E.Point]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, v: true, args: [P.$int]}, {func: 1, v: true, args: [P.Map]}, {func: 1, args: [P.Match]}, {func: 1, args: [P.num]}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, args: [E.FixesResult]}, {func: 1, args: [E.AssistsResult]}, {func: 1, args: [E.HoverResult]}, {func: 1, args: [E.ExecutionLaunchData]}, {func: 1, args: [Z.DebugConnection]}, {func: 1, args: [[P.List, P.bool]]}, {func: 1, args: [P.bool, P.bool]}, {func: 1, args: [P.String,,]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [E.Range]}, {func: 1, args: [P.Map]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, args: [E.FindElementReferencesResult]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, args: [[P.List, E.SearchResult]]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, args: [Q.LaunchConfiguration]}, {func: 1, args: [X.Launchable]}, {func: 1, args: [P.String, K.StateStorable]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.$int, P.$int]}, {func: 1, args: [, P.String]}, {func: 1, v: true, args: [Z.DebugFrame, K.CoreElement]}, {func: 1, v: true, args: [Z.DebugFrame]}, {func: 1, args: [P.$int, T.Node0]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [Z.DebugVariable, K.CoreElement]}, {func: 1, args: [P.$int,,]}, {func: 1, v: true, args: [Z.DebugVariable]}, {func: 1, v: true, args: [,,]}, {func: 1, ret: P.bool, args: [Z.DebugVariable]}, {func: 1, args: [Z.DebugValue]}, {func: 1, v: true, args: [D.ObservatoryLibrary, K.CoreElement]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, v: true, args: [,], opt: [,]}, {func: 1, args: [P.EventSink]}, {func: 1, ret: P.$int, args: [, P.$int]}, {func: 1, v: true, args: [P.$int, P.$int]}, {func: 1, args: [P.Symbol,,]}, {func: 1, ret: P.$int, args: [,,]}, {func: 1, v: true, args: [P.String], opt: [,]}, {func: 1, ret: P.$int, args: [P.$int, P.$int]}, {func: 1, args: [W.HttpRequest]}, {func: 1, args: [W.Element]}, {func: 1, ret: P.$int, args: [D.ObservatoryLibrary, D.ObservatoryLibrary]}, {func: 1, ret: P.bool, args: [D.ObservatoryLibrary]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, v: true, args: [Z.FlutterSdk]}, {func: 1, args: [T.LogMessage]}, {func: 1, v: true, args: [Z.DebugIsolate, K.CoreElement]}, {func: 1, ret: [P.Future, P.String]}, {func: 1, ret: P.Future, args: [P.String], named: {checked: P.bool, route: P.String, target: P.String}}, {func: 1, args: [P.List]}, {func: 1, v: true, args: [T.FlutterDaemon]}, {func: 1, v: true, args: [A.AtomBreakpoint, K.CoreElement]}, {func: 1, args: [[P.List, T.Device]]}, {func: 1, v: true, args: [D.ObservatoryIsolate]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, args: [P.RegExp]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, ret: G.FileSpan, args: [P.$int], opt: [P.$int]}, {func: 1, ret: G.FileLocation, args: [P.$int]}, {func: 1, ret: P.String, args: [P.String], named: {color: null}}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, args: [V.Sdk]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, args: [E.DiagnosticsResult]}, {func: 1, args: [E.ContextData]}, {func: 1, ret: P.num}, {func: 1, ret: E.ServerError, args: [P.Map]}, {func: 1, ret: S.VM, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AssistsResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.ExecutionLaunchData, args: [P.Map]}, {func: 1, ret: E.CreateContextResult, args: [P.Map]}, {func: 1, ret: E.MapUriResult, args: [P.Map]}, {func: 1, ret: E.DiagnosticsResult, args: [P.Map]}, {func: 1, ret: P.$int, args: [E.CompletionSuggestion, E.CompletionSuggestion]}, {func: 1, ret: T.Node1, args: [P.String]}, {func: 1, ret: P.bool, args: [E.TextEditor]}, {func: 1, ret: P.$int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.bool, args: [P.Object, P.Object]}, {func: 1, ret: P.$int, args: [P.Object]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, v: true, args: [P.String], opt: [P.bool]}, {func: 1, ret: P.bool, args: [,,]}, {func: 1, ret: P.$int, args: [,]}, {func: 1, ret: T.Device, args: [P.Map]}, {func: 1, ret: T.LogMessage, args: [P.Map]}, {func: 1, ret: S.ExtensionData, args: [P.Map]}, {func: 1, ret: S.BoundField, args: [P.Map]}, {func: 1, ret: S.BoundVariable, args: [P.Map]}, {func: 1, ret: S.Breakpoint, args: [P.Map]}, {func: 1, ret: S.ClassRef, args: [P.Map]}, {func: 1, ret: S.Class, args: [P.Map]}, {func: 1, ret: S.ClassList, args: [P.Map]}, {func: 1, ret: S.CodeRef, args: [P.Map]}, {func: 1, ret: S.Code, args: [P.Map]}, {func: 1, ret: S.ContextRef, args: [P.Map]}, {func: 1, ret: S.Context0, args: [P.Map]}, {func: 1, ret: S.ContextElement, args: [P.Map]}, {func: 1, ret: S.ErrorRef, args: [P.Map]}, {func: 1, ret: S.Error0, args: [P.Map]}, {func: 1, ret: S.Event1, args: [P.Map]}, {func: 1, ret: S.FieldRef, args: [P.Map]}, {func: 1, ret: S.Field, args: [P.Map]}, {func: 1, ret: S.Flag, args: [P.Map]}, {func: 1, ret: S.FlagList, args: [P.Map]}, {func: 1, ret: S.Frame, args: [P.Map]}, {func: 1, ret: S.FuncRef, args: [P.Map]}, {func: 1, ret: S.Func, args: [P.Map]}, {func: 1, ret: S.InstanceRef, args: [P.Map]}, {func: 1, ret: S.Instance, args: [P.Map]}, {func: 1, ret: S.IsolateRef, args: [P.Map]}, {func: 1, ret: S.Isolate, args: [P.Map]}, {func: 1, ret: S.LibraryRef, args: [P.Map]}, {func: 1, ret: S.Library, args: [P.Map]}, {func: 1, ret: S.LibraryDependency, args: [P.Map]}, {func: 1, ret: S.MapAssociation, args: [P.Map]}, {func: 1, ret: S.Message, args: [P.Map]}, {func: 1, ret: S.NullRef, args: [P.Map]}, {func: 1, ret: S.Null0, args: [P.Map]}, {func: 1, ret: S.ObjRef, args: [P.Map]}, {func: 1, ret: S.Obj, args: [P.Map]}, {func: 1, ret: S.Response, args: [P.Map]}, {func: 1, ret: S.Sentinel, args: [P.Map]}, {func: 1, ret: S.ScriptRef, args: [P.Map]}, {func: 1, ret: S.Script, args: [P.Map]}, {func: 1, ret: S.SourceLocation0, args: [P.Map]}, {func: 1, ret: S.Stack, args: [P.Map]}, {func: 1, ret: S.Success, args: [P.Map]}, {func: 1, ret: S.TypeArgumentsRef, args: [P.Map]}, {func: 1, ret: S.TypeArguments, args: [P.Map]}, {func: 1, ret: S.UnresolvedSourceLocation, args: [P.Map]}, {func: 1, ret: S.Version, args: [P.Map]}, {func: 1, ret: S.VMRef, args: [P.Map]}, {func: 1, ret: E.ServerStatus, args: [P.Map]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }
