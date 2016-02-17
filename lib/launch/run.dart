@@ -128,7 +128,8 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
   }
 
   void _preLaunch() {
-
+    // Save all dirty editors.
+    atom.workspace.saveAll();
   }
 
   void run(LaunchConfiguration config) {
