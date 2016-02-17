@@ -38,14 +38,13 @@ class FlutterLaunchType extends LaunchType {
     if (!_flutterSdk.hasSdk) return false;
     if (!analysisServer.isExecutable(path)) return false;
 
-    // TODO: The file 'path' should also import package:flutter.
-
-    return project.importsPackage('flutter');
+    // TODO: The file [path] should also import package:flutter.
+    return project.isFlutterProject();
   }
 
   List<String> getLaunchablesFor(DartProject project) {
     // TODO: This is temporary until we can query files for package:flutter imports.
-    if (!project.importsPackage('flutter')) return [];
+    if (!project.isFlutterProject()) return [];
 
     return analysisServer.getExecutablesFor(project.path).where((String path) {
       return path.endsWith('dart');

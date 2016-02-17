@@ -367,10 +367,16 @@ meta:
 /// a `.packages` file, an `.analysis_options` file, or a `BUILD` file.
 class DartProject {
   final Directory directory;
+  File pubspecFile;
 
   AnalysisOptions _analysisOptions;
 
-  DartProject(this.directory);
+  String _pubspecDigest;
+  dynamic _pubspecContents;
+
+  DartProject(this.directory) {
+    pubspecFile = directory.getFile(pub.pubspecFileName);
+  }
 
   String get path => directory.path;
 
@@ -385,19 +391,27 @@ class DartProject {
   }
 
   String getSelfRefName() {
-    File pubspec = directory.getFile(pub.pubspecFileName);
+    dynamic contents = getPubspecContents();
+    return contents == null ? null : contents['name'];
+  }
 
-    if (pubspec.existsSync()) {
+  /// This returns the pubspec contents. This can be null if there is an issue
+  /// parsing the file.
+  dynamic getPubspecContents() {
+    if (!pubspecFile.existsSync()) return null;
+
+    // This reads the file each time.
+    String newDigest = pubspecFile.readSync();
+    if (_pubspecContents == null || _pubspecDigest != newDigest) {
       try {
-        String contents = pubspec.readSync();
-        var data = yaml.loadYaml(contents);
-        return data['name'];
+        _pubspecContents = yaml.loadYaml(newDigest);
+        _pubspecDigest = newDigest;
       } catch (_) {
-        return null;
+        _pubspecContents = null;
       }
     }
 
-    return null;
+    return _pubspecContents;
   }
 
   int get hashCode => directory.hashCode;
@@ -457,6 +471,25 @@ class DartProject {
 
     return false;
   }
+
+  bool directlyImportsPackage(String packageName) {
+    dynamic pubspec = getPubspecContents();
+    if (pubspec == null) return false;
+
+    if (pubspec['dependencies'] != null) {
+      dynamic deps = pubspec['dependencies'];
+      if (deps[packageName] != null) return true;
+    }
+
+    if (pubspec['dev_dependencies'] != null) {
+      dynamic deps = pubspec['dev_dependencies'];
+      if (deps[packageName] != null) return true;
+    }
+
+    return false;
+  }
+
+  bool isFlutterProject() => directlyImportsPackage('flutter');
 }
 
 class ProjectScanJob extends Job {

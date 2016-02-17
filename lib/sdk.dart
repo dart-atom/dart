@@ -300,7 +300,7 @@ class SdkDiscovery {
   FlutterSdkManager get _flutterSdkManager => deps[FlutterSdkManager];
 
   String _resolveSdkFromVm(String vmPath) {
-    if (vmPath == null) return null;
+    if (vmPath == null || vmPath.isEmpty) return null;
     File vmFile = new File.fromPath(vmPath.trim());
     // Resolve symlinks.
     vmFile = new File.fromPath(vmFile.getRealPathSync());

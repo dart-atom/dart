@@ -3,6 +3,7 @@
 ## unreleased
 - save all dirty editors before running an application
 - removed the `flutter ios --init` command
+- made the Flutter devices toolbar contribution only active for Flutter projects
 - when trying to auto-locate the Dart SDK, use $FLUTTER_ROOT/bin/cache/dart-sdk
   as one of the places to look
 
