@@ -3,6 +3,7 @@
 ## unreleased
 - save all dirty editors before running an application
 - removed the `flutter ios --init` command
+- made the Flutter devices toolbar contribution only active for Flutter projects
 
 ## 0.6.0
 - added a toolbar to show runnable applications and available devices
