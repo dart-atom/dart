@@ -6,6 +6,7 @@ import '../elements.dart';
 import '../flutter/flutter_devices.dart';
 import '../launch/launch.dart';
 import '../launch/run.dart';
+import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'toolbar.dart';
@@ -55,10 +56,11 @@ class DartToolbarContribution implements Disposable {
 
   CoreElement _buildRightTile() {
     CoreElement selectList;
+    CoreElement flutterDiv;
 
     // `settings-view` class added to get proper styling for select elements.
     CoreElement e = div(c: 'settings-view', a: 'flex-center')..add([
-      div(c: 'btn-group btn-group dartlang-toolbar')..add([
+      flutterDiv = div(c: 'btn-group btn-group dartlang-toolbar')..add([
         div(c: 'icon icon-device-mobile')..id = 'toolbar-mobile-icon'
           ..tooltip = "Available devices",
         selectList = new CoreElement('select', classes: 'form-control')
@@ -87,6 +89,15 @@ class DartToolbarContribution implements Disposable {
     // Device pulldown.
     FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
     _bindDevicesToSelect(deviceManager, selectList);
+
+    void updateToolbar([_]) {
+      DartProject project = projectManager.getProjectFor(
+        atom.workspace.getActiveTextEditor()?.getPath());
+      bool isFlutterProject = project != null && project.isFlutterProject();
+      flutterDiv.hidden(!isFlutterProject);
+    }
+    updateToolbar();
+    editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar);
 
     return e;
   }
