@@ -287,7 +287,7 @@ class FlowControlSection implements Disposable {
   FlowControlSection(this.view, this.connection, CoreElement element) {
     resume = button(c: 'btn icon-playback-play')..click(_resume);
     stepIn = button(c: 'btn icon-jump-down')..click(_stepIn);
-    stepOver = button(c: 'btn icon-jump-right')..click(_stepOver);
+    stepOver = button(c: 'btn icon-jump-right')..click(_autoStepOver);
     stepOut = button(c: 'btn icon-jump-up')..click(_stepOut);
     stop = button(c: 'btn icon-primitive-square')..click(_terminate);
 
@@ -364,8 +364,8 @@ class FlowControlSection implements Disposable {
 
   _resume() => view.currentIsolate?.resume();
   _stepIn() => view.currentIsolate?.stepIn();
-  _stepOver() => view.currentIsolate?.stepOver();
   _stepOut() => view.currentIsolate?.stepOut();
+  _autoStepOver() => view.currentIsolate?.autoStepOver();
 
   _terminate() => connection.terminate();
 

@@ -119,6 +119,8 @@ class ObservatoryConnection extends DebugConnection {
   stepIn() => _selectedIsolate?.stepIn();
   stepOver() => _selectedIsolate?.stepOver();
   stepOut() => _selectedIsolate?.stepOut();
+  stepOverAsyncSuspension() => _selectedIsolate?.stepOverAsyncSuspension();
+  autoStepOver() => _selectedIsolate?.autoStepOver();
 
   Future terminate() => launch.kill();
 
@@ -301,11 +303,13 @@ class ObservatoryConnection extends DebugConnection {
         }
 
         isolate._populateFrames().then((_) {
-          isolate._suspend(true);
+          bool asyncSuspension =
+              event.atAsyncSuspension == null ? false : event.atAsyncSuspension;
+          isolate._suspend(true, pausedAtAsyncSuspension: asyncSuspension);
         });
         break;
       case EventKind.kResume:
-        _getIsolate(ref)?._suspend(false);
+        _getIsolate(ref)?._suspend(false, pausedAtAsyncSuspension: false);
         break;
       case EventKind.kInspect:
         InstanceRef inspectee = event.inspectee;
@@ -449,6 +453,7 @@ class ObservatoryIsolate extends DebugIsolate {
   ScriptManager scriptManager;
 
   bool suspended = false;
+  bool suspendedAtAsyncSuspension = false;
   bool _didInitialResume = false;
   String _detail;
 
@@ -473,12 +478,16 @@ class ObservatoryIsolate extends DebugIsolate {
       (libraryRef) => new ObservatoryLibrary._(libraryRef)).toList();
   }
 
-  void _suspend(bool value) {
-    if (!value) frames = null;
+  void _suspend(bool paused, {bool pausedAtAsyncSuspension: false}) {
+    if (!paused) {
+      frames = null;
+      suspendedAtAsyncSuspension = false;
+    }
 
-    suspended = value;
+    suspended = paused;
+    suspendedAtAsyncSuspension = pausedAtAsyncSuspension;
 
-    if (value) {
+    if (paused) {
       connection._isolatePaused.add(this);
     } else {
       connection._isolateResumed.add(this);
@@ -496,7 +505,15 @@ class ObservatoryIsolate extends DebugIsolate {
   stepIn() => service.resume(isolateRef.id, step: StepOption.kInto);
   stepOver() => service.resume(isolateRef.id, step: StepOption.kOver);
   stepOut() => service.resume(isolateRef.id, step: StepOption.kOut);
-
+  stepOverAsyncSuspension() =>
+      service.resume(isolateRef.id, step: StepOption.kOverAsyncSuspension);
+  autoStepOver() {
+    if (suspendedAtAsyncSuspension) {
+      return stepOverAsyncSuspension();
+    } else {
+      return stepOver();
+    }
+  }
   Future<ObservatoryIsolate> _updateIsolateInfo() {
     return service.getIsolate(isolateRef.id).then((Isolate isolate) {
       // TODO: Update the state info.

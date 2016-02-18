@@ -1,6 +1,7 @@
 # dartlang plugin changelog
 
 ## unreleased
+- add support for async stepping
 - save all dirty editors before running an application
 - removed the `flutter ios --init` command
 - made the Flutter devices toolbar contribution only active for Flutter projects
