@@ -346,7 +346,6 @@ class ObservatoryConnection extends DebugConnection {
         _installBreakpoints(ref);
       }
     }).then((_) {
-      // TODO: We should only call this when breakpoints have been set.
       isolate._isolateInitializedCompleter.complete();
 
       if (isolate.isolate.pauseEvent.kind == EventKind.kPauseStart) {
