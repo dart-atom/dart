@@ -104,12 +104,9 @@ class FlutterToolsManager implements Disposable {
 
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
 
-    TextEditor editor = atom.workspace.getActiveTextEditor();
-    DartProject project = projectManager.getProjectFor(editor?.getPath());
-
     flutter.runInJob(['doctor'],
       title: 'Running Flutter doctor…',
-      cwd: project?.directory?.path
+      cwd: _flutterSdk.sdk.path
     );
   }
 

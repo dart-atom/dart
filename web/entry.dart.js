@@ -33654,19 +33654,15 @@ self._domRemove = function(element) {
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(job);
       }, "call$1", "get$_upgrade", 2, 0, 7],
       _doctor$1: [function(_) {
-        var flutter, editor, t1, project, t2, job;
+        var flutter, t1, t2, job;
         if (!$.$get$_flutterSdk0().get$hasSdk()) {
           $.$get$_flutterSdk0().showInstallationInfo$0();
           return;
         }
         flutter = $.$get$_flutterSdk0().get$sdk().get$flutterTool();
-        editor = $.$get$atom()._workspace.getActiveTextEditor$0();
-        t1 = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ);
-        project = t1.getProjectFor$1(editor == null ? editor : editor.invoke$1("getPath"));
         t1 = ["doctor"];
-        t2 = project == null ? project : J.get$directory$x(project);
-        t2 = t2 == null ? t2 : J.get$path$x(t2);
-        job = new Z._FlutterToolJob(flutter.sdk, t2, null, null, "Flutter " + H.S(C.JSArray_methods.get$first(t1)), null);
+        t2 = $.$get$_flutterSdk0().get$sdk();
+        job = new Z._FlutterToolJob(flutter.sdk, t2.get$path(t2), null, null, "Flutter " + H.S(C.JSArray_methods.get$first(t1)), null);
         job._args = t1;
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(job);
       }, "call$1", "get$_doctor", 2, 0, 7],
