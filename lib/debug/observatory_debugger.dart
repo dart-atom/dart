@@ -195,8 +195,8 @@ class ObservatoryConnection extends DebugConnection {
     });
   }
 
+  // TODO: Create an observatory breakpoint manager class.
   Future _installBreakpoints(IsolateRef isolate) {
-    // TODO: Create an observatory breakpoint manager class.
     Map<AtomBreakpoint, List<Breakpoint>> _bps = {};
 
     var addBreakpoint = (AtomBreakpoint atomBreakpoint, Breakpoint vmBreakpoint) {
@@ -268,6 +268,10 @@ class ObservatoryConnection extends DebugConnection {
         _registerNewIsolate(ref);
         break;
       case EventKind.kIsolateRunnable:
+        _installBreakpoints(ref).then((_) {
+          _updateIsolateMetadata(ref);
+        });
+        break;
       case EventKind.kIsolateUpdate:
         _updateIsolateMetadata(ref);
         break;
@@ -334,10 +338,15 @@ class ObservatoryConnection extends DebugConnection {
     _isolateMap[ref.id] = isolate;
     isolates.add(isolate);
 
-    return _installBreakpoints(ref).then((_) {
-      // Get isolate metadata.
-      return isolate._updateIsolateInfo();
+    // Get isolate metadata.
+    return isolate._updateIsolateInfo().then(([_]) {
+      // If the isolate is currently runnable, or the protocol does not have
+      // information about its runnability, then set breakpoints at this time.
+      if (isolate.isolate.runnable == null || isolate.isolate.runnable == true) {
+        _installBreakpoints(ref);
+      }
     }).then((_) {
+      // TODO: We should only call this when breakpoints have been set.
       isolate._isolateInitializedCompleter.complete();
 
       if (isolate.isolate.pauseEvent.kind == EventKind.kPauseStart) {
@@ -505,15 +514,9 @@ class ObservatoryIsolate extends DebugIsolate {
   stepIn() => service.resume(isolateRef.id, step: StepOption.kInto);
   stepOver() => service.resume(isolateRef.id, step: StepOption.kOver);
   stepOut() => service.resume(isolateRef.id, step: StepOption.kOut);
-  stepOverAsyncSuspension() =>
-      service.resume(isolateRef.id, step: StepOption.kOverAsyncSuspension);
-  autoStepOver() {
-    if (suspendedAtAsyncSuspension) {
-      return stepOverAsyncSuspension();
-    } else {
-      return stepOver();
-    }
-  }
+  stepOverAsyncSuspension() => service.resume(isolateRef.id, step: StepOption.kOverAsyncSuspension);
+  autoStepOver() => suspendedAtAsyncSuspension ? stepOverAsyncSuspension() : stepOver();
+
   Future<ObservatoryIsolate> _updateIsolateInfo() {
     return service.getIsolate(isolateRef.id).then((Isolate isolate) {
       // TODO: Update the state info.

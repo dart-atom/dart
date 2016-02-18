@@ -8,6 +8,8 @@
 - when trying to auto-locate the Dart SDK, use $FLUTTER_ROOT/bin/cache/dart-sdk
   as one of the places to look
 - added a `flutter doctor` command
+- fix an issue where we could send breakpoints in before the VM was ready to
+  receive them
 
 ## 0.6.0
 - added a toolbar to show runnable applications and available devices
