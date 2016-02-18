@@ -7,6 +7,7 @@
 - made the Flutter devices toolbar contribution only active for Flutter projects
 - when trying to auto-locate the Dart SDK, use $FLUTTER_ROOT/bin/cache/dart-sdk
   as one of the places to look
+- added a `flutter doctor` command
 
 ## 0.6.0
 - added a toolbar to show runnable applications and available devices
