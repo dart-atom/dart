@@ -121,7 +121,7 @@ class ObservatoryConnection extends DebugConnection {
   stepOut() => _selectedIsolate?.stepOut();
   stepOverAsyncSuspension() => _selectedIsolate?.stepOverAsyncSuspension();
   autoStepOver() => _selectedIsolate?.autoStepOver();
-  
+
   Future terminate() => launch.kill();
 
   Future get onTerminated => completer.future;
@@ -305,11 +305,11 @@ class ObservatoryConnection extends DebugConnection {
         isolate._populateFrames().then((_) {
           bool asyncSuspension =
               event.atAsyncSuspension == null ? false : event.atAsyncSuspension;
-          isolate._suspend(true, asyncSuspension);
+          isolate._suspend(true, pausedAtAsyncSuspension: asyncSuspension);
         });
         break;
       case EventKind.kResume:
-        _getIsolate(ref)?._suspend(false, false);
+        _getIsolate(ref)?._suspend(false, pausedAtAsyncSuspension: false);
         break;
       case EventKind.kInspect:
         InstanceRef inspectee = event.inspectee;
@@ -478,7 +478,7 @@ class ObservatoryIsolate extends DebugIsolate {
       (libraryRef) => new ObservatoryLibrary._(libraryRef)).toList();
   }
 
-  void _suspend(bool paused, bool pausedAtAsyncSuspension) {
+  void _suspend(bool paused, {bool pausedAtAsyncSuspension: false}) {
     if (!paused) {
       frames = null;
       suspendedAtAsyncSuspension = false;
