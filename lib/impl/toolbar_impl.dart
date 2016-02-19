@@ -14,11 +14,7 @@ import 'toolbar.dart';
 class DartToolbarContribution implements Disposable {
   ToolbarTile leftTile;
   ToolbarTile rightTile;
-  Disposable editorWatcher;
   StreamSubscriptions subs = new StreamSubscriptions();
-
-  // CoreElement back;
-  // CoreElement forward;
 
   DartToolbarContribution(Toolbar toolbar) {
     leftTile = toolbar.addLeftTile(item: _buildLeftTile().element);
@@ -43,12 +39,6 @@ class DartToolbarContribution implements Disposable {
         ..tooltip = 'Configure launch'
     ]);
 
-    // TODO: Add a 'pinned' checkbox to the launch group?
-
-    editorWatcher = atom.workspace.observeActivePaneItem((_) {
-      runButton.enabled = atom.workspace.getActiveTextEditor() != null;
-    });
-
     _bindLaunchManager(runButton, appSelectList, configureLaunchButton);
 
     return e;
@@ -57,6 +47,7 @@ class DartToolbarContribution implements Disposable {
   CoreElement _buildRightTile() {
     CoreElement selectList;
     CoreElement flutterDiv;
+    CoreElement outlineToggleDiv;
 
     // `settings-view` class added to get proper styling for select elements.
     CoreElement e = div(c: 'settings-view', a: 'flex-center')..add([
@@ -66,36 +57,26 @@ class DartToolbarContribution implements Disposable {
         selectList = new CoreElement('select', classes: 'form-control')
       ]),
       div(c: 'btn-group btn-group dartlang-toolbar')..add([
-        button(c: 'btn icon icon-list-unordered')
+        outlineToggleDiv = button(c: 'btn icon icon-list-unordered')
           ..click(_toggleOutline)
-          ..tooltip = "Toggle Outline View"
+          ..tooltip = "Toggle Dart Outline View"
       ])
-      // div(c: 'btn-group btn-group dartlang-toolbar')..add([
-      //   back = button(c: 'btn icon icon-arrow-left')..tooltip = "Back",
-      //   forward = button(c: 'btn icon icon-arrow-right')..tooltip = "Forward"
-      // ])
     ]);
 
-    // back.disabled = true;
-    // back.click(() => navigationManager.goBack());
-    // forward.disabled = true;
-    // forward.click(() => navigationManager.goForward());
-    //
-    // navigationManager.onNavigate.listen((_) {
-    //   back.disabled = !navigationManager.canGoBack();
-    //   forward.disabled = !navigationManager.canGoForward();
-    // });
-
-    // Device pulldown.
+    // Bind the device pulldown.
     FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
     _bindDevicesToSelect(deviceManager, selectList);
 
     void updateToolbar([_]) {
-      DartProject project = projectManager.getProjectFor(
-        atom.workspace.getActiveTextEditor()?.getPath());
+      String path = atom.workspace.getActiveTextEditor()?.getPath();
+      DartProject project = projectManager.getProjectFor(path);
+
       bool isFlutterProject = project != null && project.isFlutterProject();
       flutterDiv.hidden(!isFlutterProject);
+
+      outlineToggleDiv.enabled = isDartFile(path);
     }
+
     updateToolbar();
     editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar);
 
@@ -114,14 +95,15 @@ class DartToolbarContribution implements Disposable {
     var updateUI = ([_]) {
       runnables = projectLaunchManager.runnables;
 
-      element.disabled = runnables.isEmpty;
-      configureButton.disabled = runnables.isEmpty;
-      selectList.disabled = runnables.isEmpty;
+      runButton.enabled = runnables.isNotEmpty;
+      selectList.enabled = runnables.isNotEmpty;
+      configureButton.enabled = runnables.isNotEmpty;
 
       selectList.clear();
 
       if (runnables.isEmpty) {
         selectList.add(new CoreElement('option')..text = 'No runnable apps');
+
       } else {
         runnables.sort();
 
@@ -158,13 +140,13 @@ class DartToolbarContribution implements Disposable {
       int index = 0;
 
       List<Device> devices = deviceManager.devices;
-      element.disabled = devices.isEmpty;
+      selectList.enabled = devices.isNotEmpty;
 
       if (devices.isEmpty) {
         selectList.add(new CoreElement('option')..text = 'No devices connected');
       } else {
         for (Device device in devices) {
-          /*CoreElement option =*/ selectList.add(new CoreElement('option')..text = device.getLabel());
+          selectList.add(new CoreElement('option')..text = device.getLabel());
           if (deviceManager.currentSelectedDevice == device) {
             element.selectedIndex = index;
           }
@@ -215,7 +197,6 @@ class DartToolbarContribution implements Disposable {
   void dispose() {
     leftTile.destroy();
     rightTile.destroy();
-    editorWatcher.dispose();
     subs.dispose();
   }
 }
