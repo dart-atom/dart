@@ -13,6 +13,7 @@ import 'package:yaml/yaml.dart' as yaml;
 import 'analysis/analysis_options.dart';
 import 'atom.dart';
 import 'atom_utils.dart';
+import 'dartino/dartino_util.dart';
 import 'impl/pub.dart' as pub;
 import 'jobs.dart';
 import 'state.dart';
@@ -51,6 +52,9 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     if (buildFile.existsSync()) {
       if (_isDartBuildFile(buildFile)) return true;
     }
+
+    // Look for dartino.yaml file... there is no .packages or pubspec
+    if (dartino.isProject(dir)) return true;
 
     return false;
   }
@@ -490,6 +494,8 @@ class DartProject {
   }
 
   bool isFlutterProject() => directlyImportsPackage('flutter');
+
+  bool isDartinoProject() => dartino.isProject(directory);
 }
 
 class ProjectScanJob extends Job {

@@ -12,6 +12,7 @@ import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_lib.dart';
 import 'atom.dart';
+import 'dartino/dartino_util.dart';
 import 'jobs.dart';
 import 'process.dart';
 import 'projects.dart';
@@ -148,8 +149,15 @@ class AnalysisServer implements Disposable {
   void _syncRoots() {
     if (isActive) {
       List<String> roots = new List.from(knownRoots.map((dir) => dir.path));
-      _logger.fine("setAnalysisRoots(${roots})");
-      _server.analysis.setAnalysisRoots(roots, []);
+      var pkgRoots = <String, String>{};
+      for (String root in roots) {
+        if (dartino.isProject(root)) {
+          String pkgRoot = dartino.packageRoot(root);
+          if (pkgRoot != null) pkgRoots[root] = pkgRoot;
+        }
+      }
+      _logger.fine("setAnalysisRoots(${roots}, packageRoots: $pkgRoots)");
+      _server.analysis.setAnalysisRoots(roots, [], packageRoots: pkgRoots);
     }
   }
 
