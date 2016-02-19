@@ -96,8 +96,8 @@ class DartToolbarContribution implements Disposable {
       runnables = projectLaunchManager.runnables;
 
       runButton.enabled = runnables.isNotEmpty;
-      selectList.disabled = runnables.isEmpty;
-      configureButton.disabled = runnables.isEmpty;
+      selectList.enabled = runnables.isNotEmpty;
+      configureButton.enabled = runnables.isNotEmpty;
 
       selectList.clear();
 
@@ -140,7 +140,7 @@ class DartToolbarContribution implements Disposable {
       int index = 0;
 
       List<Device> devices = deviceManager.devices;
-      element.disabled = devices.isEmpty;
+      selectList.enabled = devices.isNotEmpty;
 
       if (devices.isEmpty) {
         selectList.add(new CoreElement('option')..text = 'No devices connected');
