@@ -144,7 +144,8 @@ class _LaunchInstance {
       project,
       killHandler: _kill,
       cwd: project.path,
-      title: description
+      title: description,
+      targetName: device?.name
     );
     launchManager.addLaunch(_launch);
   }
@@ -220,7 +221,8 @@ class _FlutterLaunch extends Launch {
     DartProject project, {
     Function killHandler,
     String cwd,
-    String title
+    String title,
+    String targetName
   }) : super(
     manager,
     launchType,
@@ -228,7 +230,8 @@ class _FlutterLaunch extends Launch {
     name,
     killHandler: killHandler,
     cwd: cwd,
-    title: title
+    title: title,
+    targetName: targetName
   ) {
     _resolver = new CachingServerResolver(
       cwd: project.path,

@@ -22,9 +22,6 @@ import 'utils.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui');
 
-// TODO: Do something about the outline view - it and the debugger view
-// fight for real estate.
-
 // TODO: Ensure that the debugger ui exists over the course of the debug connection,
 // and that a new one is not created after a debugger tab is closed, and that
 // closing a debugger tab doesn't tear down any listening state.
@@ -116,20 +113,14 @@ class DebuggerView extends View {
 
   void _createTitleSection(CoreElement section) {
     CoreElement title;
-    CoreElement subtitle;
 
     section.add([
       title = div(c: 'view-title'),
-      subtitle = div(c: 'view-subtitle')
     ]);
 
-    title.text = 'Debugging ${connection.launch.name}';
+    String titleText = connection.launch.targetName ?? connection.launch.name;
+    title.text = 'Debugging ${titleText}';
     title.tooltip = title.text;
-
-    subs.add(connection.metadata.observe((val) {
-      subtitle.text = val == null ? ' ' : val;
-      subtitle.tooltip = subtitle.text;
-    }));
   }
 
   void _createFlowControlSection(CoreElement section) {
@@ -354,11 +345,12 @@ class FlowControlSection implements Disposable {
       view._removeExecutionMarker();
     }
 
-    subtitle.toggleClass('font-style-italic', false);
+    subtitle.toggleClass('font-style-italic', !suspended);
+
     if (suspended) {
-      subtitle.text = 'Isolate ${isolate.name} (paused)';
+      subtitle.text = 'Isolate ${isolate.displayName}';
     } else {
-      subtitle.text = 'Isolate ${isolate.name}';
+      subtitle.text = 'Isolate ${isolate.displayName} (running)';
     }
   }
 
@@ -514,8 +506,10 @@ class DetailSection {
         _detailsElement.text = '${e}';
         _detailsElement.toggleClass('text-error', true);
       }).whenComplete(() {
-        sectionElement.hidden(variable == null);
+        sectionElement.hidden(false);
       });
+    } else {
+      sectionElement.hidden(true);
     }
   }
 }
@@ -594,7 +588,7 @@ class IsolatesTab extends MTab {
   void _render(DebugIsolate isolate, CoreElement element) {
     // TODO: pause button, pause state
     element..add([
-      span(text: isolate.name, c: 'icon icon-versions'),
+      span(text: isolate.displayName, c: 'icon icon-versions'),
       span(text: isolate.detail, c: 'debugger-secondary-info overflow-hidden-ellipsis')
     ]);
   }
@@ -710,7 +704,7 @@ class BreakpointsTab extends MTab {
         span(text: pathText, c: 'debugger-breakpoint-path')..tooltip = bp.path,
         span(text: lineText, c: 'debugger-secondary-info')
       ]),
-      new MIconButton('icon-x')..click(handleDelete)
+      new MIconButton('icon-dash')..click(handleDelete)..tooltip = "Delete breakpoint"
     ])..layoutHorizontal();
   }
 

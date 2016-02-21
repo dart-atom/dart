@@ -187,6 +187,7 @@ class Launch implements Disposable {
   final LaunchConfiguration launchConfiguration;
   final String name;
   final String title;
+  final String targetName;
   final LaunchManager manager;
   final int id = ++_id;
   @deprecated
@@ -204,7 +205,8 @@ class Launch implements Disposable {
     this.killHandler,
     this.cwd,
     int servicePort,
-    this.title
+    this.title,
+    this.targetName
   }) {
     if (servicePort != null) this.servicePort.value = servicePort;
     if (cwd != null) _pathResolver = new _PathResolver(cwd);

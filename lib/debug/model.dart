@@ -38,6 +38,9 @@ abstract class DebugIsolate {
 
   String get name;
 
+  /// Return a more human readable name for the Isolate.
+  String get displayName => name;
+
   String get detail;
 
   bool get suspended;
