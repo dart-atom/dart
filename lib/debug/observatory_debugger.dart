@@ -472,8 +472,10 @@ class ObservatoryIsolate extends DebugIsolate {
 
   String get name => isolateRef.name;
 
-  String get displayName =>
-    name.contains(r'$') ? "${name.replaceAll(r'$', ':')}()" : name;
+
+  // Isolate names are something like `foo_app.dart$main`. This cleans them up
+  // slightly to `foo_app.dart:main()`.
+  String get displayName => name.contains(r'$') ? "${name.replaceAll(r'$', ':')}()" : name;
 
   String get detail => _detail;
 
