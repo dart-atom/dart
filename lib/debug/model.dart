@@ -38,6 +38,8 @@ abstract class DebugIsolate {
 
   String get name;
 
+  String get displayName => name;
+
   String get detail;
 
   bool get suspended;

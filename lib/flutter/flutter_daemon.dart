@@ -105,6 +105,12 @@ class FlutterDaemonManager implements Disposable {
         _deviceRemovedController.add(device);
       });
 
+      // TODO(devoncarew): We need to enable and disable device polling as Atom
+      // moves to the foreground and background.
+      _daemon.device.enable().catchError((e) {
+        // Ignore this error - older clients don't understand this call.
+      });
+
       _daemon.onSend.listen((String message) {
         if (_logger.isLoggable(Level.FINER)) {
           _logger.finer('--> ${message}');
@@ -344,6 +350,10 @@ class DeviceDomain extends Domain {
       return result.map(Device.parse).toList();
     });
   }
+
+  Future enable() => _call('device.enable');
+
+  Future disable() => _call('device.disable');
 }
 
 class Device {

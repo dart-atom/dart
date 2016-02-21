@@ -118,10 +118,8 @@ class BreakpointManager implements Disposable, StateStorable {
 
     // Check to see if we need to toggle it.
     if (other != null) {
-      atom.notifications.addInfo('Removed ${other.display}');
       removeBreakpoint(other);
     } else {
-      atom.notifications.addSuccess('Added ${bp.display}');
       addBreakpoint(bp);
     }
   }

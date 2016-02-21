@@ -472,6 +472,9 @@ class ObservatoryIsolate extends DebugIsolate {
 
   String get name => isolateRef.name;
 
+  String get displayName =>
+    name.contains(r'$') ? "${name.replaceAll(r'$', ':')}()" : name;
+
   String get detail => _detail;
 
   String get id => isolateRef.id;
