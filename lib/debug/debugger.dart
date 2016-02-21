@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
+import '../analysis/analysis_server_lib.dart' show MapUriResult;
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../state.dart';
@@ -160,7 +161,7 @@ class UriResolver implements Disposable {
 
     return _completer.future.then((String contextId) {
       return analysisServer.server.execution.mapUri(contextId, uri: uri);
-    }).then((result) {
+    }).then((MapUriResult result) {
       String path = result.file;
       _uriToPath[uri] = path;
       return path;
@@ -180,7 +181,9 @@ class UriResolver implements Disposable {
 
     return _completer.future.then((String contextId) {
       return analysisServer.server.execution.mapUri(contextId, file: path);
-    }).then((result) {
+    }).then((MapUriResult result) {
+      if (result.uri == null) return [];
+
       List<String> uris = [result.uri];
 
       if (result.uri.startsWith(_selfRefPrefix)) {
