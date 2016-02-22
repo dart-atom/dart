@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.1
 - add support for async stepping
 - save all dirty editors before running an application
 - removed the `flutter ios --init` command
