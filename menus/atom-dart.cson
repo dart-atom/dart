@@ -43,6 +43,7 @@
     ]}
     { label: 'Sort Members', command: 'dartlang:sort-members' }
     { label: 'Type Hierarchy', command: 'dartlang:type-hierarchy' }
+    { label: 'Toggle Breakpoint', command: 'dartlang:debug-toggle-breakpoint' }
     { type: 'separator'}
   ]
   '.tree-view.full-menu li[is="tree-view-file"] span[data-name$=".dart"]': [

@@ -107,6 +107,7 @@ class DebuggerView extends View {
     detailSection = new DetailSection(detailsElement);
     _createSecondarySection(secondarySection);
 
+    subs.add(connection.isolates.onAdded.listen(_handleIsolateAdded));
     subs.add(connection.onPaused.listen(_handleIsolatePaused));
     subs.add(connection.onResumed.listen(_handleIsolateResumed));
     subs.add(connection.isolates.onRemoved.listen(_handleIsolateTerminated));
@@ -162,6 +163,12 @@ class DebuggerView extends View {
     disposables.addAll(secondaryTabGroup.tabs.items);
   }
 
+  void _handleIsolateAdded(DebugIsolate isolate) {
+    if (focusManager.isolate == null) {
+      focusManager.focusOn(isolate);
+    }
+  }
+
   void _handleIsolatePaused(DebugIsolate isolate) {
     focusManager.focusOn(isolate);
   }
@@ -172,8 +179,11 @@ class DebuggerView extends View {
 
   void _handleIsolateTerminated(DebugIsolate isolate) {
     if (focusManager.isolate == isolate) {
-      // TODO: find the next paused isolate; find any other isolate
-      focusManager.focusOn(null);
+      // Select another isolate.
+      DebugIsolate nextFocused = connection.isolates.items.firstWhere((DebugIsolate i) {
+        return i != isolate;
+      }, orElse: () => null);
+      focusManager.focusOn(nextFocused);
     }
   }
 
@@ -274,10 +284,11 @@ class FlowControlSection implements Disposable {
   CoreElement stepOut;
   CoreElement stop;
 
-  CoreElement subtitle;
+  CoreElement isolateName;
+  CoreElement isolateState;
 
   FlowControlSection(this.view, this.connection, CoreElement element) {
-    resume = button(c: 'btn icon-playback-play')..click(_resume)..tooltip = 'Resume';
+    resume = button(c: 'btn icon-arrow-right')..click(_pauseResume)..tooltip = 'Resume';
     stepIn = button(c: 'btn icon-jump-down')..click(_stepIn)..tooltip = 'Step in';
     stepOver = button(c: 'btn icon-jump-right')..click(_autoStepOver)..tooltip = 'Step over';
     stepOut = button(c: 'btn icon-jump-up')..click(_stepOut)..tooltip = 'Step out';
@@ -295,10 +306,10 @@ class FlowControlSection implements Disposable {
 
     // TODO: Pull down menu for switching between isolates.
     element.add([
-      subtitle = div(
-        text: 'no isolate selected',
-        c: 'overflow-hidden-ellipsis font-style-italic'
-      ),
+      div().add([
+        isolateName = span(text: 'no isolate selected'),
+        isolateState = span(c: 'debugger-secondary-info font-style-italic')
+      ]),
       executionControlToolbar
     ]);
 
@@ -309,13 +320,11 @@ class FlowControlSection implements Disposable {
     stop.enabled = connection.isAlive;
 
     if (isolate == null) {
-      resume.enabled = false;
       stepIn.enabled = false;
       stepOut.enabled = false;
       stepOver.enabled = false;
 
-      subtitle.text = 'no isolate selected';
-      subtitle.toggleClass('font-style-italic', true);
+      isolateName.text = 'no isolate selected';
 
       view._removeExecutionMarker();
 
@@ -324,7 +333,10 @@ class FlowControlSection implements Disposable {
 
     bool suspended = isolate.suspended;
 
-    resume.enabled = suspended;
+    resume.toggleClass('icon-playback-pause', !suspended);
+    resume.toggleClass('icon-arrow-right', suspended);
+    resume.tooltip = suspended ? 'Resume' : 'Pause';
+
     stepIn.enabled = suspended;
     stepOut.enabled = suspended;
     stepOver.enabled = suspended;
@@ -346,16 +358,23 @@ class FlowControlSection implements Disposable {
       view._removeExecutionMarker();
     }
 
-    subtitle.toggleClass('font-style-italic', !suspended);
-
     if (suspended) {
-      subtitle.text = 'Isolate ${isolate.displayName}';
+      isolateName.text = 'Isolate ${isolate.displayName}';
+      isolateState.text = isolate.frames.isEmpty ? 'paused; no frames' : '';
     } else {
-      subtitle.text = 'Isolate ${isolate.displayName} (running)';
+      isolateName.text = 'Isolate ${isolate.displayName}';
+      isolateState.text = 'running';
     }
   }
 
-  _resume() => view.currentIsolate?.resume();
+  _pauseResume() {
+    if (view.currentIsolate.suspended) {
+      return view.currentIsolate?.resume();
+    } else {
+      return view.currentIsolate?.pause();
+    }
+  }
+
   _stepIn() => view.currentIsolate?.stepIn();
   _stepOut() => view.currentIsolate?.stepOut();
   _autoStepOver() => view.currentIsolate?.autoStepOver();
@@ -388,17 +407,21 @@ class ExecutionTab extends MTab {
     view.observeIsolate(_updateFrames);
   }
 
+  static const Duration _framesDebounceDuration = const Duration(milliseconds: 100);
+
+  Timer _framesClearTimer;
+
   void _updateFrames(DebugIsolate isolate) {
-    // TODO: When stepping, only remove the frames after a short delay.
+    _framesClearTimer?.cancel();
 
     List<DebugFrame> frames = isolate?.frames;
-    if (frames == null) frames = [];
-    list.update(frames);
 
-    // TODO: Listen to a frame focus manager for this.
-    if (frames.isNotEmpty) {
-      list.selectItem(frames.first);
-    }
+    // When stepping, only change the frames after a short delay.
+    _framesClearTimer = new Timer(_framesDebounceDuration, () {
+      if (frames == null) frames = [];
+      list.update(frames);
+      if (frames.isNotEmpty) list.selectItem(frames.first);
+    });
   }
 
   void _renderFrame(DebugFrame frame, CoreElement element) {
