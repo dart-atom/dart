@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## unreleased
+- several miscellaneous fixes to the debugger
+- fixed an issue with the devices visibility on the toolbar
+
 ## 0.6.1
 - add support for async stepping
 - save all dirty editors before running an application
