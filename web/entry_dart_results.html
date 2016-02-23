@@ -168,7 +168,7 @@ table {
 				<span class="menu-heading">Application code</span>
 				<a href="#package_atom_dartlang" class="menu-item">
 					<span>atom_dartlang</span>
-					<span class="counter warning">135</span>
+					<span class="counter warning">137</span>
 					<span class="counter error">9</span>
 				</a>
 				<span class="menu-heading">Package: code</span>
@@ -192,11 +192,7 @@ table {
 					<span class="counter error">1</span>
 				</a>
 				<div class="menu-item">usage</div>
-				<a href="#package_vm_service_lib" class="menu-item">
-					<span>vm_service_lib</span>
-					<span class="counter warning">20</span>
-					<span class="counter error">3</span>
-				</a>
+				<div class="menu-item">vm_service_lib</div>
 				<a href="#package_yaml" class="menu-item">
 					<span>yaml</span>
 					<span class="counter warning">1</span>
@@ -205,10 +201,10 @@ table {
 		</div>
 		<div class="column three-fourths">
 			<h1 class="page-title">DDC compilation report for web/entry.dart</h1>
-			<p>Found 34 errors and 190 warnings.</p>
+			<p>Found 31 errors and 172 warnings.</p>
 			<h2 id=package_atom_dartlang>package:atom_dartlang</h2>
 			<span class="counter error">9 errors</span>
-			<span class="counter warning">135 warnings</span>
+			<span class="counter warning">137 warnings</span>
 			<div class="file">
 				<div class="file-header">
 					<span class="counter error">STATIC_TYPE_ERROR</span>
@@ -2591,26 +2587,6 @@ table {
 			</div>
 			<div class="file">
 				<div class="file-header">
-					<span class="counter warning">AnalyzerMessage</span>
-					<span class="file-info">package:atom_dartlang/debug/debugger_ui.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">670</td>
-								<td class="blob-code blob-code-inner">    subs.add(breakpointManager.onAdd.listen(_update));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → void&#39; cannot be assigned to the parameter type &#39;(AtomBreakpoint) → void&#39;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
 					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
 					<span class="file-info">package:atom_dartlang/debug/debugger_ui.dart</span>
 				</div>
@@ -2638,8 +2614,8 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">671</td>
-								<td class="blob-code blob-code-inner">    subs.add(breakpointManager.onRemove.listen(_update));</td>
+								<td class="blob-num">670</td>
+								<td class="blob-code blob-code-inner">    subs.add(breakpointManager.onAdd.listen(_update));</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
@@ -2664,6 +2640,26 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → void to (AtomBreakpoint) → void</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">AnalyzerMessage</span>
+					<span class="file-info">package:atom_dartlang/debug/debugger_ui.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">671</td>
+								<td class="blob-code blob-code-inner">    subs.add(breakpointManager.onRemove.listen(_update));</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → void&#39; cannot be assigned to the parameter type &#39;(AtomBreakpoint) → void&#39;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2680,6 +2676,46 @@ table {
 							<tr>
 								<td class="blob-num">148</td>
 								<td class="blob-code blob-code-inner">      Map&lt;String, dynamic&gt; json = e.json[&#39;logRecord&#39;];</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from dynamic to Map&lt;String, dynamic&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
+					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">153</td>
+								<td class="blob-code blob-code-inner">      InstanceRef loggerName = InstanceRef.parse(json[&#39;loggerName&#39;]);</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from dynamic to Map&lt;String, dynamic&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
+					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">154</td>
+								<td class="blob-code blob-code-inner">      InstanceRef message = InstanceRef.parse(json[&#39;message&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
@@ -4251,26 +4287,6 @@ table {
 			</div>
 			<div class="file">
 				<div class="file-header">
-					<span class="counter warning">AnalyzerMessage</span>
-					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">123</td>
-								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onSelectedRunnableChanged.listen(updateUI));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → dynamic&#39; cannot be assigned to the parameter type &#39;(RunnableConfig) → void&#39;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
 					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
 					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
 				</div>
@@ -4284,6 +4300,26 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (RunnableConfig) → void</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">AnalyzerMessage</span>
+					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">123</td>
+								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onSelectedRunnableChanged.listen(updateUI));</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → dynamic&#39; cannot be assigned to the parameter type &#39;(RunnableConfig) → void&#39;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -6299,469 +6335,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Field declaration SourceSpanFormatException.source cannot be overridden in StringScannerException.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<h2 id=package_vm_service_lib>package:vm_service_lib</h2>
-			<span class="counter error">3 errors</span>
-			<span class="counter warning">20 warnings</span>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1747</td>
-								<td class="blob-code blob-code-inner">  ClassRef classRef;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration Obj.classRef cannot be overridden in Instance.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2296</td>
-								<td class="blob-code blob-code-inner">  String valueAsString;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration InstanceRef.valueAsString cannot be overridden in NullRef.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2318</td>
-								<td class="blob-code blob-code-inner">  String valueAsString;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration Instance.valueAsString cannot be overridden in Null.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1075</td>
-								<td class="blob-code blob-code-inner">  ClassList._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1369</td>
-								<td class="blob-code blob-code-inner">  Event._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1528</td>
-								<td class="blob-code blob-code-inner">  FlagList._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1551</td>
-								<td class="blob-code blob-code-inner">  Frame._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1984</td>
-								<td class="blob-code blob-code-inner">        _createSpecificObject(json[&#39;associations&#39;], MapAssociation.parse);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Object to List&lt;MapAssociation&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2024</td>
-								<td class="blob-code blob-code-inner">  IsolateRef._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2095</td>
-								<td class="blob-code blob-code-inner">  Isolate._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2276</td>
-								<td class="blob-code blob-code-inner">  Message._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2346</td>
-								<td class="blob-code blob-code-inner">  ObjRef._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2388</td>
-								<td class="blob-code blob-code-inner">  Obj._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2406</td>
-								<td class="blob-code blob-code-inner">      json == null ? null : new Response._fromJson(json);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2439</td>
-								<td class="blob-code blob-code-inner">  Sentinel._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2543</td>
-								<td class="blob-code blob-code-inner">  SourceLocation._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2574</td>
-								<td class="blob-code blob-code-inner">  SourceReport._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2671</td>
-								<td class="blob-code blob-code-inner">  Stack._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2688</td>
-								<td class="blob-code blob-code-inner">  Success._fromJson(Map json) : super._fromJson(json) {}</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2780</td>
-								<td class="blob-code blob-code-inner">  UnresolvedSourceLocation._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2806</td>
-								<td class="blob-code blob-code-inner">  Version._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2825</td>
-								<td class="blob-code blob-code-inner">  VMRef._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2860</td>
-								<td class="blob-code blob-code-inner">  VM._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
 							</tr>
 						</tbody>
 					</table>
