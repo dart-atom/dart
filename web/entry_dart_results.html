@@ -168,8 +168,8 @@ table {
 				<span class="menu-heading">Application code</span>
 				<a href="#package_atom_dartlang" class="menu-item">
 					<span>atom_dartlang</span>
-					<span class="counter warning">134</span>
-					<span class="counter error">8</span>
+					<span class="counter warning">135</span>
+					<span class="counter error">9</span>
 				</a>
 				<span class="menu-heading">Package: code</span>
 				<div class="menu-item">charcode</div>
@@ -205,10 +205,10 @@ table {
 		</div>
 		<div class="column three-fourths">
 			<h1 class="page-title">DDC compilation report for web/entry.dart</h1>
-			<p>Found 33 errors and 189 warnings.</p>
+			<p>Found 34 errors and 190 warnings.</p>
 			<h2 id=package_atom_dartlang>package:atom_dartlang</h2>
-			<span class="counter error">8 errors</span>
-			<span class="counter warning">134 warnings</span>
+			<span class="counter error">9 errors</span>
+			<span class="counter warning">135 warnings</span>
 			<div class="file">
 				<div class="file-header">
 					<span class="counter error">STATIC_TYPE_ERROR</span>
@@ -363,11 +363,31 @@ table {
 						<tbody>
 							<tr>
 								<td class="blob-num">81</td>
-								<td class="blob-code blob-code-inner">    editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar);</td>
+								<td class="blob-code blob-code-inner">    subs.add(editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar));</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Type check failed: updateToolbar (([dynamic]) → void) is not of type (TextEditor) → void</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter error">STATIC_TYPE_ERROR</span>
+					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">82</td>
+								<td class="blob-code blob-code-inner">    subs.add(projectManager.onProjectsChanged.listen(updateToolbar));</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">Type check failed: updateToolbar (([dynamic]) → void) is not of type (List&lt;DartProject&gt;) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -2611,26 +2631,6 @@ table {
 			</div>
 			<div class="file">
 				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:atom_dartlang/debug/debugger_ui.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">671</td>
-								<td class="blob-code blob-code-inner">    subs.add(breakpointManager.onRemove.listen(_update));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → void to (AtomBreakpoint) → void</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
 					<span class="counter warning">AnalyzerMessage</span>
 					<span class="file-info">package:atom_dartlang/debug/debugger_ui.dart</span>
 				</div>
@@ -2644,6 +2644,26 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → void&#39; cannot be assigned to the parameter type &#39;(AtomBreakpoint) → void&#39;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
+					<span class="file-info">package:atom_dartlang/debug/debugger_ui.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">671</td>
+								<td class="blob-code blob-code-inner">    subs.add(breakpointManager.onRemove.listen(_update));</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → void to (AtomBreakpoint) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -4159,7 +4179,7 @@ table {
 						<tbody>
 							<tr>
 								<td class="blob-num">81</td>
-								<td class="blob-code blob-code-inner">    editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar);</td>
+								<td class="blob-code blob-code-inner">    subs.add(editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar));</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
@@ -4178,7 +4198,27 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">121</td>
+								<td class="blob-num">82</td>
+								<td class="blob-code blob-code-inner">    subs.add(projectManager.onProjectsChanged.listen(updateToolbar));</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → void&#39; cannot be assigned to the parameter type &#39;(List&lt;DartProject&gt;) → void&#39;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">AnalyzerMessage</span>
+					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">122</td>
 								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onRunnablesChanged.listen(updateUI));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4198,32 +4238,12 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">121</td>
+								<td class="blob-num">122</td>
 								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onRunnablesChanged.listen(updateUI));</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (List&lt;RunnableConfig&gt;) → void</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">122</td>
-								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onSelectedRunnableChanged.listen(updateUI));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (RunnableConfig) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -4238,7 +4258,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">122</td>
+								<td class="blob-num">123</td>
 								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onSelectedRunnableChanged.listen(updateUI));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4258,12 +4278,12 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">160</td>
-								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onDevicesChanged.listen(updateSelect));</td>
+								<td class="blob-num">123</td>
+								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onSelectedRunnableChanged.listen(updateUI));</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (List&lt;Device&gt;) → void</td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (RunnableConfig) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -4278,7 +4298,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">160</td>
+								<td class="blob-num">161</td>
 								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onDevicesChanged.listen(updateSelect));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4299,11 +4319,11 @@ table {
 						<tbody>
 							<tr>
 								<td class="blob-num">161</td>
-								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onSelectedChanged.listen(updateSelect));</td>
+								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onDevicesChanged.listen(updateSelect));</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (Device) → void</td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (List&lt;Device&gt;) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -4318,12 +4338,32 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">161</td>
+								<td class="blob-num">162</td>
 								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onSelectedChanged.listen(updateSelect));</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → dynamic&#39; cannot be assigned to the parameter type &#39;(Device) → void&#39;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
+					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">162</td>
+								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onSelectedChanged.listen(updateSelect));</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (Device) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -6752,7 +6792,7 @@ table {
 		</div>
 	</div>
 	<footer class="footer">
-		web/entry.dart • DDC version 0.1.20
+		web/entry.dart • DDC version 0.1.21
 	</footer>
 </div>
 </body>
