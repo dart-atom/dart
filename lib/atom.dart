@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// A Dart wrapper around the [Atom](https://atom.io/docs/api) apis.
-library atom2;
 
 import 'dart:async';
 import 'dart:html' hide File, Notification, Point;
