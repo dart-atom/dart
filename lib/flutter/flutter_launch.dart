@@ -27,7 +27,7 @@ class FlutterLaunchType extends LaunchType {
 
   _LaunchInstance _lastLaunch;
 
-  FlutterLaunchType() : super('flutter');
+  FlutterLaunchType([String launchType = 'flutter']) : super(launchType);
 
   String get flutterStartCommand => 'start';
 

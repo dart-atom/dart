@@ -7,9 +7,7 @@ class MojoLaunchType extends FlutterLaunchType {
   static void register(LaunchManager manager) =>
       manager.registerLaunchType(new MojoLaunchType());
 
-  MojoLaunchType() : super();
-
-  String get type => 'mojo';
+  MojoLaunchType() : super('mojo');
 
   String get flutterStartCommand => 'run_mojo';
 

@@ -168,8 +168,8 @@ table {
 				<span class="menu-heading">Application code</span>
 				<a href="#package_atom_dartlang" class="menu-item">
 					<span>atom_dartlang</span>
-					<span class="counter warning">134</span>
-					<span class="counter error">8</span>
+					<span class="counter warning">128</span>
+					<span class="counter error">2</span>
 				</a>
 				<span class="menu-heading">Package: code</span>
 				<div class="menu-item">charcode</div>
@@ -192,11 +192,7 @@ table {
 					<span class="counter error">1</span>
 				</a>
 				<div class="menu-item">usage</div>
-				<a href="#package_vm_service_lib" class="menu-item">
-					<span>vm_service_lib</span>
-					<span class="counter warning">20</span>
-					<span class="counter error">3</span>
-				</a>
+				<div class="menu-item">vm_service_lib</div>
 				<a href="#package_yaml" class="menu-item">
 					<span>yaml</span>
 					<span class="counter warning">1</span>
@@ -205,54 +201,10 @@ table {
 		</div>
 		<div class="column three-fourths">
 			<h1 class="page-title">DDC compilation report for web/entry.dart</h1>
-			<p>Found 33 errors and 189 warnings.</p>
+			<p>Found 24 errors and 163 warnings.</p>
 			<h2 id=package_atom_dartlang>package:atom_dartlang</h2>
-			<span class="counter error">8 errors</span>
-			<span class="counter warning">134 warnings</span>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">STATIC_TYPE_ERROR</span>
-					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">342</td>
-								<td class="blob-code blob-code-inner">    return isolate._updateIsolateInfo().then(([_]) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">343</td>
-								<td class="blob-code blob-code-inner">      &#47;&#47; If the isolate is currently runnable, or the protocol does not have</td>
-							</tr>
-							<tr>
-								<td class="blob-num">344</td>
-								<td class="blob-code blob-code-inner">      &#47;&#47; information about its runnability, then set breakpoints at this time.</td>
-							</tr>
-							<tr>
-								<td class="blob-num">345</td>
-								<td class="blob-code blob-code-inner">      if (isolate.isolate.runnable == null || isolate.isolate.runnable == true) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">346</td>
-								<td class="blob-code blob-code-inner">        _installBreakpoints(ref);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">347</td>
-								<td class="blob-code blob-code-inner">      }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">348</td>
-								<td class="blob-code blob-code-inner">    }).then((_) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Type check failed: ([_]) {if (isolate.isolate.runnable == null || isolate.isolate.runnable == true) {_installBreakpoints(ref);}} (([dynamic]) → dynamic) is not of type (ObservatoryIsolate) → dynamic</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+			<span class="counter error">2 errors</span>
+			<span class="counter warning">128 warnings</span>
 			<div class="file">
 				<div class="file-header">
 					<span class="counter error">STATIC_TYPE_ERROR</span>
@@ -268,106 +220,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Type check failed: const LineSplitter() (LineSplitter) is not of type StreamTransformer&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:atom_dartlang/flutter/flutter_sdk.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">261</td>
-								<td class="blob-code blob-code-inner">  Object get schedulingRule =&gt; cwd;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration Job.schedulingRule cannot be overridden in _FlutterToolJob.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:atom_dartlang/flutter/mojo_launch.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">12</td>
-								<td class="blob-code blob-code-inner">  String get type =&gt; &#39;mojo&#39;;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration LaunchType.type cannot be overridden in MojoLaunchType.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:atom_dartlang/impl/pub.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">373</td>
-								<td class="blob-code blob-code-inner">  Object get schedulingRule =&gt; _pubspecDir;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration Job.schedulingRule cannot be overridden in PubJob.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:atom_dartlang/impl/pub.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">414</td>
-								<td class="blob-code blob-code-inner">  Object get schedulingRule =&gt; _pubspecDir;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration Job.schedulingRule cannot be overridden in PubRunJob.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">STATIC_TYPE_ERROR</span>
-					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">81</td>
-								<td class="blob-code blob-code-inner">    editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Type check failed: updateToolbar (([dynamic]) → void) is not of type (TextEditor) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -408,41 +260,21 @@ table {
 			<div class="file">
 				<div class="file-header">
 					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:atom_dartlang/analysis/analysis_options.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">110</td>
-								<td class="blob-code blob-code-inner">    return exclude is List ? exclude : [];</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from EfficientLength to List&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
 					<span class="file-info">package:atom_dartlang/analysis/analysis_server_lib.dart</span>
 				</div>
 				<div class="blob-wrapper">
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">383</td>
+								<td class="blob-num">390</td>
 								<td class="blob-code blob-code-inner">      m[&#39;errors&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">384</td>
+								<td class="blob-num">391</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">385</td>
+								<td class="blob-num">392</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;errors&#39;].map((obj) =&gt; AnalysisError.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -462,15 +294,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">405</td>
+								<td class="blob-num">412</td>
 								<td class="blob-code blob-code-inner">      m[&#39;regions&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">406</td>
+								<td class="blob-num">413</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">407</td>
+								<td class="blob-num">414</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;regions&#39;].map((obj) =&gt; FoldingRegion.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -490,15 +322,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">418</td>
+								<td class="blob-num">425</td>
 								<td class="blob-code blob-code-inner">      m[&#39;regions&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">419</td>
+								<td class="blob-num">426</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">420</td>
+								<td class="blob-num">427</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;regions&#39;].map((obj) =&gt; HighlightRegion.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -518,15 +350,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">431</td>
+								<td class="blob-num">438</td>
 								<td class="blob-code blob-code-inner">      m[&#39;classes&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">432</td>
+								<td class="blob-num">439</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">433</td>
+								<td class="blob-num">440</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;classes&#39;].map((obj) =&gt; ImplementedClass.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -546,15 +378,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">434</td>
+								<td class="blob-num">441</td>
 								<td class="blob-code blob-code-inner">      m[&#39;members&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">435</td>
+								<td class="blob-num">442</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">436</td>
+								<td class="blob-num">443</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;members&#39;].map((obj) =&gt; ImplementedMember.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -574,15 +406,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">460</td>
+								<td class="blob-num">467</td>
 								<td class="blob-code blob-code-inner">      m[&#39;regions&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">461</td>
+								<td class="blob-num">468</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">462</td>
+								<td class="blob-num">469</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;regions&#39;].map((obj) =&gt; NavigationRegion.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -602,15 +434,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">463</td>
+								<td class="blob-num">470</td>
 								<td class="blob-code blob-code-inner">      m[&#39;targets&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">464</td>
+								<td class="blob-num">471</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">465</td>
+								<td class="blob-num">472</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;targets&#39;].map((obj) =&gt; NavigationTarget.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -630,15 +462,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">479</td>
+								<td class="blob-num">486</td>
 								<td class="blob-code blob-code-inner">      m[&#39;occurrences&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">480</td>
+								<td class="blob-num">487</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">481</td>
+								<td class="blob-num">488</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;occurrences&#39;].map((obj) =&gt; Occurrences.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -658,15 +490,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">505</td>
+								<td class="blob-num">513</td>
 								<td class="blob-code blob-code-inner">      m[&#39;overrides&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">506</td>
+								<td class="blob-num">514</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">507</td>
+								<td class="blob-num">515</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;overrides&#39;].map((obj) =&gt; Override.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -686,15 +518,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">516</td>
+								<td class="blob-num">524</td>
 								<td class="blob-code blob-code-inner">  static ErrorsResult parse(Map m) =&gt; new ErrorsResult(m[&#39;errors&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">517</td>
+								<td class="blob-num">525</td>
 								<td class="blob-code blob-code-inner">      ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">518</td>
+								<td class="blob-num">526</td>
 								<td class="blob-code blob-code-inner">      : m[&#39;errors&#39;].map((obj) =&gt; AnalysisError.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -714,15 +546,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">526</td>
+								<td class="blob-num">534</td>
 								<td class="blob-code blob-code-inner">  static HoverResult parse(Map m) =&gt; new HoverResult(m[&#39;hovers&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">527</td>
+								<td class="blob-num">535</td>
 								<td class="blob-code blob-code-inner">      ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">528</td>
+								<td class="blob-num">536</td>
 								<td class="blob-code blob-code-inner">      : m[&#39;hovers&#39;].map((obj) =&gt; HoverInformation.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -742,7 +574,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">536</td>
+								<td class="blob-num">544</td>
 								<td class="blob-code blob-code-inner">  static ReachableSourcesResult parse(Map m) =&gt; new ReachableSourcesResult(m[&#39;sources&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -762,7 +594,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">545</td>
+								<td class="blob-num">553</td>
 								<td class="blob-code blob-code-inner">      m[&#39;libraries&#39;] == null ? null : new List.from(m[&#39;libraries&#39;]), m[&#39;packageMap&#39;]);</td>
 							</tr>
 							<tr class="row-expandable">
@@ -782,15 +614,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">556</td>
+								<td class="blob-num">564</td>
 								<td class="blob-code blob-code-inner">      m[&#39;targets&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">557</td>
+								<td class="blob-num">565</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">558</td>
+								<td class="blob-num">566</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;targets&#39;].map((obj) =&gt; NavigationTarget.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -810,15 +642,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">559</td>
+								<td class="blob-num">567</td>
 								<td class="blob-code blob-code-inner">      m[&#39;regions&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">560</td>
+								<td class="blob-num">568</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">561</td>
+								<td class="blob-num">569</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;regions&#39;].map((obj) =&gt; NavigationRegion.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -838,15 +670,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">591</td>
+								<td class="blob-num">600</td>
 								<td class="blob-code blob-code-inner">      m[&#39;results&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">592</td>
+								<td class="blob-num">601</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">593</td>
+								<td class="blob-num">602</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;results&#39;].map((obj) =&gt; CompletionSuggestion.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -866,15 +698,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">658</td>
+								<td class="blob-num">670</td>
 								<td class="blob-code blob-code-inner">      m[&#39;results&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">659</td>
+								<td class="blob-num">671</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">660</td>
+								<td class="blob-num">672</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;results&#39;].map((obj) =&gt; SearchResult.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -894,15 +726,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">709</td>
-								<td class="blob-code blob-code-inner">      hierarchyItems: m[&#39;hierarchyItems&#39;] == null</td>
+								<td class="blob-num">723</td>
+								<td class="blob-code blob-code-inner">      new TypeHierarchyResult(hierarchyItems: m[&#39;hierarchyItems&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">710</td>
+								<td class="blob-num">724</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">711</td>
+								<td class="blob-num">725</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;hierarchyItems&#39;].map((obj) =&gt; TypeHierarchyItem.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -922,7 +754,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">778</td>
+								<td class="blob-num">796</td>
 								<td class="blob-code blob-code-inner">      m[&#39;edits&#39;] == null ? null : m[&#39;edits&#39;].map((obj) =&gt; SourceEdit.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -942,15 +774,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">790</td>
+								<td class="blob-num">808</td>
 								<td class="blob-code blob-code-inner">  static AssistsResult parse(Map m) =&gt; new AssistsResult(m[&#39;assists&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">791</td>
+								<td class="blob-num">809</td>
 								<td class="blob-code blob-code-inner">      ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">792</td>
+								<td class="blob-num">810</td>
 								<td class="blob-code blob-code-inner">      : m[&#39;assists&#39;].map((obj) =&gt; SourceChange.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -970,15 +802,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">809</td>
+								<td class="blob-num">827</td>
 								<td class="blob-code blob-code-inner">  static FixesResult parse(Map m) =&gt; new FixesResult(m[&#39;fixes&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">810</td>
+								<td class="blob-num">828</td>
 								<td class="blob-code blob-code-inner">      ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">811</td>
+								<td class="blob-num">829</td>
 								<td class="blob-code blob-code-inner">      : m[&#39;fixes&#39;].map((obj) =&gt; AnalysisErrorFixes.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -998,15 +830,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">820</td>
+								<td class="blob-num">838</td>
 								<td class="blob-code blob-code-inner">      m[&#39;initialProblems&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">821</td>
+								<td class="blob-num">839</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">822</td>
+								<td class="blob-num">840</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;initialProblems&#39;].map((obj) =&gt; RefactoringProblem.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1026,15 +858,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">823</td>
+								<td class="blob-num">841</td>
 								<td class="blob-code blob-code-inner">      m[&#39;optionsProblems&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">824</td>
+								<td class="blob-num">842</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">825</td>
+								<td class="blob-num">843</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;optionsProblems&#39;].map((obj) =&gt; RefactoringProblem.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1054,15 +886,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">826</td>
+								<td class="blob-num">844</td>
 								<td class="blob-code blob-code-inner">      m[&#39;finalProblems&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">827</td>
+								<td class="blob-num">845</td>
 								<td class="blob-code blob-code-inner">          ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">828</td>
+								<td class="blob-num">846</td>
 								<td class="blob-code blob-code-inner">          : m[&#39;finalProblems&#39;].map((obj) =&gt; RefactoringProblem.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1082,15 +914,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">931</td>
+								<td class="blob-num">958</td>
 								<td class="blob-code blob-code-inner">  static DiagnosticsResult parse(Map m) =&gt; new DiagnosticsResult(m[&#39;contexts&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">932</td>
+								<td class="blob-num">959</td>
 								<td class="blob-code blob-code-inner">      ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">933</td>
+								<td class="blob-num">960</td>
 								<td class="blob-code blob-code-inner">      : m[&#39;contexts&#39;].map((obj) =&gt; ContextData.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1110,15 +942,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">995</td>
+								<td class="blob-num">1024</td>
 								<td class="blob-code blob-code-inner">        m[&#39;fixes&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">996</td>
+								<td class="blob-num">1025</td>
 								<td class="blob-code blob-code-inner">            ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">997</td>
+								<td class="blob-num">1026</td>
 								<td class="blob-code blob-code-inner">            : m[&#39;fixes&#39;].map((obj) =&gt; SourceChange.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1138,15 +970,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1068</td>
+								<td class="blob-num">1106</td>
 								<td class="blob-code blob-code-inner">        m[&#39;edits&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1069</td>
+								<td class="blob-num">1107</td>
 								<td class="blob-code blob-code-inner">            ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1070</td>
+								<td class="blob-num">1108</td>
 								<td class="blob-code blob-code-inner">            : m[&#39;edits&#39;].map((obj) =&gt; SourceEdit.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1166,15 +998,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1293</td>
+								<td class="blob-num">1356</td>
 								<td class="blob-code blob-code-inner">        m[&#39;positions&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1294</td>
+								<td class="blob-num">1357</td>
 								<td class="blob-code blob-code-inner">            ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1295</td>
+								<td class="blob-num">1358</td>
 								<td class="blob-code blob-code-inner">            : m[&#39;positions&#39;].map((obj) =&gt; Position.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1194,15 +1026,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1297</td>
+								<td class="blob-num">1360</td>
 								<td class="blob-code blob-code-inner">        m[&#39;suggestions&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1298</td>
+								<td class="blob-num">1361</td>
 								<td class="blob-code blob-code-inner">            ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1299</td>
+								<td class="blob-num">1362</td>
 								<td class="blob-code blob-code-inner">            : m[&#39;suggestions&#39;].map((obj) =&gt; LinkedEditSuggestion.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1222,15 +1054,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1414</td>
+								<td class="blob-num">1477</td>
 								<td class="blob-code blob-code-inner">        children: m[&#39;children&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1415</td>
+								<td class="blob-num">1478</td>
 								<td class="blob-code blob-code-inner">            ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1416</td>
+								<td class="blob-num">1479</td>
 								<td class="blob-code blob-code-inner">            : m[&#39;children&#39;].map((obj) =&gt; Outline.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1250,15 +1082,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1432</td>
+								<td class="blob-num">1496</td>
 								<td class="blob-code blob-code-inner">        interfaceMembers: m[&#39;interfaceMembers&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1433</td>
+								<td class="blob-num">1497</td>
 								<td class="blob-code blob-code-inner">            ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1434</td>
+								<td class="blob-num">1498</td>
 								<td class="blob-code blob-code-inner">            : m[&#39;interfaceMembers&#39;].map((obj) =&gt; OverriddenMember.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1278,7 +1110,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1531</td>
+								<td class="blob-num">1600</td>
 								<td class="blob-code blob-code-inner">        m[&#39;path&#39;] == null ? null : m[&#39;path&#39;].map((obj) =&gt; Element.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1298,15 +1130,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1550</td>
+								<td class="blob-num">1619</td>
 								<td class="blob-code blob-code-inner">        m[&#39;edits&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1551</td>
+								<td class="blob-num">1620</td>
 								<td class="blob-code blob-code-inner">            ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1552</td>
+								<td class="blob-num">1621</td>
 								<td class="blob-code blob-code-inner">            : m[&#39;edits&#39;].map((obj) =&gt; SourceFileEdit.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1326,15 +1158,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1553</td>
+								<td class="blob-num">1622</td>
 								<td class="blob-code blob-code-inner">        m[&#39;linkedEditGroups&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1554</td>
+								<td class="blob-num">1623</td>
 								<td class="blob-code blob-code-inner">            ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1555</td>
+								<td class="blob-num">1624</td>
 								<td class="blob-code blob-code-inner">            : m[&#39;linkedEditGroups&#39;].map((obj) =&gt; LinkedEditGroup.parse(obj)).toList(),</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1354,15 +1186,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">1596</td>
+								<td class="blob-num">1667</td>
 								<td class="blob-code blob-code-inner">        m[&#39;edits&#39;] == null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1597</td>
+								<td class="blob-num">1668</td>
 								<td class="blob-code blob-code-inner">            ? null</td>
 							</tr>
 							<tr>
-								<td class="blob-num">1598</td>
+								<td class="blob-num">1669</td>
 								<td class="blob-code blob-code-inner">            : m[&#39;edits&#39;].map((obj) =&gt; SourceEdit.parse(obj)).toList());</td>
 							</tr>
 							<tr class="row-expandable">
@@ -2678,8 +2510,48 @@ table {
 					<table>
 						<tbody>
 							<tr>
+								<td class="blob-num">153</td>
+								<td class="blob-code blob-code-inner">      InstanceRef loggerName = InstanceRef.parse(json[&#39;loggerName&#39;]);</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from dynamic to Map&lt;String, dynamic&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
+					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">154</td>
+								<td class="blob-code blob-code-inner">      InstanceRef message = InstanceRef.parse(json[&#39;message&#39;]);</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from dynamic to Map&lt;String, dynamic&gt;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
+					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
 								<td class="blob-num">342</td>
-								<td class="blob-code blob-code-inner">    return isolate._updateIsolateInfo().then(([_]) {</td>
+								<td class="blob-code blob-code-inner">    return isolate._updateIsolateInfo().then(([ObservatoryIsolate _]) {</td>
 							</tr>
 							<tr>
 								<td class="blob-num">343</td>
@@ -2748,50 +2620,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Unsound implicit cast from Future&lt;dynamic&gt; to Future&lt;ObservatoryIsolate&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">AnalyzerMessage</span>
-					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">342</td>
-								<td class="blob-code blob-code-inner">    return isolate._updateIsolateInfo().then(([_]) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">343</td>
-								<td class="blob-code blob-code-inner">      &#47;&#47; If the isolate is currently runnable, or the protocol does not have</td>
-							</tr>
-							<tr>
-								<td class="blob-num">344</td>
-								<td class="blob-code blob-code-inner">      &#47;&#47; information about its runnability, then set breakpoints at this time.</td>
-							</tr>
-							<tr>
-								<td class="blob-num">345</td>
-								<td class="blob-code blob-code-inner">      if (isolate.isolate.runnable == null || isolate.isolate.runnable == true) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">346</td>
-								<td class="blob-code blob-code-inner">        _installBreakpoints(ref);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">347</td>
-								<td class="blob-code blob-code-inner">      }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">348</td>
-								<td class="blob-code blob-code-inner">    }).then((_) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → dynamic&#39; cannot be assigned to the parameter type &#39;(ObservatoryIsolate) → dynamic&#39;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -3232,58 +3060,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Unsound implicit cast from Future&lt;dynamic&gt; to Future&lt;DebugValue&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1002</td>
-								<td class="blob-code blob-code-inner">    return _completer.future;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Future&lt;dynamic&gt; to Future&lt;DebugLocation&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1016</td>
-								<td class="blob-code blob-code-inner">    return isolate.connection.uriResolver.resolveUriToPath(script.uri).then((String path) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">1017</td>
-								<td class="blob-code blob-code-inner">      _path = path;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">1018</td>
-								<td class="blob-code blob-code-inner">      return this;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">1019</td>
-								<td class="blob-code blob-code-inner">    });</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Future&lt;dynamic&gt; to Future&lt;DebugLocation&gt;</td>
 							</tr>
 						</tbody>
 					</table>
@@ -4158,27 +3934,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">81</td>
-								<td class="blob-code blob-code-inner">    editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → void&#39; cannot be assigned to the parameter type &#39;(TextEditor) → void&#39;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">AnalyzerMessage</span>
-					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">121</td>
+								<td class="blob-num">126</td>
 								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onRunnablesChanged.listen(updateUI));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4198,7 +3954,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">121</td>
+								<td class="blob-num">126</td>
 								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onRunnablesChanged.listen(updateUI));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4218,7 +3974,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">122</td>
+								<td class="blob-num">127</td>
 								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onSelectedRunnableChanged.listen(updateUI));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4238,32 +3994,12 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">122</td>
+								<td class="blob-num">127</td>
 								<td class="blob-code blob-code-inner">    subs.add(projectLaunchManager.onSelectedRunnableChanged.listen(updateUI));</td>
 							</tr>
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → dynamic&#39; cannot be assigned to the parameter type &#39;(RunnableConfig) → void&#39;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">160</td>
-								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onDevicesChanged.listen(updateSelect));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (List&lt;Device&gt;) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -4278,7 +4014,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">160</td>
+								<td class="blob-num">165</td>
 								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onDevicesChanged.listen(updateSelect));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4298,7 +4034,27 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">161</td>
+								<td class="blob-num">165</td>
+								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onDevicesChanged.listen(updateSelect));</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → dynamic to (List&lt;Device&gt;) → void</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
+					<span class="file-info">package:atom_dartlang/impl/toolbar_impl.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">166</td>
 								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onSelectedChanged.listen(updateSelect));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4318,7 +4074,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">161</td>
+								<td class="blob-num">166</td>
 								<td class="blob-code blob-code-inner">    subs.add(deviceManager.onSelectedChanged.listen(updateSelect));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4555,26 +4311,6 @@ table {
 			</div>
 			<div class="file">
 				<div class="file-header">
-					<span class="counter warning">AnalyzerMessage</span>
-					<span class="file-info">package:atom_dartlang/launch/run.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">218</td>
-								<td class="blob-code blob-code-inner">    subs.add(projectManager.onProjectsChanged.listen(_updateFromActiveEditor));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → void&#39; cannot be assigned to the parameter type &#39;(List&lt;DartProject&gt;) → void&#39;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
 					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
 					<span class="file-info">package:atom_dartlang/launch/run.dart</span>
 				</div>
@@ -4582,35 +4318,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">218</td>
-								<td class="blob-code blob-code-inner">    subs.add(projectManager.onProjectsChanged.listen(_updateFromActiveEditor));</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → void to (List&lt;DartProject&gt;) → void</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:atom_dartlang/launch/run.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">264</td>
+								<td class="blob-num">268</td>
 								<td class="blob-code blob-code-inner">      _runnables.addAll(configs.map((LaunchConfiguration config) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">265</td>
+								<td class="blob-num">269</td>
 								<td class="blob-code blob-code-inner">        return new RunnableConfig.fromLaunchConfig(projectPath, config);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">266</td>
+								<td class="blob-num">270</td>
 								<td class="blob-code blob-code-inner">      }));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -4630,15 +4346,15 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">267</td>
+								<td class="blob-num">271</td>
 								<td class="blob-code blob-code-inner">      _runnables.addAll(launchables.map((Launchable launchable) {</td>
 							</tr>
 							<tr>
-								<td class="blob-num">268</td>
+								<td class="blob-num">272</td>
 								<td class="blob-code blob-code-inner">        return new RunnableConfig.fromLaunchable(projectPath, launchable);</td>
 							</tr>
 							<tr>
-								<td class="blob-num">269</td>
+								<td class="blob-num">273</td>
 								<td class="blob-code blob-code-inner">      }));</td>
 							</tr>
 							<tr class="row-expandable">
@@ -5108,26 +4824,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Unsound implicit cast from Future&lt;dynamic&gt; to Future&lt;String&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:atom_dartlang/views.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">543</td>
-								<td class="blob-code blob-code-inner">    _command = atom.commands.add(&#39;atom-workspace&#39;, &#39;core:cancel&#39;, _handleCancel);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from (dynamic) → void to (AtomEvent) → void</td>
 							</tr>
 						</tbody>
 					</table>
@@ -6264,469 +5960,6 @@ table {
 					</table>
 				</div>
 			</div>
-			<h2 id=package_vm_service_lib>package:vm_service_lib</h2>
-			<span class="counter error">3 errors</span>
-			<span class="counter warning">20 warnings</span>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1747</td>
-								<td class="blob-code blob-code-inner">  ClassRef classRef;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration Obj.classRef cannot be overridden in Instance.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2296</td>
-								<td class="blob-code blob-code-inner">  String valueAsString;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration InstanceRef.valueAsString cannot be overridden in NullRef.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">INVALID_FIELD_OVERRIDE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2318</td>
-								<td class="blob-code blob-code-inner">  String valueAsString;</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Field declaration Instance.valueAsString cannot be overridden in Null.</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1075</td>
-								<td class="blob-code blob-code-inner">  ClassList._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1369</td>
-								<td class="blob-code blob-code-inner">  Event._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1528</td>
-								<td class="blob-code blob-code-inner">  FlagList._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1551</td>
-								<td class="blob-code blob-code-inner">  Frame._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">1984</td>
-								<td class="blob-code blob-code-inner">        _createSpecificObject(json[&#39;associations&#39;], MapAssociation.parse);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Object to List&lt;MapAssociation&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2024</td>
-								<td class="blob-code blob-code-inner">  IsolateRef._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2095</td>
-								<td class="blob-code blob-code-inner">  Isolate._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2276</td>
-								<td class="blob-code blob-code-inner">  Message._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2346</td>
-								<td class="blob-code blob-code-inner">  ObjRef._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2388</td>
-								<td class="blob-code blob-code-inner">  Obj._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2406</td>
-								<td class="blob-code blob-code-inner">      json == null ? null : new Response._fromJson(json);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2439</td>
-								<td class="blob-code blob-code-inner">  Sentinel._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2543</td>
-								<td class="blob-code blob-code-inner">  SourceLocation._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2574</td>
-								<td class="blob-code blob-code-inner">  SourceReport._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2671</td>
-								<td class="blob-code blob-code-inner">  Stack._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2688</td>
-								<td class="blob-code blob-code-inner">  Success._fromJson(Map json) : super._fromJson(json) {}</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2780</td>
-								<td class="blob-code blob-code-inner">  UnresolvedSourceLocation._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2806</td>
-								<td class="blob-code blob-code-inner">  Version._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2825</td>
-								<td class="blob-code blob-code-inner">  VMRef._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
-					<span class="file-info">package:vm_service_lib/vm_service_lib.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">2860</td>
-								<td class="blob-code blob-code-inner">  VM._fromJson(Map json) : super._fromJson(json) {</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Unsound implicit cast from Map&lt;dynamic, dynamic&gt; to Map&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
 			<h2 id=package_yaml>package:yaml</h2>
 			<span class="counter warning">1 warning</span>
 			<div class="file">
@@ -6752,7 +5985,7 @@ table {
 		</div>
 	</div>
 	<footer class="footer">
-		web/entry.dart • DDC version 0.1.20
+		web/entry.dart • DDC version 0.1.21
 	</footer>
 </div>
 </body>
