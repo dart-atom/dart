@@ -339,7 +339,7 @@ class ObservatoryConnection extends DebugConnection {
     isolates.add(isolate);
 
     // Get isolate metadata.
-    return isolate._updateIsolateInfo().then(([_]) {
+    return isolate._updateIsolateInfo().then(([ObservatoryIsolate _]) {
       // If the isolate is currently runnable, or the protocol does not have
       // information about its runnability, then set breakpoints at this time.
       if (isolate.isolate.runnable == null || isolate.isolate.runnable == true) {
@@ -411,7 +411,7 @@ String printFunctionNameRecursive(FuncRef ref, {bool terse: false}) {
 
 String _refToString(dynamic value) {
   if (value is InstanceRef) {
-    InstanceRef ref = value as InstanceRef;
+    InstanceRef ref = value;
     if (ref.kind == InstanceKind.kString) {
       return "'${ref.valueAsString}'";
     } else if (ref.valueAsString != null) {
@@ -966,7 +966,7 @@ class ObservatoryLocation extends DebugLocation {
   final ObservatoryIsolate isolate;
   final SourceLocation location;
 
-  Completer _completer;
+  Completer<DebugLocation> _completer;
   bool _unableToResolve = false;
 
   ObservatoryLocation(this.isolate, this.location);
@@ -987,9 +987,9 @@ class ObservatoryLocation extends DebugLocation {
 
   Future<DebugLocation> resolve() {
     if (_completer == null) {
-      _completer = new Completer();
+      _completer = new Completer<DebugLocation>();
 
-      _resolve().then((val) {
+      _resolve().then((DebugLocation val) {
         _completer.complete(val);
       }).catchError((e) {
         _completer.complete(this);
@@ -1016,7 +1016,7 @@ class ObservatoryLocation extends DebugLocation {
     return isolate.connection.uriResolver.resolveUriToPath(script.uri).then((String path) {
       _path = path;
       return this;
-    });
+    }) as Future<DebugLocation>;
   }
 
   void _checkCreateSystemScript() {

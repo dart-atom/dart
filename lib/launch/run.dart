@@ -214,8 +214,12 @@ class ProjectLaunchManager implements Disposable {
   StreamController<List<RunnableConfig>> _runnablesController = new StreamController.broadcast();
 
   ProjectLaunchManager() {
-    disposeable = atom.workspace.observeActivePaneItem(_updateFromActiveEditor);
-    subs.add(projectManager.onProjectsChanged.listen(_updateFromActiveEditor));
+    disposeable = atom.workspace.observeActivePaneItem((dynamic item) {
+      _updateFromActiveEditor();
+    });
+    subs.add(projectManager.onProjectsChanged.listen((List<DartProject> projects) {
+      _updateFromActiveEditor();
+    }));
     _updateFromActiveEditor();
   }
 
@@ -235,7 +239,7 @@ class ProjectLaunchManager implements Disposable {
     _selectedRunnableController.add(selectedRunnable);
   }
 
-  void _updateFromActiveEditor([_]) {
+  void _updateFromActiveEditor() {
     TextEditor editor = atom.workspace.getActiveTextEditor();
     _currentFile = editor?.getPath();
 

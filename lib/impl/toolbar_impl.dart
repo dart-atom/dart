@@ -67,7 +67,7 @@ class DartToolbarContribution implements Disposable {
     FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
     _bindDevicesToSelect(deviceManager, selectList);
 
-    void updateToolbar([_]) {
+    void updateToolbar() {
       String path = atom.workspace.getActiveTextEditor()?.getPath();
       DartProject project = projectManager.getProjectFor(path);
 
@@ -78,8 +78,12 @@ class DartToolbarContribution implements Disposable {
     }
 
     updateToolbar();
-    subs.add(editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar));
-    subs.add(projectManager.onProjectsChanged.listen(updateToolbar));
+    subs.add(editorManager.dartProjectEditors.onActiveEditorChanged.listen((TextEditor editor) {
+      updateToolbar();
+    }));
+    subs.add(projectManager.onProjectsChanged.listen((List<DartProject> projects) {
+      updateToolbar();
+    }));
 
     return e;
   }

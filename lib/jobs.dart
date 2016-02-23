@@ -26,9 +26,11 @@ typedef void VoidHandler();
 /// An abstract representation of a long running task.
 abstract class Job implements Disposable {
   final String name;
-  final Object schedulingRule;
+  final Object _schedulingRule;
 
-  Job(this.name, [this.schedulingRule]);
+  Job(this.name, [this._schedulingRule]);
+
+  Object get schedulingRule => _schedulingRule;
 
   /// Don't show a notification on a successful completion.
   bool get quiet => false;

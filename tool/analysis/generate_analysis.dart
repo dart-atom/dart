@@ -44,9 +44,9 @@ class Api {
 
   void parse(List<Element> domainElements, List<Element> typeElements,
       List<Element> refactoringElements) {
-    typedefs = typeElements.map((element) => new TypeDef(element)).toList();
-    domains = domainElements.map((element) => new Domain(element)).toList();
-    refactorings = refactoringElements.map((e) => new Refactoring(e)).toList();
+    typedefs = new List.from(typeElements.map((element) => new TypeDef(element)));
+    domains = new List.from(domainElements.map((element) => new Domain(element)));
+    refactorings = new List.from(refactoringElements.map((e) => new Refactoring(e)));
 
     // Mark some types as jsonable - we can send them back over the wire.
     findRef('SourceEdit').setCallParam();
@@ -158,14 +158,14 @@ class Domain {
   Domain(Element element) {
     name = element.attributes['name'];
     experimental = element.attributes.containsKey('experimental');
-    requests = element
-        .getElementsByTagName('request')
-        .map((element) => new Request(this, element))
-        .toList();
-    notifications = element
-        .getElementsByTagName('notification')
-        .map((element) => new Notification(this, element))
-        .toList();
+    requests = new List.from(element
+      .getElementsByTagName('request')
+      .map((element) => new Request(this, element))
+    );
+    notifications = new List.from(element
+      .getElementsByTagName('notification')
+      .map((element) => new Notification(this, element))
+    );
   }
 
   String get className => '${titleCase(name)}Domain';
@@ -177,8 +177,7 @@ class Domain {
     gen.writeln();
     if (experimental) gen.writeln('@experimental');
     gen.writeStatement('class ${className} extends Domain {');
-    gen.writeStatement(
-        "${className}(Server server) : super(server, '${name}');");
+    gen.writeStatement("${className}(Server server) : super(server, '${name}');");
     if (notifications.isNotEmpty) {
       gen.writeln();
       notifications
@@ -284,7 +283,8 @@ class Request {
 
     if (args.isEmpty) {
       gen.writeln(
-          "Future<${resultName}> ${method}() => _call('${domain.name}.${method}').then(${resultName}.parse);");
+          "Future<${resultName}> ${method}() => _call('${domain.name}.${method}').then("
+          "${resultName}.parse) as Future<${resultName}>;");
       return;
     }
 
@@ -305,7 +305,9 @@ class Request {
     gen.writeStatement(') {');
     if (args.isEmpty) {
       gen.write("return _call('${domain.name}.${method}')");
-      if (results.isNotEmpty) gen.write(".then(${resultName}.parse)");
+      if (results.isNotEmpty) {
+        gen.write(".then(${resultName}.parse)");
+      }
       gen.writeln(';');
     } else {
       String mapStr = args
@@ -318,7 +320,9 @@ class Request {
             "if (${arg.name} != null) m['${arg.name}'] = ${arg.name};");
       }
       gen.write("return _call('${domain.name}.${method}', m)");
-      if (results.isNotEmpty) gen.write(".then(${resultName}.parse)");
+      if (results.isNotEmpty) {
+        gen.write(".then(${resultName}.parse) as Future<${resultName}>");
+      }
       gen.writeln(';');
     }
     gen.writeStatement('}');
@@ -340,10 +344,10 @@ class Notification {
 
   Notification(this.domain, Element element) {
     event = element.attributes['event'];
-    fields = element
-        .getElementsByTagName('field')
-        .map((field) => new Field(field))
-        .toList();
+    fields = new List.from(element
+      .getElementsByTagName('field')
+      .map((field) => new Field(field))
+    );
     fields.sort();
   }
 
@@ -437,20 +441,20 @@ class Refactoring {
     // <field name="deleteSource"><ref>bool</ref></field>
     Element options = element.querySelector('options');
     if (options != null) {
-      optionsFields = options
+      optionsFields = new List.from(options
         .getElementsByTagName('field')
         .map((field) => new Field(field))
-        .toList();
+      );
     }
 
     // Parse <feedback>
     // <field name="className" optional="true"><ref>String</ref></field>
     Element feedback = element.querySelector('feedback');
     if (feedback != null) {
-      feedbackFields = feedback
+      feedbackFields = new List.from(feedback
         .getElementsByTagName('field')
         .map((field) => new Field(field))
-        .toList();
+      );
     }
   }
 
@@ -522,10 +526,10 @@ class TypeDef {
 
     if (tags.contains('object')) {
       Element object = element.getElementsByTagName('object').first;
-      fields = object
-          .getElementsByTagName('field')
-          .map((f) => new Field(f))
-          .toList();
+      fields = new List.from(object
+        .getElementsByTagName('field')
+        .map((f) => new Field(f))
+      );
       fields.sort((a, b) {
         if (a.optional && !b.optional) return 1;
         if (!a.optional && b.optional) return -1;

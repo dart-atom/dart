@@ -543,7 +543,7 @@ class DoubleCancelCommand implements Disposable {
     _command = atom.commands.add('atom-workspace', 'core:cancel', _handleCancel);
   }
 
-  void _handleCancel(_) {
+  void _handleCancel(AtomEvent _) {
     if (_timer != null) {
       handleCancel();
     } else {

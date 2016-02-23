@@ -177,7 +177,8 @@ class RequestError {
   final String method;
   final String code;
   final String message;
-  @optional final String stackTrace;
+  @optional
+  final String stackTrace;
 
   RequestError(this.method, this.code, this.message, {this.stackTrace});
 
@@ -214,7 +215,7 @@ class ServerDomain extends Domain {
   }
 
   Future<VersionResult> getVersion() =>
-      _call('server.getVersion').then(VersionResult.parse);
+      _call('server.getVersion').then(VersionResult.parse) as Future<VersionResult>;
 
   Future shutdown() => _call('server.shutdown');
 
@@ -245,8 +246,10 @@ class ServerStatus {
   static ServerStatus parse(Map m) => new ServerStatus(
       analysis: AnalysisStatus.parse(m['analysis']), pub: PubStatus.parse(m['pub']));
 
-  @optional final AnalysisStatus analysis;
-  @optional final PubStatus pub;
+  @optional
+  final AnalysisStatus analysis;
+  @optional
+  final PubStatus pub;
 
   ServerStatus({this.analysis, this.pub});
 }
@@ -318,25 +321,29 @@ class AnalysisDomain extends Domain {
 
   Future<ErrorsResult> getErrors(String file) {
     Map m = {'file': file};
-    return _call('analysis.getErrors', m).then(ErrorsResult.parse);
+    return _call('analysis.getErrors', m).then(ErrorsResult.parse)
+        as Future<ErrorsResult>;
   }
 
   Future<HoverResult> getHover(String file, int offset) {
     Map m = {'file': file, 'offset': offset};
-    return _call('analysis.getHover', m).then(HoverResult.parse);
+    return _call('analysis.getHover', m).then(HoverResult.parse) as Future<HoverResult>;
   }
 
   Future<ReachableSourcesResult> getReachableSources(String file) {
     Map m = {'file': file};
-    return _call('analysis.getReachableSources', m).then(ReachableSourcesResult.parse);
+    return _call('analysis.getReachableSources', m).then(ReachableSourcesResult.parse)
+        as Future<ReachableSourcesResult>;
   }
 
   Future<LibraryDependenciesResult> getLibraryDependencies() =>
-      _call('analysis.getLibraryDependencies').then(LibraryDependenciesResult.parse);
+      _call('analysis.getLibraryDependencies').then(LibraryDependenciesResult.parse)
+      as Future<LibraryDependenciesResult>;
 
   Future<NavigationResult> getNavigation(String file, int offset, int length) {
     Map m = {'file': file, 'offset': offset, 'length': length};
-    return _call('analysis.getNavigation', m).then(NavigationResult.parse);
+    return _call('analysis.getNavigation', m).then(NavigationResult.parse)
+        as Future<NavigationResult>;
   }
 
   Future reanalyze({List<String> roots}) {
@@ -494,7 +501,8 @@ class AnalysisOutline {
   final String file;
   final String kind;
   final Outline outline;
-  @optional final String libraryName;
+  @optional
+  final String libraryName;
 
   AnalysisOutline(this.file, this.kind, this.outline, {this.libraryName});
 }
@@ -579,7 +587,8 @@ class CompletionDomain extends Domain {
 
   Future<SuggestionsResult> getSuggestions(String file, int offset) {
     Map m = {'file': file, 'offset': offset};
-    return _call('completion.getSuggestions', m).then(SuggestionsResult.parse);
+    return _call('completion.getSuggestions', m).then(SuggestionsResult.parse)
+        as Future<SuggestionsResult>;
   }
 }
 
@@ -624,31 +633,34 @@ class SearchDomain extends Domain {
       String file, int offset, bool includePotential) {
     Map m = {'file': file, 'offset': offset, 'includePotential': includePotential};
     return _call('search.findElementReferences', m)
-        .then(FindElementReferencesResult.parse);
+        .then(FindElementReferencesResult.parse) as Future<FindElementReferencesResult>;
   }
 
   Future<FindMemberDeclarationsResult> findMemberDeclarations(String name) {
     Map m = {'name': name};
     return _call('search.findMemberDeclarations', m)
-        .then(FindMemberDeclarationsResult.parse);
+        .then(FindMemberDeclarationsResult.parse) as Future<FindMemberDeclarationsResult>;
   }
 
   Future<FindMemberReferencesResult> findMemberReferences(String name) {
     Map m = {'name': name};
-    return _call('search.findMemberReferences', m).then(FindMemberReferencesResult.parse);
+    return _call('search.findMemberReferences', m).then(FindMemberReferencesResult.parse)
+        as Future<FindMemberReferencesResult>;
   }
 
   Future<FindTopLevelDeclarationsResult> findTopLevelDeclarations(String pattern) {
     Map m = {'pattern': pattern};
     return _call('search.findTopLevelDeclarations', m)
-        .then(FindTopLevelDeclarationsResult.parse);
+            .then(FindTopLevelDeclarationsResult.parse)
+        as Future<FindTopLevelDeclarationsResult>;
   }
 
   Future<TypeHierarchyResult> getTypeHierarchy(String file, int offset,
       {bool superOnly}) {
     Map m = {'file': file, 'offset': offset};
     if (superOnly != null) m['superOnly'] = superOnly;
-    return _call('search.getTypeHierarchy', m).then(TypeHierarchyResult.parse);
+    return _call('search.getTypeHierarchy', m).then(TypeHierarchyResult.parse)
+        as Future<TypeHierarchyResult>;
   }
 }
 
@@ -671,8 +683,10 @@ class FindElementReferencesResult {
   static FindElementReferencesResult parse(Map m) =>
       new FindElementReferencesResult(id: m['id'], element: Element.parse(m['element']));
 
-  @optional final String id;
-  @optional final Element element;
+  @optional
+  final String id;
+  @optional
+  final Element element;
 
   FindElementReferencesResult({this.id, this.element});
 }
@@ -705,12 +719,13 @@ class FindTopLevelDeclarationsResult {
 }
 
 class TypeHierarchyResult {
-  static TypeHierarchyResult parse(Map m) => new TypeHierarchyResult(
-      hierarchyItems: m['hierarchyItems'] == null
+  static TypeHierarchyResult parse(Map m) =>
+      new TypeHierarchyResult(hierarchyItems: m['hierarchyItems'] == null
           ? null
           : m['hierarchyItems'].map((obj) => TypeHierarchyItem.parse(obj)).toList());
 
-  @optional final List<TypeHierarchyItem> hierarchyItems;
+  @optional
+  final List<TypeHierarchyItem> hierarchyItems;
 
   TypeHierarchyResult({this.hierarchyItems});
 }
@@ -728,24 +743,24 @@ class EditDomain extends Domain {
       'selectionLength': selectionLength
     };
     if (lineLength != null) m['lineLength'] = lineLength;
-    return _call('edit.format', m).then(FormatResult.parse);
+    return _call('edit.format', m).then(FormatResult.parse) as Future<FormatResult>;
   }
 
   Future<AssistsResult> getAssists(String file, int offset, int length) {
     Map m = {'file': file, 'offset': offset, 'length': length};
-    return _call('edit.getAssists', m).then(AssistsResult.parse);
+    return _call('edit.getAssists', m).then(AssistsResult.parse) as Future<AssistsResult>;
   }
 
   Future<AvailableRefactoringsResult> getAvailableRefactorings(
       String file, int offset, int length) {
     Map m = {'file': file, 'offset': offset, 'length': length};
     return _call('edit.getAvailableRefactorings', m)
-        .then(AvailableRefactoringsResult.parse);
+        .then(AvailableRefactoringsResult.parse) as Future<AvailableRefactoringsResult>;
   }
 
   Future<FixesResult> getFixes(String file, int offset) {
     Map m = {'file': file, 'offset': offset};
-    return _call('edit.getFixes', m).then(FixesResult.parse);
+    return _call('edit.getFixes', m).then(FixesResult.parse) as Future<FixesResult>;
   }
 
   Future<RefactoringResult> getRefactoring(
@@ -759,17 +774,20 @@ class EditDomain extends Domain {
       'validateOnly': validateOnly
     };
     if (options != null) m['options'] = options;
-    return _call('edit.getRefactoring', m).then(RefactoringResult.parse);
+    return _call('edit.getRefactoring', m).then(RefactoringResult.parse)
+        as Future<RefactoringResult>;
   }
 
   Future<SortMembersResult> sortMembers(String file) {
     Map m = {'file': file};
-    return _call('edit.sortMembers', m).then(SortMembersResult.parse);
+    return _call('edit.sortMembers', m).then(SortMembersResult.parse)
+        as Future<SortMembersResult>;
   }
 
   Future<OrganizeDirectivesResult> organizeDirectives(String file) {
     Map m = {'file': file};
-    return _call('edit.organizeDirectives', m).then(OrganizeDirectivesResult.parse);
+    return _call('edit.organizeDirectives', m).then(OrganizeDirectivesResult.parse)
+        as Future<OrganizeDirectivesResult>;
   }
 }
 
@@ -834,9 +852,12 @@ class RefactoringResult {
   final List<RefactoringProblem> initialProblems;
   final List<RefactoringProblem> optionsProblems;
   final List<RefactoringProblem> finalProblems;
-  @optional final RefactoringFeedback feedback;
-  @optional final SourceChange change;
-  @optional final List<String> potentialEdits;
+  @optional
+  final RefactoringFeedback feedback;
+  @optional
+  final SourceChange change;
+  @optional
+  final List<String> potentialEdits;
 
   RefactoringResult(this.initialProblems, this.optionsProblems, this.finalProblems,
       {this.feedback, this.change, this.potentialEdits});
@@ -872,7 +893,8 @@ class ExecutionDomain extends Domain {
 
   Future<CreateContextResult> createContext(String contextRoot) {
     Map m = {'contextRoot': contextRoot};
-    return _call('execution.createContext', m).then(CreateContextResult.parse);
+    return _call('execution.createContext', m).then(CreateContextResult.parse)
+        as Future<CreateContextResult>;
   }
 
   Future deleteContext(String id) => _call('execution.deleteContext', {'id': id});
@@ -881,7 +903,7 @@ class ExecutionDomain extends Domain {
     Map m = {'id': id};
     if (file != null) m['file'] = file;
     if (uri != null) m['uri'] = uri;
-    return _call('execution.mapUri', m).then(MapUriResult.parse);
+    return _call('execution.mapUri', m).then(MapUriResult.parse) as Future<MapUriResult>;
   }
 
   Future setSubscriptions(List<String> subscriptions) =>
@@ -895,8 +917,10 @@ class ExecutionLaunchData {
           m['referencedFiles'] == null ? null : new List.from(m['referencedFiles']));
 
   final String file;
-  @optional final String kind;
-  @optional final List<String> referencedFiles;
+  @optional
+  final String kind;
+  @optional
+  final List<String> referencedFiles;
 
   ExecutionLaunchData(this.file, {this.kind, this.referencedFiles});
 }
@@ -912,8 +936,10 @@ class CreateContextResult {
 class MapUriResult {
   static MapUriResult parse(Map m) => new MapUriResult(file: m['file'], uri: m['uri']);
 
-  @optional final String file;
-  @optional final String uri;
+  @optional
+  final String file;
+  @optional
+  final String uri;
 
   MapUriResult({this.file, this.uri});
 }
@@ -924,7 +950,8 @@ class DiagnosticDomain extends Domain {
   DiagnosticDomain(Server server) : super(server, 'diagnostic');
 
   Future<DiagnosticsResult> getDiagnostics() =>
-      _call('diagnostic.getDiagnostics').then(DiagnosticsResult.parse);
+      _call('diagnostic.getDiagnostics').then(DiagnosticsResult.parse)
+      as Future<DiagnosticsResult>;
 }
 
 class DiagnosticsResult {
@@ -965,8 +992,10 @@ class AnalysisError {
   final String type;
   final Location location;
   final String message;
-  @optional final String correction;
-  @optional final bool hasFix;
+  @optional
+  final String correction;
+  @optional
+  final bool hasFix;
 
   AnalysisError(this.severity, this.type, this.location, this.message,
       {this.correction, this.hasFix});
@@ -1017,14 +1046,22 @@ class AnalysisOptions implements Jsonable {
         generateLints: m['generateLints']);
   }
 
-  @optional final bool enableAsync;
-  @optional final bool enableDeferredLoading;
-  @optional final bool enableEnums;
-  @optional final bool enableNullAwareOperators;
-  @optional final bool enableSuperMixins;
-  @optional final bool generateDart2jsHints;
-  @optional final bool generateHints;
-  @optional final bool generateLints;
+  @optional
+  final bool enableAsync;
+  @optional
+  final bool enableDeferredLoading;
+  @optional
+  final bool enableEnums;
+  @optional
+  final bool enableNullAwareOperators;
+  @optional
+  final bool enableSuperMixins;
+  @optional
+  final bool generateDart2jsHints;
+  @optional
+  final bool generateHints;
+  @optional
+  final bool generateLints;
 
   Map toMap() => _stripNullValues({
         'enableAsync': enableAsync,
@@ -1055,7 +1092,8 @@ class AnalysisStatus {
   }
 
   final bool isAnalyzing;
-  @optional final String analysisTarget;
+  @optional
+  final String analysisTarget;
 
   AnalysisStatus(this.isAnalyzing, {this.analysisTarget});
 }
@@ -1106,18 +1144,30 @@ class CompletionSuggestion {
   final int selectionLength;
   final bool isDeprecated;
   final bool isPotential;
-  @optional final String docSummary;
-  @optional final String docComplete;
-  @optional final String declaringType;
-  @optional final Element element;
-  @optional final String returnType;
-  @optional final List<String> parameterNames;
-  @optional final List<String> parameterTypes;
-  @optional final int requiredParameterCount;
-  @optional final bool hasNamedParameters;
-  @optional final String parameterName;
-  @optional final String parameterType;
-  @optional final String importUri;
+  @optional
+  final String docSummary;
+  @optional
+  final String docComplete;
+  @optional
+  final String declaringType;
+  @optional
+  final Element element;
+  @optional
+  final String returnType;
+  @optional
+  final List<String> parameterNames;
+  @optional
+  final List<String> parameterTypes;
+  @optional
+  final int requiredParameterCount;
+  @optional
+  final bool hasNamedParameters;
+  @optional
+  final String parameterName;
+  @optional
+  final String parameterType;
+  @optional
+  final String importUri;
 
   CompletionSuggestion(this.kind, this.relevance, this.completion, this.selectionOffset,
       this.selectionLength, this.isDeprecated, this.isPotential,
@@ -1174,10 +1224,14 @@ class Element {
   final String kind;
   final String name;
   final int flags;
-  @optional final Location location;
-  @optional final String parameters;
-  @optional final String returnType;
-  @optional final String typeParameters;
+  @optional
+  final Location location;
+  @optional
+  final String parameters;
+  @optional
+  final String returnType;
+  @optional
+  final String typeParameters;
 
   Element(this.kind, this.name, this.flags,
       {this.location, this.parameters, this.returnType, this.typeParameters});
@@ -1240,15 +1294,24 @@ class HoverInformation {
 
   final int offset;
   final int length;
-  @optional final String containingLibraryPath;
-  @optional final String containingLibraryName;
-  @optional final String containingClassDescription;
-  @optional final String dartdoc;
-  @optional final String elementDescription;
-  @optional final String elementKind;
-  @optional final String parameter;
-  @optional final String propagatedType;
-  @optional final String staticType;
+  @optional
+  final String containingLibraryPath;
+  @optional
+  final String containingLibraryName;
+  @optional
+  final String containingClassDescription;
+  @optional
+  final String dartdoc;
+  @optional
+  final String elementDescription;
+  @optional
+  final String elementKind;
+  @optional
+  final String parameter;
+  @optional
+  final String propagatedType;
+  @optional
+  final String staticType;
 
   HoverInformation(this.offset, this.length,
       {this.containingLibraryPath,
@@ -1419,7 +1482,8 @@ class Outline {
   final Element element;
   final int offset;
   final int length;
-  @optional final List<Outline> children;
+  @optional
+  final List<Outline> children;
 
   Outline(this.element, this.offset, this.length, {this.children});
 }
@@ -1436,8 +1500,10 @@ class Override {
 
   final int offset;
   final int length;
-  @optional final OverriddenMember superclassMember;
-  @optional final List<OverriddenMember> interfaceMembers;
+  @optional
+  final OverriddenMember superclassMember;
+  @optional
+  final List<OverriddenMember> interfaceMembers;
 
   Override(this.offset, this.length, {this.superclassMember, this.interfaceMembers});
 }
@@ -1491,8 +1557,10 @@ class RefactoringMethodParameter {
   final String kind;
   final String type;
   final String name;
-  @optional final String id;
-  @optional final String parameters;
+  @optional
+  final String id;
+  @optional
+  final String parameters;
 
   RefactoringMethodParameter(this.kind, this.type, this.name, {this.id, this.parameters});
 }
@@ -1506,7 +1574,8 @@ class RefactoringProblem {
 
   final String severity;
   final String message;
-  @optional final Location location;
+  @optional
+  final Location location;
 
   RefactoringProblem(this.severity, this.message, {this.location});
 }
@@ -1559,7 +1628,8 @@ class SourceChange {
   final String message;
   final List<SourceFileEdit> edits;
   final List<LinkedEditGroup> linkedEditGroups;
-  @optional final Position selection;
+  @optional
+  final Position selection;
 
   SourceChange(this.message, this.edits, this.linkedEditGroups, {this.selection});
 
@@ -1576,7 +1646,8 @@ class SourceEdit implements Jsonable {
   final int offset;
   final int length;
   final String replacement;
-  @optional final String id;
+  @optional
+  final String id;
 
   Map toMap() => _stripNullValues(
       {'offset': offset, 'length': length, 'replacement': replacement, 'id': id});
@@ -1625,9 +1696,12 @@ class TypeHierarchyItem {
   final List<int> interfaces;
   final List<int> mixins;
   final List<int> subclasses;
-  @optional final String displayName;
-  @optional final Element memberElement;
-  @optional final int superclass;
+  @optional
+  final String displayName;
+  @optional
+  final Element memberElement;
+  @optional
+  final int superclass;
 
   TypeHierarchyItem(this.classElement, this.interfaces, this.mixins, this.subclasses,
       {this.displayName, this.memberElement, this.superclass});

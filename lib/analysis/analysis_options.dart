@@ -107,7 +107,7 @@ class AnalysisOptions {
     var analyzer = (_document.contents as Map)['analyzer'];
     if (analyzer is! Map) return [];
     var exclude = analyzer['exclude'];
-    return exclude is List ? exclude : [];
+    return exclude is List<String> ? exclude : <String>[];
   }
 
   /// Return the list of exclutions that end in `/**`, with the suffix removed.
