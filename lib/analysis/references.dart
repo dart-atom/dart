@@ -6,11 +6,11 @@ import 'dart:collection';
 import 'dart:html' as html show DivElement, Element, SpanElement;
 import 'dart:math' as math;
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../elements.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -195,7 +195,7 @@ class FindReferencesView extends View {
     List<String> relPath = atom.project.relativizePath(originalPath);
     if (relPath[0] != null) {
       String base = relPath[0];
-      int index = base.lastIndexOf(separator);
+      int index = base.lastIndexOf(fs.separator);
       if (index != -1) base = base.substring(index + 1);
       return [base, relPath[1]];
     }
@@ -250,9 +250,9 @@ class FindReferencesView extends View {
   //   job.schedule();
   // }
 
-  static final _cachePrefix = '${separator}.pub-cache${separator}';
-  static final _pubPrefix = 'hosted${separator}pub.dartlang.org${separator}';
-  static final _libPrefix = '${separator}lib${separator}';
+  static final _cachePrefix = '${fs.separator}.pub-cache${fs.separator}';
+  static final _pubPrefix = 'hosted${fs.separator}pub.dartlang.org${fs.separator}';
+  static final _libPrefix = '${fs.separator}lib${fs.separator}';
 }
 
 class _MatchParser {

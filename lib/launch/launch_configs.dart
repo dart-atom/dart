@@ -3,6 +3,7 @@ library atom.launch_configs;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
@@ -148,7 +149,7 @@ class LaunchConfiguration {
   String get primaryResource {
     return shortResourceName == null
       ? null
-      : join(projectPath, shortResourceName);
+      : fs.join(projectPath, shortResourceName);
   }
 
   /// Return the type specific arguments for this launch configuration.
@@ -161,9 +162,9 @@ class LaunchConfiguration {
     if (typeArgs['cwd'] is String) {
       String str = typeArgs['cwd'].trim();
       if (str.isEmpty) return null;
-      if (str.startsWith(separator) || str.startsWith('/')) return str;
+      if (str.startsWith(fs.separator) || str.startsWith('/')) return str;
       if (isWindows && str.length >= 2 && str[1] == ':') return str;
-      return join(projectPath, str);
+      return fs.join(projectPath, str);
     } else {
       return null;
     }
@@ -226,10 +227,10 @@ class LaunchConfiguration {
 
   String _getRelativeConfigPath() {
     String path = _file.path;
-    String parent = dirname(projectPath);
+    String parent = fs.dirname(projectPath);
     if (path.startsWith(parent)) {
       path = path.substring(parent.length);
-      if (path.startsWith(separator)) path = path.substring(1);
+      if (path.startsWith(fs.separator)) path = path.substring(1);
       return path;
     } else {
       return path;
@@ -247,7 +248,7 @@ class LaunchConfiguration {
 }
 
 Directory _getLaunchDir(String projectPath) {
-  return new Directory.fromPath(join(projectPath, '.atom', 'launches'));
+  return new Directory.fromPath(fs.join(projectPath, '.atom', 'launches'));
 }
 
 class _ProjectConfigurations implements Disposable {

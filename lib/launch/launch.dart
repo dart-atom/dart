@@ -4,11 +4,11 @@ library atom.launch;
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../debug/debugger.dart';
 import '../projects.dart';
 import '../state.dart';
@@ -376,20 +376,20 @@ class _PathResolver implements _Resolver {
 
     String path;
 
-    if (url[0] == '/' || url[0] == separator || url[1] == ':') {
+    if (url[0] == '/' || url[0] == fs.separator || url[1] == ':') {
       path = url;
     } else if (cwd != null) {
-      path = join(cwd, url);
+      path = fs.join(cwd, url);
     }
 
     if (path == null) return null;
-    if (existsSync(path)) return new Future.value(path);
+    if (fs.existsSync(path)) return new Future.value(path);
 
     try {
       Uri uri = Uri.parse(url);
       if (uri.scheme == 'file') {
         path = uri.path;
-        if (existsSync(path)) return new Future.value(path);
+        if (fs.existsSync(path)) return new Future.value(path);
       }
     } catch (_) { }
 

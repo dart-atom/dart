@@ -7,6 +7,8 @@ library atom.rebuild;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
+
 import '../atom.dart';
 import '../jobs.dart';
 import '../state.dart';

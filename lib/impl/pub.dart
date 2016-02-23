@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:convert' show JSON;
 import 'dart:html' show HttpRequest;
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
@@ -32,10 +33,10 @@ class PubManager implements Disposable, ContextMenuContributor {
   PubManager() {
     // get, update, run
     _addSdkCmd('atom-text-editor', 'dartlang:pub-get', (event) {
-      new PubJob.get(dirname(event.editor.getPath())).schedule();
+      new PubJob.get(fs.dirname(event.editor.getPath())).schedule();
     });
     _addSdkCmd('atom-text-editor', 'dartlang:pub-upgrade', (event) {
-      new PubJob.upgrade(dirname(event.editor.getPath())).schedule();
+      new PubJob.upgrade(fs.dirname(event.editor.getPath())).schedule();
     });
     _addSdkCmd('atom-text-editor', 'dartlang:pub-run', (event) {
       _handleRun(editor: atom.workspace.getActiveTextEditor());
@@ -152,13 +153,13 @@ class PubManager implements Disposable, ContextMenuContributor {
 
     // Prefer checking for a .packages file.
     if (dotPackagesFile.existsSync()) {
-      var pubspecTime = statSync(pubspecYamlFile.path).mtime;
-      var packagesTime = statSync(dotPackagesFile.path).mtime;
+      var pubspecTime = fs.statSync(pubspecYamlFile.path).mtime;
+      var packagesTime = fs.statSync(dotPackagesFile.path).mtime;
       bool dirty = pubspecTime.compareTo(packagesTime) > 0;
       if (dirty) _showRunPubDialog(project);
     } else if (pubspecLockFile.existsSync()) {
-      var pubspecTime = statSync(pubspecYamlFile.path).mtime;
-      var lockTime = statSync(pubspecLockFile.path).mtime;
+      var pubspecTime = fs.statSync(pubspecYamlFile.path).mtime;
+      var lockTime = fs.statSync(pubspecLockFile.path).mtime;
       bool dirty = pubspecTime.compareTo(lockTime) > 0;
       if (dirty) _showRunPubDialog(project);
     } else {
@@ -322,7 +323,7 @@ class PubAppLocal extends PubApp {
 
   /// Returns whether this pub app is installed.
   bool isInstalledSync() {
-    File packagesFile = new File.fromPath(join(cwd, dotPackagesFileName));
+    File packagesFile = new File.fromPath(fs.join(cwd, dotPackagesFileName));
     if (!packagesFile.existsSync()) return false;
     String contents = packagesFile.readSync();
     return contents.split('\n').any((String line) => line.startsWith('${name}:'));
@@ -429,9 +430,9 @@ class PubRunJob extends Job {
 
 String _locatePubspecDir(String path) {
   if (path == null) return null;
-  if (path.endsWith(pubspecFileName)) return dirname(path);
+  if (path.endsWith(pubspecFileName)) return fs.dirname(path);
 
-  File f = new File.fromPath(join(path, pubspecFileName));
+  File f = new File.fromPath(fs.join(path, pubspecFileName));
   if (f.existsSync()) return path;
 
   DartProject project = projectManager.getProjectFor(path);
@@ -488,7 +489,7 @@ class PubContextCommand extends ContextMenuItem {
     if (project == null) return null;
 
     if (onlyPubspec) {
-      File file = new File.fromPath(join(project.path, pubspecFileName));
+      File file = new File.fromPath(fs.join(project.path, pubspecFileName));
       return file.existsSync();
     } else {
       return true;

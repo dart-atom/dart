@@ -3,12 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// A Dart wrapper around the [Atom](https://atom.io/docs/api) apis.
-library atom;
 
 import 'dart:async';
 import 'dart:html' hide File, Notification, Point;
 import 'dart:js';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import 'js.dart';
@@ -632,97 +632,6 @@ class Project extends ProxyHolder {
   bool contains(String pathToCheck) => invoke('contains', pathToCheck);
 }
 
-abstract class Entry extends ProxyHolder {
-  Entry(JsObject object) : super(object);
-
-  /// Fires an event when the file or directory's contents change.
-  Stream get onDidChange => eventStream('onDidChange');
-
-  String get path => obj['path'];
-
-  bool isFile() => invoke('isFile');
-  bool isDirectory() => invoke('isDirectory');
-  bool existsSync() => invoke('existsSync');
-
-  String getBaseName() => invoke('getBaseName');
-  String getPath() => invoke('getPath');
-  String getRealPathSync() => invoke('getRealPathSync');
-
-  Directory getParent() => new Directory(invoke('getParent'));
-
-  String toString() => path;
-}
-
-class File extends Entry {
-  File(JsObject object) : super(object);
-  File.fromPath(String path, [bool symlink]) :
-      super(_create('File', path, symlink));
-
-  /// Creates the file on disk that corresponds to [getPath] if no such file
-  /// already exists.
-  Future create() => promiseToFuture(invoke('create'));
-
-  Stream get onDidRename => eventStream('onDidRename');
-  Stream get onDidDelete => eventStream('onDidDelete');
-
-  /// Get the SHA-1 digest of this file.
-  String getDigestSync() => invoke('getDigestSync');
-
-  String getEncoding() => invoke('getEncoding');
-
-  /// Reads the contents of the file. [flushCache] indicates whether to require
-  /// a direct read or if a cached copy is acceptable.
-  Future<String> read([bool flushCache]) =>
-      promiseToFuture(invoke('read', flushCache));
-
-  /// Reads the contents of the file. [flushCache] indicates whether to require
-  /// a direct read or if a cached copy is acceptable.
-  String readSync([bool flushCache]) => invoke('readSync', flushCache);
-
-  /// Overwrites the file with the given text.
-  void writeSync(String text) => invoke('writeSync', text);
-
-  int get hashCode => path.hashCode;
-
-  operator==(other) => other is File && path == other.path;
-}
-
-class Directory extends Entry {
-  Directory(JsObject object) : super(object);
-  Directory.fromPath(String path, [bool symlink]) :
-      super(_create('Directory', path, symlink));
-
-  /// Creates the directory on disk that corresponds to [getPath] if no such
-  /// directory already exists. [mode] defaults to `0777`.
-  Future create([int mode]) => promiseToFuture(invoke('create', mode));
-
-  /// Returns `true` if this [Directory] is the root directory of the
-  /// filesystem, or `false` if it isn't.
-  bool isRoot() => invoke('isRoot');
-
-  // TODO: Should we move this _cvt guard into the File and Directory ctors?
-  File getFile(filename) => new File(_cvt(invoke('getFile', filename)));
-
-  Directory getSubdirectory(String dirname) =>
-      new Directory(invoke('getSubdirectory', dirname));
-
-  List<Entry> getEntriesSync() {
-    return invoke('getEntriesSync').map((entry) {
-      entry = _cvt(entry);
-      return entry.callMethod('isFile') ? new File(entry) : new Directory(entry);
-    }).toList();
-  }
-
-  /// Returns whether the given path (real or symbolic) is inside this directory.
-  /// This method does not actually check if the path exists, it just checks if
-  /// the path is under this directory.
-  bool contains(String p) => invoke('contains', p);
-
-  int get hashCode => path.hashCode;
-
-  operator==(other) => other is Directory && path == other.path;
-}
-
 /// This cooresponds to an `atom-text-editor` custom element.
 class TextEditorView extends ProxyHolder {
   TextEditorView(JsObject object) : super(_cvt(object));
@@ -1271,22 +1180,8 @@ JsObject _cvt(JsObject object) {
   return new JsObject.fromBrowserObject(object);
 }
 
-Stats statSync(String path) => new Stats(_fs.callMethod('statSync', [path]));
-
-bool existsSync(String path) => _fs.callMethod('existsSync', [path]);
-
 /// Returns the operating system's default directory for temp files.
 String tmpdir() => _os.callMethod('tmpdir');
 
 // TODO(devoncarew): [homedir] can throw (or isn't available?) on some platforms.
 String homedir() => _os.callMethod('homedir');
-
-class Stats extends ProxyHolder {
-  Stats(JsObject obj) : super(obj);
-
-  bool isFile() => invoke('isFile');
-  bool isDirectory() => invoke('isDirectory');
-
-  // The last modified time (`2015-10-08 17:48:42.000`).
-  String get mtime => obj['mtime'];
-}

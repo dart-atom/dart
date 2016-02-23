@@ -2,9 +2,9 @@ library atom.flutter.flutter_launch;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../atom_utils.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
@@ -265,7 +265,7 @@ class FlutterUriTranslator implements UriTranslator {
     if (str.startsWith(_packagesPrefix)) {
       // Convert packages/ prefix to package: one.
       return _packagePrefix + str.substring(_packagesPrefix.length);
-    } else if (existsSync(str)) {
+    } else if (fs.existsSync(str)) {
       return new Uri.file(str).toString();
     } else {
       return str;

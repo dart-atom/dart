@@ -2,6 +2,7 @@ library atom.breakpoints;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
@@ -189,7 +190,7 @@ class AtomBreakpoint implements Comparable {
   }
 
   /// Return whether the file associated with this breakpoint exists.
-  bool fileExists() => existsSync(path);
+  bool fileExists() => fs.existsSync(path);
 
   void updateLocation(LineColumn lineCol) {
     _line = lineCol.line;

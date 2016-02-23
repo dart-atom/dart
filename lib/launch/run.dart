@@ -2,10 +2,10 @@ library atom.run;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -169,7 +169,7 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
     if (relativePath.startsWith(projectPath)) {
       relativePath = relativePath.substring(projectPath.length);
-      if (relativePath.startsWith(separator)) relativePath = relativePath.substring(1);
+      if (relativePath.startsWith(fs.separator)) relativePath = relativePath.substring(1);
     }
 
     return launchConfigurationManager.createNewConfig(

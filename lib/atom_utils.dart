@@ -10,6 +10,7 @@ import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
     NodeTreeSanitizer, window;
 import 'dart:js';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
@@ -32,43 +33,20 @@ final bool isWindows = platform.startsWith('win');
 final bool isMac = platform == 'darwin';
 final bool isLinux = !isWindows && !isMac;
 
-final String separator = isWindows ? r'\' : '/';
-
-String join(dir, String arg1, [String arg2, String arg3]) {
-  if (dir is Directory) dir = dir.path;
-  String path = '${dir}${separator}${arg1}';
-  if (arg2 != null) {
-    path = '${path}${separator}${arg2}';
-    if (arg3 != null) path = '${path}${separator}${arg3}';
-  }
-  return path;
-}
-
-/// Return the parent of the given file path or entry.
-String dirname(entry) {
-  if (entry is Entry) return entry.getParent().path;
-  int index = entry.lastIndexOf(separator);
-  return index == -1 ? null : entry.substring(0, index);
-}
-
 /// Return the name of the file for the given path.
 String basename(String path) {
-  if (path.endsWith(separator)) path = path.substring(0, path.length - 1);
-  int index = path.lastIndexOf(separator);
+  if (path.endsWith(fs.separator)) path = path.substring(0, path.length - 1);
+  int index = path.lastIndexOf(fs.separator);
   return index == -1 ? path : path.substring(index + 1);
 }
 
 String relativize(String root, String path) {
   if (path.startsWith(root)) {
     path = path.substring(root.length);
-    if (path.startsWith(separator)) path = path.substring(1);
+    if (path.startsWith(fs.separator)) path = path.substring(1);
   }
   return path;
 }
-
-/// Relative path entries are removed and symlinks are resolved to their final
-/// destination.
-String realpathSync(String path) => _fs.callMethod('realpathSync', [path]);
 
 /// Get the value of an environment variable. This is often not accurate on the
 /// mac since mac apps are launched in a different shell then the terminal

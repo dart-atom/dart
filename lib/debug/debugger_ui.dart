@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:html' show Element;
 import 'dart:js' show context, JsFunction;
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
@@ -204,7 +205,7 @@ class DebuggerView extends View {
   }
 
   void _jumpToLocation(DebugLocation location, {bool addExecMarker: false}) {
-    if (!existsSync(location.path)) {
+    if (!fs.existsSync(location.path)) {
       atom.notifications.addWarning("Cannot find file '${location.path}'.");
       return;
     }

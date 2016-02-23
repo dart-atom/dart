@@ -7,6 +7,7 @@ library atom.projects;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
@@ -316,7 +317,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
       path = response;
 
       // Verify the path.
-      if (!statSync(path).isDirectory()) {
+      if (!fs.statSync(path).isDirectory()) {
         atom.notifications.addWarning("'${path}' is not a directory.");
         return;
       }
@@ -328,7 +329,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
       }
 
       // Create the analysis options file and open it.
-      File file = new File.fromPath(join(path, analysisOptionsFileName));
+      File file = new File.fromPath(fs.join(path, analysisOptionsFileName));
       file.writeSync('''
 # ${analysisOptionsFileName}
 meta:
@@ -391,7 +392,7 @@ class DartProject {
   String get workspaceRelativeName {
     List<String> relPaths = atom.project.relativizePath(directory.path);
     if (relPaths[0] == null) return name;
-    return join(basename(relPaths[0]), relPaths[1]);
+    return fs.join(basename(relPaths[0]), relPaths[1]);
   }
 
   String getSelfRefName() {

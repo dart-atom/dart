@@ -7,6 +7,8 @@ library atom.smoketest;
 import 'dart:async';
 import 'dart:html' show DivElement;
 
+import 'package:atom/node/fs.dart';
+
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../jobs.dart';
