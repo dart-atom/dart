@@ -2,6 +2,7 @@ library atom.flutter.flutter_sdk;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
@@ -211,7 +212,7 @@ class FlutterSdk {
   bool get isValidSdk => new File.fromPath(flutterToolPath).existsSync();
 
   String get flutterToolPath {
-    return join(path, 'bin', isWindows ? 'flutter.bat' : 'flutter');
+    return fs.join(path, 'bin', isWindows ? 'flutter.bat' : 'flutter');
   }
 
   FlutterTool get flutterTool => new FlutterTool(this, flutterToolPath);
@@ -219,7 +220,7 @@ class FlutterSdk {
   /// Return the path to the Dart SDK contained within the Flutter SDK, if the
   /// Dart SDK is present.
   String get dartSdkPath {
-    String p = join(path, 'bin', 'cache', 'dart-sdk');
+    String p = fs.join(path, 'bin', 'cache', 'dart-sdk');
     if (new Directory.fromPath(p).existsSync()) return p;
     return null;
   }

@@ -3,6 +3,7 @@ library atom.observatory_debugger;
 import 'dart:async';
 import 'dart:html' show WebSocket, MessageEvent;
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 import 'package:vm_service_lib/vm_service_lib.dart';
 
@@ -1020,7 +1021,7 @@ class ObservatoryLocation extends DebugLocation {
   }
 
   void _checkCreateSystemScript() {
-    if (existsSync(_path)) return;
+    if (fs.existsSync(_path)) return;
 
     _unableToResolve = true;
 
@@ -1163,7 +1164,7 @@ class _VmSourceCache {
 
   Map<String, String> _pathMappings = {};
 
-  _VmSourceCache() : cacheDir = join(tmpdir(), 'vm_cache');
+  _VmSourceCache() : cacheDir = fs.join(tmpdir(), 'vm_cache');
 
   _VmSourceCache.withDir(this.cacheDir);
 
@@ -1172,9 +1173,9 @@ class _VmSourceCache {
       List<String> safeNames = _createSafePathNames(originalPath);
       String filePath;
       if (safeNames.length == 2) {
-        filePath = join(cacheDir, safeNames[0], safeNames[1]);
+        filePath = fs.join(cacheDir, safeNames[0], safeNames[1]);
       } else {
-        filePath = join(cacheDir, safeNames[0]);
+        filePath = fs.join(cacheDir, safeNames[0]);
       }
       _createFile(filePath, source);
       _pathMappings[originalPath] = filePath;
@@ -1199,7 +1200,7 @@ class _VmSourceCache {
         Uri uri = Uri.parse(path);
         String temp = uri.path;
         if (temp.contains('/')) {
-          return [dirname(temp), basename(temp)];
+          return [fs.dirname(temp), basename(temp)];
         } else {
           return temp.contains('.') ? [temp] : [temp + '.dart'];
         }

@@ -1,5 +1,6 @@
 library atom.flutter.create_project;
 
+import 'package:atom/node/fs.dart';
 import 'package:haikunator/haikunator.dart';
 
 import '../atom.dart';
@@ -39,8 +40,8 @@ class FlutterToolsManager implements Disposable {
     }
 
     String projectName = Haikunator.haikunate(delimiter: '_');
-    String parentPath = dirname(_flutterSdk.sdk.path);
-    String projectPath = join(parentPath, projectName);
+    String parentPath = fs.dirname(_flutterSdk.sdk.path);
+    String projectPath = fs.join(parentPath, projectName);
 
     String _response;
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
@@ -61,7 +62,7 @@ class FlutterToolsManager implements Disposable {
     }).then((_) {
       if (_response != null) {
         atom.project.addPath(_response);
-        String path = join(_response, 'lib', 'main.dart');
+        String path = fs.join(_response, 'lib', 'main.dart');
         atom.workspace.open(path).then((TextEditor editor) {
           // Focus the file in the files view 'tree-view:reveal-active-file'.
           atom.commands.dispatch(

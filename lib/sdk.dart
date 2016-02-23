@@ -6,6 +6,7 @@ library atom.sdk;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
@@ -198,7 +199,7 @@ class Sdk {
 
   String get path => directory.path;
 
-  String get binPath => join(path, 'bin');
+  String get binPath => fs.join(path, 'bin');
 
   Future<String> getVersion() {
     File file = directory.getFile('version');
@@ -211,15 +212,15 @@ class Sdk {
 
   File get dartVm {
     if (isWindows) {
-      return new File.fromPath(join(directory, 'bin', 'dart.exe'));
+      return new File.fromPath(fs.join(directory, 'bin', 'dart.exe'));
     } else {
-      return new File.fromPath(join(directory, 'bin', 'dart'));
+      return new File.fromPath(fs.join(directory, 'bin', 'dart'));
     }
   }
 
   String getSnapshotPath(String snapshotName) {
     File file = new File.fromPath(
-        join(directory, 'bin', 'snapshots', snapshotName));
+        fs.join(directory, 'bin', 'snapshots', snapshotName));
     return file.path;
   }
 
@@ -229,7 +230,7 @@ class Sdk {
     cwd, bool startProcess: true
   }) {
     if (cwd is Directory) cwd = cwd.path;
-    String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
+    String command = fs.join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
 
     ProcessRunner runner =
         new ProcessRunner.underShell(command, args: args, cwd: cwd);
@@ -241,7 +242,7 @@ class Sdk {
   /// be either a [String] or a [Directory].
   Future<ProcessResult> execBinSimple(String binName, List<String> args, {cwd}) {
     if (cwd is Directory) cwd = cwd.path;
-    String command = join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
+    String command = fs.join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
     return new ProcessRunner.underShell(command, args: args, cwd: cwd).execSimple();
   }
 

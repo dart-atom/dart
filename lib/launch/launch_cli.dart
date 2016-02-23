@@ -2,6 +2,7 @@ library atom.launch_cli;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
@@ -37,14 +38,14 @@ class CliLaunchType extends LaunchType {
     } else {
       // Check that the file is not in lib/.
       String relativePath = relativize(project.path, path);
-      if (relativePath.startsWith('lib${separator}')) return false;
+      if (relativePath.startsWith('lib${fs.separator}')) return false;
 
       return analysisServer.isExecutable(path);
     }
   }
 
   List<String> getLaunchablesFor(DartProject project) {
-    final String libSuffix = 'lib${separator}';
+    final String libSuffix = 'lib${fs.separator}';
 
     return analysisServer.getExecutablesFor(project.path).where((String path) {
       // Check that the file is not in lib/.

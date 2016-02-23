@@ -2,11 +2,11 @@ library atom.error_repository;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_lib.dart'
     show AnalysisErrors, AnalysisError, AnalysisFlushResults, Location;
-import 'atom.dart' show Directory, File, statSync;
 import 'utils.dart';
 
 final Logger _logger = new Logger('error_repository');
@@ -68,7 +68,7 @@ class ErrorRepository implements Disposable {
 
     // We use statSync() here and not file.isFile() as File.isFile() always
     // returns true.
-    if (file.existsSync() && statSync(path).isFile()) {
+    if (file.existsSync() && fs.statSync(path).isFile()) {
       var oldErrors = knownErrors[path];
       var newErrors = analysisErrors.errors;
 
