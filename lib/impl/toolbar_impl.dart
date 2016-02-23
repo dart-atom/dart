@@ -78,7 +78,8 @@ class DartToolbarContribution implements Disposable {
     }
 
     updateToolbar();
-    editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar);
+    subs.add(editorManager.dartProjectEditors.onActiveEditorChanged.listen(updateToolbar));
+    subs.add(projectManager.onProjectsChanged.listen(updateToolbar));
 
     return e;
   }
