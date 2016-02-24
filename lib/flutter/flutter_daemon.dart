@@ -201,11 +201,15 @@ class FlutterDaemon {
       if (json['id'] == null) {
         // Handle a notification.
         String event = json['event'];
-        String prefix = event.substring(0, event.indexOf('.'));
-        if (_domains[prefix] == null) {
-          _logger.severe('no domain for notification: ${message}');
+        if (event == null) {
+          _logger.severe('invalid message: ${message}');
         } else {
-          _domains[prefix]._handleEvent(event, json['params']);
+          String prefix = event.substring(0, event.indexOf('.'));
+          if (_domains[prefix] == null) {
+            _logger.severe('no domain for notification: ${message}');
+          } else {
+            _domains[prefix]._handleEvent(event, json['params']);
+          }
         }
       } else {
         Completer completer = _completers.remove(json['id']);
@@ -281,7 +285,7 @@ class RequestError {
 
   RequestError(this.methodName, this.error);
 
-  String toString() => '[RequestError ${error}]';
+  String toString() => '[Flutter RequestError ${error}]';
 }
 
 /// Create a copy of the given map with all `null` values stripped out.
