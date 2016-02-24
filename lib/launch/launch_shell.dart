@@ -2,9 +2,10 @@ library atom.launch_shell;
 
 import 'dart:async';
 
+import 'package:atom/node/process.dart';
+
 import '../atom.dart';
 import '../atom_utils.dart';
-import '../process.dart';
 import '../projects.dart';
 import 'launch.dart';
 

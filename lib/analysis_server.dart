@@ -8,13 +8,13 @@ library atom.analysis_server;
 
 import 'dart:async';
 
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_lib.dart';
 import 'atom.dart';
 import 'dartino/dartino_util.dart';
 import 'jobs.dart';
-import 'process.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';

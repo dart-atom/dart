@@ -3,12 +3,12 @@ library atom.launch_cli;
 import 'dart:async';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
-import '../process.dart';
 import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';

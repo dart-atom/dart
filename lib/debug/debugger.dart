@@ -2,11 +2,11 @@ library atom.debugger;
 
 import 'dart:async';
 
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' show MapUriResult;
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'debugger_ui.dart';

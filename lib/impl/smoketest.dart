@@ -8,13 +8,12 @@ import 'dart:async';
 import 'dart:html' show DivElement;
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/process.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../jobs.dart';
 import '../launch/launch.dart';
 import '../launch/launch_cli.dart';
-import '../process.dart';
 import '../projects.dart';
 import '../sdk.dart';
 import '../state.dart';
@@ -126,7 +125,7 @@ void smokeTest() {
   new _TestJob("Do eiusmod tempor", 4).schedule();
 
   // utils
-  print("platform: '${platform}'");
+  print("platform: '${process.platform}'");
   print('isWindows: ${isWindows}');
   print('isMac: ${isMac}');
   print('isLinux: ${isLinux}');

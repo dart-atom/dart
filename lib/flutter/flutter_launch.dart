@@ -3,6 +3,7 @@ library atom.flutter.flutter_launch;
 import 'dart:async';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import '../atom_utils.dart';
@@ -10,7 +11,6 @@ import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../flutter/flutter_devices.dart';
 import '../launch/launch.dart';
-import '../process.dart';
 import '../projects.dart';
 import '../state.dart';
 import 'flutter_sdk.dart';

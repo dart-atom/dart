@@ -7,6 +7,7 @@ library atom.plugin;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_options.dart';
@@ -114,7 +115,7 @@ class AtomDartPackage extends AtomPackage {
     _setupLogging();
 
     _logger.info("activated");
-    _logger.fine("Running on Chrome version ${chromeVersion}.");
+    _logger.fine("Running on Chrome version ${process.chromeVersion}.");
 
     if (deps == null) Dependencies.setGlobalInstance(new Dependencies());
 

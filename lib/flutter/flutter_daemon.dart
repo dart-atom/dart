@@ -2,9 +2,9 @@
 import 'dart:async';
 import 'dart:convert' show JSON, JsonCodec, LineSplitter;
 
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
-import '../process.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'flutter_sdk.dart';

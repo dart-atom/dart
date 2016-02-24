@@ -11,11 +11,11 @@ import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
 import 'dart:js';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
 import 'js.dart';
-import 'process.dart';
 import 'state.dart';
 import 'utils.dart';
 
@@ -23,15 +23,6 @@ final Logger _logger = new Logger('atom_utils');
 
 final JsObject _process = require('process');
 final JsObject _fs = require('fs');
-
-/// 'darwin', 'freebsd', 'linux', 'sunos' or 'win32'
-final String platform = _process['platform'];
-
-String get chromeVersion => _process['versions']['chrome'];
-
-final bool isWindows = platform.startsWith('win');
-final bool isMac = platform == 'darwin';
-final bool isLinux = !isWindows && !isMac;
 
 /// Return the name of the file for the given path.
 String basename(String path) {
@@ -115,7 +106,7 @@ Future<String> getSystemDescription({bool sdkPath: false}) {
   String atomVer = atom.getVersion();
   String pluginVer;
   String sdkVer;
-  String os = isMac ? 'macos' : platform;
+  String os = isMac ? 'macos' : process.platform;
 
   return getPackageVersion().then((ver) {
     pluginVer = ver;

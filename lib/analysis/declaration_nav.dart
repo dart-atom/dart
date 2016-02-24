@@ -4,10 +4,10 @@ library atom.declaration_nav;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../editors.dart';
 import '../js.dart';
 import '../state.dart';

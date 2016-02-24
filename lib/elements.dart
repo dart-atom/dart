@@ -7,6 +7,8 @@ library atom.elements;
 import 'dart:async';
 import 'dart:html';
 
+import 'package:atom/node/process.dart';
+
 import 'atom.dart' hide Point;
 import 'atom_utils.dart';
 import 'utils.dart';

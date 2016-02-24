@@ -7,6 +7,7 @@ library atom.sdk;
 import 'dart:async';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
@@ -15,11 +16,8 @@ import 'atom_utils.dart';
 import 'flutter/flutter_sdk.dart' show FlutterSdkManager;
 import 'impl/debounce.dart';
 import 'jobs.dart';
-import 'process.dart';
 import 'state.dart';
 import 'utils.dart';
-
-export 'process.dart' show ProcessResult;
 
 final String _prefPath = '${pluginId}.sdkLocation';
 

@@ -2,12 +2,12 @@ library atom.formatting;
 
 import 'dart:async';
 
+import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../atom.dart';
 import '../editors.dart';
-import '../process.dart';
 import '../state.dart';
 import '../utils.dart';
 
