@@ -51,9 +51,6 @@ class FlutterLaunchType extends LaunchType {
     }).map((String fullPath) {
       return relativize(project.path, fullPath);
     }).toList();
-
-    // File file = project.directory.getFile('lib${separator}main.dart');
-    // return file.existsSync() ? [file.path] : [];
   }
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {

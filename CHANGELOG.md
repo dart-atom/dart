@@ -5,6 +5,7 @@
 - fixed an issue with the visibility of the devices pulldown on the toolbar
 - re-ordered items in the toolbar
 - added the ability to click in the line number column to set a breakpoint
+- de-emphasize Mojo launches; most users will be running Flutter apps
 
 ## 0.6.1
 - add support for async stepping

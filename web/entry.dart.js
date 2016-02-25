@@ -29693,12 +29693,17 @@ self._domRemove = function(element) {
       _initLineNumberGutter$1: function(gutter) {
         if (gutter == null || this._gutterDisposable != null)
           return;
-        J.get$onClick$x($.$get$atom()._views.invoke$2("getView", gutter)).listen$1(new A._GutterTracker__initLineNumberGutter_closure(this));
+        this._gutterClickListener = J.get$onClick$x($.$get$atom()._views.invoke$2("getView", gutter)).listen$1(new A._GutterTracker__initLineNumberGutter_closure(this));
         this._gutterDisposable = gutter.onDidDestroy$1(new A._GutterTracker__initLineNumberGutter_closure0(this));
       },
       dispose$0: [function() {
         this._breakpoints$_sub.cancel$0();
-        var t1 = this._gutterDisposable;
+        var t1 = this._gutterClickListener;
+        if (t1 == null)
+          ;
+        else
+          t1.cancel$0();
+        t1 = this._gutterDisposable;
         if (t1 == null)
           ;
         else
@@ -29743,7 +29748,14 @@ self._domRemove = function(element) {
     _GutterTracker__initLineNumberGutter_closure0: {
       "^": "Closure:1;$this",
       call$0: [function() {
-        this.$this._gutterDisposable = null;
+        var t1, t2;
+        t1 = this.$this;
+        t2 = t1._gutterClickListener;
+        if (t2 == null)
+          ;
+        else
+          t2.cancel$0();
+        t1._gutterDisposable = null;
       }, null, null, 0, 0, null, "call"]
     },
     _EditorBreakpoint: {
@@ -34708,6 +34720,9 @@ self._domRemove = function(element) {
       "^": "FlutterLaunchType;_lastLaunch,type",
       get$flutterStartCommand: function() {
         return "run_mojo";
+      },
+      getLaunchablesFor$1: function(project) {
+        return H.setRuntimeTypeInfo([], [P.String]);
       },
       getDefaultConfigText$0: function() {
         return "checked: true\n# args:\n#  - --mojo-path=path/to/mojo";
