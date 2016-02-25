@@ -13,11 +13,13 @@ import 'toolbar.dart';
 
 class DartToolbarContribution implements Disposable {
   ToolbarTile leftTile;
+  ToolbarTile flutterTile;
   ToolbarTile rightTile;
   StreamSubscriptions subs = new StreamSubscriptions();
 
   DartToolbarContribution(Toolbar toolbar) {
     leftTile = toolbar.addLeftTile(item: _buildLeftTile().element);
+    flutterTile = toolbar.addLeftTile(item: _buildFlutterTile().element);
     rightTile = toolbar.addRightTile(item: _buildRightTile().element);
   }
 
@@ -33,10 +35,10 @@ class DartToolbarContribution implements Disposable {
       runButton = button(c: 'btn icon icon-playback-play')
         ..click(_handleRunLaunch)
         ..tooltip = "Run",
-      appSelectList = new CoreElement('select', classes: 'form-control'),
       configureLaunchButton = button(c: 'btn icon icon-gear')
         ..click(_handleConfigureLaunch)
-        ..tooltip = 'Configure launch'
+        ..tooltip = 'Configure launch',
+      appSelectList = new CoreElement('select', classes: 'form-control')
     ]);
 
     _bindLaunchManager(runButton, appSelectList, configureLaunchButton);
@@ -44,23 +46,17 @@ class DartToolbarContribution implements Disposable {
     return e;
   }
 
-  CoreElement _buildRightTile() {
-    CoreElement selectList;
+  CoreElement _buildFlutterTile() {
     CoreElement flutterDiv;
-    CoreElement outlineToggleDiv;
+    CoreElement selectList;
 
     // `settings-view` class added to get proper styling for select elements.
-    CoreElement e = div(c: 'settings-view', a: 'flex-center')..add([
+    CoreElement e = div(c: 'btn-group btn-group dartlang-toolbar settings-view')..add([
       flutterDiv = div(c: 'btn-group btn-group dartlang-toolbar')..add([
         div(c: 'icon icon-device-mobile')..id = 'toolbar-mobile-icon'
           ..tooltip = "Available devices",
         selectList = new CoreElement('select', classes: 'form-control')
       ]),
-      div(c: 'btn-group btn-group dartlang-toolbar')..add([
-        outlineToggleDiv = button(c: 'btn icon icon-list-unordered')
-          ..click(_toggleOutline)
-          ..tooltip = "Toggle Dart Outline View"
-      ])
     ]);
 
     // Bind the device pulldown.
@@ -73,8 +69,6 @@ class DartToolbarContribution implements Disposable {
 
       bool isFlutterProject = project != null && project.isFlutterProject();
       flutterDiv.hidden(!isFlutterProject);
-
-      outlineToggleDiv.enabled = isDartFile(path);
     }
 
     updateToolbar();
@@ -82,6 +76,31 @@ class DartToolbarContribution implements Disposable {
       updateToolbar();
     }));
     subs.add(projectManager.onProjectsChanged.listen((List<DartProject> projects) {
+      updateToolbar();
+    }));
+
+    return e;
+  }
+
+  CoreElement _buildRightTile() {
+    CoreElement outlineToggleDiv;
+
+    // `settings-view` class added to get proper styling for select elements.
+    CoreElement e = div(c: 'settings-view', a: 'flex-center')..add([
+      div(c: 'btn-group btn-group dartlang-toolbar')..add([
+        outlineToggleDiv = button(c: 'btn icon icon-list-unordered')
+          ..click(_toggleOutline)
+          ..tooltip = "Toggle Dart Outline View"
+      ])
+    ]);
+
+    void updateToolbar() {
+      String path = atom.workspace.getActiveTextEditor()?.getPath();
+      outlineToggleDiv.enabled = isDartFile(path);
+    }
+
+    updateToolbar();
+    subs.add(editorManager.dartProjectEditors.onActiveEditorChanged.listen((TextEditor editor) {
       updateToolbar();
     }));
 
@@ -201,6 +220,7 @@ class DartToolbarContribution implements Disposable {
 
   void dispose() {
     leftTile.destroy();
+    flutterTile.destroy();
     rightTile.destroy();
     subs.dispose();
   }

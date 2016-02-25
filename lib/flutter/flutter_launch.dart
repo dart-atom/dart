@@ -119,8 +119,7 @@ class _LaunchInstance {
       _args.add(route);
     }
 
-    FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
-    Device device = deviceManager.currentSelectedDevice;
+    Device device = _currentSelectedDevice;
     if (device != null) {
       _args.add('--device-id');
       _args.add(device.id);
@@ -154,7 +153,7 @@ class _LaunchInstance {
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
 
     // Chain together both 'flutter start' and 'flutter logs'.
-    _runner = _flutter(flutter, _args, project.path);
+    _runner = _flutter(flutter, _args, cwd: project.path);
     _runner.execStreaming();
     _runner.onStdout.listen((str) => _launch.pipeStdio(str));
     _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
@@ -181,7 +180,16 @@ class _LaunchInstance {
       }
 
       // Chain 'flutter logs'.
-      _runner = _flutter(flutter, ['logs'], project.path);
+      List<String> logsArgs = ['logs'];
+
+      // Just log from the currently selected device.
+      Device device = _currentSelectedDevice;
+      if (device != null) {
+        logsArgs.add('--device-id');
+        logsArgs.add(device.id);
+      }
+
+      _runner = _flutter(flutter, logsArgs, cwd: project.path);
       _runner.execStreaming();
       _runner.onStdout.listen((str) => _launch.pipeStdio(str));
       _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
@@ -203,9 +211,14 @@ class _LaunchInstance {
       return _runner.kill();
     }
   }
+
+  Device get _currentSelectedDevice {
+    FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
+    return deviceManager.currentSelectedDevice;
+  }
 }
 
-ProcessRunner _flutter(FlutterTool flutter, List<String> args, String cwd) {
+ProcessRunner _flutter(FlutterTool flutter, List<String> args, {String cwd}) {
   return flutter.runRaw(args, cwd: cwd, startProcess: false);
 }
 
