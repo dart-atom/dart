@@ -278,7 +278,7 @@ class _GutterTracker implements Disposable {
 
     // Listen for clicks.
     html.Element gutterElement = atom.views.getView(gutter);
-    gutterElement.onClick.listen((html.MouseEvent e) {
+    _gutterClickListener = gutterElement.onClick.listen((html.MouseEvent e) {
       html.Element div = e.target;
       var bufferRow = div.attributes['data-buffer-row'];
       if (bufferRow != null) {
