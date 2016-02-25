@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.2
 - several miscellaneous fixes and improvements to the debugger
 - fixed an issue with the visibility of the devices pulldown on the toolbar
 - re-ordered items in the toolbar
