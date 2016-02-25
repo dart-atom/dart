@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:js';
 
 import 'package:atom/node/process.dart';
+import 'package:atom/node/shell.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_options.dart';

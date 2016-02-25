@@ -2,6 +2,8 @@
 /// A console output view.
 library atom.console;
 
+import 'package:atom/node/shell.dart';
+
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../elements.dart';

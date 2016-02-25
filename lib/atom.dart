@@ -27,8 +27,6 @@ AtomPackage _package;
 /// The singleton instance of [Atom].
 final Atom atom = new Atom();
 
-final Shell shell = new Shell();
-
 final JsObject _ctx = context['atom'];
 
 /// An Atom package. Register your package using [registerPackage].
@@ -1142,12 +1140,6 @@ class AtomEvent extends ProxyHolder {
   void stopImmediatePropagation() => invoke('stopImmediatePropagation');
 
   bool get propagationStopped => obj['propagationStopped'];
-}
-
-class Shell {
-  Shell();
-
-  openExternal(String url) => _shell.callMethod('openExternal', [url]);
 }
 
 class ScopeDescriptor extends ProxyHolder {

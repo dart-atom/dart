@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:html' show InputElement;
 
+import 'package:atom/node/shell.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' show DiagnosticsResult, ContextData;
