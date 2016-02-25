@@ -3,6 +3,8 @@
 ## unreleased
 - several miscellaneous fixes and improvements to the debugger
 - fixed an issue with the visibility of the devices pulldown on the toolbar
+- re-ordered items in the toolbar
+- added the ability to click in the line number column to set a breakpoint
 
 ## 0.6.1
 - add support for async stepping

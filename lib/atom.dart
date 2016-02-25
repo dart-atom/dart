@@ -873,6 +873,47 @@ class TextEditor extends ProxyHolder {
   /// Set the greyed out placeholder of a mini editor. Placeholder text will be
   /// displayed when the editor has no content.
   void setPlaceholderText(String placeholderText) => invoke('setPlaceholderText', placeholderText);
+
+  /// Get this editor's gutters.
+  List<Gutter> getGutters() => new List.from(invoke('getGutters').map((g) => new Gutter(g)));
+
+  /// Get the gutter with the given name.
+  Gutter gutterWithName(String name) {
+    var result = invoke('gutterWithName', name);
+    return result == null ? null : new Gutter(result);
+  }
+
+  /// Calls your callback when a Gutter is added to the editor. Immediately
+  /// calls your callback for each existing gutter.
+  Disposable observeGutters(void callback(Gutter gutter)) {
+    var disposable = invoke('observeGutters', (obj) {
+      callback(new Gutter(obj));
+    });
+    return new JsDisposable(disposable);
+  }
+
+  Stream<Gutter> get onDidAddGutter => eventStream('onDidAddGutter').map((g) => new Gutter(g));
+
+  Stream<Gutter> get onDidRemoveGutter => eventStream('onDidRemoveGutter').map((g) => new Gutter(g));
+}
+
+class Gutter extends ProxyHolder {
+  Gutter(JsObject object) : super(_cvt(object));
+
+  String get name => obj['name'];
+
+  void hide() => invoke('hide');
+
+  void show() => invoke('show');
+
+  bool isVisible() => invoke('isVisible');
+
+  /// Calls your callback when the gutter is destroyed.
+  Disposable onDidDestroy(void callback()) {
+    return new JsDisposable(invoke('onDidDestroy', callback));
+  }
+
+  String toString() => '[Gutter ${name}]';
 }
 
 class TextBuffer extends ProxyHolder {

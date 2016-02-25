@@ -1,6 +1,7 @@
 library atom.breakpoints;
 
 import 'dart:async';
+import 'dart:html' as html show Element, MouseEvent, Point, Rectangle;
 
 import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
@@ -18,12 +19,9 @@ final Logger _logger = new Logger('atom.breakpoints');
 // TODO: Error message when they explicitly set a breakpoint, but not if an
 // existing one fails to apply.
 
-// TODO: When setting breakpoints, adjust to where the VM actually set the
-// breakpoint.
+// TODO: When setting breakpoints, adjust to where the VM actually set the breakpoint.
 
 // TODO: No breakpoints on ws or comment lines.
-
-// TODO: listen to clicks / double clicks on the line number getter.
 
 class BreakpointManager implements Disposable, StateStorable {
   Disposables disposables = new Disposables();
@@ -35,6 +33,8 @@ class BreakpointManager implements Disposable, StateStorable {
   StreamController<AtomBreakpoint> _changeController = new StreamController.broadcast();
   StreamController<AtomBreakpoint> _removeController = new StreamController.broadcast();
 
+  _GutterTracker _gutterTracker;
+
   BreakpointManager() {
     disposables.add(atom.commands.add('atom-workspace', 'dartlang:debug-toggle-breakpoint', (_) {
       _toggleBreakpoint();
@@ -42,6 +42,9 @@ class BreakpointManager implements Disposable, StateStorable {
 
     editorManager.dartEditors.openEditors.forEach(_processEditor);
     editorManager.dartEditors.onEditorOpened.listen(_processEditor);
+
+    _updateGutterTracker(atom.workspace.getActiveTextEditor());
+    editorManager.dartEditors.onActiveEditorChanged.listen(_updateGutterTracker);
 
     state.registerStorable('breakpoints', this);
   }
@@ -89,6 +92,15 @@ class BreakpointManager implements Disposable, StateStorable {
     });
   }
 
+  void _updateGutterTracker(TextEditor editor) {
+    _gutterTracker?.dispose();
+    _gutterTracker = null;
+
+    if (editor != null) {
+      _gutterTracker = new _GutterTracker(this, editor);
+    }
+  }
+
   void _createEditorBreakpoint(TextEditor editor, AtomBreakpoint bp) {
     _logger.finer('creating editor breakpoint: ${bp}');
     Marker marker = editor.markBufferRange(
@@ -125,6 +137,24 @@ class BreakpointManager implements Disposable, StateStorable {
     }
   }
 
+  void _toggleLineNumberBreakpoint(TextEditor editor, int lineNumber) {
+    String path = editor.getPath();
+    if (!isDartFile(path)) {
+      atom.notifications.addWarning('Breakpoints only supported for Dart files.');
+      return;
+    }
+
+    AtomBreakpoint bp = new AtomBreakpoint(path, lineNumber + 1);
+    AtomBreakpoint other = _findSimilar(bp);
+
+    // Check to see if we need to toggle it.
+    if (other != null) {
+      removeBreakpoint(other);
+    } else {
+      addBreakpoint(bp);
+    }
+  }
+
   /// Find a breakpoint on the same file and line.
   AtomBreakpoint _findSimilar(AtomBreakpoint other) {
     return _breakpoints.firstWhere((AtomBreakpoint bp) {
@@ -133,7 +163,7 @@ class BreakpointManager implements Disposable, StateStorable {
   }
 
   void _removeEditorBreakpoint(_EditorBreakpoint bp) {
-    _logger.fine('removing editor breakpoint: ${bp.bp}');
+    _logger.finer('removing editor breakpoint: ${bp.bp}');
     _editorBreakpoints.remove(bp);
   }
 
@@ -158,7 +188,10 @@ class BreakpointManager implements Disposable, StateStorable {
     return _breakpoints.map((AtomBreakpoint bp) => bp.toJsonable()).toList();
   }
 
-  void dispose() => disposables.dispose();
+  void dispose() {
+    disposables.dispose();
+    _gutterTracker?.dispose();
+  }
 }
 
 class AtomBreakpoint implements Comparable {
@@ -222,6 +255,50 @@ class AtomBreakpoint implements Comparable {
     int col_a = column == null ? -1 : column;
     int col_b = other.column == null ? -1 : other.column;
     return col_a - col_b;
+  }
+}
+
+class _GutterTracker implements Disposable {
+  final BreakpointManager breakpointManager;
+  final TextEditor editor;
+
+  StreamSubscription _sub;
+  Disposable _gutterDisposable;
+  StreamSubscription _gutterClickListener;
+
+  _GutterTracker(this.breakpointManager, this.editor) {
+    _initLineNumberGutter(editor.gutterWithName('line-number'));
+    _sub = editor.onDidAddGutter.listen((Gutter gutter) {
+      if (gutter.name == 'line-number') _initLineNumberGutter(gutter);
+    });
+  }
+
+  void _initLineNumberGutter(Gutter gutter) {
+    if (gutter == null || _gutterDisposable != null) return;
+
+    // Listen for clicks.
+    html.Element gutterElement = atom.views.getView(gutter);
+    gutterElement.onClick.listen((html.MouseEvent e) {
+      html.Element div = e.target;
+      var bufferRow = div.attributes['data-buffer-row'];
+      if (bufferRow != null) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        breakpointManager._toggleLineNumberBreakpoint(editor, int.parse(bufferRow));
+      }
+    });
+
+    _gutterDisposable = gutter.onDidDestroy(() {
+      _gutterClickListener?.cancel();
+      _gutterDisposable = null;
+    });
+  }
+
+  void dispose() {
+    _sub.cancel();
+    _gutterClickListener?.cancel();
+    _gutterDisposable?.dispose();
   }
 }
 
