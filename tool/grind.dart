@@ -67,7 +67,6 @@ ddc() {
 }
 
 @Task()
-@Depends(build) //analyze, build, test, runAtomTests)
 publish() => publishAtomPlugin();
 
 @Task()
