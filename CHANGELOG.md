@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- Run Flutter apps with `flutter run` now instead of `flutter start`
+
 ## 0.6.2
 - several miscellaneous fixes and improvements to the debugger
 - fixed an issue with the visibility of the devices pulldown on the toolbar

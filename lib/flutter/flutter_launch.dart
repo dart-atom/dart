@@ -28,7 +28,7 @@ class FlutterLaunchType extends LaunchType {
 
   FlutterLaunchType([String launchType = 'flutter']) : super(launchType);
 
-  String get flutterStartCommand => 'start';
+  String get flutterRunCommand => 'run';
 
   bool canLaunch(String path) {
     DartProject project = projectManager.getProjectFor(path);
@@ -96,8 +96,8 @@ class _LaunchInstance {
   ) {
     List<String> flutterArgs = configuration.argsAsList;
 
-    // Use either `flutter start` or `flutter run_mojo`.
-    _args = [launchType.flutterStartCommand];
+    // Use either `flutter run` or `flutter run_mojo`.
+    _args = [launchType.flutterRunCommand];
 
     var checked = configuration.typeArgs['checked'];
     if (checked is bool) {
@@ -149,7 +149,7 @@ class _LaunchInstance {
   Future<Launch> launch() async {
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
 
-    // Chain together both 'flutter start' and 'flutter logs'.
+    // Chain together both 'flutter run' and 'flutter logs'.
     _runner = _flutter(flutter, _args, cwd: project.path);
     _runner.execStreaming();
     _runner.onStdout.listen((str) => _launch.pipeStdio(str));
