@@ -70,7 +70,8 @@ class FlutterLaunchType extends LaunchType {
   }
 
   String getDefaultConfigText() {
-    return 'checked: true\ndebug: true\nroute:\n';
+    return 'checked: true\ndebug: true\nroute:\n'
+           '# Additional args for the flutter run command:\nargs:\n';
   }
 
   Future _killLastLaunch() {
