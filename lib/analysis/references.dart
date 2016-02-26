@@ -265,7 +265,7 @@ class _MatchParser {
       _parse(l.file);
     }
 
-    if (lines == null || l.startLine >= lines.length) return null;
+    if (lines == null || l.startLine <= 0 || l.startLine >= lines.length) return null;
 
     String line = lines[l.startLine - 1];
 
