@@ -10,7 +10,7 @@ class MojoLaunchType extends FlutterLaunchType {
 
   MojoLaunchType() : super('mojo');
 
-  String get flutterStartCommand => 'run_mojo';
+  String get flutterRunCommand => 'run_mojo';
 
   // We don't want to advertise the mojo launch configuration as much as the flutter one.
   List<String> getLaunchablesFor(DartProject project) => <String>[];

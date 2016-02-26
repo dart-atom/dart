@@ -34073,8 +34073,8 @@ self._domRemove = function(element) {
     "^": "",
     FlutterLaunchType: {
       "^": "LaunchType;_lastLaunch,type",
-      get$flutterStartCommand: function() {
-        return "start";
+      get$flutterRunCommand: function() {
+        return "run";
       },
       canLaunch$1: function(path) {
         var project = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
@@ -34148,7 +34148,7 @@ self._domRemove = function(element) {
         t3 = this.configuration;
         t4 = new M._LaunchInstance(t2, null, null, null, null);
         flutterArgs = t3.get$argsAsList();
-        t5 = [t1.get$flutterStartCommand()];
+        t5 = [t1.get$flutterRunCommand()];
         t4._flutter_launch$_args = t5;
         checked = J.$index$asx(t3.get$typeArgs(), "checked");
         if (typeof checked === "boolean")
@@ -34718,7 +34718,7 @@ self._domRemove = function(element) {
     "^": "",
     MojoLaunchType: {
       "^": "FlutterLaunchType;_lastLaunch,type",
-      get$flutterStartCommand: function() {
+      get$flutterRunCommand: function() {
         return "run_mojo";
       },
       getLaunchablesFor$1: function(project) {
