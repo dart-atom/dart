@@ -7,7 +7,6 @@ import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../projects.dart';
 import '../sdk.dart';
@@ -37,7 +36,7 @@ class CliLaunchType extends LaunchType {
       return contents.contains('main(');
     } else {
       // Check that the file is not in lib/.
-      String relativePath = relativize(project.path, path);
+      String relativePath = fs.relativize(project.path, path);
       if (relativePath.startsWith('lib${fs.separator}')) return false;
 
       return analysisServer.isExecutable(path);
@@ -49,11 +48,11 @@ class CliLaunchType extends LaunchType {
 
     return analysisServer.getExecutablesFor(project.path).where((String path) {
       // Check that the file is not in lib/.
-      String relativePath = relativize(project.path, path);
+      String relativePath = fs.relativize(project.path, path);
       if (relativePath.startsWith(libSuffix)) return false;
       return true;
     }).map((String fullpath) {
-      return relativize(project.path, fullpath);
+      return fs.relativize(project.path, fullpath);
     }).toList();
   }
 
@@ -79,10 +78,10 @@ class CliLaunchType extends LaunchType {
         }
       } else {
         cwd = project.path;
-        path = relativize(cwd, path);
+        path = fs.relativize(cwd, path);
       }
     } else {
-      path = relativize(cwd, path);
+      path = fs.relativize(cwd, path);
     }
 
     List<String> _args = [];

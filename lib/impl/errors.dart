@@ -5,11 +5,12 @@ library atom.errors;
 import 'dart:async';
 import 'dart:html' show Element;
 
+import 'package:atom/node/fs.dart';
+
 import '../analysis/analysis_server_lib.dart' hide Element;
 import '../analysis/quick_fixes.dart';
 import '../atom.dart';
 import '../atom_statusbar.dart';
-import '../atom_utils.dart';
 import '../elements.dart';
 import '../linter.dart';
 import '../state.dart';
@@ -123,7 +124,7 @@ class ErrorsController implements Disposable {
         .toList();
     }
 
-    String shortName = _focusedDir == null ? null : basename(_focusedDir);
+    String shortName = _focusedDir == null ? null : fs.basename(_focusedDir);
 
     statusElement._handleErrorsChanged(filteredErrors);
     view._handleErrorsChanged(filteredErrors, focus: shortName);

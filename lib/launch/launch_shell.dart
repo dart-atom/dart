@@ -2,10 +2,10 @@ library atom.launch_shell;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../projects.dart';
 import 'launch.dart';
 
@@ -34,7 +34,7 @@ class ShellLaunchType extends LaunchType {
         launchName = paths[1];
       }
     } else {
-      launchName = relativize(cwd, launchName);
+      launchName = fs.relativize(cwd, launchName);
     }
 
     ProcessRunner runner = new ProcessRunner(

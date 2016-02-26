@@ -10,7 +10,6 @@ import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
     NodeTreeSanitizer, window;
 import 'dart:js';
 
-import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
@@ -23,21 +22,6 @@ final Logger _logger = new Logger('atom_utils');
 
 final JsObject _process = require('process');
 final JsObject _fs = require('fs');
-
-/// Return the name of the file for the given path.
-String basename(String path) {
-  if (path.endsWith(fs.separator)) path = path.substring(0, path.length - 1);
-  int index = path.lastIndexOf(fs.separator);
-  return index == -1 ? path : path.substring(index + 1);
-}
-
-String relativize(String root, String path) {
-  if (path.startsWith(root)) {
-    path = path.substring(root.length);
-    if (path.startsWith(fs.separator)) path = path.substring(1);
-  }
-  return path;
-}
 
 /// Get the value of an environment variable. This is often not accurate on the
 /// mac since mac apps are launched in a different shell then the terminal
@@ -151,31 +135,4 @@ Future<Map> loadPackageJson() {
 
 Future<String> getPackageVersion() {
   return loadPackageJson().then((map) => map['version']);
-}
-
-
-/// Look for the given executable; throw an error if we can't find it.
-///
-/// Note: on Windows, this assumes that we're looking for an `.exe` unless
-/// `isBatchScript` is specified.
-Future<String> which(String execName, {bool isBatchScript: false}) {
-  if (isMac) {
-    // /bin/bash -l -c 'which dart'
-    String shell = env('SHELL') ?? '/bin/bash';
-    return exec(shell, ['-l', '-c', 'which ${execName}']).then((String result) {
-      if (result.contains('\n')) result = result.split('\n').first.trim();
-      return result;
-    });
-  } else if (isWindows) {
-    String ext = isBatchScript ? 'bat' : 'exe';
-    return exec('where', ['${execName}.${ext}']).then((String result) {
-      if (result.contains('\n')) result = result.split('\n').first.trim();
-      return result;
-    });
-  } else {
-    return exec('which', [execName]).then((String result) {
-      if (result.contains('\n')) result = result.split('\n').first.trim();
-      return result;
-    });
-  }
 }

@@ -9,7 +9,6 @@ import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
@@ -58,7 +57,7 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
     content = content.trim() + '\n';
 
     _ProjectConfigurations configs = _getCreateProjectConfig(projectPath);
-    String name = basename(primaryResource);
+    String name = fs.basename(primaryResource);
     if (name.contains('.')) name = name.substring(0, name.indexOf('.'));
     String filename = _createUniqueFilename(configs.launchDir, name, 'yaml');
 
@@ -136,7 +135,7 @@ class LaunchConfiguration {
     _reparse(contents);
   }
 
-  String get launchFileName => basename(_file.path);
+  String get launchFileName => fs.basename(_file.path);
 
   String get configYamlPath => _file.path;
 

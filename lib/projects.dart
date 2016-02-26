@@ -31,7 +31,7 @@ bool isDartFile(String path) {
 String getWorkspaceRelativeDescription(String path) {
   List<String> relPaths = atom.project.relativizePath(path);
   if (relPaths[0] == null) return path;
-  return '${basename(relPaths[0])} ${relPaths[1]}';
+  return '${fs.basename(relPaths[0])} ${relPaths[1]}';
 }
 
 /// A class to locate Dart projects in Atom and listen for new or removed Dart
@@ -392,7 +392,7 @@ class DartProject {
   String get workspaceRelativeName {
     List<String> relPaths = atom.project.relativizePath(directory.path);
     if (relPaths[0] == null) return name;
-    return fs.join(basename(relPaths[0]), relPaths[1]);
+    return fs.join(fs.basename(relPaths[0]), relPaths[1]);
   }
 
   String getSelfRefName() {
@@ -423,7 +423,7 @@ class DartProject {
 
   bool contains(String path) => directory.contains(path);
 
-  String getRelative(String p) => relativize(path, p);
+  String getRelative(String p) => fs.relativize(path, p);
 
   bool isDirectoryExplicitlyExcluded(String path) {
     return _options.getIgnoredDirectories().contains(path);

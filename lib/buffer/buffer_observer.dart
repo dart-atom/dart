@@ -2,17 +2,17 @@ library atom.buffer_observer;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_options.dart';
 import '../analysis/formatting.dart';
 import '../analysis_server.dart';
 import '../atom.dart';
-import '../atom_utils.dart';
+import '../impl/debounce.dart';
 import '../projects.dart';
 import '../state.dart';
 import '../utils.dart';
-import '../impl/debounce.dart';
 
 final Logger _logger = new Logger('atom.buffer_observer');
 
@@ -32,7 +32,7 @@ class BufferObserverManager implements Disposable {
         String path = editor.getPath();
         if (path == null || !path.endsWith(analysisOptionsFileName)) return;
 
-        if (basename(path) == analysisOptionsFileName &&
+        if (fs.basename(path) == analysisOptionsFileName &&
             projectManager.getProjectFor(path) != null) {
           _newEditor(editor);
         }

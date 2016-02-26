@@ -3,12 +3,12 @@ library atom.outline;
 import 'dart:async';
 import 'dart:html' as html;
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' as analysis;
 import '../analysis_server.dart';
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../elements.dart';
 import '../linter.dart';
 import '../projects.dart';
@@ -202,7 +202,7 @@ class OutlineView implements Disposable {
     // Update the title.
     if (data.libraryName == null) {
       fileType.text = '';
-      title.text = basename(editor.getPath());
+      title.text = fs.basename(editor.getPath());
     } else if (data.kind == 'PART') {
       fileType.text = 'part of ';
       title.text = data.libraryName;

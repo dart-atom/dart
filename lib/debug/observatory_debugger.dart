@@ -8,7 +8,6 @@ import 'package:logging/logging.dart';
 import 'package:vm_service_lib/vm_service_lib.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../flutter/flutter_ext.dart';
 import '../launch/launch.dart';
 import '../state.dart';
@@ -1200,7 +1199,7 @@ class _VmSourceCache {
         Uri uri = Uri.parse(path);
         String temp = uri.path;
         if (temp.contains('/')) {
-          return [fs.dirname(temp), basename(temp)];
+          return [fs.dirname(temp), fs.basename(temp)];
         } else {
           return temp.contains('.') ? [temp] : [temp + '.dart'];
         }

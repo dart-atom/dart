@@ -712,7 +712,7 @@ class BreakpointsTab extends MTab {
     String pathText = bp.path;
     List<String> rel = atom.project.relativizePath(bp.path);
     if (rel[0] != null) {
-      pathText = basename(rel[0]) + ' ' + rel[1];
+      pathText = fs.basename(rel[0]) + ' ' + rel[1];
     }
 
     String lineText = 'line ${bp.line}';

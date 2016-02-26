@@ -6,7 +6,6 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
-import '../atom_utils.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../flutter/flutter_devices.dart';
@@ -49,7 +48,7 @@ class FlutterLaunchType extends LaunchType {
     return analysisServer.getExecutablesFor(project.path).where((String path) {
       return path.endsWith('dart');
     }).map((String fullPath) {
-      return relativize(project.path, fullPath);
+      return fs.relativize(project.path, fullPath);
     }).toList();
   }
 
@@ -122,7 +121,7 @@ class _LaunchInstance {
       _args.add(device.id);
     }
 
-    String relPath = relativize(project.path, configuration.primaryResource);
+    String relPath = fs.relativize(project.path, configuration.primaryResource);
     if (relPath != 'lib/main.dart') {
       _args.add('-t');
       _args.add(relPath);
