@@ -1,14 +1,14 @@
 part of atom.autocomplete_impl;
 
 class DartAutocompleteProvider extends AutocompleteProvider {
-  static final _suggestionKindMap = {
+  static const _suggestionKindMap = const <String, String>{
     'IMPORT': 'import',
     'KEYWORD': 'keyword',
     'PARAMETER': 'property',
     'NAMED_ARGUMENT': 'property'
   };
 
-  static final _elementKindMap = {
+  static const _elementKindMap = const <String, String>{
     'CLASS': 'class',
     'CLASS_TYPE_ALIAS': 'class',
     'CONSTRUCTOR': 'constant', // 'constructor' causes display issues
@@ -26,230 +26,233 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     'TOP_LEVEL_VARIABLE': 'variable'
   };
 
-  static Map _rightLabelMap = {null: null, 'FUNCTION_TYPE_ALIAS': 'function type'};
+  static Map<String, String> _rightLabelMap = {
+    null: null,
+    'FUNCTION_TYPE_ALIAS': 'function type'
+  };
 
-  static int _compareSuggestions(CompletionSuggestion a, CompletionSuggestion b) {
+  static int _compareSuggestions(
+      CompletionSuggestion a, CompletionSuggestion b) {
     if (a.relevance != b.relevance) return b.relevance - a.relevance;
     return a.completion.toLowerCase().compareTo(b.completion.toLowerCase());
   }
 
   static final Set<String> _elided = new Set.from(['for ()']);
 
-  DartAutocompleteProvider() : super(
-      '.source.dart',
-      filterSuggestions: true,
-      inclusionPriority: 100,
-      excludeLowerPriority: true);
+  DartAutocompleteProvider()
+      : super('.source.dart',
+            filterSuggestions: true,
+            inclusionPriority: 100,
+            excludeLowerPriority: true);
 
-  Future<List<Suggestion>> getSuggestions(AutocompleteOptions options) {
-    if (!analysisServer.isActive) return new Future.value([]);
+  Future<List<Suggestion>> getSuggestions(AutocompleteOptions options) async {
+    if (!analysisServer.isActive) return [];
 
     var server = analysisServer.server;
     var editor = options.editor;
     var path = editor.getPath();
-    String text = editor.getText();
-    int offset = editor.getBuffer().characterIndexForPosition(options.bufferPosition);
-    String prefix = options.prefix;
+    var text = editor.getText();
+    var offset =
+        editor.getBuffer().characterIndexForPosition(options.bufferPosition);
+    var prefix = options.prefix;
 
     // If in a Dart source comment return an empty result.
-    ScopeDescriptor descriptor = editor.scopeDescriptorForBufferPosition(options.bufferPosition);
-    List<String> scopes = descriptor == null ? null : descriptor.scopes;
-    if (scopes != null && scopes.any((s) => s.startsWith('comment.line')
-        || s.startsWith('comment.block'))) {
-      return new Future.value([]);
+    var descriptor =
+        editor.scopeDescriptorForBufferPosition(options.bufferPosition);
+    var scopes = descriptor?.scopes ?? <String>[];
+    if (scopes.any((String s) =>
+        s.startsWith('comment.line') || s.startsWith('comment.block'))) {
+      return [];
     }
 
     // Atom autocompletes right after a semi-colon, and often the user's return
     // key event is captured as a code complete select - inserting an item
     // (inadvertently) into the editor.
-    const String noCompletions = ";{},";
+    final Set<String> noCompletions = new Set.from(const [';', '{', '}', ',']);
 
     if (offset > 0) {
       String prevChar = text[offset - 1];
-      if (noCompletions.indexOf(prevChar) != -1) return new Future.value([]);
+      if (noCompletions.contains(prevChar)) return [];
     }
 
-    if (prefix.length == 1 && noCompletions.indexOf(prefix) != -1) {
-      return new Future.value([]);
+    if (prefix.length == 1 && noCompletions.contains(prefix)) {
+      return [];
     }
 
-    return server.completion.getSuggestions(path, offset).then((result) {
-      return server.completion.onResults
-          .where((cr) => cr.id == result.id)
-          .where((cr) => cr.isLast).first.then((r) {
-              return _handleCompletionResults(text, offset, prefix, r);
-          });
-    });
+    var result = await server.completion.getSuggestions(path, offset);
+    var r = await server.completion.onResults
+        .where((CompletionResults cr) => cr.id == result.id)
+        .where((CompletionResults cr) => cr.isLast)
+        .first;
+    return _handleCompletionResults(text, offset, prefix, r);
   }
 
-  void onDidInsertSuggestion(TextEditor editor, Point triggerPosition,
-      Map suggestion) {
+  void onDidInsertSuggestion(
+      TextEditor editor, Point triggerPosition, Map suggestion) {
+    if (!suggestion.containsKey('selectionOffset')) return;
+
     int selectionOffset = suggestion['selectionOffset'];
-    if (selectionOffset != null) {
-      Point pt = editor.getBuffer().positionForCharacterIndex(selectionOffset);
-      editor.setCursorBufferPosition(pt);
-    }
+    var pt = editor.getBuffer().positionForCharacterIndex(selectionOffset);
+    editor.setCursorBufferPosition(pt);
   }
 
-  List<Suggestion> _handleCompletionResults(String fileText, int offset, String prefix,
-      CompletionResults cr) {
-    List<CompletionSuggestion> results = cr.results;
-    String prefixLower = prefix.toLowerCase();
-    int replacementOffset = cr.replacementOffset;
+  List<Suggestion> _handleCompletionResults(
+      String fileText, int offset, String prefix, CompletionResults cr) {
+    var results = cr.results;
+    var replacementOffset = cr.replacementOffset;
+    String replacementPrefix;
 
     // Calculate the prefix based on the insert location and the offset.
-    String _prefix;
     if (replacementOffset < offset) {
-      _prefix = fileText.substring(replacementOffset, offset);
-      if (_prefix == prefix) _prefix = null;
+      var p = fileText.substring(replacementOffset, offset);
+      if (p != prefix) {
+        prefix = p;
+        replacementPrefix = prefix;
+      }
     }
 
     // Patch-up the analysis server's completion scoring.
-    var adjustRelavance = (CompletionSuggestion suggestion) {
-      if (suggestion.kind == 'KEYWORD') {
-        return _copySuggestion(suggestion, suggestion.relevance - 1);
-      }
-
-      if (suggestion.element != null && suggestion.element.kind == 'NAMED_ARGUMENT') {
-        return _copySuggestion(suggestion, suggestion.relevance + 1);
-      }
-
-      return suggestion;
-    };
-
     results = new List.from(results
         .where((result) => result.relevance > 500)
         .where((result) => !_elided.contains(result.completion))
-        .map((result) => adjustRelavance(result)));
+        .map(_adjustRelevance));
 
     results.sort(_compareSuggestions);
 
-    Iterable<Suggestion> suggestions = results.map((CompletionSuggestion cs) {
-      String text = cs.completion;
-      String snippet = null;
-      String displayText = null;
+    var suggestions = <Suggestion>[];
+    for (var cs in results) {
+      Suggestion s =
+          _makeSuggestion(cs, prefix, replacementPrefix, replacementOffset);
+      if (s != null) suggestions.add(s);
+    }
+    return suggestions;
+  }
 
-      // We have something that might take params.
-      if (cs.parameterNames != null) {
-        // If it takes no parameters, then just append `()`.
-        if (cs.parameterNames.isEmpty) {
-          text += '()';
-        } else {
-          text = null;
+  /// Returns a [CompletionSuggestion] with an adjusted score.
+  CompletionSuggestion _adjustRelevance(CompletionSuggestion suggestion) {
+    if (suggestion.kind == 'KEYWORD') {
+      return _copySuggestion(suggestion, suggestion.relevance - 1);
+    }
 
-          // If it has required params, then use a snippet: func(${1:arg}).
-          int count = 0;
-          String names = cs.parameterNames.take(cs.requiredParameterCount).map(
-              (name) => '\${${++count}:${name}}').join(', ');
+    if (suggestion.element?.kind == 'NAMED_ARGUMENT') {
+      return _copySuggestion(suggestion, suggestion.relevance + 1);
+    }
 
-          bool hasOptional = cs.requiredParameterCount != cs.parameterNames.length;
+    return suggestion;
+  }
 
-          if (hasOptional) {
-            // Create a display string with the optional params.
-            displayText = _describe(cs, useDocs: false);
-          }
+  /// Returns an Atom [Suggestion] from the analyzer's [cs] or null if [cs] is
+  /// not a suitable completion given the [prefix] and [replacementOffset].
+  Suggestion _makeSuggestion(CompletionSuggestion cs, String prefix,
+      String replacementPrefix, int replacementOffset) {
+    String text = cs.completion;
+    String snippet;
+    String displayText;
 
-          snippet = '${cs.completion}(${names})\$${++count}';
+    // We have something that might take params.
+    if (cs.parameterNames != null) {
+      // If it takes no parameters, then just append `()`.
+      if (cs.parameterNames.isEmpty) {
+        text += '()';
+      } else {
+        text = null;
+
+        // If it has required params, then use a snippet: func(${1:arg}).
+        var count = 0;
+        var names = cs.parameterNames
+            .take(cs.requiredParameterCount)
+            .map((name) => '\${${++count}:${name}}')
+            .join(', ');
+
+        var hasOptionalParameters =
+            cs.requiredParameterCount != cs.parameterNames.length;
+        if (hasOptionalParameters) {
+          // Create a display string with the optional params.
+          displayText = _describe(cs, useDocs: false);
         }
+
+        snippet = '${cs.completion}($names)\$${++count}';
       }
+    }
 
-      // Filter out completions where the suggestions.tolowercase != the prefix.
-      String completionPrefix = _prefix != null  ? _prefix.toLowerCase() : prefixLower;
-      if (completionPrefix.isNotEmpty && idRegex.hasMatch(completionPrefix[0])) {
-        if (text != null && !text.toLowerCase().startsWith(completionPrefix)) {
-          return null;
-        }
-        if (snippet != null && !snippet.toLowerCase().startsWith(completionPrefix)) {
-          return null;
-        }
-      }
+    // Filter out completions where suggestion.toLowerCase != prefix.toLowerCase
+    var completionPrefix = prefix.toLowerCase();
+    if (completionPrefix.isNotEmpty && idRegex.hasMatch(completionPrefix[0])) {
+      /// Returns true if the suggestion [s] is incompatible with the prefix [p]
+      isIncompatible(String s, String pre) =>
+          s != null && !s.toLowerCase().startsWith(pre);
 
-      // Calculate the selectionOffset.
-      int selectionOffset;
-      if (cs.selectionOffset != cs.completion.length) {
-        selectionOffset =
-            replacementOffset - completionPrefix.length + cs.selectionOffset;
-      }
+      if (isIncompatible(text ?? snippet, completionPrefix)) return null;
+    }
 
-      bool potential = cs.isPotential || cs.importUri != null;
+    // Calculate the selectionOffset.
+    int selectionOffset;
+    if (cs.selectionOffset != cs.completion.length) {
+      selectionOffset =
+          replacementOffset - completionPrefix.length + cs.selectionOffset;
+    }
 
-      Suggestion suggestion = new Suggestion(
+    var potential = cs.isPotential || cs.importUri != null;
+
+    return new Suggestion(
+        text: text,
+        snippet: snippet,
+        displayText: displayText,
+        replacementPrefix: replacementPrefix,
+        selectionOffset: selectionOffset,
         type: _mapType(cs),
         leftLabel: _sanitizeReturnType(cs),
-        rightLabel: _rightLabel(cs.element != null ? cs.element.kind : cs.kind),
-        className:
-            cs.isDeprecated ? 'suggestion-deprecated' :
-                potential ? 'suggestion-potential' : null,
+        rightLabel: _rightLabel(cs.element?.kind ?? cs.kind),
+        className: cs.isDeprecated
+            ? 'suggestion-deprecated'
+            : potential ? 'suggestion-potential' : null,
         description: _describe(cs),
-        requiredImport: cs.importUri
-      );
-      if (text != null) suggestion.text = text;
-      if (snippet != null) suggestion.snippet = snippet;
-      if (displayText != null) suggestion.displayText = displayText;
-      if (_prefix != null) suggestion.replacementPrefix = _prefix;
-      if (selectionOffset != null) suggestion.selectionOffset = selectionOffset;
-      return suggestion;
-    }).where((suggestion) => suggestion != null);
-
-    return new List.from(suggestions);
+        requiredImport: cs.importUri);
   }
 
   String _sanitizeReturnType(CompletionSuggestion cs) {
-    if (cs.element != null && cs.element.kind == 'CONSTRUCTOR') return null;
-    if (cs.parameterType != null) return cs.parameterType;
-    return cs.returnType;
+    if (cs.element?.kind == 'CONSTRUCTOR') return null;
+    return cs.parameterType ?? cs.returnType;
   }
 
   String _mapType(CompletionSuggestion cs) {
-    if (_suggestionKindMap[cs.kind] != null) return _suggestionKindMap[cs.kind];
-    if (cs.element == null) return null;
-    var elementKind = cs.element.kind;
-    if (_elementKindMap[elementKind] != null) return _elementKindMap[elementKind];
-    return null;
+    return _suggestionKindMap[cs.kind] ?? _elementKindMap[cs.element.kind];
   }
 
   String _describe(CompletionSuggestion cs, {bool useDocs: true}) {
     if (cs.importUri != null) return "Requires '${cs.importUri}'";
-
-    if (useDocs) {
-      if (cs.docSummary != null) return cs.docSummary;
-    }
+    if (useDocs && cs.docSummary != null) return cs.docSummary;
 
     var element = cs.element;
-    if (element != null && element.parameters != null) {
-      String str = '${element.name}${element.parameters}';
-      return element.returnType != null ? '${str} → ${element.returnType}' : str;
+    if (element?.parameters != null) {
+      var str = '${element.name}${element.parameters}';
+      return element.returnType != null
+          ? '${str} → ${element.returnType}'
+          : str;
     }
 
     return cs.completion;
   }
 
-  String _rightLabel(String str) {
-    if (_rightLabelMap[str] != null) return _rightLabelMap[str];
-    _rightLabelMap[str] = str.toLowerCase().replaceAll('_', ' ');
-    return _rightLabelMap[str];
+  /// Returns a human-readable right label for the [kind].
+  String _rightLabel(String kind) {
+    return _rightLabelMap.putIfAbsent(
+        kind, () => kind.toLowerCase().replaceAll('_', ' '));
   }
 }
 
-CompletionSuggestion _copySuggestion(CompletionSuggestion s, int relevance) {
-  return new CompletionSuggestion(
-    s.kind,
-    relevance,
-    s.completion,
-    s.selectionOffset,
-    s.selectionLength,
-    s.isDeprecated,
-    s.isPotential,
-    docSummary: s.docSummary,
-    docComplete: s.docComplete,
-    declaringType: s.declaringType,
-    element: s.element,
-    returnType: s.returnType,
-    parameterNames: s.parameterNames,
-    parameterTypes: s.parameterTypes,
-    requiredParameterCount: s.requiredParameterCount,
-    hasNamedParameters: s.hasNamedParameters,
-    parameterName: s.parameterName,
-    parameterType: s.parameterType,
-    importUri: s.importUri);
-}
+CompletionSuggestion _copySuggestion(CompletionSuggestion s, int relevance) =>
+    new CompletionSuggestion(s.kind, relevance, s.completion, s.selectionOffset,
+        s.selectionLength, s.isDeprecated, s.isPotential,
+        docSummary: s.docSummary,
+        docComplete: s.docComplete,
+        declaringType: s.declaringType,
+        element: s.element,
+        returnType: s.returnType,
+        parameterNames: s.parameterNames,
+        parameterTypes: s.parameterTypes,
+        requiredParameterCount: s.requiredParameterCount,
+        hasNamedParameters: s.hasNamedParameters,
+        parameterName: s.parameterName,
+        parameterType: s.parameterType,
+        importUri: s.importUri);
