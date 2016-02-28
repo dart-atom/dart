@@ -28986,7 +28986,7 @@ self._domRemove = function(element) {
           if (s != null)
             suggestions.push(s);
         }
-        return [];
+        return suggestions;
       },
       _adjustRelevance$1: [function(suggestion) {
         var t1;
