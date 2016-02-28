@@ -20257,11 +20257,12 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$._createSpecificObject_closure[1];
     _createSpecificObject_closure.prototype = $desc;
     _createSpecificObject_closure.$__fields__ = ["creator"];
-    function VmService(_vm_service_lib$_streamSub, _vm_service_lib$_writeMessage, _vm_service_lib$_id, _vm_service_lib$_completers, _vm_service_lib$_log, _vm_service_lib$_onSend, _vm_service_lib$_onReceive, _eventControllers) {
+    function VmService(_vm_service_lib$_streamSub, _vm_service_lib$_writeMessage, _vm_service_lib$_id, _vm_service_lib$_completers, _methodCalls, _vm_service_lib$_log, _vm_service_lib$_onSend, _vm_service_lib$_onReceive, _eventControllers) {
       this._vm_service_lib$_streamSub = _vm_service_lib$_streamSub;
       this._vm_service_lib$_writeMessage = _vm_service_lib$_writeMessage;
       this._vm_service_lib$_id = _vm_service_lib$_id;
       this._vm_service_lib$_completers = _vm_service_lib$_completers;
+      this._methodCalls = _methodCalls;
       this._vm_service_lib$_log = _vm_service_lib$_log;
       this._vm_service_lib$_onSend = _vm_service_lib$_onSend;
       this._vm_service_lib$_onReceive = _vm_service_lib$_onReceive;
@@ -20273,7 +20274,7 @@ self._domRemove = function(element) {
       VmService.name = "VmService";
     $desc = $collectedClasses$.VmService[1];
     VmService.prototype = $desc;
-    VmService.$__fields__ = ["_vm_service_lib$_streamSub", "_vm_service_lib$_writeMessage", "_vm_service_lib$_id", "_vm_service_lib$_completers", "_vm_service_lib$_log", "_vm_service_lib$_onSend", "_vm_service_lib$_onReceive", "_eventControllers"];
+    VmService.$__fields__ = ["_vm_service_lib$_streamSub", "_vm_service_lib$_writeMessage", "_vm_service_lib$_id", "_vm_service_lib$_completers", "_methodCalls", "_vm_service_lib$_log", "_vm_service_lib$_onSend", "_vm_service_lib$_onReceive", "_eventControllers"];
     function VmService_dispose_closure() {
       this.$deferredAction();
     }
@@ -20283,7 +20284,8 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.VmService_dispose_closure[1];
     VmService_dispose_closure.prototype = $desc;
     VmService_dispose_closure.$__fields__ = [];
-    function RPCError(code, message, data) {
+    function RPCError(callingMethod, code, message, data) {
+      this.callingMethod = callingMethod;
       this.code = code;
       this.message = message;
       this.data = data;
@@ -20294,7 +20296,7 @@ self._domRemove = function(element) {
       RPCError.name = "RPCError";
     $desc = $collectedClasses$.RPCError[1];
     RPCError.prototype = $desc;
-    RPCError.$__fields__ = ["code", "message", "data"];
+    RPCError.$__fields__ = ["callingMethod", "code", "message", "data"];
     RPCError.prototype.get$message = function(receiver) {
       return this.message;
     };
@@ -36518,7 +36520,7 @@ self._domRemove = function(element) {
         t2 = this.ws;
         t3 = H.setRuntimeTypeInfo(new W._EventStream(t2, "message", false), [null]);
         t3 = H.setRuntimeTypeInfo(new P._MapStream(new D.ObservatoryDebugger_connect__closure(), t3), [H.getRuntimeTypeArgument(t3, "Stream", 0), null]);
-        service = new S.VmService(null, null, 0, P.LinkedHashMap__makeEmpty(), null, P.StreamController_StreamController$broadcast(null, null, true, null), P.StreamController_StreamController$broadcast(null, null, true, null), P.LinkedHashMap__makeEmpty());
+        service = new S.VmService(null, null, 0, P.LinkedHashMap__makeEmpty(), P.LinkedHashMap__makeEmpty(), null, P.StreamController_StreamController$broadcast(null, null, true, null), P.StreamController_StreamController$broadcast(null, null, true, null), P.LinkedHashMap__makeEmpty());
         service._vm_service_lib$_streamSub = t3._createSubscription$4(service.get$_vm_service_lib$_processMessage(), null, null, false);
         service._vm_service_lib$_writeMessage = new D.ObservatoryDebugger_connect__closure0(t2);
         service._vm_service_lib$_log = new D.ObservatoryLog(t1);
@@ -64783,7 +64785,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     VmService: {
-      "^": "Object;_vm_service_lib$_streamSub,_vm_service_lib$_writeMessage,_vm_service_lib$_id,_vm_service_lib$_completers,_vm_service_lib$_log,_vm_service_lib$_onSend,_vm_service_lib$_onReceive,_eventControllers",
+      "^": "Object;_vm_service_lib$_streamSub,_vm_service_lib$_writeMessage,_vm_service_lib$_id,_vm_service_lib$_completers,_methodCalls,_vm_service_lib$_log,_vm_service_lib$_onSend,_vm_service_lib$_onReceive,_eventControllers",
       _getEventController$1: function(eventName) {
         var t1, controller;
         t1 = this._eventControllers;
@@ -64842,6 +64844,7 @@ self._domRemove = function(element) {
         id = "" + ++this._vm_service_lib$_id;
         t1 = this._vm_service_lib$_completers;
         t1.$indexSet(0, id, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [S.Response])), [S.Response]));
+        this._methodCalls.$indexSet(0, id, method);
         m = P.LinkedHashMap__makeLiteral(["id", id, "method", method]);
         if (args != null)
           m.$indexSet(0, "params", args);
@@ -64857,7 +64860,7 @@ self._domRemove = function(element) {
         return this._vm_service_lib$_call$2(method, null);
       },
       _vm_service_lib$_processMessage$1: [function(message) {
-        var json, params, streamId, completer, result, type, e, s, t1, t2, exception;
+        var json, params, streamId, completer, methodName, result, type, e, s, t1, t2, exception;
         try {
           t1 = this._vm_service_lib$_onReceive;
           if (!t1.get$_mayAddEvent())
@@ -64874,12 +64877,13 @@ self._domRemove = function(element) {
             t1._sendData$1(t2);
           } else if (J.$index$asx(json, "id") != null) {
             completer = this._vm_service_lib$_completers.remove$1(0, J.$index$asx(json, "id"));
+            methodName = this._methodCalls.remove$1(0, J.$index$asx(json, "id"));
             if (completer == null)
               this._vm_service_lib$_log.severe$1("unmatched request response: " + H.S(message));
             else if (J.$index$asx(json, "error") != null) {
               t1 = J.$index$asx(json, "error");
               t2 = J.getInterceptor$asx(t1);
-              completer.completeError$1(new S.RPCError(t2.$index(t1, "code"), t2.$index(t1, "message"), t2.$index(t1, "data")));
+              completer.completeError$1(new S.RPCError(methodName, t2.$index(t1, "code"), t2.$index(t1, "message"), t2.$index(t1, "data")));
             } else {
               result = H.subtypeCast(J.$index$asx(json, "result"), "$isMap", [P.String, null], "$asMap");
               type = J.$index$asx(result, "type");
@@ -64916,18 +64920,19 @@ self._domRemove = function(element) {
       }
     },
     RPCError: {
-      "^": "Object;code,message>,data>",
+      "^": "Object;callingMethod,code,message>,data>",
       toString$0: function(_) {
-        var t1, t2, t3, t4, t5;
+        var t1, t2, t3, t4, t5, t6;
         t1 = this.data;
         t2 = t1 == null;
         t3 = t2 ? null : J.$index$asx(t1, "details");
-        t4 = this.code;
-        t5 = this.message;
+        t4 = this.message;
+        t5 = this.code;
+        t6 = this.callingMethod;
         if (t3 == null)
-          return H.S(t4) + ": " + H.S(t5);
+          return H.S(t4) + " (" + H.S(t5) + ") from " + H.S(t6) + "()";
         else {
-          t3 = H.S(t4) + ": " + H.S(t5) + "\n";
+          t3 = H.S(t4) + " (" + H.S(t5) + ") from " + H.S(t6) + "():\n";
           return t3 + H.S(t2 ? null : J.$index$asx(t1, "details"));
         }
       }
