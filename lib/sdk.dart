@@ -264,8 +264,6 @@ class SdkDiscovery {
   }
 
   Future<String> _discoverSdk() {
-    if (true) return new Future.value(null);
-
     if (isMac) {
       return which('dart').then((result) {
         result = _resolveSdkFromVm(result);
