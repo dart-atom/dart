@@ -29,6 +29,7 @@ import 'atom_statusbar.dart';
 import 'atom_utils.dart';
 import 'autocomplete.dart';
 import 'buffer/buffer_observer.dart';
+import 'dartino/launch_dartino.dart';
 import 'debug/breakpoints.dart';
 import 'debug/debugger.dart';
 import 'dependencies.dart';
@@ -398,6 +399,7 @@ class AtomDartPackage extends AtomPackage {
 
   void _registerLaunchTypes() {
     FlutterLaunchType.register(launchManager);
+    DartinoLaunchType.register(launchManager);
     CliLaunchType.register(launchManager);
     MojoLaunchType.register(launchManager);
     ShellLaunchType.register(launchManager);
