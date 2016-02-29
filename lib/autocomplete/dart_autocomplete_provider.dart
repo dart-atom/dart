@@ -1,14 +1,14 @@
 part of atom.autocomplete_impl;
 
 class DartAutocompleteProvider extends AutocompleteProvider {
-  static final _suggestionKindMap = {
+  static const _suggestionKindMap = const <String, String>{
     'IMPORT': 'import',
     'KEYWORD': 'keyword',
     'PARAMETER': 'property',
     'NAMED_ARGUMENT': 'property'
   };
 
-  static final _elementKindMap = {
+  static const _elementKindMap = const <String, String>{
     'CLASS': 'class',
     'CLASS_TYPE_ALIAS': 'class',
     'CONSTRUCTOR': 'constant', // 'constructor' causes display issues
@@ -26,7 +26,10 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     'TOP_LEVEL_VARIABLE': 'variable'
   };
 
-  static Map _rightLabelMap = {null: null, 'FUNCTION_TYPE_ALIAS': 'function type'};
+  static Map<String, String> _rightLabelMap = {
+    null: null,
+    'FUNCTION_TYPE_ALIAS': 'function type'
+  };
 
   static int _compareSuggestions(CompletionSuggestion a, CompletionSuggestion b) {
     if (a.relevance != b.relevance) return b.relevance - a.relevance;
@@ -41,45 +44,40 @@ class DartAutocompleteProvider extends AutocompleteProvider {
       inclusionPriority: 100,
       excludeLowerPriority: true);
 
-  Future<List<Suggestion>> getSuggestions(AutocompleteOptions options) {
-    if (!analysisServer.isActive) return new Future.value([]);
+  Future<List<Suggestion>> getSuggestions(AutocompleteOptions options) async {
+    if (!analysisServer.isActive) return [];
 
-    var server = analysisServer.server;
-    var editor = options.editor;
-    var path = editor.getPath();
-    String text = editor.getText();
+    Server server = analysisServer.server;
+    TextEditor editor = options.editor;
     int offset = editor.getBuffer().characterIndexForPosition(options.bufferPosition);
+    String path = editor.getPath();
+    String text = editor.getText();
     String prefix = options.prefix;
 
     // If in a Dart source comment return an empty result.
     ScopeDescriptor descriptor = editor.scopeDescriptorForBufferPosition(options.bufferPosition);
-    List<String> scopes = descriptor == null ? null : descriptor.scopes;
-    if (scopes != null && scopes.any((s) => s.startsWith('comment.line')
-        || s.startsWith('comment.block'))) {
-      return new Future.value([]);
+    List<String> scopes = descriptor?.scopes ?? <String>[];
+    if (scopes.any((s) => s.startsWith('comment.line') || s.startsWith('comment.block'))) {
+      return [];
     }
 
     // Atom autocompletes right after a semi-colon, and often the user's return
     // key event is captured as a code complete select - inserting an item
     // (inadvertently) into the editor.
-    const String noCompletions = ";{},";
+    final Set<String> noCompletions = new Set.from(const [';', '{', '}', ',']);
 
     if (offset > 0) {
       String prevChar = text[offset - 1];
-      if (noCompletions.indexOf(prevChar) != -1) return new Future.value([]);
+      if (noCompletions.contains(prevChar)) return [];
     }
 
-    if (prefix.length == 1 && noCompletions.indexOf(prefix) != -1) {
-      return new Future.value([]);
-    }
+    if (prefix.length == 1 && noCompletions.contains(prefix)) return [];
 
-    return server.completion.getSuggestions(path, offset).then((result) {
-      return server.completion.onResults
+    SuggestionsResult result = await server.completion.getSuggestions(path, offset);
+    CompletionResults cr = await server.completion.onResults
           .where((cr) => cr.id == result.id)
-          .where((cr) => cr.isLast).first.then((r) {
-              return _handleCompletionResults(text, offset, prefix, r);
-          });
-    });
+          .where((cr) => cr.isLast).first;
+    return _handleCompletionResults(text, offset, prefix, cr);
   }
 
   void onDidInsertSuggestion(TextEditor editor, Point triggerPosition,
@@ -203,44 +201,38 @@ class DartAutocompleteProvider extends AutocompleteProvider {
   }
 
   String _sanitizeReturnType(CompletionSuggestion cs) {
-    if (cs.element != null && cs.element.kind == 'CONSTRUCTOR') return null;
-    if (cs.parameterType != null) return cs.parameterType;
-    return cs.returnType;
+    if (cs.element?.kind == 'CONSTRUCTOR') return null;
+    return cs.parameterType ?? cs.returnType;
   }
 
   String _mapType(CompletionSuggestion cs) {
-    if (_suggestionKindMap[cs.kind] != null) return _suggestionKindMap[cs.kind];
-    if (cs.element == null) return null;
-    var elementKind = cs.element.kind;
-    if (_elementKindMap[elementKind] != null) return _elementKindMap[elementKind];
-    return null;
+    return _suggestionKindMap[cs.kind] ?? _elementKindMap[cs.element.kind];
   }
 
   String _describe(CompletionSuggestion cs, {bool useDocs: true}) {
     if (cs.importUri != null) return "Requires '${cs.importUri}'";
-
-    if (useDocs) {
-      if (cs.docSummary != null) return cs.docSummary;
-    }
+    if (useDocs && cs.docSummary != null) return cs.docSummary;
 
     var element = cs.element;
-    if (element != null && element.parameters != null) {
+    if (element?.parameters != null) {
       String str = '${element.name}${element.parameters}';
-      return element.returnType != null ? '${str} → ${element.returnType}' : str;
+      return element.returnType != null
+          ? '${str} → ${element.returnType}'
+          : str;
     }
 
     return cs.completion;
   }
 
-  String _rightLabel(String str) {
-    if (_rightLabelMap[str] != null) return _rightLabelMap[str];
-    _rightLabelMap[str] = str.toLowerCase().replaceAll('_', ' ');
-    return _rightLabelMap[str];
+  /// Returns a human-readable right label for the [kind].
+  String _rightLabel(String kind) {
+    return _rightLabelMap.putIfAbsent(
+        kind, () => kind.toLowerCase().replaceAll('_', ' '));
   }
 }
 
-CompletionSuggestion _copySuggestion(CompletionSuggestion s, int relevance) {
-  return new CompletionSuggestion(
+CompletionSuggestion _copySuggestion(CompletionSuggestion s, int relevance) =>
+  new CompletionSuggestion(
     s.kind,
     relevance,
     s.completion,
@@ -260,4 +252,3 @@ CompletionSuggestion _copySuggestion(CompletionSuggestion s, int relevance) {
     parameterName: s.parameterName,
     parameterType: s.parameterType,
     importUri: s.importUri);
-}

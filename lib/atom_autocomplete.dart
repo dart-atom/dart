@@ -85,15 +85,18 @@ abstract class AutocompleteProvider implements Disposable {
   }
 
   JsObject _getSuggestions(options) {
-    Future<List<Suggestion>> f;
+    Future<List<JsObject>> f;
     AutocompleteOptions opts = new AutocompleteOptions(options);
 
     if (_override != null && _override.hasShown) _override = null;
 
+    /// Returns a [JsObject] representing [s].
+    JsObject suggestionToProxy(Suggestion s) => s._toProxy();
+
     if (_override != null) {
       _override.hasShown = true;
       List<Suggestion> suggestions = _override.renderSuggestions();
-      f = new Future.value(suggestions.map((s) => s._toProxy()).toList());
+      f = new Future.value(suggestions.map(suggestionToProxy).toList());
     } else {
       Stopwatch timer = new Stopwatch()..start();
       f = getSuggestions(opts).then((List<Suggestion> suggestions) {
@@ -101,7 +104,7 @@ abstract class AutocompleteProvider implements Disposable {
           'code completion in ${timer.elapsedMilliseconds}ms, '
           '${suggestions.length} results'
         );
-        return suggestions.map((suggestion) => suggestion._toProxy()).toList();
+        return suggestions.map(suggestionToProxy).toList();
       });
     }
 
