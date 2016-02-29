@@ -9,6 +9,7 @@ import 'dart:js';
 
 import 'package:atom/node/process.dart';
 import 'package:atom/node/shell.dart';
+import 'package:atom_dartlang/impl/tooltip.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_options.dart';
@@ -68,7 +69,6 @@ import 'usage.dart' show UsageManager;
 import 'utils.dart';
 import 'views.dart';
 import 'views.dart' show ViewGroupManager;
-import 'package:atom_dartlang/impl/tooltip.dart';
 
 export 'atom.dart' show registerPackage;
 
