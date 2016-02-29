@@ -93,105 +93,113 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
   List<Suggestion> _handleCompletionResults(String fileText, int offset, String prefix,
       CompletionResults cr) {
-    List<CompletionSuggestion> results = cr.results;
-    String prefixLower = prefix.toLowerCase();
+    String replacementPrefix;
     int replacementOffset = cr.replacementOffset;
 
     // Calculate the prefix based on the insert location and the offset.
-    String _prefix;
     if (replacementOffset < offset) {
-      _prefix = fileText.substring(replacementOffset, offset);
-      if (_prefix == prefix) _prefix = null;
+      var p = fileText.substring(replacementOffset, offset);
+      if (p != prefix) {
+        prefix = p;
+        replacementPrefix = prefix;
+      }
     }
 
     // Patch-up the analysis server's completion scoring.
-    var adjustRelavance = (CompletionSuggestion suggestion) {
-      if (suggestion.kind == 'KEYWORD') {
-        return _copySuggestion(suggestion, suggestion.relevance - 1);
-      }
-
-      if (suggestion.element != null && suggestion.element.kind == 'NAMED_ARGUMENT') {
-        return _copySuggestion(suggestion, suggestion.relevance + 1);
-      }
-
-      return suggestion;
-    };
-
-    results = new List.from(results
+    List<CompletionSuggestion> results = new List.from(cr.results
         .where((result) => result.relevance > 500)
         .where((result) => !_elided.contains(result.completion))
-        .map((result) => adjustRelavance(result)));
+        .map(_adjustRelevance));
 
     results.sort(_compareSuggestions);
 
-    Iterable<Suggestion> suggestions = results.map((CompletionSuggestion cs) {
-      String text = cs.completion;
-      String snippet = null;
-      String displayText = null;
+    var suggestions = <Suggestion>[];
+    for (var cs in results) {
+      Suggestion s =
+          _makeSuggestion(cs, prefix, replacementPrefix, replacementOffset);
+      if (s != null) suggestions.add(s);
+    }
+    return suggestions;
+  }
 
-      // We have something that might take params.
-      if (cs.parameterNames != null) {
-        // If it takes no parameters, then just append `()`.
-        if (cs.parameterNames.isEmpty) {
-          text += '()';
-        } else {
-          text = null;
+  /// Returns a [CompletionSuggestion] with an adjusted score.
+  CompletionSuggestion _adjustRelevance(CompletionSuggestion suggestion) {
+    if (suggestion.kind == 'KEYWORD') {
+      return _copySuggestion(suggestion, suggestion.relevance - 1);
+    }
 
-          // If it has required params, then use a snippet: func(${1:arg}).
-          int count = 0;
-          String names = cs.parameterNames.take(cs.requiredParameterCount).map(
-              (name) => '\${${++count}:${name}}').join(', ');
+    if (suggestion.element?.kind == 'NAMED_ARGUMENT') {
+      return _copySuggestion(suggestion, suggestion.relevance + 1);
+    }
 
-          bool hasOptional = cs.requiredParameterCount != cs.parameterNames.length;
+    return suggestion;
+  }
 
-          if (hasOptional) {
-            // Create a display string with the optional params.
-            displayText = _describe(cs, useDocs: false);
-          }
+  /// Returns an Atom [Suggestion] from the analyzer's [cs] or null if [cs] is
+  /// not a suitable completion given the [prefix] and [replacementOffset].
+  Suggestion _makeSuggestion(CompletionSuggestion cs, String prefix, String replacementPrefix,
+      int replacementOffset) {
+    String text = cs.completion;
+    String snippet;
+    String displayText;
 
-          snippet = '${cs.completion}(${names})\$${++count}';
+    // We have something that might take params.
+    if (cs.parameterNames != null) {
+      // If it takes no parameters, then just append `()`.
+      if (cs.parameterNames.isEmpty) {
+        text += '()';
+      } else {
+        text = null;
+
+        // If it has required params, then use a snippet: func(${1:arg}).
+        int count = 0;
+        String names = cs.parameterNames
+            .take(cs.requiredParameterCount)
+            .map((name) => '\${${++count}:${name}}')
+            .join(', ');
+
+        bool hasOptionalParameters = cs.requiredParameterCount != cs.parameterNames.length;
+        if (hasOptionalParameters) {
+          // Create a display string with the optional params.
+          displayText = _describe(cs, useDocs: false);
         }
+
+        snippet = '${cs.completion}($names)\$${++count}';
       }
+    }
 
-      // Filter out completions where the suggestions.tolowercase != the prefix.
-      String completionPrefix = _prefix != null  ? _prefix.toLowerCase() : prefixLower;
-      if (completionPrefix.isNotEmpty && idRegex.hasMatch(completionPrefix[0])) {
-        if (text != null && !text.toLowerCase().startsWith(completionPrefix)) {
-          return null;
-        }
-        if (snippet != null && !snippet.toLowerCase().startsWith(completionPrefix)) {
-          return null;
-        }
-      }
+    // Filter out completions where suggestion.toLowerCase != prefix.toLowerCase
+    String completionPrefix = prefix.toLowerCase();
+    if (completionPrefix.isNotEmpty && idRegex.hasMatch(completionPrefix[0])) {
+      /// Returns true if the suggestion [s] is incompatible with the prefix [p]
+      isIncompatible(String s, String pre) =>
+          s != null && !s.toLowerCase().startsWith(pre);
 
-      // Calculate the selectionOffset.
-      int selectionOffset;
-      if (cs.selectionOffset != cs.completion.length) {
-        selectionOffset =
-            replacementOffset - completionPrefix.length + cs.selectionOffset;
-      }
+      if (isIncompatible(text ?? snippet, completionPrefix)) return null;
+    }
 
-      bool potential = cs.isPotential || cs.importUri != null;
+    // Calculate the selectionOffset.
+    int selectionOffset;
+    if (cs.selectionOffset != cs.completion.length) {
+      selectionOffset = replacementOffset - completionPrefix.length + cs.selectionOffset;
+    }
 
-      Suggestion suggestion = new Suggestion(
+    bool potential = cs.isPotential || cs.importUri != null;
+
+    return new Suggestion(
+        text: text,
+        snippet: snippet,
+        displayText: displayText,
+        replacementPrefix: replacementPrefix,
+        selectionOffset: selectionOffset,
         type: _mapType(cs),
         leftLabel: _sanitizeReturnType(cs),
-        rightLabel: _rightLabel(cs.element != null ? cs.element.kind : cs.kind),
-        className:
-            cs.isDeprecated ? 'suggestion-deprecated' :
-                potential ? 'suggestion-potential' : null,
+        rightLabel: _rightLabel(cs.element?.kind ?? cs.kind),
+        className: cs.isDeprecated
+            ? 'suggestion-deprecated'
+            : potential ? 'suggestion-potential' : null,
         description: _describe(cs),
-        requiredImport: cs.importUri
-      );
-      if (text != null) suggestion.text = text;
-      if (snippet != null) suggestion.snippet = snippet;
-      if (displayText != null) suggestion.displayText = displayText;
-      if (_prefix != null) suggestion.replacementPrefix = _prefix;
-      if (selectionOffset != null) suggestion.selectionOffset = selectionOffset;
-      return suggestion;
-    }).where((suggestion) => suggestion != null);
-
-    return new List.from(suggestions);
+        requiredImport: cs.importUri);
   }
 
   String _sanitizeReturnType(CompletionSuggestion cs) {
