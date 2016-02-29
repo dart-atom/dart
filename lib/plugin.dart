@@ -68,6 +68,7 @@ import 'usage.dart' show UsageManager;
 import 'utils.dart';
 import 'views.dart';
 import 'views.dart' show ViewGroupManager;
+import 'package:atom_dartlang/impl/tooltip.dart';
 
 export 'atom.dart' show registerPackage;
 
@@ -154,6 +155,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());
     disposables.add(new OutlineController());
+    disposables.add(new TooltipController());
     disposables.add(pubManager);
     disposables.add(runAppManager);
     disposables.add(new RefactoringHelper());
@@ -388,6 +390,14 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': false,
         'order': 11
+      },
+
+      // experimental features
+      'hoverTooltip': {
+        'title': '[Experimental] Enable type information tooltip.',
+        'type': 'boolean',
+        'default': false,
+        'order': 12
       }
     };
   }
