@@ -172,7 +172,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     String completionPrefix = prefix.toLowerCase();
     if (completionPrefix.isNotEmpty && idRegex.hasMatch(completionPrefix[0])) {
       /// Returns true if the suggestion [s] is incompatible with the prefix [p]
-      isIncompatible(String s, String pre) =>
+      bool isIncompatible(String s, String pre) =>
           s != null && !s.toLowerCase().startsWith(pre);
 
       if (isIncompatible(text ?? snippet, completionPrefix)) return null;
