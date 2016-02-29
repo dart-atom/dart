@@ -229,17 +229,11 @@ class AtomDartPackage extends AtomPackage {
       }
     };
 
-    runOnce('_initialized', () {
-      // This is fairly drastic. We're disabling a setting in another plugin.
-      atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
-    });
-
     runOnce('_firstRun', () {
       // Show a welcome toast.
       _showFirstRun();
-    });
 
-    runOnce('_initializedSymLinks', () {
+      atom.config.setValue('autocomplete-plus.autoActivationDelay', 500);
       atom.config.setValue('core.followSymlinks', false);
     });
   }
