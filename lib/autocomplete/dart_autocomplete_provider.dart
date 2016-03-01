@@ -64,7 +64,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     // Atom autocompletes right after a semi-colon, and often the user's return
     // key event is captured as a code complete select - inserting an item
     // (inadvertently) into the editor.
-    final Set<String> noCompletions = new Set.from(const [';', '{', '}', ',']);
+    final Set<String> noCompletions = new Set.from(const [';', '{', '}', ']', ',']);
 
     if (offset > 0) {
       String prevChar = text[offset - 1];

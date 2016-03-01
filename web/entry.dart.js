@@ -29119,7 +29119,7 @@ self._domRemove = function(element) {
                   break;
                 } else
                   ;
-                noCompletions = P.LinkedHashSet_LinkedHashSet$from(C.List_e8P, null);
+                noCompletions = P.LinkedHashSet_LinkedHashSet$from(C.List_chs, null);
                 t1 = J.getInterceptor$n(offset);
                 if (t1.$gt(offset, 0))
                   if (noCompletions.contains$1(0, J.$index$asx(text, t1.$sub(offset, 1)))) {
@@ -67331,7 +67331,7 @@ self._domRemove = function(element) {
   C.List_O1R = Isolate.makeConstantList([C.Level_ALL_0, C.Level_FINEST_300, C.Level_FINER_400, C.Level_FINE_500, C.Level_CONFIG_700, C.Level_INFO_800, C.Level_WARNING_900, C.Level_SEVERE_1000, C.Level_SHOUT_1200, C.Level_OFF_2000]);
   C.List_WnV = Isolate.makeConstantList(["/", "\\"]);
   C.List_cSk = Isolate.makeConstantList(["/"]);
-  C.List_e8P = Isolate.makeConstantList([";", "{", "}", ","]);
+  C.List_chs = Isolate.makeConstantList([";", "{", "}", "]", ","]);
   C.List_ego = Isolate.makeConstantList(["HEAD", "AREA", "BASE", "BASEFONT", "BR", "COL", "COLGROUP", "EMBED", "FRAME", "FRAMESET", "HR", "IMAGE", "IMG", "INPUT", "ISINDEX", "LINK", "META", "PARAM", "SOURCE", "STYLE", "TITLE", "WBR"]);
   C.List_empty0 = H.setRuntimeTypeInfo(Isolate.makeConstantList([]), [P.String]);
   C.List_empty = Isolate.makeConstantList([]);
