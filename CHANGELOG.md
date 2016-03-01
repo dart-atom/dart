@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.6.4
+- Fixed an issue with auto-detecting the Flutter and Dart SDKs
+
 ## 0.6.3
 - Run Flutter apps with `flutter run` now instead of `flutter start`
 - Fixed an exception from the Find References view
