@@ -9,6 +9,7 @@ import 'dart:js';
 
 import 'package:atom/node/process.dart';
 import 'package:atom/node/shell.dart';
+import 'package:atom_dartlang/impl/tooltip.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_options.dart';
@@ -156,6 +157,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());
     disposables.add(new OutlineController());
+    disposables.add(new TooltipController());
     disposables.add(pubManager);
     disposables.add(runAppManager);
     disposables.add(new RefactoringHelper());
@@ -385,6 +387,14 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': false,
         'order': 11
+      },
+
+      // experimental features
+      'hoverTooltip': {
+        'title': '[Experimental] Enable type information tooltip.',
+        'type': 'boolean',
+        'default': false,
+        'order': 12
       }
     };
   }
