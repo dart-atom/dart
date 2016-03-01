@@ -14,21 +14,32 @@ class DartinoSdk extends Sdk {
       atom.notifications.addError('Windows not supported yet');
       return;
     }
+
+    // Start the download
     Future<String> download = _downloadSdkZip();
+
+    // Prompt the user then wait for download to complete
     String path = await Sdk.promptInstallPath('Dartino SDK', 'dartino-sdk');
-    if (path == null) return;
     String tmpSdkDir = await download;
     if (tmpSdkDir == null) return;
 
-    var runner = new ProcessRunner('mv', args: [tmpSdkDir, path]);
-    var result = await runner.execSimple();
-    if (result.exit != 0) {
-      atom.notifications.addError('Failed to install Dartino SDK',
-          detail: 'exitCode: ${result.exit}'
-              '\n${result.stderr}\n${result.stdout}');
-      return;
+    // Install the new SDK
+    if (path != null) {
+      var runner = new ProcessRunner('mv', args: [tmpSdkDir, path]);
+      var result = await runner.execSimple();
+      if (result.exit != 0) {
+        atom.notifications.addError('Failed to install Dartino SDK',
+        detail: 'exitCode: ${result.exit}'
+        '\n${result.stderr}\n${result.stdout}');
+        return;
+      }
+      atom.config.setValue('dartino.dartinoPath', path);
+      atom.notifications.addSuccess('Dartino SDK installed', detail: path);
     }
-    atom.config.setValue('dartino.dartinoPath', path);
+
+    // Cleanup
+    var runner = new ProcessRunner('rm', args: ['-r', (fs.dirname(tmpSdkDir))]);
+    runner.execSimple();
   }
 }
 
@@ -39,6 +50,7 @@ Future<String> _downloadSdkZip() async {
   if (isMac) zipName = 'dartino-sdk-macos-x64-release.zip';
   if (isLinux) zipName = 'dartino-sdk-linux-x64-release.zip';
   //TODO(danrubel) add Windows support
+  //TODO(danrubel) extract this into a reusable class for use by Flutter
 
   // Download the zip file
   var dirPath = fs.join(tmpdir(), 'dartino-download');

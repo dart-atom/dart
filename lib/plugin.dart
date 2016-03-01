@@ -192,7 +192,7 @@ class AtomDartPackage extends AtomPackage {
       });
     });
     _addCmd('atom-workspace', 'dartlang:send-feedback', (_) => _handleSendFeedback());
-    _addCmd('atom-workspace', 'dartino:installSdk', dartino.promptInstallSdk);
+    _addCmd('atom-workspace', 'dartino:install-sdk', dartino.promptInstallSdk);
 
     // Text editor commands.
     _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
