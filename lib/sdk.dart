@@ -96,16 +96,6 @@ class SdkManager implements Disposable {
     return new SdkDiscovery().discoverSdk().then((String sdkPath) {
       if (sdkPath != null) {
         atom.config.setValue(_prefPath, sdkPath);
-        if (verbose) {
-          Timer.run(() {
-            if (sdk == null) return;
-
-            sdk.getVersion().then((String version) {
-              atom.notifications.addSuccess(
-                "Dart SDK found at ${sdk.directory.path}. Version ${version}.");
-            });
-          });
-        }
         return true;
       } else {
         if (verbose) {
@@ -258,8 +248,7 @@ class SdkDiscovery {
   /// will return `null` if no SDK is found.
   Future<String> discoverSdk() {
     return _discoverSdk().then((String sdkPath) {
-      if (sdkPath != null) return sdkPath;
-      return _tryFlutterSdk();
+      return sdkPath != null ? sdkPath : _tryFlutterSdk();
     });
   }
 
