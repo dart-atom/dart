@@ -42701,7 +42701,7 @@ self._domRemove = function(element) {
       "^": "Closure:3;",
       call$1: [function(result) {
         var t1 = J.getInterceptor$asx(result);
-        return t1.contains$1(result, "\n") === true ? J.trim$0$s(C.JSArray_methods.get$first(t1.split$1(result, "\n"))) : result;
+        return t1.contains$1(result, "\n") === true ? J.trim$0$s(C.JSArray_methods.get$last(t1.split$1(result, "\n"))) : result;
       }, null, null, 2, 0, null, 2, "call"]
     },
     which_closure0: {
