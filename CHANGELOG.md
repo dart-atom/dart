@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- Updated code completion to reduce inadvertent completions after array braces
+
 ## 0.6.4
 - Fixed an issue with auto-detecting the Flutter and Dart SDKs
 
@@ -34,7 +37,7 @@
   breakpoints early in the app life-cycle
 - added a `flutter version` command
 - added the `flutter ios --init` command
-- fixed an exception that occured when trying to auto-locate the Dart SDK
+- fixed an exception that occurred when trying to auto-locate the Dart SDK
 
 ## 0.5.6
 - fixed an issue with node's os.homedir() call on linux
