@@ -9,7 +9,6 @@ import 'analysis/analysis_server_lib.dart'
 import 'atom.dart';
 import 'atom_autocomplete.dart';
 import 'state.dart';
-import 'utils.dart';
 
 part 'autocomplete/dart_autocomplete_provider.dart';
 
