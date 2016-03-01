@@ -726,6 +726,11 @@ class TextEditor extends ProxyHolder {
       invoke('setCursorBufferPosition', point);
   void selectRight(columnCount) => invoke('selectRight', columnCount);
 
+  void moveUp(int lineCount) => invoke('moveUp', lineCount);
+  void moveDown(int lineCount) => invoke('moveDown', lineCount);
+  void moveLeft(int rowCount) => invoke('moveLeft', rowCount);
+  void moveRight(int rowCount) => invoke('moveRight', rowCount);
+
   String lineTextForBufferRow(int bufferRow) =>
       invoke('lineTextForBufferRow', bufferRow);
 

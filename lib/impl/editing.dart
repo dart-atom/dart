@@ -70,10 +70,8 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
   if (!inComment) return false;
   if (leading.isEmpty) leading = ' ';
 
-  String previousLine = '';
-  if (row > 0) {
-    previousLine = editor.lineTextForBufferRow(row - 1).trimLeft();
-  }
+  String previousLine = editor.lineTextForBufferRow(row - 1)?.trimLeft() ?? '';
+  String nextLine = editor.lineTextForBufferRow(row + 1)?.trimLeft() ?? '';
 
   if (trimmedText.startsWith('///')) {
     if (trimmedText == '/// /' && atEol) {
@@ -94,10 +92,22 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
   }
 
   if (trimmedText.startsWith('/*')) {
-    editor.atomic(() {
-      editor.insertNewline();
-      editor.insertText(' * ');
-    });
+    if(nextLine.startsWith('*')) {
+      editor.atomic(() {
+        editor.insertNewline();
+        editor.insertText(' * ');
+      });
+    } else {
+      // Autoclose the comment.
+      editor.atomic(() {
+        editor.insertNewline();
+        editor.insertText(' *${leading}');
+        editor.insertNewline();
+        editor.insertText('*/');
+        editor.moveUp(1);
+      });
+    }
+
     return true;
   }
 
@@ -113,26 +123,10 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
   if (trimmedText.startsWith('*')) {
     if (row > 0) {
       if (previousLine.startsWith('/*') || previousLine.startsWith('*')) {
-        if (trimmedText.endsWith('* /')) {
-          editor.atomic(() {
-            editor.backspace();
-            editor.backspace();
-            editor.insertText('/');
-            editor.insertNewline();
-            editor.backspace();
-          });
-        } else if (trimmedText.endsWith(' /') && atEol) {
-          editor.atomic(() {
-            editor.backspace();
-            editor.insertNewline();
-            editor.insertText('*/');
-          });
-        } else {
-          editor.atomic(() {
-            editor.insertNewline();
-            editor.insertText('*${leading}');
-          });
-        }
+        editor.atomic(() {
+          editor.insertNewline();
+          editor.insertText('*${leading}');
+        });
 
         return true;
       }
