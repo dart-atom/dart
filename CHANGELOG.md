@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.4
 - Fixed an issue with auto-detecting the Flutter and Dart SDKs
 
 ## 0.6.3
