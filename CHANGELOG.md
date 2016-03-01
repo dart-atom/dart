@@ -3,6 +3,7 @@
 ## unreleased
 - Run Flutter apps with `flutter run` now instead of `flutter start`
 - Fixed an exception from the Find References view
+- More work to detect the user's default shell on macos
 
 ## 0.6.2
 - several miscellaneous fixes and improvements to the debugger
