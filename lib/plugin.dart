@@ -29,6 +29,7 @@ import 'atom_statusbar.dart';
 import 'atom_utils.dart';
 import 'autocomplete.dart';
 import 'buffer/buffer_observer.dart';
+import 'dartino/dartino_util.dart' show dartino;
 import 'dartino/launch_dartino.dart';
 import 'debug/breakpoints.dart';
 import 'debug/debugger.dart';
@@ -191,6 +192,7 @@ class AtomDartPackage extends AtomPackage {
       });
     });
     _addCmd('atom-workspace', 'dartlang:send-feedback', (_) => _handleSendFeedback());
+    _addCmd('atom-workspace', 'dartino:install-sdk', dartino.promptInstallSdk);
 
     // Text editor commands.
     _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);

@@ -1,8 +1,7 @@
-library atom.dartino.dartino_util;
-
 import 'package:atom/node/fs.dart';
 
 import '../atom.dart';
+import 'sdk/dartino_sdk.dart';
 
 const _pluginId = 'dartino';
 
@@ -26,5 +25,15 @@ class _Dartino {
   String packageRoot(projDir) {
     if (fs.existsSync(fs.join(projDir, '.packages'))) return null;
     return fs.join(sdkPath(), 'internal', 'dartino-sdk.packages');
+  }
+
+  /// Prompt the user which SDK and where to install, then do it.
+  void promptInstallSdk([_]) {
+    // atom.notifications
+    //     .addInfo('Which SDK would you like to install?', buttons: [
+    //   new NotificationButton('Dartino', DartinoSdk.promptInstall),
+    //   new NotificationButton('SOD', SodRepo.promptInstall)
+    // ]);
+    DartinoSdk.promptInstall();
   }
 }
