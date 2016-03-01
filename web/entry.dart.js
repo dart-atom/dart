@@ -27717,12 +27717,12 @@ self._domRemove = function(element) {
           if (J.$index$asx(json, "id") == null) {
             $event = J.$index$asx(json, "event");
             if ($event == null)
-              $.$get$_logger5().severe$1("invalid message: " + H.S(message));
+              $.$get$_logger6().severe$1("invalid message: " + H.S(message));
             else {
               prefix = J.substring$2$s($event, 0, J.indexOf$1$asx($event, "."));
               t1 = this._domains;
               if (t1.$index(0, prefix) == null)
-                $.$get$_logger5().severe$1("no domain for notification: " + H.S(message));
+                $.$get$_logger6().severe$1("no domain for notification: " + H.S(message));
               else {
                 t1 = t1.$index(0, prefix);
                 t2 = $event;
@@ -27740,7 +27740,7 @@ self._domRemove = function(element) {
             completer = this._analysis_server_lib$_completers.remove$1(0, J.$index$asx(json, "id"));
             methodName = this._methodNames.remove$1(0, J.$index$asx(json, "id"));
             if (completer == null)
-              $.$get$_logger5().severe$1("unmatched request response: " + H.S(message));
+              $.$get$_logger6().severe$1("unmatched request response: " + H.S(message));
             else if (J.$index$asx(json, "error") != null)
               completer.completeError$1(E.RequestError_parse(methodName, J.$index$asx(json, "error")));
             else
@@ -27749,7 +27749,7 @@ self._domRemove = function(element) {
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e = t1;
-          $.$get$_logger5().severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e));
+          $.$get$_logger6().severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e));
         }
       }, "call$1", "get$_processMessage", 2, 0, 10, 10],
       _call$2: function(method, args) {
@@ -28860,7 +28860,7 @@ self._domRemove = function(element) {
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e = t1;
-          $.$get$_logger8().warning$1(e);
+          $.$get$_logger9().warning$1(e);
         }
       }
     },
@@ -35036,7 +35036,7 @@ self._domRemove = function(element) {
         t1 = H.unwrapException(exception);
         e = t1;
         st = H.getTraceFromException(exception);
-        $.$get$_logger7().severe$3("jsObjectToDart", e, st);
+        $.$get$_logger8().severe$3("jsObjectToDart", e, st);
       }
     },
     promiseToFuture: function(promise) {
@@ -35101,7 +35101,7 @@ self._domRemove = function(element) {
           t1 = H.unwrapException(exception);
           e = t1;
           st = H.getTraceFromException(exception);
-          $.$get$_logger7().warning$3("error listening to " + H.S(eventName), e, st);
+          $.$get$_logger8().warning$3("error listening to " + H.S(eventName), e, st);
         }
         t1 = controller;
         return H.setRuntimeTypeInfo(new P._BroadcastStream(t1), [H.getTypeArgumentByIndex(t1, 0)]);
@@ -42685,12 +42685,17 @@ self._domRemove = function(element) {
   }], ["atom_utils", "package:atom/atom_utils.dart",, M, {
     "^": "",
     which: function(execName, isBatchScript) {
-      var shell, ext;
+      var shell, args, t1, ext;
       if ($.$get$isMac() === true) {
         shell = $.$get$process().env$1("SHELL");
         if (shell == null)
           shell = "/bin/bash";
-        return H.subtypeCast(X.exec(shell, ["-l", "-c", "which " + execName]).then$1(new M.which_closure()), "$isFuture", [P.String], "$asFuture");
+        args = [];
+        t1 = J.getInterceptor(shell);
+        if (!t1.$eq(shell, "csh") && !t1.$eq(shell, "tcsh"))
+          args.push("-l");
+        C.JSArray_methods.addAll$1(args, ["-c", "which " + execName]);
+        return H.subtypeCast(X.exec(shell, args).then$1(new M.which_closure()), "$isFuture", [P.String], "$asFuture");
       } else if ($.$get$isWindows() === true) {
         ext = isBatchScript ? "bat" : "exe";
         return H.subtypeCast(X.exec("where", [execName + "." + ext]).then$1(new M.which_closure0()), "$isFuture", [P.String], "$asFuture");
@@ -56692,7 +56697,7 @@ self._domRemove = function(element) {
         var t1, flutter, process, stream, t2, t3;
         if (sdk == null) {
           if (this._daemon != null) {
-            $.$get$_logger6().info$1("Stopping Flutter daemon server");
+            $.$get$_logger7().info$1("Stopping Flutter daemon server");
             this._daemon.dispose$0();
             this._daemon = null;
             t1 = this._daemonController;
@@ -56702,7 +56707,7 @@ self._domRemove = function(element) {
           }
         } else if (this._daemon == null) {
           flutter = sdk.get$flutterTool();
-          $.$get$_logger6().info$1("Starting Flutter daemon server");
+          $.$get$_logger7().info$1("Starting Flutter daemon server");
           process = flutter.runRaw$2$startProcess(["daemon"], true);
           t1 = process._stdoutController;
           t1 = C.C_LineSplitter.bind$1(H.setRuntimeTypeInfo(new P._ControllerStream(t1), [H.getTypeArgumentByIndex(t1, 0)]));
@@ -56801,15 +56806,15 @@ self._domRemove = function(element) {
           case "error":
             t1 = J.getInterceptor$x(message);
             if (message.get$stackTrace() != null)
-              $.$get$_logger6().severe$3(t1.get$message(message), null, new P._StringStackTrace(message.get$stackTrace()));
+              $.$get$_logger7().severe$3(t1.get$message(message), null, new P._StringStackTrace(message.get$stackTrace()));
             else
-              $.$get$_logger6().severe$1(t1.get$message(message));
+              $.$get$_logger7().severe$1(t1.get$message(message));
             break;
           case "status":
-            $.$get$_logger6().info$1(J.get$message$x(message));
+            $.$get$_logger7().info$1(J.get$message$x(message));
             break;
           default:
-            $.$get$_logger6().finer$1(J.get$message$x(message));
+            $.$get$_logger7().finer$1(J.get$message$x(message));
             break;
         }
       }, null, null, 2, 0, null, 10, "call"]
@@ -56849,7 +56854,7 @@ self._domRemove = function(element) {
     FlutterDaemonManager__initSdk_closure8: {
       "^": "Closure:3;",
       call$1: [function(message) {
-        var t1 = $.$get$_logger6();
+        var t1 = $.$get$_logger7();
         if (t1.isLoggable$1(C.Level_FINER_400))
           t1.finer$1("--> " + H.S(message));
       }, null, null, 2, 0, null, 10, "call"]
@@ -56857,7 +56862,7 @@ self._domRemove = function(element) {
     FlutterDaemonManager__initSdk_closure9: {
       "^": "Closure:3;",
       call$1: [function(message) {
-        var t1 = $.$get$_logger6();
+        var t1 = $.$get$_logger7();
         if (t1.isLoggable$1(C.Level_FINER_400))
           t1.finer$1("<-- " + H.S(message));
       }, null, null, 2, 0, null, 10, "call"]
@@ -56910,12 +56915,12 @@ self._domRemove = function(element) {
           if (J.$index$asx(json, "id") == null) {
             $event = J.$index$asx(json, "event");
             if ($event == null)
-              $.$get$_logger6().severe$1("invalid message: " + H.S(message));
+              $.$get$_logger7().severe$1("invalid message: " + H.S(message));
             else {
               prefix = J.substring$2$s($event, 0, J.indexOf$1$asx($event, "."));
               t1 = this._flutter_daemon$_domains;
               if (t1.$index(0, prefix) == null)
-                $.$get$_logger6().severe$1("no domain for notification: " + H.S(message));
+                $.$get$_logger7().severe$1("no domain for notification: " + H.S(message));
               else {
                 t1 = t1.$index(0, prefix);
                 t2 = $event;
@@ -56933,7 +56938,7 @@ self._domRemove = function(element) {
             completer = this._flutter_daemon$_completers.remove$1(0, J.$index$asx(json, "id"));
             methodName = this._flutter_daemon$_methodNames.remove$1(0, J.$index$asx(json, "id"));
             if (completer == null)
-              $.$get$_logger6().severe$1("unmatched request response: " + H.S(message));
+              $.$get$_logger7().severe$1("unmatched request response: " + H.S(message));
             else if (J.$index$asx(json, "error") != null)
               completer.completeError$1(new T.RequestError0(methodName, J.$index$asx(json, "error")));
             else
@@ -56942,7 +56947,7 @@ self._domRemove = function(element) {
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e = t1;
-          $.$get$_logger6().severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e));
+          $.$get$_logger7().severe$1("unable to decode message: " + H.S(message) + ", " + H.S(e));
         }
       }, "call$1", "get$_flutter_daemon$_processMessage", 2, 0, 10, 10],
       _flutter_daemon$_call$2: function(method, args) {
@@ -60201,11 +60206,18 @@ self._domRemove = function(element) {
         return H.subtypeCast(this.execStreaming$0().then$1(new X.ProcessRunner_execSimple_closure1(stdout, stderr)), "$isFuture", [X.ProcessResult], "$asFuture");
       },
       execStreaming$0: function() {
-        var e, exception, t1;
+        var e, t1, t2, t3, t4, t5, exception;
         if (this._process$_process != null)
           throw H.wrapException(new P.StateError("exec can only be called once"));
+        t1 = $.$get$_logger5();
+        t2 = this.command;
+        t3 = "exec: " + H.S(t2) + " ";
+        t4 = this.args;
+        t3 += t4 == null ? "" : J.join$1$ax(t4, " ");
+        t5 = this.cwd;
+        t1.fine$1(t3 + (t5 == null ? "" : " (cwd=" + H.S(t5) + ")"));
         try {
-          this._process$_process = E.BufferedProcess_create(this.command, this.args, this.cwd, this.env, new X.ProcessRunner_execStreaming_closure(this), new X.ProcessRunner_execStreaming_closure0(this), new X.ProcessRunner_execStreaming_closure1(this), new X.ProcessRunner_execStreaming_closure2(this));
+          this._process$_process = E.BufferedProcess_create(t2, t4, t5, this.env, new X.ProcessRunner_execStreaming_closure(this), new X.ProcessRunner_execStreaming_closure0(this), new X.ProcessRunner_execStreaming_closure1(this), new X.ProcessRunner_execStreaming_closure2(this));
         } catch (exception) {
           t1 = H.unwrapException(exception);
           e = t1;
@@ -60227,14 +60239,19 @@ self._domRemove = function(element) {
             t1 = H.JSSyntaxRegExp_makeNative("([\"'| \\$!\\(\\)\\[\\]])", false, true, false);
             shell = $.$get$process().env$1("SHELL");
             if (shell == null) {
-              $.$get$_logger9().warning$1("Couldn't identify the user's shell");
+              $.$get$_logger5().warning$1("Couldn't identify the user's shell");
               shell = "/bin/bash";
             }
             if (args != null)
               command = J.$add$ns(command, " " + H.setRuntimeTypeInfo(new H.MappedListIterable(args, new X.closure4(new H.JSSyntaxRegExp("([\"'| \\$!\\(\\)\\[\\]])", t1, null, null))), [null, null]).join$1(0, " "));
-            return new X.ProcessRunner(shell, ["-l", "-c", command], cwd, env, null, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]), null, P.StreamController_StreamController(null, null, null, null, false, null), P.StreamController_StreamController(null, null, null, null, false, null));
-          }
-          return new X.ProcessRunner(command, args, cwd, env, null, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]), null, P.StreamController_StreamController(null, null, null, null, false, null), P.StreamController_StreamController(null, null, null, null, false, null));
+            args = [];
+            t1 = J.getInterceptor(shell);
+            if (!t1.$eq(shell, "csh") && !t1.$eq(shell, "tcsh"))
+              args.push("-l");
+            C.JSArray_methods.addAll$1(args, ["-c", command]);
+            return new X.ProcessRunner(shell, args, cwd, env, null, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]), null, P.StreamController_StreamController(null, null, null, null, false, null), P.StreamController_StreamController(null, null, null, null, false, null));
+          } else
+            return new X.ProcessRunner(command, args, cwd, env, null, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]), null, P.StreamController_StreamController(null, null, null, null, false, null), P.StreamController_StreamController(null, null, null, null, false, null));
         }
       }
     },
@@ -60298,6 +60315,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(code) {
         var t1 = this.$this;
+        $.$get$_logger5().fine$1("exit code: " + H.S(code) + " (" + H.S(t1.command) + ")");
         t1._exit = code;
         t1 = t1._exitCompleter;
         if (t1.future._state === 0)
@@ -67609,13 +67627,13 @@ self._domRemove = function(element) {
     }());
   }, "TypeErrorDecoder_undefinedLiteralPropertyPattern", "_logger3", "$get$_logger3", function() {
     return N.Logger_Logger("analysis-server");
-  }, "_logger3", "_logger5", "$get$_logger5", function() {
+  }, "_logger3", "_logger6", "$get$_logger6", function() {
     return N.Logger_Logger("analysis_server_lib");
-  }, "_logger5", "_logger12", "$get$_logger12", function() {
+  }, "_logger6", "_logger12", "$get$_logger12", function() {
     return N.Logger_Logger("atom.atom_package_deps");
-  }, "_logger12", "_logger8", "$get$_logger8", function() {
+  }, "_logger12", "_logger9", "$get$_logger9", function() {
     return N.Logger_Logger("atom_utils");
-  }, "_logger8", "_logger30", "$get$_logger30", function() {
+  }, "_logger9", "_logger30", "$get$_logger30", function() {
     return N.Logger_Logger("atom.autocomplete");
   }, "_logger30", "DartAutocompleteProvider__rightLabelMap", "$get$DartAutocompleteProvider__rightLabelMap", function() {
     return P.LinkedHashMap__makeLiteral([null, null, "FUNCTION_TYPE_ALIAS", "function type"]);
@@ -67673,9 +67691,9 @@ self._domRemove = function(element) {
     return P.JsObject_JsObject$fromBrowserObject(J.$index$asx($.$get$context(), "window"));
   }, "_browserWindow", "_browserJson", "$get$_browserJson", function() {
     return J.$index$asx($.$get$_browserWindow(), "JSON");
-  }, "_browserJson", "_logger7", "$get$_logger7", function() {
+  }, "_browserJson", "_logger8", "$get$_logger8", function() {
     return N.Logger_Logger("js");
-  }, "_logger7", "_rand", "$get$_rand", function() {
+  }, "_logger8", "_rand", "$get$_rand", function() {
     return P.Random_Random(null);
   }, "_rand", "_logger24", "$get$_logger24", function() {
     return N.Logger_Logger("atom.launch_configs");
@@ -67746,9 +67764,9 @@ self._domRemove = function(element) {
     return P.RegExp_RegExp("\\r\\n?|\\n", true, false);
   }, "_newlineRegExp", "ExtensionSet_commonMark", "$get$ExtensionSet_commonMark", function() {
     return new E.ExtensionSet([C.C_FencedCodeBlockSyntax], [new R.InlineHtmlSyntax(null, P.RegExp_RegExp("<[/!?]?[A-Za-z][A-Za-z0-9-]*(?: [^>]*)?>", true, true))]);
-  }, "ExtensionSet_commonMark", "_logger6", "$get$_logger6", function() {
+  }, "ExtensionSet_commonMark", "_logger7", "$get$_logger7", function() {
     return N.Logger_Logger("flutter_daemon");
-  }, "_logger6", "Haikunator_rndm", "$get$Haikunator_rndm", function() {
+  }, "_logger7", "Haikunator_rndm", "$get$Haikunator_rndm", function() {
     return P.Random_Random(null);
   }, "Haikunator_rndm", "Haikunator_ADJECTIVES", "$get$Haikunator_ADJECTIVES", function() {
     return ["autumn", "hidden", "bitter", "misty", "silent", "empty", "dry", "dark", "summer", "icy", "delicate", "quiet", "white", "cool", "spring", "winter", "patient", "twilight", "dawn", "crimson", "wispy", "weathered", "blue", "billowing", "broken", "cold", "damp", "falling", "frosty", "green", "long", "late", "lingering", "bold", "little", "morning", "muddy", "old", "red", "rough", "still", "small", "sparkling", "throbbing", "shy", "wandering", "withered", "wild", "black", "young", "holy", "solitary", "fragrant", "aged", "snowy", "proud", "floral", "restless", "divine", "polished", "ancient", "purple", "lively", "nameless", "lucky", "odd", "tiny", "free", "dry", "yellow", "orange", "gentle", "tight", "super", "royal", "broad", "steep", "flat", "square", "round", "mute", "noisy", "hushy", "raspy", "soft", "shrill", "rapid", "sweet", "curly", "calm", "jolly", "fancy", "plain", "shinny"];
@@ -67803,9 +67821,9 @@ self._domRemove = function(element) {
   }, "isWindows", "isMac", "$get$isMac", function() {
     var t1 = $.$get$process();
     return J.$eq$(t1.get$platform(t1), "darwin");
-  }, "isMac", "_logger9", "$get$_logger9", function() {
+  }, "isMac", "_logger5", "$get$_logger5", function() {
     return N.Logger_Logger("process");
-  }, "_logger9", "shell", "$get$shell", function() {
+  }, "_logger5", "shell", "$get$shell", function() {
     return new F.Shell(Y.require("shell"));
   }, "shell", "context0", "$get$context0", function() {
     return new F.Context($.$get$Style_platform(), null);
