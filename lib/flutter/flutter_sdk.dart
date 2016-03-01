@@ -12,6 +12,7 @@ import '../impl/debounce.dart';
 import '../jobs.dart';
 import '../process.dart';
 import '../utils.dart';
+import '../state.dart' show sdkManager;
 
 final String _prefKey = 'flutter.flutterRoot';
 
@@ -106,6 +107,14 @@ class FlutterSdkManager implements Disposable {
 
       if (verbose) {
         atom.notifications.addSuccess("Flutter SDK found at ${sdk.path}.");
+      }
+
+      if (!sdkManager.hasSdk) {
+        // Set up a Dart SDK.
+        String dartSdkPath = sdk.dartSdkPath;
+        if (dartSdkPath != null) {
+          sdkManager.setSdkPath(dartSdkPath);
+        }
       }
     }
   }

@@ -61,7 +61,9 @@ class SdkManager implements Disposable {
     String currentPath = atom.config.getValue(_prefPath);
 
     if (currentPath == null || currentPath.isEmpty) {
-      tryToAutoConfigure();
+      new Future.delayed(new Duration(seconds: 4), () {
+        if (!sdkManager.hasSdk) tryToAutoConfigure();
+      });
     } else {
       Sdk sdk = new Sdk.fromPath(currentPath);
       if (sdk != null && sdk.isValidSdk) _setSdk(sdk);
@@ -115,6 +117,10 @@ class SdkManager implements Disposable {
   }
 
   Stream<Sdk> get onSdkChange => _controller.stream;
+
+  void setSdkPath(String path) {
+    atom.config.setValue(_prefPath, path);
+  }
 
   void _setSdkPath(String path) {
     _setSdk(new Sdk.fromPath(path), verbose: true);

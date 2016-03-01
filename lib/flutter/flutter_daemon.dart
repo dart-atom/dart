@@ -64,7 +64,7 @@ class FlutterDaemonManager implements Disposable {
         .map((String str) => str.substring(1, str.length - 1));
 
       process.onExit.then((_) {
-        _daemon.dispose();
+        _daemon?.dispose();
         _daemon = null;
 
         _daemonController.add(daemon);
