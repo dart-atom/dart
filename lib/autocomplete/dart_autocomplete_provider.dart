@@ -166,20 +166,10 @@ class DartAutocompleteProvider extends AutocompleteProvider {
       }
     }
 
-    // Filter out completions where suggestion.toLowerCase != prefix.toLowerCase
-    String completionPrefix = prefix.toLowerCase();
-    if (completionPrefix.isNotEmpty && idRegex.hasMatch(completionPrefix[0])) {
-      /// Returns true if the suggestion [s] is incompatible with the prefix [p]
-      bool isIncompatible(String s, String pre) =>
-          s != null && !s.toLowerCase().startsWith(pre);
-
-      if (isIncompatible(text ?? snippet, completionPrefix)) return null;
-    }
-
     // Calculate the selectionOffset.
     int selectionOffset;
     if (cs.selectionOffset != cs.completion.length) {
-      selectionOffset = replacementOffset - completionPrefix.length + cs.selectionOffset;
+      selectionOffset = replacementOffset - prefix.length + cs.selectionOffset;
     }
 
     bool potential = cs.isPotential || cs.importUri != null;
