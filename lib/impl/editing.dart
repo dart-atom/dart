@@ -92,7 +92,7 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
   }
 
   if (trimmedText.startsWith('/*')) {
-    if(nextLine.startsWith('*')) {
+    if (nextLine.startsWith('*')) {
       editor.atomic(() {
         editor.insertNewline();
         editor.insertText(' * ');
