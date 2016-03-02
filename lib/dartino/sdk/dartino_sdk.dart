@@ -7,6 +7,16 @@ import '../../atom.dart';
 import 'sdk.dart';
 
 class DartinoSdk extends Sdk {
+  /// Return a new instance if an SDK could exist at the given [path]
+  /// or `null` if not. Clients should call [validate] on any returned sdk
+  /// to ensure that it is a valid SDK.
+  static DartinoSdk forPath(String path) {
+    var sdk = new DartinoSdk(path);
+    return sdk.existsSync('platforms/stm32f746g-discovery/bin/build.sh')
+        ? sdk
+        : null;
+  }
+
   /// Prompt the user for where to install a new SDK, then do it.
   static Future promptInstall([_]) async {
     //TODO(danrubel) add Windows support
@@ -41,6 +51,19 @@ class DartinoSdk extends Sdk {
     var runner = new ProcessRunner('rm', args: ['-r', (fs.dirname(tmpSdkDir))]);
     runner.execSimple();
   }
+
+  DartinoSdk(String sdkRoot) : super(sdkRoot);
+
+  @override
+  String packageRoot(projDir) {
+    if (projDir == null) return null;
+    String localSpecFile = fs.join(projDir, '.packages');
+    if (fs.existsSync(localSpecFile)) return localSpecFile;
+    return resolvePath('internal/dartino-sdk.packages');
+  }
+
+  @override
+  bool validate({bool quiet: false}) => true;
 }
 
 /// Start downloading the latest Dartino SDK and return a [Future]

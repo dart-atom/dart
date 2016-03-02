@@ -2,29 +2,57 @@ import 'package:atom/node/fs.dart';
 
 import '../atom.dart';
 import 'sdk/dartino_sdk.dart';
+import 'sdk/sdk.dart';
+import 'sdk/sod_repo.dart';
 
 const _pluginId = 'dartino';
 
 final _Dartino dartino = new _Dartino();
 
 class _Dartino {
-  String sdkPath() {
+  /// Return the SDK path specified in the settings or an empty string if none.
+  String get sdkPath {
     var sdkPath = atom.config.getValue('$_pluginId.dartinoPath');
-    return (sdkPath is String) ? sdkPath : '';
+    return (sdkPath is String) ? sdkPath.trim() : '';
   }
 
-  bool hasSdk() => sdkPath().isNotEmpty;
+  /// Return the SDK associated with the given project
+  /// where [projDir] can be either a [Directory] or a directory path.
+  /// If there is a problem, then notify the user and return `null`.
+  /// Set `quiet: true` to supress any user notifications.
+  Sdk sdkFor(projDir, {bool quiet: false}) {
+    //TODO(danrubel) cache SDK path in project metadata
+    String path = sdkPath;
+    if (path.isEmpty) {
+      if (!quiet) promptSetSdk('No SDK specified');
+      return null;
+    }
+    Sdk sdk = DartinoSdk.forPath(path);
+    if (sdk == null) sdk = SodRepo.forPath(path);
+    if (sdk == null) {
+      if (!quiet) promptSetSdk('Invalid SDK path specified');
+      return null;
+    }
+    return sdk.validate(quiet: quiet) ? sdk : null;
+  }
 
-  bool isProject(projDir) =>
-      hasSdk() && fs.existsSync(fs.join(projDir, 'dartino.yaml'));
+  bool isProject(projDir) => fs.existsSync(fs.join(projDir, 'dartino.yaml'));
 
-  /// If the project does *not* contain a .packages file
-  /// then return the SDK defined package spec file
-  /// so that it can be passed to the analysis server for this project
-  /// otherwise return `null`.
-  String packageRoot(projDir) {
-    if (fs.existsSync(fs.join(projDir, '.packages'))) return null;
-    return fs.join(sdkPath(), 'internal', 'dartino-sdk.packages');
+  /// Open the Dartino settings page
+  void openSettings([_]) {
+    atom.workspace.open('atom://config/packages/dartino');
+  }
+
+  /// Prompt the user to change the SDK setting or install a new SDK
+  promptSetSdk(String message, {String detail}) {
+    atom.notifications.addError(message,
+        detail: '${detail != null ? "$detail\n \n" : ""}'
+            'Click install to install a new SDK or open the settings\n'
+            'to specify the path to an already existing installation.',
+        buttons: [
+          new NotificationButton('Install', promptInstallSdk),
+          new NotificationButton('Open settings', openSettings)
+        ]);
   }
 
   /// Prompt the user which SDK and where to install, then do it.
@@ -35,5 +63,15 @@ class _Dartino {
     //   new NotificationButton('SOD', SodRepo.promptInstall)
     // ]);
     DartinoSdk.promptInstall();
+  }
+
+  /// Validate the installed SDK if there is one.
+  void validateSdk([_]) {
+    if (sdkPath.isNotEmpty) {
+      var sdk = sdkFor(null);
+      if (sdk != null && sdk.validate()) {
+        atom.notifications.addSuccess('Valid SDK detected', detail: sdkPath);
+      }
+    }
   }
 }
