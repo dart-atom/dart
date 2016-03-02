@@ -18,7 +18,7 @@ abstract class Sdk {
       String sdkName, String relPosixPath) async {
     var relPath = relPosixPath.replaceAll('/', fs.separator);
     String path = await promptUser('Enter $sdkName installation path',
-        defaultText: fs.join(homedir(), relPath), selectLastWord: true);
+        defaultText: fs.join(fs.homedir, relPath), selectLastWord: true);
     if (path == null) return null;
     path = path.trim();
     if (path.isEmpty) return null;

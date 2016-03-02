@@ -1163,7 +1163,7 @@ class _VmSourceCache {
 
   Map<String, String> _pathMappings = {};
 
-  _VmSourceCache() : cacheDir = fs.join(tmpdir(), 'vm_cache');
+  _VmSourceCache() : cacheDir = fs.join(fs.tmpdir, 'vm_cache');
 
   _VmSourceCache.withDir(this.cacheDir);
 

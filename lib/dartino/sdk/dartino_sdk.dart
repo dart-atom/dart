@@ -53,7 +53,7 @@ Future<String> _downloadSdkZip() async {
   //TODO(danrubel) extract this into a reusable class for use by Flutter
 
   // Download the zip file
-  var dirPath = fs.join(tmpdir(), 'dartino-download');
+  var dirPath = fs.join(fs.tmpdir, 'dartino-download');
   var dir = new Directory.fromPath(dirPath);
   if (!dir.existsSync()) await dir.create();
   var zipPath = fs.join(dirPath, zipName);

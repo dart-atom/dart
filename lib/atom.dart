@@ -1217,9 +1217,3 @@ JsObject _cvt(JsObject object) {
   // JS interop.
   return new JsObject.fromBrowserObject(object);
 }
-
-/// Returns the operating system's default directory for temp files.
-String tmpdir() => _os.callMethod('tmpdir');
-
-// TODO(devoncarew): [homedir] can throw (or isn't available?) on some platforms.
-String homedir() => _os.callMethod('homedir');

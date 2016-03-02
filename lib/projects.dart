@@ -524,7 +524,7 @@ bool _isDartBuildFile(File file) {
 /// Return whether the given directory cooresponds to the user's home directory.
 bool _isHomeDir(Directory dir) {
   try {
-    return homedir() == dir.path;
+    return fs.homedir == dir.path;
   } catch (_) {
     return false;
   }

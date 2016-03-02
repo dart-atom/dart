@@ -229,7 +229,7 @@ class Launch implements Disposable {
 
   String get locationLabel {
     if (cwd == null) return null;
-    String home = homedir();
+    String home = fs.homedir;
     if (cwd.startsWith(home)) {
       return '~${cwd.substring(home.length)}';
     } else {

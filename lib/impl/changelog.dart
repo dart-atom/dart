@@ -40,7 +40,7 @@ class ChangelogManager implements Disposable {
       f = HttpRequest
           .getString('atom://dartlang/CHANGELOG.md')
           .then((contents) {
-        Directory dir = new Directory.fromPath(tmpdir());
+        Directory dir = new Directory.fromPath(fs.tmpdir);
         _changeLogFile = dir.getFile('CHANGELOG.md');
         _changeLogFile.writeSync(contents);
         return _changeLogFile;
