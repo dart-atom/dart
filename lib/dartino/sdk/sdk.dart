@@ -9,6 +9,34 @@ import '../../atom_utils.dart';
 /// Clients should call <classname>.forPath to instantiate a new SDK
 /// then further call [validate] to verify that the SDK is valid.
 abstract class Sdk {
+  /// The root path of the sdk
+  final String sdkRoot;
+
+  Sdk(this.sdkRoot);
+
+  /// Return `true` if the specified file exists in the SDK
+  bool existsSync(String relativePosixPath) {
+    var path = resolvePath(relativePosixPath);
+    return path != null && fs.existsSync(path);
+  }
+
+  /// Return a path to the `.packages` file used to analyze the specified
+  /// project or `null` if none,
+  /// where [projDir] may be a [Directory] or a directory path.
+  String packageRoot(projDir);
+
+  /// Return the absolute OS specific path for the file or directory specified by
+  /// [relativePosixPath] in the SDK, or `null` if there is a problem.
+  String resolvePath(String relativePosixPath) {
+    if (sdkRoot == null || sdkRoot.trim().isEmpty) return null;
+    return fs.join(sdkRoot, relativePosixPath.replaceAll('/', fs.separator));
+  }
+
+  /// Return `true` if this is a valid SDK installation,
+  /// otherwise notify the user of the problem and return `false`.
+  /// Set `quiet: true` to supress any user notifications.
+  bool validate({bool quiet: false});
+
   /// Prompt the user for and return a location to install the SDK.
   /// The default text will be the user's home directory plus [relPosixPath]
   /// where [relPosixPath] is translated into an OS specific path.

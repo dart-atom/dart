@@ -152,7 +152,7 @@ class AnalysisServer implements Disposable {
       var pkgRoots = <String, String>{};
       for (String root in roots) {
         if (dartino.isProject(root)) {
-          String pkgRoot = dartino.packageRoot(root);
+          String pkgRoot = dartino.sdkFor(root, quiet: true)?.packageRoot(root);
           if (pkgRoot != null) pkgRoots[root] = pkgRoot;
         }
       }
