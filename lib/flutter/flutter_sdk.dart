@@ -41,7 +41,6 @@ class FlutterSdkManager implements Disposable {
 
     // Listen to changes to the sdk pref setting; debounce the changes.
     _prefSub = atom.config.onDidChange(_prefKey)
-      .skip(1)
       .transform(new Debounce(new Duration(seconds: 1)))
       .listen((value) => _setSdkPath(value));
 
@@ -100,7 +99,6 @@ class FlutterSdkManager implements Disposable {
     if (sdk == _sdk) return;
 
     _sdk = sdk;
-    _controller.add(_sdk);
 
     if (_sdk != null) {
       _logger.info('Using Flutter SDK at ${_sdk.path}.');
@@ -117,6 +115,8 @@ class FlutterSdkManager implements Disposable {
         }
       }
     }
+
+    _controller.add(_sdk);
   }
 
   void dispose() {

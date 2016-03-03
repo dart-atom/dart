@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:html' as html;
 import 'dart:js';
 
-import 'package:atom_dartlang/analysis_server.dart';
-import 'package:atom_dartlang/elements.dart';
-import 'package:atom_dartlang/state.dart';
 import 'package:logging/logging.dart';
 
+import '../analysis_server.dart';
 import '../atom.dart';
+import '../elements.dart';
 import '../projects.dart';
+import '../state.dart';
 import '../utils.dart';
 
 final Logger _logger = new Logger('atom.tooltip');
