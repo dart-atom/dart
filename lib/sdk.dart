@@ -116,7 +116,7 @@ class SdkManager implements Disposable {
     _setSdk(new Sdk.fromPath(path), verbose: true);
   }
 
-  void _setSdk(Sdk sdk, {bool verbose: false}) {
+  Future _setSdk(Sdk sdk, {bool verbose: false}) async {
     if (sdk != null && sdk.isNotValidSdk) {
       String path = sdk.directory.path;
 
@@ -135,18 +135,23 @@ class SdkManager implements Disposable {
     if (sdk == _sdk) return;
 
     _sdk = sdk;
-    _controller.add(_sdk);
 
     if (_sdk != null) {
-      _sdk.getVersion().then((String version) {
-        if (verbose) {
-          atom.notifications.addSuccess(
-              "Dart SDK found at ${sdk.directory.path}. Version ${version}.");
-        }
+      String version = await _sdk.getVersion();
+      _logger.info('version ${version} (${_sdk.path})');
 
-        _logger.info('version ${version} (${_sdk.path})');
-        _verifyMinVersion(_sdk, version);
-      });
+      if (verbose) {
+        atom.notifications.addSuccess(
+          "Found Dart SDK version ${version}.",
+          detail: sdk.directory.path
+        );
+      }
+
+      _verifyMinVersion(_sdk, version);
+
+      _controller.add(_sdk);
+    } else {
+      _controller.add(_sdk);
     }
   }
 

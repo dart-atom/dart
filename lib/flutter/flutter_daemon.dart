@@ -5,6 +5,7 @@ import 'dart:convert' show JSON, JsonCodec, LineSplitter;
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
+import '../atom.dart';
 import '../state.dart';
 import '../utils.dart';
 import 'flutter_sdk.dart';
@@ -13,6 +14,7 @@ final Logger _logger = new Logger('flutter_daemon');
 
 class FlutterDaemonManager implements Disposable {
   FlutterDaemon _daemon;
+  Disposables _disposables = new Disposables();
   StreamSubscription _sub;
 
   StreamController<FlutterDaemon> _daemonController = new StreamController.broadcast();
@@ -21,8 +23,11 @@ class FlutterDaemonManager implements Disposable {
   StreamController<Device> _deviceRemovedController = new StreamController.broadcast();
 
   FlutterDaemonManager() {
-    _initSdk(_sdkManager.sdk);
-    _sub = _sdkManager.onSdkChange.listen(_initSdk);
+    _initFromSdk(_sdkManager.sdk, quiet: true);
+    _sub = _sdkManager.onSdkChange.listen(_initFromSdk);
+    _disposables.add(atom.commands.add('atom-workspace', 'flutter:restart-daemon', (_) {
+      _restartDaemon();
+    }));
   }
 
   FlutterDaemon get daemon => _daemon;
@@ -39,95 +44,117 @@ class FlutterDaemonManager implements Disposable {
 
   FlutterSdkManager get _sdkManager => deps[FlutterSdkManager];
 
-  void _initSdk(FlutterSdk sdk) {
+  void _initFromSdk(FlutterSdk sdk, {bool quiet: false}) {
     if (sdk == null) {
-      if (_daemon != null) {
-        _logger.info('Stopping Flutter daemon server');
-        _daemon.dispose();
-        _daemon = null;
-
-        _daemonController.add(daemon);
-      }
+      _killFlutterDaemon(quiet: quiet);
     } else if (_daemon == null) {
-      FlutterTool flutter = sdk.flutterTool;
-
-      _logger.info('Starting Flutter daemon server');
-      ProcessRunner process = flutter.runRaw(['daemon'], startProcess: true);
-
-      var writeMessage = (String str) {
-        process.write('[${str}]\n');
-      };
-
-      Stream<String> stream = process.onStdout
-        .transform(const LineSplitter())
-        .where((String str) => str.startsWith('[') && str.endsWith(']'))
-        .map((String str) => str.substring(1, str.length - 1));
-
-      process.onExit.then((_) {
-        _daemon?.dispose();
-        _daemon = null;
-
-        _daemonController.add(daemon);
-      });
-
-      _daemon = new FlutterDaemon(
-        stream,
-        writeMessage,
-        otherDisposeable: new _ProcessDisposable(process)
-      );
-
-      _daemon.daemon.onLogMessage.listen((LogMessage message) {
-        switch (message.level) {
-          case 'error':
-            if (message.stackTrace != null) {
-              _logger.severe(message.message, null, new StackTrace.fromString(message.stackTrace));
-            } else {
-              _logger.severe(message.message);
-            }
-            break;
-          case 'status':
-            _logger.info(message.message);
-            break;
-          default:
-            // 'trace'
-            _logger.finer(message.message);
-            break;
-        }
-      });
-
-      _daemon.device.onDeviceAdded.listen((Device device) {
-        _deviceAddedController.add(device);
-      });
-      _daemon.device.onDeviceChanged.listen((Device device) {
-        _deviceChangedController.add(device);
-      });
-      _daemon.device.onDeviceRemoved.listen((Device device) {
-        _deviceRemovedController.add(device);
-      });
-
-      // TODO(devoncarew): We need to enable and disable device polling as Atom
-      // moves to the foreground and background.
-      _daemon.device.enable().catchError((e) {
-        // Ignore this error - older clients don't understand this call.
-      });
-
-      _daemon.onSend.listen((String message) {
-        if (_logger.isLoggable(Level.FINER)) {
-          _logger.finer('--> ${message}');
-        }
-      });
-
-      _daemon.onReceive.listen((String message) {
-        if (_logger.isLoggable(Level.FINER)) {
-          _logger.finer('<-- ${message}');
-        }
-      });
-
-      _daemonController.add(daemon);
+      _startFlutterDaemon(quiet: quiet);
     }
   }
 
+  void _restartDaemon() {
+    if (!_sdkManager.hasSdk) {
+      atom.notifications.addWarning('No Flutter SDK configured.');
+    } else {
+      _killFlutterDaemon();
+      _startFlutterDaemon();
+    }
+  }
+
+  void _killFlutterDaemon({bool quiet: false}) {
+    if (_daemon == null) return;
+
+    if (!quiet) atom.notifications.addInfo('Flutter Daemon shutting down.');
+    _logger.info('Stopping Flutter daemon server');
+
+    _daemon.dispose();
+    _daemon = null;
+    _daemonController.add(daemon);
+  }
+
+  void _startFlutterDaemon({bool quiet: false}) {
+    if (_sdkManager.sdk == null || _daemon != null) return;
+
+    if (!quiet) atom.notifications.addSuccess('Flutter Daemon starting up.');
+    _logger.info('Starting Flutter daemon server');
+
+    FlutterTool flutter = _sdkManager.sdk.flutterTool;
+    ProcessRunner process = flutter.runRaw(['daemon'], startProcess: true);
+
+    var writeMessage = (String str) {
+      process.write('[${str}]\n');
+    };
+
+    Stream<String> stream = process.onStdout
+      .transform(const LineSplitter())
+      .where((String str) => str.startsWith('[') && str.endsWith(']'))
+      .map((String str) => str.substring(1, str.length - 1));
+
+    process.onExit.then((_) {
+      _daemon?.dispose();
+      _daemon = null;
+
+      _daemonController.add(daemon);
+    });
+
+    _daemon = new FlutterDaemon(
+      stream,
+      writeMessage,
+      otherDisposeable: new _ProcessDisposable(process)
+    );
+
+    _daemon.daemon.onLogMessage.listen((LogMessage message) {
+      switch (message.level) {
+        case 'error':
+          if (message.stackTrace != null) {
+            _logger.severe(message.message, null, new StackTrace.fromString(message.stackTrace));
+          } else {
+            _logger.severe(message.message);
+          }
+          break;
+        case 'status':
+          _logger.info(message.message);
+          break;
+        default:
+          // 'trace'
+          _logger.finer(message.message);
+          break;
+      }
+    });
+
+    _daemon.device.onDeviceAdded.listen((Device device) {
+      _deviceAddedController.add(device);
+    });
+    _daemon.device.onDeviceChanged.listen((Device device) {
+      _deviceChangedController.add(device);
+    });
+    _daemon.device.onDeviceRemoved.listen((Device device) {
+      _deviceRemovedController.add(device);
+    });
+
+    // TODO(devoncarew): We need to enable and disable device polling as Atom
+    // moves to the foreground and background.
+    _daemon.device.enable().catchError((e) {
+      // Ignore this error - older clients don't understand this call.
+    });
+
+    _daemon.onSend.listen((String message) {
+      if (_logger.isLoggable(Level.FINER)) {
+        _logger.finer('--> ${message}');
+      }
+    });
+
+    _daemon.onReceive.listen((String message) {
+      if (_logger.isLoggable(Level.FINER)) {
+        _logger.finer('<-- ${message}');
+      }
+    });
+
+    _daemonController.add(daemon);
+  }
+
   void dispose() {
+    _disposables.dispose();
     _daemon?.dispose();
     _sub?.cancel();
   }
