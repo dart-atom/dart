@@ -56,7 +56,8 @@ class FlutterDaemonManager implements Disposable {
     if (!_sdkManager.hasSdk) {
       atom.notifications.addWarning('No Flutter SDK configured.');
     } else {
-      _bounce();
+      _killFlutterDaemon();
+      _startFlutterDaemon();
     }
   }
 
@@ -150,11 +151,6 @@ class FlutterDaemonManager implements Disposable {
     });
 
     _daemonController.add(daemon);
-  }
-
-  void _bounce() {
-    _killFlutterDaemon();
-    _startFlutterDaemon();
   }
 
   void dispose() {
