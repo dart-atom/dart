@@ -230,11 +230,6 @@ atom-notification.icon-running::before {
   height: 16px;
   content: "\f087";
   -webkit-font-smoothing: antialiased;
-
-  // -webkit-animation-name: spin;
-  // -webkit-animation-duration: 4000ms;
-  // -webkit-animation-iteration-count: infinite;
-  // -webkit-animation-timing-function: linear;
 }
 
 atom-notification {
@@ -248,11 +243,6 @@ atom-notification.dartlang {
     max-height: 150px;
   }
 }
-
-// @keyframes spin {
-//   from {transform:rotate(0deg);}
-//   to {transform:rotate(360deg);}
-// }
 
 .under-construction {
   font-size: 16px;
@@ -305,7 +295,8 @@ div.dartlang-toolbar {
   button + select,
   select + button,
   select + div,
-  div + select {
+  div + select,
+  div + div {
     margin-left: 4px;
   }
 }
