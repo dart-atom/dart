@@ -88,9 +88,16 @@ class DartToolbarContribution implements Disposable {
     // `settings-view` class added to get proper styling for select elements.
     CoreElement e = div(c: 'settings-view', a: 'flex-center')..add([
       div(c: 'btn-group btn-group dartlang-toolbar')..add([
-        outlineToggleDiv = button(c: 'btn icon icon-list-unordered')
-          ..click(_toggleOutline)
-          ..tooltip = "Toggle Dart Outline View"
+        div()..add([
+          outlineToggleDiv = button(c: 'btn icon icon-list-unordered')
+            ..click(_toggleOutline)
+            ..tooltip = "Toggle Dart Outline View"
+        ]),
+        div()..add([
+          button(c: 'btn icon icon-settings')
+            ..click(_openSettings)
+            ..tooltip = "Open Atom Settings"
+        ])
       ])
     ]);
 
@@ -216,6 +223,10 @@ class DartToolbarContribution implements Disposable {
   void _toggleOutline() {
     final String keyPath = '${pluginId}.showOutlineView';
     atom.config.setValue(keyPath, !atom.config.getBoolValue(keyPath));
+  }
+
+  void _openSettings() {
+    atom.workspace.open('atom://config');
   }
 
   void dispose() {
