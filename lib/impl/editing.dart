@@ -89,7 +89,7 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
   }
 
   if (trimmedText.startsWith('//')) {
-    if(!atEol || trimmedText.endsWith(',')) {
+    if (!atEol || trimmedText.endsWith(',')) {
       editor.atomic(() {
         editor.insertNewline();
         editor.insertText('// ');
