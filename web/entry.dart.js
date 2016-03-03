@@ -29295,7 +29295,7 @@ self._domRemove = function(element) {
                   break;
                 } else
                   ;
-                noCompletions = P.LinkedHashSet_LinkedHashSet$from(C.List_chs, null);
+                noCompletions = P.LinkedHashSet_LinkedHashSet$from(C.List_8Jr, null);
                 t1 = J.getInterceptor$n(offset);
                 if (t1.$gt(offset, 0))
                   if (noCompletions.contains$1(0, J.$index$asx(text, t1.$sub(offset, 1)))) {
@@ -65078,16 +65078,23 @@ self._domRemove = function(element) {
         return e;
       },
       _buildRightTile$0: function() {
-        var t1, e, t2, outlineToggleDiv;
+        var t1, e, t2, t3, outlineToggleDiv, t4, t5;
         t1 = {};
         t1.outlineToggleDiv = null;
         e = K.CoreElement$("div", "flex-center", "settings-view", null);
         t2 = K.CoreElement$("div", null, "btn-group btn-group dartlang-toolbar", null);
+        t3 = K.CoreElement$("div", null, null, null);
         outlineToggleDiv = K.CoreElement$("button", null, "btn icon icon-list-unordered", null);
         outlineToggleDiv.click$1(0, this.get$_toggleOutline());
         J.set$title$x(outlineToggleDiv.element, "Toggle Dart Outline View");
         t1.outlineToggleDiv = outlineToggleDiv;
-        t2.add$1(0, [outlineToggleDiv]);
+        t3.add$1(0, [outlineToggleDiv]);
+        t4 = K.CoreElement$("div", null, null, null);
+        t5 = K.CoreElement$("button", null, "btn icon icon-settings", null);
+        t5.click$1(0, this.get$_openSettings());
+        J.set$title$x(t5.element, "Open Atom Settings");
+        t4.add$1(0, [t5]);
+        t2.add$1(0, [t3, t4]);
         e.add$1(0, [t2]);
         t1 = new U.DartToolbarContribution__buildRightTile_updateToolbar(t1);
         t1.call$0();
@@ -65146,6 +65153,9 @@ self._domRemove = function(element) {
         var t1 = $.$get$atom()._config;
         t1.invoke$3("set", "dartlang.showOutlineView", !J.$eq$(t1.getValue$2$scope("dartlang.showOutlineView", null), true));
       }, "call$0", "get$_toggleOutline", 0, 0, 2],
+      _openSettings$0: [function() {
+        $.$get$atom()._workspace.open$1(0, "atom://config");
+      }, "call$0", "get$_openSettings", 0, 0, 2],
       dispose$0: [function() {
         this.leftTile.invoke$1("destroy");
         this.flutterTile.invoke$1("destroy");
@@ -68145,6 +68155,7 @@ self._domRemove = function(element) {
   C.List_2Vk = Isolate.makeConstantList([0, 0, 32776, 33792, 1, 10240, 0, 0]);
   C.List_2Zi = H.setRuntimeTypeInfo(Isolate.makeConstantList(["*::class", "*::dir", "*::draggable", "*::hidden", "*::id", "*::inert", "*::itemprop", "*::itemref", "*::itemscope", "*::lang", "*::spellcheck", "*::title", "*::translate", "A::accesskey", "A::coords", "A::hreflang", "A::name", "A::shape", "A::tabindex", "A::target", "A::type", "AREA::accesskey", "AREA::alt", "AREA::coords", "AREA::nohref", "AREA::shape", "AREA::tabindex", "AREA::target", "AUDIO::controls", "AUDIO::loop", "AUDIO::mediagroup", "AUDIO::muted", "AUDIO::preload", "BDO::dir", "BODY::alink", "BODY::bgcolor", "BODY::link", "BODY::text", "BODY::vlink", "BR::clear", "BUTTON::accesskey", "BUTTON::disabled", "BUTTON::name", "BUTTON::tabindex", "BUTTON::type", "BUTTON::value", "CANVAS::height", "CANVAS::width", "CAPTION::align", "COL::align", "COL::char", "COL::charoff", "COL::span", "COL::valign", "COL::width", "COLGROUP::align", "COLGROUP::char", "COLGROUP::charoff", "COLGROUP::span", "COLGROUP::valign", "COLGROUP::width", "COMMAND::checked", "COMMAND::command", "COMMAND::disabled", "COMMAND::label", "COMMAND::radiogroup", "COMMAND::type", "DATA::value", "DEL::datetime", "DETAILS::open", "DIR::compact", "DIV::align", "DL::compact", "FIELDSET::disabled", "FONT::color", "FONT::face", "FONT::size", "FORM::accept", "FORM::autocomplete", "FORM::enctype", "FORM::method", "FORM::name", "FORM::novalidate", "FORM::target", "FRAME::name", "H1::align", "H2::align", "H3::align", "H4::align", "H5::align", "H6::align", "HR::align", "HR::noshade", "HR::size", "HR::width", "HTML::version", "IFRAME::align", "IFRAME::frameborder", "IFRAME::height", "IFRAME::marginheight", "IFRAME::marginwidth", "IFRAME::width", "IMG::align", "IMG::alt", "IMG::border", "IMG::height", "IMG::hspace", "IMG::ismap", "IMG::name", "IMG::usemap", "IMG::vspace", "IMG::width", "INPUT::accept", "INPUT::accesskey", "INPUT::align", "INPUT::alt", "INPUT::autocomplete", "INPUT::autofocus", "INPUT::checked", "INPUT::disabled", "INPUT::inputmode", "INPUT::ismap", "INPUT::list", "INPUT::max", "INPUT::maxlength", "INPUT::min", "INPUT::multiple", "INPUT::name", "INPUT::placeholder", "INPUT::readonly", "INPUT::required", "INPUT::size", "INPUT::step", "INPUT::tabindex", "INPUT::type", "INPUT::usemap", "INPUT::value", "INS::datetime", "KEYGEN::disabled", "KEYGEN::keytype", "KEYGEN::name", "LABEL::accesskey", "LABEL::for", "LEGEND::accesskey", "LEGEND::align", "LI::type", "LI::value", "LINK::sizes", "MAP::name", "MENU::compact", "MENU::label", "MENU::type", "METER::high", "METER::low", "METER::max", "METER::min", "METER::value", "OBJECT::typemustmatch", "OL::compact", "OL::reversed", "OL::start", "OL::type", "OPTGROUP::disabled", "OPTGROUP::label", "OPTION::disabled", "OPTION::label", "OPTION::selected", "OPTION::value", "OUTPUT::for", "OUTPUT::name", "P::align", "PRE::width", "PROGRESS::max", "PROGRESS::min", "PROGRESS::value", "SELECT::autocomplete", "SELECT::disabled", "SELECT::multiple", "SELECT::name", "SELECT::required", "SELECT::size", "SELECT::tabindex", "SOURCE::type", "TABLE::align", "TABLE::bgcolor", "TABLE::border", "TABLE::cellpadding", "TABLE::cellspacing", "TABLE::frame", "TABLE::rules", "TABLE::summary", "TABLE::width", "TBODY::align", "TBODY::char", "TBODY::charoff", "TBODY::valign", "TD::abbr", "TD::align", "TD::axis", "TD::bgcolor", "TD::char", "TD::charoff", "TD::colspan", "TD::headers", "TD::height", "TD::nowrap", "TD::rowspan", "TD::scope", "TD::valign", "TD::width", "TEXTAREA::accesskey", "TEXTAREA::autocomplete", "TEXTAREA::cols", "TEXTAREA::disabled", "TEXTAREA::inputmode", "TEXTAREA::name", "TEXTAREA::placeholder", "TEXTAREA::readonly", "TEXTAREA::required", "TEXTAREA::rows", "TEXTAREA::tabindex", "TEXTAREA::wrap", "TFOOT::align", "TFOOT::char", "TFOOT::charoff", "TFOOT::valign", "TH::abbr", "TH::align", "TH::axis", "TH::bgcolor", "TH::char", "TH::charoff", "TH::colspan", "TH::headers", "TH::height", "TH::nowrap", "TH::rowspan", "TH::scope", "TH::valign", "TH::width", "THEAD::align", "THEAD::char", "THEAD::charoff", "THEAD::valign", "TR::align", "TR::bgcolor", "TR::char", "TR::charoff", "TR::valign", "TRACK::default", "TRACK::kind", "TRACK::label", "TRACK::srclang", "UL::compact", "UL::type", "VIDEO::controls", "VIDEO::height", "VIDEO::loop", "VIDEO::mediagroup", "VIDEO::muted", "VIDEO::preload", "VIDEO::width"]), [P.String]);
   C.List_4QF = Isolate.makeConstantList(["file:///", "file:/"]);
+  C.List_8Jr = Isolate.makeConstantList([";", "{", "}", "]", ")", ","]);
   C.List_CVk = Isolate.makeConstantList([0, 0, 65490, 45055, 65535, 34815, 65534, 18431]);
   C.C_EmptyBlockSyntax = new U.EmptyBlockSyntax();
   C.C_BlockHtmlSyntax = new U.BlockHtmlSyntax();
@@ -68166,7 +68177,6 @@ self._domRemove = function(element) {
   C.List_O1R = Isolate.makeConstantList([C.Level_ALL_0, C.Level_FINEST_300, C.Level_FINER_400, C.Level_FINE_500, C.Level_CONFIG_700, C.Level_INFO_800, C.Level_WARNING_900, C.Level_SEVERE_1000, C.Level_SHOUT_1200, C.Level_OFF_2000]);
   C.List_WnV = Isolate.makeConstantList(["/", "\\"]);
   C.List_cSk = Isolate.makeConstantList(["/"]);
-  C.List_chs = Isolate.makeConstantList([";", "{", "}", "]", ","]);
   C.List_ego = Isolate.makeConstantList(["HEAD", "AREA", "BASE", "BASEFONT", "BR", "COL", "COLGROUP", "EMBED", "FRAME", "FRAMESET", "HR", "IMAGE", "IMG", "INPUT", "ISINDEX", "LINK", "META", "PARAM", "SOURCE", "STYLE", "TITLE", "WBR"]);
   C.List_empty0 = H.setRuntimeTypeInfo(Isolate.makeConstantList([]), [P.String]);
   C.List_empty = Isolate.makeConstantList([]);
