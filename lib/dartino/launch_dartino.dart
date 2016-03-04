@@ -4,10 +4,11 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../launch/launch.dart';
 import '../projects.dart';
 import '../state.dart';
+import 'dartino_util.dart';
+import 'sdk/sdk.dart';
 
 final Logger _logger = new Logger('atom.dartino_launch');
 
@@ -57,21 +58,20 @@ class DartinoLaunchType extends LaunchType {
       throw "File not in a Dartino project.";
     }
 
-    // Sdk sdk = dartino.sdkFor(project.directory);
-    // if (sdk == null) {
-    //   throw 'No SDK found for $project';
-    // }
+    Sdk sdk = dartino.sdkFor(project.directory);
+    if (sdk == null) {
+      throw 'No SDK found for $project';
+    }
 
     await _killLastLaunch();
     _lastLaunch = new DartinoLaunch(manager, this, configuration);
     manager.addLaunch(_lastLaunch);
-    // TODO (danrubel) to be implemented
-    // sdk.launch(_lastLaunch);
-    atom.notifications.addError('Not implemented yet');
+    sdk.launch(_lastLaunch);
     return _lastLaunch;
   }
 
   String getDefaultConfigText() {
+    //TODO(danrubel) add options for args, etc
     return '';
   }
 
@@ -105,17 +105,35 @@ class DartinoLaunch extends Launch {
   /// that completes with the external process's exit code.
   /// All output from the external process is piped to the console.
   /// The external process can be stopped by calling [kill].
+  /// If this is not the last time [run] will be called for this launch
+  /// (e.g. a compile before the launch) then set [isLast] `false`.
   Future<int> run(String command,
-      {List args, String cwd, String message, bool subtle: false}) async {
+      {List args,
+      String cwd,
+      String message,
+      bool isLast: true,
+      bool subtle: false,
+      onStdout}) async {
     if (message != null) pipeStdio('$message\n');
+    if (cwd != null) pipeStdio('\$ cd $cwd\n', highlight: true);
+    pipeStdio('\$ $command ${args.join(' ')}\n', highlight: true);
     runner = new ProcessRunner(command, args: args, cwd: cwd);
-    runner.onStdout.listen((str) {
-      str = str.replaceAll('Download', '\nDownload');
-      pipeStdio(str, subtle: subtle);
-    });
+    runner.onStdout.listen(onStdout ?? (str) => pipeStdio(str, subtle: subtle));
     runner.onStderr.listen((str) => pipeStdio('\n$str\n', error: true));
-    var exitCode = await runner.execStreaming();
+    var result;
+    try {
+      _logger.fine('launch: $command $args');
+      result = await runner.execStreaming();
+      _logger.fine('external process exited: $result');
+    } catch (e, s) {
+      _logger.info('external process exception', e, s);
+      result = 183;
+    }
     runner = null;
-    return exitCode;
+    if (result != 0) {
+      pipeStdio('Process terminated with exitCode: $result\n', error: true);
+    }
+    if (result != 0 || isLast) exitCode.value = result;
+    return result;
   }
 }

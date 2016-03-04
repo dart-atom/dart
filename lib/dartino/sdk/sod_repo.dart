@@ -4,6 +4,7 @@ import 'package:atom/node/fs.dart';
 
 import '../../atom.dart';
 import '../dartino_util.dart';
+import '../launch_dartino.dart';
 import 'sdk.dart';
 
 /// The SOD repository as an SDK
@@ -24,6 +25,11 @@ class SodRepo extends Sdk {
   }
 
   SodRepo(String sdkRoot) : super(sdkRoot);
+
+  @override
+  Future launch(DartinoLaunch launch) async {
+    atom.notifications.addError('Not implemented yet');
+  }
 
   @override
   String packageRoot(projDir) {

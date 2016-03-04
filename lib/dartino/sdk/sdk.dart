@@ -4,6 +4,7 @@ import 'package:atom/node/fs.dart';
 
 import '../../atom.dart';
 import '../../atom_utils.dart';
+import '../launch_dartino.dart';
 
 /// Abstract SDK implementation shared by Dartino and SOD.
 /// Clients should call <classname>.forPath to instantiate a new SDK
@@ -24,6 +25,10 @@ abstract class Sdk {
   /// project or `null` if none,
   /// where [projDir] may be a [Directory] or a directory path.
   String packageRoot(projDir);
+
+  /// Compile, deploy, and launch the specified application.
+  /// Return a [Future] that completes when the application has been launched.
+  Future launch(DartinoLaunch launch);
 
   /// Return the absolute OS specific path for the file or directory specified by
   /// [relativePosixPath] in the SDK, or `null` if there is a problem.
