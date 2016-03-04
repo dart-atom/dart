@@ -59,6 +59,8 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
     String temp = trimmedText.substring(3).trimLeft();
     leading = trimmedText.substring(3, trimmedText.length - temp.length);
     inComment = (line.length - trimmedText.length + 2) <= col;
+  } else if (trimmedText.startsWith('//')) {
+    inComment = (line.length - trimmedText.length + 1) <= col;
   } else if (trimmedText.startsWith('*')) {
     String temp = trimmedText.substring(1).trimLeft();
     leading = trimmedText.substring(1, trimmedText.length - temp.length);
@@ -89,6 +91,19 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
       });
     }
     return true;
+  }
+
+  if (trimmedText.startsWith('//')) {
+    if (!atEol || trimmedText.endsWith(',')) {
+      editor.atomic(() {
+        editor.insertNewline();
+        editor.insertText('// ');
+      });
+
+      return true;
+    }
+
+    return false;
   }
 
   if (trimmedText.startsWith('/*')) {
