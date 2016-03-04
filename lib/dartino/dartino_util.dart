@@ -10,10 +10,20 @@ const _pluginId = 'dartino';
 final _Dartino dartino = new _Dartino();
 
 class _Dartino {
+  /// Return the device path specified in the settings or an empty string if none.
+  String get devicePath {
+    var path = atom.config.getValue('$_pluginId.devicePath');
+    return (path is String) ? path.trim() : '';
+  }
+
   /// Return the SDK path specified in the settings or an empty string if none.
   String get sdkPath {
-    var sdkPath = atom.config.getValue('$_pluginId.dartinoPath');
-    return (sdkPath is String) ? sdkPath.trim() : '';
+    //TODO(danrubel) combine into a single $_pluginId.sdkPath setting
+    String path = atom.config.getValue('$_pluginId.dartinoPath');
+    if (path == null || path.trim().isEmpty) {
+      path = atom.config.getValue('$_pluginId.sodPath');
+    }
+    return (path is String) ? path.trim() : '';
   }
 
   /// Return the SDK associated with the given project

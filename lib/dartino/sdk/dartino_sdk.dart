@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
+import 'package:logging/logging.dart';
 
 import '../../atom.dart';
+import '../device/device.dart';
+import '../launch_dartino.dart';
 import 'sdk.dart';
 
 class DartinoSdk extends Sdk {
@@ -12,9 +16,7 @@ class DartinoSdk extends Sdk {
   /// to ensure that it is a valid SDK.
   static DartinoSdk forPath(String path) {
     var sdk = new DartinoSdk(path);
-    return sdk.existsSync('platforms/stm32f746g-discovery/bin/build.sh')
-        ? sdk
-        : null;
+    return fs.existsSync(sdk.dartinoBinary) ? sdk : null;
   }
 
   /// Prompt the user for where to install a new SDK, then do it.
@@ -39,8 +41,8 @@ class DartinoSdk extends Sdk {
       var result = await runner.execSimple();
       if (result.exit != 0) {
         atom.notifications.addError('Failed to install Dartino SDK',
-        detail: 'exitCode: ${result.exit}'
-        '\n${result.stderr}\n${result.stdout}');
+            detail: 'exitCode: ${result.exit}'
+                '\n${result.stderr}\n${result.stdout}');
         return;
       }
       atom.config.setValue('dartino.dartinoPath', path);
@@ -53,6 +55,37 @@ class DartinoSdk extends Sdk {
   }
 
   DartinoSdk(String sdkRoot) : super(sdkRoot);
+
+  /// Return the path to the dartino command line binary
+  String get dartinoBinary => resolvePath('bin/dartino');
+
+  /// Compile the application and return a path to the compiled binary.
+  /// If there is a problem, notify the user and return `null`.
+  Future<String> compile(DartinoLaunch launch) async {
+    await _validateLocalSettingsFile(this, launch);
+    String srcPath = launch.primaryResource;
+    int exitCode = await launch.run(dartinoBinary,
+        args: ['compile', srcPath],
+        cwd: fs.dirname(srcPath),
+        message: 'Compiling $srcPath',
+        isLast: false);
+    if (exitCode != 0) {
+      atom.notifications.addError('Compilation Failed',
+          detail:
+              '$srcPath\nexitCode : $exitCode\nSee console for more detail');
+      return null;
+    }
+    return srcPath.substring(0, srcPath.length - 5) + '.bin';
+  }
+
+  @override
+  Future launch(DartinoLaunch launch) async {
+    if (!await _installAdditionalTools(this, launch)) return;
+    _validateLocalSettingsFile(this, launch);
+    Device device = await Device.forLaunch(launch);
+    if (device == null) return;
+    device.launchDartino(this, launch);
+  }
 
   @override
   String packageRoot(projDir) {
@@ -110,4 +143,57 @@ Future<String> _downloadSdkZip() async {
     }
   }
   return sdkPath;
+}
+
+/// Return a [Future] that completes with `true`
+/// once additional Dartino tools have been downloaded and installed.
+/// If there is a problem, notify the user and complete the future with `false`.
+Future _installAdditionalTools(DartinoSdk sdk, DartinoLaunch launch) async {
+  // Check to see if tools have already been downloaded
+  if (sdk.existsSync('tools/gcc-arm-embedded/bin/arm-none-eabi-gcc')) {
+    return true;
+  }
+
+  // Launch an external process to download the additional tools
+  int exitCode = await launch.run(sdk.dartinoBinary,
+      args: ['x-download-tools'],
+      cwd: sdk.sdkRoot,
+      message: 'Downloading additional tools into ${sdk.sdkRoot} ...',
+      isLast: false, onStdout: (str) {
+    str = str.replaceAll('Download', '\nDownload');
+    launch.pipeStdio(str, subtle: true);
+  });
+  if (exitCode != 0) {
+    atom.notifications.addError('Failed to download tools',
+        detail: 'exitCode : $exitCode\nSee console for more detail');
+    return false;
+  }
+  launch.pipeStdio('Download complete\n');
+  return true;
+}
+
+/// Validate the local.dartino-settings file in the user's home directory.
+Future _validateLocalSettingsFile(DartinoSdk sdk, DartinoLaunch launch) async {
+  //TODO(danrubel) move this validation and notification into cmdline tool
+  try {
+    var path = fs.join(fs.homedir, 'local.dartino-settings');
+    if (!fs.existsSync(path)) return;
+    var file = new File.fromPath(path);
+    var content = await file.read();
+    Map json = JSON.decode(content);
+    String pkgsUri = json['packages'];
+    if (pkgsUri == null || !pkgsUri.startsWith('file://')) return;
+    var pkgsPath = pkgsUri.substring(7);
+    if (!fs.existsSync(pkgsPath)) {
+      launch.pipeStdio(
+          'WARNING: the dartino settings file: $path\n'
+          'references non-existing packages files: $pkgsPath\n'
+          'Either fix the path in the file'
+          ' or delete the file to have it recreated\n',
+          error: true);
+      return;
+    }
+  } catch (e, s) {
+    new Logger('DartinoSdk').info('validate local settings exception', e, s);
+  }
 }
