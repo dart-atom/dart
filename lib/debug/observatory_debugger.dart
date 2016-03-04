@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:html' show WebSocket, MessageEvent;
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:vm_service_lib/vm_service_lib.dart';
 
@@ -11,7 +12,6 @@ import '../atom.dart';
 import '../flutter/flutter_ext.dart';
 import '../launch/launch.dart';
 import '../state.dart';
-import '../utils.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
 import 'model.dart';

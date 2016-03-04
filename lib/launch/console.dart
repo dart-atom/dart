@@ -3,6 +3,7 @@
 library atom.console;
 
 import 'package:atom/node/shell.dart';
+import 'package:atom/utils/disposable.dart';
 
 import '../atom.dart';
 import '../atom_statusbar.dart';

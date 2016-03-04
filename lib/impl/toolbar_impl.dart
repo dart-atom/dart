@@ -1,6 +1,8 @@
 
 import 'dart:html' show SelectElement;
 
+import 'package:atom/utils/disposable.dart';
+
 import '../atom.dart';
 import '../elements.dart';
 import '../flutter/flutter_devices.dart';
@@ -8,7 +10,6 @@ import '../launch/launch.dart';
 import '../launch/run.dart';
 import '../projects.dart';
 import '../state.dart';
-import '../utils.dart';
 import 'toolbar.dart';
 
 class DartToolbarContribution implements Disposable {

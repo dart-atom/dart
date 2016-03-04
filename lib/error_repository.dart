@@ -3,6 +3,7 @@ library atom.error_repository;
 import 'dart:async';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_lib.dart'

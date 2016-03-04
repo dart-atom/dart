@@ -9,6 +9,7 @@ import 'dart:html' hide File, Notification, Point;
 import 'dart:js';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import 'js.dart';

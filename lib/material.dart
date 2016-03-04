@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';

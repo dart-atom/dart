@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:html' as html;
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' as analysis;
@@ -13,7 +14,6 @@ import '../elements.dart';
 import '../linter.dart';
 import '../projects.dart';
 import '../state.dart';
-import '../utils.dart';
 import '../views.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';

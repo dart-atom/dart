@@ -1,13 +1,13 @@
 library atom.flutter.create_project;
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:haikunator/haikunator.dart';
 
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../projects.dart';
 import '../state.dart';
-import '../utils.dart';
 import 'flutter_sdk.dart';
 
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];

@@ -4,12 +4,12 @@ import 'dart:async';
 import 'dart:html' as html show Element, MouseEvent, Point, Rectangle;
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../projects.dart';
 import '../state.dart';
-import '../utils.dart';
 import 'utils.dart';
 
 final Logger _logger = new Logger('atom.breakpoints');

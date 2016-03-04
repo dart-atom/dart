@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:html' show Element;
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 
 import '../analysis/analysis_server_lib.dart' hide Element;
 import '../analysis/quick_fixes.dart';

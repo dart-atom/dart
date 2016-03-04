@@ -3,6 +3,7 @@ library atom.buffer_observer;
 import 'dart:async';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_options.dart';

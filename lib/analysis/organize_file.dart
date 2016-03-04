@@ -1,10 +1,11 @@
 library atom.analysis.organize_file;
 
+import 'package:atom/utils/disposable.dart';
+
 import '../analysis_server.dart';
 import '../atom.dart';
 import '../editors.dart';
 import '../state.dart';
-import '../utils.dart';
 
 // TODO: Run in an AnalysisRequestJob job.
 

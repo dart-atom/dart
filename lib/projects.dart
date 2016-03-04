@@ -8,6 +8,7 @@ library atom.projects;
 import 'dart:async';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
@@ -18,7 +19,6 @@ import 'dartino/dartino_util.dart';
 import 'impl/pub.dart' as pub;
 import 'jobs.dart';
 import 'state.dart';
-import 'utils.dart';
 
 const String _bazelBuildFileName = 'BUILD';
 

@@ -9,11 +9,11 @@ library atom.autocomplete;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
 import 'js.dart';
-import 'utils.dart';
 
 final Logger _logger = new Logger('atom.autocomplete');
 

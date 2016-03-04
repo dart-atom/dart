@@ -5,13 +5,13 @@ import 'dart:async';
 import 'package:atom/atom_utils.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../impl/debounce.dart';
 import '../jobs.dart';
 import '../process.dart';
-import '../utils.dart';
 import '../state.dart' show sdkManager;
 
 final String _prefKey = 'flutter.flutterRoot';

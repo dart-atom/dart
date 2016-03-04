@@ -5,6 +5,7 @@ import 'dart:html' show Element;
 import 'dart:js' show context, JsFunction;
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';

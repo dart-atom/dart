@@ -4,6 +4,7 @@ library atom.dartdoc;
 import 'dart:async';
 import 'dart:html' show DivElement, Element, NodeValidator;
 
+import 'package:atom/utils/disposable.dart';
 import 'package:markdown/markdown.dart' as markdown;
 
 import '../analysis_server.dart';
@@ -11,7 +12,6 @@ import '../atom.dart';
 import '../atom_utils.dart';
 import '../elements.dart';
 import '../state.dart';
-import '../utils.dart';
 
 class DartdocHelper implements Disposable {
   Disposables _disposables = new Disposables();

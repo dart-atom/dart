@@ -1,10 +1,11 @@
 /// A library for executing unit tests.
 library atom.tests;
 
+import 'package:atom/utils/disposable.dart';
+
 import '../atom.dart';
 import '../projects.dart';
 import '../state.dart';
-import '../utils.dart';
 import 'pub.dart';
 
 class TestManager implements Disposable {

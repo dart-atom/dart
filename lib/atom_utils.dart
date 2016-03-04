@@ -11,12 +11,12 @@ import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
 import 'dart:js';
 
 import 'package:atom/node/process.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
 import 'js.dart';
 import 'state.dart';
-import 'utils.dart';
 
 final Logger _logger = new Logger('atom_utils');
 

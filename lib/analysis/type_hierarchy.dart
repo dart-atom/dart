@@ -3,6 +3,7 @@ library atom.type_hierarchy;
 
 import 'dart:html' as html show Element, SpanElement;
 
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';

@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../state.dart';
 import '../usage.dart' show trackCommand;
-import '../utils.dart';
 
 final Logger _logger = new Logger('atom.navigation');
 

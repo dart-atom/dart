@@ -8,10 +8,10 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:atom/node/process.dart';
+import 'package:atom/utils/disposable.dart';
 
 import 'atom.dart' hide Point;
 import 'atom_utils.dart';
-import 'utils.dart';
 
 /// Finds the first descendant element of this document with the given id.
 Element queryId(String id) => querySelector('#${id}');

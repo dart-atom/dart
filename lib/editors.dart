@@ -6,6 +6,7 @@ library atom.editors;
 
 import 'dart:async';
 
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_lib.dart'
@@ -13,7 +14,6 @@ import 'analysis/analysis_server_lib.dart'
 import 'atom.dart';
 import 'projects.dart';
 import 'state.dart';
-import 'utils.dart';
 
 final Logger _logger = new Logger('editors');
 

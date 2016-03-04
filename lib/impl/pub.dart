@@ -10,6 +10,7 @@ import 'dart:html' show HttpRequest;
 
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
@@ -19,7 +20,6 @@ import '../jobs.dart';
 import '../process.dart' show ProcessNotifier;
 import '../projects.dart';
 import '../state.dart';
-import '../utils.dart';
 
 const String pubspecFileName = 'pubspec.yaml';
 const String pubspecLockFileName = 'pubspec.lock';

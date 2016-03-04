@@ -2,6 +2,7 @@ library atom.refactor;
 
 import 'dart:async';
 
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' show

@@ -8,11 +8,11 @@ library atom.rebuild;
 import 'dart:async';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/utils/disposable.dart';
 
 import '../atom.dart';
 import '../jobs.dart';
 import '../state.dart';
-import '../utils.dart';
 import 'pub.dart';
 
 class RebuildManager implements Disposable {

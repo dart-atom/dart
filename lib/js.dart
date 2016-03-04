@@ -9,9 +9,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:js';
 
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
-
-import 'utils.dart';
 
 export 'dart:js' show JsObject;
 

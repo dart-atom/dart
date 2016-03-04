@@ -2,6 +2,7 @@ library atom.usage;
 
 import 'dart:async';
 
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:usage/usage_html.dart';
 
@@ -9,7 +10,6 @@ import 'atom.dart';
 import 'atom_utils.dart';
 import 'projects.dart';
 import 'state.dart';
-import 'utils.dart';
 
 // Sample Google Analytics UA code.
 final String _UA = 'UA-000000-0';
