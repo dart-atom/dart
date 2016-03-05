@@ -334,7 +334,7 @@ class DaemonDomain extends Domain {
     return _listen('daemon.logMessage', LogMessage.parse);
   }
 
-  Future<String> version() => _call('daemon.version');
+  Future<String> version() => _call('daemon.version') as Future<String>;
 
   Future shutdown() => _call('daemon.shutdown');
 }
@@ -345,12 +345,14 @@ class AppDomain extends Domain {
   // TODO: result
   // TODO: We need the stdout and stderr from launching the process.
   Future<dynamic> start(
+    String deviceId,
     String projectDirectory, {
     String target,
     bool checked,
     String route
   }) {
     return _call('app.start', _stripNullValues({
+      'deviceId': deviceId,
       'projectDirectory': projectDirectory,
       'target': target,
       'checked': checked,
@@ -358,7 +360,12 @@ class AppDomain extends Domain {
     }));
   }
 
-  Future<bool> stopAll() => _call('app.stopAll');
+  Future<bool> stop(String deviceId, String projectDirectory) {
+    return _call('app.stop', _stripNullValues({
+      'deviceId': deviceId,
+      'projectDirectory': projectDirectory
+    })) as Future<bool>;
+  }
 }
 
 class DeviceDomain extends Domain {
@@ -379,7 +386,7 @@ class DeviceDomain extends Domain {
   Future<List<Device>> getDevices() {
     return _call('device.getDevices').then((List result) {
       return result.map(Device.parse).toList();
-    });
+    }) as Future<List<Device>>;
   }
 
   Future enable() => _call('device.enable');

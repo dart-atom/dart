@@ -57,22 +57,22 @@ class TooltipManager implements Disposable {
   }
 
   void _install() {
-    _root.addEventListener('mousemove', (html.MouseEvent e) {
+    _root.addEventListener('mousemove', (html.Event event) {
+      html.MouseEvent mouseEvent = event;
       if (!_isTooltipEnabled) return;
 
-      int offset = _offsetFromMouseEvent(e);
-      new AnalysisRequestJob('hover-tooltip', () {
-        return analysisServer.getHover(_editor.getPath(), offset).then((HoverResult result) {
-          if (result == null) return;
+      int offset = _offsetFromMouseEvent(mouseEvent);
 
-          result.hovers.forEach((HoverInformation h) {
-            // Get rid of previous tooltips.
-            _tooltipElement?.dispose();
-            _tooltipElement =
-                new TooltipElement(_editor, content: _tooltipContent(h), position: e.offset);
-          });
+      analysisServer.getHover(_editor.getPath(), offset).then((HoverResult result) {
+        if (result == null) return;
+
+        result.hovers.forEach((HoverInformation h) {
+          // Get rid of previous tooltips.
+          _tooltipElement?.dispose();
+          _tooltipElement = new TooltipElement(_editor,
+            content: _tooltipContent(h), position: mouseEvent.offset);
         });
-      }).schedule();
+      }).catchError((_) => null);
     });
 
     _root.addEventListener('mouseout', (_) => _disposeTooltip());

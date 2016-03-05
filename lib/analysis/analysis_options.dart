@@ -106,7 +106,7 @@ class AnalysisOptions {
   List<String> getIgnoredRules() {
     var analyzer = (_document.contents as Map)['analyzer'];
     if (analyzer is! Map) return [];
-    var exclude = analyzer['exclude'];
+    dynamic exclude = analyzer['exclude'];
     return exclude is List<String> ? exclude : <String>[];
   }
 

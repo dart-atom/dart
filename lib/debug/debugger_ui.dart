@@ -690,12 +690,11 @@ class BreakpointsTab extends MTab {
     _update();
 
     // TODO: Support listening for breakpoint property change events.
-
     subs.add(breakpointManager.onAdd.listen(_update));
     subs.add(breakpointManager.onRemove.listen(_update));
   }
 
-  void _update([_]) {
+  void _update([AtomBreakpoint _]) {
     List<AtomBreakpoint> bps = new List.from(breakpointManager.breakpoints);
     bps.sort();
 
