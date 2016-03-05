@@ -212,7 +212,7 @@ abstract class TreeModel<T> {
 // TODO: restore expansion state between update() calls
 
 class MTree<T> extends MList<T> {
-  final TreeModel treeModel;
+  final TreeModel<T> treeModel;
 
   MTree(this.treeModel, ListRenderer renderer, {ListFilter filter}) :
       super(renderer, filter: filter);
