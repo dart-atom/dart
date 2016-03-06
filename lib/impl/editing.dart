@@ -97,11 +97,15 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
 
       return true;
     } else if (atEol) {
-      var prefLineLength = atom.config
-          .getValue('editor.preferredLineLength', scope: editor.getRootScopeDescriptor());
+      var prefLineLength = atom.config.getValue('editor.preferredLineLength',
+          scope: editor.getRootScopeDescriptor());
 
       if (col >= prefLineLength) {
         int wrapAtCol = line.substring(0, prefLineLength + 1).lastIndexOf(' ');
+
+        // Do not wrap if the comment consists only of a single word.
+        String left = line.substring(0, wrapAtCol).trimLeft().substring(2);
+        if (left.trim().isEmpty) return false;
 
         editor.atomic(() {
           editor.moveLeft(col - wrapAtCol);
