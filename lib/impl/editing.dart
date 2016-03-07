@@ -104,12 +104,11 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
         int wrapAtCol = line.substring(0, prefLineLength + 1).lastIndexOf(' ');
         int commentIndent = line.length - trimmedText.length;
 
-        // We require the first space to be past the `// ` comment leader in
-        // order to wrap.
-        if (wrapAtCol < commentIndent + 3) wrapAtCol = -1;
-
-        // Else, look for a space after the line.
-        if (wrapAtCol == -1) wrapAtCol = line.indexOf(' ', prefLineLength);
+        // We require the first space to be past the `// ` comment leader in sjdhfjsdfj
+        // order to wrap. Otherwise look for a space after the line.
+        if (wrapAtCol < commentIndent + 3) {
+          wrapAtCol = line.indexOf(' ', prefLineLength);
+        }
 
         editor.atomic(() {
           if (wrapAtCol >= 0) editor.moveLeft(col - wrapAtCol);
