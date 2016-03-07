@@ -690,12 +690,7 @@ class TextEditor extends ProxyHolder {
 
   String selectAll() => invoke('selectAll');
 
-  // /// An ambiguous type:
-  // /// {
-  // ///   'scopes': ['source.dart']
-  // /// }
-  // ScopeDescriptor getRootScopeDescriptor() =>
-  //     new ScopeDescriptor(invoke('getRootScopeDescriptor'));
+  dynamic getRootScopeDescriptor() => invoke('getRootScopeDescriptor');
 
   /// Get the syntactic scopeDescriptor for the given position in buffer
   /// coordinates.
@@ -731,6 +726,13 @@ class TextEditor extends ProxyHolder {
   void moveDown(int lineCount) => invoke('moveDown', lineCount);
   void moveLeft(int rowCount) => invoke('moveLeft', rowCount);
   void moveRight(int rowCount) => invoke('moveRight', rowCount);
+  void moveToBeginningOfLine() => invoke('moveToBeginningOfLine');
+  void moveToBeginningOfScreenLine() => invoke('moveToBeginningOfScreenLine');
+  void moveToFirstCharacterOfLine() => invoke('moveToFirstCharacterOfLine');
+  void moveToEndOfLine() => invoke('moveToEndOfLine');
+  void moveToEndOfScreenLine() => invoke('moveToEndOfScreenLine');
+  void moveToBeginningOfWord() => invoke('moveToBeginningOfWord');
+  void moveToEndOfWord() => invoke('moveToEndOfWord');
 
   String lineTextForBufferRow(int bufferRow) =>
       invoke('lineTextForBufferRow', bufferRow);
@@ -862,9 +864,6 @@ class TextEditor extends ProxyHolder {
   // through JS interop.
   dynamic get view => atom.views.getView(obj);
 
-  String toString() => getTitle();
-
-  void moveToEndOfLine() => invoke('moveToEndOfLine');
   void selectToBeginningOfWord() => invoke('selectToBeginningOfWord');
 
   /// Get the position of the most recently added cursor in buffer coordinates.
@@ -899,6 +898,8 @@ class TextEditor extends ProxyHolder {
   Stream<Gutter> get onDidAddGutter => eventStream('onDidAddGutter').map((g) => new Gutter(g));
 
   Stream<Gutter> get onDidRemoveGutter => eventStream('onDidRemoveGutter').map((g) => new Gutter(g));
+
+  @override String toString() => getTitle();
 }
 
 class Gutter extends ProxyHolder {

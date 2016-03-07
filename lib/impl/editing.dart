@@ -10,11 +10,6 @@ import '../atom.dart';
 
 final Logger _logger = new Logger('editing');
 
-// TODO: If we're in a line comment, and the line is longer than the max line
-// length, extend the comment.
-// var prefLineLength = atom.config.get('editor.preferredLineLength',
-//   scope: editor.getRootScopeDescriptor());
-
 // TODO: Tests for this.
 
 /// Handle special behavior for the enter key in Dart files. In particular, this
@@ -101,6 +96,26 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
       });
 
       return true;
+    } else if (atEol) {
+      var prefLineLength = atom.config.getValue('editor.preferredLineLength',
+          scope: editor.getRootScopeDescriptor());
+
+      if (col >= prefLineLength) {
+        int wrapAtCol = line.substring(0, prefLineLength + 1).lastIndexOf(' ');
+
+        // Do not wrap if the comment consists only of a single word.
+        String left = line.substring(0, wrapAtCol).trimLeft().substring(2);
+        if (left.trim().isEmpty) return false;
+
+        editor.atomic(() {
+          editor.moveLeft(col - wrapAtCol);
+          editor.insertNewline();
+          editor.insertText('// ');
+          editor.moveToEndOfLine();
+        });
+
+        return true;
+      }
     }
 
     return false;
