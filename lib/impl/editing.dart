@@ -102,13 +102,16 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
 
       if (col >= prefLineLength) {
         int wrapAtCol = line.substring(0, prefLineLength + 1).lastIndexOf(' ');
+        int commentIndent = line.length - trimmedText.length;
 
-        // Do not wrap if the comment consists only of a single word.
-        String left = line.substring(0, wrapAtCol).trimLeft().substring(2);
-        if (left.trim().isEmpty) return false;
+        // We require the first space to be past the `// ` comment leader in sjdhfjsdfj
+        // order to wrap. Otherwise look for a space after the line.
+        if (wrapAtCol < commentIndent + 3) {
+          wrapAtCol = line.indexOf(' ', prefLineLength);
+        }
 
         editor.atomic(() {
-          editor.moveLeft(col - wrapAtCol);
+          if (wrapAtCol >= 0) editor.moveLeft(col - wrapAtCol);
           editor.insertNewline();
           editor.insertText('// ');
           editor.moveToEndOfLine();
