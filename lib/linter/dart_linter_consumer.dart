@@ -1,7 +1,7 @@
 part of atom.linter_impl;
 
-const int maxIssuesPerFile = 200;
-const int maxTotalIssues = 500;
+const int _maxIssuesPerFile = 200;
+const int _maxIssuesPerProject = 500;
 
 StreamController<List<AnalysisError>> _processedErrorsController = new StreamController.broadcast();
 
@@ -14,7 +14,6 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
   Disposables _disposables = new Disposables();
 
   List<AnalysisError> _oldIssues = [];
-  bool _displayedWarning = false;
 
   DartLinterConsumer(this._errorRepository) {
     var regen = (_) => _regenErrors();
@@ -22,12 +21,8 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
     _disposables.add(atom.config.observe(_infosPrefPath, null, regen));
     _disposables.add(atom.config.observe(_todosPrefPath, null, regen));
 
-    Stream errorStream = _errorRepository.onChange.transform(
-       new Debounce(_reportingDelay));
+    Stream errorStream = _errorRepository.onChange.transform(new Debounce(_reportingDelay));
     errorStream.listen(regen);
-    // EventStream errorStream = new EventStream(
-    //     _errorRepository.onChange).debounce(_reportingDelay);
-    // errorStream.listen((_) => _regenErrors());
   }
 
   List<AnalysisError> get errors => _oldIssues;
@@ -43,13 +38,13 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
 
     issuesMap.forEach((String path, List<AnalysisError> issues) {
       issues = _filter(issues)..sort(_errorComparer);
-      if (issues.length > maxIssuesPerFile) {
+      if (issues.length > _maxIssuesPerFile) {
         // Create an issue to say we capped the number of issues.
         AnalysisError first = issues.first;
         AnalysisError cap = new AnalysisError(first.severity, first.type,
           new Location(first.location.file, 0, 1, 1, 1),
-          '${issues.length - maxIssuesPerFile + 1} additional issues not shown');
-        issues = issues.sublist(0, maxIssuesPerFile - 1);
+          '${issues.length - _maxIssuesPerFile + 1} additional issues not shown');
+        issues = issues.sublist(0, _maxIssuesPerFile - 1);
         issues.insert(0, cap);
       }
       allIssues.addAll(issues);
@@ -57,9 +52,37 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
 
     allIssues.sort(_errorComparer);
 
-    if (allIssues.length > maxTotalIssues) {
-      _warnMaxCap(allIssues);
-      allIssues = allIssues.sublist(0, maxTotalIssues);
+    // If we have too many total issues, then crop them.
+    List<String> projects = atom.project.getPaths();
+    Map<String, int> projectErrorCount = {};
+
+    if (allIssues.length > projects.length * _maxIssuesPerProject) {
+      for (String project in projects) {
+        projectErrorCount[project] = 0;
+      }
+
+      List<AnalysisError> newIssues = [];
+
+      for (String project in projects) {
+        for (AnalysisError issue in allIssues) {
+          if (issue.location.file.startsWith(project)) {
+            projectErrorCount[project]++;
+
+            if (projectErrorCount[project] < _maxIssuesPerProject) {
+              print(issue.severity + ' ' + issue.type);
+              newIssues.add(issue);
+            } else if (projectErrorCount[project] == _maxIssuesPerProject) {
+              AnalysisError cap = new AnalysisError('ERROR', 'ERROR',
+                new Location(issue.location.file, 0, 1, 1, 1),
+                'Maximum project issue count of ${_maxIssuesPerProject} hit.');
+              newIssues.add(cap);
+            }
+          }
+        }
+      }
+
+      allIssues = newIssues;
+      allIssues.sort(_errorComparer);
     }
 
     _emit(allIssues);
@@ -76,13 +99,6 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
 
       return true;
     }).toList();
-  }
-
-  void _warnMaxCap(List<AnalysisError> issues) {
-    if (_displayedWarning) return;
-    _displayedWarning = true;
-    atom.notifications.addWarning(
-        'Warning: displaying ${maxTotalIssues} issues of ${issues.length} total.');
   }
 
   void _emit(List<AnalysisError> newIssues) {
