@@ -5,6 +5,7 @@
 - Dart code completion now supports fuzzy matching
 - Added a `flutter:restart-daemon` command
 - Added support for automatically wrapping long comment lines.
+- On macos, run processes with the environment variables from their default shell
 
 ## 0.6.4
 - Fixed an issue with auto-detecting the Flutter and Dart SDKs
