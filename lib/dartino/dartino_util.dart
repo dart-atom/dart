@@ -80,7 +80,8 @@ class _Dartino {
     if (sdkPath.isNotEmpty) {
       var sdk = sdkFor(null);
       if (sdk != null && sdk.validate()) {
-        atom.notifications.addSuccess('Valid SDK detected', detail: sdkPath);
+        atom.notifications
+            .addSuccess('Valid ${sdk.name} detected', detail: sdkPath);
       }
     }
   }

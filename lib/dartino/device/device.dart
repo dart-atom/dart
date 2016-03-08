@@ -5,6 +5,7 @@ import 'package:atom_dartlang/atom.dart';
 import '../dartino_util.dart';
 import '../launch_dartino.dart';
 import '../sdk/dartino_sdk.dart';
+import '../sdk/sod_repo.dart';
 import 'stm32f746disco.dart';
 
 /// The connected device on which the application is executed.
@@ -41,7 +42,11 @@ abstract class Device {
     return device;
   }
 
-  /// Launch the specified application [binPath] on the device and return `true`.
+  /// Launch the specified application on the device and return `true`.
   /// If there is a problem, notify the user and return `false`.
   Future<bool> launchDartino(DartinoSdk sdk, DartinoLaunch launch);
+
+  /// Launch the specified application on the device and return `true`.
+  /// If there is a problem, notify the user and return `false`.
+  Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch);
 }
