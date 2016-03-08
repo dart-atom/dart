@@ -59,6 +59,8 @@ class DartinoSdk extends Sdk {
   /// Return the path to the dartino command line binary
   String get dartinoBinary => resolvePath('bin/dartino');
 
+  String get name => 'Dartino SDK';
+
   /// Compile the application and return a path to the compiled binary.
   /// If there is a problem, notify the user and return `null`.
   Future<String> compile(DartinoLaunch launch) async {

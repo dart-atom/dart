@@ -15,6 +15,8 @@ abstract class Sdk {
 
   Sdk(this.sdkRoot);
 
+  String get name;
+
   /// Return `true` if the specified file exists in the SDK
   bool existsSync(String relativePosixPath) {
     var path = resolvePath(relativePosixPath);
