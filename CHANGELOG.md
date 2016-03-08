@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.5
 - Updated code completion to reduce inadvertent completions after array braces
 - Dart code completion now supports fuzzy matching
 - Added a `flutter:restart-daemon` command
