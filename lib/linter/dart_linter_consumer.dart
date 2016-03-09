@@ -43,7 +43,8 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
         AnalysisError first = issues.first;
         AnalysisError cap = new AnalysisError(first.severity, first.type,
           new Location(first.location.file, 0, 1, 1, 1),
-          '${issues.length - _maxIssuesPerFile + 1} additional issues not shown');
+          '${issues.length - _maxIssuesPerFile + 1} additional issues not shown',
+          null);
         issues = issues.sublist(0, _maxIssuesPerFile - 1);
         issues.insert(0, cap);
       }
@@ -74,7 +75,8 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
             } else if (projectErrorCount[project] == _maxIssuesPerProject) {
               AnalysisError cap = new AnalysisError('ERROR', 'ERROR',
                 new Location(issue.location.file, 0, 1, 1, 1),
-                'Maximum project issue count of ${_maxIssuesPerProject} hit.');
+                'Maximum project issue count of ${_maxIssuesPerProject} hit.',
+                null);
               newIssues.add(cap);
             }
           }

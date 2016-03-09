@@ -2456,11 +2456,12 @@ self._domRemove = function(element) {
     AddContentOverlay.prototype.get$content = function(receiver) {
       return this.content;
     };
-    function AnalysisError(severity, type, location, message, correction, hasFix) {
+    function AnalysisError(severity, type, location, message, code, correction, hasFix) {
       this.severity = severity;
       this.type = type;
       this.location = location;
       this.message = message;
+      this.code = code;
       this.correction = correction;
       this.hasFix = hasFix;
       this.$deferredAction();
@@ -2470,7 +2471,7 @@ self._domRemove = function(element) {
       AnalysisError.name = "AnalysisError";
     $desc = $collectedClasses$.AnalysisError[1];
     AnalysisError.prototype = $desc;
-    AnalysisError.$__fields__ = ["severity", "type", "location", "message", "correction", "hasFix"];
+    AnalysisError.$__fields__ = ["severity", "type", "location", "message", "code", "correction", "hasFix"];
     AnalysisError.prototype.get$severity = function() {
       return this.severity;
     };
@@ -28794,23 +28795,26 @@ self._domRemove = function(element) {
       $isJsonable: 1
     },
     AnalysisError: {
-      "^": "Object;severity<,type>,location>,message>,correction,hasFix<",
+      "^": "Object;severity<,type>,location>,message>,code,correction,hasFix<",
       $eq: function(_, o) {
         if (o == null)
           return false;
-        return o instanceof E.AnalysisError && J.$eq$(this.severity, o.severity) && J.$eq$(this.type, o.type) && J.$eq$(this.location, o.location) && J.$eq$(this.message, o.message) && J.$eq$(this.correction, o.correction) && J.$eq$(this.hasFix, o.hasFix);
+        return o instanceof E.AnalysisError && J.$eq$(this.severity, o.severity) && J.$eq$(this.type, o.type) && J.$eq$(this.location, o.location) && J.$eq$(this.message, o.message) && J.$eq$(this.code, o.code) && J.$eq$(this.correction, o.correction) && J.$eq$(this.hasFix, o.hasFix);
       },
       get$hashCode: function(_) {
-        var t1, t2, t3;
+        var t1, t2, t3, t4;
         t1 = J.$xor$n(J.get$hashCode$(this.severity), J.get$hashCode$(this.type));
         t2 = J.get$hashCode$(this.location);
         t3 = J.get$hashCode$(this.message);
         if (typeof t3 !== "number")
           return H.iae(t3);
-        return (t1 ^ t2 ^ t3) >>> 0;
+        t4 = J.get$hashCode$(this.code);
+        if (typeof t4 !== "number")
+          return H.iae(t4);
+        return (t1 ^ t2 ^ t3 ^ t4) >>> 0;
       },
       toString$0: function(_) {
-        return "[AnalysisError severity: " + H.S(this.severity) + ", type: " + H.S(this.type) + ", location: " + J.toString$0$(this.location) + ", message: " + H.S(this.message) + "]";
+        return "[AnalysisError severity: " + H.S(this.severity) + ", type: " + H.S(this.type) + ", location: " + J.toString$0$(this.location) + ", message: " + H.S(this.message) + ", code: " + H.S(this.code) + "]";
       },
       static: {
         AnalysisError_parse: function(m) {
@@ -28818,7 +28822,7 @@ self._domRemove = function(element) {
           if (m == null)
             return;
           t1 = J.getInterceptor$asx(m);
-          return new E.AnalysisError(t1.$index(m, "severity"), t1.$index(m, "type"), E.Location_parse(t1.$index(m, "location")), t1.$index(m, "message"), t1.$index(m, "correction"), t1.$index(m, "hasFix"));
+          return new E.AnalysisError(t1.$index(m, "severity"), t1.$index(m, "type"), E.Location_parse(t1.$index(m, "location")), t1.$index(m, "message"), t1.$index(m, "code"), t1.$index(m, "correction"), t1.$index(m, "hasFix"));
         }
       }
     },
@@ -36885,7 +36889,7 @@ self._domRemove = function(element) {
                   H.printString(line);
                   newIssues.push(issue);
                 } else if (projectErrorCount.$index(0, project) === 500)
-                  newIssues.push(new E.AnalysisError("ERROR", "ERROR", new E.Location(t5.get$location(issue).get$file(), 0, 1, 1, 1), "Maximum project issue count of 500 hit.", null, null));
+                  newIssues.push(new E.AnalysisError("ERROR", "ERROR", new E.Location(t5.get$location(issue).get$file(), 0, 1, 1, 1), "Maximum project issue count of 500 hit.", null, null, null));
               }
             }
           }
@@ -36957,7 +36961,7 @@ self._domRemove = function(element) {
           t3 = t3.get$location(first).get$file();
           t5 = "" + (t1.get$length(issues) - 200 + 1) + " additional issues not shown";
           issues = t1.sublist$2(issues, 0, 199);
-          C.JSArray_methods.insert$2(issues, 0, new E.AnalysisError(t2, t4, new E.Location(t3, 0, 1, 1, 1), t5, null, null));
+          C.JSArray_methods.insert$2(issues, 0, new E.AnalysisError(t2, t4, new E.Location(t3, 0, 1, 1, 1), t5, null, null, null));
         }
         C.JSArray_methods.addAll$1(this._box_0.allIssues, issues);
       }
@@ -57279,6 +57283,9 @@ self._domRemove = function(element) {
     },
     DartinoSdk: {
       "^": "Sdk0;sdkRoot",
+      get$name: function(_) {
+        return "Dartino SDK";
+      },
       launch$1: [function(launch) {
         var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$returnValue, $async$handler = 2, $async$currentError, $async$self = this, device;
         var $async$launch$1 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
@@ -57488,7 +57495,7 @@ self._domRemove = function(element) {
           sdk = this.sdkFor$1(null);
           if (sdk != null && sdk.validate$0()) {
             t1 = $.$get$atom()._notifications;
-            t1.invoke$3("addSuccess", "Valid SDK detected", t1._options$5$buttons$description$detail$dismissable$icon(null, null, this.get$sdkPath(), null, null));
+            t1.invoke$3("addSuccess", "Valid " + sdk.get$name(sdk) + " detected", t1._options$5$buttons$description$detail$dismissable$icon(null, null, this.get$sdkPath(), null, null));
           }
         }
       }, function() {
@@ -59773,6 +59780,9 @@ self._domRemove = function(element) {
       },
       run$3$args$message: function(command, args, message) {
         return this.run$7$args$cwd$isLast$message$onStdout$subtle(command, args, null, true, message, null, false);
+      },
+      run$5$args$cwd$isLast$message: function(command, args, cwd, isLast, message) {
+        return this.run$7$args$cwd$isLast$message$onStdout$subtle(command, args, cwd, isLast, message, null, false);
       },
       run$6$args$cwd$isLast$message$onStdout: function(command, args, cwd, isLast, message, onStdout) {
         return this.run$7$args$cwd$isLast$message$onStdout$subtle(command, args, cwd, isLast, message, onStdout, false);
@@ -65024,8 +65034,51 @@ self._domRemove = function(element) {
     "^": "",
     SodRepo: {
       "^": "Sdk0;sdkRoot",
+      get$name: function(_) {
+        return "SOD repository";
+      },
+      compile$1: function(launch) {
+        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$returnValue, $async$handler = 2, $async$currentError, $async$self = this, srcPath, dstPath, t1, $async$temp1;
+        var $async$compile$1 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
+          if ($async$errorCode === 1) {
+            $async$currentError = $async$result;
+            $async$goto = $async$handler;
+          }
+          while (true)
+            switch ($async$goto) {
+              case 0:
+                // Function start
+                srcPath = launch.launchConfiguration.get$primaryResource();
+                dstPath = J.substring$2$s(srcPath, 0, srcPath.length - 5) + ".snap";
+                $async$temp1 = J;
+                $async$goto = 3;
+                return P._asyncHelper(launch.run$5$args$cwd$isLast$message("make", [dstPath], $async$self.sdkRoot, false, "Building " + srcPath + " ..."), $async$compile$1, $async$completer);
+              case 3:
+                // returning from await.
+                if (!$async$temp1.$eq$($async$result, 0)) {
+                  t1 = $.$get$atom()._notifications;
+                  t1.invoke$3("addError", "Failed to compile application", t1._options$5$buttons$description$detail$dismissable$icon(null, null, "Failed to compile.\n" + srcPath + "\nSee console for more.", null, null));
+                  // goto return
+                  $async$goto = 1;
+                  break;
+                } else
+                  ;
+                $async$returnValue = dstPath;
+                // goto return
+                $async$goto = 1;
+                break;
+              case 1:
+                // return
+                return P._asyncHelper($async$returnValue, 0, $async$completer, null);
+              case 2:
+                // rethrow
+                return P._asyncHelper($async$currentError, 1, $async$completer);
+            }
+        });
+        return P._asyncHelper(null, $async$compile$1, $async$completer, null);
+      },
       launch$1: [function(launch) {
-        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$handler = 1, $async$currentError, t1;
+        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$returnValue, $async$handler = 2, $async$currentError, $async$self = this, device;
         var $async$launch$1 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
           if ($async$errorCode === 1) {
             $async$currentError = $async$result;
@@ -65035,11 +65088,22 @@ self._domRemove = function(element) {
             switch ($async$goto) {
               case 0:
                 // Function start
-                t1 = $.$get$atom()._notifications;
-                t1.invoke$3("addError", "Not implemented yet", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
-                // implicit return
-                return P._asyncHelper(null, 0, $async$completer, null);
+                $async$goto = 3;
+                return P._asyncHelper(Z.Device_forLaunch(launch), $async$launch$1, $async$completer);
+              case 3:
+                // returning from await.
+                device = $async$result;
+                if (device == null) {
+                  // goto return
+                  $async$goto = 1;
+                  break;
+                } else
+                  ;
+                device.launchSOD$2($async$self, launch);
               case 1:
+                // return
+                return P._asyncHelper($async$returnValue, 0, $async$completer, null);
+              case 2:
                 // rethrow
                 return P._asyncHelper($async$currentError, 1, $async$completer);
             }
@@ -65047,7 +65111,14 @@ self._domRemove = function(element) {
         return P._asyncHelper(null, $async$launch$1, $async$completer, null);
       }, "call$1", "get$launch", 2, 0, 44],
       packageRoot$1: function(projDir) {
-        return projDir != null ? $.$get$fs().join$2(0, projDir, ".packages") : null;
+        var t1, localSpecFile;
+        if (projDir == null)
+          return;
+        t1 = $.$get$fs();
+        localSpecFile = t1.join$2(0, projDir, ".packages");
+        if (t1.invoke$2("existsSync", localSpecFile) === true)
+          return localSpecFile;
+        return this.resolvePath$1("third_party/dartino//internal/dartino-sdk.packages");
       },
       validate$1$quiet: function(quiet) {
         if (!this.existsSync$1("third_party/lk/platform/stm32f7xx/init.c")) {
@@ -65896,7 +65967,7 @@ self._domRemove = function(element) {
                 // returning from await.
                 if (!$async$temp1.$eq$($async$result, 0)) {
                   t1 = $.$get$atom0()._atom$_notifications;
-                  t1.invoke$3("addError", "Failed to deploy application", t1._atom$_options$5$buttons$description$detail$dismissable$icon(null, null, "Failed to deploy to device.\n" + H.S(t2.get$primaryResource()) + "\nto device. See console for more.", null, null));
+                  t1.invoke$3("addError", "Failed to deploy application", t1._atom$_options$5$buttons$description$detail$dismissable$icon(null, null, "Failed to deploy to device.\n" + H.S(t2.get$primaryResource()) + "\nSee console for more.", null, null));
                   $async$returnValue = false;
                   // goto return
                   $async$goto = 1;
@@ -65916,6 +65987,66 @@ self._domRemove = function(element) {
             }
         });
         return P._asyncHelper(null, $async$launchDartino$2, $async$completer, null);
+      },
+      launchSOD$2: function(sdk, launch) {
+        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$returnValue, $async$handler = 2, $async$currentError, $async$self = this, t1, binPath, $async$temp1;
+        var $async$launchSOD$2 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
+          if ($async$errorCode === 1) {
+            $async$currentError = $async$result;
+            $async$goto = $async$handler;
+          }
+          while (true)
+            switch ($async$goto) {
+              case 0:
+                // Function start
+                if ($.$get$isWindows() === true && $.$get$isMac() === true) {
+                  t1 = $.$get$atom0()._atom$_notifications;
+                  t1.invoke$3("addError", "Platform not supported", t1._atom$_options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+                  $async$returnValue = false;
+                  // goto return
+                  $async$goto = 1;
+                  break;
+                } else
+                  ;
+                $async$goto = 3;
+                return P._asyncHelper(sdk.compile$1(launch), $async$launchSOD$2, $async$completer);
+              case 3:
+                // returning from await.
+                binPath = $async$result;
+                if (binPath == null) {
+                  $async$returnValue = false;
+                  // goto return
+                  $async$goto = 1;
+                  break;
+                } else
+                  ;
+                $async$temp1 = J;
+                $async$goto = 4;
+                return P._asyncHelper(launch.run$3$args$message("dart", [sdk.resolvePath$1("dart/bin/sod.dart"), "run", binPath, "on", $async$self.ttyPath], "Deploy and run on connected device ..."), $async$launchSOD$2, $async$completer);
+              case 4:
+                // returning from await.
+                if (!$async$temp1.$eq$($async$result, 0)) {
+                  t1 = $.$get$atom0()._atom$_notifications;
+                  t1.invoke$3("addError", "Failed to deploy application", t1._atom$_options$5$buttons$description$detail$dismissable$icon(null, null, "Failed to deploy to device.\n" + H.S(launch.launchConfiguration.get$primaryResource()) + "\nSee console for more.", null, null));
+                  $async$returnValue = false;
+                  // goto return
+                  $async$goto = 1;
+                  break;
+                } else
+                  ;
+                $async$returnValue = true;
+                // goto return
+                $async$goto = 1;
+                break;
+              case 1:
+                // return
+                return P._asyncHelper($async$returnValue, 0, $async$completer, null);
+              case 2:
+                // rethrow
+                return P._asyncHelper($async$currentError, 1, $async$completer);
+            }
+        });
+        return P._asyncHelper(null, $async$launchSOD$2, $async$completer, null);
       },
       static: {
         Stm32f746Disco_forLaunch: function(launch) {
