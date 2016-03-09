@@ -6,7 +6,7 @@
   </head>
   <body>
     <h1>Analysis Server API Specification</h1>
-    <h1 style="color:#999999">Version <version>1.14.0</version></h1>
+    <h1 style="color:#999999">Version <version>1.15.0</version></h1>
     <p>
       This document contains a specification of the API provided by the
       analysis server.  The API in this document is currently under
@@ -615,14 +615,25 @@
               <value><ref>FilePath</ref></value>
             </map>
             <p>
-              A mapping from source directories to target directories
+              A mapping from source directories to package roots
               that should override the normal package: URI resolution
-              mechanism.  The analyzer will behave as though each
+              mechanism.
+            </p>
+            <p>
+              If a package root is a directory, then
+              the analyzer will behave as though the associated
               source directory in the map contains a special
               pubspec.yaml file which resolves any package: URI to the
-              corresponding path within the target directory.  The
-              effect is the same as specifying the target directory as
+              corresponding path within that package root directory.  The
+              effect is the same as specifying the package root directory as
               a "--package_root" parameter to the Dart VM when
+              executing any Dart file inside the source directory.
+            </p>
+            <p>
+              If a package root is a file, then the analyzer
+              will behave as though that file is a ".packages" file in the
+              source directory. The effect is the same as specifying the file
+              as a "--packages" parameter to the Dart VM when
               executing any Dart file inside the source directory.
             </p>
             <p>
@@ -2077,6 +2088,12 @@
               message associated with the error code.
             </p>
           </field>
+          <field name="code">
+            <ref>String</ref>
+            <p>
+              The name, as a string, of the error code associated with this error.
+            </p>
+          </field>
           <field name="hasFix" optional="true">
             <ref>bool</ref>
             <p>
@@ -2621,8 +2638,14 @@
           <value><code>SETTER</code></value>
           <value><code>TOP_LEVEL_VARIABLE</code></value>
           <value><code>TYPE_PARAMETER</code></value>
-          <value><code>UNIT_TEST_GROUP</code></value>
-          <value><code>UNIT_TEST_TEST</code></value>
+          <value>
+            <code>UNIT_TEST_GROUP</code>
+            <p><b><i>Deprecated</i></b>: support for tests was removed.</p>
+          </value>
+          <value>
+            <code>UNIT_TEST_TEST</code>
+            <p><b><i>Deprecated</i></b>: support for tests was removed.</p>
+          </value>
           <value><code>UNKNOWN</code></value>
         </enum>
       </type>

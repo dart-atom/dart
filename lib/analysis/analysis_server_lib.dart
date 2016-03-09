@@ -16,7 +16,7 @@ const String experimental = 'experimental';
 
 final Logger _logger = new Logger('analysis_server_lib');
 
-const String generatedProtocolVersion = '1.14.0';
+const String generatedProtocolVersion = '1.15.0';
 
 class Server {
   StreamSubscription _streamSub;
@@ -988,7 +988,7 @@ class AnalysisError {
   static AnalysisError parse(Map m) {
     if (m == null) return null;
     return new AnalysisError(
-        m['severity'], m['type'], Location.parse(m['location']), m['message'],
+        m['severity'], m['type'], Location.parse(m['location']), m['message'], m['code'],
         correction: m['correction'], hasFix: m['hasFix']);
   }
 
@@ -996,12 +996,13 @@ class AnalysisError {
   final String type;
   final Location location;
   final String message;
+  final String code;
   @optional
   final String correction;
   @optional
   final bool hasFix;
 
-  AnalysisError(this.severity, this.type, this.location, this.message,
+  AnalysisError(this.severity, this.type, this.location, this.message, this.code,
       {this.correction, this.hasFix});
 
   operator ==(o) =>
@@ -1010,14 +1011,19 @@ class AnalysisError {
       type == o.type &&
       location == o.location &&
       message == o.message &&
+      code == o.code &&
       correction == o.correction &&
       hasFix == o.hasFix;
 
   get hashCode =>
-      severity.hashCode ^ type.hashCode ^ location.hashCode ^ message.hashCode;
+      severity.hashCode ^
+      type.hashCode ^
+      location.hashCode ^
+      message.hashCode ^
+      code.hashCode;
 
   String toString() =>
-      '[AnalysisError severity: ${severity}, type: ${type}, location: ${location}, message: ${message}]';
+      '[AnalysisError severity: ${severity}, type: ${type}, location: ${location}, message: ${message}, code: ${code}]';
 }
 
 class AnalysisErrorFixes {
