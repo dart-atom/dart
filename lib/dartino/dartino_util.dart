@@ -18,11 +18,7 @@ class _Dartino {
 
   /// Return the SDK path specified in the settings or an empty string if none.
   String get sdkPath {
-    //TODO(danrubel) combine into a single $_pluginId.sdkPath setting
-    String path = atom.config.getValue('$_pluginId.dartinoPath');
-    if (path == null || path.trim().isEmpty) {
-      path = atom.config.getValue('$_pluginId.sodPath');
-    }
+    String path = atom.config.getValue('$_pluginId.sdkPath');
     return (path is String) ? path.trim() : '';
   }
 
