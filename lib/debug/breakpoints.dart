@@ -23,8 +23,17 @@ final Logger _logger = new Logger('atom.breakpoints');
 
 // TODO: No breakpoints on ws or comment lines.
 
+enum ExceptionBreakType {
+  all,
+  uncaught,
+  none
+}
+
+const String _debuggerCaughtExceptions = 'dartlang.debuggerCaughtExceptions';
+
 class BreakpointManager implements Disposable, StateStorable {
   Disposables disposables = new Disposables();
+  StreamSubscriptions subs = new StreamSubscriptions();
 
   List<AtomBreakpoint> _breakpoints = [];
   List<_EditorBreakpoint> _editorBreakpoints = [];
@@ -33,11 +42,18 @@ class BreakpointManager implements Disposable, StateStorable {
   StreamController<AtomBreakpoint> _changeController = new StreamController.broadcast();
   StreamController<AtomBreakpoint> _removeController = new StreamController.broadcast();
 
+  StreamController<ExceptionBreakType> _exceptionController = new StreamController.broadcast();
+
   _GutterTracker _gutterTracker;
 
   BreakpointManager() {
     disposables.add(atom.commands.add('atom-workspace', 'dartlang:debug-toggle-breakpoint', (_) {
       _toggleBreakpoint();
+    }));
+    subs.add(atom.config.onDidChange(_debuggerCaughtExceptions).listen((String val) {
+      if (val == 'all') _exceptionController.add(ExceptionBreakType.all);
+      else if (val == 'none') _exceptionController.add(ExceptionBreakType.none);
+      else _exceptionController.add(ExceptionBreakType.uncaught);
     }));
 
     editorManager.dartEditors.openEditors.forEach(_processEditor);
@@ -84,6 +100,21 @@ class BreakpointManager implements Disposable, StateStorable {
   Stream<AtomBreakpoint> get onChange => _changeController.stream;
 
   Stream<AtomBreakpoint> get onRemove => _removeController.stream;
+
+  ExceptionBreakType get breakOnExceptionType {
+    String val = atom.config.getValue(_debuggerCaughtExceptions);
+    if (val == 'all') return ExceptionBreakType.all;
+    else if (val == 'none') return ExceptionBreakType.none;
+    return ExceptionBreakType.uncaught;
+  }
+
+  set breakOnExceptionType(ExceptionBreakType val) {
+    if (val == ExceptionBreakType.all) atom.config.setValue(_debuggerCaughtExceptions, 'all');
+    else if (val == ExceptionBreakType.none) atom.config.setValue(_debuggerCaughtExceptions, 'none');
+    else atom.config.setValue(_debuggerCaughtExceptions, 'uncaught');
+  }
+
+  Stream<ExceptionBreakType> get onBreakOnExceptionTypeChanged => _exceptionController.stream;
 
   void _processEditor(TextEditor editor) {
     // Install any applicable breakpoints.
@@ -190,6 +221,7 @@ class BreakpointManager implements Disposable, StateStorable {
 
   void dispose() {
     disposables.dispose();
+    subs.dispose();
     _gutterTracker?.dispose();
   }
 }

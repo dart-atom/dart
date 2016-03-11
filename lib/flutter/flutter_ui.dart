@@ -20,19 +20,19 @@ class FlutterSection {
         new CoreElement('input')
           ..setAttribute('type', 'checkbox')
           ..click(_toggleDrawing),
-        span(text: ' debug drawing', c: 'text-subtle')
+        span(text: 'Debug drawing', c: 'text-subtle')
       ]),
       new CoreElement('label')..add([
         new CoreElement('input')
           ..setAttribute('type', 'checkbox')
           ..click(_toggleSlowAnimations),
-        span(text: ' slower animations', c: 'text-subtle')
+        span(text: 'Slower animations', c: 'text-subtle')
       ])
       // new CoreElement('label')..add([
       //   new CoreElement('input')
       //     ..setAttribute('type', 'checkbox')
       //     ..click(_toggleFPSOverlay),
-      //   span(text: ' FPS overlay', c: 'text-subtle')
+      //   span(text: 'FPS overlay', c: 'text-subtle')
       // ])
     ]);
 

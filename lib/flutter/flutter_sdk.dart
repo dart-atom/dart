@@ -107,7 +107,7 @@ class FlutterSdkManager implements Disposable {
         atom.notifications.addSuccess("Flutter SDK found at ${sdk.path}.");
       }
 
-      if (!sdkManager.hasSdk) {
+      if (sdkManager.noSdkPathConfigured) {
         // Set up a Dart SDK.
         String dartSdkPath = sdk.dartSdkPath;
         if (dartSdkPath != null) {

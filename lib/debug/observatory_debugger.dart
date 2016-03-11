@@ -204,6 +204,7 @@ class ObservatoryConnection extends DebugConnection {
       _bps[atomBreakpoint].add(vmBreakpoint);
     };
 
+    // TODO: This will try and set breakpoints on dead isolates.
     subs.add(breakpointManager.onAdd.listen((AtomBreakpoint bp) {
       uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
         return Future.forEach(uris, (String uri) {
@@ -254,8 +255,9 @@ class ObservatoryConnection extends DebugConnection {
         });
       });
     }).then((_) {
-      return service.setExceptionPauseMode(
-        isolate.id, ExceptionPauseMode.kUnhandled);
+      // TODO(devoncarew): Listen for changes to the exception pause mode and
+      // update the isolate.
+      return service.setExceptionPauseMode(isolate.id, _getExceptionPauseMode());
     });
   }
 
@@ -377,6 +379,14 @@ class ObservatoryConnection extends DebugConnection {
       // Update the libraries list for the isolate.
       return isolate._updateIsolateInfo();
     }
+  }
+
+  String _getExceptionPauseMode() {
+    ExceptionBreakType val = breakpointManager.breakOnExceptionType;
+
+    if (val == ExceptionBreakType.all) return ExceptionPauseMode.kAll;
+    else if (val == ExceptionBreakType.none) return ExceptionPauseMode.kNone;
+    else return ExceptionPauseMode.kUnhandled;
   }
 
   void _handleIsolateDeath(IsolateRef ref) {

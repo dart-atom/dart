@@ -87,9 +87,7 @@ abstract class MTab implements Disposable {
   final Property<bool> enabled = new Property(true);
   final Property<bool> active = new Property(true);
 
-  MTab(this.id, this.name) :
-      _tabElement = div(c: 'material-tab'),
-      content = div() {
+  MTab(this.id, this.name) : _tabElement = div(c: 'material-tab'), content = div() {
     _tabElement.text = name;
     enabled.onChanged.listen((val) {
       _tabElement.enabled = val;

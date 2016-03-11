@@ -1,7 +1,7 @@
 library atom.debugger_ui;
 
 import 'dart:async';
-import 'dart:html' show Element;
+import 'dart:html' show Element, Rectangle, InputElement, MouseEvent;
 import 'dart:js' show context, JsFunction;
 
 import 'package:atom/node/fs.dart';
@@ -29,8 +29,6 @@ final Logger _logger = new Logger('atom.debugger_ui');
 // closing a debugger tab doesn't tear down any listening state.
 
 // TODO: Breakpoints move to its own section.
-
-// TODO: Debugger view gets some settings.
 
 class DebuggerView extends View {
   static String viewIdForConnection(DebugConnection connection) {
@@ -101,6 +99,8 @@ class DebuggerView extends View {
         ..layoutVertical()
     ]);
 
+    _createConfigMenu();
+
     _createTitleSection(titleSection);
     new FlutterSection(connection, flutterElement);
     _createFlowControlSection(flowControlElement);
@@ -112,6 +112,48 @@ class DebuggerView extends View {
     subs.add(connection.onPaused.listen(_handleIsolatePaused));
     subs.add(connection.onResumed.listen(_handleIsolateResumed));
     subs.add(connection.isolates.onRemoved.listen(_handleIsolateTerminated));
+  }
+
+  void _createConfigMenu() {
+    MIconButton button = new MIconButton('icon-gear'); // 'icon-tools'
+    button.element.style.position = 'relative';
+
+    CoreElement checkbox;
+    InputElement checkElement;
+
+    void _toggleExceptions() {
+      breakpointManager.breakOnExceptionType =
+        checkElement.checked ? ExceptionBreakType.all : ExceptionBreakType.uncaught;
+    };
+
+    CoreElement menu = div(c: 'tooltip bottom dart-inline-dialog')..add([
+      div(c: 'tooltip-arrow'),
+      div(c: 'tooltip-inner')..add([
+        new CoreElement('label')..add([
+          checkbox = new CoreElement('input')
+            ..setAttribute('type', 'checkbox')
+            ..click(_toggleExceptions),
+          span(text: 'Break on caught exceptions')
+        ])
+      ])
+    ]);
+    menu.element.onClick.listen((MouseEvent e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    menu.hidden(true);
+
+    checkElement = checkbox.element;
+    checkElement.checked = breakpointManager.breakOnExceptionType != ExceptionBreakType.none;
+
+    subs.add(breakpointManager.onBreakOnExceptionTypeChanged.listen((ExceptionBreakType val) {
+      checkElement.checked = breakpointManager.breakOnExceptionType == ExceptionBreakType.all;
+    }));
+
+    button
+      ..add(menu)
+      ..click(() => menu.hidden());
+    toolbar.add(button);
   }
 
   void _createTitleSection(CoreElement section) {
@@ -188,7 +230,6 @@ class DebuggerView extends View {
     }
   }
 
-  // TODO: Shorter title.
   String get label => 'Debug ${connection.launch.name}';
 
   String get id => viewIdForConnection(connection);
