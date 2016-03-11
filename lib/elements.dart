@@ -130,6 +130,7 @@ class CoreElement {
     return child;
   }
 
+  bool get isHidden => hasAttribute('hidden');
   void hidden([bool value]) => attribute('hidden', value);
 
   String get label => attributes['label'];

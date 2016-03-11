@@ -238,7 +238,7 @@ class ConsoleView extends View {
       _debugButton = null;
     } else if (_debugButton == null && port != null && launch.hasDebugConnection) {
       _debugButton = toolbar.add(
-        button(text: 'Debugger', c: 'btn icon icon-bug')
+        button(text: 'Debug', c: 'btn icon icon-bug')
       );
       _debugButton.tooltip = 'Open the debugger';
       _debugButton.click(() {

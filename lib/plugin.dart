@@ -306,15 +306,6 @@ class AtomDartPackage extends AtomPackage {
         'order': 3
       },
 
-      // // auto show console
-      // 'autoShowConsole': {
-      //   'title': 'Auto open console',
-      //   'description': 'Automatically open the console when an application is run.',
-      //   'type': 'boolean',
-      //   'default': true,
-      //   'order': 4
-      // },
-
       // show infos and todos
       'showInfos': {
         'title': 'Show infos',
@@ -351,6 +342,16 @@ class AtomDartPackage extends AtomPackage {
         'order': 7
       },
 
+      // debugger
+      'debuggerCaughtExceptions': {
+        'title': "Debugger break on exceptions mode",
+        'description': 'Break on all exceptions, uncaught exceptions, or ignore exceptions.',
+        'type': 'string',
+        'default': 'all',
+        'enum': ['all', 'uncaught', 'none'],
+        'order': 8
+      },
+
       // no package symlinks
       'noPackageSymlinks': {
         'title': "Run pub with '--no-package-symlinks'",
@@ -360,7 +361,7 @@ class AtomDartPackage extends AtomPackage {
             'this option enabled.',
         'type': 'boolean',
         'default': false,
-        'order': 8
+        'order': 9
       },
 
       // google analytics
@@ -369,7 +370,7 @@ class AtomDartPackage extends AtomPackage {
         'description': "Report anonymized usage information to Google Analytics.",
         'type': 'boolean',
         'default': true,
-        'order': 9
+        'order': 10
       },
 
       'logging': {
@@ -378,7 +379,7 @@ class AtomDartPackage extends AtomPackage {
         'type': 'string',
         'default': 'info',
         'enum': ['error', 'warning', 'info', 'fine', 'finer'],
-        'order': 10
+        'order': 11
       },
       'debugAnalysisServer': {
         'title': 'Start the analysis server with debug flags.',
@@ -387,7 +388,7 @@ class AtomDartPackage extends AtomPackage {
           'restart is required.',
         'type': 'boolean',
         'default': false,
-        'order': 11
+        'order': 12
       },
 
       // experimental features
@@ -395,7 +396,7 @@ class AtomDartPackage extends AtomPackage {
         'title': '[Experimental] Enable type information tooltip.',
         'type': 'boolean',
         'default': false,
-        'order': 12
+        'order': 13
       }
     };
   }
