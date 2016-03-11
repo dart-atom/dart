@@ -18,9 +18,11 @@ part 'linter/dart_linter_provider.dart';
 Stream<List<AnalysisError>> get onProcessedErrorsChanged => _processedErrorsController.stream;
 
 LintMessage _errorToLintMessage(String filePath, AnalysisError error) {
+  String text = error.code == null ? error.message : '${error.message} (${error.code})';
+
   return new LintMessage(
       type: _severityMap[error.severity],
-      text: error.message,
+      text: text,
       filePath: filePath,
       range: _locationToRange(error.location));
 }
