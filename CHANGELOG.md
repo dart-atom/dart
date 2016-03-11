@@ -4,6 +4,7 @@
 - added an option to change the break on exceptions mode in the debugger
   (break on all exceptions, break on uncaught exceptions, or don't break on exceptions)
 - reduced the directory depth we look through for Dart projects
+- show analysis error codes in issue hovers
 
 ## 0.6.5
 - Updated code completion to reduce inadvertent completions after array braces
