@@ -7,7 +7,7 @@ library atom.statusbar;
 
 import 'dart:js';
 
-import 'js.dart';
+import 'package:atom/src/js.dart';
 
 /// A wrapper around the `status-bar` API.
 class StatusBar extends ProxyHolder {

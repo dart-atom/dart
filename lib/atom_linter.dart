@@ -8,8 +8,9 @@ library atom.linter;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/src/js.dart';
+
 import 'atom.dart';
-import 'js.dart';
 
 abstract class LinterProvider {
   final List<String> grammarScopes;

@@ -57,7 +57,6 @@ import 'impl/tests.dart';
 import 'impl/toolbar.dart';
 import 'impl/toolbar_impl.dart';
 import 'jobs.dart';
-import 'js.dart';
 import 'launch/console.dart';
 import 'launch/launch.dart';
 import 'launch/launch_cli.dart';

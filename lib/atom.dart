@@ -9,13 +9,14 @@ import 'dart:html' hide File, Notification, Point;
 import 'dart:js';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/node.dart';
+import 'package:atom/src/js.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import 'js.dart';
 import 'utils.dart';
 
-export 'js.dart' show Promise, ProxyHolder;
+export 'package:atom/src/js.dart' show Promise, ProxyHolder;
 
 final Logger _logger = new Logger('atom');
 

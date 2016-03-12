@@ -5,12 +5,11 @@ import 'dart:async';
 import 'dart:js';
 
 import 'package:atom/node/process.dart';
-import 'package:atom/utils/disposable.dart' hide EventListener;
+import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
 import '../editors.dart';
-import '../js.dart';
 import '../state.dart';
 import '../usage.dart' show trackCommand;
 import 'analysis_server_lib.dart';

@@ -2,9 +2,8 @@ library atom.treeview;
 
 import 'dart:js';
 
+import 'package:atom/src/js.dart';
 import 'package:atom/utils/disposable.dart';
-
-import 'js.dart';
 
 // TODO: Dispatch back to the original service?
 
