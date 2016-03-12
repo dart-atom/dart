@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:js';
 
 import 'package:atom/node/process.dart';
-import 'package:atom/utils/disposable.dart';
+import 'package:atom/utils/disposable.dart' hide EventListener;
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
