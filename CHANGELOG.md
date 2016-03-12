@@ -5,6 +5,7 @@
   (break on all exceptions, break on uncaught exceptions, or don't break on exceptions)
 - reduced the directory depth we look through for Dart projects
 - show analysis error codes in issue hovers
+- fixed an issue where stopping flutter launch would not stop the flutter console and debugger
 
 ## 0.6.5
 - Updated code completion to reduce inadvertent completions after array braces

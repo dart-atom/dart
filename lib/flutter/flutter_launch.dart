@@ -88,6 +88,7 @@ class _LaunchInstance {
   ProcessRunner _runner;
   int _observatoryPort;
   List<String> _args;
+  Device _device;
 
   _LaunchInstance(
     this.project,
@@ -116,10 +117,10 @@ class _LaunchInstance {
       _args.add(route);
     }
 
-    Device device = _currentSelectedDevice;
-    if (device != null) {
+    _device = _currentSelectedDevice;
+    if (_device != null) {
       _args.add('--device-id');
-      _args.add(device.id);
+      _args.add(_device.id);
     }
 
     String relPath = fs.relativize(project.path, configuration.primaryResource);
@@ -141,7 +142,7 @@ class _LaunchInstance {
       killHandler: _kill,
       cwd: project.path,
       title: description,
-      targetName: device?.name
+      targetName: _device?.name
     );
     launchManager.addLaunch(_launch);
   }
@@ -180,10 +181,9 @@ class _LaunchInstance {
       List<String> logsArgs = ['logs'];
 
       // Just log from the currently selected device.
-      Device device = _currentSelectedDevice;
-      if (device != null) {
+      if (_device != null) {
         logsArgs.add('--device-id');
-        logsArgs.add(device.id);
+        logsArgs.add(_device.id);
       }
 
       _runner = _flutter(flutter, logsArgs, cwd: project.path);
@@ -205,6 +205,20 @@ class _LaunchInstance {
       _launch.launchTerminated(1);
       return new Future.value();
     } else {
+      // Run flutter stop.
+      FlutterTool flutter = _flutterSdk.sdk.flutterTool;
+
+      List args = ['stop'];
+
+      if (_device != null) {
+        args.add('--device-id');
+        args.add(_device.id);
+      }
+
+      ProcessRunner flutterStop = _flutter(flutter, args, cwd: project.path);
+      flutterStop.execSimple().catchError((e) => null);
+
+      // And kill the logging process.
       return _runner.kill();
     }
   }
