@@ -59,6 +59,9 @@ class ShellLaunchType extends LaunchType {
   }
 
   String getDefaultConfigText() {
-    return 'args: \n';
+    return '''
+# Additional args for the application.
+args:
+''';
   }
 }
