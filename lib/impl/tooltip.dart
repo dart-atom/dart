@@ -13,8 +13,8 @@ import '../state.dart';
 
 final Logger _logger = new Logger('atom.tooltip');
 
-/// Controls the hover tooltip with type information feature, capable of installing the feature
-/// into every active .dart editor.
+/// Controls the hover tooltip with type information feature, capable of
+/// installing the feature into every active .dart editor.
 class TooltipController implements Disposable {
   Disposables _disposables = new Disposables();
 
@@ -24,16 +24,15 @@ class TooltipController implements Disposable {
     });
   }
 
-  void dispose() {
-    _disposables.dispose();
-  }
-
-  /// Installs the feature into [editor] if it responsible for a .dart file, noop if not.
+  /// Installs the feature into [editor] if it responsible for a .dart file,
+  /// noop if not.
   void _installInto(TextEditor editor) {
     if (!isDartFile(editor.getPath())) return;
 
     new TooltipManager(editor);
   }
+
+  void dispose() => _disposables.dispose();
 }
 
 /// Manages the display of tooltips for a single [TextEditor].
@@ -60,6 +59,7 @@ class TooltipManager implements Disposable {
     _root.addEventListener('mousemove', (html.Event event) {
       html.MouseEvent mouseEvent = event;
       if (!_isTooltipEnabled) return;
+      if (!analysisServer.isActive) return;
 
       int offset = _offsetFromMouseEvent(mouseEvent);
 
@@ -82,8 +82,8 @@ class TooltipManager implements Disposable {
   /// Returns true if the tooltip feature is enabled.
   bool get _isTooltipEnabled => atom.config.getValue('$pluginId.hoverTooltip');
 
-  /// Returns the offset in the current buffer corresponding to the screen position of the
-  /// [MouseEvent].
+  /// Returns the offset in the current buffer corresponding to the screen
+  /// position of the [MouseEvent].
   int _offsetFromMouseEvent(html.MouseEvent e) {
     JsObject component = _editor.view['component'];
     Point bufferPt = component.callMethod('screenPositionForMouseEvent', [e]);
@@ -94,18 +94,13 @@ class TooltipManager implements Disposable {
   String _tooltipContent(HoverInformation hover) =>
       hover.elementDescription ?? hover.staticType ?? hover.propagatedType;
 
-  void _disposeTooltip() {
-    _tooltipElement?.dispose();
-  }
+  void _disposeTooltip() => _tooltipElement?.dispose();
 
-  @override
-  void dispose() {
-    _disposeTooltip();
-  }
+  void dispose() => _disposeTooltip();
 }
 
-/// Basic tooltip element with single [String] content capable of attaching itself to a [TextEditor]
-/// at a given position relative to its top,left corner.
+/// Basic tooltip element with single [String] content capable of attaching
+/// itself to a [TextEditor] at a given position relative to its top,left corner.
 class TooltipElement extends CoreElement {
   static const int _offset = 12;
 
