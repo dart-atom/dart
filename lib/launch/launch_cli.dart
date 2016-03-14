@@ -142,7 +142,16 @@ class CliLaunchType extends LaunchType {
   }
 
   String getDefaultConfigText() {
-    return 'args: \ncwd: \nchecked: true\ndebug: true\n';
+    return '''
+# Additional args for the application.
+args:
+# The working directory to use for the launch.
+cwd:
+# Enable or disable checked mode.
+checked: true
+# Enable or disable debugging.
+debug: true
+''';
   }
 }
 
