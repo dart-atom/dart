@@ -62,13 +62,13 @@ class ViewResizer extends CoreElement {
     };
 
     element.onMouseDown.listen((e) {
-      if (e.which != 1) return;
+      if (e.button != 0) return;
 
       e.preventDefault();
       _offset = e.offset as Point<num>;
 
       _moveSub = document.onMouseMove.listen((MouseEvent e) {
-        if (e.which != 1) {
+        if (e.button != 0) {
           cancel();
         } else {
           Point<num> current =
