@@ -46,7 +46,7 @@ pre code {
   background: none;
   display: block;
   font-size: 100%;
-  white-space: inherit;
+  white-space: pre;
   word-wrap: normal;
 }
 
