@@ -216,7 +216,9 @@ class _LaunchInstance {
       }
 
       ProcessRunner flutterStop = _flutter(flutter, args, cwd: project.path);
-      flutterStop.execSimple().catchError((e) => null);
+      flutterStop.execSimple().catchError((e) {
+        _logger.finer('Error from flutter stop', e);
+      });
 
       // And kill the logging process.
       return _runner.kill();
