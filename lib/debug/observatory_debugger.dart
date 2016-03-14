@@ -271,7 +271,14 @@ class ObservatoryConnection extends DebugConnection {
         break;
       case EventKind.kIsolateRunnable:
         _installBreakpoints(ref).then((_) {
-          _updateIsolateMetadata(ref);
+          _updateIsolateMetadata(ref).then((ObservatoryIsolate obsIsolate) {
+            obsIsolate.isolate.runnable = true;
+            if (obsIsolate._wasPauseAtStart) {
+              obsIsolate._isolateInitializedCompleter.future.then((_) {
+                obsIsolate._performInitialResume();
+              });
+            }
+          });
         });
         break;
       case EventKind.kIsolateUpdate:
@@ -292,6 +299,7 @@ class ObservatoryConnection extends DebugConnection {
     switch (kind) {
       case EventKind.kPauseStart:
         ObservatoryIsolate obsIsolate = _getIsolate(ref);
+        obsIsolate._wasPauseAtStart = true;
         obsIsolate._isolateInitializedCompleter.future.then((_) {
           obsIsolate._performInitialResume();
         });
@@ -344,9 +352,7 @@ class ObservatoryConnection extends DebugConnection {
     return isolate._updateIsolateInfo().then(([ObservatoryIsolate _]) {
       // If the isolate is currently runnable, or the protocol does not have
       // information about its runnability, then set breakpoints at this time.
-      if (isolate.isolate.runnable == null || isolate.isolate.runnable == true) {
-        _installBreakpoints(ref);
-      }
+      if (isolate._runnable) _installBreakpoints(ref);
     }).then((_) {
       isolate._isolateInitializedCompleter.complete();
 
@@ -370,7 +376,7 @@ class ObservatoryConnection extends DebugConnection {
     return Future.wait(futures);
   }
 
-  Future _updateIsolateMetadata(IsolateRef ref) {
+  Future<ObservatoryIsolate> _updateIsolateMetadata(IsolateRef ref) {
     ObservatoryIsolate isolate = _isolateMap[ref.id];
 
     if (isolate == null) {
@@ -473,6 +479,8 @@ class ObservatoryIsolate extends DebugIsolate {
   bool suspended = false;
   bool suspendedAtAsyncSuspension = false;
   bool _didInitialResume = false;
+  bool _wasPauseAtStart = false;
+
   String _detail;
 
   ObservatoryIsolate._(this.connection, this.service, this.isolateRef) {
@@ -500,6 +508,10 @@ class ObservatoryIsolate extends DebugIsolate {
     return isolate.libraries.map(
       (libraryRef) => new ObservatoryLibrary._(libraryRef)).toList();
   }
+
+  /// If the isolate is currently runnable (or the protocol does not have
+  /// information about its runnability) return true.
+  bool get _runnable => isolate.runnable == null || isolate.runnable == true;
 
   void _suspend(bool paused, {bool pausedAtAsyncSuspension: false}) {
     if (!paused) {
@@ -533,10 +545,7 @@ class ObservatoryIsolate extends DebugIsolate {
 
   Future<ObservatoryIsolate> _updateIsolateInfo() {
     return service.getIsolate(isolateRef.id).then((Isolate isolate) {
-      // TODO: Update the state info.
-
       this.isolate = isolate;
-
       return this;
     });
   }
@@ -575,7 +584,9 @@ class ObservatoryIsolate extends DebugIsolate {
   String toString() => 'Isolate ${name}';
 
   void _performInitialResume() {
-    if (!_didInitialResume) {
+    if (_didInitialResume) return;
+
+    if (isolate != null && _runnable) {
       _didInitialResume = true;
       resume();
     }
