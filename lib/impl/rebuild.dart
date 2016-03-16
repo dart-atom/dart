@@ -19,8 +19,11 @@ class RebuildManager implements Disposable {
   Disposables disposables = new Disposables();
 
   RebuildManager() {
-    disposables.add(atom.commands.add('atom-workspace', 'dartlang:rebuild-restart-dev', (_) {
-      new RebuildJob("Rebuilding Atom plugins").schedule();
+    disposables.add(atom.commands
+        .add('atom-workspace', 'dartlang:rebuild-restart-dev', (_) {
+      if (_projectsToBuild().isNotEmpty) {
+        new RebuildJob("Rebuilding Atom plugins").schedule();
+      }
     }));
   }
 
@@ -42,12 +45,8 @@ class RebuildJob extends Job {
       if (editor.isModified()) editor.save();
     });
 
-    // Determine names of plugins to build
-    List<String> projNames = atom.config.getValue('$pluginId.buildAtomPlugins');
-    if (projNames == null) projNames = [pluginId];
-
     // Build plugins and aggregate the results
-    var builds = projNames.map((String name) => _runBuild(name));
+    var builds = _projectsToBuild().map((String name) => _runBuild(name));
     Future<bool> result = Future.wait(builds).then((List<bool> results) =>
         results.reduce((bool value, bool success) => value && success));
 
@@ -76,3 +75,6 @@ class RebuildJob extends Job {
       .schedule().then((JobStatus status) => status.isOk && status.result == 0);
   }
 }
+
+List<String> _projectsToBuild() =>
+    atom.config.getValue('$pluginId.buildAtomPlugins') ?? [];
