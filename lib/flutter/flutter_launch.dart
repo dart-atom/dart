@@ -30,7 +30,9 @@ class FlutterLaunchType extends LaunchType {
 
   String get flutterRunCommand => 'run';
 
-  bool canLaunch(String path) {
+  bool canLaunch(String path, { LaunchData data }) {
+    if (data == null) return false;
+
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
 
@@ -38,18 +40,7 @@ class FlutterLaunchType extends LaunchType {
     if (!analysisServer.isExecutable(path)) return false;
 
     // TODO: The file [path] should also import package:flutter.
-    return project.isFlutterProject();
-  }
-
-  List<String> getLaunchablesFor(DartProject project) {
-    // TODO: This is temporary until we can query files for package:flutter imports.
-    if (!project.isFlutterProject()) return [];
-
-    return analysisServer.getExecutablesFor(project.path).where((String path) {
-      return path.endsWith('dart');
-    }).map((String fullPath) {
-      return fs.relativize(project.path, fullPath);
-    }).toList();
+    return data.hasMain && project.isFlutterProject();
   }
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {

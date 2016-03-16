@@ -330,7 +330,7 @@ class FlowControlSection implements Disposable {
   CoreElement isolateState;
 
   FlowControlSection(this.view, this.connection, CoreElement element) {
-    resume = button(c: 'btn icon-arrow-right')..click(_pauseResume)..tooltip = 'Resume';
+    resume = button(c: 'btn icon-playback-play')..click(_pauseResume)..tooltip = 'Resume';
     stepIn = button(c: 'btn icon-jump-down')..click(_stepIn)..tooltip = 'Step in';
     stepOver = button(c: 'btn icon-jump-right')..click(_autoStepOver)..tooltip = 'Step over';
     stepOut = button(c: 'btn icon-jump-up')..click(_stepOut)..tooltip = 'Step out';
@@ -376,7 +376,7 @@ class FlowControlSection implements Disposable {
     bool suspended = isolate.suspended;
 
     resume.toggleClass('icon-playback-pause', !suspended);
-    resume.toggleClass('icon-arrow-right', suspended);
+    resume.toggleClass('icon-playback-play', suspended);
     resume.tooltip = suspended ? 'Resume' : 'Pause';
 
     stepIn.enabled = suspended;

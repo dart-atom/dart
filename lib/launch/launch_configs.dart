@@ -24,9 +24,13 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
   Map<String, _ProjectConfigurations> _projectConfigs = {};
   Map<String, int> _launchTimestamps = {};
 
+  StreamController _changeController = new StreamController.broadcast();
+
   LaunchConfigurationManager() {
     state.registerStorable('launchConfigs', this);
 
+    projectManager.projects.forEach(_handleProjectAdded);
+    projectManager.onProjectAdd.listen(_handleProjectAdded);
     projectManager.onProjectRemove.listen(_handleProjectRemoved);
   }
 
@@ -36,6 +40,12 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
   List<LaunchConfiguration> getConfigsFor(String path) {
     if (path == null) return [];
     return _getCreateProjectConfig(path).getConfigs();
+  }
+
+  List<LaunchConfiguration> getAllConfigs() {
+    return _projectConfigs.values
+      .expand((_ProjectConfigurations configs) => configs.getConfigs())
+      .toList();
   }
 
   /// Create a new launch configuration for the [projectPath] project. Use the
@@ -69,8 +79,12 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
       description: 'Created ${config._getRelativeConfigPath()}.'
     );
 
+    _changeController.add(null);
+
     return config;
   }
+
+  Stream get onChange => _changeController.stream;
 
   void dispose() {
     List<_ProjectConfigurations> configs = _projectConfigs.values.toList();
@@ -84,13 +98,19 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
     if (!_projectConfigs.containsKey(path)) {
       Directory launchDir = _getLaunchDir(path);
       _projectConfigs[path] = new _ProjectConfigurations(path, launchDir);
+      _changeController.add(null);
     }
     return _projectConfigs[path];
+  }
+
+  void _handleProjectAdded(DartProject project) {
+    _getCreateProjectConfig(project.path);
   }
 
   void _handleProjectRemoved(DartProject project) {
     _ProjectConfigurations config = _projectConfigs.remove(project.path);
     config?.dispose();
+    _changeController.add(null);
   }
 
   void initFromStored(dynamic storedData) {

@@ -2,7 +2,6 @@ library atom.launch_web;
 
 import 'dart:async';
 
-import '../projects.dart';
 import 'launch.dart';
 
 class WebLaunchType extends LaunchType {
@@ -11,17 +10,10 @@ class WebLaunchType extends LaunchType {
 
   WebLaunchType() : super('web');
 
-  bool canLaunch(String path) => path.endsWith('.html');
-
-  List<String> getLaunchablesFor(DartProject project) {
-    // TODO: Do not traverse lib, build, dot folders, symlinks, 'packages' folders
-
-    return [];
-  }
+  bool canLaunch(String path, { LaunchData data }) => path.endsWith('.html');
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
     // TODO:
-
     return new Future.error(new UnimplementedError());
   }
 
