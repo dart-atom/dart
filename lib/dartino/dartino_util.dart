@@ -1,4 +1,5 @@
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/notification.dart';
 
 import '../atom.dart';
 import 'sdk/dartino_sdk.dart';

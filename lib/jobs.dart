@@ -13,6 +13,7 @@ library atom.jobs;
 
 import 'dart:async';
 
+import 'package:atom/node/notification.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
