@@ -14,7 +14,7 @@ class ShellLaunchType extends LaunchType {
 
   ShellLaunchType() : super('shell');
 
-  bool canLaunch(String path, { LaunchData data }) {
+  bool canLaunch(String path, LaunchData data) {
     return path.endsWith('.sh') || path.endsWith('.bat');
   }
 

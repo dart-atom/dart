@@ -10,7 +10,7 @@ class WebLaunchType extends LaunchType {
 
   WebLaunchType() : super('web');
 
-  bool canLaunch(String path, { LaunchData data }) => path.endsWith('.html');
+  bool canLaunch(String path, LaunchData data) => path.endsWith('.html');
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
     // TODO:

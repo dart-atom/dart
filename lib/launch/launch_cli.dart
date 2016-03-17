@@ -23,10 +23,8 @@ class CliLaunchType extends LaunchType {
 
   CliLaunchType() : super('cli');
 
-  bool canLaunch(String path, { LaunchData data }) {
+  bool canLaunch(String path, LaunchData data) {
     if (!path.endsWith('.dart')) return false;
-
-    if (data == null) return false;
 
     DartProject project = projectManager.getProjectFor(path);
 

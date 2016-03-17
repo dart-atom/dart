@@ -13,7 +13,7 @@ class MojoLaunchType extends FlutterLaunchType {
 
   // We don't want to advertise the mojo launch configuration as much as the
   // flutter one.
-  bool canLaunch(String path, { LaunchData data }) => false;
+  bool canLaunch(String path, LaunchData data) => false;
 
   String getDefaultConfigText() {
     return 'checked: true\n# args:\n#  - --mojo-path=path/to/mojo';

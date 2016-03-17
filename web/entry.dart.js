@@ -30090,12 +30090,6 @@ self._domRemove = function(element) {
       getTypeHierarchy$2: function(path, offset) {
         return this._server._search.getTypeHierarchy$2(path, offset);
       },
-      isExecutable$1: function(path) {
-        var t1 = this._server;
-        if (!(t1 != null && t1.process != null))
-          return false;
-        return t1._executables.contains$1(0, path);
-      },
       updateContent$2: function(path, contentOverlay) {
         var t1, t2;
         t1 = this._server._analysis;
@@ -37222,13 +37216,11 @@ self._domRemove = function(element) {
       get$flutterRunCommand: function() {
         return "run";
       },
-      canLaunch$2$data: function(path, data) {
+      canLaunch$2: function(path, data) {
         var project = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
         if (project == null)
           return false;
         if (!$.$get$_flutterSdk().get$hasSdk())
-          return false;
-        if (!Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).isExecutable$1(path))
           return false;
         return data.get$hasMain() === true && project.isFlutterProject$0();
       },
@@ -37866,7 +37858,7 @@ self._domRemove = function(element) {
       get$flutterRunCommand: function() {
         return "run_mojo";
       },
-      canLaunch$2$data: function(path, data) {
+      canLaunch$2: function(path, data) {
         return false;
       },
       getDefaultConfigText$0: function() {
@@ -38285,7 +38277,7 @@ self._domRemove = function(element) {
           return;
         for (t1 = this.launchTypes, t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
           type = t1[_i];
-          if (type.canLaunch$2$data(path, data) === true)
+          if (type.canLaunch$2(path, data) === true)
             return type;
         }
         return;
@@ -38304,7 +38296,7 @@ self._domRemove = function(element) {
         results = [];
         for (t1 = this.launchTypes, t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
           type = t1[_i];
-          if (type.canLaunch$2$data(path, data) === true) {
+          if (type.canLaunch$2(path, data) === true) {
             $.Zone__current.toString;
             project = $.Dependencies__global.getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
             if (project == null)
@@ -38714,7 +38706,7 @@ self._domRemove = function(element) {
     "^": "",
     CliLaunchType: {
       "^": "LaunchType;type",
-      canLaunch$2$data: function(path, data) {
+      canLaunch$2: function(path, data) {
         var project, t1;
         if (!J.endsWith$1$s(path, ".dart"))
           return false;
@@ -39171,7 +39163,7 @@ self._domRemove = function(element) {
     "^": "",
     ShellLaunchType: {
       "^": "LaunchType;type",
-      canLaunch$2$data: function(path, data) {
+      canLaunch$2: function(path, data) {
         var t1 = J.getInterceptor$s(path);
         return t1.endsWith$1(path, ".sh") || t1.endsWith$1(path, ".bat");
       },
@@ -64561,7 +64553,7 @@ self._domRemove = function(element) {
     "^": "",
     DartinoLaunchType: {
       "^": "LaunchType;_lastLaunch,type",
-      canLaunch$2$data: function(path, data) {
+      canLaunch$2: function(path, data) {
         var project = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
         if (project == null || project.isDartinoProject$0() !== true)
           return false;

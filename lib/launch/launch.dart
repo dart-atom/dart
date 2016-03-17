@@ -107,7 +107,7 @@ class LaunchManager implements Disposable {
     if (path == null) return null;
 
     for (LaunchType type in launchTypes) {
-      if (type.canLaunch(path, data: data)) return type;
+      if (type.canLaunch(path, data)) return type;
     }
 
     return null;
@@ -124,7 +124,7 @@ class LaunchManager implements Disposable {
     List<Launchable> results = [];
 
     for (LaunchType type in launchTypes) {
-      if (type.canLaunch(path, data: data)) {
+      if (type.canLaunch(path, data)) {
         DartProject project = projectManager.getProjectFor(path);
         if (project == null) continue;
 
@@ -149,7 +149,7 @@ abstract class LaunchType {
 
   LaunchType(this.type);
 
-  bool canLaunch(String path, { LaunchData data });
+  bool canLaunch(String path, LaunchData data);
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration);
 

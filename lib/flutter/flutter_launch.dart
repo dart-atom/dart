@@ -30,14 +30,11 @@ class FlutterLaunchType extends LaunchType {
 
   String get flutterRunCommand => 'run';
 
-  bool canLaunch(String path, { LaunchData data }) {
-    if (data == null) return false;
-
+  bool canLaunch(String path, LaunchData data) {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
 
     if (!_flutterSdk.hasSdk) return false;
-    if (!analysisServer.isExecutable(path)) return false;
 
     // TODO: The file [path] should also import package:flutter.
     return data.hasMain && project.isFlutterProject();

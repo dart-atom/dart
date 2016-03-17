@@ -19,9 +19,7 @@ class DartinoLaunchType extends LaunchType {
 
   DartinoLaunchType() : super('dartino');
 
-  bool canLaunch(String path, { LaunchData data }) {
-    if (data == null) return false;
-
+  bool canLaunch(String path, LaunchData data) {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null || !project.isDartinoProject()) return false;
 
