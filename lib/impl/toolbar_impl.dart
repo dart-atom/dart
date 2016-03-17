@@ -24,7 +24,7 @@ class DartToolbarContribution implements Disposable {
     rightTile = toolbar.addRightTile(item: _buildRightTile().element);
   }
 
-  ProjectLaunchManager get projectLaunchManager => deps[ProjectLaunchManager];
+  WorkspaceLaunchManager get workspaceLaunchManager => deps[WorkspaceLaunchManager];
 
   CoreElement _buildLeftTile() {
     CoreElement runButton;
@@ -36,6 +36,7 @@ class DartToolbarContribution implements Disposable {
       runButton = button(c: 'btn icon icon-playback-play')
         ..click(_handleRunLaunch)
         ..tooltip = "Run",
+      // TODO: Add a stop button.
       configureLaunchButton = button(c: 'btn icon icon-gear')
         ..click(_handleConfigureLaunch)
         ..tooltip = 'Configure launch',
@@ -69,14 +70,20 @@ class DartToolbarContribution implements Disposable {
       DartProject project = projectManager.getProjectFor(path);
 
       bool isFlutterProject = project != null && project.isFlutterProject();
-      flutterDiv.hidden(!isFlutterProject);
+      bool isFlutterRunnable = workspaceLaunchManager.selectedRunnable?.isFlutterRunnable ?? false;
+
+      flutterDiv.hidden(!isFlutterProject && !isFlutterRunnable);
     }
 
     updateToolbar();
+
     subs.add(editorManager.dartProjectEditors.onActiveEditorChanged.listen((TextEditor editor) {
       updateToolbar();
     }));
     subs.add(projectManager.onProjectsChanged.listen((List<DartProject> projects) {
+      updateToolbar();
+    }));
+    subs.add(workspaceLaunchManager.onSelectedRunnableChanged.listen((RunnableConfig config) {
       updateToolbar();
     }));
 
@@ -125,7 +132,7 @@ class DartToolbarContribution implements Disposable {
     List<RunnableConfig> runnables = [];
 
     var updateUI = ([_]) {
-      runnables = projectLaunchManager.runnables;
+      runnables = workspaceLaunchManager.runnables;
 
       runButton.enabled = runnables.isNotEmpty;
       selectList.enabled = runnables.isNotEmpty;
@@ -143,20 +150,20 @@ class DartToolbarContribution implements Disposable {
           selectList.add(new CoreElement('option')..text = runnable.getDisplayName());
         }
 
-        int index = runnables.indexOf(projectLaunchManager.selectedRunnable);
+        int index = runnables.indexOf(workspaceLaunchManager.selectedRunnable);
         if (index != -1) {
           element.selectedIndex = index;
         }
       }
     };
 
-    subs.add(projectLaunchManager.onRunnablesChanged.listen(updateUI));
-    subs.add(projectLaunchManager.onSelectedRunnableChanged.listen(updateUI));
+    subs.add(workspaceLaunchManager.onRunnablesChanged.listen(updateUI));
+    subs.add(workspaceLaunchManager.onSelectedRunnableChanged.listen(updateUI));
 
     element.onChange.listen((e) {
       int index = element.selectedIndex;
       if (index >= 0 && index < runnables.length) {
-        projectLaunchManager.setSelectedRunnable(runnables[index]);
+        workspaceLaunchManager.setSelectedRunnable(runnables[index]);
       }
     });
 
@@ -198,11 +205,10 @@ class DartToolbarContribution implements Disposable {
   }
 
   void _handleRunLaunch() {
-    RunnableConfig runnable = projectLaunchManager.selectedRunnable;
+    RunnableConfig runnable = workspaceLaunchManager.selectedRunnable;
 
     if (runnable != null) {
       RunApplicationManager runApplicationManager = deps[RunApplicationManager];
-
       LaunchConfiguration config = runnable.getCreateLaunchConfig();
       runApplicationManager.run(config);
     } else {
@@ -211,7 +217,7 @@ class DartToolbarContribution implements Disposable {
   }
 
   void _handleConfigureLaunch() {
-    RunnableConfig runnable = projectLaunchManager.selectedRunnable;
+    RunnableConfig runnable = workspaceLaunchManager.selectedRunnable;
 
     if (runnable != null) {
       LaunchConfiguration config = runnable.getCreateLaunchConfig();

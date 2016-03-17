@@ -20,7 +20,6 @@ export 'launch_configs.dart' show LaunchConfiguration;
 
 final Logger _logger = new Logger('atom.launch');
 
-
 final math.Random _rand = new math.Random();
 
 /// This guesses for a likely open port. We could also use the technique of
@@ -103,13 +102,12 @@ class LaunchManager implements Disposable {
   List<String> getLaunchTypes() =>
       launchTypes.map((LaunchType l) => l.type).toList()..sort();
 
-  /// Get the best launch handler for the given resource; return `null`
-  /// otherwise.
-  LaunchType getHandlerFor(String path) {
+  /// Get the best launch handler for the given resource; return `null` otherwise.
+  LaunchType getHandlerFor(String path, LaunchData data) {
     if (path == null) return null;
 
     for (LaunchType type in launchTypes) {
-      if (type.canLaunch(path)) return type;
+      if (type.canLaunch(path, data)) return type;
     }
 
     return null;
@@ -122,13 +120,16 @@ class LaunchManager implements Disposable {
     return null;
   }
 
-  List<Launchable> getAllLaunchables(DartProject project) {
+  List<Launchable> getAllLaunchables(String path, LaunchData data) {
     List<Launchable> results = [];
 
-    if (project != null) {
-      for (LaunchType type in launchTypes) {
-        List<String> paths = type.getLaunchablesFor(project);
-        results.addAll(paths.map((path) => new Launchable(type, path)));
+    for (LaunchType type in launchTypes) {
+      if (type.canLaunch(path, data)) {
+        DartProject project = projectManager.getProjectFor(path);
+        if (project == null) continue;
+
+        String relPath = project.getRelative(path);
+        results.add(new Launchable(type, project.path, relPath));
       }
     }
 
@@ -148,9 +149,7 @@ abstract class LaunchType {
 
   LaunchType(this.type);
 
-  bool canLaunch(String path);
-
-  List<String> getLaunchablesFor(DartProject project);
+  bool canLaunch(String path, LaunchData data);
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration);
 
@@ -165,11 +164,33 @@ abstract class LaunchType {
   String toString() => type;
 }
 
+class LaunchData {
+  final String fileContents;
+
+  bool _hasMain;
+
+  LaunchData(this.fileContents);
+
+  bool get hasMain {
+    if (_hasMain == null) {
+      if (fileContents != null) {
+        // TODO: This could be made more rigorous.
+        _hasMain = fileContents.contains('main(');
+      } else {
+        _hasMain = false;
+      }
+    }
+
+    return _hasMain;
+  }
+}
+
 class Launchable {
   final LaunchType type;
+  final String projectPath;
   final String relativePath;
 
-  Launchable(this.type, this.relativePath);
+  Launchable(this.type, this.projectPath, this.relativePath);
 
   String getDisplayName() => '${relativePath} (${type})';
 

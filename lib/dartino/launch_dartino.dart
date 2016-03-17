@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
@@ -20,33 +19,11 @@ class DartinoLaunchType extends LaunchType {
 
   DartinoLaunchType() : super('dartino');
 
-  bool canLaunch(String path) {
+  bool canLaunch(String path, LaunchData data) {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null || !project.isDartinoProject()) return false;
-    if (!analysisServer.isExecutable(path)) return false;
-    return true;
-  }
 
-  List<String> getLaunchablesFor(DartProject project) {
-    if (project == null || !project.isDartinoProject()) return [];
-    var files = <String>[];
-    visit(Directory dir) {
-      for (Entry entry in dir.getEntriesSync()) {
-        if (entry.isDirectory()) {
-          visit(entry);
-          continue;
-        }
-        var path = entry.getPath();
-        if (path != null && path.endsWith('dart')) files.add(path);
-      }
-    }
-    visit(project.directory);
-    return files;
-    //TODO(danrubel) add Dartino launch support to analysis server
-    // return analysisServer
-    //     .getExecutablesFor(project.path)
-    //     .where((String path) => path.endsWith('dart'))
-    //     .toList();
+    return data.hasMain;
   }
 
   Future<Launch> performLaunch(

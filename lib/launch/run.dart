@@ -24,6 +24,8 @@ final Logger _logger = new Logger('atom.run');
 // -launch last one
 // -or, show a dialog to launch available project apps
 
+WorkspaceLaunchManager get _workspaceLaunchManager => deps[WorkspaceLaunchManager];
+
 /// Contribute the Run commands.
 class RunApplicationManager implements Disposable, ContextMenuContributor {
   Disposables disposables = new Disposables();
@@ -37,12 +39,13 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
     disposables.add(
         atom.commands.add('.tree-view', 'dartlang:run-application', (event) {
       stop(event);
-      _handleRunCommand(event.targetFilePath);
+      _handleTreeViewRunCommand(event.targetFilePath);
     }));
     disposables.add(
         atom.commands.add('atom-text-editor', 'dartlang:run-application', (event) {
       stop(event);
-      _handleRunCommand(event.editor.getPath());
+      TextEditor editor = event.editor;
+      _handleEditorRunCommand(editor.getPath(), editor.getText());
     }));
   }
 
@@ -54,72 +57,31 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
     ];
   }
 
-  void _handleRunCommand(String path) {
+  void _handleTreeViewRunCommand(String path) {
+    File file = new File.fromPath(path);
+    _handleRunCommand(path, new LaunchData(file.readSync()));
+  }
+
+  void _handleEditorRunCommand(String path, String contents) {
+    _handleRunCommand(path, new LaunchData(contents));
+  }
+
+  void _handleRunCommand(String path, LaunchData data) {
     if (path == null) return;
 
     _preRunConfigSearch();
 
-    String projectPath = _getProjectPath(path);
-    LaunchConfiguration config = _getConfigFor(projectPath, path);
-
-    // Look for already created launch configs for the path.
-    if (config != null) {
-      _logger.fine("Using existing launch config for '${path}'.");
-      run(config);
-      return;
-    }
-
-    LaunchType launchType = launchManager.getHandlerFor(path);
-
-    if (launchType != null) {
-      LaunchConfiguration config = _createConfig(projectPath, launchType, path);
-      _logger.fine("Creating new launch config for '${path}'.");
-      run(config);
-      return;
-    }
-
     DartProject project = projectManager.getProjectFor(path);
+    WorkspaceLaunchManager workspaceLaunchManager = _workspaceLaunchManager;
+    RunnableConfig runnable = workspaceLaunchManager.selectedRunnable;
 
-    if (project != null) {
-      // Look for the last launched config for the project; run it.
-      config = _newest(launchConfigurationManager.getConfigsFor(project.path));
-
-      if (config != null) {
-        _logger.fine("Using recent launch config '${config}'.");
-        run(config);
-        return;
-      }
-    }
-
-    // Gather all potential runnables for this project.
-    List<Launchable> runnables = launchManager.getAllLaunchables(project);
-
-    if (runnables.isEmpty) {
+    if (runnable != null) {
+      run(runnable.getCreateLaunchConfig());
+    } else {
       String displayPath = project == null ? path : project.getRelative(path);
       atom.notifications.addWarning(
           'Unable to locate a suitable execution handler for file ${displayPath}.');
-    } else if (runnables.length == 1) {
-      Launchable launchable = runnables.first;
-      config = launchConfigurationManager.createNewConfig(
-        projectPath,
-        launchable.type.type,
-        launchable.relativePath,
-        launchable.type.getDefaultConfigText()
-      );
-
-      _logger.fine("Found one runnable in project: '${config}'.");
-      run(config);
-    } else {
-      atom.notifications.addWarning(
-        'This project contains more than one potentially runnable file; '
-        'please select a specific file.');
     }
-  }
-
-  String _getProjectPath(String path) {
-    DartProject project = projectManager.getProjectFor(path);
-    if (project != null) return project.path;
-    return atom.project.relativizePath(path)[0];
   }
 
   void _preRunConfigSearch() {
@@ -151,58 +113,28 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
       });
     }
   }
-
-  LaunchConfiguration _getConfigFor(String projectPath, String path) {
-    List<LaunchConfiguration> configs =
-        launchConfigurationManager.getConfigsFor(projectPath);
-
-    // Check if the file _is_ a launch config.
-    for (LaunchConfiguration config in configs) {
-      if (config.configYamlPath == path) return config;
-    }
-
-    return _newest(configs.where((config) => config.primaryResource == path));
-  }
-
-  LaunchConfiguration _createConfig(String projectPath, LaunchType launchType, String path) {
-    String relativePath = path;
-
-    if (relativePath.startsWith(projectPath)) {
-      relativePath = relativePath.substring(projectPath.length);
-      if (relativePath.startsWith(fs.separator)) relativePath = relativePath.substring(1);
-    }
-
-    return launchConfigurationManager.createNewConfig(
-      projectPath,
-      launchType.type,
-      relativePath,
-      launchType.getDefaultConfigText()
-    );
-  }
-
-  LaunchConfiguration _newest(Iterable<LaunchConfiguration> configs) {
-    if (configs.isEmpty) return null;
-
-    LaunchConfiguration config = configs.first;
-
-    for (LaunchConfiguration c in configs) {
-      if (c.timestamp > config.timestamp) config = c;
-    }
-
-    return config;
-  }
 }
 
-// TODO: store the current selection per project
+// TODO: Use this when calculating the best current launch selection.
+// LaunchConfiguration _newest(Iterable<LaunchConfiguration> configs) {
+//   if (configs.isEmpty) return null;
+//
+//   LaunchConfiguration config = configs.first;
+//
+//   for (LaunchConfiguration c in configs) {
+//     if (c.timestamp > config.timestamp) config = c;
+//   }
+//
+//   return config;
+// }
 
-/// Manage the list of available launches for the currently selected project,
-/// and the currently selected launch (what would be run when the user hits
-/// cmd-R).
+/// Manage the list of available launches for the workspace, and the currently
+/// selected launch (what would be run when the user hits cmd-R).
 ///
 /// The list of launches contains launch configurations that the user has
-/// already un, as well as potential launch configs for things which are
+/// already run, as well as potential launch configs for things which are
 /// runnable but have not yet been run.
-class ProjectLaunchManager implements Disposable {
+class WorkspaceLaunchManager implements Disposable {
   Disposable disposeable;
   StreamSubscriptions subs = new StreamSubscriptions();
 
@@ -213,19 +145,20 @@ class ProjectLaunchManager implements Disposable {
   StreamController<RunnableConfig> _selectedRunnableController = new StreamController.broadcast();
   StreamController<List<RunnableConfig>> _runnablesController = new StreamController.broadcast();
 
-  ProjectLaunchManager() {
+  WorkspaceLaunchManager() {
     disposeable = atom.workspace.observeActivePaneItem((dynamic item) {
       _updateFromActiveEditor();
     });
     subs.add(projectManager.onProjectsChanged.listen((List<DartProject> projects) {
       _updateFromActiveEditor();
     }));
+    subs.add(launchConfigurationManager.onChange.listen((_) {
+      _updateFromActiveEditor();
+    }));
     _updateFromActiveEditor();
   }
 
   String get currentFile => _currentFile;
-
-  DartProject get currentProject => projectManager.getProjectFor(_currentFile);
 
   RunnableConfig get selectedRunnable => _selectedRunnable;
 
@@ -243,44 +176,45 @@ class ProjectLaunchManager implements Disposable {
     TextEditor editor = atom.workspace.getActiveTextEditor();
     _currentFile = editor?.getPath();
 
-    if (currentProject == null) {
-      _selectedRunnable = null;
-      _runnables.clear();
+    List<LaunchConfiguration> configs = launchConfigurationManager.getAllConfigs();
+    List<Launchable> launchables = [];
 
-      _selectedRunnableController.add(selectedRunnable);
-      _runnablesController.add(runnables);
-    } else {
-      String projectPath = currentProject.path;
+    // Find launchables from the current active editor.
+    if (_currentFile != null) {
+      launchables = launchManager.getAllLaunchables(_currentFile, new LaunchData(editor.getText()));
+    }
 
-      List<LaunchConfiguration> configs = launchConfigurationManager.getConfigsFor(projectPath);
-      List<Launchable> launchables = launchManager.getAllLaunchables(currentProject);
+    for (LaunchConfiguration config in configs) {
+      Launchable tempLaunchable = new Launchable(
+        launchManager.getLaunchType(config.type),
+        config.projectPath,
+        config.shortResourceName
+      );
+      launchables.remove(tempLaunchable);
+    }
 
-      for (LaunchConfiguration config in configs) {
-        Launchable tempLaunchable = new Launchable(
-          launchManager.getLaunchType(config.type),
-          config.shortResourceName
-        );
-        launchables.remove(tempLaunchable);
-      }
+    _runnables.clear();
 
-      _runnables.clear();
+    _runnables.addAll(configs.map((LaunchConfiguration config) {
+      return new RunnableConfig.fromLaunchConfig(config);
+    }));
+    _runnables.addAll(launchables.map((Launchable launchable) {
+      return new RunnableConfig.fromLaunchable(launchable);
+    }));
+    _runnables.sort();
 
-      _runnables.addAll(configs.map((LaunchConfiguration config) {
-        return new RunnableConfig.fromLaunchConfig(projectPath, config);
-      }));
-      _runnables.addAll(launchables.map((Launchable launchable) {
-        return new RunnableConfig.fromLaunchable(projectPath, launchable);
-      }));
+    _runnablesController.add(runnables);
 
-      _runnablesController.add(runnables);
+    // TODO: We should prefer to have a runnable that matches the current file
+    // here, if one exists. We should also try and make the user's selection as
+    // stable and sticky as possible.
 
-      if (_selectedRunnable != null && !_runnables.contains(_selectedRunnable)) {
-        _selectedRunnable = _runnables.isNotEmpty ? _runnables.first : null;
-        _selectedRunnableController.add(_selectedRunnable);
-      } else if (_selectedRunnable == null && _runnables.isNotEmpty) {
-        _selectedRunnable = _runnables.first;
-        _selectedRunnableController.add(_selectedRunnable);
-      }
+    if (_selectedRunnable != null && !_runnables.contains(_selectedRunnable)) {
+      _selectedRunnable = _runnables.isNotEmpty ? _runnables.first : null;
+      _selectedRunnableController.add(_selectedRunnable);
+    } else if (_selectedRunnable == null && _runnables.isNotEmpty) {
+      _selectedRunnable = _runnables.first;
+      _selectedRunnableController.add(_selectedRunnable);
     }
   }
 
@@ -294,21 +228,29 @@ class ProjectLaunchManager implements Disposable {
 /// potentially runnable that the user has never run - or a
 /// [LaunchConfiguration] - something the user has already run at least once.
 class RunnableConfig implements Comparable<RunnableConfig> {
-  final String projectPath;
-
   Launchable _launchable;
   LaunchConfiguration _config;
 
-  RunnableConfig.fromLaunchable(this.projectPath, this._launchable);
-  RunnableConfig.fromLaunchConfig(this.projectPath, this._config);
+  RunnableConfig.fromLaunchable(this._launchable);
+  RunnableConfig.fromLaunchConfig(this._config);
 
   bool get hasConfig => _config != null;
 
+  String get projectPath {
+    if (_config != null) {
+      return _config.projectPath;
+    } else {
+      return _launchable.projectPath;
+    }
+  }
+
   String getDisplayName() {
     if (_config != null) {
-      return '${_config.shortResourceName} • ${_config.type}';
+      String projectName = fs.basename(_config.projectPath);
+      return '${projectName}: ${_config.shortResourceName} (${_config.type})';
     } else {
-      return '${_launchable.relativePath} (${_launchable.type})';
+      String projectName = fs.basename(_launchable.projectPath);
+      return '${projectName}: ${_launchable.relativePath} (${_launchable.type}) •';
     }
   }
 
@@ -326,9 +268,11 @@ class RunnableConfig implements Comparable<RunnableConfig> {
     return _config;
   }
 
+  bool get isFlutterRunnable => type == 'flutter';
+
+  String get type => _config != null ? _config.type : _launchable.type;
+
   int compareTo(RunnableConfig other) {
-    if (hasConfig && !other.hasConfig) return -1;
-    if (!hasConfig && other.hasConfig) return 1;
     return getDisplayName().toLowerCase().compareTo(other.getDisplayName().toLowerCase());
   }
 
@@ -354,6 +298,8 @@ class _RunAppContextCommand extends ContextMenuItem {
     String filePath = event.targetFilePath;
     DartProject project = projectManager.getProjectFor(filePath);
     if (project == null) return false;
-    return launchManager.getHandlerFor(filePath) != null;
+    File file = new File.fromPath(filePath);
+    String contents = file.readSync();
+    return launchManager.getHandlerFor(filePath, new LaunchData(contents)) != null;
   }
 }

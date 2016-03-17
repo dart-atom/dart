@@ -6,7 +6,6 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 
 import '../atom.dart';
-import '../projects.dart';
 import 'launch.dart';
 
 class ShellLaunchType extends LaunchType {
@@ -15,9 +14,9 @@ class ShellLaunchType extends LaunchType {
 
   ShellLaunchType() : super('shell');
 
-  bool canLaunch(String path) => path.endsWith('.sh') || path.endsWith('.bat');
-
-  List<String> getLaunchablesFor(DartProject project) => [];
+  bool canLaunch(String path, LaunchData data) {
+    return path.endsWith('.sh') || path.endsWith('.bat');
+  }
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
     String script = configuration.primaryResource;
