@@ -9,6 +9,7 @@ import 'dart:js';
 
 import 'package:atom/node/process.dart';
 import 'package:atom/node/shell.dart';
+import 'package:atom/utils/dependencies.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom_dartlang/impl/tooltip.dart';
 import 'package:logging/logging.dart';
@@ -35,7 +36,6 @@ import 'dartino/dartino_util.dart' show dartino;
 import 'dartino/launch_dartino.dart';
 import 'debug/breakpoints.dart';
 import 'debug/debugger.dart';
-import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'flutter/flutter_daemon.dart';

@@ -7,10 +7,11 @@ library atom.state;
 import 'dart:async';
 import 'dart:convert' show JSON;
 
+import 'package:atom/utils/dependencies.dart';
+
 import 'analysis_server.dart';
 import 'debug/breakpoints.dart';
 import 'debug/debugger.dart';
-import 'dependencies.dart';
 import 'editors.dart';
 import 'error_repository.dart';
 import 'impl/navigation.dart';
@@ -22,7 +23,7 @@ import 'projects.dart';
 import 'sdk.dart';
 import 'views.dart';
 
-export 'dependencies.dart' show deps;
+export 'package:atom/utils/dependencies.dart' show deps;
 
 final String pluginId = 'dartlang';
 
