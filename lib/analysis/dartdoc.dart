@@ -100,9 +100,14 @@ class DartdocHelper implements Disposable {
 
     if (hover.dartdoc != null) {
       if (buf.isNotEmpty) buf.write('<br>');
-      String html = markdown.markdownToHtml(
-          hover.dartdoc, linkResolver: _resolve);
-      buf.write('\n${html}\n');
+
+      if (hover.dartdoc.contains(' class="material-icons')) {
+        // <p><i class="material-icons md-48">menu</i> &#x2014; material...</p>
+        buf.write('\n${hover.dartdoc}\n');
+      } else {
+        String html = markdown.markdownToHtml(hover.dartdoc, linkResolver: _resolve);
+        buf.write('\n${html}\n');
+      }
     }
 
     return buf.toString();
