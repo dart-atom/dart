@@ -206,7 +206,7 @@ class ObservatoryConnection extends DebugConnection {
 
     // TODO: This will try and set breakpoints on dead isolates.
     subs.add(breakpointManager.onAdd.listen((AtomBreakpoint bp) {
-      uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
+      uriResolver.resolvePathToUris(bp.path).then((List<String> uris) {
         return Future.forEach(uris, (String uri) {
           return service.addBreakpointWithScriptUri(
             isolate.id,
@@ -240,7 +240,7 @@ class ObservatoryConnection extends DebugConnection {
     return Future.forEach(breakpointManager.breakpoints, (AtomBreakpoint bp) {
       if (!bp.fileExists()) return null;
 
-      return uriResolver.resolvePathToUri(bp.path).then((List<String> uris) {
+      return uriResolver.resolvePathToUris(bp.path).then((List<String> uris) {
         return Future.forEach(uris, (String uri) {
           return service.addBreakpointWithScriptUri(
             isolate.id,
@@ -1037,7 +1037,7 @@ class ObservatoryLocation extends DebugLocation {
     return isolate.connection.uriResolver.resolveUriToPath(script.uri).then((String path) {
       _path = path;
       return this;
-    }) as Future<DebugLocation>;
+    });
   }
 
   void _checkCreateSystemScript() {
@@ -1228,7 +1228,7 @@ class _VmSourceCache {
     }
 
     if (path.indexOf('\\') != -1) {
-      List l = path.split('\\');
+      List<String> l = path.split('\\');
       if (l.length == 1) {
         return l;
       } else {
@@ -1236,7 +1236,7 @@ class _VmSourceCache {
       }
     }
 
-    List l = path.split('/');
+    List<String> l = path.split('/');
     if (l.length == 1) {
       return l;
     } else {

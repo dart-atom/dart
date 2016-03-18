@@ -387,7 +387,7 @@ class DeviceDomain extends Domain {
   Future<List<Device>> getDevices() {
     return _call('device.getDevices').then((List result) {
       return result.map(Device.parse).toList();
-    }) as Future<List<Device>>;
+    });
   }
 
   Future enable() => _call('device.enable');

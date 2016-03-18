@@ -9,6 +9,7 @@ import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
+import '../analysis/analysis_server_lib.dart' show CreateContextResult, MapUriResult;
 import '../atom.dart';
 import '../debug/debugger.dart';
 import '../projects.dart';
@@ -374,7 +375,7 @@ class CachingServerResolver implements _Resolver {
     } else if (_pathResolver != null) {
       return _pathResolver.resolve(url);
     } else {
-      return new Future.value();
+      return new Future<String>.value();
     }
   }
 
@@ -428,7 +429,7 @@ class _ServerResolver implements _Resolver {
   Completer<String> _contextCompleter = new Completer();
 
   _ServerResolver(this.path, this.server) {
-    analysisServer.server.execution.createContext(path).then((result) {
+    analysisServer.server.execution.createContext(path).then((CreateContextResult result) {
       return _contextCompleter.complete(result.id);
     }).catchError((_) {
       return _contextCompleter.complete(null);
@@ -439,7 +440,7 @@ class _ServerResolver implements _Resolver {
     return _context.then((String id) {
       if (id == null) return null;
 
-      return analysisServer.server.execution.mapUri(id, uri: url).then((result) {
+      return analysisServer.server.execution.mapUri(id, uri: url).then((MapUriResult result) {
         if (result.file != null) return result.file;
       }).catchError((_e) {
         return null;

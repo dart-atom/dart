@@ -23,7 +23,7 @@ abstract class FileIconsService implements Disposable {
   }
 
   JsObject toProxy() {
-    return jsify({
+    return jsify(<String, dynamic>{
       'iconClassForPath': iconClassForPath,
       'onWillDeactivate': onWillDeactivate
     });

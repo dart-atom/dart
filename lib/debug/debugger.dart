@@ -169,14 +169,14 @@ class UriResolver implements Disposable {
   }
 
   /// This can return one or two results.
-  Future<List<String>> resolvePathToUri(String path) {
-    return _resolvePathToUri(path).then((String result) {
-      _logger.finer('resolve ${path} ==> ${result}');
-      return result;
+  Future<List<String>> resolvePathToUris(String path) {
+    return _resolvePathToUris(path).then((List<String> results) {
+      _logger.finer('resolve ${path} ==> ${results}');
+      return results;
     });
   }
 
-  Future<String> _resolvePathToUri(String path) {
+  Future<List<String>> _resolvePathToUris(String path) {
     if (_pathToUri.containsKey(path)) return new Future.value(_pathToUri[path]);
 
     return _completer.future.then((String contextId) {

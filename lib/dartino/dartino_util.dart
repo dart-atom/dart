@@ -62,7 +62,7 @@ class _Dartino {
   }
 
   /// Prompt the user which SDK and where to install, then do it.
-  void promptInstallSdk([_]) {
+  void promptInstallSdk([AtomEvent _]) {
     // atom.notifications
     //     .addInfo('Which SDK would you like to install?', buttons: [
     //   new NotificationButton('Dartino', DartinoSdk.promptInstall),
@@ -72,7 +72,7 @@ class _Dartino {
   }
 
   /// Validate the installed SDK if there is one.
-  void validateSdk([_]) {
+  void validateSdk([AtomEvent _]) {
     if (sdkPath.isNotEmpty) {
       var sdk = sdkFor(null);
       if (sdk != null && sdk.validate()) {

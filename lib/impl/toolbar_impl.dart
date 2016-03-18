@@ -131,7 +131,7 @@ class DartToolbarContribution implements Disposable {
 
     List<RunnableConfig> runnables = [];
 
-    var updateUI = ([_]) {
+    var updateUI = () {
       runnables = workspaceLaunchManager.runnables;
 
       runButton.enabled = runnables.isNotEmpty;
@@ -157,8 +157,8 @@ class DartToolbarContribution implements Disposable {
       }
     };
 
-    subs.add(workspaceLaunchManager.onRunnablesChanged.listen(updateUI));
-    subs.add(workspaceLaunchManager.onSelectedRunnableChanged.listen(updateUI));
+    subs.add(workspaceLaunchManager.onRunnablesChanged.listen((List<RunnableConfig> runnables) => updateUI()));
+    subs.add(workspaceLaunchManager.onSelectedRunnableChanged.listen((RunnableConfig runnable) => updateUI()));
 
     element.onChange.listen((e) {
       int index = element.selectedIndex;
@@ -173,7 +173,7 @@ class DartToolbarContribution implements Disposable {
   void _bindDevicesToSelect(FlutterDeviceManager deviceManager, CoreElement selectList) {
     SelectElement element = selectList.element as SelectElement;
 
-    var updateSelect = ([_]) {
+    var updateSelect = () {
       selectList.clear();
 
       int index = 0;
@@ -196,8 +196,8 @@ class DartToolbarContribution implements Disposable {
 
     updateSelect();
 
-    subs.add(deviceManager.onDevicesChanged.listen(updateSelect));
-    subs.add(deviceManager.onSelectedChanged.listen(updateSelect));
+    subs.add(deviceManager.onDevicesChanged.listen((List<Device> devices) => updateSelect()));
+    subs.add(deviceManager.onSelectedChanged.listen((Device device) => updateSelect()));
 
     element.onChange.listen((e) {
       deviceManager.setSelectedDeviceIndex(element.selectedIndex);
