@@ -35500,7 +35500,7 @@ self._domRemove = function(element) {
           t2 = "Isolate " + H.S(isolate.get$displayName());
           J.set$text$x(t1.element, t2);
           t2 = this.isolateState;
-          t1 = J.get$isEmpty$asx(isolate.get$frames()) ? "paused (no frames)" : "";
+          t1 = isolate.get$hasFrames() ? "" : "paused (no frames)";
           J.set$text$x(t2.element, t1);
         } else {
           t2 = "Isolate " + H.S(isolate.get$displayName());
