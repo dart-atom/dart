@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue with doc comment grammar.
+
 ## 0.6.6
 - added an option to change the break on exceptions mode in the debugger
   (break on all exceptions, break on uncaught exceptions, or don't break on exceptions)
