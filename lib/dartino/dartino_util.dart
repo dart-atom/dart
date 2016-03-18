@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:atom/atom_utils.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
+import 'package:haikunator/haikunator.dart';
 
 import '../atom.dart';
 import 'sdk/dartino_sdk.dart';
@@ -44,6 +48,28 @@ class _Dartino {
   }
 
   bool isProject(projDir) => fs.existsSync(fs.join(projDir, 'dartino.yaml'));
+
+  /// Prompt the user for a new project location (path)
+  Future createNewProject([_]) async {
+    var sdk = sdkFor(null);
+    if (sdk == null) return;
+
+    // Prompt for new project location
+    String projectName = Haikunator.haikunate(delimiter: '_');
+    String projectPath = fs.join(fs.homedir, 'dartino-projects', projectName);
+    projectPath = await promptUser('Enter the path to the project to create:',
+        defaultText: projectPath, selectLastWord: true);
+    if (projectPath == null) return;
+
+    // Create the project, and if successful then open it in Atom
+    if (await sdk.createNewProject(projectPath)) {
+      atom.project.addPath(projectPath);
+      var editor = await atom.workspace.open(fs.join(projectPath, 'main.dart'));
+      // Focus the file in the files view 'tree-view:reveal-active-file'.
+      var view = atom.views.getView(editor);
+      atom.commands.dispatch(view, 'tree-view:reveal-active-file');
+    }
+  }
 
   /// Open the Dartino settings page
   void openSettings([_]) {

@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';
+import 'package:atom_dartlang/jobs.dart';
 import 'package:logging/logging.dart';
 
 import '../../atom.dart';
@@ -78,6 +80,18 @@ class DartinoSdk extends Sdk {
       return null;
     }
     return srcPath.substring(0, srcPath.length - 5) + '.bin';
+  }
+
+  @override
+  Future<bool> createNewProject(String projectPath) {
+    // TODO(danrubel) get list of supported boards
+    // and prompt user for which board they would like to create a project.
+    // If there is a connected board then make that the default.
+    String boardName = 'stm32f746g-discovery';
+
+    // Create the project using the dartino cmdline utility
+    return new DartinoCmd(this, 'Creating ${fs.basename(projectPath)}',
+        ['create', 'project', projectPath, 'for', boardName]).start();
   }
 
   @override
@@ -197,5 +211,22 @@ Future _validateLocalSettingsFile(DartinoSdk sdk, DartinoLaunch launch) async {
     }
   } catch (e, s) {
     new Logger('DartinoSdk').info('validate local settings exception', e, s);
+  }
+}
+
+/// Launch and monitor the Dartino cmdline utility,
+/// reporting progress and result to the user.
+class DartinoCmd extends Job {
+  final DartinoSdk sdk;
+  final List<String> cmd;
+
+  DartinoCmd(this.sdk, String name, this.cmd) : super(name);
+
+  Future<bool> start() =>
+      schedule().then((JobStatus status) => status.isOk && status.result == 0);
+
+  @override
+  Future run() {
+    return new ProcessNotifier(name).watch(sdk.execBin('dartino', cmd));
   }
 }

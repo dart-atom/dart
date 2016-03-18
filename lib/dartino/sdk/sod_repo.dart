@@ -53,6 +53,29 @@ class SodRepo extends Sdk {
   }
 
   @override
+  Future<bool> createNewProject(String projectPath) async {
+    // TODO(danrubel) implement sod create project in sod cmdline utility then
+    // call it from here.
+    try {
+      var dir = new Directory.fromPath(projectPath);
+      if (!dir.existsSync()) await dir.create();
+      if (!dir.getEntriesSync().isEmpty) {
+        atom.notifications.addError('Project already exists',
+            detail: projectPath, dismissable: true);
+        return false;
+      }
+      dir.getFile('dartino.yaml').writeSync(
+          r'''# This is an empty SOD configuration file. Currently this is only used as a
+  # placeholder to enable the Dartino Atom package.''');
+    } catch (e, s) {
+      atom.notifications.addError('Failed to create new project',
+          detail: '$projectPath\n$e\n$s', dismissable: true);
+      return false;
+    }
+    return true;
+  }
+
+  @override
   Future launch(DartinoLaunch launch) async {
     Device device = await Device.forLaunch(launch);
     if (device == null) return;

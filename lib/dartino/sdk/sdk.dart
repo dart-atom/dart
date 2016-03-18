@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/process.dart';
 
 import '../../atom.dart';
 import '../../atom_utils.dart';
@@ -16,6 +17,24 @@ abstract class Sdk {
   Sdk(this.sdkRoot);
 
   String get name;
+
+  /// Create a new project at the specified location.
+  /// Return a [Future] that indicates whether the project was created.
+  Future<bool> createNewProject(String projectPath);
+
+  /// Execute the given SDK binary (a command in the `bin/` folder). [cwd] can
+  /// be either a [String] or a [Directory].
+  ProcessRunner execBin(String binName, List<String> args,
+      {cwd, bool startProcess: true}) {
+    if (cwd is Directory) cwd = cwd.path;
+    String osBinName = isWindows ? '${binName}.bat' : binName;
+    String command = fs.join(sdkRoot, 'bin', osBinName);
+
+    ProcessRunner runner =
+        new ProcessRunner.underShell(command, args: args, cwd: cwd);
+    if (startProcess) runner.execStreaming();
+    return runner;
+  }
 
   /// Return `true` if the specified file exists in the SDK
   bool existsSync(String relativePosixPath) {
