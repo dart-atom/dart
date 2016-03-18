@@ -22,7 +22,7 @@ final Logger _logger = new Logger('atom.launch_configs');
 
 class LaunchConfigurationManager implements Disposable, StateStorable {
   Map<String, _ProjectConfigurations> _projectConfigs = {};
-  Map<String, int> _launchTimestamps = {};
+  Map<String, int> _launchTimestamps = <String, int>{};
 
   StreamController _changeController = new StreamController.broadcast();
 
@@ -117,7 +117,7 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
     if (storedData is Map) {
       _launchTimestamps = storedData;
     } else {
-      _launchTimestamps = {};
+      _launchTimestamps = <String, int>{};
     }
   }
 
@@ -176,7 +176,7 @@ class LaunchConfiguration {
   /// Return the type specific arguments for this launch configuration.
   Map<String, dynamic> get typeArgs {
     var data = _map[type];
-    return data is Map ? data : {};
+    return data is Map ? data : <String, dynamic>{};
   }
 
   String get cwd {
@@ -213,7 +213,7 @@ class LaunchConfiguration {
 
   List<String> get argsAsList {
     var val = typeArgs['args'];
-    if (val == null) return [];
+    if (val == null) return <String>[];
     if (val is List) return val;
 
     String str = '${val}';

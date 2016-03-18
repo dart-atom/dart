@@ -184,19 +184,19 @@ Future<String> _discoverSdk() {
       return _resolveSdkFromFlutterPath(result);
     }).catchError((e) {
       return null;
-    });
+    }) as Future<String>;
   } else if (isWindows) {
     return which('flutter', isBatchScript: true).then((result) {
       return _resolveSdkFromFlutterPath(result);
     }).catchError((e) {
       return null;
-    });
+    }) as Future<String>;
   } else {
     return which('flutter').then((String result) {
       return _resolveSdkFromFlutterPath(result);
     }).catchError((e) {
       return null;
-    });
+    }) as Future<String>;
   }
 }
 

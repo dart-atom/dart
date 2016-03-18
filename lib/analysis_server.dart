@@ -552,7 +552,7 @@ class _AnalysisServerWrapper extends Server {
 
   /// Creates a process.
   static ProcessRunner _createProcess(Sdk sdk) {
-    List<String> arguments = [];
+    List<String> arguments = <String>[];
 
     // Start in checked mode?
     if (AnalysisServer.useChecked) {

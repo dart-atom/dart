@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html' show InputElement;
+import 'dart:html' show AnchorElement, InputElement;
 
 import 'package:atom/node/shell.dart';
 import 'package:atom/utils/disposable.dart';
@@ -101,7 +101,8 @@ class StatusView extends View {
 
   CoreElement _registerSection(String sectionId, CoreElement element) {
     for (var link in element.element.querySelectorAll('a')) {
-      link.onClick.listen((_) => shell.openExternal(link.href));
+      AnchorElement aRef = link;
+      link.onClick.listen((_) => shell.openExternal(aRef.href));
     }
 
     _sections[sectionId] = element;
@@ -206,7 +207,7 @@ class StatusView extends View {
     header.toolbar.add(strobeIncoming);
     header.toolbar.add(strobeOutgoing);
 
-    var update = ([_]) {
+    var update = ([bool _]) {
       start.disabled = analysisServer.isActive;
       reanalyze.enabled = analysisServer.isActive;
       stop.enabled = analysisServer.isActive;
@@ -239,14 +240,14 @@ class StatusView extends View {
     //   ])
     // ]);
 
-    var updateTrafficIncoming = (str) {
+    var updateTrafficIncoming = (String str) {
       // Don't show the text for the diagnostic command.
       if (str.contains('"result":{"contexts":')) return;
       strobeIncoming.strobe();
     };
     subs.add(analysisServer.onReceive.listen(updateTrafficIncoming));
 
-    var updateTrafficOutgoing = (str) {
+    var updateTrafficOutgoing = (String str) {
       // Don't show the text for the diagnostic command.
       if (str.contains('"diagnostic.getDiagnostics"')) return;
       strobeOutgoing.strobe();

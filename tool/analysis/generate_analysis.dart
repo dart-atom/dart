@@ -284,7 +284,7 @@ class Request {
     if (args.isEmpty) {
       gen.writeln(
           "Future<${resultName}> ${method}() => _call('${domain.name}.${method}').then("
-          "${resultName}.parse) as Future<${resultName}>;");
+          "${resultName}.parse);");
       return;
     }
 
@@ -321,7 +321,7 @@ class Request {
       }
       gen.write("return _call('${domain.name}.${method}', m)");
       if (results.isNotEmpty) {
-        gen.write(".then(${resultName}.parse) as Future<${resultName}>");
+        gen.write(".then(${resultName}.parse)");
       }
       gen.writeln(';');
     }

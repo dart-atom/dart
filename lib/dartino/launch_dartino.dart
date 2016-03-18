@@ -85,7 +85,7 @@ class DartinoLaunch extends Launch {
   /// If this is not the last time [run] will be called for this launch
   /// (e.g. a compile before the launch) then set [isLast] `false`.
   Future<int> run(String command,
-      {List args,
+      {List<String> args,
       String cwd,
       String message,
       bool isLast: true,

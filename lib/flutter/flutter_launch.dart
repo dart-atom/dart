@@ -174,7 +174,7 @@ class _LaunchInstance {
       }
 
       // Chain 'flutter logs'.
-      List<String> logsArgs = ['logs'];
+      List<String> logsArgs = <String>['logs'];
 
       // Just log from the currently selected device.
       if (_device != null) {
@@ -204,7 +204,7 @@ class _LaunchInstance {
       // Run flutter stop.
       FlutterTool flutter = _flutterSdk.sdk.flutterTool;
 
-      List args = ['stop'];
+      List<String> args = <String>['stop'];
 
       if (_device != null) {
         args.add('--device-id');

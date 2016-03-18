@@ -219,7 +219,7 @@ class ServerDomain extends Domain {
   }
 
   Future<VersionResult> getVersion() =>
-      _call('server.getVersion').then(VersionResult.parse) as Future<VersionResult>;
+      _call('server.getVersion').then(VersionResult.parse);
 
   Future shutdown() => _call('server.shutdown');
 
@@ -325,29 +325,25 @@ class AnalysisDomain extends Domain {
 
   Future<ErrorsResult> getErrors(String file) {
     Map m = {'file': file};
-    return _call('analysis.getErrors', m).then(ErrorsResult.parse)
-        as Future<ErrorsResult>;
+    return _call('analysis.getErrors', m).then(ErrorsResult.parse);
   }
 
   Future<HoverResult> getHover(String file, int offset) {
     Map m = {'file': file, 'offset': offset};
-    return _call('analysis.getHover', m).then(HoverResult.parse) as Future<HoverResult>;
+    return _call('analysis.getHover', m).then(HoverResult.parse);
   }
 
   Future<ReachableSourcesResult> getReachableSources(String file) {
     Map m = {'file': file};
-    return _call('analysis.getReachableSources', m).then(ReachableSourcesResult.parse)
-        as Future<ReachableSourcesResult>;
+    return _call('analysis.getReachableSources', m).then(ReachableSourcesResult.parse);
   }
 
   Future<LibraryDependenciesResult> getLibraryDependencies() =>
-      _call('analysis.getLibraryDependencies').then(LibraryDependenciesResult.parse)
-      as Future<LibraryDependenciesResult>;
+      _call('analysis.getLibraryDependencies').then(LibraryDependenciesResult.parse);
 
   Future<NavigationResult> getNavigation(String file, int offset, int length) {
     Map m = {'file': file, 'offset': offset, 'length': length};
-    return _call('analysis.getNavigation', m).then(NavigationResult.parse)
-        as Future<NavigationResult>;
+    return _call('analysis.getNavigation', m).then(NavigationResult.parse);
   }
 
   Future reanalyze({List<String> roots}) {
@@ -591,8 +587,7 @@ class CompletionDomain extends Domain {
 
   Future<SuggestionsResult> getSuggestions(String file, int offset) {
     Map m = {'file': file, 'offset': offset};
-    return _call('completion.getSuggestions', m).then(SuggestionsResult.parse)
-        as Future<SuggestionsResult>;
+    return _call('completion.getSuggestions', m).then(SuggestionsResult.parse);
   }
 }
 
@@ -637,34 +632,31 @@ class SearchDomain extends Domain {
       String file, int offset, bool includePotential) {
     Map m = {'file': file, 'offset': offset, 'includePotential': includePotential};
     return _call('search.findElementReferences', m)
-        .then(FindElementReferencesResult.parse) as Future<FindElementReferencesResult>;
+        .then(FindElementReferencesResult.parse);
   }
 
   Future<FindMemberDeclarationsResult> findMemberDeclarations(String name) {
     Map m = {'name': name};
     return _call('search.findMemberDeclarations', m)
-        .then(FindMemberDeclarationsResult.parse) as Future<FindMemberDeclarationsResult>;
+        .then(FindMemberDeclarationsResult.parse);
   }
 
   Future<FindMemberReferencesResult> findMemberReferences(String name) {
     Map m = {'name': name};
-    return _call('search.findMemberReferences', m).then(FindMemberReferencesResult.parse)
-        as Future<FindMemberReferencesResult>;
+    return _call('search.findMemberReferences', m).then(FindMemberReferencesResult.parse);
   }
 
   Future<FindTopLevelDeclarationsResult> findTopLevelDeclarations(String pattern) {
     Map m = {'pattern': pattern};
     return _call('search.findTopLevelDeclarations', m)
-            .then(FindTopLevelDeclarationsResult.parse)
-        as Future<FindTopLevelDeclarationsResult>;
+        .then(FindTopLevelDeclarationsResult.parse);
   }
 
   Future<TypeHierarchyResult> getTypeHierarchy(String file, int offset,
       {bool superOnly}) {
     Map m = {'file': file, 'offset': offset};
     if (superOnly != null) m['superOnly'] = superOnly;
-    return _call('search.getTypeHierarchy', m).then(TypeHierarchyResult.parse)
-        as Future<TypeHierarchyResult>;
+    return _call('search.getTypeHierarchy', m).then(TypeHierarchyResult.parse);
   }
 }
 
@@ -747,24 +739,24 @@ class EditDomain extends Domain {
       'selectionLength': selectionLength
     };
     if (lineLength != null) m['lineLength'] = lineLength;
-    return _call('edit.format', m).then(FormatResult.parse) as Future<FormatResult>;
+    return _call('edit.format', m).then(FormatResult.parse);
   }
 
   Future<AssistsResult> getAssists(String file, int offset, int length) {
     Map m = {'file': file, 'offset': offset, 'length': length};
-    return _call('edit.getAssists', m).then(AssistsResult.parse) as Future<AssistsResult>;
+    return _call('edit.getAssists', m).then(AssistsResult.parse);
   }
 
   Future<AvailableRefactoringsResult> getAvailableRefactorings(
       String file, int offset, int length) {
     Map m = {'file': file, 'offset': offset, 'length': length};
     return _call('edit.getAvailableRefactorings', m)
-        .then(AvailableRefactoringsResult.parse) as Future<AvailableRefactoringsResult>;
+        .then(AvailableRefactoringsResult.parse);
   }
 
   Future<FixesResult> getFixes(String file, int offset) {
     Map m = {'file': file, 'offset': offset};
-    return _call('edit.getFixes', m).then(FixesResult.parse) as Future<FixesResult>;
+    return _call('edit.getFixes', m).then(FixesResult.parse);
   }
 
   Future<RefactoringResult> getRefactoring(
@@ -778,20 +770,17 @@ class EditDomain extends Domain {
       'validateOnly': validateOnly
     };
     if (options != null) m['options'] = options;
-    return _call('edit.getRefactoring', m).then(RefactoringResult.parse)
-        as Future<RefactoringResult>;
+    return _call('edit.getRefactoring', m).then(RefactoringResult.parse);
   }
 
   Future<SortMembersResult> sortMembers(String file) {
     Map m = {'file': file};
-    return _call('edit.sortMembers', m).then(SortMembersResult.parse)
-        as Future<SortMembersResult>;
+    return _call('edit.sortMembers', m).then(SortMembersResult.parse);
   }
 
   Future<OrganizeDirectivesResult> organizeDirectives(String file) {
     Map m = {'file': file};
-    return _call('edit.organizeDirectives', m).then(OrganizeDirectivesResult.parse)
-        as Future<OrganizeDirectivesResult>;
+    return _call('edit.organizeDirectives', m).then(OrganizeDirectivesResult.parse);
   }
 }
 
@@ -897,8 +886,7 @@ class ExecutionDomain extends Domain {
 
   Future<CreateContextResult> createContext(String contextRoot) {
     Map m = {'contextRoot': contextRoot};
-    return _call('execution.createContext', m).then(CreateContextResult.parse)
-        as Future<CreateContextResult>;
+    return _call('execution.createContext', m).then(CreateContextResult.parse);
   }
 
   Future deleteContext(String id) => _call('execution.deleteContext', {'id': id});
@@ -907,7 +895,7 @@ class ExecutionDomain extends Domain {
     Map m = {'id': id};
     if (file != null) m['file'] = file;
     if (uri != null) m['uri'] = uri;
-    return _call('execution.mapUri', m).then(MapUriResult.parse) as Future<MapUriResult>;
+    return _call('execution.mapUri', m).then(MapUriResult.parse);
   }
 
   Future setSubscriptions(List<String> subscriptions) =>
@@ -954,8 +942,7 @@ class DiagnosticDomain extends Domain {
   DiagnosticDomain(Server server) : super(server, 'diagnostic');
 
   Future<DiagnosticsResult> getDiagnostics() =>
-      _call('diagnostic.getDiagnostics').then(DiagnosticsResult.parse)
-      as Future<DiagnosticsResult>;
+      _call('diagnostic.getDiagnostics').then(DiagnosticsResult.parse);
 }
 
 class DiagnosticsResult {

@@ -264,7 +264,7 @@ class SdkDiscovery {
 
   Future<String> _discoverSdk() {
     if (isMac) {
-      return which('dart').then((result) {
+      return which('dart').then((String result) {
         result = _resolveSdkFromVm(result);
         if (result != null) {
           // On mac, special case for homebrew. Replace the version specific
@@ -277,20 +277,20 @@ class SdkDiscovery {
         return result;
       }).catchError((e) {
         return null;
-      });
+      }) as Future<String>;
     } else if (isWindows) {
       // TODO: Also use the PATH var?
-      return which('dart').then((result) {
+      return which('dart').then((String result) {
         return _resolveSdkFromVm(result);
       }).catchError((e) {
         return null;
-      });
+      }) as Future<String>;
     } else {
       return which('dart').then((String result) {
         return _resolveSdkFromVm(result);
       }).catchError((e) {
         return null;
-      });
+      }) as Future<String>;
     }
   }
 
