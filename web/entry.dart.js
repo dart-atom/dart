@@ -45669,12 +45669,12 @@ self._domRemove = function(element) {
           t1 = X.MacShellWrangler$();
           $._shellWrangler = t1;
         }
-        return H.subtypeCast(X.exec("which", [execName], t1._env).then$1(new M.which_closure()), "$isFuture", [P.String], "$asFuture");
+        return X.exec("which", [execName], t1._env).then$1(new M.which_closure());
       } else if ($.$get$isWindows() === true) {
         ext = isBatchScript ? "bat" : "exe";
-        return H.subtypeCast(X.exec("where", [execName + "." + ext], null).then$1(new M.which_closure0()), "$isFuture", [P.String], "$asFuture");
+        return X.exec("where", [execName + "." + ext], null).then$1(new M.which_closure0());
       } else
-        return H.subtypeCast(X.exec("which", [execName], null).then$1(new M.which_closure1()), "$isFuture", [P.String], "$asFuture");
+        return X.exec("which", [execName], null).then$1(new M.which_closure1());
     },
     promptUser_closure3: {
       "^": "Closure:1;editorElement",
@@ -67143,7 +67143,7 @@ self._domRemove = function(element) {
   }], ["node.process", "package:atom/node/process.dart",, X, {
     "^": "",
     exec: function(command, args, env) {
-      return H.subtypeCast(new X.ProcessRunner(command, args, null, env, null, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]), null, P.StreamController_StreamController(null, null, null, null, false, null), P.StreamController_StreamController(null, null, null, null, false, null)).execSimple$0().then$1(new X.exec_closure()), "$isFuture", [P.String], "$asFuture");
+      return new X.ProcessRunner(command, args, null, env, null, H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]), null, P.StreamController_StreamController(null, null, null, null, false, null), P.StreamController_StreamController(null, null, null, null, false, null)).execSimple$0().then$1(new X.exec_closure());
     },
     execSync: function(command) {
       var result, error, t1, exception;
@@ -67199,7 +67199,7 @@ self._domRemove = function(element) {
         H.setRuntimeTypeInfo(new P._ControllerStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new X.ProcessRunner_execSimple_closure(stdout));
         t1 = this._stderrController;
         H.setRuntimeTypeInfo(new P._ControllerStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new X.ProcessRunner_execSimple_closure0(stderr));
-        return H.subtypeCast(this.execStreaming$0().then$1(new X.ProcessRunner_execSimple_closure1(stdout, stderr)), "$isFuture", [X.ProcessResult], "$asFuture");
+        return this.execStreaming$0().then$1(new X.ProcessRunner_execSimple_closure1(stdout, stderr));
       },
       execStreaming$0: function() {
         var e, t1, t2, t3, t4, t5, exception;

@@ -1,7 +1,12 @@
 # dartlang plugin changelog
 
 ## unreleased
-- fixed an issue with doc comment grammar.
+- fixed an issue with doc comment grammar
+- the application pulldown now shows all available launch configurations for the
+  open projects
+- fixed an NPE in the debugger's stack frame view
+- updated to a new Atom API to open editors in a 'preview' mode, so we don't end
+  up with a proliferation of open editors
 
 ## 0.6.6
 - added an option to change the break on exceptions mode in the debugger
