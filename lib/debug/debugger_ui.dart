@@ -402,7 +402,7 @@ class FlowControlSection implements Disposable {
 
     if (suspended) {
       isolateName.text = 'Isolate ${isolate.displayName}';
-      isolateState.text = isolate.frames.isEmpty ? 'paused (no frames)' : '';
+      isolateState.text = isolate.hasFrames ? '' : 'paused (no frames)';
     } else {
       isolateName.text = 'Isolate ${isolate.displayName}';
       isolateState.text = 'running';
