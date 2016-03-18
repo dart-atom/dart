@@ -231,8 +231,8 @@ class Workspace extends ProxyHolder {
   /// no registered opener can open the URI, a new empty TextEditor will be
   /// created.
   ///
-  /// [options] can include initialLine, initialColumn, split, activePane, and
-  /// searchAllPanes.
+  /// [options] can include initialLine, initialColumn, split, activePane,
+  /// searchAllPanes, and pending.
   Future<TextEditor> open(String url, {Map options}) {
     return _openSerializer.perform(() {
       Future future = promiseToFuture(invoke('open', url, options));
@@ -242,6 +242,28 @@ class Workspace extends ProxyHolder {
         return editor.isValid() ? editor : null;
       });
     });
+  }
+
+  /// Call the `workspace.open` call with `pending` set to true; this will open
+  /// the tab in a preview mode.
+  Future<TextEditor> openPending(String url, {Map options}) {
+    if (options == null) {
+      options = {'pending': true};
+    } else {
+      options['pending'] = true;
+    }
+
+    return open(url, options: options);
+  }
+
+  /// Open the settings view. Optionally open it to the settings for a particular
+  /// plugin.
+  Future<TextEditor> openConfigPage({String packageID}) {
+    if (packageID == null) {
+      return open('atom://config');
+    } else {
+      return open('atom://config/packages/${packageID}');
+    }
   }
 
   /// Register an opener for a uri.

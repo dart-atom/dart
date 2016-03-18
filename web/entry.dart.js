@@ -33803,7 +33803,7 @@ self._domRemove = function(element) {
     ConsoleView_closure1: {
       "^": "Closure:1;$this",
       call$0: function() {
-        $.$get$atom()._workspace.open$1(0, this.$this.launch.get$launchConfiguration().get$configYamlPath());
+        $.$get$atom()._workspace.openPending$1(this.$this.launch.get$launchConfiguration().get$configYamlPath());
       }
     },
     ConsoleView__watchServicePort_closure: {
@@ -34003,6 +34003,25 @@ self._domRemove = function(element) {
       },
       open$1: function($receiver, url) {
         return this.open$2$options($receiver, url, null);
+      },
+      openPending$2$options: function(url, options) {
+        if (options == null)
+          options = P.LinkedHashMap__makeLiteral(["pending", true]);
+        else
+          options.$indexSet(0, "pending", true);
+        return this.open$2$options(0, url, options);
+      },
+      openPending$1: function(url) {
+        return this.openPending$2$options(url, null);
+      },
+      openConfigPage$1$packageID: function(packageID) {
+        if (packageID == null)
+          return this.open$1(0, "atom://config");
+        else
+          return this.open$1(0, "atom://config/packages/" + packageID);
+      },
+      openConfigPage$0: function() {
+        return this.openConfigPage$1$packageID(null);
       },
       saveAll$0: function() {
         var e, exception, t1;
@@ -36373,7 +36392,7 @@ self._domRemove = function(element) {
         ed = t1._workspace.getActiveTextEditor$0();
         if (ed != null && J.$eq$(ed.invoke$1("getPath"), path))
           options.$indexSet(0, "searchAllPanes", false);
-        return t1._workspace.open$2$options(0, path, options).then$1(new F.EditorManager_jumpToLocation_closure($length));
+        return t1._workspace.openPending$2$options(path, options).then$1(new F.EditorManager_jumpToLocation_closure($length));
       },
       jumpToLocation$3: function(path, line, column) {
         return this.jumpToLocation$4(path, line, column, null);
@@ -36386,7 +36405,7 @@ self._domRemove = function(element) {
         ed = t1._workspace.getActiveTextEditor$0();
         if (ed != null && J.$eq$(ed.invoke$1("getPath"), path))
           options.$indexSet(0, "searchAllPanes", false);
-        return t1._workspace.open$2$options(0, path, options).then$1(new F.EditorManager_jumpToLine_closure(true));
+        return t1._workspace.openPending$2$options(path, options).then$1(new F.EditorManager_jumpToLine_closure(true));
       },
       dispose$0: [function() {
         this.dartEditors.dispose$0();
@@ -37071,7 +37090,7 @@ self._domRemove = function(element) {
         ed = t1._workspace.getActiveTextEditor$0();
         if (ed != null && J.$eq$(ed.invoke$1("getPath"), J.get$file$x($location)))
           options.$indexSet(0, "searchAllPanes", false);
-        return t1._workspace.open$2$options(0, J.get$file$x($location), options).then$1(new G.ErrorsView__jumpTo_closure($location));
+        return t1._workspace.openPending$2$options(J.get$file$x($location), options).then$1(new G.ErrorsView__jumpTo_closure($location));
       }
     },
     ErrorsView__cvtError_closure: {
@@ -37826,7 +37845,7 @@ self._domRemove = function(element) {
       "^": "Closure:1;_box_0",
       call$0: [function() {
         this._box_0.notification.invoke$1("dismiss");
-        $.$get$atom()._workspace.open$1(0, "atom://config/packages/dartlang");
+        $.$get$atom()._workspace.openConfigPage$1$packageID("dartlang");
       }, null, null, 0, 0, null, "call"]
     },
     _discoverSdk_closure: {
@@ -41706,7 +41725,7 @@ self._domRemove = function(element) {
     AtomDartPackage_packageActivated_closure: {
       "^": "Closure:0;",
       call$1: function(_) {
-        $.$get$atom()._workspace.open$1(0, "atom://config/packages/dartlang");
+        $.$get$atom()._workspace.openConfigPage$1$packageID("dartlang");
       }
     },
     AtomDartPackage_packageActivated_closure0: {
@@ -43368,7 +43387,7 @@ self._domRemove = function(element) {
         t2 = t1.get$data(node);
         if (typeof t2 === "string") {
           path = t1.get$data(node);
-          $.$get$atom()._workspace.open$2$options(0, path, P.LinkedHashMap__makeLiteral(["searchAllPanes", true]));
+          $.$get$atom()._workspace.openPending$2$options(path, P.LinkedHashMap__makeLiteral(["searchAllPanes", true]));
         }
       }, "call$1", "get$_doubleClick", 2, 0, 21, 22],
       _renderPath$1: function(originalPath) {
@@ -62453,7 +62472,7 @@ self._domRemove = function(element) {
         return this.createNewProject$1(null);
       }, "createNewProject$0", "call$1", "call$0", "get$createNewProject", 0, 2, 169, 3],
       openSettings$1: [function(_) {
-        $.$get$atom()._workspace.open$1(0, "atom://config/packages/dartino");
+        $.$get$atom()._workspace.openConfigPage$1$packageID("dartino");
       }, function() {
         return this.openSettings$1(null);
       }, "openSettings$0", "call$1", "call$0", "get$openSettings", 0, 2, 15, 3, 1],
@@ -71145,7 +71164,7 @@ self._domRemove = function(element) {
     StatusView__createPluginSection_closure0: {
       "^": "Closure:1;",
       call$0: function() {
-        $.$get$atom()._workspace.open$1(0, "atom://config/packages/dartlang");
+        $.$get$atom()._workspace.openConfigPage$1$packageID("dartlang");
       }
     },
     StatusView__createPluginSection_closure1: {
@@ -71953,7 +71972,7 @@ self._domRemove = function(element) {
         runnable = Q.Dependencies_instance().getDependency$1(C.Type_WorkspaceLaunchManager_G7N).get$selectedRunnable();
         if (runnable != null) {
           config = runnable.getCreateLaunchConfig$0();
-          $.$get$atom()._workspace.open$1(0, config.get$configYamlPath());
+          $.$get$atom()._workspace.openPending$1(config.get$configYamlPath());
         } else {
           t1 = $.$get$atom()._notifications;
           t1.invoke$3("addWarning", "No current launchable resource.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
@@ -71964,7 +71983,7 @@ self._domRemove = function(element) {
         t1.invoke$3("set", "dartlang.showOutlineView", !J.$eq$(t1.getValue$2$scope("dartlang.showOutlineView", null), true));
       }, "call$0", "get$_toggleOutline", 0, 0, 2],
       _openSettings$0: [function() {
-        $.$get$atom()._workspace.open$1(0, "atom://config");
+        $.$get$atom()._workspace.openConfigPage$0();
       }, "call$0", "get$_openSettings", 0, 0, 2],
       dispose$0: [function() {
         this.leftTile.invoke$1("destroy");

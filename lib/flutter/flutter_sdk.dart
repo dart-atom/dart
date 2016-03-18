@@ -142,7 +142,7 @@ class FlutterSdkManager implements Disposable {
 
     var openSettings = () {
       notification.dismiss();
-      atom.workspace.open('atom://config/packages/dartlang');
+      atom.workspace.openConfigPage(packageID: 'dartlang');
     };
 
     notification = atom.notifications.addSuccess('Flutter SDK info',

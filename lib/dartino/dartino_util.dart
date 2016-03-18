@@ -73,7 +73,7 @@ class _Dartino {
 
   /// Open the Dartino settings page
   void openSettings([_]) {
-    atom.workspace.open('atom://config/packages/dartino');
+    atom.workspace.openConfigPage(packageID: 'dartino');
   }
 
   /// Prompt the user to change the SDK setting or install a new SDK

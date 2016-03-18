@@ -221,7 +221,7 @@ class DartToolbarContribution implements Disposable {
 
     if (runnable != null) {
       LaunchConfiguration config = runnable.getCreateLaunchConfig();
-      atom.workspace.open(config.configYamlPath);
+      atom.workspace.openPending(config.configYamlPath);
     } else {
       atom.notifications.addWarning('No current launchable resource.');
     }
@@ -233,7 +233,7 @@ class DartToolbarContribution implements Disposable {
   }
 
   void _openSettings() {
-    atom.workspace.open('atom://config');
+    atom.workspace.openConfigPage();
   }
 
   void dispose() {

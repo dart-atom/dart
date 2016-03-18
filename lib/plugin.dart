@@ -179,7 +179,7 @@ class AtomDartPackage extends AtomPackage {
     // Register commands.
     //_addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
     _addCmd('atom-workspace', 'dartlang:settings', (_) {
-      atom.workspace.open('atom://config/packages/dartlang');
+      atom.workspace.openConfigPage(packageID: 'dartlang');
     });
     _addCmd('atom-workspace', 'dartlang:reanalyze-sources', (_) {
       new ProjectScanJob().schedule().then((_) {

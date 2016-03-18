@@ -286,7 +286,7 @@ class ErrorsView extends View {
       options['searchAllPanes'] = false;
     }
 
-    return atom.workspace.open(location.file, options: options).then(
+    return atom.workspace.openPending(location.file, options: options).then(
         (TextEditor editor) {
       // Select offset to length.
       TextBuffer buffer = editor.getBuffer();
