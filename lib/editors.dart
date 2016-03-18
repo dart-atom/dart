@@ -104,7 +104,7 @@ class EditorManager implements Disposable {
     var ed = atom.workspace.getActiveTextEditor();
     if (ed != null && ed.getPath() == path) options['searchAllPanes'] = false;
 
-    return atom.workspace.open(path, options: options).then((TextEditor editor) {
+    return atom.workspace.openPending(path, options: options).then((TextEditor editor) {
       if (length != null) editor.selectRight(length);
       return editor;
     });
@@ -119,7 +119,7 @@ class EditorManager implements Disposable {
     var ed = atom.workspace.getActiveTextEditor();
     if (ed != null && ed.getPath() == path) options['searchAllPanes'] = false;
 
-    return atom.workspace.open(path, options: options).then((TextEditor editor) {
+    return atom.workspace.openPending(path, options: options).then((TextEditor editor) {
       if (selectLine) editor.selectLinesContainingCursors();
       return editor;
     });

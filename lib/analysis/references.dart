@@ -187,7 +187,7 @@ class FindReferencesView extends View {
   void _doubleClick(Node node) {
     if (node.data is String) {
       String path = node.data;
-      atom.workspace.open(path, options: { 'searchAllPanes': true });
+      atom.workspace.openPending(path, options: { 'searchAllPanes': true });
     }
   }
 

@@ -164,7 +164,7 @@ class ConsoleView extends View {
       );
       e.tooltip = 'Configure this application launch';
       e.click(() {
-        atom.workspace.open(launch.launchConfiguration.configYamlPath);
+        atom.workspace.openPending(launch.launchConfiguration.configYamlPath);
       });
     }
 

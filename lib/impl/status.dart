@@ -119,7 +119,7 @@ class StatusView extends View {
     });
 
     header.toolbar.add(new MIconButton('icon-tools')..click(() {
-      atom.workspace.open('atom://config/packages/dartlang');
+      atom.workspace.openConfigPage(packageID: 'dartlang');
     }))..tooltip = 'Settings';
 
     CoreElement text = section.add(div());
