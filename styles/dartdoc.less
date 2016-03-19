@@ -1,6 +1,13 @@
 @import "ui-variables";
 @import "syntax-variables";
 
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url('https://fonts.gstatic.com/s/materialicons/v13/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2') format('woff2');
+}
+
 #dartdoc-tooltip {
   position: absolute;
   top: 8px;
@@ -14,6 +21,23 @@
   z-index: 100;
   font-size: 110%;
   border: none;
+
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    vertical-align: bottom;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
 
   .dartdoc-title {
     color: @text-color-highlight;

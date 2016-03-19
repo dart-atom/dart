@@ -7,6 +7,7 @@
 - fixed an NPE in the debugger's stack frame view
 - updated to a new Atom API to open editors in a 'preview' mode, so we don't end
   up with a proliferation of open editors
+- display Flutter Material Design icons in dartdoc tooltips
 
 ## 0.6.6
 - added an option to change the break on exceptions mode in the debugger
