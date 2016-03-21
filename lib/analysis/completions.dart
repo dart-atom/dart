@@ -84,8 +84,8 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
     SuggestionsResult result = await analysisServer.server.completion.getSuggestions(path, offset);
     CompletionResults cr = await analysisServer.server.completion.onResults
-          .where((cr) => cr.id == result.id)
-          .where((cr) => cr.isLast).first;
+        .where((cr) => cr.id == result.id)
+        .where((cr) => cr.isLast).first;
     return _handleCompletionResults(text, offset, prefix, cr);
   }
 
@@ -122,8 +122,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
     var suggestions = <Suggestion>[];
     for (var cs in results) {
-      Suggestion s =
-          _makeSuggestion(cs, prefix, replacementPrefix, replacementOffset);
+      Suggestion s = _makeSuggestion(cs, prefix, replacementPrefix, replacementOffset);
       if (s != null) suggestions.add(s);
     }
     return suggestions;
@@ -183,20 +182,35 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
     bool potential = cs.isPotential || cs.importUri != null;
 
+    String iconHTML;
+
+    // Handle material icons in docs.
+    if (cs.docSummary != null && cs.docSummary.contains('<i class="material-icons')) {
+      String docs = cs.docSummary;
+      // <p><i class="material-icons md-48">merge_type</i> &#x2014; material icon named "merge type".</p>
+      int startIndex = docs.indexOf('<i class=');
+      int endIndex = docs.indexOf('</i>');
+      if (endIndex != -1) {
+        iconHTML = docs.substring(startIndex, endIndex + 4);
+      }
+    }
+
     return new Suggestion(
-        text: text,
-        snippet: snippet,
-        displayText: displayText,
-        replacementPrefix: replacementPrefix,
-        selectionOffset: selectionOffset,
-        type: _mapType(cs),
-        leftLabel: _sanitizeReturnType(cs),
-        rightLabel: _rightLabel(cs.element?.kind ?? cs.kind),
-        className: cs.isDeprecated
-            ? 'suggestion-deprecated'
-            : potential ? 'suggestion-potential' : null,
-        description: _describe(cs),
-        requiredImport: cs.importUri);
+      text: text,
+      snippet: snippet,
+      displayText: displayText,
+      replacementPrefix: replacementPrefix,
+      selectionOffset: selectionOffset,
+      type: _mapType(cs),
+      leftLabel: _sanitizeReturnType(cs),
+      rightLabel: _rightLabel(cs.element?.kind ?? cs.kind),
+      className: cs.isDeprecated
+          ? 'suggestion-deprecated'
+          : potential ? 'suggestion-potential' : null,
+      iconHTML: iconHTML,
+      description: _describe(cs),
+      requiredImport: cs.importUri
+    );
   }
 
   String _sanitizeReturnType(CompletionSuggestion cs) {
@@ -209,15 +223,25 @@ class DartAutocompleteProvider extends AutocompleteProvider {
   }
 
   String _describe(CompletionSuggestion cs, {bool useDocs: true}) {
-    if (cs.importUri != null) return "Requires '${cs.importUri}'";
-    if (useDocs && cs.docSummary != null) return cs.docSummary;
+    if (useDocs) {
+      if (cs.importUri != null) return "Requires '${cs.importUri}'";
+      // Special case a substutition for a character in the material design docs.
+      if (cs.docSummary != null) return cs.docSummary.replaceAll('&#x2014;', '-');
+    }
 
     var element = cs.element;
     if (element?.parameters != null) {
       String str = '${element.name}${element.parameters}';
-      return element.returnType != null
-          ? '${str} → ${element.returnType}'
-          : str;
+
+      if (element.kind == 'CONSTRUCTOR') {
+        if (element.name.isEmpty) {
+          str = '${cs.declaringType}${str}';
+        } else {
+          str = '${cs.declaringType}.${str}';
+        }
+      }
+
+      return element.returnType != null ? '${str} → ${element.returnType}' : str;
     }
 
     return cs.completion;
@@ -229,6 +253,34 @@ class DartAutocompleteProvider extends AutocompleteProvider {
         kind, () => kind.toLowerCase().replaceAll('_', ' '));
   }
 }
+
+// String _suggestionToString(CompletionSuggestion cs) {
+//   StringBuffer buf = new StringBuffer();
+//
+//   buf.write('kind: ${cs.kind},');
+//   buf.write('relevance: ${cs.relevance},');
+//   buf.write('completion: ${cs.completion},');
+//   buf.write('selectionOffset: ${cs.selectionOffset},');
+//   buf.write('selectionLength: ${cs.selectionLength},');
+//   buf.write('isDeprecated: ${cs.isDeprecated},');
+//   buf.write('isPotential: ${cs.isPotential},');
+//
+//   // if (cs.docSummary != null) buf.write('docSummary: ${cs.docSummary},');
+//   // if (cs.docComplete != null) buf.write('docComplete: ${cs.docComplete},');
+//   if (cs.declaringType != null) buf.write('declaringType: ${cs.declaringType},');
+//   if (cs.element != null) buf.write('element: ${cs.element},');
+//   if (cs.returnType != null) buf.write('returnType: ${cs.returnType},');
+//   if (cs.parameterNames != null) buf.write('parameterNames: ${cs.parameterNames},');
+//   if (cs.parameterTypes != null) buf.write('parameterTypes: ${cs.parameterTypes},');
+//
+//   if (cs.requiredParameterCount != null) buf.write('requiredParameterCount: ${cs.requiredParameterCount},');
+//   if (cs.hasNamedParameters != null) buf.write('hasNamedParameters: ${cs.hasNamedParameters},');
+//   if (cs.parameterName != null) buf.write('parameterName: ${cs.parameterName},');
+//   if (cs.parameterType != null) buf.write('parameterType: ${cs.parameterType},');
+//   if (cs.importUri != null) buf.write('importUri: ${cs.importUri},');
+//
+//   return buf.toString();
+// }
 
 CompletionSuggestion _copySuggestion(CompletionSuggestion s, int relevance) =>
   new CompletionSuggestion(
