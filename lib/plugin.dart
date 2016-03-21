@@ -15,6 +15,7 @@ import 'package:atom_dartlang/impl/tooltip.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_options.dart';
+import 'analysis/completions.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/declaration_nav.dart';
 import 'analysis/find_type.dart';
@@ -31,7 +32,6 @@ import 'atom_linter.dart' show LinterService;
 import 'atom_package_deps.dart' as package_deps;
 import 'atom_statusbar.dart';
 import 'atom_utils.dart';
-import 'autocomplete.dart';
 import 'buffer/buffer_observer.dart';
 import 'dartino/dartino_util.dart' show dartino;
 import 'dartino/launch_dartino.dart';
