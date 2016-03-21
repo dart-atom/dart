@@ -34630,7 +34630,10 @@ self._domRemove = function(element) {
             t1 = buf._contents;
             if (t1.length !== 0)
               buf._contents = t1 + "<br>";
-            buf._contents += "\n" + B.markdownToHtml(hover.get$dartdoc(), null, null, null, false, null, T.dartdoc_DartdocHelper__resolve$closure()) + "\n";
+            if (J.contains$1$asx(hover.get$dartdoc(), ' class="material-icons') === true)
+              buf._contents += "\n" + H.S(hover.get$dartdoc()) + "\n";
+            else
+              buf._contents += "\n" + B.markdownToHtml(hover.get$dartdoc(), null, null, null, false, null, T.dartdoc_DartdocHelper__resolve$closure()) + "\n";
           }
           t1 = buf._contents;
           return t1.charCodeAt(0) == 0 ? t1 : t1;
@@ -43806,6 +43809,8 @@ self._domRemove = function(element) {
         var filePath, contents;
         filePath = $event.get$targetFilePath();
         if (Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(filePath) == null)
+          return false;
+        if (new F.Stats($.$get$fs().invoke$2("statSync", filePath)).invoke$1("isFile") !== true)
           return false;
         contents = new F.File(F._create("File", filePath, null)).invoke$2("readSync", null);
         return Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getHandlerFor$2(filePath, new X.LaunchData(contents, null)) != null;
