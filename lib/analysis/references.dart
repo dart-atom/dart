@@ -45,7 +45,9 @@ class FindReferencesHelper implements Disposable {
           atom.beep();
           return;
         } else {
-          FindReferencesView.showView(result,
+          bool isMethod = result.element.parameters != null;
+          String name = "${result.element.name}${isMethod ? '()' : ''}";
+          FindReferencesView.showView(new ReferencesSearch(result.id, 'References', name),
             refData: { 'path': path, 'offset': offset }
           );
         }
@@ -55,18 +57,24 @@ class FindReferencesHelper implements Disposable {
   }
 }
 
+class ReferencesSearch {
+  final String searchId;
+  final String searchType;
+  final String label;
+
+  ReferencesSearch(this.searchId, this.searchType, this.label);
+}
+
 class FindReferencesView extends View {
-  static void showView(FindElementReferencesResult result, {
-    Map refData
-  }) {
+  static void showView(ReferencesSearch search, { Map refData }) {
     FindReferencesView view = viewGroupManager.getViewById('findReferences');
 
     if (view != null) {
-      view._handleSearchResults(result, refData: refData);
+      view._handleSearchResults(search, refData: refData);
       viewGroupManager.activate(view);
     } else {
       FindReferencesView view = new FindReferencesView();
-      view._handleSearchResults(result, refData: refData);
+      view._handleSearchResults(search, refData: refData);
       viewGroupManager.addView('right', view);
     }
   }
@@ -107,22 +115,20 @@ class FindReferencesView extends View {
 
   void dispose() => disposables.dispose();
 
-  void _handleSearchResults(FindElementReferencesResult findResult, {Map refData}) {
+  void _handleSearchResults(ReferencesSearch search, {Map refData}) {
     // this._refData = refData;
 
-    bool isMethod = findResult.element.parameters != null;
-    String name = "${findResult.element.name}${isMethod ? '()' : ''}";
-    title.text = 'References';
-    subtitle.text = "'${name}'; searching…";
+    title.text = search.searchType;
+    subtitle.text = "'${search.label}'; searching…";
     subtitle.toggleClass('searching', true);
     // refreshButton.enabled = false;
 
     treeBuilder.clear();
 
-    Stream<SearchResult> stream = analysisServer.filterSearchResults(findResult.id);
+    Stream<SearchResult> stream = analysisServer.filterSearchResults(search.searchId);
 
     stream.toList().then((List<SearchResult> l) {
-      subtitle.text = "${commas(l.length)} ${pluralize('result', l.length)} for '${name}'";
+      subtitle.text = "${commas(l.length)} ${pluralize('result', l.length)} for '${search.label}'";
       subtitle.toggleClass('searching', false);
       // refreshButton.enabled = _refData != null;
 

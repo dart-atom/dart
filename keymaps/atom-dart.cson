@@ -42,6 +42,7 @@
   'cmd-alt-o': 'dartlang:organize-directives'
   'cmd-alt-down': 'dartlang:jump-to-declaration'
   'cmd-alt-enter': 'dartlang:jump-to-declaration'
+  'shift-cmd-t': 'dartlang:find-type'
 
 # Handle cmd-r for launch config files.
 'body.platform-darwin atom-text-editor[data-grammar~="yaml"]:not([mini])':
@@ -54,6 +55,7 @@
   'ctrl-r': 'dartlang:run-application'
   'ctrl-alt-b': 'dartlang:dart-format'
   'ctrl-alt-o': 'dartlang:organize-directives'
+  'ctrl-shift-t': 'dartlang:find-type'
 
 # Handle ctrl-r for launch config files.
 'body.platform-linux atom-text-editor[data-grammar~="yaml"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="yaml"]:not([mini])':

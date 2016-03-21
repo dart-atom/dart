@@ -10,6 +10,7 @@ import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
     NodeTreeSanitizer, window;
 import 'dart:js';
 
+import 'package:atom/src/js.dart';
 import 'package:atom/node/node.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/utils/disposable.dart';
@@ -60,12 +61,6 @@ Future<String> promptUser(String prompt,
     editor.selectToBeginningOfWord();
   }
 
-  // Focus the element.
-  Timer.run(() {
-    try { editorElement.focus(); }
-    catch (e) { _logger.warning(e); }
-  });
-
   disposables.add(atom.commands.add('atom-workspace', 'core:confirm', (_) {
     if (!completer.isCompleted) completer.complete(editor.getText());
   }));
@@ -75,6 +70,15 @@ Future<String> promptUser(String prompt,
   }));
 
   Panel panel = atom.workspace.addModalPanel(item: element, visible: true);
+
+  Timer.run(() {
+    // There's a bug in Dart's JS interop where we can't see custom elements
+    // well. In order to work around it, we get the raw JS object, wrap it in a
+    // JsObject, pass that to a semantic wrapper around TextEditorElement, and
+    // then call `focused()`.
+    JsObject obj = new JsObject.fromBrowserObject(uncrackDart2js(editorElement));
+    new TextEditorElement(obj).focused();
+  });
 
   completer.future.whenComplete(() {
     disposables.dispose();

@@ -17,6 +17,7 @@ import 'package:logging/logging.dart';
 import 'analysis/analysis_options.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/declaration_nav.dart';
+import 'analysis/find_type.dart';
 import 'analysis/formatting.dart';
 import 'analysis/organize_file.dart';
 import 'analysis/quick_fixes.dart';
@@ -161,6 +162,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(runAppManager);
     disposables.add(new RefactoringHelper());
     disposables.add(new FindReferencesHelper());
+    disposables.add(new FindTypeHelper());
     disposables.add(new TypeHierarchyHelper());
     disposables.add(deps[QuickFixHelper] = new QuickFixHelper());
     disposables.add(consoleController = new ConsoleController());
