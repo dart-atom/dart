@@ -26,8 +26,7 @@ class FormattingHelper implements Disposable {
     _commands.add(atom.commands.add('.tree-view', 'dartlang:dart-format', (e) {
       formatFile(e.targetFilePath);
     }));
-    _commands
-        .add(atom.commands.add('atom-text-editor', 'dartlang:dart-format', (e) {
+    _commands.add(atom.commands.add('atom-text-editor', 'dartlang:dart-format', (e) {
       formatEditor(e.editor);
     }));
   }
@@ -49,8 +48,7 @@ class FormattingHelper implements Disposable {
       if (result.exit == 0) {
         atom.notifications.addSuccess('Formatting successful.');
       } else {
-        atom.notifications
-            .addError('Error while formatting', description: result.stderr);
+        atom.notifications.addError('Error while formatting', description: result.stderr);
       }
     });
   }

@@ -480,17 +480,27 @@ class Project extends ProxyHolder {
 }
 
 /// This cooresponds to an `atom-text-editor` custom element.
-class TextEditorView extends ProxyHolder {
-  TextEditorView(JsObject object) : super(_cvt(object));
+class TextEditorElement extends ProxyHolder {
+  TextEditorElement(JsObject object) : super(_cvt(object));
 
   TextEditor getModel() => new TextEditor(invoke('getModel'));
 
   // num scrollTop() => invoke('scrollTop');
   // num scrollLeft() => invoke('scrollLeft');
+
+  bool get focusOnAttach => obj['focusOnAttach'];
+
+  set focusOnAttach(bool value) {
+    obj['focusOnAttach'] = value;
+  }
+
+  void focused() => invoke('focused');
 }
 
 class TextEditor extends ProxyHolder {
   TextEditor(JsObject object) : super(_cvt(object));
+
+  TextEditorElement getElement() => new TextEditorElement(invoke('getElement'));
 
   /// Return whether this editor is a valid object. We sometimes create them
   /// from JS objects w/o knowning if they are editors for certain.
@@ -937,7 +947,7 @@ class AtomEvent extends ProxyHolder {
   /// available if an editor is the target of an event; calling this otherwise
   /// will return an invalid [TextEditor].
   TextEditor get editor {
-    TextEditorView view = new TextEditorView(currentTarget);
+    TextEditorElement view = new TextEditorElement(currentTarget);
     return view.getModel();
   }
 

@@ -16,7 +16,7 @@ final Logger _logger = new Logger('editing');
 /// method extends dartdoc comments and block comments to the next line.
 void handleEnterKey(AtomEvent event) {
   try {
-    TextEditorView view = new TextEditorView(event.currentTarget);
+    TextEditorElement view = new TextEditorElement(event.currentTarget);
     TextEditor editor = view.getModel();
     Range selection = editor.getSelectedBufferRange();
 
