@@ -298,6 +298,7 @@ class _RunAppContextCommand extends ContextMenuItem {
     String filePath = event.targetFilePath;
     DartProject project = projectManager.getProjectFor(filePath);
     if (project == null) return false;
+    if (!fs.statSync(filePath).isFile()) return false;
     File file = new File.fromPath(filePath);
     String contents = file.readSync();
     return launchManager.getHandlerFor(filePath, new LaunchData(contents)) != null;

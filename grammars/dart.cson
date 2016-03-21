@@ -116,7 +116,7 @@
             'name': 'variable.other.source.dart'
       }
       {
-        'match': '(///)( ?)(.*?)$'
+        'match': '(///)(.*?)$'
         'captures':
           '1':
             'name': 'comment.block.triple-slash.dart'
