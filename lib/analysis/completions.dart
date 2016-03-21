@@ -1,4 +1,14 @@
-part of atom.autocomplete_impl;
+import 'dart:async';
+
+import 'package:logging/logging.dart';
+
+import '../atom.dart';
+import '../atom_autocomplete.dart';
+import '../state.dart';
+import 'analysis_server_lib.dart' show CompletionResults, CompletionSuggestion,
+    SuggestionsResult;
+
+final Logger _logger = new Logger('completions');
 
 class DartAutocompleteProvider extends AutocompleteProvider {
   static const _suggestionKindMap = const <String, String>{
@@ -47,7 +57,6 @@ class DartAutocompleteProvider extends AutocompleteProvider {
   Future<List<Suggestion>> getSuggestions(AutocompleteOptions options) async {
     if (!analysisServer.isActive) return [];
 
-    Server server = analysisServer.server;
     TextEditor editor = options.editor;
     int offset = editor.getBuffer().characterIndexForPosition(options.bufferPosition);
     String path = editor.getPath();
@@ -73,8 +82,8 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
     if (prefix.length == 1 && noCompletions.contains(prefix)) return [];
 
-    SuggestionsResult result = await server.completion.getSuggestions(path, offset);
-    CompletionResults cr = await server.completion.onResults
+    SuggestionsResult result = await analysisServer.server.completion.getSuggestions(path, offset);
+    CompletionResults cr = await analysisServer.server.completion.onResults
           .where((cr) => cr.id == result.id)
           .where((cr) => cr.isLast).first;
     return _handleCompletionResults(text, offset, prefix, cr);
