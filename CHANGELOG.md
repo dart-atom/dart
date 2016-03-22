@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.7
 - fixed an issue with doc comment grammar
 - the application pulldown now shows all available launch configurations for the
   open projects
