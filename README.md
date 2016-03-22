@@ -12,7 +12,7 @@ useful for users new to the plugin and users new to Atom as well.
 
 ## What is it?
 
-This package is a full-featured Dart development plugin for Atom. It supports
+This package is a Dart development plugin for Atom. It supports
 features like auto-discovery of the Dart SDK, errors and warnings shown as you
 type, code completion, refactorings, and integration with Pub and other tools.
 
