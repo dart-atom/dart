@@ -32402,7 +32402,7 @@ self._domRemove = function(element) {
       "^": "Closure:116;suggestionToProxy,timer",
       call$1: [function(suggestions) {
         var t1 = J.getInterceptor$asx(suggestions);
-        $.$get$_logger31().finer$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this.timer.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
+        $.$get$_logger32().finer$1("code completion in " + H.S(J.$tdiv$n(J.$mul$ns(this.timer.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms, " + H.S(t1.get$length(suggestions)) + " results");
         return t1.map$1(suggestions, this.suggestionToProxy).toList$0(0);
       }, null, null, 2, 0, null, 97, "call"]
     },
@@ -33247,14 +33247,14 @@ self._domRemove = function(element) {
       t1 = $.$get$atom();
       lastVersion = t1._config.getValue$1("_dartlang._version");
       if (!J.$eq$(lastVersion, currentVersion)) {
-        $.$get$_logger30().info$1("upgraded from " + H.S(lastVersion) + " to " + H.S(currentVersion));
+        $.$get$_logger31().info$1("upgraded from " + H.S(lastVersion) + " to " + H.S(currentVersion));
         t1._config.invoke$3("set", "_dartlang._version", currentVersion);
         if (lastVersion != null) {
           t1 = t1._notifications;
           t1.invoke$3("addSuccess", "Upgraded to dartlang plugin version " + H.S(currentVersion) + ".", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         }
       } else
-        $.$get$_logger30().info$1("dartlang version " + H.S(currentVersion));
+        $.$get$_logger31().info$1("dartlang version " + H.S(currentVersion));
     }, "call$1", "changelog___checkChangelog$closure", 2, 0, 10, 120],
     ChangelogManager: {
       "^": "Object;disposables,_changeLogFile",
@@ -34888,7 +34888,7 @@ self._domRemove = function(element) {
     UriResolver_resolveUriToPath_closure: {
       "^": "Closure:3;uri",
       call$1: [function(result) {
-        $.$get$_logger25().finer$1("resolve " + H.S(this.uri) + " <== " + H.S(result));
+        $.$get$_logger26().finer$1("resolve " + H.S(this.uri) + " <== " + H.S(result));
         return result;
       }, null, null, 2, 0, null, 2, "call"]
     },
@@ -34909,7 +34909,7 @@ self._domRemove = function(element) {
     UriResolver_resolvePathToUris_closure: {
       "^": "Closure:26;path",
       call$1: [function(results) {
-        $.$get$_logger25().finer$1("resolve " + H.S(this.path) + " ==> " + H.S(results));
+        $.$get$_logger26().finer$1("resolve " + H.S(this.path) + " ==> " + H.S(results));
         return results;
       }, null, null, 2, 0, null, 75, "call"]
     },
@@ -37411,7 +37411,7 @@ self._domRemove = function(element) {
     _LaunchInstance__kill_closure: {
       "^": "Closure:0;",
       call$1: [function(e) {
-        $.$get$_logger27().finer$2("Error from flutter stop", e);
+        $.$get$_logger28().finer$2("Error from flutter stop", e);
       }, null, null, 2, 0, null, 0, "call"]
     },
     _FlutterLaunch: {
@@ -37464,7 +37464,7 @@ self._domRemove = function(element) {
       "^": "Object;root>",
       targetToClient$1: function(str) {
         var result = this._targetToClient$1(str);
-        $.$get$_logger27().finer$1("targetToClient " + H.S(str) + " ==> " + H.S(result));
+        $.$get$_logger28().finer$1("targetToClient " + H.S(str) + " ==> " + H.S(result));
         return result;
       },
       _targetToClient$1: function(str) {
@@ -37478,7 +37478,7 @@ self._domRemove = function(element) {
       },
       clientToTarget$1: function(str) {
         var result = this._clientToTarget$1(str);
-        $.$get$_logger27().finer$1("clientToTarget " + H.S(str) + " ==> " + H.S(result));
+        $.$get$_logger28().finer$1("clientToTarget " + H.S(str) + " ==> " + H.S(result));
         return result;
       },
       _clientToTarget$1: function(str) {
@@ -39069,7 +39069,7 @@ self._domRemove = function(element) {
             } catch (exception) {
               t4 = H.unwrapException(exception);
               e = t4;
-              $.$get$_logger28().info$2("Error parsing " + H.S(J.get$path$x(entry)), e);
+              $.$get$_logger29().info$2("Error parsing " + H.S(J.get$path$x(entry)), e);
             }
           }
       },
@@ -39485,7 +39485,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;launch,uriTranslator,url,ws,connectedCompleter,finishedCompleter",
       call$1: [function(_) {
         var t1, t2, t3, service, connection;
-        t1 = $.$get$_logger24();
+        t1 = $.$get$_logger25();
         t1.info$1("Connected to observatory on " + this.url + ".");
         t2 = this.ws;
         t3 = H.setRuntimeTypeInfo(new W._EventStream(t2, "message", false), [null]);
@@ -39517,7 +39517,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;port,connectedCompleter",
       call$1: [function(e) {
         var t1;
-        $.$get$_logger24().fine$2("Unable to connect to observatory, port " + H.S(this.port), e);
+        $.$get$_logger25().fine$2("Unable to connect to observatory, port " + H.S(this.port), e);
         t1 = this.connectedCompleter;
         if (t1.future._state === 0)
           t1.completeError$1(e);
@@ -39770,7 +39770,7 @@ self._domRemove = function(element) {
     ObservatoryConnection__init_closure0: {
       "^": "Closure:0;trim",
       call$1: [function(str) {
-        var t1 = $.$get$_logger24();
+        var t1 = $.$get$_logger25();
         if (t1.isLoggable$1(C.Level_FINER_400))
           t1.finer$1("==> " + H.S(this.trim.call$1(str)));
       }, null, null, 2, 0, null, 6, "call"]
@@ -39778,7 +39778,7 @@ self._domRemove = function(element) {
     ObservatoryConnection__init_closure1: {
       "^": "Closure:0;trim",
       call$1: [function(str) {
-        var t1 = $.$get$_logger24();
+        var t1 = $.$get$_logger25();
         if (t1.isLoggable$1(C.Level_FINER_400))
           t1.finer$1("<== " + H.S(this.trim.call$1(str)));
       }, null, null, 2, 0, null, 6, "call"]
@@ -39814,7 +39814,7 @@ self._domRemove = function(element) {
     ObservatoryConnection__init_closure3: {
       "^": "Closure:87;",
       call$1: [function(ver) {
-        $.$get$_logger24().fine$1("Observatory version " + H.S(ver.get$major()) + "." + H.S(ver.get$minor()) + ".");
+        $.$get$_logger25().fine$1("Observatory version " + H.S(ver.get$major()) + "." + H.S(ver.get$minor()) + ".");
       }, null, null, 2, 0, null, 23, "call"]
     },
     ObservatoryConnection__init_closure4: {
@@ -39828,7 +39828,7 @@ self._domRemove = function(element) {
         t1 = this.$this;
         t2 = t1.metadata;
         t2.set$value(0, H.S(vm.get$targetCPU()) + " \u2022 " + H.S(vm.get$hostCPU()) + " \u2022 Dart " + H.S(dart));
-        $.$get$_logger24().info$1("Connected to " + H.S(t2._utils0$_value));
+        $.$get$_logger25().info$1("Connected to " + H.S(t2._utils0$_value));
         return t1._registerNewIsolates$1(vm.get$isolates());
       }, null, null, 2, 0, null, 79, "call"]
     },
@@ -39875,7 +39875,7 @@ self._domRemove = function(element) {
     ObservatoryConnection__installBreakpoints__closure2: {
       "^": "Closure:0;bp",
       call$1: [function(e) {
-        $.$get$_logger24().info$2("error resolving uri: " + H.S(J.get$path$x(this.bp)), H.S(e));
+        $.$get$_logger25().info$2("error resolving uri: " + H.S(J.get$path$x(this.bp)), H.S(e));
       }, null, null, 2, 0, null, 0, "call"]
     },
     ObservatoryConnection__installBreakpoints_closure1: {
@@ -39893,7 +39893,7 @@ self._domRemove = function(element) {
     ObservatoryConnection__installBreakpoints__closure0: {
       "^": "Closure:0;",
       call$1: [function(e) {
-        $.$get$_logger24().info$2("error removing breakpoint", e);
+        $.$get$_logger25().info$2("error removing breakpoint", e);
       }, null, null, 2, 0, null, 0, "call"]
     },
     ObservatoryConnection__installBreakpoints_closure2: {
@@ -40250,7 +40250,7 @@ self._domRemove = function(element) {
         else if (!!t1.$isObjRef)
           this._observatory_debugger$_value = new D.ObservatoryObjRefValue(this.isolate, ref);
         else
-          $.$get$_logger24().severe$1("Invalid ObservatoryObjRefVariable ref: " + H.S(ref));
+          $.$get$_logger25().severe$1("Invalid ObservatoryObjRefVariable ref: " + H.S(ref));
       },
       static: {
         ObservatoryObjRefVariable$: function(isolate, $name, ref) {
@@ -40344,7 +40344,7 @@ self._domRemove = function(element) {
               results.push(D.ObservatoryObjRefVariable$(t1.isolate, "owner", $function.get$owner()));
               return results;
             } else {
-              $.$get$_logger24().info$1("unhandled debugger type: " + H.S(ret.kind));
+              $.$get$_logger25().info$1("unhandled debugger type: " + H.S(ret.kind));
               return J.map$1$ax(ret.fields, new D.ObservatoryInstanceRefValue_getChildren__closure1(t1)).toList$0(0);
             }
           }
@@ -41188,7 +41188,7 @@ self._domRemove = function(element) {
         t1 = J.$index$asx($.$get$atom()._views.invoke$2("getView", t1.obj), "shadowRoot");
         this.root = t1;
         if (t1 == null)
-          $.$get$_logger22().warning$1("The editor's shadow root is null");
+          $.$get$_logger23().warning$1("The editor's shadow root is null");
         if (this.controller.showView === true)
           this._outline$_install$0();
       },
@@ -43417,7 +43417,7 @@ self._domRemove = function(element) {
         var t1, t2, launchType;
         t1 = $.$get$atom();
         t1._workspace.saveAll$0();
-        $.$get$_logger23().info$1("Launching '" + H.S(config) + "'.");
+        $.$get$_logger24().info$1("Launching '" + H.S(config) + "'.");
         t2 = J.getInterceptor$x(config);
         launchType = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).getLaunchType$1(t2.get$type(config));
         if (launchType == null) {
@@ -43748,7 +43748,7 @@ self._domRemove = function(element) {
               case 6:
                 // returning from await.
                 version = $async$result;
-                $.$get$_logger29().info$1("version " + H.S(version) + " (" + H.S(J.$index$asx($async$self._sdk$_sdk.directory.obj, "path")) + ")");
+                $.$get$_logger30().info$1("version " + H.S(version) + " (" + H.S(J.$index$asx($async$self._sdk$_sdk.directory.obj, "path")) + ")");
                 if (verbose) {
                   t1 = $.$get$atom()._notifications;
                   t1.invoke$3("addSuccess", "Found Dart SDK version " + H.S(version) + ".", t1._options$5$buttons$description$detail$dismissable$icon(null, null, J.$index$asx(sdk.directory.obj, "path"), null, null));
@@ -63504,11 +63504,17 @@ self._domRemove = function(element) {
     FindTypeHelper__handleFindType_closure: {
       "^": "Closure:3;$this,editor",
       call$1: [function(searchTerm) {
-        var t1, t2, t3;
+        var t1, e, t2, exception, t3;
         t1 = {};
         t1.searchTerm = searchTerm;
-        t2 = new X.TextEditorElement(X._cvt(this.editor.invoke$1("getElement")));
-        t2.invoke$1("focused");
+        try {
+          t2 = new X.TextEditorElement(X._cvt(this.editor.invoke$1("getElement")));
+          t2.invoke$1("focused");
+        } catch (exception) {
+          t2 = H.unwrapException(exception);
+          e = t2;
+          $.$get$_logger21().warning$2("Error focusing editor in _handleFindType", e);
+        }
         if (searchTerm == null)
           return;
         searchTerm = J.trim$0$s(searchTerm);
@@ -63533,7 +63539,7 @@ self._domRemove = function(element) {
     FindTypeHelper__handleFindType___closure: {
       "^": "Closure:173;_box_0",
       call$1: [function(result) {
-        if (result == null || J.get$id$x(result) == null) {
+        if ((result == null ? result : J.get$id$x(result)) == null) {
           $.$get$atom().invoke$1("beep");
           return;
         } else
@@ -65130,7 +65136,7 @@ self._domRemove = function(element) {
                 H.setRuntimeTypeInfo(new P._ControllerStream(t1), [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new Q.DartinoLaunch_run_closure0($async$self));
                 result = null;
                 $async$handler = 4;
-                t1 = $.$get$_logger26();
+                t1 = $.$get$_logger27();
                 t1.fine$1("launch: " + H.S(command) + " " + H.S(args));
                 $async$goto = 7;
                 return P._asyncHelper($async$self.runner.execStreaming$0(), $async$run$7$args$cwd$isLast$message$onStdout$subtle, $async$completer);
@@ -65149,7 +65155,7 @@ self._domRemove = function(element) {
                 t1 = H.unwrapException($async$exception);
                 e = t1;
                 s = H.getTraceFromException($async$exception);
-                $.$get$_logger26().info$3("external process exception", e, s);
+                $.$get$_logger27().info$3("external process exception", e, s);
                 result = 183;
                 // goto after finally
                 $async$goto = 6;
@@ -72430,7 +72436,7 @@ self._domRemove = function(element) {
       TooltipManager$1: function(editor) {
         this._tooltip$_subs._subscriptions.push(this._editor.eventStream$1("onDidDestroy").listen$1(new S.TooltipManager_closure(this)));
         if (this._root == null)
-          $.$get$_logger21().warning$1("The editor's shadow root is null.");
+          $.$get$_logger22().warning$1("The editor's shadow root is null.");
         else
           this._tooltip$_install$0();
       },
@@ -75668,15 +75674,15 @@ self._domRemove = function(element) {
     return N.Logger_Logger("analysis_server_lib");
   }, "_logger8", "_logger11", "$get$_logger11", function() {
     return N.Logger_Logger("atom.atom_package_deps");
-  }, "_logger11", "_logger31", "$get$_logger31", function() {
+  }, "_logger11", "_logger32", "$get$_logger32", function() {
     return N.Logger_Logger("atom.autocomplete");
-  }, "_logger31", "_logger13", "$get$_logger13", function() {
+  }, "_logger32", "_logger13", "$get$_logger13", function() {
     return N.Logger_Logger("atom.breakpoints");
   }, "_logger13", "_logger14", "$get$_logger14", function() {
     return N.Logger_Logger("atom.buffer_observer");
-  }, "_logger14", "_logger30", "$get$_logger30", function() {
+  }, "_logger14", "_logger31", "$get$_logger31", function() {
     return N.Logger_Logger("changelog");
-  }, "_logger30", "_logger0", "$get$_logger0", function() {
+  }, "_logger31", "_logger0", "$get$_logger0", function() {
     return N.Logger_Logger("atom");
   }, "_logger0", "atom", "$get$atom", function() {
     var t1 = new X.Atom(null, null, null, null, null, null, null, null, null, $.$get$_ctx());
@@ -75686,9 +75692,9 @@ self._domRemove = function(element) {
     return J.$index$asx($.$get$context(), "atom");
   }, "_ctx", "ContextMenuItem_separator", "$get$ContextMenuItem_separator", function() {
     return new X._SeparatorMenuItem("", "");
-  }, "ContextMenuItem_separator", "_logger25", "$get$_logger25", function() {
+  }, "ContextMenuItem_separator", "_logger26", "$get$_logger26", function() {
     return N.Logger_Logger("atom.debugger");
-  }, "_logger25", "_logger20", "$get$_logger20", function() {
+  }, "_logger26", "_logger20", "$get$_logger20", function() {
     return N.Logger_Logger("atom.debugger_ui");
   }, "_logger20", "NavigationHelper__timeout", "$get$NavigationHelper__timeout", function() {
     return P.Duration$(0, 0, 0, 1000, 0, 0);
@@ -75704,9 +75710,9 @@ self._domRemove = function(element) {
     return N.Logger_Logger("error_repository");
   }, "_logger12", "_flutterSdk0", "$get$_flutterSdk0", function() {
     return Q.deps().$index(0, C.Type_FlutterSdkManager_Ag3);
-  }, "_flutterSdk0", "_logger27", "$get$_logger27", function() {
+  }, "_flutterSdk0", "_logger28", "$get$_logger28", function() {
     return N.Logger_Logger("atom.flutter_launch");
-  }, "_logger27", "_flutterSdk", "$get$_flutterSdk", function() {
+  }, "_logger28", "_flutterSdk", "$get$_flutterSdk", function() {
     return Q.deps().$index(0, C.Type_FlutterSdkManager_Ag3);
   }, "_flutterSdk", "_logger18", "$get$_logger18", function() {
     return N.Logger_Logger("flutter.sdk");
@@ -75716,17 +75722,17 @@ self._domRemove = function(element) {
     return N.Logger_Logger("jobs");
   }, "_logger1", "_rand", "$get$_rand", function() {
     return P.Random_Random(null);
-  }, "_rand", "_logger28", "$get$_logger28", function() {
+  }, "_rand", "_logger29", "$get$_logger29", function() {
     return N.Logger_Logger("atom.launch_configs");
-  }, "_logger28", "_severityMap", "$get$_severityMap", function() {
+  }, "_logger29", "_severityMap", "$get$_severityMap", function() {
     return P.LinkedHashMap__makeLiteral(["ERROR", "Error", "WARNING", "Warning", "INFO", "Info"]);
   }, "_severityMap", "_processedErrorsController", "$get$_processedErrorsController", function() {
     return P.StreamController_StreamController$broadcast(null, null, false, null);
-  }, "_processedErrorsController", "_logger24", "$get$_logger24", function() {
+  }, "_processedErrorsController", "_logger25", "$get$_logger25", function() {
     return N.Logger_Logger("atom.observatory");
-  }, "_logger24", "_logger22", "$get$_logger22", function() {
+  }, "_logger25", "_logger23", "$get$_logger23", function() {
     return N.Logger_Logger("atom.outline");
-  }, "_logger22", "_logger", "$get$_logger", function() {
+  }, "_logger23", "_logger", "$get$_logger", function() {
     return N.Logger_Logger("plugin");
   }, "_logger", "_logger2", "$get$_logger2", function() {
     return N.Logger_Logger("projects");
@@ -75739,13 +75745,13 @@ self._domRemove = function(element) {
   }, "FindReferencesView__pubPrefix", "FindReferencesView__libPrefix", "$get$FindReferencesView__libPrefix", function() {
     var t1 = $.$get$fs().separator;
     return t1 + "lib" + t1;
-  }, "FindReferencesView__libPrefix", "_logger23", "$get$_logger23", function() {
+  }, "FindReferencesView__libPrefix", "_logger24", "$get$_logger24", function() {
     return N.Logger_Logger("atom.run");
-  }, "_logger23", "_minSdkVersion", "$get$_minSdkVersion", function() {
+  }, "_logger24", "_minSdkVersion", "$get$_minSdkVersion", function() {
     return T.Version_Version$parse("1.12.0");
-  }, "_minSdkVersion", "_logger29", "$get$_logger29", function() {
+  }, "_minSdkVersion", "_logger30", "$get$_logger30", function() {
     return N.Logger_Logger("sdk");
-  }, "_logger29", "state", "$get$state", function() {
+  }, "_logger30", "state", "$get$state", function() {
     return new K.State(P.LinkedHashMap__makeEmpty(), P.LinkedHashMap__makeEmpty(), P.LinkedHashMap__makeEmpty());
   }, "state", "_ga", "$get$_ga", function() {
     return new F.AnalyticsMock(false, false, true);
@@ -75795,7 +75801,9 @@ self._domRemove = function(element) {
     return P.RegExp_RegExp("\\r\\n?|\\n", true, false);
   }, "_newlineRegExp", "ExtensionSet_commonMark", "$get$ExtensionSet_commonMark", function() {
     return new E.ExtensionSet([C.C_FencedCodeBlockSyntax], [new R.InlineHtmlSyntax(null, P.RegExp_RegExp("<[/!?]?[A-Za-z][A-Za-z0-9-]*(?: [^>]*)?>", true, true))]);
-  }, "ExtensionSet_commonMark", "_logger17", "$get$_logger17", function() {
+  }, "ExtensionSet_commonMark", "_logger21", "$get$_logger21", function() {
+    return N.Logger_Logger("find_type");
+  }, "_logger21", "_logger17", "$get$_logger17", function() {
     return N.Logger_Logger("flutter_daemon");
   }, "_logger17", "Haikunator_rndm", "$get$Haikunator_rndm", function() {
     return P.Random_Random(null);
@@ -75811,9 +75819,9 @@ self._domRemove = function(element) {
     return J.$index$asx($.$get$_browserWindow(), "JSON");
   }, "_browserJson", "_logger4", "$get$_logger4", function() {
     return N.Logger_Logger("js");
-  }, "_logger4", "_logger26", "$get$_logger26", function() {
+  }, "_logger4", "_logger27", "$get$_logger27", function() {
     return N.Logger_Logger("atom.dartino_launch");
-  }, "_logger26", "Logger_root", "$get$Logger_root", function() {
+  }, "_logger27", "Logger_root", "$get$Logger_root", function() {
     return N.Logger_Logger("");
   }, "Logger_root", "Logger__loggers", "$get$Logger__loggers", function() {
     return P.LinkedHashMap_LinkedHashMap$_empty(P.String, N.Logger);
@@ -75882,9 +75890,9 @@ self._domRemove = function(element) {
     return P.RegExp_RegExp($.$get$START_VERSION().pattern + "$", true, false);
   }, "COMPLETE_VERSION", "_logger7", "$get$_logger7", function() {
     return N.Logger_Logger("atom.status");
-  }, "_logger7", "_logger21", "$get$_logger21", function() {
+  }, "_logger7", "_logger22", "$get$_logger22", function() {
     return N.Logger_Logger("atom.tooltip");
-  }, "_logger21", "_pathRegex", "$get$_pathRegex", function() {
+  }, "_logger22", "_pathRegex", "$get$_pathRegex", function() {
     return P.RegExp_RegExp("file:/\\S+/(\\S+\\.dart)", true, false);
   }, "_pathRegex", "yamlWarningCallback", "$get$yamlWarningCallback", function() {
     return new B.closure3();
