@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## unreleased
+- strip html markup from the code completion results
+- support case insensitive searching in the find type dialog
+
 ## 0.6.7
 - fixed an issue with doc comment grammar
 - the application pulldown now shows all available launch configurations for the

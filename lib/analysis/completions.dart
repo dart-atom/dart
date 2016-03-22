@@ -225,8 +225,13 @@ class DartAutocompleteProvider extends AutocompleteProvider {
   String _describe(CompletionSuggestion cs, {bool useDocs: true}) {
     if (useDocs) {
       if (cs.importUri != null) return "Requires '${cs.importUri}'";
+
       // Special case a substutition for a character in the material design docs.
-      if (cs.docSummary != null) return cs.docSummary.replaceAll('&#x2014;', '-');
+      if (cs.docSummary != null) {
+        String docs = cs.docSummary;
+        if (docs.startsWith('<')) docs = _stripHtml(docs);
+        return docs;
+      }
     }
 
     var element = cs.element;
@@ -252,6 +257,18 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     return _rightLabelMap.putIfAbsent(
         kind, () => kind.toLowerCase().replaceAll('_', ' '));
   }
+}
+
+final RegExp _htmlRegex = new RegExp('<[^>]+>');
+
+String _stripHtml(String str) {
+  // <p><i class="material-icons md-48">zoom_out_map</i> &#x2014; material icon
+  // named "zoom out map".</p>
+
+  str = str.replaceAll('&#x2014;', '-');
+  str = str.replaceAll(_htmlRegex, '');
+
+  return str;
 }
 
 // String _suggestionToString(CompletionSuggestion cs) {

@@ -21,7 +21,7 @@ class FindTypeHelper implements Disposable {
   void _handleFindType(TextEditor editor) {
     promptUser('Find type:', defaultText: _lastSearchTerm, selectText: true).then((String searchTerm) {
       // Focus the current editor.
-      editor.getElement().focused();
+      editor?.getElement()?.focused();
 
       // Abort if user cancels the operation or nothing to do.
       if (searchTerm == null) return;
@@ -31,7 +31,8 @@ class FindTypeHelper implements Disposable {
       _lastSearchTerm = searchTerm;
 
       new AnalysisRequestJob('Find type', () {
-        return analysisServer.server.search.findTopLevelDeclarations(searchTerm).then(
+        String term = createInseneitiveRegex(searchTerm);
+        return analysisServer.server.search.findTopLevelDeclarations(term).then(
             (FindTopLevelDeclarationsResult result) {
           if (result == null || result.id == null) {
             atom.beep();
@@ -42,6 +43,17 @@ class FindTypeHelper implements Disposable {
         });
       }).schedule();
     });
+  }
+
+  String createInseneitiveRegex(String searchTerm) {
+    StringBuffer buf = new StringBuffer();
+
+    for (int i = 0; i < searchTerm.length; i++) {
+      String s = searchTerm[i];
+      buf.write('[${s.toLowerCase()}${s.toUpperCase()}]');
+    }
+
+    return buf.toString();
   }
 
   void dispose() => disposables.dispose();

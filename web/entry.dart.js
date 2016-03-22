@@ -19947,8 +19947,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.FindTypeHelper__handleFindType_closure[1];
     FindTypeHelper__handleFindType_closure.prototype = $desc;
     FindTypeHelper__handleFindType_closure.$__fields__ = ["$this", "editor"];
-    function FindTypeHelper__handleFindType__closure(_box_0) {
+    function FindTypeHelper__handleFindType__closure(_box_0, $this) {
       this._box_0 = _box_0;
+      this.$this = $this;
       this.$deferredAction();
     }
     FindTypeHelper__handleFindType__closure.builtin$cls = "FindTypeHelper__handleFindType__closure";
@@ -19956,7 +19957,7 @@ self._domRemove = function(element) {
       FindTypeHelper__handleFindType__closure.name = "FindTypeHelper__handleFindType__closure";
     $desc = $collectedClasses$.FindTypeHelper__handleFindType__closure[1];
     FindTypeHelper__handleFindType__closure.prototype = $desc;
-    FindTypeHelper__handleFindType__closure.$__fields__ = ["_box_0"];
+    FindTypeHelper__handleFindType__closure.$__fields__ = ["_box_0", "$this"];
     function FindTypeHelper__handleFindType___closure(_box_0) {
       this._box_0 = _box_0;
       this.$deferredAction();
@@ -28700,8 +28701,11 @@ self._domRemove = function(element) {
         nativeRegexp = pattern.get$_nativeGlobalVersion();
         nativeRegexp.lastIndex = 0;
         return receiver.replace(nativeRegexp, replacement.replace(/\$/g, "$$$$"));
-      } else
+      } else {
+        if (pattern == null)
+          H.throwExpression(H.argumentErrorValue(pattern));
         throw H.wrapException("String.replaceAll(Pattern) UNIMPLEMENTED");
+      }
     },
     stringReplaceFirstUnchecked: function(receiver, pattern, replacement, startIndex) {
       var index = receiver.indexOf(pattern, startIndex);
@@ -45789,12 +45793,22 @@ self._domRemove = function(element) {
         return t1 == null ? cs.get$returnType() : t1;
       },
       _describe$2$useDocs: function(cs, useDocs) {
-        var element, t1, str;
+        var docs, t1, str, element;
         if (useDocs) {
           if (cs.get$importUri() != null)
             return "Requires '" + H.S(cs.get$importUri()) + "'";
-          if (cs.get$docSummary() != null)
-            return J.replaceAll$2$s(cs.get$docSummary(), "&#x2014;", "-");
+          if (cs.get$docSummary() != null) {
+            docs = cs.get$docSummary();
+            t1 = J.getInterceptor$s(docs);
+            if (t1.startsWith$1(docs, "<")) {
+              str = t1.replaceAll$2(docs, "&#x2014;", "-");
+              t1 = $.$get$_htmlRegex();
+              H.checkString("");
+              str = H.stringReplaceAllUnchecked(str, t1, "");
+              docs = str;
+            }
+            return docs;
+          }
         }
         element = cs.get$element();
         if ((element == null ? element : element.get$parameters()) != null) {
@@ -63447,6 +63461,25 @@ self._domRemove = function(element) {
       _handleFindType$1: function(editor) {
         S.promptUser("Find type:", this._lastSearchTerm, false, true).then$1(new G.FindTypeHelper__handleFindType_closure(this, editor));
       },
+      createInseneitiveRegex$1: function(searchTerm) {
+        var buf, t1, i, t2, s;
+        buf = new P.StringBuffer("");
+        t1 = J.getInterceptor$asx(searchTerm);
+        i = 0;
+        while (true) {
+          t2 = t1.get$length(searchTerm);
+          if (typeof t2 !== "number")
+            return H.iae(t2);
+          if (!(i < t2))
+            break;
+          s = t1.$index(searchTerm, i);
+          t2 = J.getInterceptor$s(s);
+          buf._contents += "[" + t2.toLowerCase$0(s) + t2.toUpperCase$0(s) + "]";
+          ++i;
+        }
+        t1 = buf._contents;
+        return t1.charCodeAt(0) == 0 ? t1 : t1;
+      },
       dispose$0: [function() {
         return this.disposables.dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
@@ -63471,26 +63504,30 @@ self._domRemove = function(element) {
     FindTypeHelper__handleFindType_closure: {
       "^": "Closure:3;$this,editor",
       call$1: [function(searchTerm) {
-        var t1, t2;
+        var t1, t2, t3;
         t1 = {};
         t1.searchTerm = searchTerm;
-        new X.TextEditorElement(X._cvt(this.editor.invoke$1("getElement"))).invoke$1("focused");
+        t2 = new X.TextEditorElement(X._cvt(this.editor.invoke$1("getElement")));
+        t2.invoke$1("focused");
         if (searchTerm == null)
           return;
         searchTerm = J.trim$0$s(searchTerm);
         t1.searchTerm = searchTerm;
         if (C.JSString_methods.get$isEmpty(searchTerm))
           return;
-        this.$this._lastSearchTerm = searchTerm;
-        t2 = G.toTitleCase("Find type");
-        Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(new X.AnalysisRequestJob(new G.FindTypeHelper__handleFindType__closure(t1), t2, null));
+        t2 = this.$this;
+        t2._lastSearchTerm = searchTerm;
+        t3 = G.toTitleCase("Find type");
+        Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(new X.AnalysisRequestJob(new G.FindTypeHelper__handleFindType__closure(t1, t2), t3, null));
       }, null, null, 2, 0, null, 139, "call"]
     },
     FindTypeHelper__handleFindType__closure: {
-      "^": "Closure:1;_box_0",
+      "^": "Closure:1;_box_0,$this",
       call$0: function() {
-        var t1 = this._box_0;
-        return J.get$search$x(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$server()).findTopLevelDeclarations$1(t1.searchTerm).then$1(new G.FindTypeHelper__handleFindType___closure(t1));
+        var t1, term;
+        t1 = this._box_0;
+        term = this.$this.createInseneitiveRegex$1(t1.searchTerm);
+        return J.get$search$x(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$server()).findTopLevelDeclarations$1(term).then$1(new G.FindTypeHelper__handleFindType___closure(t1));
       }
     },
     FindTypeHelper__handleFindType___closure: {
@@ -75720,7 +75757,9 @@ self._domRemove = function(element) {
     return P.LinkedHashMap__makeLiteral([null, null, "FUNCTION_TYPE_ALIAS", "function type"]);
   }, "DartAutocompleteProvider__rightLabelMap", "DartAutocompleteProvider__elided", "$get$DartAutocompleteProvider__elided", function() {
     return P.LinkedHashSet_LinkedHashSet$from(["for ()"], null);
-  }, "DartAutocompleteProvider__elided", "_AsyncRun__scheduleImmediateClosure", "$get$_AsyncRun__scheduleImmediateClosure", function() {
+  }, "DartAutocompleteProvider__elided", "_htmlRegex", "$get$_htmlRegex", function() {
+    return P.RegExp_RegExp("<[^>]+>", true, false);
+  }, "_htmlRegex", "_AsyncRun__scheduleImmediateClosure", "$get$_AsyncRun__scheduleImmediateClosure", function() {
     return P._AsyncRun__initializeScheduleImmediate();
   }, "_AsyncRun__scheduleImmediateClosure", "Future__nullFuture", "$get$Future__nullFuture", function() {
     return P.Future_Future$value(null, null);
