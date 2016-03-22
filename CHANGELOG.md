@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.8
 - strip html markup from the code completion results
 - support case insensitive searching in the find type dialog
 
