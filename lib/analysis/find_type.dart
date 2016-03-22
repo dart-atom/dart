@@ -1,11 +1,15 @@
 import 'package:atom/utils/disposable.dart';
 
+import 'package:logging/logging.dart';
+
 import '../analysis_server.dart';
 import '../atom.dart';
 import '../atom_utils.dart';
 import '../state.dart';
 import 'analysis_server_lib.dart' show FindTopLevelDeclarationsResult;
 import 'references.dart';
+
+final Logger _logger = new Logger('find_type');
 
 class FindTypeHelper implements Disposable {
   Disposables disposables = new Disposables();
@@ -21,7 +25,11 @@ class FindTypeHelper implements Disposable {
   void _handleFindType(TextEditor editor) {
     promptUser('Find type:', defaultText: _lastSearchTerm, selectText: true).then((String searchTerm) {
       // Focus the current editor.
-      editor.getElement().focused();
+      try {
+        editor?.getElement()?.focused();
+      } catch (e) {
+        _logger.warning('Error focusing editor in _handleFindType', e);
+      }
 
       // Abort if user cancels the operation or nothing to do.
       if (searchTerm == null) return;
@@ -31,9 +39,10 @@ class FindTypeHelper implements Disposable {
       _lastSearchTerm = searchTerm;
 
       new AnalysisRequestJob('Find type', () {
-        return analysisServer.server.search.findTopLevelDeclarations(searchTerm).then(
+        String term = createInseneitiveRegex(searchTerm);
+        return analysisServer.server.search.findTopLevelDeclarations(term).then(
             (FindTopLevelDeclarationsResult result) {
-          if (result == null || result.id == null) {
+          if (result?.id == null) {
             atom.beep();
             return;
           } else {
@@ -42,6 +51,17 @@ class FindTypeHelper implements Disposable {
         });
       }).schedule();
     });
+  }
+
+  String createInseneitiveRegex(String searchTerm) {
+    StringBuffer buf = new StringBuffer();
+
+    for (int i = 0; i < searchTerm.length; i++) {
+      String s = searchTerm[i];
+      buf.write('[${s.toLowerCase()}${s.toUpperCase()}]');
+    }
+
+    return buf.toString();
   }
 
   void dispose() => disposables.dispose();

@@ -168,8 +168,8 @@ table {
 				<span class="menu-heading">Application code</span>
 				<a href="#package_atom_dartlang" class="menu-item">
 					<span>atom_dartlang</span>
-					<span class="counter warning">60</span>
-					<span class="counter error">7</span>
+					<span class="counter warning">62</span>
+					<span class="counter error">1</span>
 				</a>
 				<span class="menu-heading">Package: code</span>
 				<div class="menu-item">atom</div>
@@ -199,118 +199,10 @@ table {
 		</div>
 		<div class="column three-fourths">
 			<h1 class="page-title">DDC compilation report for web/entry.dart</h1>
-			<p>Found 28 errors and 95 warnings.</p>
+			<p>Found 22 errors and 97 warnings.</p>
 			<h2 id=package_atom_dartlang>package:atom_dartlang</h2>
-			<span class="counter error">7 errors</span>
-			<span class="counter warning">60 warnings</span>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">STATIC_TYPE_ERROR</span>
-					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">837</td>
-								<td class="blob-code blob-code-inner">          return isolate.service.getObject(isolate.id, result.id).then((result) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">838</td>
-								<td class="blob-code blob-code-inner">            if (result is Sentinel) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">839</td>
-								<td class="blob-code blob-code-inner">              return new SentinelDebugValue(result);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">840</td>
-								<td class="blob-code blob-code-inner">            } else if (result is InstanceRef) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">841</td>
-								<td class="blob-code blob-code-inner">              return new ObservatoryInstanceRefValue(isolate, result);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">842</td>
-								<td class="blob-code blob-code-inner">            } else if (result is Instance) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">843</td>
-								<td class="blob-code blob-code-inner">              return new ObservatoryInstanceRefValue.fromInstance(isolate, result);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">844</td>
-								<td class="blob-code blob-code-inner">            } else if (result is ErrorRef) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">845</td>
-								<td class="blob-code blob-code-inner">              return new Future.error(result.message);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">846</td>
-								<td class="blob-code blob-code-inner">            } else {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">847</td>
-								<td class="blob-code blob-code-inner">              return new Future.error(&#39;unexpected result type: ${result}&#39;);</td>
-							</tr>
-							<tr>
-								<td class="blob-num">848</td>
-								<td class="blob-code blob-code-inner">            }</td>
-							</tr>
-							<tr>
-								<td class="blob-num">849</td>
-								<td class="blob-code blob-code-inner">          });</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Type check failed: isolate.service.getObject(isolate.id, result.id).then((result) {if (result is Sentinel) {return new SentinelDebugValue(result);} else if (result is InstanceRef) {return new ObservatoryInstanceRefValue(isolate, result);} else if (result is Instance) {return new ObservatoryInstanceRefValue.fromInstance(isolate, result);} else if (result is ErrorRef) {return new Future.error(result.message);} else {return new Future.error(&#39;unexpected result type: ${result}&#39;);}}) (Future&lt;Object&gt;) is not of type DebugValue</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">STATIC_TYPE_ERROR</span>
-					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">854</td>
-								<td class="blob-code blob-code-inner">        return new Future.error(result.message);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Type check failed: new Future.error(result.message) (Future&lt;dynamic&gt;) is not of type DebugValue</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">STATIC_TYPE_ERROR</span>
-					<span class="file-info">package:atom_dartlang/debug/observatory_debugger.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">856</td>
-								<td class="blob-code blob-code-inner">        return new Future.error(&#39;unexpected result type: ${result}&#39;);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Type check failed: new Future.error(&#39;unexpected result type: ${result}&#39;) (Future&lt;dynamic&gt;) is not of type DebugValue</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+			<span class="counter error">1 error</span>
+			<span class="counter warning">62 warnings</span>
 			<div class="file">
 				<div class="file-header">
 					<span class="counter error">STATIC_TYPE_ERROR</span>
@@ -326,82 +218,6 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Type check failed: const LineSplitter() (LineSplitter) is not of type StreamTransformer&lt;String, dynamic&gt;</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">STATIC_TYPE_ERROR</span>
-					<span class="file-info">package:atom_dartlang/flutter/flutter_launch.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">56</td>
-								<td class="blob-code blob-code-inner">      return _lastLaunch.launch();</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Type check failed: _lastLaunch.launch() (Future&lt;Launch&gt;) is not of type Launch</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">STATIC_TYPE_ERROR</span>
-					<span class="file-info">package:atom_dartlang/launch/launch.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">373</td>
-								<td class="blob-code blob-code-inner">        return _pathResolver?.resolve(url);</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Type check failed: _pathResolver?.resolve(url) (Future&lt;String&gt;) is not of type String</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="file">
-				<div class="file-header">
-					<span class="counter error">STATIC_TYPE_ERROR</span>
-					<span class="file-info">package:atom_dartlang/launch/launch.dart</span>
-				</div>
-				<div class="blob-wrapper">
-					<table>
-						<tbody>
-							<tr>
-								<td class="blob-num">443</td>
-								<td class="blob-code blob-code-inner">      return analysisServer.server.execution.mapUri(id, uri: url).then((MapUriResult result) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">444</td>
-								<td class="blob-code blob-code-inner">        if (result.file != null) return result.file;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">445</td>
-								<td class="blob-code blob-code-inner">      }).catchError((_e) {</td>
-							</tr>
-							<tr>
-								<td class="blob-num">446</td>
-								<td class="blob-code blob-code-inner">        return null;</td>
-							</tr>
-							<tr>
-								<td class="blob-num">447</td>
-								<td class="blob-code blob-code-inner">      });</td>
-							</tr>
-							<tr class="row-expandable">
-								<td class="blob-num blob-num-expandable"></td>
-								<td class="blob-code blob-code-expandable">Type check failed: analysisServer.server.execution.mapUri(id, uri: url).then((MapUriResult result) {if (result.file != null) return result.file;}).catchError((_e) {return null;}) (Future&lt;dynamic&gt;) is not of type String</td>
 							</tr>
 						</tbody>
 					</table>
@@ -1444,7 +1260,7 @@ table {
 					<table>
 						<tbody>
 							<tr>
-								<td class="blob-num">17</td>
+								<td class="blob-num">18</td>
 								<td class="blob-code blob-code-inner">    List&lt;String&gt; requiredPackages = info[&#39;required-packages&#39;];</td>
 							</tr>
 							<tr class="row-expandable">
@@ -1914,6 +1730,46 @@ table {
 							<tr class="row-expandable">
 								<td class="blob-num blob-num-expandable"></td>
 								<td class="blob-code blob-code-expandable">Unsound implicit cast from (dynamic, dynamic) → int to (T, T) → int</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">DOWN_CAST_COMPOSITE</span>
+					<span class="file-info">package:atom_dartlang/plugin.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">198</td>
+								<td class="blob-code blob-code-inner">    _addCmd(&#39;atom-workspace&#39;, &#39;dartino:create-new-proj&#39;, dartino.createNewProject);</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">Unsound implicit cast from ([dynamic]) → Future&lt;dynamic&gt; to (AtomEvent) → void</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="file">
+				<div class="file-header">
+					<span class="counter warning">AnalyzerMessage</span>
+					<span class="file-info">package:atom_dartlang/plugin.dart</span>
+				</div>
+				<div class="blob-wrapper">
+					<table>
+						<tbody>
+							<tr>
+								<td class="blob-num">198</td>
+								<td class="blob-code blob-code-inner">    _addCmd(&#39;atom-workspace&#39;, &#39;dartino:create-new-proj&#39;, dartino.createNewProject);</td>
+							</tr>
+							<tr class="row-expandable">
+								<td class="blob-num blob-num-expandable"></td>
+								<td class="blob-code blob-code-expandable">The argument type &#39;([dynamic]) → Future&lt;dynamic&gt;&#39; cannot be assigned to the parameter type &#39;(AtomEvent) → void&#39;.</td>
 							</tr>
 						</tbody>
 					</table>
