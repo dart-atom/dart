@@ -77,4 +77,4 @@ class RebuildJob extends Job {
 }
 
 List<String> _projectsToBuild() =>
-    atom.config.getValue('$pluginId.buildAtomPlugins') ?? [];
+    atom.config.getValue('$pluginId.buildAtomPlugins') as List<String> ?? <String>[];

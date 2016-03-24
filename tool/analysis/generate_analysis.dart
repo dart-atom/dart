@@ -62,6 +62,8 @@ class Api {
     gen.out(_headerCode);
     gen.writeln("const String generatedProtocolVersion = '${version}';");
     gen.writeln();
+    gen.writeln("typedef void MethodSend(String methodName);");
+    gen.writeln();
     gen.writeStatement('class Server {');
     gen.writeStatement('StreamSubscription _streamSub;');
     gen.writeStatement('Function _writeMessage;');
@@ -73,7 +75,7 @@ class Api {
     gen.writeStatement('Map<String, Domain> _domains = {};');
     gen.writeln("StreamController<String> _onSend = new StreamController.broadcast();");
     gen.writeln("StreamController<String> _onReceive = new StreamController.broadcast();");
-    gen.writeln("Function _willSend;");
+    gen.writeln("MethodSend _willSend;");
     gen.writeln();
     domains.forEach(
         (Domain domain) => gen.writeln('${domain.className} _${domain.name};'));
@@ -779,7 +781,7 @@ final String _serverCode = r'''
   Stream<String> get onSend => _onSend.stream;
   Stream<String> get onReceive => _onReceive.stream;
 
-  set willSend(void fn(String methodName)) {
+  set willSend(MethodSend fn) {
     _willSend = fn;
   }
 

@@ -90,7 +90,7 @@ class DartinoLaunch extends Launch {
       String message,
       bool isLast: true,
       bool subtle: false,
-      onStdout}) async {
+      void onStdout(String msg)}) async {
     if (message != null) pipeStdio('$message\n');
     if (cwd != null) pipeStdio('\$ cd $cwd\n', highlight: true);
     pipeStdio('\$ $command ${args.join(' ')}\n', highlight: true);

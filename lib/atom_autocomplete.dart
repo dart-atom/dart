@@ -32,7 +32,7 @@ Future<dynamic> chooseItemUsingCompletions(TextEditor editor,
     List<dynamic> items, Suggestion renderer(var item)) {
   // TODO: _AutocompleteOverride should take the current editor and time. It
   // should not apply if we get a request for a different editor or it's been a
-  // while since the completion was requested
+  // while since the completion was requested.
   _override = new _AutocompleteOverride(items, renderer);
   triggerAutocomplete(editor);
   return _override.future;
