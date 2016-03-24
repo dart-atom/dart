@@ -18,6 +18,8 @@ final Logger _logger = new Logger('analysis_server_lib');
 
 const String generatedProtocolVersion = '1.15.0';
 
+typedef void MethodSend(String methodName);
+
 class Server {
   StreamSubscription _streamSub;
   Function _writeMessage;
@@ -28,7 +30,7 @@ class Server {
   Map<String, Domain> _domains = {};
   StreamController<String> _onSend = new StreamController.broadcast();
   StreamController<String> _onReceive = new StreamController.broadcast();
-  Function _willSend;
+  MethodSend _willSend;
 
   ServerDomain _server;
   AnalysisDomain _analysis;
@@ -61,7 +63,7 @@ class Server {
   Stream<String> get onSend => _onSend.stream;
   Stream<String> get onReceive => _onReceive.stream;
 
-  set willSend(void fn(String methodName)) {
+  set willSend(MethodSend fn) {
     _willSend = fn;
   }
 
