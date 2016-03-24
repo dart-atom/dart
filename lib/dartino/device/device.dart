@@ -7,6 +7,7 @@ import '../dartino_util.dart';
 import '../launch_dartino.dart';
 import '../sdk/dartino_sdk.dart';
 import '../sdk/sod_repo.dart';
+import 'dartuino_board.dart';
 import 'stm32f746disco.dart';
 
 /// The connected device on which the application is executed.
@@ -16,6 +17,7 @@ abstract class Device {
   /// then notify the user and return `null`.
   static Future<Device> forLaunch(DartinoLaunch launch) async {
     Device device = await Stm32f746Disco.forLaunch(launch);
+    if (device == null) device = await DartuinoBoard.forLaunch(launch);
     if (device == null) {
       if (dartino.devicePath.isEmpty) {
         atom.notifications.addError('No connected devices found.',
