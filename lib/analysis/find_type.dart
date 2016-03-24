@@ -1,10 +1,10 @@
+import 'package:atom/node/notification.dart';
 import 'package:atom/utils/disposable.dart';
 
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../state.dart';
 import 'analysis_server_lib.dart' show FindTopLevelDeclarationsResult;
 import 'references.dart';

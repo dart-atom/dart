@@ -8,85 +8,14 @@ import 'dart:async';
 import 'dart:convert' show JSON;
 import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
     NodeTreeSanitizer, window;
-import 'dart:js';
 
-import 'package:atom/src/js.dart';
-import 'package:atom/node/node.dart';
 import 'package:atom/node/process.dart';
-import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
 import 'state.dart';
 
 final Logger _logger = new Logger('atom_utils');
-
-final JsObject _process = require('process');
-final JsObject _fs = require('fs');
-
-/// Get the value of an environment variable. This is often not accurate on the
-/// mac since mac apps are launched in a different shell then the terminal
-/// default.
-String env(String key) {
-  try {
-    return _process['env'][key];
-  } catch (err) {
-    return null;
-  }
-}
-
-/// Display a textual prompt to the user.
-Future<String> promptUser(String prompt,
-    {String defaultText, bool selectText: false, bool selectLastWord: false}) {
-  if (defaultText == null) defaultText = '';
-
-  // div, atom-text-editor.editor.mini div.message atom-text-editor[mini]
-  Completer<String> completer = new Completer();
-  Disposables disposables = new Disposables();
-
-  Element element = new DivElement();
-  element.setInnerHtml('''
-    <label>${prompt}</label>
-    <atom-text-editor mini>${defaultText}</atom-text-editor>
-''',
-      treeSanitizer: new TrustedHtmlTreeSanitizer());
-
-  Element editorElement = element.querySelector('atom-text-editor');
-  JsFunction editorConverter = context['getTextEditorForElement'];
-  TextEditor editor = new TextEditor(editorConverter.apply([editorElement]));
-  if (selectText) {
-    editor.selectAll();
-  } else if (selectLastWord) {
-    editor.moveToEndOfLine();
-    editor.selectToBeginningOfWord();
-  }
-
-  disposables.add(atom.commands.add('atom-workspace', 'core:confirm', (_) {
-    if (!completer.isCompleted) completer.complete(editor.getText());
-  }));
-
-  disposables.add(atom.commands.add('atom-workspace', 'core:cancel', (_) {
-    if (!completer.isCompleted) completer.complete(null);
-  }));
-
-  Panel panel = atom.workspace.addModalPanel(item: element, visible: true);
-
-  Timer.run(() {
-    // There's a bug in Dart's JS interop where we can't see custom elements
-    // well. In order to work around it, we get the raw JS object, wrap it in a
-    // JsObject, pass that to a semantic wrapper around TextEditorElement, and
-    // then call `focused()`.
-    JsObject obj = new JsObject.fromBrowserObject(uncrackDart2js(editorElement));
-    new TextEditorElement(obj).focused();
-  });
-
-  completer.future.whenComplete(() {
-    disposables.dispose();
-    panel.destroy();
-  });
-
-  return completer.future;
-}
 
 /// Return a description of Atom, the plugin, and the OS.
 Future<String> getSystemDescription({bool sdkPath: false}) {
@@ -124,11 +53,6 @@ class PermissiveNodeValidator implements NodeValidator {
   bool allowsAttribute(Element element, String attributeName, String value) {
     return true;
   }
-}
-
-class TrustedHtmlTreeSanitizer implements NodeTreeSanitizer {
-  const TrustedHtmlTreeSanitizer();
-  void sanitizeTree(Node node) { }
 }
 
 Future<Map> loadPackageJson() {

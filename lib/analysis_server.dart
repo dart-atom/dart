@@ -10,6 +10,7 @@ import 'dart:async';
 
 import 'package:atom/node/process.dart';
 import 'package:atom/utils/disposable.dart';
+import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_lib.dart';
@@ -19,7 +20,6 @@ import 'jobs.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
-import 'utils.dart';
 
 export 'analysis/analysis_server_lib.dart' show FormatResult, HoverInformation,
     HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,

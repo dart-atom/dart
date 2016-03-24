@@ -1018,51 +1018,6 @@ class ScopeDescriptor extends ProxyHolder {
   List<String> getScopesArray() => new List.from(invoke('getScopesArray'));
 }
 
-class BufferedProcess extends ProxyHolder {
-  static BufferedProcess create(String command, {
-      List<String> args,
-      void stdout(String str),
-      void stderr(String str),
-      void exit(num code),
-      String cwd,
-      Map<String, String> env,
-      Function onWillThrowError}) {
-    Map options = {'command': command};
-
-    if (args != null) options['args'] = args;
-    if (stdout != null) options['stdout'] = stdout;
-    if (stderr != null) options['stderr'] = stderr;
-    if (exit != null) options['exit'] = exit;
-    if (onWillThrowError != null) options['onWillThrowError'] = (JsObject e) {
-      e.callMethod('handle');
-      onWillThrowError(e['error']);
-    };
-
-    if (cwd != null || env != null) {
-      Map nodeOptions = {};
-      if (cwd != null) nodeOptions['cwd'] = cwd;
-      if (env != null) nodeOptions['env'] = jsify(env);
-      options['options'] = nodeOptions;
-    }
-
-    JsObject ctor = require('atom')['BufferedProcess'];
-    return new BufferedProcess._(new JsObject(ctor, [jsify(options)]));
-  }
-
-  JsObject _stdin;
-
-  BufferedProcess._(JsObject object) : super(object);
-
-  /// Write the given string as utf8 bytes to the process' stdin.
-  void write(String str) {
-    // node.js ChildProcess, Writeable stream
-    if (_stdin == null) _stdin = obj['process']['stdin'];
-    _stdin.callMethod('write', [str, 'utf8']);
-  }
-
-  void kill() => invoke('kill');
-}
-
 JsObject _create(String className, dynamic arg1, [dynamic arg2]) {
   if (arg2 != null) {
     return new JsObject(require('atom')[className], [arg1, arg2]);

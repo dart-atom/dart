@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:atom/node/fs.dart';
 import 'package:atom/utils/disposable.dart';
+import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_options.dart';
@@ -13,7 +14,6 @@ import '../atom.dart';
 import '../impl/debounce.dart';
 import '../projects.dart';
 import '../state.dart';
-import '../utils.dart';
 
 final Logger _logger = new Logger('atom.buffer_observer');
 

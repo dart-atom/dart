@@ -7,13 +7,13 @@ library atom.status;
 import 'dart:async';
 
 import 'package:atom/utils/disposable.dart';
+import 'package:atom/utils/string_utils.dart';
 
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../elements.dart';
 import '../jobs.dart';
 import '../state.dart';
-import '../utils.dart';
 
 // TODO: De-bounce the jobs display by 100ms.
 

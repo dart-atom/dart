@@ -6,6 +6,7 @@ library atom.utils_test;
 
 import 'dart:async';
 
+import 'package:atom/utils/string_utils.dart';
 import 'package:atom_dartlang/utils.dart';
 import 'package:test/test.dart';
 
