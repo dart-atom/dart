@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:atom/atom_utils.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:haikunator/haikunator.dart';

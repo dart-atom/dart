@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:atom/node/notification.dart';
 import 'package:atom/utils/disposable.dart';
+import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' show
@@ -11,10 +12,8 @@ import '../analysis/analysis_server_lib.dart' show
     RenameRefactoringOptions, ExtractLocalVariableRefactoringOptions;
 import '../analysis_server.dart';
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../editors.dart';
 import '../state.dart';
-import '../utils.dart';
 
 final Logger _logger = new Logger('refactoring');
 

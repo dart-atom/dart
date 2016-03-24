@@ -8,13 +8,13 @@ import 'dart:math' as math;
 
 import 'package:atom/node/fs.dart';
 import 'package:atom/utils/disposable.dart';
+import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../atom.dart';
 import '../elements.dart';
 import '../state.dart';
-import '../utils.dart';
 import '../views.dart';
 import 'analysis_server_lib.dart';
 

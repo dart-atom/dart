@@ -3,6 +3,7 @@ import 'dart:html' show AnchorElement, InputElement;
 
 import 'package:atom/node/shell.dart';
 import 'package:atom/utils/disposable.dart';
+import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' show DiagnosticsResult, ContextData;
@@ -13,7 +14,6 @@ import '../material.dart';
 import '../sdk.dart';
 import '../state.dart';
 import '../usage.dart' show trackCommand;
-import '../utils.dart';
 import '../views.dart';
 
 final String _statusOpenKey = 'statusOpen';

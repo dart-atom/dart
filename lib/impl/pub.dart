@@ -16,7 +16,6 @@ import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../jobs.dart';
 import '../projects.dart';
 import '../state.dart';

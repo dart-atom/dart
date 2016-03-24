@@ -4,13 +4,13 @@ library atom.console;
 
 import 'package:atom/node/shell.dart';
 import 'package:atom/utils/disposable.dart';
+import 'package:atom/utils/string_utils.dart';
 
 import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../elements.dart';
 import '../impl/errors.dart';
 import '../state.dart';
-import '../utils.dart';
 import '../views.dart';
 import 'launch.dart';
 
