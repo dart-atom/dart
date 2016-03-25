@@ -176,7 +176,7 @@ class LaunchData {
     if (_hasMain == null) {
       if (fileContents != null) {
         // TODO: This could be made more rigorous.
-        _hasMain = fileContents.contains('main(');
+        _hasMain = fileContents.contains(new RegExp(r'main *\('));
       } else {
         _hasMain = false;
       }
@@ -289,7 +289,7 @@ class Launch implements Disposable {
     }
   }
 
-  void launchTerminated(int code) {
+  void launchTerminated(int code, {bool quiet: false}) {
     if (isTerminated) return;
     exitCode.value = code;
 
@@ -297,10 +297,12 @@ class Launch implements Disposable {
       debugManager.removeConnection(_debugConnection);
     }
 
-    if (errored) {
-      atom.notifications.addError('${this} exited with error code ${exitCode}.');
-    } else {
-      atom.notifications.addSuccess('${this} finished.');
+    if (!quiet) {
+      if (errored) {
+        atom.notifications.addError('${this} exited with error code ${exitCode}.');
+      } else {
+        atom.notifications.addSuccess('${this} finished.');
+      }
     }
 
     manager._launchTerminated.add(this);

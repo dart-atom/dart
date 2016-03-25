@@ -110,7 +110,7 @@ class DartinoLaunch extends Launch {
     if (result != 0) {
       pipeStdio('Process terminated with exitCode: $result\n', error: true);
     }
-    if (result != 0 || isLast) exitCode.value = result;
+    if (result != 0 || isLast) launchTerminated(result, quiet: true);
     return result;
   }
 }
