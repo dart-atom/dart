@@ -757,6 +757,10 @@ class TextEditor extends ProxyHolder {
 
   Stream<Gutter> get onDidRemoveGutter => eventStream('onDidRemoveGutter').map((g) => new Gutter(g));
 
+  int get hashCode => obj.hashCode;
+
+  bool operator ==(other) => other is TextEditor && obj == other.obj;
+
   @override String toString() => getTitle();
 }
 

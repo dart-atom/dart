@@ -47,7 +47,7 @@ class FindReferencesHelper implements Disposable {
         } else {
           bool isMethod = result.element.parameters != null;
           String name = "${result.element.name}${isMethod ? '()' : ''}";
-          FindReferencesView.showView(new ReferencesSearch(result.id, 'References', name),
+          FindReferencesView.showView(new ReferencesSearch('References', name, searchId: result.id),
             refData: { 'path': path, 'offset': offset }
           );
         }
@@ -58,11 +58,13 @@ class FindReferencesHelper implements Disposable {
 }
 
 class ReferencesSearch {
-  final String searchId;
   final String searchType;
   final String label;
 
-  ReferencesSearch(this.searchId, this.searchType, this.label);
+  final String searchId;
+  final List<SearchResult> results;
+
+  ReferencesSearch(this.searchType, this.label, {this.searchId, this.results});
 }
 
 class FindReferencesView extends View {
@@ -115,7 +117,7 @@ class FindReferencesView extends View {
 
   void dispose() => disposables.dispose();
 
-  void _handleSearchResults(ReferencesSearch search, {Map refData}) {
+  Future _handleSearchResults(ReferencesSearch search, {Map refData}) async {
     // this._refData = refData;
 
     title.text = search.searchType;
@@ -125,31 +127,36 @@ class FindReferencesView extends View {
 
     treeBuilder.clear();
 
-    Stream<SearchResult> stream = analysisServer.filterSearchResults(search.searchId);
+    List<SearchResult> resultsList;
 
-    stream.toList().then((List<SearchResult> l) {
-      subtitle.text = "${commas(l.length)} ${pluralize('result', l.length)} for '${search.label}'";
-      subtitle.toggleClass('searching', false);
-      // refreshButton.enabled = _refData != null;
+    if (search.results != null) {
+      resultsList = search.results;
+    } else {
+      resultsList = await analysisServer.waitForSearchResults(search.searchId);
+    }
 
-      LinkedHashMap<String, List<SearchResult>> results = new LinkedHashMap();
+    subtitle.text = "${commas(resultsList.length)} ${pluralize('result', resultsList.length)} "
+      "for '${search.label}'";
+    subtitle.toggleClass('searching', false);
+    // refreshButton.enabled = _refData != null;
 
-      for (SearchResult r in l) {
-        String path = r.location.file;
-        if (results[path] == null) results[path] = [];
-        results[path].add(r);
-      }
+    LinkedHashMap<String, List<SearchResult>> results = new LinkedHashMap();
 
-      for (String path in results.keys) {
-        Node node = new Node(path, canHaveChildren: true);
-        List<SearchResult> fileResults = results[path];
-        fileResults.sort((SearchResult a, SearchResult b) {
-          return a.location.offset - b.location.offset;
-        });
-        fileResults.forEach((r) => node.add(new Node(r)));
-        treeBuilder.addNode(node);
-      }
-    });
+    for (SearchResult r in resultsList) {
+      String path = r.location.file;
+      if (results[path] == null) results[path] = [];
+      results[path].add(r);
+    }
+
+    for (String path in results.keys) {
+      Node node = new Node(path, canHaveChildren: true);
+      List<SearchResult> fileResults = results[path];
+      fileResults.sort((SearchResult a, SearchResult b) {
+        return a.location.offset - b.location.offset;
+      });
+      fileResults.forEach((r) => node.add(new Node(r)));
+      treeBuilder.addNode(node);
+    }
 
     matchParser.reset();
   }
