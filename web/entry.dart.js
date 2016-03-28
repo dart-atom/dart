@@ -30027,7 +30027,7 @@ self._domRemove = function(element) {
       "^": "ProxyHolder;obj",
       get$onDidDestroy: function() {
         var t1 = this.eventStream$1("onDidDestroy");
-        return H.subtypeCast(H.setRuntimeTypeInfo(new P._MapStream(new E.Panel_onDidDestroy_closure0(), t1), [H.getRuntimeTypeArgument(t1, "Stream", 0), null]), "$isStream", [E.Panel], "$asStream");
+        return H.setRuntimeTypeInfo(new P._MapStream(new E.Panel_onDidDestroy_closure0(), t1), [H.getRuntimeTypeArgument(t1, "Stream", 0), null]);
       },
       onDidDestroy$1: function(arg0) {
         return this.get$onDidDestroy().call$1(arg0);
@@ -41690,14 +41690,13 @@ self._domRemove = function(element) {
     }
   }], ["atom.projects", "package:atom_dartlang/projects.dart",, L, {
     "^": "",
-    _isDartBuildFile: function(file) {
-      var marker1, marker2, marker3, contents, t1, exception;
-      marker1 = "/dart/build_defs";
-      marker2 = "dart_library(";
-      marker3 = "dart_analyzed_library";
+    isDartBuildFile: function(path) {
+      var contents, t1, exception;
       try {
-        contents = file.readSync$0();
-        t1 = J.contains$1$asx(contents, marker1) === true || J.contains$1$asx(contents, marker2) === true || J.contains$1$asx(contents, marker3) === true;
+        t1 = $.$get$fs();
+        t1.toString;
+        contents = t1.invoke$3("readFileSync", path, P.LinkedHashMap__makeLiteral(["encoding", "utf8"]));
+        t1 = $.$get$_bazelDartRegex()._nativeRegExp.test(H.checkString(contents)) || $.$get$_bazelFlutterRegex()._nativeRegExp.test(H.checkString(contents));
         return t1;
       } catch (exception) {
         H.unwrapException(exception);
@@ -41890,7 +41889,7 @@ self._domRemove = function(element) {
       $isDisposable: 1,
       static: {
         ProjectManager_isDartProject: function(dir) {
-          var t1, buildFile;
+          var t1, t2, buildFilePath;
           t1 = J.getInterceptor$x(dir);
           if (t1.getFile$1(dir, "pubspec.yaml").existsSync$0() === true)
             return true;
@@ -41898,13 +41897,13 @@ self._domRemove = function(element) {
             return true;
           if (t1.getFile$1(dir, ".analysis_options").existsSync$0() === true)
             return true;
-          buildFile = t1.getFile$1(dir, "BUILD");
-          if (buildFile.existsSync$0() === true)
-            if (L._isDartBuildFile(buildFile) === true)
+          t2 = $.$get$fs();
+          buildFilePath = t2.join$2(0, t1.get$path(dir), "BUILD");
+          if (t2.invoke$2("existsSync", buildFilePath) === true)
+            if (L.isDartBuildFile(buildFilePath) === true)
               return true;
           $.$get$dartino().toString;
-          t1 = $.$get$fs();
-          if (t1.invoke$2("existsSync", t1.join$2(0, dir, "dartino.yaml")) === true)
+          if (t2.invoke$2("existsSync", t2.join$2(0, dir, "dartino.yaml")) === true)
             return true;
           return false;
         },
@@ -76041,7 +76040,11 @@ self._domRemove = function(element) {
     return N.Logger_Logger("plugin");
   }, "_logger", "_logger2", "$get$_logger2", function() {
     return N.Logger_Logger("projects");
-  }, "_logger2", "FindReferencesView__cachePrefix", "$get$FindReferencesView__cachePrefix", function() {
+  }, "_logger2", "_bazelDartRegex", "$get$_bazelDartRegex", function() {
+    return P.RegExp_RegExp("[\\W_]dart[\\W_]", true, false);
+  }, "_bazelDartRegex", "_bazelFlutterRegex", "$get$_bazelFlutterRegex", function() {
+    return P.RegExp_RegExp("[\\W_]flutter[\\W_]", true, false);
+  }, "_bazelFlutterRegex", "FindReferencesView__cachePrefix", "$get$FindReferencesView__cachePrefix", function() {
     var t1 = $.$get$fs().separator;
     return t1 + ".pub-cache" + t1;
   }, "FindReferencesView__cachePrefix", "FindReferencesView__pubPrefix", "$get$FindReferencesView__pubPrefix", function() {
