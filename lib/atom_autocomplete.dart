@@ -17,25 +17,36 @@ import 'atom.dart';
 
 final Logger _logger = new Logger('atom.autocomplete');
 
-_AutocompleteOverride _override;
+_AutoCompleteOverride _override;
 
 void triggerAutocomplete(TextEditor editor) {
   atom.commands.dispatch(
     atom.views.getView(editor),
     'autocomplete-plus:activate',
-    options: {'activatedManually': false});
+    options: {'activatedManually': false}
+  );
 }
 
 /// Display the code completion UI with the given list of items, and return the
 /// user's selection.
-Future<dynamic> chooseItemUsingCompletions(TextEditor editor,
-    List<dynamic> items, Suggestion renderer(var item)) {
-  // TODO: _AutocompleteOverride should take the current editor and time. It
-  // should not apply if we get a request for a different editor or it's been a
-  // while since the completion was requested.
-  _override = new _AutocompleteOverride(items, renderer);
+Future/*<T>*/ chooseItemUsingCompletions/*T*/(TextEditor editor,
+    List<dynamic> items, Suggestion renderer(/*T*/ item)) {
+  _override = new _AutoCompleteOverride(editor, items, renderer);
   triggerAutocomplete(editor);
   return _override.future;
+}
+
+List<_AutoCompleteEditorOverride> _overrides = [];
+
+typedef Future<List<Suggestion>> AutoCompleter(AutocompleteOptions options);
+
+void addOverrideAutocompleteForEditor(TextEditor editor, AutoCompleter autoCompleter) {
+  _overrides.removeWhere((override) => override.editor == editor);
+  _overrides.add(new _AutoCompleteEditorOverride(editor, autoCompleter));
+}
+
+void removeOverrideAutocompleteForEditor(TextEditor editor) {
+  _overrides.removeWhere((override) => override.editor == editor);
 }
 
 abstract class AutocompleteProvider implements Disposable {
@@ -88,7 +99,14 @@ abstract class AutocompleteProvider implements Disposable {
     Future<List<JsObject>> f;
     AutocompleteOptions opts = new AutocompleteOptions(options);
 
-    if (_override != null && _override.hasShown) _override = null;
+    if (_override != null) {
+      if (_override.hasShown) {
+        _override = null;
+      } else if (_override.editor != opts.editor) {
+        _logger.info('completions override editor != current editor');
+        _override = null;
+      }
+    }
 
     /// Returns a [JsObject] representing [s].
     JsObject suggestionToProxy(Suggestion s) => s._toProxy();
@@ -97,6 +115,17 @@ abstract class AutocompleteProvider implements Disposable {
       _override.hasShown = true;
       List<Suggestion> suggestions = _override.renderSuggestions();
       f = new Future.value(suggestions.map(suggestionToProxy).toList());
+    } else if (_overrides.any((override) => override.editor == opts.editor)) {
+      _AutoCompleteEditorOverride override = _overrides.firstWhere(
+        (override) => override.editor == opts.editor);
+      Stopwatch timer = new Stopwatch()..start();
+      f = override.autoCompleter(opts).then((List<Suggestion> suggestions) {
+        _logger.finer(
+          'override completion in ${timer.elapsedMilliseconds}ms, '
+          '${suggestions.length} results'
+        );
+        return suggestions.map(suggestionToProxy).toList();
+      });
     } else {
       Stopwatch timer = new Stopwatch()..start();
       f = getSuggestions(opts).then((List<Suggestion> suggestions) {
@@ -105,6 +134,9 @@ abstract class AutocompleteProvider implements Disposable {
           '${suggestions.length} results'
         );
         return suggestions.map(suggestionToProxy).toList();
+      }).catchError((error) {
+        _logger.warning('Error retrieving code completions: ${error}');
+        return <Suggestion>[];
       });
     }
 
@@ -245,14 +277,15 @@ class Suggestion {
   JsObject _toProxy() => jsify(_toMap());
 }
 
-class _AutocompleteOverride {
+class _AutoCompleteOverride {
+  final TextEditor editor;
   final List<dynamic> items;
   final Function renderer;
   final Completer<dynamic> completer = new Completer();
 
   bool hasShown = false;
 
-  _AutocompleteOverride(this.items, this.renderer);
+  _AutoCompleteOverride(this.editor, this.items, this.renderer);
 
   List<Suggestion> renderSuggestions() {
     List<Suggestion> result = [];
@@ -270,4 +303,11 @@ class _AutocompleteOverride {
   }
 
   Future<dynamic> get future => completer.future;
+}
+
+class _AutoCompleteEditorOverride {
+  final TextEditor editor;
+  final AutoCompleter autoCompleter;
+
+  _AutoCompleteEditorOverride(this.editor, this.autoCompleter);
 }
