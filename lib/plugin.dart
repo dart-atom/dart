@@ -199,6 +199,7 @@ class AtomDartPackage extends AtomPackage {
     _addCmd('atom-workspace', 'dartino:create-new-proj', dartino.createNewProject);
     _addCmd('atom-workspace', 'dartino:create-new-project', dartino.createNewProject);
     _addCmd('atom-workspace', 'dartino:install-sdk', dartino.promptInstallSdk);
+    _addCmd('atom-workspace', 'dartino:sdk-docs', dartino.showSdkDocs);
     _addCmd('atom-workspace', 'dartino:validate-sdk', dartino.validateSdk);
 
     // Text editor commands.

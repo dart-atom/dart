@@ -97,6 +97,11 @@ class _Dartino {
     DartinoSdk.promptInstall();
   }
 
+  /// Show docs for the installed SDK.
+  void showSdkDocs(AtomEvent _) {
+    sdkFor(null)?.showDocs();
+  }
+
   /// Validate the installed SDK if there is one.
   void validateSdk([AtomEvent _]) {
     if (sdkPath.isNotEmpty) {

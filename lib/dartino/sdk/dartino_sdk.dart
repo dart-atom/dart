@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';
+import 'package:atom/node/shell.dart';
 import 'package:atom_dartlang/jobs.dart';
 import 'package:logging/logging.dart';
 
@@ -113,6 +114,12 @@ class DartinoSdk extends Sdk {
 
   @override
   bool validate({bool quiet: false}) => true;
+
+  @override
+  void showDocs() {
+    var uri = new Uri.file(fs.join(sdkRoot, 'docs', 'index.html'));
+    shell.openExternal(uri.toString());
+  }
 }
 
 /// Start downloading the latest Dartino SDK and return a [Future]
