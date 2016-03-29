@@ -83,4 +83,7 @@ abstract class Sdk {
     }
     return path;
   }
+
+  /// Show documentation for the installed SDK.
+  void showDocs();
 }

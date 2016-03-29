@@ -102,4 +102,9 @@ class SodRepo extends Sdk {
     }
     return true;
   }
+
+  @override
+  void showDocs() {
+    atom.notifications.addInfo('no docs yet');
+  }
 }
