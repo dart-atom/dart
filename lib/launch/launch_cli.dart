@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
+import 'package:atom_dartlang/dartino/dartino_util.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
@@ -35,6 +36,7 @@ class CliLaunchType extends LaunchType {
       String relativePath = fs.relativize(project.path, path);
       if (relativePath.startsWith('lib${fs.separator}')) return false;
 
+      if (dartino.isProject(project.directory.path)) return false;
       return data.hasMain;
     }
   }
