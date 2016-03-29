@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## unreleased
+- several improvements to the Find Type dialog
+- improve the Dart detection logic in our BUILD file support
+
 ## 0.6.8
 - strip html markup from the code completion results
 - support case insensitive searching in the find type dialog

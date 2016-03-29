@@ -264,6 +264,10 @@ class AnalysisServer implements Disposable {
     return controller.stream;
   }
 
+  Future<List<SearchResult>> waitForSearchResults(String id) {
+    return filterSearchResults(id).toList();
+  }
+
   Future<FormatResult> format(String path, int selectionOffset, int selectionLength,
       {int lineLength}) {
     return server.edit.format(

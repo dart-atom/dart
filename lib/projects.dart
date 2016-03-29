@@ -49,9 +49,9 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     if (dir.getFile(analysisOptionsFileName).existsSync()) return true;
 
     // Look for a `BUILD` file with some Dart build rules.
-    File buildFile = dir.getFile(_bazelBuildFileName);
-    if (buildFile.existsSync()) {
-      if (_isDartBuildFile(buildFile)) return true;
+    String buildFilePath = fs.join(dir.path, _bazelBuildFileName);
+    if (fs.existsSync(buildFilePath)) {
+      if (isDartBuildFile(buildFilePath)) return true;
     }
 
     // Look for dartino.yaml file... there is no .packages or pubspec
@@ -508,14 +508,13 @@ class ProjectScanJob extends Job {
   }
 }
 
-bool _isDartBuildFile(File file) {
-  const String marker1 = '/dart/build_defs';
-  const String marker2 = 'dart_library(';
-  const String marker3 = 'dart_analyzed_library';
+final RegExp _bazelDartRegex = new RegExp(r'[\W_]dart[\W_]');
+final RegExp _bazelFlutterRegex = new RegExp(r'[\W_]flutter[\W_]');
 
+bool isDartBuildFile(String path) {
   try {
-    String contents = file.readSync();
-    return contents.contains(marker1) || contents.contains(marker2) || contents.contains(marker3);
+    String contents = fs.readFileSync(path);
+    return _bazelDartRegex.hasMatch(contents) || _bazelFlutterRegex.hasMatch(contents);
   } catch (_) {
     return false;
   }
