@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.9
 - several improvements to the Find Type dialog
 - improve the Dart detection logic in our BUILD file support
 
