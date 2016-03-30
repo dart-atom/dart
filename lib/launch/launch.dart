@@ -213,7 +213,7 @@ class Launch implements Disposable {
   final String targetName;
   final LaunchManager manager;
   final int id = ++_id;
-  @deprecated
+  /*@deprecated*/
   final Function killHandler;
   final String cwd;
 
