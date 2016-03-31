@@ -84,7 +84,7 @@ class AtomDartPackage extends AtomPackage {
   ConsoleController consoleController;
   DartLinterConsumer _consumer;
 
-  AtomDartPackage() {
+  AtomDartPackage() : super(pluginId) {
     // Register a method to consume the `status-bar` service API.
     registerServiceConsumer('consumeStatusBar', (JsObject obj) {
       StatusBar statusBar = new StatusBar(obj);
@@ -115,7 +115,7 @@ class AtomDartPackage extends AtomPackage {
     moduleExports['provideAutocomplete'] = () => dartCompleterProvider.toProxy();
   }
 
-  void packageActivated([dynamic pluginState]) {
+  void activate([dynamic pluginState]) {
     _setupLogging();
 
     _logger.info("activated");
@@ -276,7 +276,7 @@ class AtomDartPackage extends AtomPackage {
 
   dynamic serialize() => state.saveState();
 
-  void packageDeactivated() {
+  void deactivate() {
     _logger.info('deactivated');
 
     disposables.dispose();

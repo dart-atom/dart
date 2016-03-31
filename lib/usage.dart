@@ -7,7 +7,6 @@ import 'package:logging/logging.dart';
 import 'package:usage/usage_html.dart';
 
 import 'atom.dart';
-import 'atom_utils.dart';
 import 'projects.dart';
 import 'state.dart';
 
@@ -25,7 +24,7 @@ class UsageManager implements Disposable {
   }
 
   Future _init() {
-    return getPackageVersion().then((String version) {
+    return atomPackage.getPackageVersion().then((String version) {
       atom.config.observe('${pluginId}.sendUsage', null, (value) {
         // Disable Google Analytics if the UA is the placeholder one.
         if (_UA.startsWith('UA-0000')) value = false;

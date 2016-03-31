@@ -114,7 +114,7 @@ class StatusView extends View {
     CoreElement section = container.add(div(c: 'view-section'));
     StatusHeader header = new StatusHeader(section);
     header.title.text = '${pluginId} plugin';
-    getPackageVersion().then((str) {
+    atomPackage.getPackageVersion().then((str) {
       header.subtitle.text = str;
     });
 
@@ -453,7 +453,7 @@ class StatusHeader {
 
 /// 'Atom 1.0.11, dartlang 0.4.3'
 Future<String> _getPlatformVersions() {
-  return getPackageVersion().then((pluginVer) {
+  return atomPackage.getPackageVersion().then((pluginVer) {
     String atomVer = atom.getVersion();
     return 'Atom ${atomVer}, ${pluginId} ${pluginVer}';
   });

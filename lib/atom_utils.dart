@@ -5,7 +5,6 @@
 library atom.atom_utils;
 
 import 'dart:async';
-import 'dart:convert' show JSON;
 import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
     NodeTreeSanitizer, window;
 
@@ -25,7 +24,7 @@ Future<String> getSystemDescription({bool sdkPath: false}) {
   String sdkVer;
   String os = isMac ? 'macos' : process.platform;
 
-  return getPackageVersion().then((ver) {
+  return atomPackage.getPackageVersion().then((ver) {
     pluginVer = ver;
     return sdkManager.hasSdk ? sdkManager.sdk.getVersion() : null;
   }).then((ver) {
@@ -53,14 +52,4 @@ class PermissiveNodeValidator implements NodeValidator {
   bool allowsAttribute(Element element, String attributeName, String value) {
     return true;
   }
-}
-
-Future<Map> loadPackageJson() {
-  return HttpRequest.getString('atom://dartlang/package.json').then((str) {
-    return JSON.decode(str);
-  });
-}
-
-Future<String> getPackageVersion() {
-  return loadPackageJson().then((map) => map['version']);
 }

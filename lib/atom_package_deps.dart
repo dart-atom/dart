@@ -7,13 +7,12 @@ import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import 'atom.dart';
-import 'atom_utils.dart';
 import 'jobs.dart';
 
 final Logger _logger = new Logger('atom.atom_package_deps');
 
 Future install() {
-  return loadPackageJson().then((Map info) {
+  return atomPackage.loadPackageJson().then((Map info) {
     List<String> installedPackages = atom.packages.getAvailablePackageNames();
     List<String> requiredPackages = info['required-packages'];
 

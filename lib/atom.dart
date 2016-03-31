@@ -5,6 +5,7 @@
 /// A Dart wrapper around the [Atom](https://atom.io/docs/api) apis.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:html' hide File, Notification, Point;
 import 'dart:js';
 
@@ -27,6 +28,8 @@ final JsObject _shell = require('shell');
 
 AtomPackage _package;
 
+AtomPackage get atomPackage => _package;
+
 /// The singleton instance of [Atom].
 final Atom atom = new Atom();
 
@@ -36,12 +39,26 @@ final JsObject _ctx = context['atom'];
 abstract class AtomPackage {
   Map<String, Function> _registeredMethods = {};
 
-  AtomPackage();
+  final String id;
 
+  AtomPackage(this.id);
+
+  void activate([dynamic state]);
   Map config() => {};
-  void packageActivated([dynamic state]) { }
-  void packageDeactivated() { }
   dynamic serialize() => {};
+  void deactivate() {}
+
+  Future<Map<String, dynamic>> loadPackageJson() {
+    String url = 'atom://${id}/package.json';
+    return HttpRequest.getString(url).then((String str) {
+      return JSON.decode(str) as Map<String, dynamic>;
+    }) as Future<Map<String, dynamic>>;
+  }
+
+  Future<String> getPackageVersion() {
+    return loadPackageJson().then((Map map) => map['version'])
+        as Future<String>;
+  }
 
   /// Register a method for a service callback (`consumedServices`).
   void registerServiceConsumer(String methodName, Disposable callback(JsObject obj)) {
@@ -75,8 +92,8 @@ void registerPackage(AtomPackage package) {
 
   final JsObject exports = context['module']['exports'];
 
-  exports['activate'] = _package.packageActivated;
-  exports['deactivate'] = _package.packageDeactivated;
+  exports['activate'] = _package.activate;
+  exports['deactivate'] = _package.deactivate;
   exports['config'] = jsify(_package.config());
   exports['serialize'] = _package.serialize;
 

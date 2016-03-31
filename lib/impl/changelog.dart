@@ -9,14 +9,13 @@ import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';
-import '../atom_utils.dart';
 import '../state.dart';
 //import 'package:pub_semver/pub_semver.dart';
 
 
 final Logger _logger = new Logger('changelog');
 
-Future checkChangelog() => getPackageVersion().then(_checkChangelog);
+Future checkChangelog() => atomPackage.getPackageVersion().then(_checkChangelog);
 
 class ChangelogManager implements Disposable {
   Disposables disposables = new Disposables();
