@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
     NodeTreeSanitizer, window;
 
+import 'package:atom/node/package.dart';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 

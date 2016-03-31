@@ -3,6 +3,7 @@ library atom.atom_package_deps;
 import 'dart:async';
 
 import 'package:atom/node/notification.dart';
+import 'package:atom/node/package.dart';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
