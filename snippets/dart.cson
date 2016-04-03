@@ -13,7 +13,58 @@
       try {
         $2
       } catch (${1:e}) {
-        
+
       }
 
+      """
+  'if':
+    'prefix': 'if'
+    'body': """
+      if($1){
+
+      }
+
+      """
+  'ifElse':
+    'prefix': 'ifElse'
+    'body': """
+      if($1){
+
+      }else{
+
+      }
+
+      """
+  'assert':
+    'prefix': 'assert'
+    'body': """
+      assert($1);
+
+      """
+
+  'print':
+    'prefix': 'print'
+    'body': """
+      print($1);
+      """
+  'for':
+    'prefix': 'for'
+    'body': """
+      for(var i = 0; i < count; i++){
+        //doSomeStuff
+      }
+      """
+  'while':
+    'prefix': 'while'
+    'body': """
+      while($1){
+        //doSomeStuff
+      }
+      """
+  'void':
+    'prefix': 'void'
+    'body': """
+      void $1 (){
+        
+      }
       """
