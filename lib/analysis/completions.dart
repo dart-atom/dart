@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:atom/node/config.dart';
+import 'package:atom/node/workspace.dart';
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../atom_autocomplete.dart';
 import '../state.dart';
 import 'analysis_server_lib.dart' show CompletionResults, CompletionSuggestion,

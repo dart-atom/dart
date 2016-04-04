@@ -3,6 +3,7 @@ library atom.usage;
 import 'dart:async';
 
 import 'package:atom/node/package.dart';
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:usage/usage_html.dart';

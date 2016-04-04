@@ -1,6 +1,7 @@
 
 import 'dart:html' show SelectElement;
 
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 
 import '../atom.dart';

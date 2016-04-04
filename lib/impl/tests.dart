@@ -1,6 +1,7 @@
 /// A library for executing unit tests.
 library atom.tests;
 
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 
 import '../atom.dart';

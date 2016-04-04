@@ -4,6 +4,7 @@ library atom.dartdoc;
 import 'dart:async';
 import 'dart:html' show DivElement, Element, NodeValidator;
 
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:markdown/markdown.dart' as markdown;
 

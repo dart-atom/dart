@@ -3,6 +3,7 @@ library atom.quick_fixes;
 
 import 'dart:async';
 
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';

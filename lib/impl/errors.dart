@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:html' show Element;
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
 

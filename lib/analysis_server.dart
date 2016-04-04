@@ -9,6 +9,7 @@ library atom.analysis_server;
 import 'dart:async';
 
 import 'package:atom/node/process.dart';
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';

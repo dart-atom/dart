@@ -2,6 +2,7 @@ library atom.linter_impl;
 
 import 'dart:async';
 
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 
 import 'analysis/analysis_server_lib.dart' show AnalysisError, Location;

@@ -1,5 +1,6 @@
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/workspace.dart';
 
 import '../atom.dart';
 

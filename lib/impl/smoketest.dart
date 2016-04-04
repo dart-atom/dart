@@ -10,6 +10,7 @@ import 'dart:html' show DivElement;
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';
+import 'package:atom/node/workspace.dart';
 
 import '../atom.dart';
 import '../jobs.dart';

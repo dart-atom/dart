@@ -9,6 +9,7 @@ library atom.autocomplete;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/node/workspace.dart';
 import 'package:atom/src/js.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';

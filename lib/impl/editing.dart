@@ -4,6 +4,7 @@
 
 library atom.editing;
 
+import 'package:atom/node/workspace.dart';
 import 'package:logging/logging.dart';
 
 import '../atom.dart';

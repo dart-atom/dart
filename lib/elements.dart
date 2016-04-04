@@ -9,6 +9,7 @@ import 'dart:html';
 
 import 'package:atom/atom_utils.dart';
 import 'package:atom/node/process.dart';
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 
 import 'atom.dart' hide Point;

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:html' as html;
 
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
