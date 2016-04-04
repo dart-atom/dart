@@ -71,15 +71,15 @@
     'body': """
       import '$1';
       """
-    'class':
-      'prefix': 'class'
-      'body': """
-        class ${1:name} {
+  'class':
+    'prefix': 'class'
+    'body': """
+      class ${1:name} {
 
-        }
-        """
-    'typedef':
-      'prefix': 'typedef'
-      'body': """
-        typedef ${1:type} ${2:name};
-        """
+      }
+      """
+  'typedef':
+    'prefix': 'typedef'
+    'body': """
+      typedef ${1:type} ${2:name};
+      """
