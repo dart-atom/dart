@@ -62,7 +62,7 @@
   'void':
     'prefix': 'void'
     'body': """
-      void ${1:name} (){
+      void ${1:name} () {
         //doSomeStuff
       }
       """
