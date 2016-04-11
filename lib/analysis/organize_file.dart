@@ -8,10 +8,6 @@ import '../atom.dart';
 import '../editors.dart';
 import '../state.dart';
 
-// TODO: Run in an AnalysisRequestJob job.
-
-// TODO: Report errors better (like from trying to organize parts).
-
 class OrganizeFileManager implements Disposable {
   Disposables disposables = new Disposables();
 
@@ -42,42 +38,47 @@ class OrganizeFileManager implements Disposable {
 
   void _handleSortMembers(TextEditor editor) {
     String path = editor.getPath();
-    /*Future f =*/ analysisServer.server.edit.sortMembers(path).then((result) {
-      SourceFileEdit edit = result.edit;
 
-      if (edit.edits.isEmpty) {
-        atom.notifications.addSuccess('No changes from sort members.');
-      } else {
-        atom.notifications.addSuccess('Sort members successful.');
-        applyEdits(editor, edit.edits);
-      }
+    AnalysisRequestJob job = new AnalysisRequestJob('Sort members', () {
+      return analysisServer.server.edit.sortMembers(path).then((result) {
+        SourceFileEdit edit = result.edit;
+
+        if (edit.edits.isEmpty) {
+          atom.notifications.addSuccess('No changes from sort members.');
+        } else {
+          atom.notifications.addSuccess('Sort members successful.');
+          applyEdits(editor, edit.edits);
+        }
+      });
     });
 
-    // TODO: Run the operation in a job to give the user some feedback for
-    // longer running operations. Also, handle error results.
-    //analysisServer.handleResultTimeout('sort members');
+    job.schedule();
   }
 
   void _handleOrganizeDirectives(TextEditor editor) {
     String path = editor.getPath();
 
-    analysisServer.server.edit.organizeDirectives(path).then((result) {
-      SourceFileEdit edit = result.edit;
+    AnalysisRequestJob job = new AnalysisRequestJob('Organize directives', () {
+      return analysisServer.server.edit.organizeDirectives(path).then((result) {
+        SourceFileEdit edit = result.edit;
 
-      if (edit.edits.isEmpty) {
-        atom.notifications.addSuccess('No changes from organize directives.');
-      } else {
-        atom.notifications.addSuccess('Organize directives successful.');
-        applyEdits(editor, edit.edits);
-      }
-    }).catchError((e) {
-      if (e is RequestError && e.code == 'UNKNOWN_REQUEST') {
-        atom.notifications.addWarning(
-            'Organize directives is not supported in this version of the analysis server.');
-      } else {
-        atom.notifications
-            .addError('Error running organize directives.', detail: '${e}');
-      }
+        if (edit.edits.isEmpty) {
+          atom.notifications.addSuccess('No changes from organize directives.');
+        } else {
+          atom.notifications.addSuccess('Organize directives successful.');
+          applyEdits(editor, edit.edits);
+        }
+      }).catchError((e) {
+        if (e is RequestError && e.code == 'UNKNOWN_REQUEST') {
+          atom.notifications.addWarning(
+              'Organize directives is not supported in this version of the analysis server.');
+        } else {
+          atom.notifications
+              .addError('Error running organize directives.', detail: '${e}');
+        }
+      });
     });
+
+    job.schedule();
   }
 }

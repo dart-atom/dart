@@ -299,8 +299,9 @@ class AnalysisServer implements Disposable {
     return server.edit.getAssists(path, offset, length);
   }
 
-  Future<HoverResult> getHover(String file, int offset) =>
-      server.analysis.getHover(file, offset);
+  Future<HoverResult> getHover(String file, int offset) {
+    return server.analysis.getHover(file, offset);
+  }
 
   Future<FindElementReferencesResult> findElementReferences(
       String path, int offset, bool includePotential) {
@@ -309,22 +310,6 @@ class AnalysisServer implements Disposable {
 
   Future<TypeHierarchyResult> getTypeHierarchy(String path, int offset) =>
       server.search.getTypeHierarchy(path, offset);
-
-  /// Return whether the given file is executable. This means it has a `main()`
-  /// method and does not import `dart:html`;
-  bool isExecutable(String path) {
-    if (!isActive) return false;
-    return _server._executables.contains(path);
-  }
-
-  /// Returns all the executables for the given project path.
-  List<String> getExecutablesFor(String projectPath) {
-    if (!isActive) return [];
-
-    return _server._executables
-        .where((path) => path.startsWith(projectPath))
-        .toList();
-  }
 
   /// Update the given file with a new overlay. [contentOverlay] can be one of
   /// [AddContentOverlay], [ChangeContentOverlay], or [RemoveContentOverlay].
@@ -443,7 +428,6 @@ class _AnalysisServerWrapper extends Server {
   bool analyzing = false;
   StreamController<bool> _analyzingController = new StreamController.broadcast();
   StreamController<int> _disposedController = new StreamController.broadcast();
-  Set<String> _executables = new Set();
 
   _AnalysisServerWrapper(this.process, this._processCompleter,
       Stream<String> inStream, void writeMessage(String message)) :
@@ -456,9 +440,6 @@ class _AnalysisServerWrapper extends Server {
 
   void setup() {
     server.setSubscriptions(['STATUS']);
-
-    _executables.clear();
-    execution.setSubscriptions(['LAUNCH_DATA']);
 
     // Tracking `enableSuperMixins` here: github.com/dart-lang/sdk/issues/23772.
     analysis.updateOptions(new AnalysisOptions(
@@ -492,14 +473,6 @@ class _AnalysisServerWrapper extends Server {
             detail: error.stackTrace,
             dismissable: true);
         }
-      }
-    });
-
-    execution.onLaunchData.listen((ExecutionLaunchData data) {
-      if (data.kind == 'SERVER') {
-        _executables.add(data.file);
-      } else {
-        _executables.remove(data.file);
       }
     });
   }
@@ -637,12 +610,14 @@ class _AnalysisServerWrapper extends Server {
 // TODO: We need more visible progress for this job - it should put up a toast
 // after a ~400ms delay.
 
+typedef Future PerformRequest();
+
 /// A [Job] implementation to wrap calls to the analysis server. It will not run
 /// if the analysis server is not active. If the call results in an error from
 /// the analysis server, the error will be displayed in a toast and will not be
 /// passed back from the returned Future.
 class AnalysisRequestJob extends Job {
-  final Function _fn;
+  final PerformRequest _fn;
 
   AnalysisRequestJob(String name, this._fn) : super(toTitleCase(name));
 
@@ -654,12 +629,11 @@ class AnalysisRequestJob extends Job {
       return new Future.value();
     }
 
-    return (_fn() as Future).catchError((e) {
+    return _fn().catchError((e) {
       if (!analysisServer.isActive) return null;
 
       if (e is RequestError) {
-        atom.notifications.addError(
-            '${name} error', description: '${e.code} ${e.message}');
+        atom.notifications.addError('${name} error', detail: '${e.message} (${e.code})');
 
         if (e.stackTrace == null) {
           _logger.warning('${name} error', e);

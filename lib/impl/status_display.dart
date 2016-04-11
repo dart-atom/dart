@@ -15,9 +15,9 @@ import '../elements.dart';
 import '../jobs.dart';
 import '../state.dart';
 
-// TODO: De-bounce the jobs display by 100ms.
+const Duration _showDelay = const Duration(milliseconds: 200);
 
-const Duration _shortDuration = const Duration(milliseconds: 400);
+const Duration _hideDelay = const Duration(milliseconds: 400);
 
 class StatusDisplay implements Disposable {
   final Disposables _disposables = new Disposables();
@@ -27,7 +27,8 @@ class StatusDisplay implements Disposable {
 
   Tile _statusbarTile;
 
-  Timer _timer;
+  Timer _showTimer;
+  Timer _hideTimer;
 
   StatusDisplay(StatusBar statusBar) {
     CoreElement spinner;
@@ -51,29 +52,45 @@ class StatusDisplay implements Disposable {
 
     _subscription = jobs.onQueueChanged.listen((_) {
       Job job = jobs.activeJob;
-      bool showing = job != null;
 
-      if (_timer != null) {
-        _timer.cancel();
-        _timer = null;
+      bool shouldShow = job != null;
+      bool isShowing = statusElement.element.classes.contains('showing');
+
+      if (shouldShow && !isShowing) {
+        _hideTimer?.cancel();
+        _hideTimer = null;
+
+        // Show it.
+        if (_showTimer == null) {
+          _showTimer = new Timer(_showDelay, () {
+            statusElement.toggleClass('showing', true);
+            _showTimer = null;
+          });
+        }
+      } else if (!shouldShow && isShowing) {
+        _showTimer?.cancel();
+        _showTimer = null;
+
+        // Hide it.
+        if (_hideTimer == null) {
+          _hideTimer = new Timer(_hideDelay, () {
+            textLabel.text = '';
+            statusElement.toggleClass('showing', false);
+            _hideTimer = null;
+          });
+        }
       }
 
       if (job != null) {
         textLabel.text = '${job.name}…';
-        statusElement.toggleClass('showing', true);
-      } else {
-        _timer = new Timer(_shortDuration, () {
-          textLabel.text = '';
-          statusElement.toggleClass('showing', false);
-        });
       }
 
-      int jobLen = jobs.allJobs.length;
-      countBadge.text = jobLen == 0 ? '' : '${jobLen} ${pluralize('job', jobLen)}';
+      int jobsLength = jobs.allJobs.length;
+      countBadge.text = jobsLength == 0 ? '' : '${jobsLength} ${pluralize('job', jobsLength)}';
 
-      spinner.toggleClass('showing', showing);
-      textLabel.toggleClass('showing', showing);
-      countBadge.toggleClass('showing', jobLen > 1);
+      spinner.toggleClass('showing', shouldShow);
+      textLabel.toggleClass('showing', shouldShow);
+      countBadge.toggleClass('showing', jobsLength > 1);
 
       _updateJobsDialog();
     });
