@@ -353,9 +353,6 @@ class PubAppLocal extends PubApp {
 }
 
 class PubJob extends Job {
-  static bool get _noPackageSymlinks =>
-      atom.config.getValue('${pluginId}.noPackageSymlinks');
-
   final String path;
   final String pubCommand;
 
@@ -380,8 +377,6 @@ class PubJob extends Job {
     }
 
     List<String> args = [pubCommand];
-    if (_noPackageSymlinks) args.insert(0, '--no-package-symlinks');
-
     ProcessNotifier notifier = new ProcessNotifier(name);
     ProcessRunner runner = sdkManager.sdk.execBin('pub', args, cwd: _pubspecDir);
     return notifier.watch(runner);

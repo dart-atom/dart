@@ -69,7 +69,7 @@ class BufferObserver extends Disposables {
 class BufferFormatter extends BufferObserver {
   StreamSubscriptions _subs = new StreamSubscriptions();
   bool isFormatting = false;
-  bool get formatOnSave => atom.config.getValue('dartlang.formatOnSave');
+  bool get formatOnSave => false; //atom.config.getValue('dartlang.formatOnSave');
 
   BufferFormatter(manager, editor) : super(manager, editor) {
     _subs.add(this.editor.onDidSave.listen((_) {
@@ -78,7 +78,7 @@ class BufferFormatter extends BufferObserver {
       if (!dartProject) return; // Breaks stand-alone dart files?
 
       isFormatting = true;
-      FormattingHelper.formatEditor(editor, quiet: true).then((didFormat) {
+      FormattingManager.formatEditor(editor, quiet: true).then((didFormat) {
         if (didFormat) editor.save();
         // This is a side-effect or bug in Dart:
         // This method will complete before the callbacks initiated by

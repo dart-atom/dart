@@ -152,7 +152,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new FlutterToolsManager());
     disposables.add(new DartdocHelper());
     disposables.add(errorsController = new ErrorsController());
-    disposables.add(new FormattingHelper());
+    disposables.add(new FormattingManager());
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());
     disposables.add(new OutlineController());
@@ -326,14 +326,16 @@ class AtomDartPackage extends AtomPackage {
         'order': 5
       },
 
-      // format on save
-      'formatOnSave': {
-        'title': 'Format current file on save',
-        'description': 'Format the current editor on save.',
-        'type': 'boolean',
-        'default': false,
-        'order': 6
-      },
+      // TODO(devoncarew): Removed; this interacts badly with refacotoring and
+      // atom's auto-save feature. Re-add once the implementation is solid.
+      // // format on save
+      // 'formatOnSave': {
+      //   'title': 'Format current file on save',
+      //   'description': 'Format the current editor on save.',
+      //   'type': 'boolean',
+      //   'default': false,
+      //   'order': 6
+      // },
 
       // key-bindings
       'jumpToDeclarationKeys': {
@@ -354,18 +356,6 @@ class AtomDartPackage extends AtomPackage {
         'default': 'all',
         'enum': ['all', 'uncaught', 'none'],
         'order': 8
-      },
-
-      // no package symlinks
-      'noPackageSymlinks': {
-        'title': "Run pub with '--no-package-symlinks'",
-        'description':
-            'Run pub with a command-line option to not create packages '
-            'symlinks. Note: Flutter applications will not currently work with '
-            'this option enabled.',
-        'type': 'boolean',
-        'default': false,
-        'order': 9
       },
 
       // google analytics

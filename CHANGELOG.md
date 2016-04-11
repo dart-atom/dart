@@ -6,6 +6,9 @@
 - fix an issue where cli apps would launch as flutter apps inside of a flutter project
 - fix an issue where right-clicking on a file and choosing 'run application'
   would instead launch the application showing in the toolbar pulldown
+- removed the auto-format on save option; this interacted badly with atom's
+  auto-save and some refactorings
+- removed the option to pass in `--no-package-symlinks` to pub commands
 
 ## 0.6.9
 - several improvements to the Find Type dialog
