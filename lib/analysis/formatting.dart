@@ -18,12 +18,10 @@ final Logger _logger = new Logger('formatting');
 int get _prefLineLength =>
     atom.config.getValue('editor.preferredLineLength', scope: ['source.dart']);
 
-// TODO: this should be "FormattingCommandManger" (?), containing only logic
-// for responding to formatting commands sent by Atom.
-class FormattingHelper implements Disposable {
+class FormattingManager implements Disposable {
   Disposables _commands = new Disposables();
 
-  FormattingHelper() {
+  FormattingManager() {
     _commands.add(atom.commands.add('.tree-view', 'dartlang:dart-format', (e) {
       formatFile(e.targetFilePath);
     }));
