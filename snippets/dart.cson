@@ -49,21 +49,21 @@
     'prefix': 'for'
     'body': """
       for (var i = 0; i < count; i++) {
-        //doSomeStuff
+
       }
       """
   'while':
     'prefix': 'while'
     'body': """
       while ($1) {
-        //doSomeStuff
+
       }
       """
   'void':
     'prefix': 'void'
     'body': """
       void ${1:name} () {
-        //doSomeStuff
+
       }
       """
   'import':

@@ -166,6 +166,8 @@ abstract class LaunchType {
 }
 
 class LaunchData {
+  static final RegExp _mainRegex = new RegExp(r'main *\(');
+
   final String fileContents;
 
   bool _hasMain;
@@ -175,8 +177,7 @@ class LaunchData {
   bool get hasMain {
     if (_hasMain == null) {
       if (fileContents != null) {
-        // TODO: This could be made more rigorous.
-        _hasMain = fileContents.contains(new RegExp(r'main *\('));
+        _hasMain = fileContents.contains(_mainRegex);
       } else {
         _hasMain = false;
       }

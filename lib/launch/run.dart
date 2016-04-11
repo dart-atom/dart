@@ -74,6 +74,9 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
     DartProject project = projectManager.getProjectFor(path);
     WorkspaceLaunchManager workspaceLaunchManager = _workspaceLaunchManager;
+
+    // TODO: if path is directly runnable, use that; else use selectedRunnable
+
     RunnableConfig runnable = workspaceLaunchManager.selectedRunnable;
 
     if (runnable != null) {
@@ -290,6 +293,8 @@ class RunnableConfig implements Comparable<RunnableConfig> {
   }
 
   int get hashCode => getDisplayName().hashCode;
+
+  String toString() => getDisplayName();
 }
 
 class _RunAppContextCommand extends ContextMenuItem {

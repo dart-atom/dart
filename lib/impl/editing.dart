@@ -90,7 +90,7 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
   }
 
   if (trimmedText.startsWith('//')) {
-    if (!atEol || trimmedText.endsWith(',')) {
+    if (!atEol) {
       editor.atomic(() {
         editor.insertNewline();
         editor.insertText('// ');
@@ -105,7 +105,7 @@ bool _handleEnterKey(TextEditor editor, int row, int col) {
         int wrapAtCol = line.substring(0, prefLineLength + 1).lastIndexOf(' ');
         int commentIndent = line.length - trimmedText.length;
 
-        // We require the first space to be past the `// ` comment leader in sjdhfjsdfj
+        // We require the first space to be past the `// ` comment leader in
         // order to wrap. Otherwise look for a space after the line.
         if (wrapAtCol < commentIndent + 3) {
           wrapAtCol = line.indexOf(' ', prefLineLength);
