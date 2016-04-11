@@ -194,6 +194,8 @@ class Launchable {
 
   Launchable(this.type, this.projectPath, this.relativePath);
 
+  String get path => fs.join(projectPath, relativePath);
+
   String getDisplayName() => '${relativePath} (${type})';
 
   operator ==(other) => other is Launchable && (type == other.type && relativePath == other.relativePath);

@@ -60,31 +60,68 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
   void _handleTreeViewRunCommand(String path) {
     File file = new File.fromPath(path);
-    _handleRunCommand(path, new LaunchData(file.readSync()));
+    _handleRunCommand(path, new LaunchData(file.readSync()), explicitFile: true);
   }
 
   void _handleEditorRunCommand(String path, String contents) {
     _handleRunCommand(path, new LaunchData(contents));
   }
 
-  void _handleRunCommand(String path, LaunchData data) {
+  void _handleRunCommand(String path, LaunchData data, { bool explicitFile: false }) {
     if (path == null) return;
 
     _preRunConfigSearch();
 
     DartProject project = projectManager.getProjectFor(path);
     WorkspaceLaunchManager workspaceLaunchManager = _workspaceLaunchManager;
-
-    // TODO: if path is directly runnable, use that; else use selectedRunnable
-
     RunnableConfig runnable = workspaceLaunchManager.selectedRunnable;
 
-    if (runnable != null) {
-      run(runnable.getCreateLaunchConfig());
+    if (explicitFile) {
+      // If the current select == the current file, use that.
+      if (runnable != null && runnable.path == path) {
+        run(runnable.getCreateLaunchConfig());
+      } else {
+        // If the file has a launch config, use that.
+        DartProject project = projectManager.getProjectFor(path);
+        List<LaunchConfiguration> configs = project == null ?
+           [] : launchConfigurationManager.getConfigsForProject(project.path);
+
+        configs = configs.where((LaunchConfiguration c) => path == c.primaryResource).toList();
+
+        if (configs.isNotEmpty) {
+          LaunchConfiguration config = configs.first;
+          for (LaunchConfiguration c in configs) {
+            if (c.timestamp > config.timestamp) config = c;
+          }
+          run(config);
+        } else {
+          // If the file is runnable, use that.
+          List<Launchable> launchables = launchManager.getAllLaunchables(path, data);
+
+          if (launchables.isNotEmpty) {
+            Launchable launchable = launchables.first;
+            LaunchConfiguration config = launchConfigurationManager.createNewConfig(
+              launchable.projectPath,
+              launchable.type.type,
+              launchable.relativePath,
+              launchable.type.getDefaultConfigText()
+            );
+            run(config);
+          } else {
+            String displayPath = project == null ? path : project.getRelative(path);
+            atom.notifications.addWarning(
+                'Unable to locate a suitable execution handler for file ${displayPath}.');
+          }
+        }
+      }
     } else {
-      String displayPath = project == null ? path : project.getRelative(path);
-      atom.notifications.addWarning(
-          'Unable to locate a suitable execution handler for file ${displayPath}.');
+      if (runnable != null) {
+        run(runnable.getCreateLaunchConfig());
+      } else {
+        String displayPath = project == null ? path : project.getRelative(path);
+        atom.notifications.addWarning(
+            'Unable to locate a suitable execution handler for file ${displayPath}.');
+      }
     }
   }
 
@@ -247,6 +284,8 @@ class RunnableConfig implements Comparable<RunnableConfig> {
       return _launchable.projectPath;
     }
   }
+
+  String get path => _config  != null ? _config.primaryResource : _launchable.path;
 
   String getDisplayName() {
     if (_config != null) {
