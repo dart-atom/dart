@@ -73,8 +73,6 @@ import 'usage.dart' show UsageManager;
 import 'views.dart';
 import 'views.dart' show ViewGroupManager;
 
-export 'atom.dart' show registerPackage;
-
 final Logger _logger = new Logger('plugin');
 
 class AtomDartPackage extends AtomPackage {

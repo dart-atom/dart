@@ -37,7 +37,7 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
   /// Get all the launch configurations for the given project path.
   ///
   /// This method can be expensive.
-  List<LaunchConfiguration> getConfigsFor(String path) {
+  List<LaunchConfiguration> getConfigsForProject(String path) {
     if (path == null) return [];
     return _getCreateProjectConfig(path).getConfigs();
   }

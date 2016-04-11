@@ -60,19 +60,12 @@ runAtomTests() async {
   }
 }
 
-@Task('Analyze the source code with ddc')
-ddc() {
-  return new DevCompiler().analyzeAsync(
-    getFile('web/entry.dart'), htmlReport: true);
-}
-
 @Task()
 publish() => publishAtomPlugin();
 
 @Task()
 test() => Dart.runAsync('test/all.dart');
 
-// TODO: Removed the `ddc` dep task for now.
 @Task()
 @Depends(analyze, build, test, runAtomTests)
 bot() => null;

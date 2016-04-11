@@ -36,8 +36,16 @@ class FlutterLaunchType extends LaunchType {
 
     if (!_flutterSdk.hasSdk) return false;
 
-    // TODO: The file [path] should also import package:flutter.
-    return data.hasMain && project.isFlutterProject();
+    // It's a flutter entry-point if it's in a Flutter project, has a main()
+    // method, and imports a flutter package.
+    if (data.hasMain && project.isFlutterProject()) {
+      if (data.fileContents != null) {
+        return data.fileContents.contains('"package:flutter/')
+          || data.fileContents.contains("'package:flutter/");
+      }
+    }
+
+    return false;
   }
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {

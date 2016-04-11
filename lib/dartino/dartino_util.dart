@@ -49,7 +49,7 @@ class _Dartino {
   bool isProject(projDir) => fs.existsSync(fs.join(projDir, 'dartino.yaml'));
 
   /// Prompt the user for a new project location (path)
-  Future createNewProject([_]) async {
+  Future createNewProject([AtomEvent _]) async {
     var sdk = sdkFor(null);
     if (sdk == null) return;
 
