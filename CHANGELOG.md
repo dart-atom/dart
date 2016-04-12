@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.10
 - whitespace changes to atom snippets
 - fixes to editing behavior inside of line comments
 - fix an issue where cli apps would launch as flutter apps inside of a flutter project
