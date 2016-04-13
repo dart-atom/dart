@@ -275,7 +275,21 @@ class ProjectManager implements Disposable, ContextMenuContributor {
   //   }
   // }
 
+  final Set<String> _excludeDirectories = atom.config
+      .getValue('${pluginId}.excludeDirectories')
+      .toString()
+      .split(',')
+      .map((String dir) => dir.trim())
+      .toSet();
+
+  bool _excludeDirectory(Directory dir) =>
+      _excludeDirectories.contains(dir.getBaseName());
+
   List<Directory> _findDartProjects(Directory dir, int recurse) {
+    if (_excludeDirectory(dir)) {
+      return [];
+    }
+
     if (isDartProject(dir)) {
       return [dir];
     }

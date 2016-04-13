@@ -391,6 +391,14 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': false,
         'order': 13
+      },
+
+      'excludeDirectories': {
+        'title': '[Experimental] Exclude directories from indexing',
+        'description': 'A comma separated list of directory names to avoid '
+        'indexing',
+        'type': 'string',
+        'default': '.git'
       }
     };
   }
