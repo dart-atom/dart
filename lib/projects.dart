@@ -38,7 +38,7 @@ String getWorkspaceRelativeDescription(String path) {
 /// A class to locate Dart projects in Atom and listen for new or removed Dart
 /// projects.
 class ProjectManager implements Disposable, ContextMenuContributor {
-  static const int _recurseDepth = 3;
+  static const int _recurseDepth = 4;
 
   /// Return whether the given directory is a Dart project.
   static bool isDartProject(Directory dir) {
