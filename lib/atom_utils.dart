@@ -5,8 +5,7 @@
 library atom.atom_utils;
 
 import 'dart:async';
-import 'dart:html' show DivElement, Element, HttpRequest, Node, NodeValidator,
-    NodeTreeSanitizer, window;
+import 'dart:html' show Element, NodeValidator;
 
 import 'package:atom/node/package.dart';
 import 'package:atom/node/process.dart';

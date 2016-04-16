@@ -188,7 +188,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     // Handle material icons in docs.
     if (cs.docSummary != null && cs.docSummary.contains('<i class="material-icons')) {
       String docs = cs.docSummary;
-      // <p><i class="material-icons md-48">merge_type</i> &#x2014; material icon named "merge type".</p>
+      // <p><i class="material-icons md-36">merge_type</i> &#x2014; material icon named "merge type".</p>
       int startIndex = docs.indexOf('<i class=');
       int endIndex = docs.indexOf('</i>');
       if (endIndex != -1) {
@@ -263,7 +263,7 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 final RegExp _htmlRegex = new RegExp('<[^>]+>');
 
 String _stripHtml(String str) {
-  // <p><i class="material-icons md-48">zoom_out_map</i> &#x2014; material icon
+  // <p><i class="material-icons md-36">zoom_out_map</i> &#x2014; material icon
   // named "zoom out map".</p>
 
   str = str.replaceAll('&#x2014;', '-');

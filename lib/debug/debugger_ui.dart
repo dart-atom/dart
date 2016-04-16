@@ -1,7 +1,7 @@
 library atom.debugger_ui;
 
 import 'dart:async';
-import 'dart:html' show Element, Rectangle, InputElement, MouseEvent;
+import 'dart:html' show Element, InputElement, MouseEvent;
 import 'dart:js' show context, JsFunction;
 
 import 'package:atom/atom_utils.dart';

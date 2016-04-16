@@ -1,5 +1,10 @@
 # dartlang plugin changelog
 
+## unreleased
+- traverse further down the directory tree looking for Dart projects
+- when looking for Dart projects, ignore any directories that contain a
+  `.dartignore` file
+
 ## 0.6.10
 - whitespace changes to atom snippets
 - fixes to editing behavior inside of line comments
