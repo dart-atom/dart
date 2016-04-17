@@ -21,7 +21,7 @@ import '../views.dart';
 
 const String errorViewId = 'errors';
 
-final String _errorPref = '${pluginId}.useErrorsView';
+final String _errorPref = '${pluginId}.showErrorsView';
 
 final String _initKeyPath = '_dartlang._errorsInitialized';
 

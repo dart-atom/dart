@@ -232,7 +232,7 @@ class OutlineView implements Disposable {
   void _handleErrorsChanged([List<analysis.AnalysisError> errors]) {
     if (errorsList == null) return;
 
-    if (errors == null) errors = deps[DartLinterConsumer].errors;
+    if (errors == null) errors = (deps[DartLinterConsumer] as DartLinterConsumer).errors;
     errorsList.updateWith(errors);
     errorArea.hidden(!errorsList.hasErrors);
   }

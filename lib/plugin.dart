@@ -294,35 +294,29 @@ class AtomDartPackage extends AtomPackage {
       },
 
       // custom views
-      'useErrorsView': {
-        'title': 'Show errors view',
-        'description': 'Use a custom errors view to display Dart errors and '
-            'warnings. This will be used in place of the default linter view.',
-        'type': 'boolean',
-        'default': true,
-        'order': 3
-      },
       'showOutlineView': {
         'title': 'Show outline view',
-        'description': 'Show an outline view for Dart files.',
+        'description': 'Show the outline view for Dart files.',
         'type': 'boolean',
         'default': true,
         'order': 3
       },
 
-      // show infos and todos
-      'showInfos': {
-        'title': 'Show infos',
-        'description': 'Show informational level analysis issues.',
+      'showErrorsView': {
+        'title': 'Show errors view',
+        'description': 'Show the error and warnings view.',
         'type': 'boolean',
         'default': true,
-        'order': 5
+        'order': 4
       },
-      'showTodos': {
-        'title': 'Show todos',
-        'description': 'When showing infos, also show TODO items.',
-        'type': 'boolean',
-        'default': false,
+
+      // show infos and todos
+      'configureErrorsView': {
+        'title': "Errors view configuration",
+        'description': 'Choose which types of items to show in the errors view.',
+        'type': 'string',
+        'default': 'infos',
+        'enum': ['errors+warnings', 'infos', 'todos'],
         'order': 5
       },
 
@@ -360,7 +354,7 @@ class AtomDartPackage extends AtomPackage {
 
       // google analytics
       'sendUsage': {
-        'title': 'Report usage information to Google Analytics.',
+        'title': 'Report usage information to Google Analytics',
         'description': "Report anonymized usage information to Google Analytics.",
         'type': 'boolean',
         'default': true,
@@ -368,26 +362,25 @@ class AtomDartPackage extends AtomPackage {
       },
 
       'logging': {
-        'title': 'Log plugin diagnostics to the devtools console.',
-        'description': 'This is for plugin development only!',
+        'title': 'Log plugin diagnostics to the DevTools console',
         'type': 'string',
         'default': 'info',
         'enum': ['error', 'warning', 'info', 'fine', 'finer'],
         'order': 11
       },
-      'debugAnalysisServer': {
-        'title': 'Start the analysis server with debug flags.',
-        'description':
-          'Start the analysis server with its diagnostics port enabled. A '
-          'restart is required.',
-        'type': 'boolean',
-        'default': false,
-        'order': 12
-      },
+      // 'debugAnalysisServer': {
+      //   'title': 'Start the analysis server with debug flags',
+      //   'description':
+      //     'Start the analysis server with its diagnostics port enabled. A '
+      //     'restart is required.',
+      //   'type': 'boolean',
+      //   'default': false,
+      //   'order': 12
+      // },
 
       // experimental features
       'hoverTooltip': {
-        'title': '[Experimental] Enable type information tooltip.',
+        'title': '[Experimental] Enable type information tooltip',
         'type': 'boolean',
         'default': false,
         'order': 13
