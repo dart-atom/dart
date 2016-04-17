@@ -1,7 +1,7 @@
 library atom.breakpoints;
 
 import 'dart:async';
-import 'dart:html' as html show Element, MouseEvent, Point, Rectangle;
+import 'dart:html' as html show Element, MouseEvent;
 
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';

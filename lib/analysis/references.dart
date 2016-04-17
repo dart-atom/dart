@@ -3,7 +3,7 @@ library atom.references;
 
 import 'dart:async';
 import 'dart:collection';
-import 'dart:html' as html show DivElement, Element, SpanElement;
+import 'dart:html' as html show Element, SpanElement;
 import 'dart:math' as math;
 
 import 'package:atom/node/fs.dart';

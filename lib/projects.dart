@@ -21,9 +21,9 @@ import 'impl/pub.dart' as pub;
 import 'jobs.dart';
 import 'state.dart';
 
-const String _bazelBuildFileName = 'BUILD';
-
 final Logger _logger = new Logger('projects');
+
+const String _bazelBuildFileName = 'BUILD';
 
 bool isDartFile(String path) {
   return path == null ? false : path.endsWith('.dart');
@@ -42,12 +42,15 @@ class ProjectManager implements Disposable, ContextMenuContributor {
 
   /// Return whether the given directory is a Dart project.
   static bool isDartProject(Directory dir) {
+    // Don't recurse into directories containing a `.dartignore` file.
+    if (fs.existsSync(fs.join(dir.path, '.dartignore'))) return false;
+
     // Look for `pubspec.yaml` or `.packages` files.
-    if (dir.getFile(pub.pubspecFileName).existsSync()) return true;
-    if (dir.getFile(pub.dotPackagesFileName).existsSync()) return true;
+    if (fs.existsSync(fs.join(dir.path, pub.pubspecFileName))) return true;
+    if (fs.existsSync(fs.join(dir.path, pub.dotPackagesFileName))) return true;
 
     // Look for an `.analysis_options` file.
-    if (dir.getFile(analysisOptionsFileName).existsSync()) return true;
+    if (fs.existsSync(fs.join(dir.path, analysisOptionsFileName))) return true;
 
     // Look for a `BUILD` file with some Dart build rules.
     String buildFilePath = fs.join(dir.path, _bazelBuildFileName);
@@ -55,7 +58,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
       if (isDartBuildFile(buildFilePath)) return true;
     }
 
-    // Look for dartino.yaml file... there is no .packages or pubspec
+    // Look for dartino.yaml file; there is no .packages or pubspec.
     if (dartino.isProject(dir)) return true;
 
     return false;
@@ -276,13 +279,12 @@ class ProjectManager implements Disposable, ContextMenuContributor {
   // }
 
   List<Directory> _findDartProjects(Directory dir, int recurse) {
-    if (isDartProject(dir)) {
-      return [dir];
-    }
+    if (isDartProject(dir)) return [dir];
 
-    if (_isHomeDir(dir)) {
-      return [];
-    }
+    if (_isHomeDir(dir)) return [];
+
+    // Don't recurse into directories containing a `.dartignore` file.
+    if (fs.existsSync(fs.join(dir.path, '.dartignore'))) return [];
 
     if (recurse > 0) {
       List<Directory> found = [];

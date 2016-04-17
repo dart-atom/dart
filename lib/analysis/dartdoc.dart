@@ -2,7 +2,7 @@
 library atom.dartdoc;
 
 import 'dart:async';
-import 'dart:html' show DivElement, Element, NodeValidator;
+import 'dart:html' show DivElement;
 
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
@@ -103,7 +103,7 @@ class DartdocHelper implements Disposable {
       if (buf.isNotEmpty) buf.write('<br>');
 
       if (hover.dartdoc.contains(' class="material-icons')) {
-        // <p><i class="material-icons md-48">menu</i> &#x2014; material...</p>
+        // <p><i class="material-icons md-36">menu</i> &#x2014; material...</p>
         buf.write('\n${hover.dartdoc}\n');
       } else {
         String html = markdown.markdownToHtml(hover.dartdoc, linkResolver: _resolve);
