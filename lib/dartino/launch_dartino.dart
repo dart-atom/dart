@@ -67,7 +67,7 @@ class DartinoLaunch extends Launch {
   DartinoLaunch(LaunchManager manager, DartinoLaunchType launchType,
       LaunchConfiguration configuration)
       : super(manager, launchType, configuration,
-            configuration.shortResourceName);
+            configuration.shortResourceName, targetName: 'Dartino');
 
   bool canKill() => true;
 

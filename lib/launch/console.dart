@@ -168,18 +168,6 @@ class ConsoleView extends View {
       });
     }
 
-    // Re-run
-    // TODO: Re-enable this when we listen for changes to launch configurations.
-    // if (launch.launchConfiguration != null) {
-    //   CoreElement e = toolbar.add(
-    //     button(text: 'Rerun', c: 'btn icon icon-sync')
-    //   );
-    //   e.tooltip = 'Rerun this application';
-    //   e.click(() {
-    //     deps[RunApplicationManager].run(launch.launchConfiguration);
-    //   });
-    // }
-
     // Observatory
     launch.servicePort.observe(_watchServicePort);
 

@@ -67,6 +67,7 @@ class StatusViewManager implements Disposable {
 
 class StatusView extends View {
   StreamSubscriptions subs = new StreamSubscriptions();
+  Disposables disposables = new Disposables();
 
   final Map<String, CoreElement> _sections = {};
 
@@ -98,6 +99,8 @@ class StatusView extends View {
     last.toggleClass('view-section-last');
 
     state[_statusOpenKey] = true;
+
+    disposables.add(new DoubleCancelCommand(handleClose));
   }
 
   CoreElement _registerSection(String sectionId, CoreElement element) {
@@ -404,6 +407,7 @@ class StatusView extends View {
   }
 
   void dispose() {
+    disposables.dispose();
     _diagnosticTimer?.cancel();
     subs.cancel();
   }

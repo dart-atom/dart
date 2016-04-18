@@ -157,7 +157,8 @@ class _CliLaunch extends Launch {
     name,
     killHandler: killHandler,
     cwd: cwd,
-    title: title
+    title: title,
+    targetName: 'Dart VM'
   ) {
     _resolver = new CachingServerResolver(
       cwd: project?.path,

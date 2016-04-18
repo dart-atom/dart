@@ -21,8 +21,6 @@ final String _keyPath = '${pluginId}.showOutlineView';
 
 final Logger _logger = new Logger('atom.outline');
 
-// TODO: Implement auto scroll-sync with the document.
-
 class OutlineController implements Disposable {
   Disposables disposables = new Disposables();
 
@@ -237,7 +235,6 @@ class OutlineView implements Disposable {
     errorArea.hidden(!errorsList.hasErrors);
   }
 
-  // TODO: handle multiple cursors
   void _cursorChanged(Point pos) {
     if (pos == null || treeBuilder == null) return;
 
@@ -358,15 +355,6 @@ class OutlineView implements Disposable {
     );
     editor.setSelectedBufferRange(range);
   }
-
-  // void _scrollSync() {
-  //   // get the current top visible line
-  //   // get the char index
-  //   // get the last node the overlaps that index
-  //   // scroll the cooresponding element into view
-  //
-  //   if (treeBuilder != null) treeBuilder.scrollToSelection();
-  // }
 }
 
 class _ErrorsList extends CoreElement {

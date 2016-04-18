@@ -159,14 +159,15 @@ class DebuggerView extends View {
 
   void _createTitleSection(CoreElement section) {
     CoreElement title;
+    CoreElement subtitle;
 
     section.add([
       title = div(c: 'view-title'),
+      subtitle = div(c: 'view-subtitle')
     ]);
 
-    String titleText = connection.launch.targetName ?? connection.launch.name;
-    title.text = 'Debugging ${titleText}';
-    title.tooltip = title.text;
+    title.text = 'Debugging ${connection.launch.targetName}';
+    subtitle.text = connection.launch.name;
   }
 
   void _createFlowControlSection(CoreElement section) {
@@ -231,7 +232,7 @@ class DebuggerView extends View {
     }
   }
 
-  String get label => 'Debug ${connection.launch.name}';
+  String get label => 'Debugger';
 
   String get id => viewIdForConnection(connection);
 

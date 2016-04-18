@@ -51,6 +51,7 @@ import 'impl/editing.dart' as editing;
 import 'impl/errors.dart';
 import 'impl/navigation.dart';
 import 'impl/outline.dart';
+import 'impl/outline2.dart';
 import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/status.dart';
@@ -156,6 +157,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());
     disposables.add(new OutlineController());
+    disposables.add(new OutlineController2());
     disposables.add(new TooltipController());
     disposables.add(pubManager);
     disposables.add(runAppManager);
