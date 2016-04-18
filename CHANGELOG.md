@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.11
 - traverse further down the directory tree looking for Dart projects
 - when looking for Dart projects, ignore any directories that contain a
   `.dartignore` file
