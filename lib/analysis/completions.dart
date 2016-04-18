@@ -42,11 +42,6 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     'FUNCTION_TYPE_ALIAS': 'function type'
   };
 
-  static int _compareSuggestions(CompletionSuggestion a, CompletionSuggestion b) {
-    if (a.relevance != b.relevance) return b.relevance - a.relevance;
-    return a.completion.toLowerCase().compareTo(b.completion.toLowerCase());
-  }
-
   static final Set<String> _elided = new Set.from(['for ()']);
 
   DartAutocompleteProvider() : super(
@@ -106,40 +101,24 @@ class DartAutocompleteProvider extends AutocompleteProvider {
 
     // Calculate the prefix based on the insert location and the offset.
     if (replacementOffset < offset) {
-      var p = fileText.substring(replacementOffset, offset);
+      String p = fileText.substring(replacementOffset, offset);
       if (p != prefix) {
         prefix = p;
         replacementPrefix = prefix;
       }
     }
 
-    // Patch-up the analysis server's completion scoring.
-    List<CompletionSuggestion> results = new List.from(cr.results
-        .where((result) => result.relevance > 500)
-        .where((result) => !_elided.contains(result.completion))
-        .map(_adjustRelevance));
+    // Remove any undesired results.
+    List<CompletionSuggestion> results = new List.from(
+      cr.results.where((result) => !_elided.contains(result.completion))
+    );
 
-    results.sort(_compareSuggestions);
-
-    var suggestions = <Suggestion>[];
-    for (var cs in results) {
+    List<Suggestion> suggestions = <Suggestion>[];
+    for (CompletionSuggestion cs in results) {
       Suggestion s = _makeSuggestion(cs, prefix, replacementPrefix, replacementOffset);
       if (s != null) suggestions.add(s);
     }
     return suggestions;
-  }
-
-  /// Returns a [CompletionSuggestion] with an adjusted score.
-  CompletionSuggestion _adjustRelevance(CompletionSuggestion suggestion) {
-    if (suggestion.kind == 'KEYWORD') {
-      return _copySuggestion(suggestion, suggestion.relevance - 1);
-    }
-
-    if (suggestion.element?.kind == 'NAMED_ARGUMENT') {
-      return _copySuggestion(suggestion, suggestion.relevance + 1);
-    }
-
-    return suggestion;
   }
 
   /// Returns an Atom [Suggestion] from the analyzer's [cs] or null if [cs] is
@@ -299,25 +278,3 @@ String _stripHtml(String str) {
 //
 //   return buf.toString();
 // }
-
-CompletionSuggestion _copySuggestion(CompletionSuggestion s, int relevance) =>
-  new CompletionSuggestion(
-    s.kind,
-    relevance,
-    s.completion,
-    s.selectionOffset,
-    s.selectionLength,
-    s.isDeprecated,
-    s.isPotential,
-    docSummary: s.docSummary,
-    docComplete: s.docComplete,
-    declaringType: s.declaringType,
-    element: s.element,
-    returnType: s.returnType,
-    parameterNames: s.parameterNames,
-    parameterTypes: s.parameterTypes,
-    requiredParameterCount: s.requiredParameterCount,
-    hasNamedParameters: s.hasNamedParameters,
-    parameterName: s.parameterName,
-    parameterType: s.parameterType,
-    importUri: s.importUri);
