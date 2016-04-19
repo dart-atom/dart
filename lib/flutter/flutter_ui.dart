@@ -7,6 +7,7 @@ class FlutterSection {
   final DebugConnection connection;
 
   bool isDebugDrawing = false;
+  bool isRepaintRainbow = false;
   bool isSlowAnimations = false;
   bool isFPSOverlay = false;
 
@@ -16,17 +17,27 @@ class FlutterSection {
         text: 'Flutter',
         c: 'overflow-hidden-ellipsis'
       ),
-      new CoreElement('label')..add([
-        new CoreElement('input')
-          ..setAttribute('type', 'checkbox')
-          ..click(_toggleDrawing),
-        span(text: 'Debug drawing', c: 'text-subtle')
+      div().add([
+        new CoreElement('label')..add([
+          new CoreElement('input')
+            ..setAttribute('type', 'checkbox')
+            ..click(_toggleDrawing),
+          span(text: 'Debug drawing', c: 'text-subtle')
+        ]),
+        new CoreElement('label')..add([
+          new CoreElement('input')
+            ..setAttribute('type', 'checkbox')
+            ..click(_toggleRepaintRainbow),
+          span(text: 'Repaint rainbow', c: 'text-subtle')
+        ])
       ]),
-      new CoreElement('label')..add([
-        new CoreElement('input')
-          ..setAttribute('type', 'checkbox')
-          ..click(_toggleSlowAnimations),
-        span(text: 'Slower animations', c: 'text-subtle')
+      div()..add([
+        new CoreElement('label')..add([
+          new CoreElement('input')
+            ..setAttribute('type', 'checkbox')
+            ..click(_toggleSlowAnimations),
+          span(text: 'Slow animations', c: 'text-subtle')
+        ])
       ])
       // new CoreElement('label')..add([
       //   new CoreElement('input')
@@ -54,6 +65,11 @@ class FlutterSection {
   void _toggleDrawing() {
     isDebugDrawing = !isDebugDrawing;
     flutterExtension.debugPaint(isDebugDrawing);
+  }
+
+  void _toggleRepaintRainbow() {
+    isRepaintRainbow = !isRepaintRainbow;
+    flutterExtension.repaintRainbow(isRepaintRainbow);
   }
 
   void _toggleSlowAnimations() {

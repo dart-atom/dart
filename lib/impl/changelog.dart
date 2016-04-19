@@ -13,7 +13,6 @@ import '../atom.dart';
 import '../state.dart';
 //import 'package:pub_semver/pub_semver.dart';
 
-
 final Logger _logger = new Logger('changelog');
 
 Future checkChangelog() => atomPackage.getPackageVersion().then(_checkChangelog);
