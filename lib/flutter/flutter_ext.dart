@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
 import 'package:vm_service_lib/vm_service_lib.dart';
 
 import '../debug/observatory.dart';
 import '../utils.dart';
 
 const String _flutterPrefix = 'ext.flutter';
+
+final Logger _logger = new Logger('atom.flutter_ext');
 
 /// Flutter specific debugging extensions.
 ///
@@ -29,7 +32,15 @@ class FlutterExt {
   Future debugPaint(bool enabled) {
     return service.callServiceExtension(
       '$_flutterPrefix.debugPaint',
-      isolateId,
+      isolateId: isolateId,
+      args: { 'enabled': enabled }
+    );
+  }
+
+  Future repaintRainbow(bool enabled) {
+    return service.callServiceExtension(
+      '$_flutterPrefix.repaintRainbow',
+      isolateId: isolateId,
       args: { 'enabled': enabled }
     );
   }
@@ -37,7 +48,7 @@ class FlutterExt {
   Future timeDilation(double dilation) {
     return service.callServiceExtension(
       '$_flutterPrefix.timeDilation',
-      isolateId,
+      isolateId: isolateId,
       args: { 'timeDilation': dilation }
     );
   }
@@ -45,7 +56,7 @@ class FlutterExt {
   Future fpsOverlay(bool showOverlay) {
     return service.callServiceExtension(
       '$_flutterPrefix.fpsOverlay',
-      isolateId,
+      isolateId: isolateId,
       args: { 'showOverlay': showOverlay }
     );
   }
@@ -78,6 +89,8 @@ class FlutterExt {
       this.isolateId = isolateId;
       enabled.value = true;
     }
+
+    _logger.fine('Found ${extension}.');
 
     services.add(extension);
   }
