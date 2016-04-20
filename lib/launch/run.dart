@@ -2,6 +2,7 @@ library atom.run;
 
 import 'dart:async';
 
+import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';

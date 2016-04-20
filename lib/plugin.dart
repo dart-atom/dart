@@ -7,6 +7,7 @@ library atom.plugin;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/node/command.dart';
 import 'package:atom/node/package.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/shell.dart';

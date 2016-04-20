@@ -1,9 +1,9 @@
 library atom.analysis_options;
 
+import 'package:atom/node/command.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
-import '../atom.dart';
 // import '../atom_utils.dart' as atom_utils show separator;
 // import '../projects.dart';
 

@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:convert' show JSON;
 import 'dart:html' show HttpRequest;
 
+import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';

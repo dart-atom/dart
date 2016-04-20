@@ -4,6 +4,7 @@ library atom.declaration_nav;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/node/command.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';

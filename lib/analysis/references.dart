@@ -6,6 +6,7 @@ import 'dart:collection';
 import 'dart:html' as html show Element, SpanElement;
 import 'dart:math' as math;
 
+import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
