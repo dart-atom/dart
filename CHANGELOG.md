@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.12
 - adjusted the order of code completions
 - exposed the repaint rainbow debug option for Flutter apps
 - added experimental support for isolate reloading
