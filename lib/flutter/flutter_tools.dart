@@ -29,6 +29,11 @@ class FlutterToolsManager implements Disposable {
     );
     disposables.add(atom.commands.add(
       'atom-workspace',
+      'flutter:screenshot',
+      _screenshot)
+    );
+    disposables.add(atom.commands.add(
+      'atom-workspace',
       'flutter:upgrade',
       _upgrade)
     );
@@ -96,6 +101,23 @@ class FlutterToolsManager implements Disposable {
       title: 'Running Flutter upgrade…',
       cwd: project.directory.path
     );
+  }
+
+  void _screenshot(AtomEvent _) {
+    // TODO: find the current project
+
+    // TODO: complain if there is none
+
+    // TODO: find the currently selected device
+
+    // TODO: complain if there is none
+
+    // call flutter screenshot
+
+    // TODO: print where the file was created
+
+    // TODO: show it in the UI?
+
   }
 
   void _doctor(AtomEvent _) {
