@@ -3,6 +3,7 @@
 ## unreleased
 - adjusted the order of code completions
 - exposed the repaint rainbow debug option for Flutter apps
+- added experimental support for isolate reloading
 
 ## 0.6.11
 - traverse further down the directory tree looking for Dart projects
