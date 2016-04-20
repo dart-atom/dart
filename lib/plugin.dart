@@ -384,6 +384,12 @@ class AtomDartPackage extends AtomPackage {
         'type': 'boolean',
         'default': false,
         'order': 13
+      },
+      'isolateReload': {
+        'title': '[Experimental] Enable sending debugger isolate reload commands.',
+        'type': 'boolean',
+        'default': false,
+        'order': 13
       }
     };
   }

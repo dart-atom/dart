@@ -325,6 +325,7 @@ class FlowControlSection implements Disposable {
   CoreElement stepIn;
   CoreElement stepOver;
   CoreElement stepOut;
+  CoreElement reload;
   CoreElement stop;
 
   CoreElement isolateName;
@@ -335,6 +336,7 @@ class FlowControlSection implements Disposable {
     stepIn = button(c: 'btn icon-jump-down')..click(_stepIn)..tooltip = 'Step in';
     stepOver = button(c: 'btn icon-jump-right')..click(_autoStepOver)..tooltip = 'Step over';
     stepOut = button(c: 'btn icon-jump-up')..click(_stepOut)..tooltip = 'Step out';
+    reload = button(c: 'btn icon-sync')..click(_reload)..tooltip = 'Reload';
     stop = button(c: 'btn icon-primitive-square')..click(_terminate)..tooltip = 'Stop';
 
     CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
@@ -343,9 +345,13 @@ class FlowControlSection implements Disposable {
       stepIn,
       stepOver,
       stepOut,
-      div()..flex(),
-      stop
+      div()..flex()
     ]);
+
+    if (connection.supportsReload && atom.config.getBoolValue('dartlang.isolateReload')) {
+      executionControlToolbar.add(reload);
+    }
+    executionControlToolbar.add(stop);
 
     // TODO: Pull down menu for switching between isolates.
     element.add([
@@ -360,6 +366,7 @@ class FlowControlSection implements Disposable {
   }
 
   void _handleIsolateChange(DebugIsolate isolate) {
+    reload.enabled = connection.isAlive && isolate != null;
     stop.enabled = connection.isAlive;
 
     if (isolate == null) {
@@ -421,6 +428,12 @@ class FlowControlSection implements Disposable {
   _stepIn() => view.currentIsolate?.stepIn();
   _stepOut() => view.currentIsolate?.stepOut();
   _autoStepOver() => view.currentIsolate?.autoStepOver();
+
+  void _reload() {
+    connection.reload().catchError((e) {
+      atom.notifications.addWarning(e.toString());
+    });
+  }
 
   _terminate() => connection.terminate();
 
