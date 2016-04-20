@@ -6,10 +6,10 @@ library atom.status;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
 
-import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../elements.dart';
 import '../jobs.dart';

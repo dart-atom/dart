@@ -4,13 +4,13 @@ library atom.launch;
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../analysis_server.dart';
 import '../analysis/analysis_server_lib.dart' show CreateContextResult, MapUriResult;
-import '../atom.dart';
+import '../analysis_server.dart';
 import '../debug/debugger.dart';
 import '../projects.dart';
 import '../state.dart';

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:html' show Element, InputElement, MouseEvent;
 import 'dart:js' show context, JsFunction;
 
+import 'package:atom/atom.dart';
 import 'package:atom/atom_utils.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
@@ -11,7 +12,6 @@ import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../elements.dart';
 import '../flutter/flutter_ui.dart';
 import '../material.dart';

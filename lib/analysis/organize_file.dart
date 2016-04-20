@@ -1,10 +1,10 @@
 library atom.analysis.organize_file;
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 
 import '../analysis_server.dart';
-import '../atom.dart';
 import '../editors.dart';
 import '../state.dart';
 

@@ -6,6 +6,7 @@ library atom.sdk;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/atom_utils.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
@@ -13,7 +14,6 @@ import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-import 'atom.dart';
 import 'flutter/flutter_sdk.dart' show FlutterSdkManager;
 import 'impl/debounce.dart';
 import 'jobs.dart';

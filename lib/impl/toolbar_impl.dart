@@ -1,10 +1,10 @@
 
 import 'dart:html' show SelectElement;
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 
-import '../atom.dart';
 import '../elements.dart';
 import '../flutter/flutter_devices.dart';
 import '../launch/launch.dart';

@@ -2,6 +2,7 @@ library atom.refactor;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
@@ -12,7 +13,6 @@ import '../analysis/analysis_server_lib.dart' show
     Refactorings, SourceChange, SourceEdit, SourceFileEdit,
     RenameRefactoringOptions, ExtractLocalVariableRefactoringOptions;
 import '../analysis_server.dart';
-import '../atom.dart';
 import '../editors.dart';
 import '../state.dart';
 

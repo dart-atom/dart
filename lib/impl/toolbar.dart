@@ -1,6 +1,6 @@
 import 'dart:js';
 
-import '../atom.dart';
+import 'package:atom/atom.dart';
 
 /// A wrapper around the `toolbar` API.
 class Toolbar extends ProxyHolder {

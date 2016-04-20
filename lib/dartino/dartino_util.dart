@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:haikunator/haikunator.dart';
 
-import '../atom.dart';
 import 'sdk/dartino_sdk.dart';
 import 'sdk/sdk.dart';
 import 'sdk/sod_repo.dart';

@@ -2,10 +2,10 @@
 import 'dart:async';
 import 'dart:collection' show LinkedHashSet;
 
+import 'package:atom/atom.dart';
 import 'package:atom/utils/dependencies.dart';
 import 'package:atom/utils/disposable.dart';
 
-import '../atom.dart';
 import '../state.dart';
 import 'flutter_daemon.dart';
 

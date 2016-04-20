@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';
@@ -8,7 +9,6 @@ import 'package:atom/node/shell.dart';
 import 'package:atom_dartlang/jobs.dart';
 import 'package:logging/logging.dart';
 
-import '../../atom.dart';
 import '../device/device.dart';
 import '../launch_dartino.dart';
 import 'sdk.dart';

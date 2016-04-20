@@ -3,13 +3,13 @@ library atom.changelog;
 import 'dart:async';
 import 'dart:html' show HttpRequest;
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/package.dart';
 import 'package:atom/node/shell.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../state.dart';
 //import 'package:pub_semver/pub_semver.dart';
 

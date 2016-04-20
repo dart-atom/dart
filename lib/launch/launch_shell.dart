@@ -2,10 +2,10 @@ library atom.launch_shell;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 
-import '../atom.dart';
 import 'launch.dart';
 
 class ShellLaunchType extends LaunchType {

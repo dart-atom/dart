@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:convert' show JSON;
 import 'dart:html' show HttpRequest;
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
@@ -17,7 +18,6 @@ import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-import '../atom.dart';
 import '../jobs.dart';
 import '../projects.dart';
 import '../state.dart';

@@ -2,11 +2,11 @@
 /// A console output view.
 library atom.console;
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/shell.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
 
-import '../atom.dart';
 import '../atom_statusbar.dart';
 import '../elements.dart';
 import '../impl/errors.dart';

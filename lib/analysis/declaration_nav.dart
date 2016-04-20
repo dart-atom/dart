@@ -4,13 +4,13 @@ library atom.declaration_nav;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../editors.dart';
 import '../state.dart';
 import '../usage.dart' show trackCommand;

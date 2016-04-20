@@ -2,6 +2,7 @@ library atom.flutter.flutter_sdk;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/atom_utils.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
@@ -9,7 +10,6 @@ import 'package:atom/node/process.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../impl/debounce.dart';
 import '../jobs.dart';
 import '../state.dart' show sdkManager;

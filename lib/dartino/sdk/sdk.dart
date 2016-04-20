@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';
 
-import '../../atom.dart';
 import '../launch_dartino.dart';
 
 /// Abstract SDK implementation shared by Dartino and SOD.
