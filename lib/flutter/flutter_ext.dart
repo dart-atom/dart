@@ -53,11 +53,11 @@ class FlutterExt {
     );
   }
 
-  Future fpsOverlay(bool showOverlay) {
+  Future performanceOverlay(bool enabled) {
     return service.callServiceExtension(
-      '$_flutterPrefix.fpsOverlay',
+      '$_flutterPrefix.showPerformanceOverlay',
       isolateId: isolateId,
-      args: { 'showOverlay': showOverlay }
+      args: { 'enabled': enabled }
     );
   }
 

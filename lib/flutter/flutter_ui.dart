@@ -3,13 +3,16 @@ import '../debug/observatory_debugger.dart';
 import '../elements.dart';
 import '../flutter/flutter_ext.dart';
 
+// TODO(devoncarew): We need to re-do the UI for the Flutter section to better
+// fit more elements (like a FPS label and the current route text).
+
 class FlutterSection {
   final DebugConnection connection;
 
   bool isDebugDrawing = false;
   bool isRepaintRainbow = false;
   bool isSlowAnimations = false;
-  bool isFPSOverlay = false;
+  bool isPerformanceOverlay = false;
 
   FlutterSection(this.connection, CoreElement element) {
     element.add([
@@ -37,14 +40,14 @@ class FlutterSection {
             ..setAttribute('type', 'checkbox')
             ..click(_toggleSlowAnimations),
           span(text: 'Slow animations', c: 'text-subtle')
+        ]),
+        new CoreElement('label')..add([
+          new CoreElement('input')
+            ..setAttribute('type', 'checkbox')
+            ..click(_togglePerformanceOverlay),
+          span(text: 'Performance overlay', c: 'text-subtle')
         ])
       ])
-      // new CoreElement('label')..add([
-      //   new CoreElement('input')
-      //     ..setAttribute('type', 'checkbox')
-      //     ..click(_toggleFPSOverlay),
-      //   span(text: 'FPS overlay', c: 'text-subtle')
-      // ])
     ]);
 
     element.hidden(true);
@@ -77,8 +80,8 @@ class FlutterSection {
     flutterExtension.timeDilation(isSlowAnimations ? 5.0 : 1.0);
   }
 
-  // void _toggleFPSOverlay() {
-  //   isFPSOverlay = !isFPSOverlay;
-  //   flutterExtension.fpsOverlay(isFPSOverlay);
-  // }
+  void _togglePerformanceOverlay() {
+    isPerformanceOverlay = !isPerformanceOverlay;
+    flutterExtension.performanceOverlay(isPerformanceOverlay);
+  }
 }
