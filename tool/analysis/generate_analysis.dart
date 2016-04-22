@@ -683,7 +683,7 @@ class ListType extends Type {
       return "${ref} == null ? null : new List.from(${ref})";
     }
 
-    return "${ref} == null ? null : ${ref}.map((obj) => ${subType.jsonConvert('obj')}).toList()";
+    return "${ref} == null ? null : new List.from(${ref}.map((obj) => ${subType.jsonConvert('obj')}))";
   }
 
   void setCallParam() => subType.setCallParam();

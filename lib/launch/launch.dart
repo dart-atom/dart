@@ -446,8 +446,8 @@ class _ServerResolver implements _Resolver {
       if (id == null) return null;
 
       return analysisServer.server.execution.mapUri(id, uri: url).then((MapUriResult result) {
-        if (result.file != null) return result.file;
-      }).catchError((_e) {
+        return result.file;
+      }).catchError((_) {
         return null;
       });
     });
