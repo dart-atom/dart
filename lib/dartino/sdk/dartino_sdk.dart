@@ -9,6 +9,7 @@ import 'package:atom/node/shell.dart';
 import 'package:atom_dartlang/jobs.dart';
 import 'package:logging/logging.dart';
 
+import '../../impl/pub.dart' show dotPackagesFileName;
 import '../device/device.dart';
 import '../launch_dartino.dart';
 import 'sdk.dart';
@@ -111,7 +112,7 @@ class DartinoSdk extends Sdk {
   @override
   String packageRoot(projDir) {
     if (projDir == null) return null;
-    String localSpecFile = fs.join(projDir, '.packages');
+    String localSpecFile = fs.join(projDir, dotPackagesFileName);
     if (fs.existsSync(localSpecFile)) return localSpecFile;
     return resolvePath('internal/dartino-sdk.packages');
   }

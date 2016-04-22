@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 
+import '../../impl/pub.dart' show dotPackagesFileName;
 import '../dartino_util.dart';
 import '../device/device.dart';
 import '../launch_dartino.dart';
@@ -85,7 +86,7 @@ class SodRepo extends Sdk {
   @override
   String packageRoot(projDir) {
     if (projDir == null) return null;
-    String localSpecFile = fs.join(projDir, '.packages');
+    String localSpecFile = fs.join(projDir, dotPackagesFileName);
     if (fs.existsSync(localSpecFile)) return localSpecFile;
     return resolvePath('third_party/dartino//internal/dartino-sdk.packages');
   }
