@@ -5,6 +5,7 @@ import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:haikunator/haikunator.dart';
+import 'package:logging/logging.dart';
 
 import 'sdk/dartino_sdk.dart';
 import 'sdk/sdk.dart';
@@ -14,7 +15,12 @@ const _pluginId = 'dartino';
 
 final _Dartino dartino = new _Dartino();
 
+final Logger _logger = new Logger(_pluginId);
+
 class _Dartino {
+  /// A flag indicating whether Dartino specific UI should be user visible.
+  bool enabled = false;
+
   /// Return the device path specified in the settings or an empty string if none.
   String get devicePath {
     var path = atom.config.getValue('$_pluginId.devicePath');
@@ -69,6 +75,12 @@ class _Dartino {
       var view = atom.views.getView(editor);
       atom.commands.dispatch(view, 'tree-view:reveal-active-file');
     }
+  }
+
+  /// Called by the Dartino plugin to enable Dartino specific behavior.
+  void enable([AtomEvent _]) {
+    enabled = true;
+    _logger.info('Dartino features enabled');
   }
 
   /// Open the Dartino settings page
