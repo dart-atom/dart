@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:grinder/grinder.dart';
 import 'package:which/which.dart';
 
+import 'package:atom/build/build.dart';
 import 'package:atom/build/publish.dart';
 
 main(List<String> args) => grind(args);
@@ -23,19 +24,7 @@ build() async {
 
   // --trust-type-annotations? --trust-primitives?
   await Dart2js.compileAsync(inputFile, csp: true);
-  outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
-
-  // Patch in the GA UA code; replace "UA-000000-0" with a valid code.
-  String code = Platform.environment['DARTLANG_UA'];
-  if (code != null) {
-    log('Patching with the dartlang Google Analytics code.');
-
-    String str = outputFile.readAsStringSync();
-    str = str.replaceAll('"UA-000000-0"', '"${code}"');
-    outputFile.writeAsStringSync(str);
-  } else {
-    log('No \$DARTLANG_UA environment variable set.');
-  }
+  outputFile.writeAsStringSync(patchDart2JSOutput(outputFile.readAsStringSync()));
 }
 
 @Task('Build the Atom tests')
@@ -87,48 +76,3 @@ analysisApi() {
 @Task()
 @Depends(analysisApi)
 generate() => null;
-
-final String _jsPrefix = """
-var self = Object.create(this);
-self.require = require;
-self.module = module;
-self.window = window;
-self.atom = atom;
-self.exports = exports;
-self.Object = Object;
-self.Promise = Promise;
-self.setTimeout = function(f, millis) { return window.setTimeout(f, millis); };
-self.clearTimeout = function(id) { window.clearTimeout(id); };
-self.setInterval = function(f, millis) { return window.setInterval(f, millis); };
-self.clearInterval = function(id) { window.clearInterval(id); };
-
-// Work around interop issues.
-self.getTextEditorForElement = function(element) { return element.o.getModel(); };
-self.uncrackDart2js = function(obj) { return obj.o; };
-
-self._domHoist = function(element, targetQuery) {
-  var target = document.querySelector(targetQuery);
-  target.appendChild(element);
-};
-
-self._domRemove = function(element) {
-  element.parentNode.removeChild(element);
-};
-""";
-
-String _patchJSFile(String input) {
-  final String from_1 = 'if (document.currentScript) {';
-  final String from_2 = "if (typeof document.currentScript != 'undefined') {";
-  final String to = 'if (true) {';
-
-  int index = input.lastIndexOf(from_1);
-  if (index != -1) {
-    input =
-        input.substring(0, index) + to + input.substring(index + from_1.length);
-  } else {
-    index = input.lastIndexOf(from_2);
-    input =
-        input.substring(0, index) + to + input.substring(index + from_2.length);
-  }
-  return _jsPrefix + input;
-}

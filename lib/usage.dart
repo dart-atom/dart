@@ -12,8 +12,7 @@ import 'package:usage/usage_html.dart';
 import 'projects.dart';
 import 'state.dart';
 
-// Sample Google Analytics UA code.
-final String _UA = 'UA-000000-0';
+final String _UA = 'UA-26406144-22';
 
 Analytics _ga = new AnalyticsMock();
 
