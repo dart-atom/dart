@@ -92,7 +92,11 @@ class DartinoSdk extends Sdk {
 
     // Create the project using the dartino cmdline utility
     return new DartinoCmd(this, 'Creating ${fs.basename(projectPath)}',
-        ['create', 'project', projectPath, 'for', boardName]).start();
+            ['create', 'project', projectPath, 'for', boardName],
+            // Do not display a completion message unless there is an error
+            // because the caller should open the new project.
+            quiet: true)
+        .start();
   }
 
   @override
@@ -227,7 +231,11 @@ class DartinoCmd extends Job {
   final DartinoSdk sdk;
   final List<String> cmd;
 
-  DartinoCmd(this.sdk, String name, this.cmd) : super(name);
+  // Override superclass getter to be quiet based upon constructor settings.
+  final bool quiet;
+
+  DartinoCmd(this.sdk, String name, this.cmd, {this.quiet: false})
+      : super(name);
 
   Future<bool> start() =>
       schedule().then((JobStatus status) => status.isOk && status.result == 0);
