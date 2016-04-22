@@ -4,10 +4,10 @@
 
 library atom.editing;
 
+import 'package:atom/atom.dart';
+import 'package:atom/node/command.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:logging/logging.dart';
-
-import '../atom.dart';
 
 final Logger _logger = new Logger('editing');
 

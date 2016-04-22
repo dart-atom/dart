@@ -7,6 +7,8 @@ library atom.plugin;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/atom.dart';
+import 'package:atom/node/command.dart';
 import 'package:atom/node/package.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/shell.dart';
@@ -27,7 +29,6 @@ import 'analysis/refactor.dart';
 import 'analysis/references.dart';
 import 'analysis/type_hierarchy.dart';
 import 'analysis_server.dart';
-import 'atom.dart';
 import 'atom_autocomplete.dart' show AutocompleteProvider;
 import 'atom_linter.dart' show LinterService;
 import 'atom_package_deps.dart' as package_deps;

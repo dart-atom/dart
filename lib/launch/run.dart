@@ -2,12 +2,13 @@ library atom.run;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
+import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../projects.dart';
 import '../state.dart';
 import 'launch.dart';

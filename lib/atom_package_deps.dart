@@ -2,12 +2,12 @@ library atom.atom_package_deps;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/package.dart';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
-import 'atom.dart';
 import 'jobs.dart';
 
 final Logger _logger = new Logger('atom.atom_package_deps');

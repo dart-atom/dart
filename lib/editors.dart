@@ -6,12 +6,12 @@ library atom.editors;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_lib.dart' show LinkedEditGroup, Position, SourceEdit;
-import 'atom.dart';
 import 'projects.dart';
 import 'state.dart';
 

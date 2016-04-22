@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:html' show AnchorElement, InputElement;
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/package.dart';
 import 'package:atom/node/shell.dart';
 import 'package:atom/utils/disposable.dart';
@@ -8,7 +9,6 @@ import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' show DiagnosticsResult, ContextData;
-import '../atom.dart';
 import '../atom_utils.dart';
 import '../elements.dart';
 import '../material.dart';

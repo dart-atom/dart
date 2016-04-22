@@ -7,12 +7,12 @@ library atom.smoketest;
 import 'dart:async';
 import 'dart:html' show DivElement;
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/workspace.dart';
 
-import '../atom.dart';
 import '../jobs.dart';
 import '../launch/launch.dart';
 import '../launch/launch_cli.dart';

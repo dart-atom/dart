@@ -7,11 +7,11 @@ library atom.atom_utils;
 import 'dart:async';
 import 'dart:html' show Element, NodeValidator;
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/package.dart';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
-import 'atom.dart';
 import 'state.dart';
 
 final Logger _logger = new Logger('atom_utils');

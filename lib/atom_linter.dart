@@ -11,8 +11,6 @@ import 'dart:js';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/src/js.dart';
 
-import 'atom.dart';
-
 abstract class LinterProvider {
   final List<String> grammarScopes;
   final String scope;

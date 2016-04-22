@@ -5,10 +5,11 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math' as math;
 
+import 'package:atom/atom.dart';
+import 'package:atom/node/command.dart';
 import 'package:atom/node/workspace.dart' hide Point;
 import 'package:atom/utils/disposable.dart';
 
-import 'atom.dart';
 import 'elements.dart';
 import 'state.dart';
 import 'utils.dart';

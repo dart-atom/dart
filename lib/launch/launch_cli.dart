@@ -2,12 +2,12 @@ library atom.launch_cli;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom_dartlang/dartino/dartino_util.dart';
 import 'package:logging/logging.dart';
 
-import '../atom.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../projects.dart';
 import '../sdk.dart';

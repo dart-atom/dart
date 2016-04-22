@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 
-import '../../atom.dart';
 import '../dartino_util.dart';
 import '../device/device.dart';
 import '../launch_dartino.dart';

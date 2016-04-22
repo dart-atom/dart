@@ -1,8 +1,7 @@
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
-
-import '../atom.dart';
 
 /// [line] and [column] are 1-based.
 Range debuggerCoordsToEditorRange(int line, int column) {
