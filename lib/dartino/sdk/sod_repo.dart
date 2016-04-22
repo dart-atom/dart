@@ -65,9 +65,7 @@ class SodRepo extends Sdk {
             detail: projectPath, dismissable: true);
         return false;
       }
-      dir.getFile('dartino.yaml').writeSync(
-          r'''# This is an empty SOD configuration file. Currently this is only used as a
-  # placeholder to enable the Dartino Atom package.''');
+      dartino.createDartinoYaml(dir);
     } catch (e, s) {
       atom.notifications.addError('Failed to create new project',
           detail: '$projectPath\n$e\n$s', dismissable: true);

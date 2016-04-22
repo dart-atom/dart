@@ -55,6 +55,12 @@ class _Dartino {
 
   bool isProject(projDir) => fs.existsSync(fs.join(projDir, 'dartino.yaml'));
 
+  void createDartinoYaml(Directory directory) {
+    directory.getFile('dartino.yaml').writeSync(
+        r'''# This is an empty configuration file. Currently this is only used as a
+# placeholder to enable the Dartino Atom package.''');
+  }
+
   /// Prompt the user for a new project location (path)
   Future createNewProject([AtomEvent _]) async {
     var sdk = sdkFor(null);
