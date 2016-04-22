@@ -838,14 +838,13 @@ class ObservatoryInstanceRefValue extends DebugValue {
   }
 
   Future<DebugValue> invokeToString() {
-    return isolate.service.evaluate(isolate.id, value.id, 'toString()').then((result) {
+    return isolate.service.evaluate(isolate.id, value.id, 'toString()').then((dynamic result) {
       // [InstanceRef], [ErrorRef] or [Sentinel]
       if (result is Sentinel) {
         return new SentinelDebugValue(result);
       } else if (result is InstanceRef) {
         InstanceRef ref = result;
-        if (ref.kind == InstanceKind.kString
-            && ref.valueAsStringIsTruncated == true) {
+        if (ref.kind == InstanceKind.kString && ref.valueAsStringIsTruncated == true) {
           return isolate.service.getObject(isolate.id, result.id).then((result) {
             if (result is Sentinel) {
               return new SentinelDebugValue(result);

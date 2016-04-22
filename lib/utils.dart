@@ -111,11 +111,13 @@ class SelectionGroup<T> {
   }
 }
 
+typedef Future ReturnsFuture();
+
 class FutureSerializer<T> {
-  List _operations = [];
+  List<ReturnsFuture> _operations = [];
   List<Completer<T>> _completers = [];
 
-  Future<T> perform(Function operation) {
+  Future<T> perform(ReturnsFuture operation) {
     Completer<T> completer = new Completer();
 
     _operations.add(operation);
@@ -129,7 +131,7 @@ class FutureSerializer<T> {
   }
 
   void _serviceQueue() {
-    Function operation = _operations.first;
+    ReturnsFuture operation = _operations.first;
     Completer<T> completer = _completers.first;
 
     Future future = operation();
