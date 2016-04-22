@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- exposed the performance overlay debug option for Flutter apps
+
 ## 0.6.12
 - adjusted the order of code completions
 - exposed the repaint rainbow debug option for Flutter apps
