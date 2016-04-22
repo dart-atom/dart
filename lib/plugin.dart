@@ -321,17 +321,6 @@ class AtomDartPackage extends AtomPackage {
         'order': 5
       },
 
-      // TODO(devoncarew): Removed; this interacts badly with refacotoring and
-      // atom's auto-save feature. Re-add once the implementation is solid.
-      // // format on save
-      // 'formatOnSave': {
-      //   'title': 'Format current file on save',
-      //   'description': 'Format the current editor on save.',
-      //   'type': 'boolean',
-      //   'default': false,
-      //   'order': 6
-      // },
-
       // key-bindings
       'jumpToDeclarationKeys': {
         'title': 'Jump to declaration modifer key',
@@ -388,6 +377,14 @@ class AtomDartPackage extends AtomPackage {
       },
       'isolateReload': {
         'title': '[Experimental] Enable sending debugger isolate reload commands.',
+        'type': 'boolean',
+        'default': false,
+        'order': 13
+      },
+      // TODO(devoncarew): This option needs some debugging; see #931.
+      'formatOnSave': {
+        'title': '[Experimental] Format files on save',
+        'description': 'Format the current editor on save. Note: this does not work well with Atom\'s autosave feature.',
         'type': 'boolean',
         'default': false,
         'order': 13
