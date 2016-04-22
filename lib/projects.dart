@@ -17,7 +17,7 @@ import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
 import 'analysis/analysis_options.dart';
-import 'dartino/dartino_util.dart';
+import 'dartino/dartino_util.dart' show dartino;
 import 'impl/pub.dart' as pub;
 import 'jobs.dart';
 import 'state.dart';
@@ -68,6 +68,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
   StreamController<List<DartProject>> _projectsController = new StreamController.broadcast();
   StreamController<DartProject> _projectAddController = new StreamController.broadcast();
   StreamController<DartProject> _projectRemoveController = new StreamController.broadcast();
+  StreamController<Directory> _nonProjectController = new StreamController.broadcast();
   StreamSubscription _sub;
   Disposables disposables = new Disposables();
 
@@ -125,6 +126,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
   Stream<List<DartProject>> get onProjectsChanged => _projectsController.stream;
   Stream<DartProject> get onProjectAdd => _projectAddController.stream;
   Stream<DartProject> get onProjectRemove => _projectRemoveController.stream;
+  Stream<Directory> get onNonProject => _nonProjectController.stream;
 
   void dispose() {
     _logger.fine('dispose()');
@@ -142,7 +144,12 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     for (Directory dir in atom.project.getDirectories()) {
       // Guard against synthetic project directories (like `config`).
       if (dir.existsSync()) {
-        allDirs.addAll(_findDartProjects(dir, _recurseDepth));
+        var projDirs = _findDartProjects(dir, _recurseDepth);
+        if (projDirs.isNotEmpty) {
+          allDirs.addAll(projDirs);
+        } else {
+          _nonProjectController.add(dir);
+        }
       }
     }
 
@@ -166,29 +173,6 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     if (changed) {
       _logger.fine('${projects}');
       _projectsController.add(projects);
-    }
-
-    // Special case `lib/` directories. If the user opened a lib/ directory, and
-    // the parent directory is a Dart project, tell the user they could be doing
-    // something better.
-    for (Directory dir in atom.project.getDirectories()) {
-      if (dir.getBaseName() == 'lib') {
-        if (!isDartProject(dir) && isDartProject(dir.getParent())) {
-          String path = dir.path;
-
-          if (!_warnedProjects.contains(path)) {
-            _warnedProjects.add(path);
-
-            atom.notifications.addWarning(
-              "'lib/' directory opened",
-              description: "You've opened the ${path} directory directly; for Dart "
-                "analysis to work well, you should instead open the parent, "
-                "${dir.getParent().path}, directory.",
-              dismissable: true
-            );
-          }
-        }
-      }
     }
   }
 
@@ -366,6 +350,29 @@ meta:
         if (!current.contains(projectPath)) {
           DartProject project = knownProjects.remove(projectPath);
           _projectRemoveController.add(project);
+        }
+      }
+    });
+
+    // If the user opened a directory which is not a Dart project,
+    // and the parent directory is a Dart project,
+    // tell the user they could be doing something better.
+    onNonProject.listen((Directory dir) {
+      if (isDartProject(dir.getParent())) {
+        String path = dir.path;
+
+        if (!_warnedProjects.contains(path)) {
+          _warnedProjects.add(path);
+
+          atom.notifications.addWarning(
+            "'${dir.getBaseName()}/' directory opened",
+            description:
+              "You've opened the '${dir.getBaseName()}/' directory directly.\n"
+              "$path\n\n"
+              "For Dart analysis to work well, you should open the parent instead.\n"
+              "${dir.getParent().path}",
+            dismissable: true
+          );
         }
       }
     });
