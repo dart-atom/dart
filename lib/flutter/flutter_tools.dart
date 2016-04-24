@@ -92,6 +92,8 @@ class FlutterToolsManager implements Disposable {
       return;
     }
 
+    atom.workspace.saveAll();
+
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
     flutter.runInJob(['upgrade'],
       title: 'Running Flutter upgrade…',

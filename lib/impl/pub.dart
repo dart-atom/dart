@@ -34,9 +34,11 @@ class PubManager implements Disposable, ContextMenuContributor {
   PubManager() {
     // get, update, run
     _addSdkCmd('atom-text-editor', 'dartlang:pub-get', (event) {
+      atom.workspace.saveAll();
       new PubJob.get(fs.dirname(event.editor.getPath())).schedule();
     });
     _addSdkCmd('atom-text-editor', 'dartlang:pub-upgrade', (event) {
+      atom.workspace.saveAll();
       new PubJob.upgrade(fs.dirname(event.editor.getPath())).schedule();
     });
     _addSdkCmd('atom-text-editor', 'dartlang:pub-run', (event) {
@@ -52,9 +54,11 @@ class PubManager implements Disposable, ContextMenuContributor {
     });
 
     _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
+      atom.workspace.saveAll();
       new PubJob.get(event.targetFilePath).schedule();
     });
     _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (AtomEvent event) {
+      atom.workspace.saveAll();
       new PubJob.upgrade(event.targetFilePath).schedule();
     });
     _addSdkCmd('.tree-view', 'dartlang:pub-run', (AtomEvent event) {
