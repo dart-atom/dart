@@ -391,7 +391,7 @@ class AnalysisErrors {
       m['file'],
       m['errors'] == null
           ? null
-          : m['errors'].map((obj) => AnalysisError.parse(obj)).toList());
+          : new List.from(m['errors'].map((obj) => AnalysisError.parse(obj))));
 
   final String file;
   final List<AnalysisError> errors;
@@ -413,7 +413,7 @@ class AnalysisFolding {
       m['file'],
       m['regions'] == null
           ? null
-          : m['regions'].map((obj) => FoldingRegion.parse(obj)).toList());
+          : new List.from(m['regions'].map((obj) => FoldingRegion.parse(obj))));
 
   final String file;
   final List<FoldingRegion> regions;
@@ -426,7 +426,7 @@ class AnalysisHighlights {
       m['file'],
       m['regions'] == null
           ? null
-          : m['regions'].map((obj) => HighlightRegion.parse(obj)).toList());
+          : new List.from(m['regions'].map((obj) => HighlightRegion.parse(obj))));
 
   final String file;
   final List<HighlightRegion> regions;
@@ -439,10 +439,10 @@ class AnalysisImplemented {
       m['file'],
       m['classes'] == null
           ? null
-          : m['classes'].map((obj) => ImplementedClass.parse(obj)).toList(),
+          : new List.from(m['classes'].map((obj) => ImplementedClass.parse(obj))),
       m['members'] == null
           ? null
-          : m['members'].map((obj) => ImplementedMember.parse(obj)).toList());
+          : new List.from(m['members'].map((obj) => ImplementedMember.parse(obj))));
 
   final String file;
   final List<ImplementedClass> classes;
@@ -468,10 +468,10 @@ class AnalysisNavigation {
       m['file'],
       m['regions'] == null
           ? null
-          : m['regions'].map((obj) => NavigationRegion.parse(obj)).toList(),
+          : new List.from(m['regions'].map((obj) => NavigationRegion.parse(obj))),
       m['targets'] == null
           ? null
-          : m['targets'].map((obj) => NavigationTarget.parse(obj)).toList(),
+          : new List.from(m['targets'].map((obj) => NavigationTarget.parse(obj))),
       m['files'] == null ? null : new List.from(m['files']));
 
   final String file;
@@ -487,7 +487,7 @@ class AnalysisOccurrences {
       m['file'],
       m['occurrences'] == null
           ? null
-          : m['occurrences'].map((obj) => Occurrences.parse(obj)).toList());
+          : new List.from(m['occurrences'].map((obj) => Occurrences.parse(obj))));
 
   final String file;
   final List<Occurrences> occurrences;
@@ -514,7 +514,7 @@ class AnalysisOverrides {
       m['file'],
       m['overrides'] == null
           ? null
-          : m['overrides'].map((obj) => Override.parse(obj)).toList());
+          : new List.from(m['overrides'].map((obj) => Override.parse(obj))));
 
   final String file;
   final List<Override> overrides;
@@ -525,7 +525,7 @@ class AnalysisOverrides {
 class ErrorsResult {
   static ErrorsResult parse(Map m) => new ErrorsResult(m['errors'] == null
       ? null
-      : m['errors'].map((obj) => AnalysisError.parse(obj)).toList());
+      : new List.from(m['errors'].map((obj) => AnalysisError.parse(obj))));
 
   final List<AnalysisError> errors;
 
@@ -535,7 +535,7 @@ class ErrorsResult {
 class HoverResult {
   static HoverResult parse(Map m) => new HoverResult(m['hovers'] == null
       ? null
-      : m['hovers'].map((obj) => HoverInformation.parse(obj)).toList());
+      : new List.from(m['hovers'].map((obj) => HoverInformation.parse(obj))));
 
   final List<HoverInformation> hovers;
 
@@ -565,10 +565,10 @@ class NavigationResult {
       m['files'] == null ? null : new List.from(m['files']),
       m['targets'] == null
           ? null
-          : m['targets'].map((obj) => NavigationTarget.parse(obj)).toList(),
+          : new List.from(m['targets'].map((obj) => NavigationTarget.parse(obj))),
       m['regions'] == null
           ? null
-          : m['regions'].map((obj) => NavigationRegion.parse(obj)).toList());
+          : new List.from(m['regions'].map((obj) => NavigationRegion.parse(obj))));
 
   final List<String> files;
   final List<NavigationTarget> targets;
@@ -600,7 +600,7 @@ class CompletionResults {
       m['replacementLength'],
       m['results'] == null
           ? null
-          : m['results'].map((obj) => CompletionSuggestion.parse(obj)).toList(),
+          : new List.from(m['results'].map((obj) => CompletionSuggestion.parse(obj))),
       m['isLast']);
 
   final String id;
@@ -667,7 +667,7 @@ class SearchResults {
       m['id'],
       m['results'] == null
           ? null
-          : m['results'].map((obj) => SearchResult.parse(obj)).toList(),
+          : new List.from(m['results'].map((obj) => SearchResult.parse(obj))),
       m['isLast']);
 
   final String id;
@@ -717,10 +717,11 @@ class FindTopLevelDeclarationsResult {
 }
 
 class TypeHierarchyResult {
-  static TypeHierarchyResult parse(Map m) =>
-      new TypeHierarchyResult(hierarchyItems: m['hierarchyItems'] == null
-          ? null
-          : m['hierarchyItems'].map((obj) => TypeHierarchyItem.parse(obj)).toList());
+  static TypeHierarchyResult parse(Map m) => new TypeHierarchyResult(hierarchyItems: m[
+              'hierarchyItems'] ==
+          null
+      ? null
+      : new List.from(m['hierarchyItems'].map((obj) => TypeHierarchyItem.parse(obj))));
 
   @optional
   final List<TypeHierarchyItem> hierarchyItems;
@@ -788,7 +789,9 @@ class EditDomain extends Domain {
 
 class FormatResult {
   static FormatResult parse(Map m) => new FormatResult(
-      m['edits'] == null ? null : m['edits'].map((obj) => SourceEdit.parse(obj)).toList(),
+      m['edits'] == null
+          ? null
+          : new List.from(m['edits'].map((obj) => SourceEdit.parse(obj))),
       m['selectionOffset'],
       m['selectionLength']);
 
@@ -802,7 +805,7 @@ class FormatResult {
 class AssistsResult {
   static AssistsResult parse(Map m) => new AssistsResult(m['assists'] == null
       ? null
-      : m['assists'].map((obj) => SourceChange.parse(obj)).toList());
+      : new List.from(m['assists'].map((obj) => SourceChange.parse(obj))));
 
   final List<SourceChange> assists;
 
@@ -821,7 +824,7 @@ class AvailableRefactoringsResult {
 class FixesResult {
   static FixesResult parse(Map m) => new FixesResult(m['fixes'] == null
       ? null
-      : m['fixes'].map((obj) => AnalysisErrorFixes.parse(obj)).toList());
+      : new List.from(m['fixes'].map((obj) => AnalysisErrorFixes.parse(obj))));
 
   final List<AnalysisErrorFixes> fixes;
 
@@ -832,13 +835,15 @@ class RefactoringResult {
   static RefactoringResult parse(Map m) => new RefactoringResult(
       m['initialProblems'] == null
           ? null
-          : m['initialProblems'].map((obj) => RefactoringProblem.parse(obj)).toList(),
+          : new List.from(
+              m['initialProblems'].map((obj) => RefactoringProblem.parse(obj))),
       m['optionsProblems'] == null
           ? null
-          : m['optionsProblems'].map((obj) => RefactoringProblem.parse(obj)).toList(),
+          : new List.from(
+              m['optionsProblems'].map((obj) => RefactoringProblem.parse(obj))),
       m['finalProblems'] == null
           ? null
-          : m['finalProblems'].map((obj) => RefactoringProblem.parse(obj)).toList(),
+          : new List.from(m['finalProblems'].map((obj) => RefactoringProblem.parse(obj))),
       feedback: RefactoringFeedback.parse(m['feedback']),
       change: SourceChange.parse(m['change']),
       potentialEdits:
@@ -950,7 +955,7 @@ class DiagnosticDomain extends Domain {
 class DiagnosticsResult {
   static DiagnosticsResult parse(Map m) => new DiagnosticsResult(m['contexts'] == null
       ? null
-      : m['contexts'].map((obj) => ContextData.parse(obj)).toList());
+      : new List.from(m['contexts'].map((obj) => ContextData.parse(obj))));
 
   final List<ContextData> contexts;
 
@@ -1022,7 +1027,7 @@ class AnalysisErrorFixes {
         AnalysisError.parse(m['error']),
         m['fixes'] == null
             ? null
-            : m['fixes'].map((obj) => SourceChange.parse(obj)).toList());
+            : new List.from(m['fixes'].map((obj) => SourceChange.parse(obj))));
   }
 
   final AnalysisError error;
@@ -1104,7 +1109,7 @@ class ChangeContentOverlay implements Jsonable {
         m['type'],
         m['edits'] == null
             ? null
-            : m['edits'].map((obj) => SourceEdit.parse(obj)).toList());
+            : new List.from(m['edits'].map((obj) => SourceEdit.parse(obj))));
   }
 
   final String type;
@@ -1354,11 +1359,12 @@ class LinkedEditGroup {
     return new LinkedEditGroup(
         m['positions'] == null
             ? null
-            : m['positions'].map((obj) => Position.parse(obj)).toList(),
+            : new List.from(m['positions'].map((obj) => Position.parse(obj))),
         m['length'],
         m['suggestions'] == null
             ? null
-            : m['suggestions'].map((obj) => LinkedEditSuggestion.parse(obj)).toList());
+            : new List.from(
+                m['suggestions'].map((obj) => LinkedEditSuggestion.parse(obj))));
   }
 
   final List<Position> positions;
@@ -1475,7 +1481,7 @@ class Outline {
     return new Outline(Element.parse(m['element']), m['offset'], m['length'],
         children: m['children'] == null
             ? null
-            : m['children'].map((obj) => Outline.parse(obj)).toList());
+            : new List.from(m['children'].map((obj) => Outline.parse(obj))));
   }
 
   final Element element;
@@ -1494,7 +1500,8 @@ class Override {
         superclassMember: OverriddenMember.parse(m['superclassMember']),
         interfaceMembers: m['interfaceMembers'] == null
             ? null
-            : m['interfaceMembers'].map((obj) => OverriddenMember.parse(obj)).toList());
+            : new List.from(
+                m['interfaceMembers'].map((obj) => OverriddenMember.parse(obj))));
   }
 
   final int offset;
@@ -1595,8 +1602,13 @@ class RemoveContentOverlay implements Jsonable {
 class SearchResult {
   static SearchResult parse(Map m) {
     if (m == null) return null;
-    return new SearchResult(Location.parse(m['location']), m['kind'], m['isPotential'],
-        m['path'] == null ? null : m['path'].map((obj) => Element.parse(obj)).toList());
+    return new SearchResult(
+        Location.parse(m['location']),
+        m['kind'],
+        m['isPotential'],
+        m['path'] == null
+            ? null
+            : new List.from(m['path'].map((obj) => Element.parse(obj))));
   }
 
   final Location location;
@@ -1617,10 +1629,11 @@ class SourceChange {
         m['message'],
         m['edits'] == null
             ? null
-            : m['edits'].map((obj) => SourceFileEdit.parse(obj)).toList(),
+            : new List.from(m['edits'].map((obj) => SourceFileEdit.parse(obj))),
         m['linkedEditGroups'] == null
             ? null
-            : m['linkedEditGroups'].map((obj) => LinkedEditGroup.parse(obj)).toList(),
+            : new List.from(
+                m['linkedEditGroups'].map((obj) => LinkedEditGroup.parse(obj))),
         selection: Position.parse(m['selection']));
   }
 
@@ -1665,7 +1678,7 @@ class SourceFileEdit {
         m['fileStamp'],
         m['edits'] == null
             ? null
-            : m['edits'].map((obj) => SourceEdit.parse(obj)).toList());
+            : new List.from(m['edits'].map((obj) => SourceEdit.parse(obj))));
   }
 
   final String file;
