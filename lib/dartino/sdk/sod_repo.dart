@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 
+import '../../impl/pub.dart' show dotPackagesFileName;
 import '../dartino_util.dart';
 import '../device/device.dart';
 import '../launch_dartino.dart';
@@ -64,9 +65,7 @@ class SodRepo extends Sdk {
             detail: projectPath, dismissable: true);
         return false;
       }
-      dir.getFile('dartino.yaml').writeSync(
-          r'''# This is an empty SOD configuration file. Currently this is only used as a
-  # placeholder to enable the Dartino Atom package.''');
+      dartino.createDartinoYaml(dir);
     } catch (e, s) {
       atom.notifications.addError('Failed to create new project',
           detail: '$projectPath\n$e\n$s', dismissable: true);
@@ -85,7 +84,7 @@ class SodRepo extends Sdk {
   @override
   String packageRoot(projDir) {
     if (projDir == null) return null;
-    String localSpecFile = fs.join(projDir, '.packages');
+    String localSpecFile = fs.join(projDir, dotPackagesFileName);
     if (fs.existsSync(localSpecFile)) return localSpecFile;
     return resolvePath('third_party/dartino//internal/dartino-sdk.packages');
   }

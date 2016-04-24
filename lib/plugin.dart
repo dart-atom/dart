@@ -198,6 +198,7 @@ class AtomDartPackage extends AtomPackage {
     //TODO(danrubel) remove dartino:create-new-proj once dartino plugin has been updated
     _addCmd('atom-workspace', 'dartino:create-new-proj', dartino.createNewProject);
     _addCmd('atom-workspace', 'dartino:create-new-project', dartino.createNewProject);
+    _addCmd('atom-workspace', 'dartino:enable', dartino.enable);
     _addCmd('atom-workspace', 'dartino:install-sdk', dartino.promptInstallSdk);
     _addCmd('atom-workspace', 'dartino:sdk-docs', dartino.showSdkDocs);
     _addCmd('atom-workspace', 'dartino:validate-sdk', dartino.validateSdk);
