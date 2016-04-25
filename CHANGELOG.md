@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.13
 - exposed the performance overlay debug option for Flutter apps
 - re-enable format on save
 - save all files before running `pub get` or `pub upgrade`
