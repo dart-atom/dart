@@ -4,6 +4,7 @@
 - exposed the performance overlay debug option for Flutter apps
 - re-enable format on save
 - save all files before running `pub get` or `pub upgrade`
+- fix an NPE in code completion with the latest analysis server
 
 ## 0.6.12
 - adjusted the order of code completions
