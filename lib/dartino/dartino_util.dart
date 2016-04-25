@@ -136,6 +136,12 @@ class _Dartino {
     if (sdkPath.isNotEmpty) {
       var sdk = sdkFor(null);
       if (sdk != null && sdk.validate()) {
+
+        // Given a valid Dartino SDK, now validate the Dart SDK
+        if (sdkManager.sdk?.isValidSdk != true) {
+          sdkManager.setSdkPath(sdk.dartSdkPath);
+        }
+
         atom.notifications
             .addSuccess('Valid ${sdk.name} detected', detail: sdkPath);
       }
