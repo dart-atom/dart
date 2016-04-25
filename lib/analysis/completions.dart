@@ -13,6 +13,7 @@ final Logger _logger = new Logger('completions');
 
 class DartAutocompleteProvider extends AutocompleteProvider {
   static const _suggestionKindMap = const <String, String>{
+    'IDENTIFIER': 'identifier',
     'IMPORT': 'import',
     'KEYWORD': 'keyword',
     'PARAMETER': 'property',
