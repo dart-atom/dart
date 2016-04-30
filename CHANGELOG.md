@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- make max issues per file and project configurable.
+
 ## 0.6.13
 - exposed the performance overlay debug option for Flutter apps
 - re-enable format on save
