@@ -359,6 +359,22 @@ class AtomDartPackage extends AtomPackage {
         'enum': ['error', 'warning', 'info', 'fine', 'finer'],
         'order': 11
       },
+
+      // issues
+      'maxIssuesPerProject': {
+        'title': 'Max number of issues displayed per prject',
+        'type': 'integer',
+        'default': 500,
+        'order': 12
+      },
+
+      'maxIssuesPerFile': {
+        'title': 'Max number of issues displayed per file',
+        'type': 'integer',
+        'default': 200,
+        'order': 13
+      },
+
       // 'debugAnalysisServer': {
       //   'title': 'Start the analysis server with debug flags',
       //   'description':
@@ -374,13 +390,13 @@ class AtomDartPackage extends AtomPackage {
         'title': '[Experimental] Enable type information tooltip',
         'type': 'boolean',
         'default': false,
-        'order': 13
+        'order': 14
       },
       'isolateReload': {
         'title': '[Experimental] Enable sending debugger isolate reload commands.',
         'type': 'boolean',
         'default': false,
-        'order': 13
+        'order': 14
       },
       // TODO(devoncarew): This option needs some debugging; see #931.
       'formatOnSave': {
@@ -388,7 +404,7 @@ class AtomDartPackage extends AtomPackage {
         'description': 'Format the current editor on save. Note: this does not work well with Atom\'s autosave feature.',
         'type': 'boolean',
         'default': false,
-        'order': 13
+        'order': 14
       }
     };
   }
