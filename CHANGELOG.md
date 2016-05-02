@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue with auto-locating the Dart SDK too aggressively (when the user
+  already had an SDK configured)
+
 ## 0.6.13
 - exposed the performance overlay debug option for Flutter apps
 - re-enable format on save

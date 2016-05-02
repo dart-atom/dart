@@ -41,6 +41,7 @@ import 'debug/breakpoints.dart';
 import 'debug/debugger.dart';
 import 'editors.dart';
 import 'error_repository.dart';
+import 'flutter/flutter.dart';
 import 'flutter/flutter_daemon.dart';
 import 'flutter/flutter_devices.dart';
 import 'flutter/flutter_launch.dart';
@@ -398,12 +399,14 @@ class AtomDartPackage extends AtomPackage {
   }
 
   void _registerLaunchTypes() {
-    FlutterLaunchType.register(launchManager);
+    if (Flutter.hasFlutterPlugin()) {
+      FlutterLaunchType.register(launchManager);
+      MojoLaunchType.register(launchManager);
+    }
+
     DartinoLaunchType.register(launchManager);
     CliLaunchType.register(launchManager);
-    MojoLaunchType.register(launchManager);
     ShellLaunchType.register(launchManager);
-    //WebLaunchType.register(launchManager);
   }
 
   void _registerLinter() {

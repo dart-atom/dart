@@ -5,9 +5,9 @@
 library atom.elements;
 
 import 'dart:async';
-import 'dart:html';
+import 'dart:html' hide Point;
 
-import 'package:atom/atom.dart' hide Point;
+import 'package:atom/atom.dart';
 import 'package:atom/atom_utils.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/workspace.dart';

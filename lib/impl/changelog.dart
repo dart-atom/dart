@@ -1,4 +1,3 @@
-library atom.changelog;
 
 import 'dart:async';
 import 'dart:html' show HttpRequest;
@@ -11,7 +10,6 @@ import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../state.dart';
-//import 'package:pub_semver/pub_semver.dart';
 
 final Logger _logger = new Logger('changelog');
 

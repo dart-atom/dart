@@ -1,4 +1,3 @@
-library atom.flutter.create_project;
 
 import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
@@ -10,6 +9,7 @@ import 'package:haikunator/haikunator.dart';
 
 import '../projects.dart';
 import '../state.dart';
+import 'flutter.dart';
 import 'flutter_sdk.dart';
 
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
@@ -18,21 +18,23 @@ class FlutterToolsManager implements Disposable {
   Disposables disposables = new Disposables();
 
   FlutterToolsManager() {
-    disposables.add(atom.commands.add(
-      'atom-workspace',
-      'flutter:create-project',
-      _createProject)
-    );
-    disposables.add(atom.commands.add(
-      'atom-workspace',
-      'flutter:doctor',
-      _doctor)
-    );
-    disposables.add(atom.commands.add(
-      'atom-workspace',
-      'flutter:upgrade',
-      _upgrade)
-    );
+    if (Flutter.hasFlutterPlugin()) {
+      disposables.add(atom.commands.add(
+        'atom-workspace',
+        'flutter:create-project',
+        _createProject)
+      );
+      disposables.add(atom.commands.add(
+        'atom-workspace',
+        'flutter:doctor',
+        _doctor)
+      );
+      disposables.add(atom.commands.add(
+        'atom-workspace',
+        'flutter:upgrade',
+        _upgrade)
+      );
+    }
   }
 
   void _createProject(AtomEvent _) {
