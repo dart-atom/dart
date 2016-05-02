@@ -3,6 +3,7 @@
 ## unreleased
 - fixed an issue with auto-locating the Dart SDK too aggressively (when the user
   already had an SDK configured)
+- fixed an NPE in the debugger when there is no self-ref package:
 
 ## 0.6.13
 - exposed the performance overlay debug option for Flutter apps

@@ -34005,7 +34005,7 @@ self._domRemove = function(element) {
           return [];
         uris = [result.get$uri()];
         t1 = this.$this;
-        if (J.startsWith$1$s(result.get$uri(), t1._selfRefPrefix))
+        if (t1._selfRefPrefix != null && J.startsWith$1$s(result.get$uri(), t1._selfRefPrefix))
           C.JSArray_methods.insert$2(uris, 0, P.Uri_Uri$file(t1.root, $.$get$isWindows()).toString$0(0) + ("/lib/" + J.substring$1$s(result.get$uri(), t1._selfRefPrefix.length)));
         for (i = 0; i < uris.length; ++i) {
           t2 = t1._translator.clientToTarget$1(uris[i]);
