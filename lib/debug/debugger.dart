@@ -187,7 +187,7 @@ class UriResolver implements Disposable {
 
       List<String> uris = [result.uri];
 
-      if (result.uri.startsWith(_selfRefPrefix)) {
+      if (_selfRefPrefix != null && result.uri.startsWith(_selfRefPrefix)) {
         String filePath = new Uri.file(root, windows: isWindows).toString();
         filePath += '/lib/${result.uri.substring(_selfRefPrefix.length)}';
         uris.insert(0, filePath);
