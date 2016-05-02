@@ -1,4 +1,3 @@
-library atom.flutter.flutter_sdk;
 
 import 'dart:async';
 
@@ -13,6 +12,7 @@ import 'package:logging/logging.dart';
 import '../impl/debounce.dart';
 import '../jobs.dart';
 import '../state.dart' show sdkManager;
+import 'flutter.dart';
 
 final String _prefKey = 'flutter.flutterRoot';
 
@@ -31,7 +31,9 @@ class FlutterSdkManager implements Disposable {
     String currentPath = atom.config.getValue(_prefKey);
 
     if (currentPath == null || currentPath.isEmpty) {
-      tryToAutoConfigure(complainOnFailure: false);
+      if (Flutter.hasFlutterPlugin()) {
+        tryToAutoConfigure(complainOnFailure: false);
+      }
     } else {
       FlutterSdk sdk = new FlutterSdk.fromPath(currentPath);
       if (sdk != null && sdk.isValidSdk) {
@@ -44,15 +46,17 @@ class FlutterSdkManager implements Disposable {
       .transform(new Debounce(new Duration(seconds: 1)))
       .listen((value) => _setSdkPath(value));
 
-    _disposables.add(atom.commands.add('atom-workspace', 'flutter:auto-locate-flutter-sdk', (_) {
-      new SdkLocationJob(this).schedule();
-    }));
-    _disposables.add(atom.commands.add('atom-workspace', 'flutter:show-flutter-sdk-info', (_) {
-      showInstallationInfo();
-    }));
-    _disposables.add(atom.commands.add('atom-workspace', 'flutter:version', (_) {
-      showVersionInfo();
-    }));
+    if (Flutter.hasFlutterPlugin()) {
+      _disposables.add(atom.commands.add('atom-workspace', 'flutter:auto-locate-flutter-sdk', (_) {
+        new SdkLocationJob(this).schedule();
+      }));
+      _disposables.add(atom.commands.add('atom-workspace', 'flutter:show-flutter-sdk-info', (_) {
+        showInstallationInfo();
+      }));
+      _disposables.add(atom.commands.add('atom-workspace', 'flutter:version', (_) {
+        showVersionInfo();
+      }));
+    }
   }
 
   Future tryToAutoConfigure({bool complainOnFailure: true}) {

@@ -1,4 +1,3 @@
-library atom.flutter.mojo_launch;
 
 import '../launch/launch.dart';
 import 'flutter_launch.dart';

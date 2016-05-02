@@ -1,4 +1,3 @@
-library atom.flutter.flutter_launch;
 
 import 'dart:async';
 
