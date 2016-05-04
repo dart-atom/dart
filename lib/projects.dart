@@ -8,10 +8,7 @@ library atom.projects;
 import 'dart:async';
 
 import 'package:atom/atom.dart';
-import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
-import 'package:atom/node/notification.dart';
-import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
@@ -38,7 +35,7 @@ String getWorkspaceRelativeDescription(String path) {
 
 /// A class to locate Dart projects in Atom and listen for new or removed Dart
 /// projects.
-class ProjectManager implements Disposable, ContextMenuContributor {
+class ProjectManager implements Disposable {
   static const int _recurseDepth = 4;
 
   /// Return whether the given directory is a Dart project.
@@ -49,9 +46,6 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     // Look for `pubspec.yaml` or `.packages` files.
     if (fs.existsSync(fs.join(dir.path, pub.pubspecFileName))) return true;
     if (fs.existsSync(fs.join(dir.path, pub.dotPackagesFileName))) return true;
-
-    // Look for an `.analysis_options` file.
-    if (fs.existsSync(fs.join(dir.path, analysisOptionsFileName))) return true;
 
     // Look for a `BUILD` file with some Dart build rules.
     String buildFilePath = fs.join(dir.path, _bazelBuildFileName);
@@ -84,21 +78,7 @@ class ProjectManager implements Disposable, ContextMenuContributor {
       rescanForProjects();
       _updateChangeListeners(atom.project.getPaths());
     });
-    disposables.add(atom.commands.add(
-        'atom-text-editor', 'dartlang:mark-as-dart-project', (event) {
-      event.stopImmediatePropagation();
-      _markDartProject();
-    }));
-    disposables.add(atom.commands.add(
-        '.tree-view', 'dartlang:mark-as-dart-project', (AtomEvent event) {
-      event.stopImmediatePropagation();
-      _markDartProject(path: event.targetFilePath);
-    }));
     _initProjectControllers();
-  }
-
-  List<ContextMenuItem> getTreeViewContributions() {
-    return [new _MarkDartProjectContextCommand()];
   }
 
   bool get hasDartProjects => projects.isNotEmpty;
@@ -286,48 +266,6 @@ class ProjectManager implements Disposable, ContextMenuContributor {
     } else {
       return [];
     }
-  }
-
-  void _markDartProject({String path}) {
-    if (path != null) {
-      // Find the best current path.
-      TextEditor editor = atom.workspace.getActiveTextEditor();
-      if (editor != null) {
-        String temp = editor.getPath();
-        if (temp != null) path = atom.project.relativizePath(temp).first;
-      }
-    }
-
-    // Ask the user for project to make a Dart project.
-    promptUser('Select the directory to mark as a Dart project:',
-        defaultText: path, selectText: true).then((String response) {
-      if (response == null) return;
-      path = response;
-
-      // Verify the path.
-      if (!fs.statSync(path).isDirectory()) {
-        atom.notifications.addWarning("'${path}' is not a directory.");
-        return;
-      }
-
-      if (atom.project.relativizePath(path).first == null) {
-        atom.notifications.addWarning(
-            "'${path}' is not contained in an existing Atom directory.");
-        return;
-      }
-
-      // Create the analysis options file and open it.
-      File file = new File.fromPath(fs.join(path, analysisOptionsFileName));
-      file.writeSync('''
-# ${analysisOptionsFileName}
-meta:
-  generatedOn: '${new DateTime.now()}'
-''');
-      atom.workspace.open(file.path);
-
-      // Refresh the Dart projects.
-      _fullScanForProjects();
-    });
   }
 
   void _initProjectControllers() {
@@ -537,23 +475,5 @@ bool _isHomeDir(Directory dir) {
     return fs.homedir == dir.path;
   } catch (_) {
     return false;
-  }
-}
-
-class _MarkDartProjectContextCommand extends ContextMenuItem {
-  _MarkDartProjectContextCommand() :
-      super('Mark as a Dart Project', 'dartlang:mark-as-dart-project');
-
-  bool shouldDisplay(AtomEvent event) {
-    String filePath = event.targetFilePath;
-    if (filePath == null) return false;
-
-    DartProject project = projectManager.getProjectFor(filePath);
-    List<String> paths = atom.project.relativizePath(filePath);
-
-    if (project != null) return false;
-
-    String relativePath = paths[1];
-    return relativePath == null || relativePath.isEmpty;
   }
 }

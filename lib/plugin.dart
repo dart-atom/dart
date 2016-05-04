@@ -212,7 +212,6 @@ class AtomDartPackage extends AtomPackage {
     treeItems.addAll(runAppManager.getTreeViewContributions());
     treeItems.addAll(pubManager.getTreeViewContributions());
     treeItems.addAll(analysisOptionsManager.getTreeViewContributions());
-    treeItems.addAll(projectManager.getTreeViewContributions());
     treeItems.add(ContextMenuItem.separator);
     disposables.add(atom.contextMenu.add('.tree-view', treeItems));
 
