@@ -21,7 +21,7 @@ import 'state.dart';
 
 final String _prefPath = '${pluginId}.sdkLocation';
 
-final Version _minSdkVersion = new Version.parse('1.12.0');
+final Version _minSdkVersion = new Version.parse('1.15.0');
 
 final Logger _logger = new Logger('sdk');
 
