@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.14
 - fixed an issue with auto-locating the Dart SDK too aggressively (when the user
   already had an SDK configured)
 - fixed an NPE in the debugger when there is no self-ref package:
