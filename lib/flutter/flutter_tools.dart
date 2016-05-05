@@ -59,8 +59,7 @@ class FlutterToolsManager implements Disposable {
 
       if (_response != null) {
         return flutter.runInJob(
-          ['create', '--out', _response],
-          title: 'Creating Flutter Project'
+          ['create',  _response], title: 'Creating Flutter Project'
         );
       }
     }).then((_) {

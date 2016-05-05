@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.6.15
+- fixed an issue with the `flutter:create-project` command
+
 ## 0.6.14
 - fixed an issue with auto-locating the Dart SDK too aggressively (when the user
   already had an SDK configured)
