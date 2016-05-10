@@ -65,6 +65,15 @@ class DartinoSdk extends Sdk {
 
   String get name => 'Dartino SDK';
 
+  @override
+  Future<String> get version async {
+    try {
+      return await exec(dartinoBinary, ['--version']);
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// Compile the application and return a path to the compiled binary.
   /// If there is a problem, notify the user and return `null`.
   Future<String> compile(DartinoLaunch launch) async {

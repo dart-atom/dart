@@ -18,6 +18,9 @@ abstract class Sdk {
 
   String get name;
 
+  /// Return a string representing the Sdk version, or `null` if unknown.
+  Future<String> get version => null;
+
   /// Return the path to the Dart SDK
   /// that is shipped as part of the Dartino SDK
   String get dartSdkPath => fs.join(sdkRoot, 'internal', 'dart-sdk');

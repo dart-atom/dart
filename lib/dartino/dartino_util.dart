@@ -144,7 +144,7 @@ class _Dartino {
   }
 
   /// Validate the installed SDK if there is one.
-  void validateSdk([AtomEvent _]) {
+  Future<Null> validateSdk([AtomEvent _]) async {
     if (sdkPath.isNotEmpty) {
       var sdk = sdkFor(null);
       if (sdk != null && sdk.validate()) {
@@ -152,9 +152,9 @@ class _Dartino {
         if (sdkManager.noSdkPathConfigured) {
           sdkManager.setSdkPath(sdk.dartSdkPath);
         }
-
+        String version = (await sdk.version) ?? '';
         atom.notifications
-            .addSuccess('Valid ${sdk.name} detected', detail: sdkPath);
+            .addSuccess('Found ${sdk.name} $version', detail: sdkPath);
       }
     }
   }
