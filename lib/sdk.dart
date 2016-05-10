@@ -21,8 +21,6 @@ import 'state.dart';
 
 final String _prefPath = '${pluginId}.sdkLocation';
 
-final Version _minSdkVersion = new Version.parse('1.15.0');
-
 final Logger _logger = new Logger('sdk');
 
 // Use cases:
@@ -49,7 +47,17 @@ final Logger _logger = new Logger('sdk');
 // TODO: status line contribution for a mis-configured sdk
 
 class SdkManager implements Disposable {
-  StreamController<Sdk> _controller = new StreamController.broadcast(sync: true);
+  /// The minimum version for an installed SDK or `null` if unspecified.
+  static Version _minVersion;
+
+  static void set minVersion(Version minVersion) {
+    if (_minVersion == null || _minVersion < minVersion) {
+      _minVersion = minVersion;
+    }
+  }
+
+  StreamController<Sdk> _controller =
+      new StreamController.broadcast(sync: true);
 
   StreamSubscription _prefSub;
   Disposables _commands = new Disposables();
@@ -70,7 +78,8 @@ class SdkManager implements Disposable {
     }
 
     // Listen to changes to the sdk pref setting; debounce the changes.
-    _prefSub = atom.config.onDidChange(_prefPath)
+    _prefSub = atom.config
+        .onDidChange(_prefPath)
         .transform(new Debounce(new Duration(seconds: 1)))
         .listen((value) => _setSdkPath(value));
 
@@ -172,18 +181,18 @@ class SdkManager implements Disposable {
 
     try {
       Version installedVersion = new Version.parse(version);
-      if (installedVersion < _minSdkVersion) {
+      if (_minVersion != null && installedVersion < _minVersion) {
         if (!_alreadyWarned) {
           _alreadyWarned = true;
           atom.notifications.addWarning(
-            'SDK version ${installedVersion} is older than the recommended '
-            'version of ${_minSdkVersion}. Please visit www.dartlang.org to '
-            'download a recent SDK.',
-            detail: 'Using SDK at ${currentSdk.path}.',
-            dismissable: true);
+              'SDK version ${installedVersion} is older than the recommended '
+              'version of ${_minVersion}. Please visit www.dartlang.org to '
+              'download a recent SDK.',
+              detail: 'Using SDK at ${currentSdk.path}.',
+              dismissable: true);
         }
       }
-    } catch (e) { }
+    } catch (e) {}
   }
 }
 
