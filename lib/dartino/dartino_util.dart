@@ -99,6 +99,11 @@ class _Dartino {
         .listen((DartProject project) => _checkDirectory(project.directory));
   }
 
+  /// Return `true` if the Dartino plugin is installed.
+  bool hasDartinoPlugin() {
+    return atom.packages.getAvailablePackageNames().contains(_pluginId);
+  }
+
   /// Open the Dartino settings page
   void openSettings([_]) {
     atom.workspace.openConfigPage(packageID: 'dartino');

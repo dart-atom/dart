@@ -196,13 +196,13 @@ class AtomDartPackage extends AtomPackage {
       });
     });
     _addCmd('atom-workspace', 'dartlang:send-feedback', (_) => _handleSendFeedback());
-    //TODO(danrubel) remove dartino:create-new-proj once dartino plugin has been updated
-    _addCmd('atom-workspace', 'dartino:create-new-proj', dartino.createNewProject);
-    _addCmd('atom-workspace', 'dartino:create-new-project', dartino.createNewProject);
-    _addCmd('atom-workspace', 'dartino:enable', dartino.enable);
-    _addCmd('atom-workspace', 'dartino:install-sdk', dartino.promptInstallSdk);
-    _addCmd('atom-workspace', 'dartino:sdk-docs', dartino.showSdkDocs);
-    _addCmd('atom-workspace', 'dartino:validate-sdk', dartino.validateSdk);
+    if (dartino.hasDartinoPlugin()) {
+      _addCmd('atom-workspace', 'dartino:create-new-project', dartino.createNewProject);
+      _addCmd('atom-workspace', 'dartino:enable', dartino.enable);
+      _addCmd('atom-workspace', 'dartino:install-sdk', dartino.promptInstallSdk);
+      _addCmd('atom-workspace', 'dartino:sdk-docs', dartino.showSdkDocs);
+      _addCmd('atom-workspace', 'dartino:validate-sdk', dartino.validateSdk);
+    }
 
     // Text editor commands.
     _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
@@ -402,8 +402,9 @@ class AtomDartPackage extends AtomPackage {
       FlutterLaunchType.register(launchManager);
       MojoLaunchType.register(launchManager);
     }
-
-    DartinoLaunchType.register(launchManager);
+    if (dartino.hasDartinoPlugin()) {
+      DartinoLaunchType.register(launchManager);
+    }
     CliLaunchType.register(launchManager);
     ShellLaunchType.register(launchManager);
   }
