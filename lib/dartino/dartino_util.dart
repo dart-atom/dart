@@ -4,10 +4,11 @@ import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
-import 'package:atom_dartlang/projects.dart' show ProjectManager;
 import 'package:atom_dartlang/projects.dart';
+import 'package:atom_dartlang/sdk.dart' show SdkManager;
 import 'package:haikunator/haikunator.dart';
 import 'package:logging/logging.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 import '../impl/pub.dart' show dotPackagesFileName;
 import '../state.dart';
@@ -99,6 +100,11 @@ class _Dartino {
         .listen((DartProject project) => _checkDirectory(project.directory));
   }
 
+  /// Return `true` if the Dartino plugin is installed.
+  bool hasDartinoPlugin() {
+    return atom.packages.getAvailablePackageNames().contains(_pluginId);
+  }
+
   /// Open the Dartino settings page
   void openSettings([_]) {
     atom.workspace.openConfigPage(packageID: 'dartino');
@@ -126,23 +132,29 @@ class _Dartino {
     DartinoSdk.promptInstall();
   }
 
+  void setMinSdkVersion() {
+    if (hasDartinoPlugin()) {
+      SdkManager.minVersion = new Version.parse('1.16.0');
+    }
+  }
+
   /// Show docs for the installed SDK.
   void showSdkDocs(AtomEvent _) {
     sdkFor(null)?.showDocs();
   }
 
   /// Validate the installed SDK if there is one.
-  void validateSdk([AtomEvent _]) {
+  Future<Null> validateSdk([AtomEvent _]) async {
     if (sdkPath.isNotEmpty) {
       var sdk = sdkFor(null);
       if (sdk != null && sdk.validate()) {
-
         // If there's no Dart SDK configured, use the one provided by Dartino.
         if (sdkManager.noSdkPathConfigured) {
           sdkManager.setSdkPath(sdk.dartSdkPath);
         }
-
-        atom.notifications.addSuccess('Valid ${sdk.name} detected', detail: sdkPath);
+        String version = (await sdk.version) ?? '';
+        atom.notifications
+            .addSuccess('Found ${sdk.name} $version', detail: sdkPath);
       }
     }
   }
