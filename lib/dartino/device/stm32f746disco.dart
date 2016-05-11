@@ -7,6 +7,7 @@ import 'package:atom/node/process.dart';
 
 import '../launch_dartino.dart';
 import '../sdk/dartino_sdk.dart';
+import '../sdk/sdk.dart';
 import '../sdk/sod_repo.dart';
 import 'device.dart';
 
@@ -15,7 +16,7 @@ class Stm32f746Disco extends Device {
   //TODO(danrubel) generalize STM boards and hopefully connected devices in general
 
   /// Return a target device for the given launch or `null` if none.
-  static Future<Stm32f746Disco> forLaunch(DartinoLaunch launch) async {
+  static Future<Stm32f746Disco> forLaunch(Sdk sdk, DartinoLaunch launch) async {
     //TODO(danrubel) move this into the command line utility
     //TODO(danrubel) add Windows support
     String ttyPath;
@@ -79,26 +80,7 @@ class Stm32f746Disco extends Device {
   }
 
   @override
-  Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) async {
-    //TODO(danrubel) add windows and mac support and move this into cmdline util
-    if (isWindows && isMac) {
-      atom.notifications.addError('Platform not supported');
-      return false;
-    }
-    // Compile
-    String binPath = await sdk.compile(launch);
-    if (binPath == null) return false;
-    // Deploy and run
-    var exitCode = await launch.run('dart',
-        args: [sdk.sodUtil, 'run', binPath, 'on', ttyPath],
-        message: 'Deploy and run on connected device ...');
-    if (exitCode != 0) {
-      atom.notifications.addError('Failed to deploy application',
-          detail: 'Failed to deploy to device.\n'
-              '${launch.primaryResource}\n'
-              'See console for more.');
-      return false;
-    }
-    return true;
+  Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) {
+    return launchSOD_old(sdk, launch, ttyPath);
   }
 }

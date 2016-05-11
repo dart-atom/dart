@@ -129,7 +129,7 @@ class AtomDartPackage extends AtomPackage {
     checkChangelog();
 
     Flutter.setMinSdkVersion();
-    dartino.setMinSdkVersion();
+    dartino.activate(disposables);
 
     disposables.add(deps[JobManager] = new JobManager());
     disposables.add(deps[SdkManager] = new SdkManager());
