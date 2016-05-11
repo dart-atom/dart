@@ -142,6 +142,12 @@ class _Dartino {
     DartinoSdk.promptInstall();
   }
 
+  void setMinSdkVersion() {
+    if (hasDartinoPlugin()) {
+      SdkManager.minVersion = new Version.parse('1.16.0');
+    }
+  }
+
   /// Show docs for the installed SDK.
   void showSdkDocs(AtomEvent _) {
     sdkFor(null)?.showDocs();
