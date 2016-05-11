@@ -55,7 +55,7 @@ abstract class Device {
   /// If there is a problem, notify the user and return `false`.
   Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) async {
     //TODO(danrubel) add windows and mac support and move this into cmdline util
-    if (isWindows && isMac) {
+    if (isWindows || isMac) {
       atom.notifications.addError('Platform not supported');
       return false;
     }
@@ -100,7 +100,7 @@ abstract class Device {
   Future<bool> launchSOD_old(
       SodRepo sdk, DartinoLaunch launch, String ttyPath) async {
     //TODO(danrubel) add windows and mac support and move this into cmdline util
-    if (isWindows && isMac) {
+    if (isWindows || isMac) {
       atom.notifications.addError('Platform not supported');
       return false;
     }

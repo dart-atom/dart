@@ -62259,7 +62259,7 @@ self._domRemove = function(element) {
             switch ($async$goto) {
               case 0:
                 // Function start
-                if ($.$get$isWindows() === true && $.$get$isMac() === true) {
+                if ($.$get$isWindows() === true || $.$get$isMac() === true) {
                   t1 = $.$get$atom()._notifications;
                   t1.invoke$3("addError", "Platform not supported", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
                   $async$returnValue = false;
@@ -62368,7 +62368,7 @@ self._domRemove = function(element) {
             switch ($async$goto) {
               case 0:
                 // Function start
-                if ($.$get$isWindows() === true && $.$get$isMac() === true) {
+                if ($.$get$isWindows() === true || $.$get$isMac() === true) {
                   t1 = $.$get$atom()._notifications;
                   t1.invoke$3("addError", "Platform not supported", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
                   $async$returnValue = false;
