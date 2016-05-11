@@ -4,6 +4,7 @@ import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
+import 'package:atom/utils/disposable.dart';
 import 'package:atom_dartlang/projects.dart';
 import 'package:atom_dartlang/sdk.dart' show SdkManager;
 import 'package:haikunator/haikunator.dart';
@@ -26,6 +27,8 @@ final Logger _logger = new Logger(_pluginId);
 Set<Directory> _checkedDirectories = new Set<Directory>();
 
 class _Dartino {
+  Disposables disposables;
+
   /// A flag indicating whether Dartino specific UI should be user visible.
   bool enabled = false;
 
@@ -39,6 +42,13 @@ class _Dartino {
   String get sdkPath {
     String path = atom.config.getValue('$_pluginId.sdkPath');
     return (path is String) ? path.trim() : '';
+  }
+
+  void activate(Disposables disposables) {
+    this.disposables = disposables;
+    if (hasDartinoPlugin()) {
+      SdkManager.minVersion = new Version.parse('1.16.0');
+    }
   }
 
   /// Return the SDK associated with the given project
@@ -130,12 +140,6 @@ class _Dartino {
     //   new NotificationButton('SOD', SodRepo.promptInstall)
     // ]);
     DartinoSdk.promptInstall();
-  }
-
-  void setMinSdkVersion() {
-    if (hasDartinoPlugin()) {
-      SdkManager.minVersion = new Version.parse('1.16.0');
-    }
   }
 
   /// Show docs for the installed SDK.
