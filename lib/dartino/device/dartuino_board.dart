@@ -19,6 +19,7 @@ class DartuinoBoard extends Device {
     String ttyPath;
 
     if (isMac || isLinux) {
+      // Old style interaction with device via TTY
       var stdout = await exec('ls', ['-1', '/dev']);
       if (stdout == null) return null;
       for (String line in LineSplitter.split(stdout)) {
@@ -32,7 +33,16 @@ class DartuinoBoard extends Device {
       }
     }
 
-    if (ttyPath == null) return null;
+    if (ttyPath == null) {
+      // New interaction with device via debug daemon
+      if (sdk is SodRepo) {
+        //TODO(danrubel) need better way to list connected devices
+        if (await sdk.startDebugDaemon(launch) != null) {
+          return new DartuinoBoard(null);
+        }
+      }
+      return null;
+    }
     return new DartuinoBoard(ttyPath);
   }
 

@@ -113,7 +113,7 @@ class DartinoSdk extends Sdk {
   Future launch(DartinoLaunch launch) async {
     if (!await _installAdditionalTools(this, launch)) return;
     _validateLocalSettingsFile(this, launch);
-    Device device = await Device.forLaunch(launch);
+    Device device = await Device.forLaunch(this, launch);
     if (device == null) return;
     device.launchDartino(this, launch);
   }
