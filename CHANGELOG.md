@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue with paths when Atom is launched from GUI launchers on Linux
+
 ## 0.6.15
 - fixed an issue with the `flutter:create-project` command
 
