@@ -2,6 +2,7 @@
 
 ## unreleased
 - fixed an issue with paths when Atom is launched from GUI launchers on Linux
+- launch Dartino apps via new SOD debug daemon
 
 ## 0.6.15
 - fixed an issue with the `flutter:create-project` command
