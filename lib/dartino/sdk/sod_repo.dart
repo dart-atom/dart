@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
+import 'package:atom/node/process.dart';
+import 'package:atom/utils/disposable.dart';
 
 import '../../impl/pub.dart' show dotPackagesFileName;
 import '../dartino_util.dart';
@@ -31,6 +33,8 @@ class SodRepo extends Sdk {
   String get name => 'SOD repository';
 
   String get sodUtil => resolvePath('dart/bin/sod.dart');
+
+  String get debugUtil => resolvePath('third_party/lk/tools/sdbg');
 
   /// Compile the application and return the path of the binary to deploy.
   /// If there is a problem, notify the user and return `null`.
@@ -76,7 +80,7 @@ class SodRepo extends Sdk {
 
   @override
   Future launch(DartinoLaunch launch) async {
-    Device device = await Device.forLaunch(launch);
+    Device device = await Device.forLaunch(this, launch);
     if (device == null) return;
     device.launchSOD(this, launch);
   }
@@ -86,7 +90,7 @@ class SodRepo extends Sdk {
     if (projDir == null) return null;
     String localSpecFile = fs.join(projDir, dotPackagesFileName);
     if (fs.existsSync(localSpecFile)) return localSpecFile;
-    return resolvePath('third_party/dartino//internal/dartino-sdk.packages');
+    return resolvePath('third_party/dartino/internal/dartino-sdk.packages');
   }
 
   @override
@@ -105,5 +109,104 @@ class SodRepo extends Sdk {
   @override
   void showDocs() {
     atom.notifications.addInfo('no docs yet');
+  }
+
+  /// Launch the debug daemon if not already running.
+  /// Return the [LkShell] used to interact with the device
+  /// or `null` if the daemon could not connect to the device.
+  Future<LkShell> startDebugDaemon(DartinoLaunch launch) async {
+    if (_debugDaemon != null) return _debugDaemon.shell;
+    _DebugDaemon daemon = new _DebugDaemon(this);
+    if (!await daemon.start(launch)) return null;
+    dartino.disposables.add(daemon);
+    _debugDaemon = daemon;
+    return _debugDaemon.shell;
+  }
+}
+
+/// The current debug daemon, or `null` if one is not running.
+_DebugDaemon _debugDaemon;
+
+class _DebugDaemon implements Disposable {
+  final SodRepo sdk;
+  ProcessRunner runner;
+  LkShell shell;
+
+  _DebugDaemon(this.sdk);
+
+  String get daemonPath => sdk.resolvePath('third_party/lk/tools/sdbgd');
+
+  Future<bool> start(DartinoLaunch launch) async {
+    if (!fs.existsSync(daemonPath)) {
+      atom.notifications
+          .addError('Cannot find debug daemon', detail: daemonPath);
+      return false;
+    }
+    launch.pipeStdio('Launching debug daemon...\n\$ $daemonPath\n');
+    runner = new ProcessRunner(daemonPath);
+    Future<ProcessResult> future;
+    try {
+      future = runner.execSimple();
+      ProcessResult result = await future
+          //TODO(danrubel) need better way to determine if device connected
+          .timeout(new Duration(milliseconds: 1500), onTimeout: () => null);
+      if (result != null) {
+        atom.notifications.addError('Failed to connect to device',
+            detail: '$daemonPath\n${result.stderr}\n${result.stdout}');
+        return false;
+      }
+    } catch (e, s) {
+      atom.notifications
+          .addError('Failed to start daemon', detail: '$daemonPath\n$e\n$s');
+      return false;
+    }
+    future.then((ProcessResult result) {
+      String detail = '${result.stderr}\n${result.stdout}'.trim();
+      if (detail == 'Connected to USB device.') detail == null;
+      atom.notifications.addInfo('Device disconnected', detail: detail);
+      if (_debugDaemon == this) _debugDaemon = null;
+      dispose();
+    });
+    shell = new LkShell().._start(launch);
+    return true;
+  }
+
+  @override
+  void dispose() {
+    shell?.dispose();
+    shell = null;
+    runner?.kill();
+    runner = null;
+  }
+}
+
+class LkShell implements Disposable {
+  ProcessRunner runner;
+  DartinoLaunch launch;
+
+  void _start(DartinoLaunch launch) {
+    this.launch = launch;
+    runner = new ProcessRunner('netcat', args: ['localhost', '9092']);
+    runner.onStdout.listen(launch.pipeStdio);
+    runner.onStderr.listen((str) => launch.pipeStdio(str, error: true));
+    runner.execStreaming().then((int exitCode) {
+      runner = null;
+      launch.pipeStdio('netcat exit code $exitCode');
+    });
+  }
+
+  void write(String command) {
+    if (runner == null) {
+      launch.pipeStdio('netcat terminated\nfailed to send $command\n',
+          error: true);
+      return;
+    }
+    runner.write(command);
+  }
+
+  @override
+  void dispose() {
+    runner?.kill();
+    runner = null;
   }
 }
