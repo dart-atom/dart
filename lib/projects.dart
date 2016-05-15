@@ -14,7 +14,7 @@ import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
 import 'analysis/analysis_options.dart';
-import 'dartino/dartino_util.dart' show dartino;
+import 'dartino/dartino.dart' show dartino;
 import 'impl/pub.dart' as pub;
 import 'jobs.dart';
 import 'state.dart';

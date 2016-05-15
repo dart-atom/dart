@@ -4,10 +4,12 @@
 
 library atom.all_test;
 
+import 'dartino_util_test.dart' as dartino_util_test;
 import 'dependencies_test.dart' as dependencies_test;
 import 'utils_test.dart' as utils_test;
 
 main() {
+  dartino_util_test.defineTests();
   dependencies_test.defineTests();
   utils_test.defineTests();
 }
