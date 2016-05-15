@@ -113,7 +113,7 @@ class PubManager implements Disposable, ContextMenuContributor {
 
     String lastRunText = state['lastRunText'];
 
-    promptUser('pub run: pub application to run (ex. sky:init).',
+    promptUser('pub run - pub application to run:',
         defaultText: lastRunText, selectText: true).then((String response) {
       if (response == null) return;
       response = response.trim();
@@ -128,7 +128,7 @@ class PubManager implements Disposable, ContextMenuContributor {
     String dir = path == null ? null : _locatePubspecDir(path);
     String lastRunText = state['lastGlobalRunText'];
 
-    promptUser('pub global run: pub application to run (ex. sky:init).',
+    promptUser('pub global run - pub application to run:',
         defaultText: lastRunText, selectText: true).then((String response) {
       if (response == null) return;
       response = response.trim();

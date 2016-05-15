@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
-import 'package:atom_dartlang/dartino/dartino_util.dart' show dartino;
+import 'package:atom_dartlang/dartino/dartino.dart' show dartino;
 import 'package:logging/logging.dart';
 
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;

@@ -6,7 +6,7 @@ import 'package:atom/node/process.dart';
 import 'package:atom/utils/disposable.dart';
 
 import '../../impl/pub.dart' show dotPackagesFileName;
-import '../dartino_util.dart';
+import '../dartino.dart';
 import '../device/device.dart';
 import '../launch_dartino.dart';
 import 'sdk.dart';

@@ -6,7 +6,7 @@ import 'package:logging/logging.dart';
 import '../launch/launch.dart';
 import '../projects.dart';
 import '../state.dart';
-import 'dartino_util.dart';
+import 'dartino.dart';
 import 'sdk/sdk.dart';
 
 final Logger _logger = new Logger('atom.dartino_launch');

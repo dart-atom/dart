@@ -35,7 +35,7 @@ import 'atom_package_deps.dart' as package_deps;
 import 'atom_statusbar.dart';
 import 'atom_utils.dart';
 import 'buffer/buffer_observer.dart';
-import 'dartino/dartino_util.dart' show dartino;
+import 'dartino/dartino.dart' show dartino;
 import 'dartino/launch_dartino.dart';
 import 'debug/breakpoints.dart';
 import 'debug/debugger.dart';

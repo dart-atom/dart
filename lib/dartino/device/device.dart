@@ -4,14 +4,14 @@ import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';
+import 'package:atom_dartlang/dartino/sdk/sdk.dart';
 
-import '../dartino_util.dart';
+import '../dartino.dart';
 import '../launch_dartino.dart';
 import '../sdk/dartino_sdk.dart';
 import '../sdk/sod_repo.dart';
 import 'dartuino_board.dart';
 import 'stm32f746disco.dart';
-import 'package:atom_dartlang/dartino/sdk/sdk.dart';
 
 /// The connected device on which the application is executed.
 abstract class Device {

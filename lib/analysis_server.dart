@@ -16,7 +16,7 @@ import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_server_lib.dart';
-import 'dartino/dartino_util.dart' show dartino;
+import 'dartino/dartino.dart' show dartino;
 import 'jobs.dart';
 import 'projects.dart';
 import 'sdk.dart';

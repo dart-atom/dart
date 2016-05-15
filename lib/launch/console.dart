@@ -104,11 +104,9 @@ class ConsoleController implements Disposable {
   }
 }
 
-// TODO: activity spinner - where to show?
-
 class ConsoleView extends View {
   // Only show a set amount of lines of output.
-  static const _maxLines = 200;
+  static const _maxLines = 400;
 
   static int _idCount = 0;
 
