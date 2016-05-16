@@ -101,6 +101,16 @@ class _Dartino implements Disposable {
     }
   }
 
+  Future openSamples(AtomEvent e) async {
+    String samplesRoot = sdkFor(null)?.samplesRoot;
+    if (atom.project.getPaths().contains(samplesRoot)) {
+      atom.notifications
+          .addInfo('The samples are already open', detail: samplesRoot);
+    } else {
+      atom.project.addPath(samplesRoot);
+    }
+  }
+
   /// Called by the Dartino plugin to enable Dartino specific behavior.
   void enable([AtomEvent _]) {
     if (!isPluginInstalled()) return;
@@ -109,6 +119,7 @@ class _Dartino implements Disposable {
 
     SdkManager.minVersion = new Version.parse('1.16.0');
     _addCmd('atom-workspace', 'dartino:create-new-project', createNewProject);
+    _addCmd('atom-workspace', 'dartino:open-samples', openSamples);
     _addCmd('atom-workspace', 'dartino:install-sdk', promptInstallSdk);
     _addCmd('atom-workspace', 'dartino:sdk-docs', showSdkDocs);
     _addCmd('atom-workspace', 'dartino:validate-sdk', validateSdk);

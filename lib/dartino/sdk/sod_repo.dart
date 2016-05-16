@@ -32,6 +32,8 @@ class SodRepo extends Sdk {
 
   String get name => 'SOD repository';
 
+  String get samplesRoot => resolvePath('dart/examples');
+
   String get sodUtil => resolvePath('dart/bin/sod.dart');
 
   String get debugUtil => resolvePath('third_party/lk/tools/sdbg');

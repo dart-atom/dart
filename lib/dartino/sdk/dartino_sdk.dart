@@ -65,6 +65,8 @@ class DartinoSdk extends Sdk {
 
   String get name => 'Dartino SDK';
 
+  String get samplesRoot => resolvePath('samples');
+
   @override
   Future<String> get version async {
     try {
