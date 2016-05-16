@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue displaying output from some `pub run` commands
+
 ## 0.6.16
 - fixed an issue with paths when Atom is launched from GUI launchers on Linux
 - launch Dartino apps via new SOD debug daemon
