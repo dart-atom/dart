@@ -36,7 +36,6 @@ import 'atom_statusbar.dart';
 import 'atom_utils.dart';
 import 'buffer/buffer_observer.dart';
 import 'dartino/dartino.dart' show dartino;
-import 'dartino/launch_dartino.dart';
 import 'debug/breakpoints.dart';
 import 'debug/debugger.dart';
 import 'editors.dart';
@@ -129,7 +128,7 @@ class AtomDartPackage extends AtomPackage {
     checkChangelog();
 
     Flutter.setMinSdkVersion();
-    dartino.activate(disposables);
+    disposables.add(dartino);
 
     disposables.add(deps[JobManager] = new JobManager());
     disposables.add(deps[SdkManager] = new SdkManager());
@@ -198,14 +197,11 @@ class AtomDartPackage extends AtomPackage {
         }
       });
     });
+    // Always register this one Dartino command so that Dartino will be
+    // properly activated/enabled when/if the Dartino plugin is installed
+    // in a running system.
+    _addCmd('atom-workspace', 'dartino:enable', dartino.enable);
     _addCmd('atom-workspace', 'dartlang:send-feedback', (_) => _handleSendFeedback());
-    if (dartino.hasDartinoPlugin()) {
-      _addCmd('atom-workspace', 'dartino:create-new-project', dartino.createNewProject);
-      _addCmd('atom-workspace', 'dartino:enable', dartino.enable);
-      _addCmd('atom-workspace', 'dartino:install-sdk', dartino.promptInstallSdk);
-      _addCmd('atom-workspace', 'dartino:sdk-docs', dartino.showSdkDocs);
-      _addCmd('atom-workspace', 'dartino:validate-sdk', dartino.validateSdk);
-    }
 
     // Text editor commands.
     _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
@@ -404,9 +400,6 @@ class AtomDartPackage extends AtomPackage {
     if (Flutter.hasFlutterPlugin()) {
       FlutterLaunchType.register(launchManager);
       MojoLaunchType.register(launchManager);
-    }
-    if (dartino.hasDartinoPlugin()) {
-      DartinoLaunchType.register(launchManager);
     }
     CliLaunchType.register(launchManager);
     ShellLaunchType.register(launchManager);

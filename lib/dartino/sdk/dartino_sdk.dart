@@ -65,6 +65,8 @@ class DartinoSdk extends Sdk {
 
   String get name => 'Dartino SDK';
 
+  String get samplesRoot => resolvePath('samples');
+
   @override
   Future<String> get version async {
     try {
@@ -192,6 +194,10 @@ Future _installAdditionalTools(DartinoSdk sdk, DartinoLaunch launch) async {
   }
 
   // Launch an external process to download the additional tools
+  Notification msg = atom.notifications.addInfo('Downloading Tools...',
+      detail: 'See console for more detail...', dismissable: true);
+  NotificationHelper helper = new NotificationHelper(msg.view);
+  helper.setRunning();
   int exitCode = await launch.run(sdk.dartinoBinary,
       args: ['x-download-tools'],
       cwd: sdk.sdkRoot,
@@ -201,10 +207,12 @@ Future _installAdditionalTools(DartinoSdk sdk, DartinoLaunch launch) async {
     launch.pipeStdio(str, subtle: true);
   });
   if (exitCode != 0) {
-    atom.notifications.addError('Failed to download tools',
-        detail: 'exitCode : $exitCode\nSee console for more detail');
+    helper.showError();
+    helper.appendText('\nexitCode : $exitCode');
     return false;
   }
+  helper.showSuccess();
+  helper.appendText('\nDownload complete');
   launch.pipeStdio('Download complete\n');
   return true;
 }

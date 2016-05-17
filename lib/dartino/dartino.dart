@@ -5,16 +5,17 @@ import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/utils/disposable.dart';
-import 'package:atom_dartlang/projects.dart';
-import 'package:atom_dartlang/sdk.dart' show SdkManager;
 import 'package:haikunator/haikunator.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import '../impl/pub.dart' show dotPackagesFileName;
+import '../projects.dart';
+import '../sdk.dart' show SdkManager;
 import '../state.dart';
 import 'dartino_project_settings.dart';
 import 'dartino_util.dart';
+import 'launch_dartino.dart';
 import 'sdk/dartino_sdk.dart';
 import 'sdk/sdk.dart';
 import 'sdk/sod_repo.dart';
@@ -27,8 +28,8 @@ final Logger _logger = new Logger(_pluginId);
 
 Set<Directory> _checkedDirectories = new Set<Directory>();
 
-class _Dartino {
-  Disposables disposables;
+class _Dartino implements Disposable {
+  final Disposables disposables = new Disposables();
 
   /// A flag indicating whether Dartino specific UI should be user visible.
   bool enabled = false;
@@ -45,11 +46,9 @@ class _Dartino {
     return (path is String) ? path.trim() : '';
   }
 
-  void activate(Disposables disposables) {
-    this.disposables = disposables;
-    if (hasDartinoPlugin()) {
-      SdkManager.minVersion = new Version.parse('1.16.0');
-    }
+  @override
+  void dispose() {
+    disposables.dispose();
   }
 
   /// Return the SDK associated with the given project
@@ -102,17 +101,42 @@ class _Dartino {
     }
   }
 
+  Future openSamples(AtomEvent e) async {
+    String samplesRoot = sdkFor(null)?.samplesRoot;
+    if (atom.project.getPaths().contains(samplesRoot)) {
+      atom.notifications
+          .addInfo('The samples are already open', detail: samplesRoot);
+    } else {
+      atom.project.addPath(samplesRoot);
+    }
+  }
+
   /// Called by the Dartino plugin to enable Dartino specific behavior.
   void enable([AtomEvent _]) {
+    if (!isPluginInstalled()) return;
     enabled = true;
     _logger.info('Dartino features enabled');
+
+    SdkManager.minVersion = new Version.parse('1.16.0');
+    _addCmd('atom-workspace', 'dartino:create-new-project', createNewProject);
+    _addCmd('atom-workspace', 'dartino:open-samples', openSamples);
+    _addCmd('atom-workspace', 'dartino:install-sdk', promptInstallSdk);
+    _addCmd('atom-workspace', 'dartino:sdk-docs', showSdkDocs);
+    _addCmd('atom-workspace', 'dartino:validate-sdk', validateSdk);
+
     projectManager.onNonProject.listen(_checkDirectory);
     projectManager.onProjectAdd
         .listen((DartProject project) => _checkDirectory(project.directory));
+
+    DartinoLaunchType.register(launchManager);
+  }
+
+  void _addCmd(String target, String command, void callback(AtomEvent e)) {
+    disposables.add(atom.commands.add(target, command, callback));
   }
 
   /// Return `true` if the Dartino plugin is installed.
-  bool hasDartinoPlugin() {
+  bool isPluginInstalled() {
     return atom.packages.getAvailablePackageNames().contains(_pluginId);
   }
 
@@ -141,12 +165,6 @@ class _Dartino {
     //   new NotificationButton('SOD', SodRepo.promptInstall)
     // ]);
     DartinoSdk.promptInstall();
-  }
-
-  void setMinSdkVersion() {
-    if (hasDartinoPlugin()) {
-      SdkManager.minVersion = new Version.parse('1.16.0');
-    }
   }
 
   /// Show docs for the installed SDK.

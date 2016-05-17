@@ -25,6 +25,10 @@ abstract class Sdk {
   /// that is shipped as part of the Dartino SDK
   String get dartSdkPath => fs.join(sdkRoot, 'internal', 'dart-sdk');
 
+  /// Return the path to the root directory of the samples
+  /// or `null` if none.
+  String get samplesRoot;
+
   /// Create a new project at the specified location.
   /// Return a [Future] that indicates whether the project was created.
   Future<bool> createNewProject(String projectPath);
