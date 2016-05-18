@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## 0.6.18
+- no longer pass in `--checked` or `--no-checked` when running flutter apps (to
+  match a change in the flutter cli tool)
+
 ## 0.6.17
 - fixed an issue displaying output from some `pub run` commands
 - added menu cmd that opens the Dartino SDK samples as a project in Atom
