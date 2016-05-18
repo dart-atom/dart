@@ -154,6 +154,8 @@ abstract class LaunchType {
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration);
 
+  bool get supportsChecked => true;
+
   /// Return a yaml fragment with the defaults values for a new launch
   /// configuration.
   String getDefaultConfigText();
@@ -267,7 +269,7 @@ class Launch implements Disposable {
     List<String> desc = [];
 
     if (locationLabel != null) desc.add(locationLabel);
-    if (launchConfiguration.checked) desc.add('checked mode');
+    if (launchType.supportsChecked && launchConfiguration.checked) desc.add('checked mode');
     if (launchConfiguration.debug) desc.add('debug');
 
     return desc.isEmpty ? null : desc.join(' • ');

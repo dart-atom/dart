@@ -18,6 +18,8 @@ class ShellLaunchType extends LaunchType {
     return path.endsWith('.sh') || path.endsWith('.bat');
   }
 
+  bool get supportsChecked => false;
+
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
     String script = configuration.primaryResource;
     String cwd = configuration.cwd;

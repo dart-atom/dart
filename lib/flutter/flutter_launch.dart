@@ -29,6 +29,8 @@ class FlutterLaunchType extends LaunchType {
 
   String get flutterRunCommand => 'run';
 
+  bool get supportsChecked => false;
+
   bool canLaunch(String path, LaunchData data) {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
@@ -66,8 +68,6 @@ class FlutterLaunchType extends LaunchType {
 
   String getDefaultConfigText() {
     return '''
-# Enable or disable checked mode.
-checked: true
 # Enable or disable debugging.
 debug: true
 # The starting route for the app.
@@ -102,11 +102,6 @@ class _LaunchInstance {
 
     // Use either `flutter run` or `flutter run_mojo`.
     _args = [launchType.flutterRunCommand];
-
-    var checked = configuration.typeArgs['checked'];
-    if (checked is bool) {
-      _args.add(checked ? '--checked' : '--no-checked');
-    }
 
     if (configuration.debug) {
       _observatoryPort = getOpenPort();
