@@ -10,6 +10,7 @@ import 'package:haikunator/haikunator.dart';
 import '../projects.dart';
 import '../state.dart';
 import 'flutter.dart';
+import 'flutter_devices.dart';
 import 'flutter_sdk.dart';
 
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
@@ -21,20 +22,46 @@ class FlutterToolsManager implements Disposable {
     if (Flutter.hasFlutterPlugin()) {
       disposables.add(atom.commands.add(
         'atom-workspace',
+        'flutter:screenshot',
+        _screenshot
+      ));
+      disposables.add(atom.commands.add(
+        'atom-workspace',
         'flutter:create-project',
-        _createProject)
-      );
+        _createProject
+      ));
       disposables.add(atom.commands.add(
         'atom-workspace',
         'flutter:doctor',
-        _doctor)
-      );
+        _doctor
+      ));
       disposables.add(atom.commands.add(
         'atom-workspace',
         'flutter:upgrade',
-        _upgrade)
-      );
+        _upgrade
+      ));
     }
+  }
+
+  void _screenshot(AtomEvent _) {
+    DartProject project = projectManager.getProjectFor(
+      atom.workspace.getActiveTextEditor()?.getPath());
+
+    if (project == null) {
+      atom.notifications.addWarning('No active project.');
+      return;
+    }
+
+   // Find the currently selected device.
+   FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
+   Device device = deviceManager.currentSelectedDevice;
+
+   // flutter screenshot [-d device.id]
+   FlutterTool flutter = _flutterSdk.sdk.flutterTool;
+   flutter.runInJob(device == null ? ['screenshot'] : ['screenshot', '-d', device.id],
+     title: 'Running Flutter screenshot…',
+     cwd: project.directory.path
+   );
   }
 
   void _createProject(AtomEvent _) {

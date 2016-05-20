@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- exposed `flutter screenshot`
+
 ## 0.6.18
 - no longer pass in `--checked` or `--no-checked` when running flutter apps (to
   match a change in the flutter cli tool)
