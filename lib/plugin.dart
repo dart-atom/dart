@@ -337,7 +337,7 @@ class AtomDartPackage extends AtomPackage {
         'title': "Debugger break on exceptions mode",
         'description': 'Break on all exceptions, uncaught exceptions, or ignore exceptions.',
         'type': 'string',
-        'default': 'all',
+        'default': 'uncaught',
         'enum': ['all', 'uncaught', 'none'],
         'order': 8
       },

@@ -317,15 +317,12 @@ class ObservatoryConnection extends DebugConnection {
       case EventKind.kPauseException:
         ObservatoryIsolate isolate = _getIsolate(ref);
 
-        // TODO: Add this exception to the top-most frame.
         if (event.exception != null) {
-          launch.pipeStdio('exception: ${_refToString(event.exception)}\n',
-              error: true);
+          _printExceptionToConsole(isolate, event.exception);
         }
 
-        isolate._populateFrames().then((_) {
-          bool asyncSuspension =
-              event.atAsyncSuspension == null ? false : event.atAsyncSuspension;
+        isolate._populateFrames(exception: event.exception).then((_) {
+          bool asyncSuspension = event.atAsyncSuspension == null ? false : event.atAsyncSuspension;
           isolate._suspend(true, pausedAtAsyncSuspension: asyncSuspension);
         });
         break;
@@ -398,8 +395,38 @@ class ObservatoryConnection extends DebugConnection {
     ExceptionBreakType val = breakpointManager.breakOnExceptionType;
 
     if (val == ExceptionBreakType.all) return ExceptionPauseMode.kAll;
-    else if (val == ExceptionBreakType.none) return ExceptionPauseMode.kNone;
-    else return ExceptionPauseMode.kUnhandled;
+    if (val == ExceptionBreakType.none) return ExceptionPauseMode.kNone;
+
+    return ExceptionPauseMode.kUnhandled;
+  }
+
+  void _printExceptionToConsole(ObservatoryIsolate isolate, InstanceRef exception) {
+    if (exception.kind == InstanceKind.kString) {
+      launch.pipeStdio(
+        "exception: '${exception.valueAsString}'\n",
+        error: true
+      );
+    } else if (exception.valueAsString != null) {
+      launch.pipeStdio(
+        "exception: ${exception.valueAsString}\n",
+        error: true
+      );
+    } else {
+      launch.pipeStdio(
+        'exception (${exception.classRef.name}): ',
+        error: true
+      );
+
+      var exceptionRef = new ObservatoryInstanceRefValue(isolate, exception);
+      exceptionRef.invokeToString().then((DebugValue result) {
+        String str = result.valueAsString;
+        if (result.valueIsTruncated) str += '…';
+        launch.pipeStdio('"${str.trimRight()}"\n', error: true);
+      }).catchError((e) {
+        _logger.info('Error invoking toString on exception: $e');
+        launch.pipeStdio('\n', error: true);
+      });
+    }
   }
 
   void _handleIsolateDeath(IsolateRef ref) {
@@ -564,16 +591,28 @@ class ObservatoryIsolate extends DebugIsolate {
 
   // Populate the frames for the current isolate; populate the Scripts for any
   // referenced ScriptRefs.
-  Future _populateFrames() {
+  Future _populateFrames({ InstanceRef exception }) {
     return service.getStack(id).then((Stack stack) {
       List<ScriptRef> scriptRefs = [];
 
       frames = stack.frames.map((Frame frame) {
         scriptRefs.add(frame.location.script);
-        ObservatoryFrame obsFrame = new ObservatoryFrame(this, frame);
+
+        ObservatoryFrame obsFrame = new ObservatoryFrame(this, frame, isExceptionFrame: exception != null);
+
         obsFrame.locals = new List.from(
-          frame.vars.map((v) => new ObservatoryVariable(this, v))
+          frame.vars.map((BoundVariable v) => new ObservatoryVariable(this, v))
         );
+
+        if (exception != null) {
+          BoundVariable exceptionVariable = new BoundVariable()
+            ..name = 'exception'
+            ..value = exception;
+          obsFrame.locals.insert(0, new ObservatoryVariable(this, exceptionVariable));
+
+          exception = null;
+        }
+
         return obsFrame;
       }).toList();
 
@@ -607,12 +646,13 @@ class ObservatoryIsolate extends DebugIsolate {
 class ObservatoryFrame extends DebugFrame {
   final ObservatoryIsolate isolate;
   final Frame frame;
+  final bool isExceptionFrame;
 
   List<DebugVariable> locals;
 
   ObservatoryLocation _location;
 
-  ObservatoryFrame(this.isolate, this.frame);
+  ObservatoryFrame(this.isolate, this.frame, { this.isExceptionFrame: false });
 
   String get title => printFunctionNameRecursive(frame.function);
 

@@ -69,6 +69,7 @@ abstract class DebugFrame {
   String get title;
 
   bool get isSystem;
+  bool get isExceptionFrame;
 
   List<DebugVariable> get locals;
 

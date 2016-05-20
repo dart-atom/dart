@@ -418,10 +418,9 @@ class FlowControlSection implements Disposable {
   }
 
   _pauseResume() {
-    if (view.currentIsolate.suspended) {
-      return view.currentIsolate?.resume();
-    } else {
-      return view.currentIsolate?.pause();
+    DebugIsolate isolate = view.currentIsolate;
+    if (isolate != null) {
+      return isolate.suspended ? isolate.resume() : isolate.pause();
     }
   }
 
@@ -508,6 +507,10 @@ class ExecutionTab extends MTab {
 
     List<DebugVariable> vars = frame.locals;
     locals.update(vars ?? []);
+
+    if (frame.isExceptionFrame && vars.isNotEmpty) {
+      locals.selectItem(vars.first);
+    }
   }
 
   void _renderVariable(DebugVariable local, CoreElement element) {
