@@ -492,8 +492,7 @@ class ExecutionTab extends MTab {
           text: locationText,
           c: 'debugger-secondary-info right-aligned overflow-hidden-ellipsis'
         )..flex()
-      ])..flex(),
-      span(text: '#${frame.frameIndex}', c: 'debugger-secondary-info')
+      ])..flex()
     ])..layoutHorizontal();
   }
 
