@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## unreleased
+- exposed `flutter screenshot`
+- we no longer show frame numbers in the debugger stack frame view
+
 ## 0.6.18
 - no longer pass in `--checked` or `--no-checked` when running flutter apps (to
   match a change in the flutter cli tool)

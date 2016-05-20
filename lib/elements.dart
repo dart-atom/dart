@@ -49,6 +49,12 @@ CoreElement li({String text, String c, String a}) =>
 CoreElement para({String text, String c, String a}) =>
     new CoreElement('p', text: text, classes: c, attributes: a);
 
+CoreElement table() => new CoreElement('table');
+
+CoreElement tr() => new CoreElement('tr');
+
+CoreElement td() => new CoreElement('td');
+
 class CoreElement {
   final Element element;
 

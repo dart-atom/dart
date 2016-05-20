@@ -21,32 +21,42 @@ class FlutterSection {
         text: 'Flutter',
         c: 'overflow-hidden-ellipsis'
       ),
-      div().add([
-        new CoreElement('label')..add([
-          new CoreElement('input')
-            ..setAttribute('type', 'checkbox')
-            ..click(_toggleDrawing),
-          span(text: 'Debug drawing', c: 'text-subtle')
+      table()..add([
+        tr()..add([
+          td()..add([
+            new CoreElement('label')..add([
+              new CoreElement('input')
+                ..setAttribute('type', 'checkbox')
+                ..click(_toggleDrawing),
+              span(text: 'Debug drawing', c: 'text-subtle')
+            ])
+          ]),
+          td()..add([
+            new CoreElement('label')..add([
+              new CoreElement('input')
+                ..setAttribute('type', 'checkbox')
+                ..click(_toggleRepaintRainbow),
+              span(text: 'Repaint rainbow', c: 'text-subtle')
+            ])
+          ])
         ]),
-        new CoreElement('label')..add([
-          new CoreElement('input')
-            ..setAttribute('type', 'checkbox')
-            ..click(_toggleRepaintRainbow),
-          span(text: 'Repaint rainbow', c: 'text-subtle')
-        ])
-      ]),
-      div()..add([
-        new CoreElement('label')..add([
-          new CoreElement('input')
-            ..setAttribute('type', 'checkbox')
-            ..click(_toggleSlowAnimations),
-          span(text: 'Slow animations', c: 'text-subtle')
-        ]),
-        new CoreElement('label')..add([
-          new CoreElement('input')
-            ..setAttribute('type', 'checkbox')
-            ..click(_togglePerformanceOverlay),
-          span(text: 'Performance overlay', c: 'text-subtle')
+        tr()..add([
+          td()..add([
+            new CoreElement('label')..add([
+              new CoreElement('input')
+                ..setAttribute('type', 'checkbox')
+                ..click(_togglePerformanceOverlay),
+              span(text: 'Performance overlay', c: 'text-subtle')
+            ])
+          ]),
+          td()..add([
+            new CoreElement('label')..add([
+              new CoreElement('input')
+                ..setAttribute('type', 'checkbox')
+                ..click(_toggleSlowAnimations),
+              span(text: 'Slow animations', c: 'text-subtle')
+            ])
+          ])
         ])
       ])
     ]);
