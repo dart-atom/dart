@@ -68,8 +68,6 @@ abstract class DebugFrame {
 
   String get title;
 
-  int get frameIndex;
-
   bool get isSystem;
 
   List<DebugVariable> get locals;

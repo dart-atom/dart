@@ -568,10 +568,9 @@ class ObservatoryIsolate extends DebugIsolate {
     return service.getStack(id).then((Stack stack) {
       List<ScriptRef> scriptRefs = [];
 
-      int index = stack.frames.length;
       frames = stack.frames.map((Frame frame) {
         scriptRefs.add(frame.location.script);
-        ObservatoryFrame obsFrame = new ObservatoryFrame(this, frame, index--);
+        ObservatoryFrame obsFrame = new ObservatoryFrame(this, frame);
         obsFrame.locals = new List.from(
           frame.vars.map((v) => new ObservatoryVariable(this, v))
         );
@@ -608,13 +607,12 @@ class ObservatoryIsolate extends DebugIsolate {
 class ObservatoryFrame extends DebugFrame {
   final ObservatoryIsolate isolate;
   final Frame frame;
-  final int frameIndex;
 
   List<DebugVariable> locals;
 
   ObservatoryLocation _location;
 
-  ObservatoryFrame(this.isolate, this.frame, this.frameIndex);
+  ObservatoryFrame(this.isolate, this.frame);
 
   String get title => printFunctionNameRecursive(frame.function);
 
