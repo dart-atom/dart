@@ -38216,28 +38216,19 @@ self._domRemove = function(element) {
       _printExceptionToConsole$2: function(isolate, exception) {
         var t1, t2;
         t1 = J.getInterceptor$x(exception);
-        if (J.$eq$(t1.get$kind(exception), "String")) {
-          t1 = "exception: '" + H.S(t1.get$valueAsString(exception)) + "'\n";
+        if (J.$eq$(t1.get$kind(exception), "String") || t1.get$valueAsString(exception) != null) {
+          t1 = "exception: " + H.S(J.$eq$(t1.get$kind(exception), "String") ? "'" + H.S(t1.get$valueAsString(exception)) + "'" : t1.get$valueAsString(exception)) + "\n";
           t2 = this.launch._stdio;
           if (!t2.get$_mayAddEvent())
             H.throwExpression(t2._addEventError$0());
           t2._sendData$1(new X.TextFragment(t1, true, false, false));
         } else {
-          t2 = this.launch;
-          if (t1.get$valueAsString(exception) != null) {
-            t1 = "exception: " + H.S(t1.get$valueAsString(exception)) + "\n";
-            t2 = t2._stdio;
-            if (!t2.get$_mayAddEvent())
-              H.throwExpression(t2._addEventError$0());
-            t2._sendData$1(new X.TextFragment(t1, true, false, false));
-          } else {
-            t1 = "exception (" + H.S(J.get$name$x(exception.get$classRef())) + "): ";
-            t2 = t2._stdio;
-            if (!t2.get$_mayAddEvent())
-              H.throwExpression(t2._addEventError$0());
-            t2._sendData$1(new X.TextFragment(t1, true, false, false));
-            new D.ObservatoryInstanceRefValue(isolate, exception).invokeToString$0().then$1(new D.ObservatoryConnection__printExceptionToConsole_closure(this)).catchError$1(new D.ObservatoryConnection__printExceptionToConsole_closure0(this));
-          }
+          t1 = "exception (" + H.S(J.get$name$x(exception.get$classRef())) + "): ";
+          t2 = this.launch._stdio;
+          if (!t2.get$_mayAddEvent())
+            H.throwExpression(t2._addEventError$0());
+          t2._sendData$1(new X.TextFragment(t1, true, false, false));
+          new D.ObservatoryInstanceRefValue(isolate, exception).invokeToString$0().then$1(new D.ObservatoryConnection__printExceptionToConsole_closure(this)).catchError$1(new D.ObservatoryConnection__printExceptionToConsole_closure0(this));
         }
       },
       dispose$0: function() {

@@ -401,21 +401,12 @@ class ObservatoryConnection extends DebugConnection {
   }
 
   void _printExceptionToConsole(ObservatoryIsolate isolate, InstanceRef exception) {
-    if (exception.kind == InstanceKind.kString) {
-      launch.pipeStdio(
-        "exception: '${exception.valueAsString}'\n",
-        error: true
-      );
-    } else if (exception.valueAsString != null) {
-      launch.pipeStdio(
-        "exception: ${exception.valueAsString}\n",
-        error: true
-      );
+    if (exception.kind == InstanceKind.kString || exception.valueAsString != null) {
+      String message = exception.kind == InstanceKind.kString ?
+        "'${exception.valueAsString}'" : exception.valueAsString;
+      launch.pipeStdio("exception: $message\n", error: true);
     } else {
-      launch.pipeStdio(
-        'exception (${exception.classRef.name}): ',
-        error: true
-      );
+      launch.pipeStdio('exception (${exception.classRef.name}): ', error: true);
 
       var exceptionRef = new ObservatoryInstanceRefValue(isolate, exception);
       exceptionRef.invokeToString().then((DebugValue result) {
