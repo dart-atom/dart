@@ -65,13 +65,31 @@ class Stm32f746Disco extends Device {
       atom.notifications.addError('Platform not supported');
       return false;
     }
+
+    // TODO(danrubel) use the code below
+    // rather than `launch.launchConfiguration.debug`
+    // because we want `debug` to default `false`
+    // until this new feature is ready.
+    var debug = launch.launchConfiguration.typeArgs['debug'];
+    if (debug is! bool) debug = false;
+
     // Compile, deploy, and run
+    var args = ['flash', launch.primaryResource];
+    if (debug) args.insert(1, '--debugging-mode');
     var exitCode = await launch.run(sdk.dartinoBinary,
-        args: ['flash', launch.primaryResource],
-        message: 'Compile and deploy to connected device ...');
+        args: args, message: 'Compile and deploy to connected device ...');
     if (exitCode != 0) {
       atom.notifications.addError('Failed to deploy application',
           detail: 'Failed to deploy to device.\n'
+              '${launch.primaryResource}\n'
+              'See console for more.');
+      return false;
+    }
+
+    // If debugging then connect and start a debug session
+    if (debug && !await launch.debug(sdk, ttyPath)) {
+      atom.notifications.addError('Failed to start debug session',
+          detail: 'Failed to start debug session on device.\n'
               '${launch.primaryResource}\n'
               'See console for more.');
       return false;
