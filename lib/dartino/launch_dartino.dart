@@ -130,6 +130,7 @@ class DartinoLaunch extends Launch {
     // Wait for the observatory port
     Completer<int> portCompleter = new Completer<int>();
     runner.onStdout.listen((str) {
+      pipeStdio(str, subtle: true);
       if (str.startsWith('localhost:')) {
         try {
           portCompleter.complete(int.parse(str.substring(10)));
@@ -138,13 +139,15 @@ class DartinoLaunch extends Launch {
               error: true);
         }
       }
-      pipeStdio(str, subtle: true);
     });
     runner.onStderr.listen((str) => pipeStdio('\n$str\n', error: true));
     runner.execStreaming().then((int exitCode) {
       pipeStdio('debug session exit code is $exitCode', highlight: true);
       launchTerminated(exitCode, quiet: true);
     });
+    // TODO(danrubel): Wait up to 5 seconds for the observatory port
+    // as a "reasonable" amount of time.
+    // Consider printing a message and letting the user cancel instead.
     int observatoryPort = await portCompleter.future
         .timeout(new Duration(seconds: 5), onTimeout: () => null);
     if (observatoryPort == null) {
