@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
+import '../debug/observatory_debugger.dart';
 import '../launch/launch.dart';
 import '../projects.dart';
 import '../state.dart';
 import 'dartino.dart';
+import 'sdk/dartino_sdk.dart';
 import 'sdk/sdk.dart';
 
 final Logger _logger = new Logger('atom.dartino_launch');
@@ -112,5 +114,57 @@ class DartinoLaunch extends Launch {
     }
     if (result != 0 || isLast) launchTerminated(result, quiet: true);
     return result;
+  }
+
+  /// Start the debugging session and return `true` if successful.
+  Future<bool> debug(DartinoSdk sdk, [String ttyPath]) async {
+    String command = sdk.dartinoBinary;
+    List<String> args = ['debug', 'serve', primaryResource];
+    if (ttyPath != null) args.addAll(['on', 'tty', ttyPath]);
+
+    pipeStdio('Starting debug session...\n');
+    pipeStdio('\$ $command ${args.join(' ')}\n', highlight: true);
+    runner = new ProcessRunner(command,
+        args: args, cwd: launchConfiguration.projectPath);
+
+    // Wait for the observatory port
+    Completer<int> portCompleter = new Completer<int>();
+    runner.onStdout.listen((str) {
+      if (str.startsWith('localhost:')) {
+        try {
+          portCompleter.complete(int.parse(str.substring(10)));
+        } catch (e) {
+          pipeStdio('Failed to parse observatory port from "$str"',
+              error: true);
+        }
+      }
+      pipeStdio(str, subtle: true);
+    });
+    runner.onStderr.listen((str) => pipeStdio('\n$str\n', error: true));
+    runner.execStreaming().then((int exitCode) {
+      pipeStdio('debug session exit code is $exitCode', highlight: true);
+      launchTerminated(exitCode, quiet: true);
+    });
+    int observatoryPort = await portCompleter.future
+        .timeout(new Duration(seconds: 5), onTimeout: () => null);
+    if (observatoryPort == null) {
+      pipeStdio('Failed to determine observatory port', error: true);
+      launchTerminated(1, quiet: true);
+      return false;
+    }
+
+    // Connect to the observatory
+    return await ObservatoryDebugger
+        .connect(this, 'localhost', observatoryPort)
+        .then((_) {
+      servicePort.value = observatoryPort;
+      return true;
+    }).catchError((e, s) {
+      pipeStdio(
+          'Failed to connect to observatory on port $observatoryPort\n$e\n$s\n',
+          error: true);
+      launchTerminated(1, quiet: true);
+      return false;
+    });
   }
 }
