@@ -1,11 +1,11 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.19
 - exposed `flutter screenshot`
 - we no longer show frame numbers in the debugger stack frame view
 - when stopping on an exception, display the toString() of an exception in the
   console
-- when stopping on an exception, display the exception object in the stack frame 
+- when stopping on an exception, display the exception object in the stack frame
   view of the first frame
 
 ## 0.6.18
