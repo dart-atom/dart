@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:atom/atom.dart';
-import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom_dartlang/dartino/sdk/sdk.dart';

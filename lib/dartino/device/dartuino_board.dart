@@ -19,7 +19,7 @@ class DartuinoBoard extends Device {
     // New interaction with device via debug daemon
     if (sdk is SodRepo) {
       //TODO(danrubel) need better way to list connected devices
-      if (await sdk.startDebugDaemon(launch) != null) {
+      if (await sdk.startDebugDaemon(launch)) {
         return new DartuinoBoard(null);
       }
     }
