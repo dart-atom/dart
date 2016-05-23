@@ -53,68 +53,33 @@ abstract class Device {
 
   /// Launch the specified application on the device and return `true`.
   /// If there is a problem, notify the user and return `false`.
-  Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) async {
-    //TODO(danrubel) add windows and mac support and move this into cmdline util
-    if (isWindows || isMac) {
-      atom.notifications.addError('Platform not supported');
-      return false;
-    }
-    // Compile
-    String binPath = await sdk.compile(launch);
-    if (binPath == null) return false;
-    String destPath;
-    destPath = '/spifs/${fs.basename(binPath)}';
-    //TODO(danrubel) remove next line once files can be removed or overwritten
-    // destPath = '/spifs/d${new DateTime.now().millisecondsSinceEpoch}.snap';
-    // Start background daemon if not already running
-    LkShell shell = await sdk.startDebugDaemon(launch);
-    if (shell == null) return false;
-    // Deploy to device
-    shell.write('\n');
-    await new Future.delayed(new Duration(milliseconds: 250));
-    // Ensure that the device is in the right state
-    shell.write('bio ioctl qspi-flash 2\n');
-    await new Future.delayed(new Duration(milliseconds: 250));
-    shell.write('rm $destPath\n');
-    await new Future.delayed(new Duration(milliseconds: 250));
-    var exitCode = await launch.run(sdk.debugUtil,
-        args: ['putfile', binPath, destPath],
-        message: 'Deploying to connected device ...');
-    if (exitCode != 0) {
-      atom.notifications.addError('Failed to deploy application',
-          detail: 'Failed to deploy to device.\n \n'
-              '${launch.primaryResource}\n \n'
-              'See console for more.');
-      return false;
-    }
-    // Run on device
-    launch.pipeStdio('Launching application on device ...\n');
-    await new Future.delayed(new Duration(milliseconds: 250));
-    shell.write('dartino start\n');
-    await new Future.delayed(new Duration(milliseconds: 250));
-    shell.write('dartino run $destPath\n');
-    await new Future.delayed(new Duration(seconds: 10));
-    return true;
-  }
+  Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch);
 
-  Future<bool> launchSOD_old(
+  /// Launch the specified application on the device and return `true`.
+  /// If there is a problem, notify the user and return `false`.
+  Future<bool> launchSOD_device(
       SodRepo sdk, DartinoLaunch launch, String ttyPath) async {
     //TODO(danrubel) add windows and mac support and move this into cmdline util
     if (isWindows || isMac) {
       atom.notifications.addError('Platform not supported');
       return false;
     }
+
     // Compile
     String binPath = await sdk.compile(launch);
     if (binPath == null) return false;
+
     // Deploy and run
+    List<String> args = [sdk.sodUtil, 'run', binPath];
+    if (ttyPath != null) args.addAll(['on', ttyPath]);
     var exitCode = await launch.run('dart',
-        args: [sdk.sodUtil, 'run', binPath, 'on', ttyPath],
-        message: 'Deploy and run on connected device ...');
+        args: args, message: 'Deploy and run on connected device ...');
     if (exitCode != 0) {
       atom.notifications.addError('Failed to deploy application',
           detail: 'Failed to deploy to device.\n'
               '${launch.primaryResource}\n'
+              ' \n'
+              'Try disconnecting and reconnecting device.\n'
               'See console for more.');
       return false;
     }

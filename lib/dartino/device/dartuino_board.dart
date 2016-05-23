@@ -55,10 +55,6 @@ class DartuinoBoard extends Device {
 
   @override
   Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) {
-    if (ttyPath == null) {
-      return super.launchSOD(sdk, launch);
-    } else {
-      return launchSOD_old(sdk, launch, ttyPath);
-    }
+    return launchSOD_device(sdk, launch, ttyPath);
   }
 }

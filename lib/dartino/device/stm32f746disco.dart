@@ -99,6 +99,6 @@ class Stm32f746Disco extends Device {
 
   @override
   Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) {
-    return launchSOD_old(sdk, launch, ttyPath);
+    return launchSOD_device(sdk, launch, ttyPath);
   }
 }
