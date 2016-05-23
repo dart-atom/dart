@@ -27,7 +27,8 @@ abstract class Device {
             detail: 'Please connect the device and try again.\n'
                 ' \n'
                 'If the device is already connected, please set the device\n'
-                'path in Settings > Packages > dartino > Device Path',
+                'path in Settings > Packages > dartino > Device Path,\n'
+                'and/or disconnect and reconnect the device.',
             buttons: [
               new NotificationButton('Open settings', dartino.openSettings)
             ]);
