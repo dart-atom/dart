@@ -6,6 +6,7 @@ library atom.utils;
 
 import 'dart:async';
 
+import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
 final String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing "
@@ -160,4 +161,20 @@ bool listIdentical(List a, List b) {
   }
 
   return true;
+}
+
+/// If the given path starts with ~/ then return an equivlent path
+/// with the ~ replace by the user's home directory,
+/// otherwise return the given path unchanged.
+String resolveTilde(String path) {
+  if (path == null) return null;
+  if (!path.startsWith('~/')) return path;
+  try {
+    String home = fs.homedir;
+    if (!home.endsWith('/')) home += '/';
+    return home + path.substring(2);
+  } catch (_) {
+    _logger.warning('Failed to resolve ~ to user home directory');
+    return path;
+  }
 }
