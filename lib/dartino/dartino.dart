@@ -13,7 +13,6 @@ import '../impl/pub.dart' show dotPackagesFileName;
 import '../projects.dart';
 import '../sdk.dart' show SdkManager;
 import '../state.dart';
-import '../utils.dart';
 import 'dartino_project_settings.dart';
 import 'dartino_util.dart';
 import 'launch_dartino.dart';
@@ -63,7 +62,7 @@ class _Dartino implements Disposable {
       if (!quiet) promptSetSdk('No SDK specified');
       return null;
     }
-    path = resolveTilde(path);
+    path = fs.resolveTilde(path);
     Sdk sdk = DartinoSdk.forPath(path);
     if (sdk == null) sdk = SodRepo.forPath(path);
     if (sdk == null) {

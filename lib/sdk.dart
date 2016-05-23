@@ -18,7 +18,6 @@ import 'flutter/flutter_sdk.dart' show FlutterSdkManager;
 import 'impl/debounce.dart';
 import 'jobs.dart';
 import 'state.dart';
-import 'utils.dart';
 
 final String _prefPath = '${pluginId}.sdkLocation';
 
@@ -204,7 +203,7 @@ class Sdk {
 
   factory Sdk.fromPath(String path) {
     if (path == null) return null;
-    return new Sdk(new Directory.fromPath(resolveTilde(path)));
+    return new Sdk(new Directory.fromPath(fs.resolveTilde(path)));
   }
 
   bool get isValidSdk =>
