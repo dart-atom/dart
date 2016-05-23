@@ -148,7 +148,7 @@ class AnalysisServer implements Disposable {
     }
   }
 
-  void _syncRoots() {
+  void updateRoots() {
     if (isActive) {
       List<String> roots = new List.from(knownRoots.map((dir) => dir.path));
       var pkgRoots = <String, String>{};
@@ -192,7 +192,7 @@ class AnalysisServer implements Disposable {
     if (addedProjects.isNotEmpty) _logger.fine("added: ${addedProjects}");
 
     if (removedProjects.isNotEmpty || addedProjects.isNotEmpty) {
-      _syncRoots();
+      updateRoots();
     }
 
     _checkTrigger();
@@ -366,7 +366,7 @@ class AnalysisServer implements Disposable {
   void _initExistingServer(Server server) {
     server.willSend = _willSend;
     _serverActiveController.add(true);
-    _syncRoots();
+    updateRoots();
     _focusedEditorChanged(editorManager.dartProjectEditors.activeEditor);
   }
 
