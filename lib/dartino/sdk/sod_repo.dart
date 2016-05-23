@@ -83,7 +83,10 @@ class SodRepo extends Sdk {
   @override
   Future launch(DartinoLaunch launch) async {
     Device device = await Device.forLaunch(this, launch);
-    if (device == null) return;
+    if (device == null) {
+      launch.launchTerminated(-1, quiet: true);
+      return;
+    }
     device.launchSOD(this, launch);
   }
 
