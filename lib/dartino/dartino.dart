@@ -62,6 +62,17 @@ class _Dartino implements Disposable {
       if (!quiet) promptSetSdk('No SDK specified');
       return null;
     }
+    if (path.startsWith('~/')) {
+      String home;
+      try {
+        home = fs.homedir;
+      } catch (_) {
+        if (!quiet) promptSetSdk('Failed to determine ~ --> user home dir');
+        return null;
+      }
+      if (!home.endsWith('/')) home += '/';
+      path = home + path.substring(2);
+    }
     Sdk sdk = DartinoSdk.forPath(path);
     if (sdk == null) sdk = SodRepo.forPath(path);
     if (sdk == null) {
