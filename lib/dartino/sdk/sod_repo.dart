@@ -87,7 +87,9 @@ class SodRepo extends Sdk {
       launch.launchTerminated(-1, quiet: true);
       return;
     }
-    device.launchSOD(this, launch);
+    if (!await device.launchSOD(this, launch)) {
+      _debugDaemon?.dispose();
+    }
   }
 
   @override
@@ -213,5 +215,6 @@ class LkShell implements Disposable {
   void dispose() {
     runner?.kill();
     runner = null;
+    if (_debugDaemon == this) _debugDaemon = null;
   }
 }
