@@ -1,7 +1,7 @@
 # dartlang plugin changelog
 
 ## unreleased
-- allow ~ to be used when specifying Dart SDK
+- allow ~ to be used when specifying Dart SDK or Dartino SDK
 
 ## 0.6.19
 - exposed `flutter screenshot`
