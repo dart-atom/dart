@@ -201,8 +201,10 @@ class Sdk {
 
   Sdk(this.directory);
 
-  factory Sdk.fromPath(String path) =>
-      path == null ? null : new Sdk(new Directory.fromPath(path));
+  factory Sdk.fromPath(String path) {
+    if (path == null) return null;
+    return new Sdk(new Directory.fromPath(fs.resolveTilde(path)));
+  }
 
   bool get isValidSdk =>
       directory.getFile('version').existsSync() &&
