@@ -14,11 +14,18 @@ import 'device.dart';
 class DartuinoBoard extends Device {
   /// Return a target device for the given launch or `null` if none.
   static Future<DartuinoBoard> forLaunch(Sdk sdk, DartinoLaunch launch) async {
-    //TODO(danrubel) move this into the command line utility
     //TODO(danrubel) add Windows support
-    String ttyPath;
+
+    // New interaction with device via debug daemon
+    if (sdk is SodRepo) {
+      //TODO(danrubel) need better way to list connected devices
+      if (await sdk.startDebugDaemon(launch)) {
+        return new DartuinoBoard(null);
+      }
+    }
 
     if (isMac || isLinux) {
+      String ttyPath;
       // Old style interaction with device via TTY
       var stdout = await exec('ls', ['-1', '/dev']);
       if (stdout == null) return null;
@@ -31,19 +38,9 @@ class DartuinoBoard extends Device {
           // so continue looping to pick up the 2nd tty port
         }
       }
+      if (ttyPath != null) return new DartuinoBoard(ttyPath);
     }
-
-    if (ttyPath == null) {
-      // New interaction with device via debug daemon
-      if (sdk is SodRepo) {
-        //TODO(danrubel) need better way to list connected devices
-        if (await sdk.startDebugDaemon(launch) != null) {
-          return new DartuinoBoard(null);
-        }
-      }
-      return null;
-    }
-    return new DartuinoBoard(ttyPath);
+    return null;
   }
 
   final String ttyPath;
@@ -58,10 +55,6 @@ class DartuinoBoard extends Device {
 
   @override
   Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) {
-    if (ttyPath == null) {
-      return super.launchSOD(sdk, launch);
-    } else {
-      return launchSOD_old(sdk, launch, ttyPath);
-    }
+    return launchSOD_device(sdk, launch, ttyPath);
   }
 }

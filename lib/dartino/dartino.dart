@@ -181,6 +181,9 @@ class _Dartino implements Disposable {
         // If there's no Dart SDK configured, use the one provided by Dartino.
         if (sdkManager.noSdkPathConfigured) {
           sdkManager.setSdkPath(sdk.dartSdkPath);
+        } else {
+          // Package roots may have changed due to new Dartino SDK.
+          analysisServer.updateRoots();
         }
         String version = (await sdk.version) ?? '';
         atom.notifications

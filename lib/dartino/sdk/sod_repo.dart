@@ -83,8 +83,13 @@ class SodRepo extends Sdk {
   @override
   Future launch(DartinoLaunch launch) async {
     Device device = await Device.forLaunch(this, launch);
-    if (device == null) return;
-    device.launchSOD(this, launch);
+    if (device == null) {
+      launch.launchTerminated(-1, quiet: true);
+      return;
+    }
+    if (!await device.launchSOD(this, launch)) {
+      _debugDaemon?.dispose();
+    }
   }
 
   @override
@@ -114,15 +119,15 @@ class SodRepo extends Sdk {
   }
 
   /// Launch the debug daemon if not already running.
-  /// Return the [LkShell] used to interact with the device
-  /// or `null` if the daemon could not connect to the device.
-  Future<LkShell> startDebugDaemon(DartinoLaunch launch) async {
-    if (_debugDaemon != null) return _debugDaemon.shell;
+  /// Return `true` if successfully launched and connected to the device
+  /// or if already running, else return `false`.
+  Future<bool> startDebugDaemon(DartinoLaunch launch) async {
+    if (_debugDaemon != null) return true;
     _DebugDaemon daemon = new _DebugDaemon(this);
-    if (!await daemon.start(launch)) return null;
+    if (!await daemon.start(launch)) return false;
     dartino.disposables.add(daemon);
     _debugDaemon = daemon;
-    return _debugDaemon.shell;
+    return true;
   }
 }
 
@@ -132,7 +137,6 @@ _DebugDaemon _debugDaemon;
 class _DebugDaemon implements Disposable {
   final SodRepo sdk;
   ProcessRunner runner;
-  LkShell shell;
 
   _DebugDaemon(this.sdk);
 
@@ -146,69 +150,43 @@ class _DebugDaemon implements Disposable {
     }
     launch.pipeStdio('Launching debug daemon...\n\$ $daemonPath\n');
     runner = new ProcessRunner(daemonPath);
-    Future<ProcessResult> future;
+
+    // Start the daemon process and wait for a connection message
+    Completer<bool> connected = new Completer<bool>();
+    StringBuffer out = new StringBuffer();
     try {
-      future = runner.execSimple();
-      ProcessResult result = await future
-          //TODO(danrubel) need better way to determine if device connected
-          .timeout(new Duration(milliseconds: 1500), onTimeout: () => null);
-      if (result != null) {
-        atom.notifications.addError('Failed to connect to device',
-            detail: '$daemonPath\n${result.stderr}\n${result.stdout}');
-        return false;
-      }
+      runner.execStreaming().then((int exitCode) {
+        if (connected.isCompleted) {
+          atom.notifications.addInfo('Device disconnected',
+              detail: '$daemonPath\n$out\nexit code $exitCode');
+        } else {
+          atom.notifications.addError('Failed to connect to device',
+              detail: '$daemonPath\n$out\nexit code $exitCode');
+          connected.complete(false);
+        }
+        dispose();
+      });
     } catch (e, s) {
       atom.notifications
           .addError('Failed to start daemon', detail: '$daemonPath\n$e\n$s');
       return false;
     }
-    future.then((ProcessResult result) {
-      String detail = '${result.stderr}\n${result.stdout}'.trim();
-      if (detail == 'Connected to USB device.') detail == null;
-      atom.notifications.addInfo('Device disconnected', detail: detail);
-      if (_debugDaemon == this) _debugDaemon = null;
-      dispose();
-    });
-    shell = new LkShell().._start(launch);
-    return true;
-  }
-
-  @override
-  void dispose() {
-    shell?.dispose();
-    shell = null;
-    runner?.kill();
-    runner = null;
-  }
-}
-
-class LkShell implements Disposable {
-  ProcessRunner runner;
-  DartinoLaunch launch;
-
-  void _start(DartinoLaunch launch) {
-    this.launch = launch;
-    runner = new ProcessRunner('netcat', args: ['localhost', '9092']);
-    runner.onStdout.listen(launch.pipeStdio);
-    runner.onStderr.listen((str) => launch.pipeStdio(str, error: true));
-    runner.execStreaming().then((int exitCode) {
-      runner = null;
-      launch.pipeStdio('netcat exit code $exitCode');
-    });
-  }
-
-  void write(String command) {
-    if (runner == null) {
-      launch.pipeStdio('netcat terminated\nfailed to send $command\n',
-          error: true);
-      return;
+    void processDaemonOutput(String data) {
+      out.write(data);
+      launch.pipeStdio('sdbgd: $data\n');
+      if (out.toString().contains('Connected to USB device.')) {
+        connected.complete(true);
+      }
     }
-    runner.write(command);
+    runner.onStdout.listen(processDaemonOutput);
+    runner.onStderr.listen(processDaemonOutput);
+    return connected.future;
   }
 
   @override
   void dispose() {
     runner?.kill();
     runner = null;
+    if (_debugDaemon == this) _debugDaemon = null;
   }
 }
