@@ -135,11 +135,46 @@ class DartinoSdk extends Sdk {
   bool validate({bool quiet: false}) => true;
 
   @override
+  Future promptOptIntoAnalytics() async {
+    if (_promptOptIntoAnalyticsStarted) return;
+    // Determine whether the user has already opted in or out.
+    ProcessRunner runner =
+        execBin('dartino', ['x-should-prompt-analytics'], startProcess: false);
+    ProcessResult result = await runner.execSimple();
+    if (result.exit != 0 || result.stdout?.trim() != 'true') return;
+    _promptOptIntoAnalyticsStarted = true;
+
+    Notification notification;
+    void recordChoice(String verb) {
+      execBin('dartino', [verb, 'analytics']);
+      notification.dismiss();
+    }
+    void optIn() => recordChoice('enable');
+    void optOut() => recordChoice('disable');
+
+    notification = atom.notifications.addInfo(
+        'Welcome to Dartino! '
+        'We collect anonymous usage statistics and crash reports '
+        'in order to improve the tool (see http://goo.gl/27JjhU for details).\n'
+        ' \n'
+        'Would you like to opt-in to help us improve Dartino?',
+        dismissable: true,
+        buttons: [
+          new NotificationButton('Yes', optIn),
+          new NotificationButton('No', optOut)
+        ]);
+  }
+
+  @override
   void showDocs() {
     var uri = new Uri.file(fs.join(sdkRoot, 'docs', 'index.html'));
     shell.openExternal(uri.toString());
   }
 }
+
+/// A flag indicating whether the user has already been prompted to opt into
+/// analytics during this session.
+bool _promptOptIntoAnalyticsStarted = false;
 
 /// Start downloading the latest Dartino SDK and return a [Future]
 /// that completes with a path to the downloaded and unzipped SDK directory.

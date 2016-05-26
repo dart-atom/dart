@@ -130,6 +130,10 @@ class _Dartino implements Disposable {
         .listen((DartProject project) => _checkDirectory(project.directory));
 
     DartinoLaunchType.register(launchManager);
+
+    new Future.delayed(new Duration(seconds: 3), () {
+      sdkFor(null, quiet: true)?.promptOptIntoAnalytics();
+    });
   }
 
   void _addCmd(String target, String command, void callback(AtomEvent e)) {
@@ -188,6 +192,7 @@ class _Dartino implements Disposable {
         String version = (await sdk.version) ?? '';
         atom.notifications
             .addSuccess('Found ${sdk.name} $version', detail: sdkPath);
+        sdk.promptOptIntoAnalytics();
       }
     }
   }

@@ -114,6 +114,11 @@ class SodRepo extends Sdk {
   }
 
   @override
+  void promptOptIntoAnalytics() {
+    // ignored
+  }
+
+  @override
   void showDocs() {
     atom.notifications.addInfo('no docs yet');
   }

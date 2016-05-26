@@ -95,6 +95,10 @@ abstract class Sdk {
     return path;
   }
 
+  /// If the user has not already choosen to opt into (or out of) analytics
+  /// then prompt the user to do so.
+  void promptOptIntoAnalytics();
+
   /// Show documentation for the installed SDK.
   void showDocs();
 }
