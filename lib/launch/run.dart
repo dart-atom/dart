@@ -138,6 +138,7 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
   void run(LaunchConfiguration config) {
     _preLaunch();
+    config.reparse();
 
     _logger.info("Launching '${config}'.");
     LaunchType launchType = launchManager.getLaunchType(config.type);

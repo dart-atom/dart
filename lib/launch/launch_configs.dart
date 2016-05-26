@@ -153,7 +153,7 @@ class LaunchConfiguration {
 
   LaunchConfiguration._parse(this.projectPath, File file, [String contents]) {
     this._file = file;
-    _reparse(contents);
+    reparse(contents);
   }
 
   String get launchFileName => fs.basename(_file.path);
@@ -258,7 +258,7 @@ class LaunchConfiguration {
     }
   }
 
-  void _reparse([String contents]) {
+  void reparse([String contents]) {
     try {
       var parsed = loadYaml(contents == null ? _file.readSync(true) : contents);
       _map = parsed is Map ? parsed : {};
@@ -288,7 +288,7 @@ class _ProjectConfigurations implements Disposable {
       _reparse();
     } else {
       for (LaunchConfiguration config in _configs) {
-        config._reparse();
+        config.reparse();
       }
     }
 
