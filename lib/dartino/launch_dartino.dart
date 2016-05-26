@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:atom/node/process.dart';
+import 'package:atom_dartlang/debug/debugger.dart';
+import 'package:atom_dartlang/debug/model.dart';
 import 'package:logging/logging.dart';
 
 import '../debug/observatory_debugger.dart';
@@ -165,8 +167,20 @@ class DartinoLaunch extends Launch {
     pipeStdio('Connecting observatory to application on device...\n');
     return await ObservatoryDebugger
         .connect(this, 'localhost', observatoryPort)
-        .then((_) {
+        .then((DebugConnection debugger) {
       servicePort.value = observatoryPort;
+
+      // Listen for the first isolate and start the app
+      StreamSubscription<List<DebugIsolate>> subscription;
+      subscription =
+          debugger.isolates.observeMutation((List<DebugIsolate> isolates) {
+        if (isolates.length > 0) {
+          isolates.first.resume();
+          subscription.cancel();
+        }
+      });
+
+
       return true;
     }).catchError((e, s) {
       pipeStdio(
