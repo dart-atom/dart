@@ -66,6 +66,9 @@ class DartinoLaunch extends Launch {
   /// The current process runner or `null` if nothing running
   ProcessRunner runner;
 
+  /// The Dartino SDK used to debug the app, or `null` if none.
+  DartinoSdk sdk;
+
   DartinoLaunch(LaunchManager manager, DartinoLaunchType launchType,
       LaunchConfiguration configuration)
       : super(manager, launchType, configuration,
@@ -74,6 +77,10 @@ class DartinoLaunch extends Launch {
   bool canKill() => true;
 
   Future kill() async {
+    if (sdk != null) {
+      await sdk.execBin('dartino', ['quit']).onExit;
+      sdk = null;
+    }
     if (runner != null) {
       await runner.kill();
       runner = null;
@@ -146,6 +153,7 @@ class DartinoLaunch extends Launch {
       pipeStdio('debug session exit code is $exitCode\n', highlight: true);
       launchTerminated(exitCode, quiet: true);
     });
+    this.sdk = sdk;
     int observatoryPort = await portCompleter.future;
     if (observatoryPort == null) {
       pipeStdio('Failed to determine observatory port\n', error: true);
