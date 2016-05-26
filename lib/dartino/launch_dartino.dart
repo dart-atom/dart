@@ -133,30 +133,28 @@ class DartinoLaunch extends Launch {
       pipeStdio(str, subtle: true);
       if (str.startsWith('localhost:')) {
         try {
-          portCompleter.complete(int.parse(str.substring(10)));
+          portCompleter.complete(int.parse(str.substring(10).trim()));
         } catch (e) {
-          pipeStdio('Failed to parse observatory port from "$str"',
+          pipeStdio('Failed to parse observatory port from "$str"\n',
               error: true);
+          portCompleter.complete(null);
         }
       }
     });
     runner.onStderr.listen((str) => pipeStdio('\n$str\n', error: true));
     runner.execStreaming().then((int exitCode) {
-      pipeStdio('debug session exit code is $exitCode', highlight: true);
+      pipeStdio('debug session exit code is $exitCode\n', highlight: true);
       launchTerminated(exitCode, quiet: true);
     });
-    // TODO(danrubel): Wait up to 5 seconds for the observatory port
-    // as a "reasonable" amount of time.
-    // Consider printing a message and letting the user cancel instead.
-    int observatoryPort = await portCompleter.future
-        .timeout(new Duration(seconds: 5), onTimeout: () => null);
+    int observatoryPort = await portCompleter.future;
     if (observatoryPort == null) {
-      pipeStdio('Failed to determine observatory port', error: true);
+      pipeStdio('Failed to determine observatory port\n', error: true);
       launchTerminated(1, quiet: true);
       return false;
     }
 
     // Connect to the observatory
+    pipeStdio('Connecting observatory to application on device...\n');
     return await ObservatoryDebugger
         .connect(this, 'localhost', observatoryPort)
         .then((_) {
