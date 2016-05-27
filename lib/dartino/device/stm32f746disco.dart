@@ -77,12 +77,15 @@ class Stm32f746Disco extends Device {
     var args = ['flash', launch.primaryResource];
     if (debug) args.insert(1, '--debugging-mode');
     var exitCode = await launch.run(sdk.dartinoBinary,
-        args: args, message: 'Compile and deploy to connected device ...');
+        args: args,
+        message: 'Compile and deploy to connected device ...',
+        isLast: !debug);
     if (exitCode != 0) {
       atom.notifications.addError('Failed to deploy application',
           detail: 'Failed to deploy to device.\n'
               '${launch.primaryResource}\n'
               'See console for more.');
+      launch.launchTerminated(1, quiet: true);
       return false;
     }
 

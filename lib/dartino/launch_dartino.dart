@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:atom/node/process.dart';
+import 'package:atom_dartlang/debug/debugger.dart';
+import 'package:atom_dartlang/debug/model.dart';
 import 'package:logging/logging.dart';
 
 import '../debug/observatory_debugger.dart';
@@ -66,6 +68,9 @@ class DartinoLaunch extends Launch {
   /// The current process runner or `null` if nothing running
   ProcessRunner runner;
 
+  /// The Dartino SDK used to debug the app, or `null` if none.
+  DartinoSdk sdk;
+
   DartinoLaunch(LaunchManager manager, DartinoLaunchType launchType,
       LaunchConfiguration configuration)
       : super(manager, launchType, configuration,
@@ -74,6 +79,10 @@ class DartinoLaunch extends Launch {
   bool canKill() => true;
 
   Future kill() async {
+    if (sdk != null) {
+      await sdk.execBin('dartino', ['quit']).onExit;
+      sdk = null;
+    }
     if (runner != null) {
       await runner.kill();
       runner = null;
@@ -133,34 +142,45 @@ class DartinoLaunch extends Launch {
       pipeStdio(str, subtle: true);
       if (str.startsWith('localhost:')) {
         try {
-          portCompleter.complete(int.parse(str.substring(10)));
+          portCompleter.complete(int.parse(str.substring(10).trim()));
         } catch (e) {
-          pipeStdio('Failed to parse observatory port from "$str"',
+          pipeStdio('Failed to parse observatory port from "$str"\n',
               error: true);
+          portCompleter.complete(null);
         }
       }
     });
     runner.onStderr.listen((str) => pipeStdio('\n$str\n', error: true));
     runner.execStreaming().then((int exitCode) {
-      pipeStdio('debug session exit code is $exitCode', highlight: true);
+      pipeStdio('debug session exit code is $exitCode\n', highlight: true);
       launchTerminated(exitCode, quiet: true);
     });
-    // TODO(danrubel): Wait up to 5 seconds for the observatory port
-    // as a "reasonable" amount of time.
-    // Consider printing a message and letting the user cancel instead.
-    int observatoryPort = await portCompleter.future
-        .timeout(new Duration(seconds: 5), onTimeout: () => null);
+    this.sdk = sdk;
+    int observatoryPort = await portCompleter.future;
     if (observatoryPort == null) {
-      pipeStdio('Failed to determine observatory port', error: true);
+      pipeStdio('Failed to determine observatory port\n', error: true);
       launchTerminated(1, quiet: true);
       return false;
     }
 
     // Connect to the observatory
+    pipeStdio('Connecting observatory to application on device...\n');
     return await ObservatoryDebugger
         .connect(this, 'localhost', observatoryPort)
-        .then((_) {
+        .then((DebugConnection debugger) {
       servicePort.value = observatoryPort;
+
+      // Listen for the first isolate and start the app
+      StreamSubscription<List<DebugIsolate>> subscription;
+      subscription =
+          debugger.isolates.observeMutation((List<DebugIsolate> isolates) {
+        if (isolates.length > 0) {
+          isolates.first.resume();
+          subscription.cancel();
+        }
+      });
+
+
       return true;
     }).catchError((e, s) {
       pipeStdio(
