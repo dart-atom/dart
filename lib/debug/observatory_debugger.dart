@@ -555,7 +555,7 @@ class ObservatoryIsolate extends DebugIsolate {
     }
   }
 
-  // TODO: Don't return until the get the ack `IsolateReload` event from the VM.
+  // TODO: Don't return until we get the ack `IsolateReload` event from the VM.
   Future isolateReload() {
     return service.callMethod('_reloadSources', args: {
       'isolateId': isolate.id
