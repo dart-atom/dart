@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.6.21
+- fixed an NPE on startup
+
 ## 0.6.20
 - allow ~ to be used when specifying Dart SDK or Dartino SDK
 - reparse config on launch to pickup any recent edits
