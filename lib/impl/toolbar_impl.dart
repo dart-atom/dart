@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:html' show SelectElement;
 
 import 'package:atom/atom.dart';
@@ -13,6 +14,8 @@ import '../projects.dart';
 import '../state.dart';
 import 'toolbar.dart';
 
+WorkspaceLaunchManager get _workspaceLaunchManager => deps[WorkspaceLaunchManager];
+
 class DartToolbarContribution implements Disposable {
   ToolbarTile leftTile;
   ToolbarTile flutterTile;
@@ -20,12 +23,14 @@ class DartToolbarContribution implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
 
   DartToolbarContribution(Toolbar toolbar) {
-    leftTile = toolbar.addLeftTile(item: _buildLeftTile().element);
-    flutterTile = toolbar.addLeftTile(item: _buildFlutterTile().element);
-    rightTile = toolbar.addRightTile(item: _buildRightTile().element);
+    // Delay construction of the toolbar; the toolbar UI can be constructed before
+    // all the global singeltons have been set up (like WorkspaceLaunchManager).
+    Timer.run(() {
+      leftTile = toolbar.addLeftTile(item: _buildLeftTile().element);
+      flutterTile = toolbar.addLeftTile(item: _buildFlutterTile().element);
+      rightTile = toolbar.addRightTile(item: _buildRightTile().element);
+    });
   }
-
-  WorkspaceLaunchManager get workspaceLaunchManager => deps[WorkspaceLaunchManager];
 
   CoreElement _buildLeftTile() {
     CoreElement runButton;
@@ -71,7 +76,7 @@ class DartToolbarContribution implements Disposable {
       DartProject project = projectManager.getProjectFor(path);
 
       bool isFlutterProject = project != null && project.isFlutterProject();
-      bool isFlutterRunnable = workspaceLaunchManager.selectedRunnable?.isFlutterRunnable ?? false;
+      bool isFlutterRunnable = _workspaceLaunchManager.selectedRunnable?.isFlutterRunnable ?? false;
 
       flutterDiv.hidden(!isFlutterProject && !isFlutterRunnable);
     }
@@ -84,7 +89,7 @@ class DartToolbarContribution implements Disposable {
     subs.add(projectManager.onProjectsChanged.listen((List<DartProject> projects) {
       updateToolbar();
     }));
-    subs.add(workspaceLaunchManager.onSelectedRunnableChanged.listen((RunnableConfig config) {
+    subs.add(_workspaceLaunchManager.onSelectedRunnableChanged.listen((RunnableConfig config) {
       updateToolbar();
     }));
 
@@ -128,7 +133,7 @@ class DartToolbarContribution implements Disposable {
     List<RunnableConfig> runnables = [];
 
     var updateUI = () {
-      runnables = workspaceLaunchManager.runnables;
+      runnables = _workspaceLaunchManager.runnables;
 
       runButton.enabled = runnables.isNotEmpty;
       selectList.enabled = runnables.isNotEmpty;
@@ -146,20 +151,20 @@ class DartToolbarContribution implements Disposable {
           selectList.add(new CoreElement('option')..text = runnable.getDisplayName());
         }
 
-        int index = runnables.indexOf(workspaceLaunchManager.selectedRunnable);
+        int index = runnables.indexOf(_workspaceLaunchManager.selectedRunnable);
         if (index != -1) {
           element.selectedIndex = index;
         }
       }
     };
 
-    subs.add(workspaceLaunchManager.onRunnablesChanged.listen((List<RunnableConfig> runnables) => updateUI()));
-    subs.add(workspaceLaunchManager.onSelectedRunnableChanged.listen((RunnableConfig runnable) => updateUI()));
+    subs.add(_workspaceLaunchManager.onRunnablesChanged.listen((List<RunnableConfig> runnables) => updateUI()));
+    subs.add(_workspaceLaunchManager.onSelectedRunnableChanged.listen((RunnableConfig runnable) => updateUI()));
 
     element.onChange.listen((e) {
       int index = element.selectedIndex;
       if (index >= 0 && index < runnables.length) {
-        workspaceLaunchManager.setSelectedRunnable(runnables[index]);
+        _workspaceLaunchManager.setSelectedRunnable(runnables[index]);
       }
     });
 
@@ -201,7 +206,7 @@ class DartToolbarContribution implements Disposable {
   }
 
   void _handleRunLaunch() {
-    RunnableConfig runnable = workspaceLaunchManager.selectedRunnable;
+    RunnableConfig runnable = _workspaceLaunchManager.selectedRunnable;
 
     if (runnable != null) {
       RunApplicationManager runApplicationManager = deps[RunApplicationManager];
@@ -213,7 +218,7 @@ class DartToolbarContribution implements Disposable {
   }
 
   void _handleConfigureLaunch() {
-    RunnableConfig runnable = workspaceLaunchManager.selectedRunnable;
+    RunnableConfig runnable = _workspaceLaunchManager.selectedRunnable;
 
     if (runnable != null) {
       LaunchConfiguration config = runnable.getCreateLaunchConfig();
