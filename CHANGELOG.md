@@ -3,6 +3,9 @@
 ## unreleased
 - changed how we launch flutter apps to speed up the edit/refresh development cycle
 
+## 0.6.21
+- fixed an NPE on startup
+
 ## 0.6.20
 - allow ~ to be used when specifying Dart SDK or Dartino SDK
 - reparse config on launch to pickup any recent edits

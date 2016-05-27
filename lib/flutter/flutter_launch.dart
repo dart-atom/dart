@@ -199,10 +199,13 @@ class _LaunchInstance {
       return new Future.value();
     } else {
       // Tell the flutter run --resident process to quit.
+      // TOOD(devoncarew): This is not reliable - the remote app is not terminating.
       _runner.write('q');
+      _runner.write('\n');
 
       return new Future.delayed(new Duration(milliseconds: 250), () {
-        return _runner.kill();
+        _runner?.kill();
+        _runner = null;
       });
     }
   }
