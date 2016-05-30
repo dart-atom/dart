@@ -38,12 +38,8 @@ class ShellLaunchType extends LaunchType {
       launchName = fs.relativize(cwd, launchName);
     }
 
-    ProcessRunner runner = new ProcessRunner(
-      script,
-      args: args,
-      cwd: cwd);
-
-    String description = args == null ? launchName : '${launchName} ${args.join(' ')}';
+    ProcessRunner runner = new ProcessRunner(script, args: args, cwd: cwd);
+    String description = (args == null || args.isEmpty) ? launchName : '${launchName} ${args.join(' ')}';
     Launch launch = new Launch(manager, this, configuration, launchName,
       killHandler: () => runner.kill(),
       cwd: cwd,

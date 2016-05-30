@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an NPE when starting command-line apps
+- made the console output take up slightly less vertical space
+
 ## 0.6.21
 - fixed an NPE on startup
 

@@ -84,7 +84,7 @@ class CliLaunchType extends LaunchType {
     _args.add(path);
     if (args != null) _args.addAll(args);
 
-    String description = '${path} ${args == null ? '' : args.join(' ')}';
+    String description = (args == null || args.isEmpty) ? path : '${path} ${args.join(' ')}';
 
     // Run in `underShell` to capture environment variables on the mac.
     ProcessRunner runner = new ProcessRunner.underShell(

@@ -166,38 +166,22 @@ class ConsoleView extends View {
       });
     }
 
-    // Re-run
-    // TODO: Re-enable this when we listen for changes to launch configurations.
-    // if (launch.launchConfiguration != null) {
-    //   CoreElement e = toolbar.add(
-    //     button(text: 'Rerun', c: 'btn icon icon-sync')
-    //   );
-    //   e.tooltip = 'Rerun this application';
-    //   e.click(() {
-    //     deps[RunApplicationManager].run(launch.launchConfiguration);
-    //   });
-    // }
-
     // Observatory
     launch.servicePort.observe(_watchServicePort);
 
     // Emit a header.
     CoreElement header = div(c: 'console-header');
-    String name = launch.name;
-    String title = launch.title;
-    if (title == null) {
-      header.add(span(text: '${name}\n', c: 'text-highlight'));
-    } else if (title.contains(name)) {
-      int index = title.indexOf(name);
-      String pre = title.substring(0, index);
-      if (pre.isNotEmpty) header.add(span(text: pre));
-      header.add(span(text: name, c: 'text-highlight'));
-      String post = title.substring(index + name.length);
-      header.add(span(text: '${post}\n'));
+
+    if (launch.title != null) {
+      header.add(span(text: launch.title, c: 'text-highlight'));
     } else {
-      header.add(span(text: '${title}\n'));
+      header.add(span(text: launch.name, c: 'text-highlight'));
     }
-    header.add(span(text: launch.subtitle ?? '', c: 'text-subtle'));
+
+    if (launch.subtitle != null) {
+      header.add(span(text: ' • ${launch.subtitle}', c: 'text-subtle'));
+    }
+
     _emitElement(header);
   }
 
@@ -338,8 +322,7 @@ class ConsoleView extends View {
 
     List children = output.element.children;
     if (children.length > _maxLines) {
-      // Don't remove the console header.
-      children.remove(children[1]);
+      children.removeAt(0);
     }
 
     _emitElement(e);
