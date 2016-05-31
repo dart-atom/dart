@@ -63466,7 +63466,6 @@ self._domRemove = function(element) {
         t4._flutter_launch$_args = t5;
         if (t1.get$supportsResident())
           t5.push("--resident");
-        t5.push("--quiet");
         if (t3.get$debug() === true) {
           t6 = 16161 + $.$get$_rand().nextInt$1(100);
           t4._observatoryPort = t6;

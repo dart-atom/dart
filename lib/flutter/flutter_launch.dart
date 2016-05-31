@@ -109,7 +109,8 @@ class _LaunchInstance {
     if (launchType.supportsResident)
       _args.add('--resident');
 
-    _args.add('--quiet');
+    // TODO(devoncarew): Add this back in once more clients support this arg.
+    // _args.add('--quiet');
 
     if (configuration.debug) {
       _observatoryPort = getOpenPort();
