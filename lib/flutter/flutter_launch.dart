@@ -31,6 +31,8 @@ class FlutterLaunchType extends LaunchType {
 
   bool get supportsChecked => false;
 
+  bool get supportsResident => true;
+
   bool canLaunch(String path, LaunchData data) {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
@@ -103,6 +105,12 @@ class _LaunchInstance {
     // Use either `flutter run` or `flutter run_mojo`.
     _args = [launchType.flutterRunCommand];
 
+    // TODO(devoncarew): Remove after flutter run defaults to '--resident'.
+    if (launchType.supportsResident)
+      _args.add('--resident');
+
+    _args.add('--quiet');
+
     if (configuration.debug) {
       _observatoryPort = getOpenPort();
       _args.add('--debug-port=${_observatoryPort}');
@@ -129,7 +137,7 @@ class _LaunchInstance {
 
     _args.addAll(flutterArgs);
 
-    String description = '${_toolName} ${_args.join(' ')} • ${_toolName} logs';
+    String description = '${_toolName} ${_args.join(' ')}';
 
     _launch = new _FlutterLaunch(
       launchManager,
@@ -148,54 +156,41 @@ class _LaunchInstance {
   Future<Launch> launch() async {
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
 
-    // Chain together both 'flutter run' and 'flutter logs'.
     _runner = _flutter(flutter, _args, cwd: project.path);
     _runner.execStreaming();
-    _runner.onStdout.listen((str) => _launch.pipeStdio(str));
-    _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
-
-    int code = await _runner.onExit;
-    if (code == 0) {
-      if (_observatoryPort != null) {
-        new Future.delayed(new Duration(milliseconds: 100), () {
-          FlutterUriTranslator translator = new FlutterUriTranslator(_launch.project?.path);
-          ObservatoryDebugger.connect(
-            _launch,
-            'localhost',
-            _observatoryPort,
-            uriTranslator: translator
-          ).then((_) {
-            _launch.servicePort.value = _observatoryPort;
-          }).catchError((e) {
-            _launch.pipeStdio(
-              'Unable to connect to the Observatory at port ${_observatoryPort}.\n',
-              error: true
-            );
-          });
-        });
-      }
-
-      // Chain 'flutter logs'.
-      List<String> logsArgs = <String>['logs'];
-
-      // Just log from the currently selected device.
-      if (_device != null) {
-        logsArgs.add('--device-id');
-        logsArgs.add(_device.id);
-      }
-
-      _runner = _flutter(flutter, logsArgs, cwd: project.path);
-      _runner.execStreaming();
-      _runner.onStdout.listen((str) => _launch.pipeStdio(str));
-      _runner.onStderr.listen((str) => _launch.pipeStdio(str, error: true));
-
-      // Don't return the future here.
-      _runner.onExit.then((code) => _launch.launchTerminated(code));
-    } else {
-      _launch.launchTerminated(code);
-    }
+    _runner.onStdout.listen((String str) {
+      _watchForObservatoryMessage(str);
+      _launch.pipeStdio(str);
+    });
+    _runner.onStderr.listen((String str) => _launch.pipeStdio(str, error: true));
+    _runner.onExit.then((code) => _launch.launchTerminated(code));
 
     return _launch;
+  }
+
+  void _watchForObservatoryMessage(String str) {
+    // "Observatory listening on http://127.0.0.1:8100"
+    if (!str.startsWith('Observatory listening on http'))
+      return;
+
+    if (_observatoryPort != null && _launch.servicePort.value == null) {
+      new Future.delayed(new Duration(milliseconds: 100), () {
+        FlutterUriTranslator translator = new FlutterUriTranslator(_launch.project?.path);
+        ObservatoryDebugger.connect(
+          _launch,
+          'localhost',
+          _observatoryPort,
+          uriTranslator: translator
+        ).then((_) {
+          _launch.servicePort.value = _observatoryPort;
+        }).catchError((e) {
+          _launch.pipeStdio(
+            'Unable to connect to the Observatory at port ${_observatoryPort}.\n',
+            error: true
+          );
+        });
+      });
+    }
   }
 
   Future _kill() {
@@ -203,23 +198,15 @@ class _LaunchInstance {
       _launch.launchTerminated(1);
       return new Future.value();
     } else {
-      // Run flutter stop.
-      FlutterTool flutter = _flutterSdk.sdk.flutterTool;
+      // Tell the flutter run --resident process to quit.
+      // TOOD(devoncarew): This is not reliable - the remote app is not terminating.
+      _runner.write('q');
+      _runner.write('\n');
 
-      List<String> args = <String>['stop'];
-
-      if (_device != null) {
-        args.add('--device-id');
-        args.add(_device.id);
-      }
-
-      ProcessRunner flutterStop = _flutter(flutter, args, cwd: project.path);
-      flutterStop.execSimple().catchError((e) {
-        _logger.finer('Error from flutter stop', e);
+      return new Future.delayed(new Duration(milliseconds: 250), () {
+        _runner?.kill();
+        _runner = null;
       });
-
-      // And kill the logging process.
-      return _runner.kill();
     }
   }
 
