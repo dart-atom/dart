@@ -26154,24 +26154,11 @@ self._domRemove = function(element) {
         return new P.Runes(receiver);
       },
       indexOf$2: function(receiver, pattern, start) {
-        var t1, match, t2, i;
-        if (pattern == null)
-          H.throwExpression(H.argumentErrorValue(pattern));
         if (typeof start !== "number" || Math.floor(start) !== start)
           throw H.wrapException(H.argumentErrorValue(start));
         if (start < 0 || start > receiver.length)
           throw H.wrapException(P.RangeError$range(start, 0, receiver.length, null, null));
-        if (typeof pattern === "string")
-          return receiver.indexOf(pattern, start);
-        t1 = J.getInterceptor(pattern);
-        if (!!t1.$isJSSyntaxRegExp) {
-          match = pattern._execGlobal$2(receiver, start);
-          return match == null ? -1 : match._match.index;
-        }
-        for (t2 = receiver.length, i = start; i <= t2; ++i)
-          if (t1.matchAsPrefix$2(pattern, receiver, i) != null)
-            return i;
-        return -1;
+        return receiver.indexOf(pattern, start);
       },
       indexOf$1: function($receiver, pattern) {
         return this.indexOf$2($receiver, pattern, 0);
@@ -33183,7 +33170,7 @@ self._domRemove = function(element) {
         children = J.get$children$x(this.output.get$element());
         t1 = J.getInterceptor$asx(children);
         if (J.$gt$n(t1.get$length(children), 400))
-          t1.remove$1(children, t1.$index(children, 1));
+          t1.removeAt$1(children, 0);
         J.add$1$ax(this.output, e);
         e.scrollIntoView$1$bottom(0, true);
       },
@@ -33191,7 +33178,7 @@ self._domRemove = function(element) {
         return this._emitText$4$error$highlight$subtle(str, false, false, false);
       },
       ConsoleView$2: function(controller, launch) {
-        var t1, t2, t3, t4, t5, t6, e, header, $name, title, index, pre;
+        var t1, t2, t3, t4, t5, t6, e, header;
         t1 = $.ConsoleView__idCount;
         $.ConsoleView__idCount = t1 + 1;
         this._launchId = t1;
@@ -33232,25 +33219,13 @@ self._domRemove = function(element) {
         t2 = t2._utils$_controller;
         H.setRuntimeTypeInfo(new P._BroadcastStream(t2), [H.getTypeArgumentByIndex(t2, 0)]).listen$1(t3);
         header = K.CoreElement$("div", null, "console-header", null);
-        t3 = J.getInterceptor$x(t1);
-        $name = t3.get$name(t1);
-        title = t3.get$title(t1);
-        if (title == null)
-          header.add$1(0, K.CoreElement$("span", null, "text-highlight", H.S($name) + "\n"));
-        else {
-          t2 = J.getInterceptor$asx(title);
-          if (t2.contains$1(title, $name) === true) {
-            index = t2.indexOf$1(title, $name);
-            pre = t2.substring$2(title, 0, index);
-            if (pre.length !== 0)
-              header.add$1(0, K.CoreElement$("span", null, null, pre));
-            header.add$1(0, K.CoreElement$("span", null, "text-highlight", $name));
-            header.add$1(0, K.CoreElement$("span", null, null, t2.substring$1(title, J.$add$ns(index, J.get$length$asx($name))) + "\n"));
-          } else
-            header.add$1(0, K.CoreElement$("span", null, null, H.S(title) + "\n"));
-        }
-        t1 = t1.get$subtitle();
-        header.add$1(0, K.CoreElement$("span", null, "text-subtle", t1 == null ? "" : t1));
+        t2 = J.getInterceptor$x(t1);
+        if (t2.get$title(t1) != null)
+          header.add$1(0, K.CoreElement$("span", null, "text-highlight", t2.get$title(t1)));
+        else
+          header.add$1(0, K.CoreElement$("span", null, "text-highlight", t2.get$name(t1)));
+        if (t1.get$subtitle() != null)
+          header.add$1(0, K.CoreElement$("span", null, "text-subtle", " \u2022 " + H.S(t1.get$subtitle())));
         J.add$1$ax(this.output, header);
         header.scrollIntoView$1$bottom(0, true);
       },
@@ -36980,8 +36955,7 @@ self._domRemove = function(element) {
           _args.push("--checked");
         _args.push(path);
         C.JSArray_methods.addAll$1(_args, args);
-        t2 = H.S(path) + " ";
-        description = t2 + J.join$1$ax(args, " ");
+        description = J.get$isEmpty$asx(args) ? path : H.S(path) + " " + J.join$1$ax(args, " ");
         runner = X.ProcessRunner_ProcessRunner$underShell(J.$index$asx(sdk.get$dartVm().obj, "path"), _args, cwd, null);
         launch = Z._CliLaunch$(manager, this, configuration, path, cwd, new Z.CliLaunchType_performLaunch_closure(runner), project, description);
         manager.addLaunch$1(launch);
@@ -37421,7 +37395,7 @@ self._domRemove = function(element) {
         t2 = P.StreamController_StreamController(null, null, null, null, false, null);
         t3 = P.StreamController_StreamController(null, null, null, null, false, null);
         runner = new X.ProcessRunner(script, args, cwd, null, null, t1, null, t2, t3);
-        description = H.S(launchName) + " " + J.join$1$ax(args, " ");
+        description = J.get$isEmpty$asx(args) ? launchName : H.S(launchName) + " " + J.join$1$ax(args, " ");
         t4 = $.Launch__id + 1;
         $.Launch__id = t4;
         t5 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
@@ -45234,6 +45208,9 @@ self._domRemove = function(element) {
       clear$0: function(receiver) {
         throw H.wrapException(new P.UnsupportedError("Cannot clear a fixed-length list"));
       },
+      removeAt$1: function(receiver, index) {
+        throw H.wrapException(new P.UnsupportedError("Cannot remove from a fixed-length list"));
+      },
       replaceRange$3: function(receiver, start, end, iterable) {
         throw H.wrapException(new P.UnsupportedError("Cannot remove from a fixed-length list"));
       }
@@ -45263,6 +45240,9 @@ self._domRemove = function(element) {
       },
       clear$0: function(_) {
         throw H.wrapException(new P.UnsupportedError("Cannot clear an unmodifiable list"));
+      },
+      removeAt$1: function(_, index) {
+        throw H.wrapException(new P.UnsupportedError("Cannot remove from an unmodifiable list"));
       },
       setRange$4: function(_, start, end, iterable, skipCount) {
         throw H.wrapException(new P.UnsupportedError("Cannot modify an unmodifiable list"));
@@ -49509,6 +49489,12 @@ self._domRemove = function(element) {
         this.set$length(receiver, J.$add$ns(this.get$length(receiver), 1));
         this.setRange$4(receiver, index + 1, this.get$length(receiver), receiver, index);
         this.$indexSet(receiver, index, element);
+      },
+      removeAt$1: function(receiver, index) {
+        var result = this.$index(receiver, index);
+        this.setRange$4(receiver, index, J.$sub$n(this.get$length(receiver), 1), receiver, index + 1);
+        this.set$length(receiver, J.$sub$n(this.get$length(receiver), 1));
+        return result;
       },
       toString$0: function(receiver) {
         return P.IterableBase_iterableToFullString(receiver, "[", "]");
@@ -54681,6 +54667,15 @@ self._domRemove = function(element) {
       clear$0: function(_) {
         J._clearChildren$0$x(this._element);
       },
+      removeAt$1: function(_, index) {
+        var t1, result;
+        t1 = this._childElements;
+        if (index >= t1.length)
+          return H.ioore(t1, index);
+        result = t1[index];
+        this._element.removeChild(result);
+        return result;
+      },
       get$first: function(_) {
         var result = this._element.firstElementChild;
         if (result == null)
@@ -55744,6 +55739,16 @@ self._domRemove = function(element) {
             return H.ioore(t1, index);
           t2.insertBefore(node, t1[index]);
         }
+      },
+      removeAt$1: function(_, index) {
+        var t1, t2, result;
+        t1 = this._this;
+        t2 = t1.childNodes;
+        if (index >= t2.length)
+          return H.ioore(t2, index);
+        result = t2[index];
+        t1.removeChild(result);
+        return result;
       },
       remove$1: function(_, object) {
         var t1;
@@ -58250,6 +58255,9 @@ self._domRemove = function(element) {
       insert$2: function(receiver, index, element) {
         throw H.wrapException(new P.UnsupportedError("Cannot add to immutable List."));
       },
+      removeAt$1: function(receiver, pos) {
+        throw H.wrapException(new P.UnsupportedError("Cannot remove from immutable List."));
+      },
       remove$1: function(receiver, object) {
         throw H.wrapException(new P.UnsupportedError("Cannot remove from immutable List."));
       },
@@ -59872,6 +59880,15 @@ self._domRemove = function(element) {
     },
     JsArray: {
       "^": "JsObject_ListMixin;_jsObject",
+      _checkIndex$1: function(index) {
+        var t1;
+        if (typeof index === "number" && Math.floor(index) === index)
+          t1 = index < 0 || index >= this.get$length(this);
+        else
+          t1 = false;
+        if (t1)
+          throw H.wrapException(P.RangeError$range(index, 0, this.get$length(this), null, null));
+      },
       $index: function(_, index) {
         var t1;
         if (typeof index === "number" && index === C.JSNumber_methods.toInt$0(index)) {
@@ -59920,6 +59937,10 @@ self._domRemove = function(element) {
         if (t1)
           H.throwExpression(P.RangeError$range(index, 0, this.get$length(this), null, null));
         this.callMethod$2("splice", [index, 0, element]);
+      },
+      removeAt$1: function(_, index) {
+        this._checkIndex$1(index);
+        return J.$index$asx(this.callMethod$2("splice", [index, 1]), 0);
       },
       setRange$4: function(_, start, end, iterable, skipCount) {
         var $length, args;
@@ -64723,6 +64744,13 @@ self._domRemove = function(element) {
           element = t1._f$1(J.elementAt$1$ax(t1._iterable, index));
           J.insertBefore$2$x(J.get$parentNode$x(element), value, element);
         }
+      },
+      removeAt$1: function(_, index) {
+        var t1, result;
+        t1 = this.get$_html_common$_iterable();
+        result = t1._f$1(J.elementAt$1$ax(t1._iterable, index));
+        J.remove$0$ax(result);
+        return result;
       },
       remove$1: function(_, element) {
         var t1 = J.getInterceptor(element);

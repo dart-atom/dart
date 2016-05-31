@@ -1,7 +1,9 @@
 # dartlang plugin changelog
 
 ## unreleased
-- changed how we launch flutter apps to speed up the edit/refresh development cycle
+- changed how we launch Flutter apps to speed up the edit/refresh development cycle
+- made the console output take up slightly less vertical space
+- fixed an NPE when starting command-line apps
 
 ## 0.6.21
 - fixed an NPE on startup
