@@ -10,6 +10,8 @@ class MojoLaunchType extends FlutterLaunchType {
 
   String get flutterRunCommand => 'run_mojo';
 
+  bool get supportsResident => false;
+
   // We don't want to advertise the mojo launch configuration as much as the
   // flutter one.
   bool canLaunch(String path, LaunchData data) => false;

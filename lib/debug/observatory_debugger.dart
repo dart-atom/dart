@@ -22,9 +22,6 @@ final Logger _logger = new Logger('atom.observatory');
 
 class ObservatoryDebugger {
   /// Establish a connection to a service protocol server at the given port.
-  ///
-  /// If [pollForConnection] is provided, this call will continue polling for
-  /// the given duration until a connection is established.
   static Future<DebugConnection> connect(Launch launch, String host, int port, {
     UriTranslator uriTranslator
   }) {
@@ -558,10 +555,11 @@ class ObservatoryIsolate extends DebugIsolate {
     }
   }
 
-  // TODO: Don't return until the get the ack `IsolateReload` event from the VM.
+  // TODO: Don't return until we get the ack `IsolateReload` event from the VM.
   Future isolateReload() {
-    // TODO: Switch to an API method when one is available.
-    return service.callMethod('isolateReload');
+    return service.callMethod('_reloadSources', args: {
+      'isolateId': isolate.id
+    });
   }
 
   pause() => service.pause(isolateRef.id);

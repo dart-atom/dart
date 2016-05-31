@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- changed how we launch flutter apps to speed up the edit/refresh development cycle
+
 ## 0.6.21
 - fixed an NPE on startup
 
