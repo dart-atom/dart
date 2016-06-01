@@ -10,6 +10,7 @@ import 'package:haikunator/haikunator.dart';
 import '../projects.dart';
 import '../state.dart';
 import 'flutter.dart';
+import 'flutter_connect.dart';
 import 'flutter_devices.dart';
 import 'flutter_sdk.dart';
 
@@ -17,6 +18,8 @@ FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
 
 class FlutterToolsManager implements Disposable {
   Disposables disposables = new Disposables();
+
+  FlutterConnectManager connectManager;
 
   FlutterToolsManager() {
     if (Flutter.hasFlutterPlugin()) {
@@ -40,6 +43,14 @@ class FlutterToolsManager implements Disposable {
         'flutter:upgrade',
         _upgrade
       ));
+      disposables.add(atom.commands.add(
+        'atom-workspace',
+        'flutter:connect-remote-debugger',
+        _connect
+      ));
+
+      connectManager = new FlutterConnectManager();
+      disposables.add(connectManager);
     }
   }
 
@@ -141,6 +152,15 @@ class FlutterToolsManager implements Disposable {
       title: 'Running Flutter doctor…',
       cwd: _flutterSdk.sdk.path
     );
+  }
+
+  void _connect(AtomEvent _) {
+    if (!_flutterSdk.hasSdk) {
+      _flutterSdk.showInstallationInfo();
+      return;
+    }
+
+    connectManager.showConnectDialog();
   }
 
   void dispose() => disposables.dispose();

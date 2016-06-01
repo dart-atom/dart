@@ -11,6 +11,7 @@ import '../flutter/flutter_devices.dart';
 import '../launch/launch.dart';
 import '../projects.dart';
 import '../state.dart';
+import 'flutter_daemon.dart';
 import 'flutter_sdk.dart';
 
 final Logger _logger = new Logger('atom.flutter_launch');
@@ -65,8 +66,20 @@ class FlutterLaunchType extends LaunchType {
     }
 
     return _killLastLaunch().then((_) {
-      _lastLaunch = new _LaunchInstance(project, configuration, this);
+      _lastLaunch = new _RunLaunchInstance(project, configuration, this);
       return _lastLaunch.launch();
+    });
+  }
+
+  void connectToApp(DartProject project, LaunchConfiguration configuration, int observatoryPort) {
+    if (!_flutterSdk.hasSdk) {
+      _flutterSdk.showInstallationInfo();
+      return;
+    }
+
+    _killLastLaunch().then((_) {
+      _lastLaunch = new _ConnectLaunchInstance(project, configuration, this, observatoryPort);
+      _lastLaunch.launch();
     });
   }
 
@@ -86,20 +99,45 @@ args:
   }
 }
 
-class _LaunchInstance {
+abstract class _LaunchInstance {
   final DartProject project;
-
   Launch _launch;
-  ProcessRunner _runner;
   int _observatoryPort;
-  List<String> _args;
   Device _device;
 
-  _LaunchInstance(
-    this.project,
+  _LaunchInstance(this.project) {
+    _device = deviceManager.currentSelectedDevice;
+  }
+
+  Future<Launch> launch();
+
+  void _connectToDebugger() {
+    FlutterUriTranslator translator = new FlutterUriTranslator(_launch.project?.path);
+    ObservatoryDebugger.connect(
+      _launch,
+      'localhost',
+      _observatoryPort,
+      uriTranslator: translator
+    ).then((_) {
+      _launch.servicePort.value = _observatoryPort;
+    }).catchError((e) {
+      _launch.pipeStdio(
+        'Unable to connect to the Observatory at port ${_observatoryPort}.\n',
+        error: true
+      );
+    });
+  }
+}
+
+class _RunLaunchInstance extends _LaunchInstance {
+  ProcessRunner _runner;
+  List<String> _args;
+
+  _RunLaunchInstance(
+    DartProject project,
     LaunchConfiguration configuration,
     FlutterLaunchType launchType
-  ) {
+  ) : super(project) {
     List<String> flutterArgs = configuration.argsAsList;
 
     // Use either `flutter run` or `flutter run_mojo`.
@@ -130,7 +168,6 @@ class _LaunchInstance {
       _args.add(route);
     }
 
-    _device = _currentSelectedDevice;
     if (_device != null) {
       _args.add('--device-id');
       _args.add(_device.id);
@@ -181,22 +218,7 @@ class _LaunchInstance {
       return;
 
     if (_observatoryPort != null && _launch.servicePort.value == null) {
-      new Future.delayed(new Duration(milliseconds: 100), () {
-        FlutterUriTranslator translator = new FlutterUriTranslator(_launch.project?.path);
-        ObservatoryDebugger.connect(
-          _launch,
-          'localhost',
-          _observatoryPort,
-          uriTranslator: translator
-        ).then((_) {
-          _launch.servicePort.value = _observatoryPort;
-        }).catchError((e) {
-          _launch.pipeStdio(
-            'Unable to connect to the Observatory at port ${_observatoryPort}.\n',
-            error: true
-          );
-        });
-      });
+      new Future.delayed(new Duration(milliseconds: 100), _connectToDebugger);
     }
   }
 
@@ -216,8 +238,48 @@ class _LaunchInstance {
       });
     }
   }
+}
 
-  Device get _currentSelectedDevice => deviceManager.currentSelectedDevice;
+class _ConnectLaunchInstance extends _LaunchInstance {
+  int _observatoryDevicePort;
+
+  _ConnectLaunchInstance(
+    DartProject project,
+    LaunchConfiguration configuration,
+    FlutterLaunchType launchType,
+    this._observatoryDevicePort
+  ) : super(project) {
+    String description = 'Flutter connect to port $_observatoryDevicePort';
+
+    _launch = new _FlutterLaunch(
+      launchManager,
+      launchType,
+      configuration,
+      configuration.shortResourceName,
+      project,
+      killHandler: _kill,
+      cwd: project.path,
+      title: description,
+      targetName: _device?.name
+    );
+    launchManager.addLaunch(_launch);
+  }
+
+  Future<Launch> launch() async {
+    _observatoryPort = await _daemon.device.forward(_device.id, _observatoryDevicePort);
+
+    _connectToDebugger();
+    return _launch;
+  }
+
+  Future _kill() {
+    _daemon.device.unforward(_device.id, _observatoryDevicePort, _observatoryPort);
+
+    _launch.launchTerminated(0);
+    return new Future.value();
+  }
+
+  FlutterDaemon get _daemon => deps[FlutterDaemonManager].daemon;
 }
 
 ProcessRunner _flutter(FlutterTool flutter, List<String> args, {String cwd}) {
