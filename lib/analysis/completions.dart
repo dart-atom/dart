@@ -11,9 +11,11 @@ import 'analysis_server_lib.dart' show CompletionResults, CompletionSuggestion,
 
 final Logger _logger = new Logger('completions');
 
+const CompletionSuggestionKind_IDENTIFIER = 'IDENTIFIER';
+
 class DartAutocompleteProvider extends AutocompleteProvider {
   static const _suggestionKindMap = const <String, String>{
-    'IDENTIFIER': 'identifier',
+    CompletionSuggestionKind_IDENTIFIER: 'identifier',
     'IMPORT': 'import',
     'KEYWORD': 'keyword',
     'PARAMETER': 'property',
@@ -134,9 +136,10 @@ class DartAutocompleteProvider extends AutocompleteProvider {
     if (cs.parameterNames != null) {
       // If it takes no parameters, then just append `()`.
       if (cs.parameterNames.isEmpty) {
-        text += '()';
+        if (cs.kind != CompletionSuggestionKind_IDENTIFIER) {
+          text += '()';
+        }
       } else {
-        text = null;
 
         // If it has required params, then use a snippet: func(${1:arg}).
         int count = 0;
@@ -151,7 +154,10 @@ class DartAutocompleteProvider extends AutocompleteProvider {
           displayText = _describe(cs, useDocs: false);
         }
 
-        snippet = '${cs.completion}($names)\$${++count}';
+        if (cs.kind != CompletionSuggestionKind_IDENTIFIER) {
+          text = null;
+          snippet = '${cs.completion}($names)\$${++count}';
+        }
       }
     }
 
