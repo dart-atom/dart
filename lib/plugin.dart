@@ -352,21 +352,20 @@ class AtomDartPackage extends AtomPackage {
       },
 
       'logging': {
-        'title': 'Log plugin diagnostics to the DevTools console',
+        'title': '[Diagnostics] Log plugin diagnostics to the DevTools console',
         'type': 'string',
         'default': 'info',
         'enum': ['error', 'warning', 'info', 'fine', 'finer'],
         'order': 11
       },
-      // 'debugAnalysisServer': {
-      //   'title': 'Start the analysis server with debug flags',
-      //   'description':
-      //     'Start the analysis server with its diagnostics port enabled. A '
-      //     'restart is required.',
-      //   'type': 'boolean',
-      //   'default': false,
-      //   'order': 12
-      // },
+      'debugAnalysisServer': {
+        'title': '[Diagnostics] Start the analysis server with debug flags',
+        'description': 'Start the analysis server with its diagnostics port enabled '
+          '(at localhost:23072); a restart is required.',
+        'type': 'boolean',
+        'default': false,
+        'order': 12
+      },
 
       // experimental features
       'hoverTooltip': {

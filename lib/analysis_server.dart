@@ -542,6 +542,10 @@ class _AnalysisServerWrapper extends Server {
       arguments.add('--checked');
     }
 
+    if (AnalysisServer.startWithDiagnostics) {
+      arguments.add('--enable-vm-service=0');
+    }
+
     String path = sdk.getSnapshotPath('analysis_server.dart.snapshot');
 
     // Run from source if local config points to analysis_server/bin/server.dart.
