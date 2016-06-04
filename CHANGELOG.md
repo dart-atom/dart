@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.23
 - fix completions for import/show statements
 - added additional diagnostics for debugging issues with the analysis server
 
