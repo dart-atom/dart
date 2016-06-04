@@ -126,6 +126,11 @@ class AnalysisServer implements Disposable {
     });
 
     onReceive.listen((String message) {
+      if (message.startsWith('Observatory listening') ||
+          message.startsWith('Observatory no longer listening')) {
+        atom.notifications.addInfo('Analysis server', detail: message.trim(), dismissable: true);
+      }
+
       if (_logger.isLoggable(Level.FINER)) {
         _logger.finer('<-- ${trim(message)}');
       }
@@ -535,6 +540,10 @@ class _AnalysisServerWrapper extends Server {
     // Start in checked mode?
     if (AnalysisServer.useChecked) {
       arguments.add('--checked');
+    }
+
+    if (AnalysisServer.startWithDiagnostics) {
+      arguments.add('--enable-vm-service=0');
     }
 
     String path = sdk.getSnapshotPath('analysis_server.dart.snapshot');

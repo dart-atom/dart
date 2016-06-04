@@ -799,14 +799,14 @@ final String _serverCode = r'''
   }
 
   void _processMessage(String message) {
-    if (message.startsWith('#')) return;
-    if (message.startsWith('Observatory listening on')) return;
-    if (message.startsWith('Could not start Observatory')) return;
-    if (message.startsWith('SocketException: ')) return;
+    _onReceive.add(message);
+
+    if (!message.startsWith('{')) {
+      _logger.warning('unknown message: ${message}');
+      return;
+    }
 
     try {
-      _onReceive.add(message);
-
       var json = JSON.decode(message);
 
       if (json['id'] == null) {

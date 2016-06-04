@@ -2,6 +2,7 @@
 
 ## unreleased
 - fix completions for import/show statements
+- added additional diagnostics for debugging issues with the analysis server
 
 ## 0.6.22
 - changed how we launch Flutter apps to speed up the edit/refresh development cycle
