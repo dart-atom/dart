@@ -126,6 +126,11 @@ class AnalysisServer implements Disposable {
     });
 
     onReceive.listen((String message) {
+      if (message.startsWith('Observatory listening') ||
+          message.startsWith('Observatory no longer listening')) {
+        atom.notifications.addInfo('Analysis server', detail: message.trim(), dismissable: true);
+      }
+
       if (_logger.isLoggable(Level.FINER)) {
         _logger.finer('<-- ${trim(message)}');
       }
