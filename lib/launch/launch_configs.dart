@@ -259,11 +259,13 @@ class LaunchConfiguration {
   }
 
   void reparse([String contents]) {
-    try {
-      var parsed = loadYaml(contents == null ? _file.readSync(true) : contents);
-      _map = parsed is Map ? parsed : {};
-    } catch (e) {
-      _map = {};
+    if (contents != null || _file.existsSync()) {
+      try {
+        var parsed = loadYaml(contents == null ? _file.readSync(true) : contents);
+        _map = parsed is Map ? parsed : {};
+      } catch (e) {
+        _map = {};
+      }
     }
   }
 }
@@ -305,7 +307,6 @@ class _ProjectConfigurations implements Disposable {
     } else {
       file.create().then((_) {
         file.writeSync(contents);
-
         _listenToLaunchDir();
       });
     }

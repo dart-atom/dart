@@ -138,6 +138,8 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
   void run(LaunchConfiguration config) {
     _preLaunch();
+
+    // Make sure we're running with the latest config file info.
     config.reparse();
 
     _logger.info("Launching '${config}'.");
