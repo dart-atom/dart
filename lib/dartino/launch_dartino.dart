@@ -169,18 +169,6 @@ class DartinoLaunch extends Launch {
         .connect(this, 'localhost', observatoryPort)
         .then((DebugConnection debugger) {
       servicePort.value = observatoryPort;
-
-      // Listen for the first isolate and start the app
-      StreamSubscription<List<DebugIsolate>> subscription;
-      subscription =
-          debugger.isolates.observeMutation((List<DebugIsolate> isolates) {
-        if (isolates.length > 0) {
-          isolates.first.resume();
-          subscription.cancel();
-        }
-      });
-
-
       return true;
     }).catchError((e, s) {
       pipeStdio(
