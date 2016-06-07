@@ -340,6 +340,13 @@ class DaemonDomain extends Domain {
   Future shutdown() => _call('daemon.shutdown');
 }
 
+/// Describes an app running on the device.
+class DiscoveredApp {
+  DiscoveredApp(this.id, this.observatoryPort);
+  final String id;
+  final int observatoryPort;
+}
+
 class AppDomain extends Domain {
   AppDomain(FlutterDaemon server) : super(server, 'app');
 
@@ -367,6 +374,14 @@ class AppDomain extends Domain {
       'projectDirectory': projectDirectory
     })) as Future<bool>;
   }
+
+  Future<List<DiscoveredApp>> discover(String deviceId) {
+    return _call('app.discover', _stripNullValues({
+      'deviceId': deviceId,
+    })).then((List<Map<String, dynamic>> result) => result.map(
+      (Map<String, dynamic> app) => new DiscoveredApp(app['id'], app['observatoryDevicePort'])
+    ));
+  }
 }
 
 class DeviceDomain extends Domain {
@@ -393,6 +408,22 @@ class DeviceDomain extends Domain {
   Future enable() => _call('device.enable');
 
   Future disable() => _call('device.disable');
+
+  Future<int> forward(String deviceId, int devicePort, [int hostPort]) {
+    return _call('device.forward', _stripNullValues({
+      'deviceId': deviceId,
+      'devicePort': devicePort,
+      'hostPort': hostPort,
+    })).then((Map<String, dynamic> result) => result['hostPort']);
+  }
+
+  Future unforward(String deviceId, int devicePort, int hostPort) {
+    return _call('device.unforward', _stripNullValues({
+      'deviceId': deviceId,
+      'devicePort': devicePort,
+      'hostPort': hostPort,
+    }));
+  }
 }
 
 class Device {
