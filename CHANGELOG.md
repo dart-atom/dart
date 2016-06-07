@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- added the ability to run flutter apps in debug / profile / release modes
+
 ## 0.6.24
 - fix an issue with newly created launches
 - remove auto-resume during dartino debug startup
