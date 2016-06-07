@@ -6,8 +6,10 @@ import 'package:atom/atom.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/utils/dependencies.dart';
 import 'package:atom/utils/disposable.dart';
+import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
+import '../jobs.dart';
 import '../state.dart';
 import 'flutter_sdk.dart';
 
@@ -464,4 +466,31 @@ class LogMessage {
   LogMessage(this.level, this.message, [this.stackTrace]);
 
   String toString() => '[$level] $message';
+}
+
+typedef Future PerformRequest();
+
+/// A [Job] implementation to wrap calls to the daemon server.
+class DaemonRequestJob extends Job {
+  final PerformRequest _fn;
+
+  DaemonRequestJob(String name, this._fn) : super(toTitleCase(name));
+
+  bool get quiet => true;
+
+  Future run() {
+    return _fn().catchError((e) {
+      if (!analysisServer.isActive) return null;
+
+      if (e is RequestError) {
+        _logger.warning('${name} ${e.methodName} ${e.error}', e);
+
+        atom.notifications.addError('${name} error', detail: '${e.error}');
+
+        return null;
+      } else {
+        throw e;
+      }
+    });
+  }
 }

@@ -124,7 +124,7 @@ class JobsDialog implements Disposable {
   CoreElement _listGroup;
 
   JobsDialog() {
-    dialog = new TitledModelDialog('', classes: 'jobs-dialog');
+    dialog = new TitledModelDialog('', classes: 'list-dialog');
     dialog.content.add([
       div(c: 'select-list')..add([_listGroup = ol(c: 'list-group')])
     ]);
@@ -141,7 +141,7 @@ class JobsDialog implements Disposable {
     for (JobInstance jobInstance in jobs.allJobs) {
       Job job = jobInstance.job;
 
-      CoreElement item = li(c: 'job-container')
+      CoreElement item = li(c: 'item-container')
         ..layoutHorizontal()
         ..add([
           div()
