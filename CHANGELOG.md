@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## 0.6.24
+- fix an issue with newly created launches
+- remove auto-resume during dartino debug startup
+
 ## 0.6.23
 - fix completions for import/show statements
 - added additional diagnostics for debugging issues with the analysis server
