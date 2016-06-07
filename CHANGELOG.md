@@ -2,6 +2,7 @@
 
 ## unreleased
 - added the ability to run flutter apps in debug / profile / release modes
+- split the mojo launch config out from the flutter one
 
 ## 0.6.24
 - fix an issue with newly created launches
