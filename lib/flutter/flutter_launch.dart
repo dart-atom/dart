@@ -19,6 +19,8 @@ const String _toolName = 'flutter';
 
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
 
+FlutterDeviceManager get deviceManager => deps[FlutterDeviceManager];
+
 class FlutterLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
       manager.registerLaunchType(new FlutterLaunchType());
@@ -70,8 +72,6 @@ class FlutterLaunchType extends LaunchType {
 
   String getDefaultConfigText() {
     return '''
-# Enable or disable debugging.
-debug: true
 # The starting route for the app.
 route:
 # Additional args for the flutter run command.
@@ -106,13 +106,19 @@ class _LaunchInstance {
     _args = [launchType.flutterRunCommand];
 
     // TODO(devoncarew): Remove after flutter run defaults to '--resident'.
-    if (launchType.supportsResident)
+    if (launchType.supportsResident) {
       _args.add('--resident');
+    }
 
-    // TODO(devoncarew): Add this back in once more clients support this arg.
-    // _args.add('--quiet');
+    BuildMode mode;
 
-    if (configuration.debug) {
+    // Pass in the run mode: --debug, --profile, or --release.
+    if (launchType.supportsResident) {
+      mode = deviceManager.runMode;
+      _args.add('--${mode.name}');
+    }
+
+    if ((mode != null && mode.supportsDebugging) || (mode == null && configuration.debug)) {
       _observatoryPort = getOpenPort();
       _args.add('--debug-port=${_observatoryPort}');
       _args.add('--start-paused');
@@ -211,10 +217,7 @@ class _LaunchInstance {
     }
   }
 
-  Device get _currentSelectedDevice {
-    FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
-    return deviceManager.currentSelectedDevice;
-  }
+  Device get _currentSelectedDevice => deviceManager.currentSelectedDevice;
 }
 
 ProcessRunner _flutter(FlutterTool flutter, List<String> args, {String cwd}) {

@@ -12,17 +12,34 @@ import 'flutter_daemon.dart';
 export 'flutter_daemon.dart' show Device;
 
 class FlutterDeviceManager implements Disposable {
+  /// Flutter run / build modes.
+  static List<BuildMode> runModes = [
+    new BuildMode('debug'),
+    new BuildMode('profile'),
+    new BuildMode('release', supportsDebugging: false)
+  ];
+
   StreamSubscriptions subs = new StreamSubscriptions();
 
   StreamController<Device> _selectedController = new StreamController.broadcast();
   StreamController<List<Device>> _devicesController = new StreamController.broadcast();
+  StreamController<BuildMode> _modeController = new StreamController.broadcast();
 
   Device _selectedDevice;
   LinkedHashSet<Device> _devices = new LinkedHashSet<Device>();
 
+  BuildMode _runMode = runModes.first;
+
   FlutterDeviceManager() {
     _updateForDaemon(_daemonManager.daemon);
     subs.add(_daemonManager.onDaemonAvailable.listen(_updateForDaemon));
+  }
+
+  BuildMode get runMode => _runMode;
+
+  set runMode(BuildMode mode) {
+    _runMode = mode;
+    _modeController.add(_runMode);
   }
 
   void _updateForDaemon(FlutterDaemon daemon) {
@@ -56,6 +73,8 @@ class FlutterDeviceManager implements Disposable {
   Stream<Device> get onSelectedChanged => _selectedController.stream;
 
   Stream<List<Device>> get onDevicesChanged => _devicesController.stream;
+
+  Stream<BuildMode> get onModeChanged => _modeController.stream;
 
   Device get currentSelectedDevice => _selectedDevice;
 
@@ -116,4 +135,13 @@ class FlutterDeviceManager implements Disposable {
   }
 
   FlutterDaemonManager get _daemonManager => deps[FlutterDaemonManager];
+}
+
+class BuildMode {
+  final String name;
+  final bool supportsDebugging;
+
+  BuildMode(this.name, { this.supportsDebugging: true });
+
+  String toString() => name;
 }

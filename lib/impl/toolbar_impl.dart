@@ -56,20 +56,23 @@ class DartToolbarContribution implements Disposable {
 
   CoreElement _buildFlutterTile() {
     CoreElement flutterDiv;
-    CoreElement selectList;
+    CoreElement deviceList;
+    CoreElement runModeList;
 
     // `settings-view` class added to get proper styling for select elements.
     CoreElement e = div(c: 'btn-group btn-group dartlang-toolbar settings-view')..add([
       flutterDiv = div(c: 'btn-group btn-group dartlang-toolbar')..add([
         div(c: 'icon icon-device-mobile')..id = 'toolbar-mobile-icon'
           ..tooltip = "Available devices",
-        selectList = new CoreElement('select', classes: 'form-control')
+        deviceList = new CoreElement('select', classes: 'form-control'),
+        runModeList = new CoreElement('select', classes: 'form-control')
+          ..element.style.width = '120px'
       ]),
     ]);
 
     // Bind the device pulldown.
     FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
-    _bindDevicesToSelect(deviceManager, selectList);
+    _bindDevicesToSelect(deviceManager, deviceList, runModeList);
 
     void updateToolbar() {
       String path = atom.workspace.getActiveTextEditor()?.getPath();
@@ -171,24 +174,25 @@ class DartToolbarContribution implements Disposable {
     updateUI();
   }
 
-  void _bindDevicesToSelect(FlutterDeviceManager deviceManager, CoreElement selectList) {
-    SelectElement element = selectList.element as SelectElement;
+  void _bindDevicesToSelect(FlutterDeviceManager deviceManager,
+      CoreElement deviceList, CoreElement runModeList) {
+    SelectElement deviceElement = deviceList.element as SelectElement;
 
     var updateSelect = () {
-      selectList.clear();
+      deviceList.clear();
 
       int index = 0;
 
       List<Device> devices = deviceManager.devices;
-      selectList.enabled = devices.isNotEmpty;
+      deviceList.enabled = devices.isNotEmpty;
 
       if (devices.isEmpty) {
-        selectList.add(new CoreElement('option')..text = 'No devices connected');
+        deviceList.add(new CoreElement('option')..text = 'No devices connected');
       } else {
         for (Device device in devices) {
-          selectList.add(new CoreElement('option')..text = device.getLabel());
+          deviceList.add(new CoreElement('option')..text = device.getLabel());
           if (deviceManager.currentSelectedDevice == device) {
-            element.selectedIndex = index;
+            deviceElement.selectedIndex = index;
           }
           index++;
         }
@@ -200,8 +204,18 @@ class DartToolbarContribution implements Disposable {
     subs.add(deviceManager.onDevicesChanged.listen((List<Device> devices) => updateSelect()));
     subs.add(deviceManager.onSelectedChanged.listen((Device device) => updateSelect()));
 
-    element.onChange.listen((e) {
-      deviceManager.setSelectedDeviceIndex(element.selectedIndex);
+    deviceElement.onChange.listen((e) {
+      deviceManager.setSelectedDeviceIndex(deviceElement.selectedIndex);
+    });
+
+    // runModeList
+    SelectElement runModeElement = runModeList.element as SelectElement;
+    for (BuildMode mode in FlutterDeviceManager.runModes) {
+      runModeList.add(new CoreElement('option')..text = mode.name);
+    }
+    runModeElement.selectedIndex = 0;
+    runModeElement.onChange.listen((e) {
+      deviceManager.runMode = FlutterDeviceManager.runModes[runModeElement.selectedIndex];
     });
   }
 
