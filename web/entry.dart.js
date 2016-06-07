@@ -63635,8 +63635,6 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(e) {
         var t1, t2, t3, t4;
-        if (!Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive())
-          return;
         if (e instanceof T.RequestError0) {
           t1 = $.$get$_logger16();
           t2 = this.$this.name;

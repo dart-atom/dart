@@ -480,13 +480,9 @@ class DaemonRequestJob extends Job {
 
   Future run() {
     return _fn().catchError((e) {
-      if (!analysisServer.isActive) return null;
-
       if (e is RequestError) {
         _logger.warning('${name} ${e.methodName} ${e.error}', e);
-
         atom.notifications.addError('${name} error', detail: '${e.error}');
-
         return null;
       } else {
         throw e;
