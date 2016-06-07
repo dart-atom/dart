@@ -16,8 +16,6 @@ import 'flutter_sdk.dart';
 
 final Logger _logger = new Logger('atom.flutter_launch');
 
-const String _toolName = 'flutter';
-
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
 
 FlutterDeviceManager get deviceManager => deps[FlutterDeviceManager];
@@ -30,11 +28,7 @@ class FlutterLaunchType extends LaunchType {
 
   FlutterLaunchType([String launchType = 'flutter']) : super(launchType);
 
-  String get flutterRunCommand => 'run';
-
   bool get supportsChecked => false;
-
-  bool get supportsResident => true;
 
   bool canLaunch(String path, LaunchData data) {
     DartProject project = projectManager.getProjectFor(path);
@@ -141,22 +135,16 @@ class _RunLaunchInstance extends _LaunchInstance {
     List<String> flutterArgs = configuration.argsAsList;
 
     // Use either `flutter run` or `flutter run_mojo`.
-    _args = [launchType.flutterRunCommand];
+    _args = ['run'];
 
     // TODO(devoncarew): Remove after flutter run defaults to '--resident'.
-    if (launchType.supportsResident) {
-      _args.add('--resident');
-    }
-
-    BuildMode mode;
+    _args.add('--resident');
 
     // Pass in the run mode: --debug, --profile, or --release.
-    if (launchType.supportsResident) {
-      mode = deviceManager.runMode;
-      _args.add('--${mode.name}');
-    }
+    BuildMode mode = deviceManager.runMode;
+    _args.add('--${mode.name}');
 
-    if ((mode != null && mode.supportsDebugging) || (mode == null && configuration.debug)) {
+    if (mode.supportsDebugging) {
       _observatoryPort = getOpenPort();
       _args.add('--debug-port=${_observatoryPort}');
       _args.add('--start-paused');
@@ -181,7 +169,7 @@ class _RunLaunchInstance extends _LaunchInstance {
 
     _args.addAll(flutterArgs);
 
-    String description = '${_toolName} ${_args.join(' ')}';
+    String description = 'flutter ${_args.join(' ')}';
 
     _launch = new _FlutterLaunch(
       launchManager,
@@ -318,7 +306,6 @@ class _FlutterLaunch extends Launch {
     exitCode.onChanged.first.then((_) => _resolver.dispose());
   }
 
-  // TODO: Use the device name?
   String get locationLabel => project.workspaceRelativeName;
 
   Future<String> resolve(String url) => _resolver.resolve(url);
