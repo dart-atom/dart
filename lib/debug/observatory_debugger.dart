@@ -23,7 +23,8 @@ final Logger _logger = new Logger('atom.observatory');
 class ObservatoryDebugger {
   /// Establish a connection to a service protocol server at the given port.
   static Future<DebugConnection> connect(Launch launch, String host, int port, {
-    UriTranslator uriTranslator
+    UriTranslator uriTranslator,
+    bool pipeStdio: false
   }) {
     String url = 'ws://${host}:${port}/ws';
 
@@ -45,7 +46,9 @@ class ObservatoryDebugger {
         launch,
         service,
         finishedCompleter,
-        uriTranslator: uriTranslator
+        uriTranslator: uriTranslator,
+        pipeStdio: pipeStdio,
+        ws: ws
       );
 
       launch.addDebugConnection(connection);
@@ -67,6 +70,7 @@ class ObservatoryConnection extends DebugConnection {
   final VmService service;
   final Completer completer;
   final bool pipeStdio;
+  final WebSocket ws;
 
   Map<String, ObservatoryIsolate> _isolateMap = {};
 
@@ -90,7 +94,8 @@ class ObservatoryConnection extends DebugConnection {
 
   ObservatoryConnection(Launch launch, this.service, this.completer, {
     this.pipeStdio: false,
-    UriTranslator uriTranslator
+    UriTranslator uriTranslator,
+    this.ws
   }) : super(launch) {
     String root = launch.primaryResource;
     if (launch.project != null) root = launch.project.path;
@@ -122,7 +127,10 @@ class ObservatoryConnection extends DebugConnection {
   autoStepOver() => _selectedIsolate?.autoStepOver();
 
   Future reload() => _selectedIsolate.isolateReload();
-  Future terminate() => launch.kill();
+  Future terminate() {
+    try { ws?.close(); } catch (e) { }
+    return launch.kill();
+  }
 
   Future get onTerminated => completer.future;
 

@@ -65,14 +65,25 @@ class FlutterLaunchType extends LaunchType {
     });
   }
 
-  void connectToApp(DartProject project, LaunchConfiguration configuration, int observatoryPort) {
+  void connectToApp(
+    DartProject project,
+    LaunchConfiguration configuration,
+    int observatoryPort, {
+    bool pipeStdio: true
+  }) {
     if (!_flutterSdk.hasSdk) {
       _flutterSdk.showInstallationInfo();
       return;
     }
 
     _killLastLaunch().then((_) {
-      _lastLaunch = new _ConnectLaunchInstance(project, configuration, this, observatoryPort);
+      _lastLaunch = new _ConnectLaunchInstance(
+        project,
+        configuration,
+        this,
+        observatoryPort,
+        pipeStdio: pipeStdio
+      );
       _lastLaunch.launch();
     });
   }
@@ -98,10 +109,13 @@ abstract class _LaunchInstance {
   Launch _launch;
   int _observatoryPort;
   Device _device;
+  DebugConnection debugConnection;
 
   _LaunchInstance(this.project) {
     _device = deviceManager.currentSelectedDevice;
   }
+
+  bool get pipeStdio;
 
   Future<Launch> launch();
 
@@ -111,8 +125,10 @@ abstract class _LaunchInstance {
       _launch,
       'localhost',
       _observatoryPort,
-      uriTranslator: translator
-    ).then((_) {
+      uriTranslator: translator,
+      pipeStdio: pipeStdio
+    ).then((DebugConnection connection) {
+      debugConnection = connection;
       _launch.servicePort.value = _observatoryPort;
     }).catchError((e) {
       _launch.pipeStdio(
@@ -185,6 +201,8 @@ class _RunLaunchInstance extends _LaunchInstance {
     launchManager.addLaunch(_launch);
   }
 
+  bool get pipeStdio => false;
+
   Future<Launch> launch() async {
     FlutterTool flutter = _flutterSdk.sdk.flutterTool;
 
@@ -230,13 +248,15 @@ class _RunLaunchInstance extends _LaunchInstance {
 
 class _ConnectLaunchInstance extends _LaunchInstance {
   int _observatoryDevicePort;
+  bool pipeStdio;
 
   _ConnectLaunchInstance(
     DartProject project,
     LaunchConfiguration configuration,
     FlutterLaunchType launchType,
-    this._observatoryDevicePort
-  ) : super(project) {
+    this._observatoryDevicePort, {
+    this.pipeStdio
+  }) : super(project) {
     String description = 'Flutter connect to port $_observatoryDevicePort';
 
     _launch = new _FlutterLaunch(
@@ -255,14 +275,12 @@ class _ConnectLaunchInstance extends _LaunchInstance {
 
   Future<Launch> launch() async {
     _observatoryPort = await _daemon.device.forward(_device.id, _observatoryDevicePort);
-
     _connectToDebugger();
     return _launch;
   }
 
   Future _kill() {
     _daemon.device.unforward(_device.id, _observatoryDevicePort, _observatoryPort);
-
     _launch.launchTerminated(0);
     return new Future.value();
   }
