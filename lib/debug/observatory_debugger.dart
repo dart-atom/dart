@@ -361,7 +361,7 @@ class ObservatoryConnection extends DebugConnection {
     return isolate._updateIsolateInfo().then(([ObservatoryIsolate _]) {
       // If the isolate is currently runnable, or the protocol does not have
       // information about its runnability, then set breakpoints at this time.
-      if (isolate._runnable) _installBreakpoints(ref);
+      if (isolate._runnable) return _installBreakpoints(ref);
     }).then((_) {
       isolate._isolateInitializedCompleter.complete();
 
