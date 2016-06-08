@@ -38,7 +38,7 @@ class ConnectDialog implements Disposable {
   CoreElement itemCount;
 
   ConnectDialog() {
-    dialog = new TitledModelDialog('Connect to Flutter App', classes: 'list-dialog');
+    dialog = new TitledModelDialog('Connect Debugger to Remote Flutter App:', classes: 'list-dialog');
     dialog.content.add([
       div(c: 'select-list')..add([_listGroup = ol(c: 'list-group')]),
       itemCount = div(text: 'Looking for apps…')
@@ -50,7 +50,15 @@ class ConnectDialog implements Disposable {
     dialog.show();
 
     FlutterDaemon daemon = deps[FlutterDaemonManager].daemon;
-    String deviceId = deps[FlutterDeviceManager].currentSelectedDevice.id;
+    FlutterDeviceManager flutterDeviceManager = deps[FlutterDeviceManager];
+
+    if (flutterDeviceManager.currentSelectedDevice == null) {
+      dialog.hide();
+      atom.notifications.addInfo('No Flutter devices found.');
+      return;
+    }
+
+    String deviceId = flutterDeviceManager.currentSelectedDevice.id;
 
     DaemonRequestJob job = new DaemonRequestJob('Discovering Flutter Apps', () {
       itemCount.text = 'Looking for apps…';
@@ -106,7 +114,7 @@ class ConnectDialog implements Disposable {
 
   void _updateApps(List<DiscoveredApp> apps) {
     for (DiscoveredApp app in apps) {
-      CoreElement item = li(c: 'item-container')
+      CoreElement item = li(c: 'item-container select-item')
         ..layoutHorizontal()
         ..add([
           div()
