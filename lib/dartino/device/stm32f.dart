@@ -11,12 +11,12 @@ import '../sdk/sdk.dart';
 import '../sdk/sod_repo.dart';
 import 'device.dart';
 
-/// An STM32 Discovery board
-class Stm32f746Disco extends Device {
+/// An STM32F Discovery or Nucleo board
+class Stm32f extends Device {
   //TODO(danrubel) generalize STM boards and hopefully connected devices in general
 
   /// Return a target device for the given launch or `null` if none.
-  static Future<Stm32f746Disco> forLaunch(Sdk sdk, DartinoLaunch launch) async {
+  static Future<Stm32f> forLaunch(Sdk sdk, DartinoLaunch launch) async {
     //TODO(danrubel) move this into the command line utility
     //TODO(danrubel) add Windows support
     String ttyPath;
@@ -35,28 +35,37 @@ class Stm32f746Disco extends Device {
       }
     }
 
-    if (isMac) {
-      mediaPath = '/Volumes/DIS_F746NG';
-    }
-    if (isLinux) {
-      var stdout = await exec('df');
-      if (stdout == null) return null;
-      for (String line in LineSplitter.split(stdout)) {
-        if (line.endsWith('/DIS_F746NG')) {
-          mediaPath = line.substring(line.lastIndexOf(' /') + 1);
-          break;
+    for (String mediaName in <String>[
+      'DIS_F746NG', // STM32F746 Discovery
+      'NODE_F411RE', // STM32F411 Nucleo
+    ]) {
+      if (isMac) {
+        mediaPath = '/Volumes/$mediaName';
+      }
+      if (isLinux) {
+        var stdout = await exec('df');
+        if (stdout == null) return null;
+        for (String line in LineSplitter.split(stdout)) {
+          if (line.endsWith('/$mediaName')) {
+            mediaPath = line.substring(line.lastIndexOf(' /') + 1);
+            break;
+          }
         }
       }
-    }
 
-    if (mediaPath == null || !fs.existsSync('$mediaPath/MBED.HTM')) return null;
-    return new Stm32f746Disco(ttyPath, mediaPath);
+      if (mediaPath != null ||
+          !fs.existsSync('$mediaPath/MBED.HTM') ||
+          !fs.existsSync('$mediaPath/mbed.htm')) {
+        return new Stm32f(ttyPath, mediaPath);
+      }
+    }
+    return null;
   }
 
   final String ttyPath;
   final String mediaPath;
 
-  Stm32f746Disco(this.ttyPath, this.mediaPath);
+  Stm32f(this.ttyPath, this.mediaPath);
 
   @override
   Future<bool> launchDartino(DartinoSdk sdk, DartinoLaunch launch) async {

@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- support running Dartino apps on Nucleo board and on an emulated device
+
 ## 0.6.25
 - added the ability to run flutter apps in debug / profile / release modes
 - added the ability to connect to already running Flutter apps on devices (currently Android only)

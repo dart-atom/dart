@@ -10,7 +10,8 @@ import '../launch_dartino.dart';
 import '../sdk/dartino_sdk.dart';
 import '../sdk/sod_repo.dart';
 import 'dartuino_board.dart';
-import 'stm32f746disco.dart';
+import 'emulated_device.dart';
+import 'stm32f.dart';
 
 /// The connected device on which the application is executed.
 abstract class Device {
@@ -18,7 +19,10 @@ abstract class Device {
   /// If there is a problem or a compatible device cannot be found
   /// then notify the user and return `null`.
   static Future<Device> forLaunch(Sdk sdk, DartinoLaunch launch) async {
-    Device device = await Stm32f746Disco.forLaunch(sdk, launch);
+    if (dartino.devicePath == 'emulated') {
+      return EmulatedDevice.forLaunch(sdk, launch);
+    }
+    Device device = await Stm32f.forLaunch(sdk, launch);
     if (device == null) device = await DartuinoBoard.forLaunch(sdk, launch);
     if (device == null) {
       if (dartino.devicePath.isEmpty) {
