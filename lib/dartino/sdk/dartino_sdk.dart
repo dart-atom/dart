@@ -209,7 +209,21 @@ class DartinoRepo extends DartinoSdk {
       {cwd, bool startProcess: true}) {
     if (cwd is Directory) cwd = cwd.path;
     String osBinName = isWindows ? '${binName}.bat' : binName;
-    String command = fs.join(fs.join(sdkRoot, 'out', 'ReleaseX64'), osBinName);
+    String binDir;
+    if (["dartfmt", "dartanalyzer", "pub"].contains(binName)) {
+      if (isLinux) {
+        binDir = fs.join('third_party', 'dart-sdk', 'linux', 'bin');
+      } else if (isMac) {
+        binDir = fs.join('third_party', 'dart-sdk', 'mac', 'bin');
+      } else {
+        assert(isWindows);
+        binDir = fs.join('third_party', 'dart-sdk', 'mac', 'bin');
+      }
+    } else {
+      binDir = fs.join(sdkRoot, 'out', 'ReleaseX64');
+    }
+
+    String command = fs.join(binDir, osBinName);
 
     ProcessRunner runner =
         new ProcessRunner.underShell(command, args: args, cwd: cwd);
