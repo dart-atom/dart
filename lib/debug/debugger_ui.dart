@@ -348,9 +348,10 @@ class FlowControlSection implements Disposable {
       div()..flex()
     ]);
 
-    if (connection.supportsReload && atom.config.getBoolValue('dartlang.isolateReload')) {
-      executionControlToolbar.add(reload);
-    }
+    // TODO(devoncarew): Check if the launch supports reload.
+    // if (false && connection.supportsReload) {
+    //   executionControlToolbar.add(reload);
+    // }
     executionControlToolbar.add(stop);
 
     // TODO: Pull down menu for switching between isolates.

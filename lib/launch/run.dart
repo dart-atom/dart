@@ -153,8 +153,10 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
       launchType.performLaunch(launchManager, config).catchError((e) {
         atom.notifications.addError(
-            "Error running '${config.primaryResource}'.",
-            detail: '${e}');
+          "Error running '${config.shortResourceName}'.",
+          description: '${e}',
+          dismissable: true
+        );
       });
     }
   }

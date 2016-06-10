@@ -14,7 +14,7 @@ export 'flutter_daemon.dart' show Device;
 class FlutterDeviceManager implements Disposable {
   /// Flutter run / build modes.
   static List<BuildMode> runModes = [
-    new BuildMode('debug'),
+    new BuildMode('debug', startPaused: true),
     new BuildMode('profile'),
     new BuildMode('release', supportsDebugging: false)
   ];
@@ -140,8 +140,9 @@ class FlutterDeviceManager implements Disposable {
 class BuildMode {
   final String name;
   final bool supportsDebugging;
+  final bool startPaused;
 
-  BuildMode(this.name, { this.supportsDebugging: true });
+  BuildMode(this.name, { this.supportsDebugging: true, this.startPaused: false });
 
   String toString() => name;
 }

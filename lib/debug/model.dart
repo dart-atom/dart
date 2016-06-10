@@ -52,7 +52,7 @@ abstract class DebugIsolate {
 
   List<DebugFrame> get frames;
 
-  Future isolateReload();
+  // Future isolateReload();
 
   pause();
   Future resume();

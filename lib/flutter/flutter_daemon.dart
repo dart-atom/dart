@@ -315,7 +315,7 @@ class RequestError {
 
   RequestError(this.methodName, this.error);
 
-  String toString() => '[Flutter RequestError ${error}]';
+  String toString() => '${error}';
 }
 
 /// Create a copy of the given map with all `null` values stripped out.
@@ -367,7 +367,7 @@ class AppDomain extends Domain {
 
   /// Start an application on the given device and return an `appId` representing
   /// the running app.
-  Future<String> start(
+  Future<AppStartedResult> start(
     String deviceId,
     String projectDirectory, {
     bool startPaused,
@@ -383,7 +383,7 @@ class AppDomain extends Domain {
       'mode': mode,
       'target': target
     })).then((result) {
-      return result['appId'];
+      return new AppStartedResult(result);
     });
   }
 
@@ -409,19 +409,22 @@ class AppDomain extends Domain {
     ));
   }
 
-  DaemonApp createDaemonApp(String appId) => new DaemonApp(this, appId);
+  DaemonApp createDaemonApp(String appId, { bool supportsRestart: false }) {
+    return new DaemonApp(this, appId, supportsRestart: supportsRestart);
+  }
 }
 
 class DaemonApp {
   final AppDomain daemon;
   final String appId;
+  final bool supportsRestart;
 
   StreamSubscriptions _subs = new StreamSubscriptions();
   Completer _stoppedCompleter = new Completer();
   Completer<DebugPortAppEvent> _debugPortCompleter = new Completer<DebugPortAppEvent>();
   StreamController<LogAppEvent> _logController = new StreamController<LogAppEvent>.broadcast();
 
-  DaemonApp(this.daemon, this.appId) {
+  DaemonApp(this.daemon, this.appId, { this.supportsRestart: false }) {
     // listen for the debugPort event
     _subs.add(daemon.onAppDebugPort
         .where((AppEvent event) => event.appId == appId)
@@ -442,9 +445,9 @@ class DaemonApp {
     }));
   }
 
-  Future<bool> restart(String appId) => daemon.restart(appId);
+  Future<bool> restart() => daemon.restart(appId);
 
-  Future<bool> stop(String appId) {
+  Future<bool> stop() {
     return daemon.stop(appId).timeout(
       new Duration(seconds: 2),
       onTimeout: () {
@@ -473,6 +476,15 @@ class DaemonApp {
   }
 }
 
+class AppStartedResult {
+  final Map data;
+
+  AppStartedResult(this.data);
+
+  String get appId => data['appId'];
+  bool get supportsRestart => data['supportsRestart'];
+}
+
 abstract class AppEvent {
   final Map data;
 
@@ -488,6 +500,7 @@ class StartAppEvent extends AppEvent {
 
   String get directory => data['directory'];
   String get deviceId => data['deviceId'];
+  bool get supportsRestart => data['supportsRestart'];
 }
 
 class DebugPortAppEvent extends AppEvent {
@@ -496,6 +509,8 @@ class DebugPortAppEvent extends AppEvent {
   DebugPortAppEvent(Map data) : super(data);
 
   int get port => data['port'];
+
+  String toString() => '[DebugPortAppEvent: $port]';
 }
 
 class LogAppEvent extends AppEvent {
@@ -508,8 +523,7 @@ class LogAppEvent extends AppEvent {
   bool get hasStackTrace => data.containsKey('stackTrace');
   String get stackTrace => data['stackTrace'];
 
-  bool get hasError => data.containsKey('error');
-  String get error => data['error'];
+  bool get error => data['error'] ?? false;
 }
 
 class StopAppEvent extends AppEvent {

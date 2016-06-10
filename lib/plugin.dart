@@ -374,12 +374,6 @@ class AtomDartPackage extends AtomPackage {
         'default': false,
         'order': 13
       },
-      'isolateReload': {
-        'title': '[Experimental] Enable sending debugger isolate reload commands.',
-        'type': 'boolean',
-        'default': false,
-        'order': 13
-      },
       // TODO(devoncarew): This option needs some debugging; see #931.
       'formatOnSave': {
         'title': '[Experimental] Format files on save',
