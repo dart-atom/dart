@@ -162,7 +162,12 @@ class ConsoleView extends View {
         button(text: 'Restart', c: 'btn icon icon-sync')
       );
       _restartButton.tooltip = 'Restart application';
-      _restartButton.click(() => launch.restart());
+      _restartButton.click(() {
+        _restartButton.disabled = true;
+        launch.restart().whenComplete(() {
+          _restartButton.disabled = launch.isTerminated;
+        });
+      });
     }
 
     // Configure

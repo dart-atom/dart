@@ -523,7 +523,11 @@ class LogAppEvent extends AppEvent {
   bool get hasStackTrace => data.containsKey('stackTrace');
   String get stackTrace => data['stackTrace'];
 
-  bool get error => data['error'] ?? false;
+  bool get isError => data['error'] ?? false;
+
+  bool get isProgress => data['progress'] ?? false;
+  bool get isProgressFinished => data['finished'] ?? false;
+  String get progressId => data['id'];
 }
 
 class StopAppEvent extends AppEvent {

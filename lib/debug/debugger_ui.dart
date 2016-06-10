@@ -429,8 +429,12 @@ class FlowControlSection implements Disposable {
   _autoStepOver() => view.currentIsolate?.autoStepOver();
 
   void _restart() {
+    restart.enabled = false;
+
     connection.launch.restart().catchError((e) {
       atom.notifications.addWarning(e.toString());
+    }).whenComplete(() {
+      restart.enabled = connection.isAlive;
     });
   }
 

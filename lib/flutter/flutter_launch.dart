@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../flutter/flutter_devices.dart';
+import '../jobs.dart';
 import '../launch/launch.dart';
 import '../projects.dart';
 import '../state.dart';
@@ -199,19 +200,31 @@ class _RunLaunchInstance extends _LaunchInstance {
 
       launchManager.addLaunch(_launch);
 
+      _LogStatusJob job;
+
       _app.onDebugPort.then((DebugPortAppEvent event) {
         _observatoryPort = event.port;
         new Future.delayed(new Duration(milliseconds: 100), _connectToDebugger);
       });
 
       _app.onAppLog.listen((LogAppEvent log) {
-        _launch.pipeStdio('${log.log}\n', error: log.error);
-        if (log.hasStackTrace) {
-          _launch.pipeStdio('${log.stackTrace}\n', error: true);
+        if (log.isProgress) {
+          if (!log.isProgressFinished) {
+            job?.cancel();
+
+            job = new _LogStatusJob(log.log);
+            job.schedule();
+          } else {
+            job?.cancel();
+          }
+        } else {
+          _launch.pipeStdio('${log.log}\n', error: log.isError);
+          if (log.hasStackTrace) _launch.pipeStdio('${log.stackTrace}\n', error: true);
         }
       });
 
       _app.onStopped.then((_) {
+        job?.cancel();
         _launch.launchTerminated(0);
       });
 
@@ -228,6 +241,28 @@ class _RunLaunchInstance extends _LaunchInstance {
         _app = null;
       }).catchError((e) => null);
     }
+  }
+}
+
+/// A Job used to show progress to the user for flutter daemon reported tasks.
+class _LogStatusJob extends Job {
+  Completer completer = new Completer();
+
+  _LogStatusJob(String message) : super(_stripEllipses(message));
+
+  bool get quiet => true;
+
+  @override
+  Future run() => completer.future;
+
+  void dispose() {
+    if (!completer.isCompleted) {
+      completer.complete();
+    }
+  }
+
+  static String _stripEllipses(String str) {
+    return str.endsWith('...') ? str.substring(0, str.length - 3) : str;
   }
 }
 
