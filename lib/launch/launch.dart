@@ -294,6 +294,10 @@ class Launch implements Disposable {
     }
   }
 
+  bool get supportsRestart => false;
+
+  Future restart() => new Future.error('unsupported');
+
   void launchTerminated(int code, {bool quiet: false}) {
     if (isTerminated) return;
     exitCode.value = code;

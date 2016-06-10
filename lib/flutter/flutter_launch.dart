@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:logging/logging.dart';
 
@@ -113,7 +114,7 @@ args:
 
 abstract class _LaunchInstance {
   final DartProject project;
-  Launch _launch;
+  _FlutterLaunch _launch;
   int _observatoryPort;
   Device _device;
   DebugConnection debugConnection;
@@ -128,6 +129,7 @@ abstract class _LaunchInstance {
 
   void _connectToDebugger() {
     FlutterUriTranslator translator = new FlutterUriTranslator(_launch.project?.path);
+
     ObservatoryDebugger.connect(
       _launch,
       'localhost',
@@ -179,7 +181,6 @@ class _RunLaunchInstance extends _LaunchInstance {
       title: 'flutter run ${_target} ($_mode)',
       targetName: _device?.name
     );
-    launchManager.addLaunch(_launch);
   }
 
   bool get pipeStdio => false;
@@ -194,9 +195,9 @@ class _RunLaunchInstance extends _LaunchInstance {
       route: _route
     ).then((AppStartedResult result) {
       _app = daemon.app.createDaemonApp(result.appId, supportsRestart: result.supportsRestart);
+      _launch.app = _app;
 
-      // TODO(devoncarew): Report whether the launch supports reload.
-      // TODO(devoncarew): Enable launch reload based on the _app.supportsRestart flag.
+      launchManager.addLaunch(_launch);
 
       _app.onDebugPort.then((DebugPortAppEvent event) {
         _observatoryPort = event.port;
@@ -215,9 +216,6 @@ class _RunLaunchInstance extends _LaunchInstance {
       });
 
       return _launch;
-    }).catchError((e) {
-      _launch.launchTerminated(0);
-      throw e;
     });
   }
 
@@ -275,7 +273,8 @@ class _ConnectLaunchInstance extends _LaunchInstance {
 
 // TODO: Move _LaunchInstance functionality into this class?
 class _FlutterLaunch extends Launch {
-  CachingServerResolver _resolver;
+  CachingServerResolver resolver;
+  DaemonApp app;
 
   _FlutterLaunch(
     LaunchManager manager,
@@ -297,17 +296,27 @@ class _FlutterLaunch extends Launch {
     title: title,
     targetName: targetName
   ) {
-    _resolver = new CachingServerResolver(
+    resolver = new CachingServerResolver(
       cwd: project.path,
       server: analysisServer
     );
 
-    exitCode.onChanged.first.then((_) => _resolver.dispose());
+    exitCode.onChanged.first.then((_) => resolver.dispose());
   }
 
   String get locationLabel => project.workspaceRelativeName;
 
-  Future<String> resolve(String url) => _resolver.resolve(url);
+  bool get supportsRestart => app != null && app.supportsRestart;
+
+  Future restart() {
+    return app.restart().then((bool result) {
+      if (!result) {
+        atom.notifications.addWarning('Error restarting application.');
+      }
+    });
+  }
+
+  Future<String> resolve(String url) => resolver.resolve(url);
 }
 
 class FlutterUriTranslator implements UriTranslator {
