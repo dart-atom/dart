@@ -64478,13 +64478,13 @@ self._domRemove = function(element) {
     },
     _LaunchInstance0: {
       "^": "Object;",
-      _connectToDebugger$0: [function() {
+      _connectToDebugger$0: function() {
         var t1 = this._launch;
         t1.toString;
         t1 = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(t1.launchConfiguration.get$primaryResource());
         t1 = t1 == null ? t1 : J.get$path$x(t1);
         D.ObservatoryDebugger_connect(this._launch, "localhost", this._observatoryPort, this.get$pipeStdio(), new O.FlutterUriTranslator(t1)).then$1(new O._LaunchInstance__connectToDebugger_closure(this)).catchError$1(new O._LaunchInstance__connectToDebugger_closure0(this));
-      }, "call$0", "get$_connectToDebugger", 0, 0, 2],
+      },
       pipeStdio$1: function(arg0) {
         return this.get$pipeStdio().call$1(arg0);
       }
@@ -64587,7 +64587,7 @@ self._domRemove = function(element) {
       call$1: [function($event) {
         var t1 = this.$this;
         t1._observatoryPort = J.get$port$x($event);
-        P.Future_Future$delayed(P.Duration$(0, 0, 0, 100, 0, 0), t1.get$_connectToDebugger(), null);
+        t1._connectToDebugger$0();
       }, null, null, 2, 0, null, 14, "call"]
     },
     _RunLaunchInstance_launch__closure0: {

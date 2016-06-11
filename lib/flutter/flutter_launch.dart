@@ -204,7 +204,7 @@ class _RunLaunchInstance extends _LaunchInstance {
 
       _app.onDebugPort.then((DebugPortAppEvent event) {
         _observatoryPort = event.port;
-        new Future.delayed(new Duration(milliseconds: 100), _connectToDebugger);
+        _connectToDebugger();
       });
 
       _app.onAppLog.listen((LogAppEvent log) {

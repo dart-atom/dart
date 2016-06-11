@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- added support for fast re-start of running Flutter apps
+
 ## 0.6.25
 - added the ability to run flutter apps in debug / profile / release modes
 - added the ability to connect to already running Flutter apps on devices (currently Android only)
