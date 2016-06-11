@@ -84,8 +84,6 @@ class ObservatoryConnection extends DebugConnection {
   StreamSubscriptions subs = new StreamSubscriptions();
   UriResolver uriResolver;
 
-  bool get supportsReload => true;
-
   bool stdoutSupported = true;
   bool stderrSupported = true;
 
@@ -126,7 +124,6 @@ class ObservatoryConnection extends DebugConnection {
   stepOverAsyncSuspension() => _selectedIsolate?.stepOverAsyncSuspension();
   autoStepOver() => _selectedIsolate?.autoStepOver();
 
-  Future reload() => _selectedIsolate.isolateReload();
   Future terminate() {
     try { ws?.close(); } catch (e) { }
     return launch.kill();
@@ -294,10 +291,6 @@ class ObservatoryConnection extends DebugConnection {
         break;
       case EventKind.kIsolateExit:
         _handleIsolateDeath(ref);
-        break;
-      case 'IsolateReload':
-        // TODO: Handle this event.
-        _logger.fine('IsolateReload: ${event.json}');
         break;
     }
   }
@@ -561,13 +554,6 @@ class ObservatoryIsolate extends DebugIsolate {
     if (suspended) {
       connection.isolates.setSelection(this);
     }
-  }
-
-  // TODO: Don't return until we get the ack `IsolateReload` event from the VM.
-  Future isolateReload() {
-    return service.callMethod('_reloadSources', args: {
-      'isolateId': isolate.id
-    });
   }
 
   pause() => service.pause(isolateRef.id);

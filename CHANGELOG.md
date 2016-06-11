@@ -2,6 +2,7 @@
 
 ## unreleased
 - support running Dartino apps on Nucleo board and on an emulated device
+- added support for fast re-start of running Flutter apps
 
 ## 0.6.25
 - added the ability to run flutter apps in debug / profile / release modes

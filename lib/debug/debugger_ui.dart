@@ -325,7 +325,7 @@ class FlowControlSection implements Disposable {
   CoreElement stepIn;
   CoreElement stepOver;
   CoreElement stepOut;
-  CoreElement reload;
+  CoreElement restart;
   CoreElement stop;
 
   CoreElement isolateName;
@@ -336,7 +336,7 @@ class FlowControlSection implements Disposable {
     stepIn = button(c: 'btn icon-jump-down')..click(_stepIn)..tooltip = 'Step in';
     stepOver = button(c: 'btn icon-jump-right')..click(_autoStepOver)..tooltip = 'Step over';
     stepOut = button(c: 'btn icon-jump-up')..click(_stepOut)..tooltip = 'Step out';
-    reload = button(c: 'btn icon-sync')..click(_reload)..tooltip = 'Reload';
+    restart = button(c: 'btn icon-sync')..click(_restart)..tooltip = 'Restart';
     stop = button(c: 'btn icon-primitive-square')..click(_terminate)..tooltip = 'Stop';
 
     CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
@@ -348,8 +348,8 @@ class FlowControlSection implements Disposable {
       div()..flex()
     ]);
 
-    if (connection.supportsReload && atom.config.getBoolValue('dartlang.isolateReload')) {
-      executionControlToolbar.add(reload);
+    if (connection.launch.supportsRestart) {
+      executionControlToolbar.add(restart);
     }
     executionControlToolbar.add(stop);
 
@@ -366,7 +366,7 @@ class FlowControlSection implements Disposable {
   }
 
   void _handleIsolateChange(DebugIsolate isolate) {
-    reload.enabled = connection.isAlive && isolate != null;
+    restart.enabled = connection.isAlive && isolate != null;
     stop.enabled = connection.isAlive;
 
     if (isolate == null) {
@@ -428,9 +428,13 @@ class FlowControlSection implements Disposable {
   _stepOut() => view.currentIsolate?.stepOut();
   _autoStepOver() => view.currentIsolate?.autoStepOver();
 
-  void _reload() {
-    connection.reload().catchError((e) {
+  void _restart() {
+    restart.enabled = false;
+
+    connection.launch.restart().catchError((e) {
       atom.notifications.addWarning(e.toString());
+    }).whenComplete(() {
+      restart.enabled = connection.isAlive;
     });
   }
 

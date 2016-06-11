@@ -315,7 +315,7 @@ class RequestError {
 
   RequestError(this.methodName, this.error);
 
-  String toString() => '[Flutter RequestError ${error}]';
+  String toString() => '${error}';
 }
 
 /// Create a copy of the given map with all `null` values stripped out.
@@ -344,37 +344,61 @@ class DaemonDomain extends Domain {
 
 /// Describes an app running on the device.
 class DiscoveredApp {
-  DiscoveredApp(this.id, this.observatoryPort);
   final String id;
   final int observatoryPort;
+
+  DiscoveredApp(this.id, this.observatoryPort);
 }
 
 class AppDomain extends Domain {
   AppDomain(FlutterDaemon server) : super(server, 'app');
 
-  // TODO: result
-  // TODO: We need the stdout and stderr from launching the process.
-  Future<dynamic> start(
+  // app.start; appId, directory, deviceId
+  Stream<StartAppEvent> get onAppStart => _listen('app.start', StartAppEvent.parse);
+
+  // app.debugPort; appId, port
+  Stream<DebugPortAppEvent> get onAppDebugPort => _listen('app.debugPort', DebugPortAppEvent.parse);
+
+  // app.log; appId, log, [stackTrace], [error](bool)
+  Stream<LogAppEvent> get onAppLog => _listen('app.log', LogAppEvent.parse);
+
+  // app.stop; appId, [error]
+  Stream<StopAppEvent> get onAppStop => _listen('app.stop', StopAppEvent.parse);
+
+  /// Start an application on the given device and return an `appId` representing
+  /// the running app.
+  Future<AppStartedResult> start(
     String deviceId,
     String projectDirectory, {
-    String target,
-    bool checked,
-    String route
+    bool startPaused,
+    String route,
+    String mode,
+    String target
   }) {
     return _call('app.start', _stripNullValues({
       'deviceId': deviceId,
       'projectDirectory': projectDirectory,
-      'target': target,
-      'checked': checked,
-      'route': route
-    }));
+      'startPaused': startPaused,
+      'route': route,
+      'mode': mode,
+      'target': target
+    })).then((result) {
+      return new AppStartedResult(result);
+    });
   }
 
-  Future<bool> stop(String deviceId, String projectDirectory) {
-    return _call('app.stop', _stripNullValues({
-      'deviceId': deviceId,
-      'projectDirectory': projectDirectory
-    })) as Future<bool>;
+  /// Restart a running flutter app.
+  Future<bool> restart(String appId) {
+    return _call('app.restart', {
+      'appId': appId
+    }) as Future<bool>;
+  }
+
+  // Stop a running flutter app.
+  Future<bool> stop(String appId) {
+    return _call('app.stop', {
+      'appId': appId
+    }) as Future<bool>;
   }
 
   Future<List<DiscoveredApp>> discover(String deviceId) {
@@ -384,6 +408,135 @@ class AppDomain extends Domain {
       (Map<String, dynamic> app) => new DiscoveredApp(app['id'], app['observatoryDevicePort'])
     ));
   }
+
+  DaemonApp createDaemonApp(String appId, { bool supportsRestart: false }) {
+    return new DaemonApp(this, appId, supportsRestart: supportsRestart);
+  }
+}
+
+class DaemonApp {
+  final AppDomain daemon;
+  final String appId;
+  final bool supportsRestart;
+
+  StreamSubscriptions _subs = new StreamSubscriptions();
+  Completer _stoppedCompleter = new Completer();
+  Completer<DebugPortAppEvent> _debugPortCompleter = new Completer<DebugPortAppEvent>();
+  StreamController<LogAppEvent> _logController = new StreamController<LogAppEvent>.broadcast();
+
+  DaemonApp(this.daemon, this.appId, { this.supportsRestart: false }) {
+    // listen for the debugPort event
+    _subs.add(daemon.onAppDebugPort
+        .where((AppEvent event) => event.appId == appId)
+        .listen((DebugPortAppEvent event) {
+      if (!_debugPortCompleter.isCompleted) {
+        _debugPortCompleter.complete(event);
+      }
+    }));
+
+    // listen for logs
+    _subs.add(daemon.onAppLog.where((AppEvent event) => event.appId == appId).listen((LogAppEvent event) {
+      _logController.add(event);
+    }));
+
+    // listen for app termination
+    _subs.add(daemon.onAppStop.where((AppEvent event) => event.appId == appId).listen((_) {
+      _dispose();
+    }));
+  }
+
+  Future<bool> restart() => daemon.restart(appId);
+
+  Future<bool> stop() {
+    return daemon.stop(appId).timeout(
+      new Duration(seconds: 2),
+      onTimeout: () {
+        _dispose();
+        return true;
+      }
+    );
+  }
+
+  Future<DebugPortAppEvent> get onDebugPort => _debugPortCompleter.future;
+
+  Stream<LogAppEvent> get onAppLog => _logController.stream;
+
+  Future get onStopped => _stoppedCompleter.future;
+
+  void _dispose() {
+    _subs.cancel();
+
+    if (!_logController.isClosed) {
+      _logController.close();
+    }
+
+    if (!_stoppedCompleter.isCompleted) {
+      _stoppedCompleter.complete();
+    }
+  }
+}
+
+class AppStartedResult {
+  final Map data;
+
+  AppStartedResult(this.data);
+
+  String get appId => data['appId'];
+  bool get supportsRestart => data['supportsRestart'];
+}
+
+abstract class AppEvent {
+  final Map data;
+
+  AppEvent(this.data);
+
+  String get appId => data['appId'];
+}
+
+class StartAppEvent extends AppEvent {
+  static StartAppEvent parse(Map data) => new StartAppEvent(data);
+
+  StartAppEvent(Map data) : super(data);
+
+  String get directory => data['directory'];
+  String get deviceId => data['deviceId'];
+  bool get supportsRestart => data['supportsRestart'];
+}
+
+class DebugPortAppEvent extends AppEvent {
+  static DebugPortAppEvent parse(Map data) => new DebugPortAppEvent(data);
+
+  DebugPortAppEvent(Map data) : super(data);
+
+  int get port => data['port'];
+
+  String toString() => '[DebugPortAppEvent: $port]';
+}
+
+class LogAppEvent extends AppEvent {
+  static LogAppEvent parse(Map data) => new LogAppEvent(data);
+
+  LogAppEvent(Map data) : super(data);
+
+  String get log => data['log'];
+
+  bool get hasStackTrace => data.containsKey('stackTrace');
+  String get stackTrace => data['stackTrace'];
+
+  bool get isError => data['error'] ?? false;
+
+  bool get isProgress => data['progress'] ?? false;
+  bool get isProgressFinished => data['finished'] ?? false;
+  String get progressId => data['id'];
+}
+
+class StopAppEvent extends AppEvent {
+  static StopAppEvent parse(Map data) => new StopAppEvent(data);
+
+  StopAppEvent(Map data) : super(data);
+
+  bool get hasError => data.containsKey('error');
+  String get error => data['error'];
 }
 
 class DeviceDomain extends Domain {

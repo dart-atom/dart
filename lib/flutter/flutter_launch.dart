@@ -1,13 +1,14 @@
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
-import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../flutter/flutter_devices.dart';
+import '../jobs.dart';
 import '../launch/launch.dart';
 import '../projects.dart';
 import '../state.dart';
@@ -19,6 +20,8 @@ final Logger _logger = new Logger('atom.flutter_launch');
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
 
 FlutterDeviceManager get deviceManager => deps[FlutterDeviceManager];
+FlutterDaemonManager get flutterDaemonManager => deps[FlutterDaemonManager];
+FlutterDaemon get flutterDaemon => flutterDaemonManager.daemon;
 
 class FlutterLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -55,12 +58,18 @@ class FlutterLaunchType extends LaunchType {
 
     if (!_flutterSdk.hasSdk) {
       _flutterSdk.showInstallationInfo();
-      return new Future.error("Unable to launch ${configuration.shortResourceName}; "
-        " no Flutter SDK found.");
+      return new Future.error("Unable to launch application; no Flutter SDK found.");
+    }
+
+    // Check that the flutter daemon is running.
+    if (flutterDaemon == null) {
+      return new Future.error("Unable to launch application; "
+        "the Flutter daemon is not running. Make sure a Flutter SDK is configured in the "
+        "settings for the 'flutter' plugin and / or try re-starting Atom.");
     }
 
     return _killLastLaunch().then((_) {
-      _lastLaunch = new _RunLaunchInstance(project, configuration, this);
+      _lastLaunch = new _RunLaunchInstance(project, configuration, this, flutterDaemon);
       return _lastLaunch.launch();
     });
   }
@@ -106,7 +115,7 @@ args:
 
 abstract class _LaunchInstance {
   final DartProject project;
-  Launch _launch;
+  _FlutterLaunch _launch;
   int _observatoryPort;
   Device _device;
   DebugConnection debugConnection;
@@ -121,6 +130,7 @@ abstract class _LaunchInstance {
 
   void _connectToDebugger() {
     FlutterUriTranslator translator = new FlutterUriTranslator(_launch.project?.path);
+
     ObservatoryDebugger.connect(
       _launch,
       'localhost',
@@ -140,52 +150,26 @@ abstract class _LaunchInstance {
 }
 
 class _RunLaunchInstance extends _LaunchInstance {
-  ProcessRunner _runner;
-  List<String> _args;
+  final FlutterDaemon daemon;
+
+  BuildMode _mode;
+  String _route;
+  String _target;
+
+  DaemonApp _app;
 
   _RunLaunchInstance(
     DartProject project,
     LaunchConfiguration configuration,
-    FlutterLaunchType launchType
+    FlutterLaunchType launchType,
+    this.daemon
   ) : super(project) {
-    List<String> flutterArgs = configuration.argsAsList;
+    _mode = deviceManager.runMode;
 
-    // Use either `flutter run` or `flutter run_mojo`.
-    _args = ['run'];
+    _route = configuration.typeArgs['route'];
+    if (_route != null && _route.isEmpty) _route = null;
 
-    // TODO(devoncarew): Remove after flutter run defaults to '--resident'.
-    _args.add('--resident');
-
-    // Pass in the run mode: --debug, --profile, or --release.
-    BuildMode mode = deviceManager.runMode;
-    _args.add('--${mode.name}');
-
-    if (mode.supportsDebugging) {
-      _observatoryPort = getOpenPort();
-      _args.add('--debug-port=${_observatoryPort}');
-      _args.add('--start-paused');
-    }
-
-    var route = configuration.typeArgs['route'];
-    if (route is String && route.isNotEmpty) {
-      _args.add('--route');
-      _args.add(route);
-    }
-
-    if (_device != null) {
-      _args.add('--device-id');
-      _args.add(_device.id);
-    }
-
-    String relPath = fs.relativize(project.path, configuration.primaryResource);
-    if (relPath != 'lib/main.dart') {
-      _args.add('-t');
-      _args.add(relPath);
-    }
-
-    _args.addAll(flutterArgs);
-
-    String description = 'flutter ${_args.join(' ')}';
+    _target = fs.relativize(project.path, configuration.primaryResource);
 
     _launch = new _FlutterLaunch(
       launchManager,
@@ -195,54 +179,90 @@ class _RunLaunchInstance extends _LaunchInstance {
       project,
       killHandler: _kill,
       cwd: project.path,
-      title: description,
+      title: 'flutter run ${_target} ($_mode)',
       targetName: _device?.name
     );
-    launchManager.addLaunch(_launch);
   }
 
   bool get pipeStdio => false;
 
   Future<Launch> launch() async {
-    FlutterTool flutter = _flutterSdk.sdk.flutterTool;
+    return daemon.app.start(
+      _device?.id,
+      project.path,
+      mode: _mode.name,
+      startPaused: _mode.startPaused,
+      target: _target,
+      route: _route
+    ).then((AppStartedResult result) {
+      _app = daemon.app.createDaemonApp(result.appId, supportsRestart: result.supportsRestart);
+      _launch.app = _app;
 
-    _runner = _flutter(flutter, _args, cwd: project.path);
-    _runner.execStreaming();
-    _runner.onStdout.listen((String str) {
-      _watchForObservatoryMessage(str);
-      _launch.pipeStdio(str);
+      launchManager.addLaunch(_launch);
+
+      _LogStatusJob job;
+
+      _app.onDebugPort.then((DebugPortAppEvent event) {
+        _observatoryPort = event.port;
+        _connectToDebugger();
+      });
+
+      _app.onAppLog.listen((LogAppEvent log) {
+        if (log.isProgress) {
+          if (!log.isProgressFinished) {
+            job?.cancel();
+
+            job = new _LogStatusJob(log.log);
+            job.schedule();
+          } else {
+            job?.cancel();
+          }
+        } else {
+          _launch.pipeStdio('${log.log}\n', error: log.isError);
+          if (log.hasStackTrace) _launch.pipeStdio('${log.stackTrace}\n', error: true);
+        }
+      });
+
+      _app.onStopped.then((_) {
+        job?.cancel();
+        _launch.launchTerminated(0);
+      });
+
+      return _launch;
     });
-    _runner.onStderr.listen((String str) => _launch.pipeStdio(str, error: true));
-    _runner.onExit.then((code) => _launch.launchTerminated(code));
-
-    return _launch;
-  }
-
-  void _watchForObservatoryMessage(String str) {
-    // "Observatory listening on http://127.0.0.1:8100"
-    if (!str.startsWith('Observatory listening on http'))
-      return;
-
-    if (_observatoryPort != null && _launch.servicePort.value == null) {
-      new Future.delayed(new Duration(milliseconds: 100), _connectToDebugger);
-    }
   }
 
   Future _kill() {
-    if (_runner == null) {
-      _launch.launchTerminated(1);
+    if (_app == null) {
+      _launch.launchTerminated(0);
       return new Future.value();
     } else {
-      // Tell the flutter run --resident process to quit.
-      // TOOD(devoncarew): This is not reliable - the remote app is not terminating.
-      _runner.write('q');
-      _runner.write('\n');
-
-      return new Future.delayed(new Duration(milliseconds: 250), () {
-        _runner?.kill();
-        _runner = null;
-      });
+      return _app.stop().whenComplete(() {
+        _app = null;
+      }).catchError((e) => null);
     }
+  }
+}
+
+/// A Job used to show progress to the user for flutter daemon reported tasks.
+class _LogStatusJob extends Job {
+  Completer completer = new Completer();
+
+  _LogStatusJob(String message) : super(_stripEllipses(message));
+
+  bool get quiet => true;
+
+  @override
+  Future run() => completer.future;
+
+  void dispose() {
+    if (!completer.isCompleted) {
+      completer.complete();
+    }
+  }
+
+  static String _stripEllipses(String str) {
+    return str.endsWith('...') ? str.substring(0, str.length - 3) : str;
   }
 }
 
@@ -274,27 +294,22 @@ class _ConnectLaunchInstance extends _LaunchInstance {
   }
 
   Future<Launch> launch() async {
-    _observatoryPort = await _daemon.device.forward(_device.id, _observatoryDevicePort);
+    _observatoryPort = await flutterDaemon.device.forward(_device.id, _observatoryDevicePort);
     _connectToDebugger();
     return _launch;
   }
 
   Future _kill() {
-    _daemon.device.unforward(_device.id, _observatoryDevicePort, _observatoryPort);
+    flutterDaemon.device.unforward(_device.id, _observatoryDevicePort, _observatoryPort);
     _launch.launchTerminated(0);
     return new Future.value();
   }
-
-  FlutterDaemon get _daemon => deps[FlutterDaemonManager].daemon;
-}
-
-ProcessRunner _flutter(FlutterTool flutter, List<String> args, {String cwd}) {
-  return flutter.runRaw(args, cwd: cwd, startProcess: false);
 }
 
 // TODO: Move _LaunchInstance functionality into this class?
 class _FlutterLaunch extends Launch {
-  CachingServerResolver _resolver;
+  CachingServerResolver resolver;
+  DaemonApp app;
 
   _FlutterLaunch(
     LaunchManager manager,
@@ -316,17 +331,27 @@ class _FlutterLaunch extends Launch {
     title: title,
     targetName: targetName
   ) {
-    _resolver = new CachingServerResolver(
+    resolver = new CachingServerResolver(
       cwd: project.path,
       server: analysisServer
     );
 
-    exitCode.onChanged.first.then((_) => _resolver.dispose());
+    exitCode.onChanged.first.then((_) => resolver.dispose());
   }
 
   String get locationLabel => project.workspaceRelativeName;
 
-  Future<String> resolve(String url) => _resolver.resolve(url);
+  bool get supportsRestart => app != null && app.supportsRestart;
+
+  Future restart() {
+    return app.restart().then((bool result) {
+      if (!result) {
+        atom.notifications.addWarning('Error restarting application.');
+      }
+    });
+  }
+
+  Future<String> resolve(String url) => resolver.resolve(url);
 }
 
 class FlutterUriTranslator implements UriTranslator {

@@ -119,9 +119,10 @@ class ConsoleView extends View {
   CoreElement output;
   String _lastText = '';
 
-  CoreElement _debugButton;
-  CoreElement _observatoryButton;
   CoreElement _terminateButton;
+  CoreElement _restartButton;
+  CoreElement _observatoryButton;
+  // CoreElement _debugButton;
 
   ConsoleView(this.controller, this.launch) {
     _launchId = _idCount++;
@@ -153,6 +154,20 @@ class ConsoleView extends View {
       );
       _terminateButton.tooltip = 'Terminate process';
       _terminateButton.click(() => launch.kill());
+    }
+
+    // Restart
+    if (launch.supportsRestart) {
+      _restartButton = toolbar.add(
+        button(text: 'Restart', c: 'btn icon icon-sync')
+      );
+      _restartButton.tooltip = 'Restart application';
+      _restartButton.click(() {
+        _restartButton.disabled = true;
+        launch.restart().whenComplete(() {
+          _restartButton.disabled = launch.isTerminated;
+        });
+      });
     }
 
     // Configure
@@ -215,18 +230,18 @@ class ConsoleView extends View {
       });
     }
 
-    if (_debugButton != null && port == null) {
-      _debugButton.dispose();
-      _debugButton = null;
-    } else if (_debugButton == null && port != null && launch.hasDebugConnection) {
-      _debugButton = toolbar.add(
-        button(text: 'Debug', c: 'btn icon icon-bug')
-      );
-      _debugButton.tooltip = 'Open the debugger';
-      _debugButton.click(() {
-        debugManager.showViewForConnection(launch.debugConnection);
-      });
-    }
+    // if (_debugButton != null && port == null) {
+    //   _debugButton.dispose();
+    //   _debugButton = null;
+    // } else if (_debugButton == null && port != null && launch.hasDebugConnection) {
+    //   _debugButton = toolbar.add(
+    //     button(text: 'Debug', c: 'btn icon icon-bug')
+    //   );
+    //   _debugButton.tooltip = 'Open the debugger';
+    //   _debugButton.click(() {
+    //     debugManager.showViewForConnection(launch.debugConnection);
+    //   });
+    // }
   }
 
   void _launchTerminated(Launch l) {
@@ -236,9 +251,10 @@ class ConsoleView extends View {
       CoreElement footer =
         div(text: 'exited with code ${launch.exitCode}', c: 'console-footer');
       _emitElement(footer);
-      _observatoryButton?.disabled = true;
-      _debugButton?.disabled = true;
       _terminateButton?.disabled = true;
+      _restartButton?.disabled = true;
+      _observatoryButton?.disabled = true;
+      // _debugButton?.disabled = true;
     }
   }
 

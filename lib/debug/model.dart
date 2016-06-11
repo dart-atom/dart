@@ -11,14 +11,11 @@ abstract class DebugConnection {
 
   DebugConnection(this.launch);
 
-  bool get supportsReload;
-
   bool get isAlive;
 
   Stream<DebugIsolate> get onPaused;
   Stream<DebugIsolate> get onResumed;
 
-  Future reload();
   Future terminate();
 
   Future get onTerminated;
@@ -51,8 +48,6 @@ abstract class DebugIsolate {
   bool get hasFrames => frames != null && frames.isNotEmpty;
 
   List<DebugFrame> get frames;
-
-  Future isolateReload();
 
   pause();
   Future resume();
