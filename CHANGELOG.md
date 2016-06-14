@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.26
 - support running Dartino apps on Nucleo board and on an emulated device
 - added support for fast re-start of running Flutter apps
 
