@@ -9,7 +9,7 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../analysis/analysis_server_lib.dart' show CreateContextResult, MapUriResult;
+import '../analysis/analysis_server_lib.dart' show CreateContextResult;
 import '../analysis_server.dart';
 import '../debug/debugger.dart';
 import '../projects.dart';
@@ -377,12 +377,11 @@ class CachingServerResolver implements _Resolver {
     });
   }
 
-  Future<String> _resolve(String url) {
+  Future<String> _resolve(String url) async {
     if (_serverResolver != null && !url.startsWith('file:/') && url.contains(':')) {
-      return _serverResolver.resolve(url).then((result) {
-        if (result != null) return result;
-        return _pathResolver?.resolve(url);
-      });
+      String result = await _serverResolver.resolve(url);
+      if (result != null) return result;
+      return _pathResolver?.resolve(url);
     } else if (_pathResolver != null) {
       return _pathResolver.resolve(url);
     } else {
@@ -447,16 +446,15 @@ class _ServerResolver implements _Resolver {
     });
   }
 
-  Future<String> resolve(String url) {
-    return _context.then((String id) {
-      if (id == null) return null;
+  Future<String> resolve(String url) async {
+    String id = await _context;
+    if (id == null) return null;
 
-      return analysisServer.server.execution.mapUri(id, uri: url).then((MapUriResult result) {
-        return result.file;
-      }).catchError((_) {
-        return null;
-      });
-    });
+    try {
+      return (await analysisServer.server.execution.mapUri(id, uri: url)).file;
+    } catch (_) {
+      return null;
+    }
   }
 
   void dispose() {

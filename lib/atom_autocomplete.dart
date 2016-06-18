@@ -17,7 +17,7 @@ import 'package:logging/logging.dart';
 
 final Logger _logger = new Logger('atom.autocomplete');
 
-_AutoCompleteOverride _override;
+_AutoCompleteOverride<dynamic> _override;
 
 void triggerAutocomplete(TextEditor editor) {
   atom.commands.dispatch(
@@ -31,9 +31,9 @@ void triggerAutocomplete(TextEditor editor) {
 /// user's selection.
 Future/*<T>*/ chooseItemUsingCompletions/*<T>*/(TextEditor editor,
     List<dynamic> items, Suggestion renderer(/*T*/ item)) {
-  _override = new _AutoCompleteOverride(editor, items, renderer);
+  _override = new _AutoCompleteOverride/*<T>*/(editor, items, renderer);
   triggerAutocomplete(editor);
-  return _override.future;
+  return _override.future as Future/*<T>*/;
 }
 
 List<_AutoCompleteEditorOverride> _overrides = [];
@@ -163,8 +163,8 @@ class AutocompleteOptions {
   /// The position of the cursor.
   Point bufferPosition;
 
-  /// The scope descriptor for the current cursor position.
-  List<String> scopeDescriptor;
+  // /// The scope descriptor for the current cursor position.
+  // List<String> scopeDescriptor;
 
   /// The prefix for the word immediately preceding the current cursor position.
   String prefix;
@@ -172,11 +172,11 @@ class AutocompleteOptions {
   AutocompleteOptions(JsObject options) {
     editor = new TextEditor(options['editor']);
     bufferPosition = new Point(options['bufferPosition']);
-    scopeDescriptor = options['scopeDescriptor'];
+    // scopeDescriptor = options['scopeDescriptor'];
     prefix = options['prefix'];
   }
 
-  String toString() => '[${bufferPosition}, ${scopeDescriptor}, ${prefix}]';
+  String toString() => '[${bufferPosition}, ${prefix}]';
 }
 
 class Suggestion {
@@ -277,11 +277,11 @@ class Suggestion {
   JsObject _toProxy() => jsify(_toMap());
 }
 
-class _AutoCompleteOverride {
+class _AutoCompleteOverride<T> {
   final TextEditor editor;
   final List<dynamic> items;
   final Function renderer;
-  final Completer<dynamic> completer = new Completer();
+  final Completer<T> completer = new Completer<T>();
 
   bool hasShown = false;
 
@@ -302,7 +302,7 @@ class _AutoCompleteOverride {
     completer.complete(index == null ? null : items[index]);
   }
 
-  Future<dynamic> get future => completer.future;
+  Future<T> get future => completer.future;
 }
 
 class _AutoCompleteEditorOverride {

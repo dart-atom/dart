@@ -55,7 +55,7 @@ class AnalysisServer implements Disposable {
   _AnalysisServerWrapper _server;
   _AnalyzingJob _job;
 
-  Function _willSend;
+  MethodSend _willSend;
 
   List<DartProject> knownRoots = [];
 
@@ -578,7 +578,7 @@ class _AnalysisServerWrapper extends Server {
     if (atom.config.getValue(optionsPrefPath) != null) {
       dynamic options = atom.config.getValue(optionsPrefPath);
       if (options is List) {
-        arguments.addAll(options);
+        arguments.addAll(new List.from(options));
       } else if (options is String) {
         arguments.addAll(options.split('\n'));
       }

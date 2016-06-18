@@ -99,6 +99,6 @@ class FormattingManager implements Disposable {
         _logger.warning('error when formatting: ${e}');
       }
       return false;
-    }) as Future<bool>;
+    });
   }
 }

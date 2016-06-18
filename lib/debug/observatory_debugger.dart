@@ -150,13 +150,13 @@ class ObservatoryConnection extends DebugConnection {
 
     // Handle the dart:developer log() calls.
     service.onEvent('_Logging').listen((Event e) {
-      Map<String, dynamic> json = e.json['logRecord'];
+      Map json = e.json['logRecord'];
       // num time = json['time'];
       // num level = json['level'];
       // InstanceRef error = InstanceRef.parse(json['error']);
       // InstanceRef stackTrace = InstanceRef.parse(json['stackTrace']);
-      InstanceRef loggerName = InstanceRef.parse(json['loggerName']);
-      InstanceRef message = InstanceRef.parse(json['message']);
+      InstanceRef loggerName = InstanceRef.parse(new Map.from(json['loggerName']));
+      InstanceRef message = InstanceRef.parse(new Map.from(json['message']));
 
       String name = loggerName.valueAsString;
       if (name == null || name.isEmpty) {
@@ -665,12 +665,11 @@ class ObservatoryFrame extends DebugFrame {
 }
 
 class ObservatoryVariable extends DebugVariable {
-  final ObservatoryIsolate _isolate;
   final BoundVariable _variable;
   final DebugValue value;
 
   ObservatoryVariable(ObservatoryIsolate isolate, BoundVariable variable) :
-    _isolate = isolate, _variable = variable, value = _createValue(isolate, variable);
+    _variable = variable, value = _createValue(isolate, variable);
 
   String get name => _variable.name;
 
@@ -688,12 +687,11 @@ class ObservatoryVariable extends DebugVariable {
 }
 
 class ObservatoryFieldVariable extends DebugVariable {
-  final ObservatoryIsolate _isolate;
   final BoundField _field;
   final DebugValue value;
 
   ObservatoryFieldVariable(ObservatoryIsolate isolate, BoundField field) :
-    _isolate = isolate, _field = field, value = _createValue(isolate, field);
+    _field = field, value = _createValue(isolate, field);
 
   String get name => _field.decl.name;
 
@@ -858,36 +856,36 @@ class ObservatoryInstanceRefValue extends DebugValue {
     });
   }
 
-  Future<DebugValue> invokeToString() {
-    return isolate.service.evaluate(isolate.id, value.id, 'toString()').then((dynamic result) {
-      // [InstanceRef], [ErrorRef] or [Sentinel]
-      if (result is Sentinel) {
-        return new SentinelDebugValue(result);
-      } else if (result is InstanceRef) {
-        InstanceRef ref = result;
-        if (ref.kind == InstanceKind.kString && ref.valueAsStringIsTruncated == true) {
-          return isolate.service.getObject(isolate.id, result.id).then((result) {
-            if (result is Sentinel) {
-              return new SentinelDebugValue(result);
-            } else if (result is InstanceRef) {
-              return new ObservatoryInstanceRefValue(isolate, result);
-            } else if (result is Instance) {
-              return new ObservatoryInstanceRefValue.fromInstance(isolate, result);
-            } else if (result is ErrorRef) {
-              return new Future.error(result.message);
-            } else {
-              return new Future.error('unexpected result type: ${result}');
-            }
-          });
-        } else {
-          return new ObservatoryInstanceRefValue(isolate, result);
-        }
-      } else if (result is ErrorRef) {
-        return new Future.error(result.message);
+  Future<DebugValue> invokeToString() async {
+    dynamic result = isolate.service.evaluate(isolate.id, value.id, 'toString()');
+
+    // [InstanceRef], [ErrorRef] or [Sentinel]
+    if (result is Sentinel) {
+      return new SentinelDebugValue(result);
+    } else if (result is InstanceRef) {
+      InstanceRef ref = result;
+      if (ref.kind == InstanceKind.kString && ref.valueAsStringIsTruncated == true) {
+        return isolate.service.getObject(isolate.id, result.id).then((result) {
+          if (result is Sentinel) {
+            return new SentinelDebugValue(result);
+          } else if (result is InstanceRef) {
+            return new ObservatoryInstanceRefValue(isolate, result);
+          } else if (result is Instance) {
+            return new ObservatoryInstanceRefValue.fromInstance(isolate, result);
+          } else if (result is ErrorRef) {
+            return new Future.error(result.message);
+          } else {
+            return new Future.error('unexpected result type: ${result}');
+          }
+        });
       } else {
-        return new Future.error('unexpected result type: ${result}');
+        return new ObservatoryInstanceRefValue(isolate, result);
       }
-    });
+    } else if (result is ErrorRef) {
+      throw result.message;
+    } else {
+      throw 'unexpected result type: ${result}';
+    }
   }
 
   String get valueAsString {

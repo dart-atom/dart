@@ -30,21 +30,20 @@ class MojoLaunchType extends LaunchType {
 
   _LaunchInstance _lastLaunch;
 
-  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
+  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) async {
     String path = configuration.primaryResource;
     DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return new Future.error("File not in a Dart project.");
+    if (project == null) throw "File not in a Dart project.";
 
     if (!_flutterSdk.hasSdk) {
       _flutterSdk.showInstallationInfo();
-      return new Future.error("Unable to launch ${configuration.shortResourceName}; "
-        " no Flutter SDK found.");
+      throw "Unable to launch ${configuration.shortResourceName}; no Flutter SDK found.";
     }
 
-    return _killLastLaunch().then((_) {
-      _lastLaunch = new _LaunchInstance(project, configuration, this);
-      return _lastLaunch.launch();
-    });
+    await _killLastLaunch();
+
+    _lastLaunch = new _LaunchInstance(project, configuration, this);
+    return _lastLaunch.launch();
   }
 
   Future _killLastLaunch() {

@@ -543,7 +543,8 @@ class HoverResult {
 }
 
 class ReachableSourcesResult {
-  static ReachableSourcesResult parse(Map m) => new ReachableSourcesResult(m['sources']);
+  static ReachableSourcesResult parse(Map m) =>
+      new ReachableSourcesResult(new Map.from(m['sources']));
 
   final Map<String, List<String>> sources;
 
@@ -552,7 +553,8 @@ class ReachableSourcesResult {
 
 class LibraryDependenciesResult {
   static LibraryDependenciesResult parse(Map m) => new LibraryDependenciesResult(
-      m['libraries'] == null ? null : new List.from(m['libraries']), m['packageMap']);
+      m['libraries'] == null ? null : new List.from(m['libraries']),
+      new Map.from(m['packageMap']));
 
   final List<String> libraries;
   final Map<String, Map<String, List<String>>> packageMap;

@@ -23,7 +23,7 @@ build() async {
   File outputFile = getFile('web/entry.dart.js');
 
   // --trust-type-annotations? --trust-primitives?
-  await Dart2js.compileAsync(inputFile, csp: true);
+  await Dart2js.compileAsync(inputFile, csp: true, extraArgs: ['--show-package-warnings']);
   outputFile.writeAsStringSync(patchDart2JSOutput(outputFile.readAsStringSync()));
 }
 
@@ -34,7 +34,6 @@ buildAtomTests() async {
   File outputFile = getFile('${base}.js');
   await Dart2js.compileAsync(inputFile, csp: true, outFile: outputFile);
   delete(getFile('${base}.js.deps'));
-  //outputFile.writeAsStringSync(_patchJSFile(outputFile.readAsStringSync()));
 }
 
 @Task('Run the Atom tests')

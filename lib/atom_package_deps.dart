@@ -15,7 +15,7 @@ final Logger _logger = new Logger('atom.atom_package_deps');
 Future install() {
   return atomPackage.loadPackageJson().then((Map info) {
     List<String> installedPackages = atom.packages.getAvailablePackageNames();
-    List<String> requiredPackages = info['required-packages'];
+    List<String> requiredPackages = new List.from(info['required-packages']);
 
     if (requiredPackages == null || requiredPackages.isEmpty) {
       return null;
