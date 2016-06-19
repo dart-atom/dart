@@ -38,16 +38,12 @@ class QuickFixHelper implements Disposable {
     int offset = editor.getBuffer().characterIndexForPosition(range.start);
     int length = editor.getBuffer().characterIndexForPosition(range.end) - offset;
 
-    Job job = new AnalysisRequestJob('quick fix', () {
-      Future<AssistsResult> f = analysisServer.getAssists(path, offset, length);
-      FixesResult fixes;
+    Job job = new AnalysisRequestJob('quick fix', () async {
+      Future<AssistsResult> assistsFuture = analysisServer.getAssists(path, offset, length);
+      FixesResult fixes = await analysisServer.getFixes(path, offset);
+      AssistsResult assists = await assistsFuture;
 
-      return analysisServer.getFixes(path, offset).then((FixesResult result) {
-        fixes = result;
-        return f;
-      }).then((AssistsResult assists) {
-        _handleFixesResult(fixes, assists, editor, autoFix: autoFix);
-      });
+      _handleFixesResult(fixes, assists, editor, autoFix: autoFix);
     });
     job.schedule();
   }

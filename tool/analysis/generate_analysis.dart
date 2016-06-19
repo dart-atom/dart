@@ -200,6 +200,10 @@ class Domain {
       gen.write('new ${name}(');
       gen.write(fields.map((Field field) {
         String val = "m['${field.name}']";
+        if (field.type.isMap) {
+          val = 'new Map.from($val)';
+        }
+
         if (field.optional) {
           return "${field.name}: ${field.type.jsonConvert(val)}";
         } else {
@@ -663,6 +667,8 @@ abstract class Type {
   String jsonConvert(String ref);
 
   void setCallParam();
+
+  bool get isMap => typeName == 'Map' || typeName.startsWith('Map<');
 
   String toString() => typeName;
 }

@@ -288,20 +288,20 @@ class SdkDiscovery {
         return result;
       }).catchError((e) {
         return null;
-      }) as Future<String>;
+      });
     } else if (isWindows) {
       // TODO: Also use the PATH var?
       return which('dart').then((String result) {
         return _resolveSdkFromVm(result);
       }).catchError((e) {
         return null;
-      }) as Future<String>;
+      });
     } else {
       return which('dart').then((String result) {
         return _resolveSdkFromVm(result);
       }).catchError((e) {
         return null;
-      }) as Future<String>;
+      });
     }
   }
 

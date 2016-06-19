@@ -71,7 +71,7 @@ class TooltipManager implements Disposable {
           // Get rid of previous tooltips.
           _tooltipElement?.dispose();
           _tooltipElement = new TooltipElement(_editor,
-            content: _tooltipContent(h), position: mouseEvent.offset);
+            content: _tooltipContent(h), position: mouseEvent.offset as html.Point<num>); // ignore: unnecessary_cast
         });
       }).catchError((_) => null);
     });

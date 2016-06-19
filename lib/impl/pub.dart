@@ -244,7 +244,7 @@ class PubAppGlobal extends PubApp {
   Future<bool> isInstalled() {
     return getInstalledVersion()
       .then((ver) => ver != null)
-      .catchError((e) => false) as Future<bool>;
+      .catchError((e) => false);
   }
 
   Future<Version> getInstalledVersion() {

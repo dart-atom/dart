@@ -17,33 +17,26 @@ import 'state.dart';
 final Logger _logger = new Logger('atom_utils');
 
 /// Return a description of Atom, the plugin, and the OS.
-Future<String> getSystemDescription({bool sdkPath: false}) {
+Future<String> getSystemDescription({bool sdkPath: false}) async {
   // 'Atom 1.0.11, dartlang 0.4.3, SDK 1.12 running on Windows.'
   String atomVer = atom.getVersion();
-  String pluginVer;
-  String sdkVer;
   String os = isMac ? 'macos' : process.platform;
+  String pluginVer = await atomPackage.getPackageVersion();
+  String sdkVer = sdkManager.hasSdk ? await sdkManager.sdk.getVersion() : null;
 
-  return atomPackage.getPackageVersion().then((ver) {
-    pluginVer = ver;
-    return sdkManager.hasSdk ? sdkManager.sdk.getVersion() : null;
-  }).then((ver) {
-    sdkVer = ver;
+  String description = '\n\nAtom ${atomVer}, dartlang ${pluginVer}';
+  if (sdkVer != null) description += ', SDK ${sdkVer}';
+  description += ' running on ${os}.';
 
-    String description = '\n\nAtom ${atomVer}, dartlang ${pluginVer}';
-    if (sdkVer != null) description += ', SDK ${sdkVer}';
-    description += ' running on ${os}.';
-
-    if (sdkPath) {
-      if (sdkManager.hasSdk) {
-        description += '\nSDK at ${sdkManager.sdk.path}.';
-      } else {
-        description += '\nNo SDK configured.';
-      }
+  if (sdkPath) {
+    if (sdkManager.hasSdk) {
+      description += '\nSDK at ${sdkManager.sdk.path}.';
+    } else {
+      description += '\nNo SDK configured.';
     }
+  }
 
-    return description;
-  });
+  return description;
 }
 
 /// A [NodeValidator] which allows everything.

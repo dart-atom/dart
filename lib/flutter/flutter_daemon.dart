@@ -289,11 +289,11 @@ abstract class Domain {
 
   Stream/*<T>*/ _listen/*<T>*/(String name, Function cvt) {
     if (_streams[name] == null) {
-      _controllers[name] = new StreamController.broadcast();
+      _controllers[name] = new StreamController/*<T>*/.broadcast();
       _streams[name] = _controllers[name].stream.map(cvt);
     }
 
-    return _streams[name];
+    return _streams[name] as Stream/*<T>*/;
   }
 
   void _handleEvent(String name, dynamic event) {

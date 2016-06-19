@@ -101,13 +101,13 @@ abstract class MTab implements Disposable {
 
 typedef void ListRenderer(dynamic obj, CoreElement element);
 typedef bool ListFilter(dynamic obj);
-typedef int ListSort(dynamic obj1, dynamic obj2);
+typedef int ListSort<T>(T obj1, T obj2);
 
 // TODO: use cmd, ctrl to toggle list items
 
 class MList<T> extends CoreElement {
   final ListRenderer renderer;
-  final ListSort sort;
+  final ListSort<T> sort;
   final ListFilter filter;
 
   final Property<T> selectedItem = new Property();

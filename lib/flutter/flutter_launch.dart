@@ -51,27 +51,27 @@ class FlutterLaunchType extends LaunchType {
     return false;
   }
 
-  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
+  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) async {
     String path = configuration.primaryResource;
     DartProject project = projectManager.getProjectFor(path);
-    if (project == null) return new Future.error("File not in a Dart project.");
+    if (project == null) throw "File not in a Dart project.";
 
     if (!_flutterSdk.hasSdk) {
       _flutterSdk.showInstallationInfo();
-      return new Future.error("Unable to launch application; no Flutter SDK found.");
+      throw "Unable to launch application; no Flutter SDK found.";
     }
 
     // Check that the flutter daemon is running.
     if (flutterDaemon == null) {
-      return new Future.error("Unable to launch application; "
+      return throw "Unable to launch application; "
         "the Flutter daemon is not running. Make sure a Flutter SDK is configured in the "
-        "settings for the 'flutter' plugin and / or try re-starting Atom.");
+        "settings for the 'flutter' plugin and / or try re-starting Atom.";
     }
 
-    return _killLastLaunch().then((_) {
-      _lastLaunch = new _RunLaunchInstance(project, configuration, this, flutterDaemon);
-      return _lastLaunch.launch();
-    });
+    await _killLastLaunch();
+
+    _lastLaunch = new _RunLaunchInstance(project, configuration, this, flutterDaemon);
+    return _lastLaunch.launch();
   }
 
   void connectToApp(

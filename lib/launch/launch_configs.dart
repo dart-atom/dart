@@ -115,7 +115,7 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
 
   void initFromStored(dynamic storedData) {
     if (storedData is Map) {
-      _launchTimestamps = storedData;
+      _launchTimestamps = new Map.from(storedData);
     } else {
       _launchTimestamps = <String, int>{};
     }
@@ -176,7 +176,7 @@ class LaunchConfiguration {
   /// Return the type specific arguments for this launch configuration.
   Map<String, dynamic> get typeArgs {
     var data = _map[type];
-    return data is Map ? data : <String, dynamic>{};
+    return data is Map ? new Map.from(data) : <String, dynamic>{};
   }
 
   String get cwd {
@@ -214,7 +214,7 @@ class LaunchConfiguration {
   List<String> get argsAsList {
     var val = typeArgs['args'];
     if (val == null) return <String>[];
-    if (val is List) return val;
+    if (val is List) return new List<String>.from(val);
 
     String str = '${val}';
     // TODO: Handle args wrapped by quotes.

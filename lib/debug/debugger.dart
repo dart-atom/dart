@@ -127,7 +127,7 @@ class UriResolver implements Disposable {
   final Map<String, String> _uriToPath = {};
   final Map<String, List<String>> _pathToUri = {};
 
-  Completer _completer = new Completer();
+  Completer<String> _completer = new Completer<String>();
   String _contextId;
 
   UriResolver(this.root, {UriTranslator translator, this.selfRefName}) {
@@ -153,20 +153,17 @@ class UriResolver implements Disposable {
     });
   }
 
-  Future<String> _resolveUriToPath(String uri) {
+  Future<String> _resolveUriToPath(String uri) async {
     uri = _translator.targetToClient(uri);
 
-    if (uri.startsWith('file:')) return new Future.value(_fileUriToPath(uri));
+    if (uri.startsWith('file:')) return _fileUriToPath(uri);
+    if (_uriToPath.containsKey(uri)) return _uriToPath[uri];
 
-    if (_uriToPath.containsKey(uri)) return new Future.value(_uriToPath[uri]);
-
-    return _completer.future.then((String contextId) {
-      return analysisServer.server.execution.mapUri(contextId, uri: uri);
-    }).then((MapUriResult result) {
-      String path = result.file;
-      _uriToPath[uri] = path;
-      return path;
-    });
+    String contextId = await _completer.future;
+    MapUriResult result = await analysisServer.server.execution.mapUri(contextId, uri: uri);
+    String path = result.file;
+    _uriToPath[uri] = path;
+    return path;
   }
 
   /// This can return one or two results.
@@ -177,29 +174,27 @@ class UriResolver implements Disposable {
     });
   }
 
-  Future<List<String>> _resolvePathToUris(String path) {
-    if (_pathToUri.containsKey(path)) return new Future.value(_pathToUri[path]);
+  Future<List<String>> _resolvePathToUris(String path) async {
+    if (_pathToUri.containsKey(path)) return _pathToUri[path];
 
-    return _completer.future.then((String contextId) {
-      return analysisServer.server.execution.mapUri(contextId, file: path);
-    }).then((MapUriResult result) {
-      if (result.uri == null) return [];
+    String contextId = await _completer.future;
+    MapUriResult result = await analysisServer.server.execution.mapUri(contextId, file: path);
+    if (result.uri == null) return [];
 
-      List<String> uris = [result.uri];
+    List<String> uris = [result.uri];
 
-      if (_selfRefPrefix != null && result.uri.startsWith(_selfRefPrefix)) {
-        String filePath = new Uri.file(root, windows: isWindows).toString();
-        filePath += '/lib/${result.uri.substring(_selfRefPrefix.length)}';
-        uris.insert(0, filePath);
-      }
+    if (_selfRefPrefix != null && result.uri.startsWith(_selfRefPrefix)) {
+      String filePath = new Uri.file(root, windows: isWindows).toString();
+      filePath += '/lib/${result.uri.substring(_selfRefPrefix.length)}';
+      uris.insert(0, filePath);
+    }
 
-      for (int i = 0; i < uris.length; i++) {
-        uris[i] = _translator.clientToTarget(uris[i]);
-      }
+    for (int i = 0; i < uris.length; i++) {
+      uris[i] = _translator.clientToTarget(uris[i]);
+    }
 
-      _pathToUri[path] = uris;
-      return uris;
-    });
+    _pathToUri[path] = uris;
+    return uris;
   }
 
   void dispose() {
