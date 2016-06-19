@@ -41358,7 +41358,7 @@ self._domRemove = function(element) {
     QuickFixHelper__handleQuickFix_closure: {
       "^": "Closure:5;$this,editor,autoFix,path,offset,length",
       call$0: function() {
-        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$handler = 1, $async$currentError, $async$self = this, t1, t2, fixesFuture, $async$temp1, $async$temp2;
+        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$handler = 1, $async$currentError, $async$self = this, t1, t2, assistsFuture, $async$temp1, $async$temp2;
         var $async$call$0 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
           if ($async$errorCode === 1) {
             $async$currentError = $async$result;
@@ -41370,7 +41370,7 @@ self._domRemove = function(element) {
                 // Function start
                 t1 = $async$self.path;
                 t2 = $async$self.offset;
-                fixesFuture = Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).getAssists$3(t1, t2, $async$self.length);
+                assistsFuture = Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).getAssists$3(t1, t2, $async$self.length);
                 $async$temp1 = $async$self.$this;
                 $async$goto = 2;
                 return P._asyncHelper(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).getFixes$2(t1, t2), $async$call$0, $async$completer);
@@ -41378,7 +41378,7 @@ self._domRemove = function(element) {
                 // returning from await.
                 $async$temp2 = $async$result;
                 $async$goto = 3;
-                return P._asyncHelper(fixesFuture, $async$call$0, $async$completer);
+                return P._asyncHelper(assistsFuture, $async$call$0, $async$completer);
               case 3:
                 // returning from await.
                 $async$temp1._handleFixesResult$4$autoFix($async$temp2, $async$result, $async$self.editor, $async$self.autoFix);
