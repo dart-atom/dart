@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue with setting breakpoints in packages when debugging Flutter apps
+
 ## 0.6.26
 - support running Dartino apps on Nucleo board and on an emulated device
 - added support for fast re-start of running Flutter apps
