@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.27
 - fixed an issue with setting breakpoints in packages when debugging Flutter apps
 
 ## 0.6.26
