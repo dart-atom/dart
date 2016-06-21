@@ -355,9 +355,6 @@ class _FlutterLaunch extends Launch {
 }
 
 class FlutterUriTranslator implements UriTranslator {
-  static const _packagesPrefix = 'packages/';
-  static const _packagePrefix = 'package:';
-
   final String root;
 
   FlutterUriTranslator(this.root);
@@ -369,10 +366,7 @@ class FlutterUriTranslator implements UriTranslator {
   }
 
   String _targetToClient(String str) {
-    if (str.startsWith(_packagesPrefix)) {
-      // Convert packages/ prefix to package: one.
-      return _packagePrefix + str.substring(_packagesPrefix.length);
-    } else if (fs.existsSync(str)) {
+    if (fs.existsSync(str)) {
       return new Uri.file(str).toString();
     } else {
       return str;
@@ -386,10 +380,7 @@ class FlutterUriTranslator implements UriTranslator {
   }
 
   String _clientToTarget(String str) {
-    if (str.startsWith(_packagePrefix)) {
-      // Convert package: prefix to packages/ one.
-      return _packagesPrefix + str.substring(_packagePrefix.length);
-    } else if (str.startsWith('file:')) {
+    if (str.startsWith('file:')) {
       return Uri.parse(str).toFilePath();
     } else {
       return str;

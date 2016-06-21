@@ -64891,10 +64891,7 @@ self._domRemove = function(element) {
         return result;
       },
       _targetToClient$1: function(str) {
-        var t1 = J.getInterceptor$s(str);
-        if (t1.startsWith$1(str, "packages/"))
-          return "package:" + t1.substring$1(str, 9);
-        else if ($.$get$fs().invoke$2("existsSync", str) === true)
+        if ($.$get$fs().invoke$2("existsSync", str) === true)
           return P.Uri_Uri$file(str, null).toString$0(0);
         else
           return str;
@@ -64905,10 +64902,7 @@ self._domRemove = function(element) {
         return result;
       },
       _clientToTarget$1: function(str) {
-        var t1 = J.getInterceptor$s(str);
-        if (t1.startsWith$1(str, "package:"))
-          return "packages/" + t1.substring$1(str, 8);
-        else if (t1.startsWith$1(str, "file:"))
+        if (J.startsWith$1$s(str, "file:"))
           return P.Uri_parse(str, 0, null).toFilePath$0();
         else
           return str;
