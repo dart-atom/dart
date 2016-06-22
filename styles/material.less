@@ -1,11 +1,9 @@
 @import "ui-variables";
-// @import "syntax-variables";
 
 .material-icon-button {
   display: inline-block;
 
   width: 22px;
-  height: 22px;
   margin: 1px;
   text-align: center;
   border-radius: 50%;
@@ -58,10 +56,6 @@
     text-decoration: underline;
   }
 
-  // .material-tab:active {
-  //   background-color: @background-color-highlight;
-  // }
-
   .material-tab[disabled] {
     color: @text-color-subtle;
     text-decoration: none;
@@ -77,7 +71,6 @@
     overflow-y: auto;
     overflow-x: hidden;
     cursor: default;
-    // background-color: @base-background-color;
   }
 
   li {
@@ -89,7 +82,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow-x: hidden;
-    // border-bottom: 1px solid @tool-panel-background-color;
 
     .material-icon-button span {
       margin: 0;
@@ -100,9 +92,7 @@
     background-color: @button-background-color-hover;
   }
 
-  li.material-list-selected
-  // , li.material-list-selected span
-  {
+  li.material-list-selected {
     color: @text-color-selected;
     background-color: @background-color-selected;
   }
