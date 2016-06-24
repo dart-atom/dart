@@ -303,10 +303,11 @@ class ObservatoryConnection extends DebugConnection {
 
     switch (kind) {
       case EventKind.kPauseStart:
-        ObservatoryIsolate obsIsolate = _getIsolate(ref);
-        obsIsolate._wasPauseAtStart = true;
-        obsIsolate._isolateInitializedCompleter.future.then((_) {
-          obsIsolate._performInitialResume();
+        _registerNewIsolate(ref).then((ObservatoryIsolate obsIsolate) {
+          obsIsolate._wasPauseAtStart = true;
+          obsIsolate._isolateInitializedCompleter.future.then((_) {
+            obsIsolate._performInitialResume();
+          });
         });
         break;
       case EventKind.kPauseExit:
