@@ -93,7 +93,7 @@ abstract class TestRunner {
 
 class FlutterTestRunner extends TestRunner {
   bool canRun(DartProject project, String path) {
-    return project.isFlutterProject() && project.importsPackage('test');
+    return project.importsPackage('flutter') && project.importsPackage('test');
   }
 
   Launch run(DartProject project, String path) {
