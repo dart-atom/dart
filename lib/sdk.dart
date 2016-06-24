@@ -245,8 +245,7 @@ class Sdk {
     cwd, bool startProcess: true
   }) {
     if (cwd is Directory) cwd = cwd.path;
-    String command = fs.join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
-
+    String command = getToolPath(binName);
     ProcessRunner runner =
         new ProcessRunner.underShell(command, args: args, cwd: cwd);
     if (startProcess) runner.execStreaming();
@@ -257,8 +256,13 @@ class Sdk {
   /// be either a [String] or a [Directory].
   Future<ProcessResult> execBinSimple(String binName, List<String> args, {cwd}) {
     if (cwd is Directory) cwd = cwd.path;
-    String command = fs.join(directory, 'bin', isWindows ? '${binName}.bat' : binName);
+    String command = getToolPath(binName);
     return new ProcessRunner.underShell(command, args: args, cwd: cwd).execSimple();
+  }
+
+  // Get the full, platform dependent name to a tool in the `bin/` directory.
+  String getToolPath(String toolName) {
+    return fs.join(directory, 'bin', isWindows ? '${toolName}.bat' : toolName);
   }
 
   String toString() => directory.getPath();

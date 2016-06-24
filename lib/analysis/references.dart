@@ -88,8 +88,6 @@ class FindReferencesView extends View {
   ListTreeBuilder treeBuilder;
   Disposables disposables = new Disposables();
   _MatchParser matchParser = new _MatchParser();
-  // CoreElement refreshButton;
-  // Map _refData;
 
   FindReferencesView() {
     content.toggleClass('find-references');
@@ -101,10 +99,6 @@ class FindReferencesView extends View {
       ]),
       treeBuilder = new ListTreeBuilder(_render)
     ]);
-
-    // toolbar.add([ // MIconButton instead
-    //   refreshButton = span(c: 'icon-button icon-sync')..click(_refesh)
-    // ]);
 
     treeBuilder.toggleClass('tab-scrollable');
     treeBuilder.onClickNode.listen(_jumpTo);
@@ -120,12 +114,9 @@ class FindReferencesView extends View {
   void dispose() => disposables.dispose();
 
   Future _handleSearchResults(ReferencesSearch search, {Map refData}) async {
-    // this._refData = refData;
-
     title.text = search.searchType;
     subtitle.text = "'${search.label}'; searching…";
     subtitle.toggleClass('searching', true);
-    // refreshButton.enabled = false;
 
     treeBuilder.clear();
 
@@ -140,7 +131,6 @@ class FindReferencesView extends View {
     subtitle.text = "${commas(resultsList.length)} ${pluralize('result', resultsList.length)} "
       "for '${search.label}'";
     subtitle.toggleClass('searching', false);
-    // refreshButton.enabled = _refData != null;
 
     LinkedHashMap<String, List<SearchResult>> results = new LinkedHashMap();
 
@@ -238,33 +228,6 @@ class FindReferencesView extends View {
     // Return the original path.
     return [originalPath];
   }
-
-  // void _refesh() {
-  //   if (_refData == null) return;
-  //
-  //   String path = _refData['path'];
-  //   int offset = _refData['offset'];
-  //
-  //   refreshButton.enabled = false;
-  //
-  //   Job job = new AnalysisRequestJob('find references', () {
-  //     return new Future.delayed(new Duration(milliseconds: 150)).then((_) {
-  //       return analysisServer.findElementReferences(path, offset, false);
-  //     }).then((FindElementReferencesResult result) {
-  //       if (result == null || result.id == null) {
-  //         refreshButton.enabled = true;
-  //         atom.beep();
-  //         return;
-  //       } else {
-  //         FindReferencesView.showView(result, refData: _refData, isRefreshing: true);
-  //       }
-  //     }).catchError((e) {
-  //       refreshButton.enabled = false;
-  //       throw e;
-  //     });
-  //   });
-  //   job.schedule();
-  // }
 
   static final _cachePrefix = '${fs.separator}.pub-cache${fs.separator}';
   static final _pubPrefix = 'hosted${fs.separator}pub.dartlang.org${fs.separator}';

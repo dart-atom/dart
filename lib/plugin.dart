@@ -56,7 +56,7 @@ import 'impl/pub.dart';
 import 'impl/rebuild.dart';
 import 'impl/status.dart';
 import 'impl/status_display.dart';
-import 'impl/tests.dart';
+import 'impl/testing.dart';
 import 'impl/toolbar.dart';
 import 'impl/toolbar_impl.dart';
 import 'jobs.dart';

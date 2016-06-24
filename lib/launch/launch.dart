@@ -269,8 +269,12 @@ class Launch implements Disposable {
     List<String> desc = [];
 
     if (locationLabel != null) desc.add(locationLabel);
-    if (launchType.supportsChecked && launchConfiguration.checked) desc.add('checked mode');
-    if (launchConfiguration.debug) desc.add('debug');
+    if (launchConfiguration != null) {
+      if (launchType != null) {
+        if (launchType.supportsChecked && launchConfiguration.checked) desc.add('checked mode');
+      }
+      if (launchConfiguration.debug) desc.add('debug');
+    }
 
     return desc.isEmpty ? null : desc.join(' • ');
   }

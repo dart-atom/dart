@@ -12,9 +12,12 @@ import '../launch/launch.dart';
 import '../launch/run.dart';
 import '../projects.dart';
 import '../state.dart';
+import 'testing.dart';
 import 'toolbar.dart';
 
 WorkspaceLaunchManager get _workspaceLaunchManager => deps[WorkspaceLaunchManager];
+
+TestManager get testManager => deps[TestManager];
 
 class DartToolbarContribution implements Disposable {
   ToolbarTile leftTile;
@@ -100,11 +103,18 @@ class DartToolbarContribution implements Disposable {
   }
 
   CoreElement _buildRightTile() {
+    CoreElement runTestsDiv;
     CoreElement outlineToggleDiv;
 
     // `settings-view` class added to get proper styling for select elements.
     CoreElement e = div(c: 'settings-view', a: 'flex-center')..add([
       div(c: 'btn-group btn-group dartlang-toolbar')..add([
+        div()..add([
+          runTestsDiv = button(c: 'btn icon icon-pulse')
+            ..click(_runTests)
+            ..tooltip = "Run Tests"
+            ..display = 'none'
+        ]),
         div()..add([
           outlineToggleDiv = button(c: 'btn icon icon-list-unordered')
             ..click(_toggleOutline)
@@ -115,6 +125,8 @@ class DartToolbarContribution implements Disposable {
 
     void updateToolbar() {
       String path = atom.workspace.getActiveTextEditor()?.getPath();
+
+      runTestsDiv.display = testManager.isRunnableTest(path) ? 'inline-block' : 'none';
       outlineToggleDiv.enabled = isDartFile(path);
     }
 
@@ -239,6 +251,16 @@ class DartToolbarContribution implements Disposable {
       atom.workspace.openPending(config.configYamlPath);
     } else {
       atom.notifications.addWarning('No current launchable resource.');
+    }
+  }
+
+  void _runTests() {
+    String path = atom.workspace.getActiveTextEditor()?.getPath();
+
+    if (path == null) {
+      atom.notifications.addWarning('No active editor.');
+    } else {
+      testManager.runTestFile(path);
     }
   }
 

@@ -200,7 +200,7 @@ class ConsoleView extends View {
     _emitElement(header);
   }
 
-  String get label => launch.launchConfiguration.shortResourceName;
+  String get label => launch.launchConfiguration?.shortResourceName ?? launch.name;
 
   String get id => 'console.${_launchId}';
 
