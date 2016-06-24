@@ -33178,7 +33178,7 @@ self._domRemove = function(element) {
         }
       }, null, null, 2, 0, null, 0, "call"]
     }
-  }], ["atom.buffer_observer", "package:atom_dartlang/buffer/buffer_observer.dart",, K, {
+  }], ["atom.buffer_observer", "package:atom_dartlang/analysis/buffer_observer.dart",, K, {
     "^": "",
     _log: function(f) {
       f.catchError$1(new K._log_closure());
