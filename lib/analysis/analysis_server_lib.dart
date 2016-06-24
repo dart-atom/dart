@@ -16,7 +16,7 @@ const String experimental = 'experimental';
 
 final Logger _logger = new Logger('analysis_server_lib');
 
-const String generatedProtocolVersion = '1.15.0';
+const String generatedProtocolVersion = '1.16.0';
 
 typedef void MethodSend(String methodName);
 
@@ -230,11 +230,12 @@ class ServerDomain extends Domain {
 }
 
 class ServerConnected {
-  static ServerConnected parse(Map m) => new ServerConnected(m['version']);
+  static ServerConnected parse(Map m) => new ServerConnected(m['version'], m['pid']);
 
   final String version;
+  final int pid;
 
-  ServerConnected(this.version);
+  ServerConnected(this.version, this.pid);
 }
 
 class ServerError {
