@@ -322,6 +322,7 @@ class ProjectManager implements Disposable {
 class DartProject {
   final Directory directory;
   File pubspecFile;
+  File dotPackages;
 
   AnalysisOptions _analysisOptions;
 
@@ -330,6 +331,7 @@ class DartProject {
 
   DartProject(this.directory) {
     pubspecFile = directory.getFile(pub.pubspecFileName);
+    dotPackages = directory.getFile(pub.dotPackagesFileName);
   }
 
   String get path => directory.path;
@@ -410,8 +412,6 @@ class DartProject {
   String toString() => '[Project ${directory.getBaseName()}]';
 
   bool importsPackage(String packageName) {
-    File dotPackages = directory.getFile(pub.dotPackagesFileName);
-
     if (dotPackages.existsSync()) {
       try {
         List<String> lines = dotPackages.readSync().split('\n');

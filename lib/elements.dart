@@ -183,6 +183,12 @@ class CoreElement {
     element.title = value;
   }
 
+  String get display => element.style.display;
+
+  set display(String value) {
+    element.style.display = value;
+  }
+
   Stream<MouseEvent> get onClick => element.onClick.where((_) => !disabled);
 
   /// Subscribe to the [onClick] event stream with a no-arg handler.

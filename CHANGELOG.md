@@ -1,5 +1,10 @@
 # dartlang plugin changelog
 
+## unreleased
+- added support for running tests (available via a toolbar button or the
+  ctrl-option-cmd-t keybinding)
+- fixed an issue with rendering getters in the outline view
+
 ## 0.6.27
 - fixed an issue with setting breakpoints in packages when debugging Flutter apps
 
