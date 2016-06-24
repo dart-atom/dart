@@ -336,7 +336,7 @@ class Launch implements Disposable {
     }
   }
 
-  String toString() => '${launchType}: ${name}';
+  String toString() => launchType != null ? '${launchType}: ${name}' : name;
 }
 
 class TextFragment {
