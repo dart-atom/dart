@@ -97,13 +97,15 @@ class FlutterTestRunner extends TestRunner {
   }
 
   Launch run(DartProject project, String path) {
-    // TODO(devoncarew): Add an option to send in the `--merge-coverage` flag.
-
     String relativePath = project.getRelative(path);
+    List<String> args = ['--no-color', 'test'];
+    if (atom.config.getBoolValue('flutter.mergeCoverage'))
+      args.add('--merge-coverage');
+    args.add(relativePath);
 
     ProcessRunner runner = new ProcessRunner(
       _flutterSdk.sdk.flutterToolPath,
-      args: ['--no-color', 'test', relativePath],
+      args: args,
       cwd: project.path
     );
     String description = 'flutter test ${relativePath}';

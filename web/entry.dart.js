@@ -43428,6 +43428,7 @@ self._domRemove = function(element) {
           t1.invoke$3("addWarning", "Unable to run tests - not a valid test file.", t1._options$5$buttons$description$detail$dismissable$icon(null, path, null, null, null));
           return;
         }
+        $.$get$atom()._workspace.saveAll$0();
         project = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
         for (t1 = this.runners, _i = 0; _i < 3; ++_i) {
           runner = t1[_i];
@@ -43473,15 +43474,19 @@ self._domRemove = function(element) {
         return project.isFlutterProject$0() && project.importsPackage$1("test");
       },
       run$2: function(project, path) {
-        var relativePath, t1, t2, t3, t4, t5, t6, runner, description, t7, t8, launch;
+        var relativePath, args, t1, t2, t3, t4, t5, t6, runner, description, t7, t8, launch;
         relativePath = project.getRelative$1(path);
+        args = ["--no-color", "test"];
+        if (J.$eq$($.$get$atom()._config.getValue$2$scope("flutter.mergeCoverage", null), true))
+          args.push("--merge-coverage");
+        args.push(relativePath);
         t1 = $.$get$_flutterSdk0().get$sdk().get$flutterToolPath();
         t2 = J.getInterceptor$x(project);
         t3 = t2.get$path(project);
         t4 = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
         t5 = P.StreamController_StreamController(null, null, null, null, false, null);
         t6 = P.StreamController_StreamController(null, null, null, null, false, null);
-        runner = new X.ProcessRunner(t1, ["--no-color", "test", relativePath], t3, null, null, t4, null, t5, t6);
+        runner = new X.ProcessRunner(t1, args, t3, null, null, t4, null, t5, t6);
         description = "flutter test " + H.S(relativePath);
         t3 = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK);
         t2 = t2.get$path(project);
