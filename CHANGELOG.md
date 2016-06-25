@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.28
 - added support for running tests (available via a toolbar button or the
   ctrl-option-cmd-t keybinding)
 - fixed an issue with rendering getters in the outline view

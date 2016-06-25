@@ -37278,7 +37278,7 @@ self._domRemove = function(element) {
         return P.Future_Future$error("unsupported", null, null);
       },
       launchTerminated$2$quiet: function(code, quiet) {
-        var t1, t2, t3, t4;
+        var t1, t2;
         t1 = this.exitCode;
         if (t1._utils$_value != null)
           return;
@@ -37287,15 +37287,12 @@ self._domRemove = function(element) {
           Q.Dependencies_instance().getDependency$1(C.Type_DebugManager_QDz).removeConnection$1(this._debugConnection);
         if (!quiet) {
           t2 = t1._utils$_value;
-          t2 = t2 != null && !J.$eq$(t2, 0);
-          t3 = this.launchType;
-          t4 = this.name;
-          if (t2) {
+          if (t2 != null && !J.$eq$(t2, 0)) {
             t2 = $.$get$atom()._notifications;
-            t2.invoke$3("addError", J.toString$0$(t3) + ": " + H.S(t4) + " exited with error code " + H.S(t1._utils$_value) + ".", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+            t2.invoke$3("addError", H.S(this) + " exited with error code " + H.S(t1._utils$_value) + ".", t2._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
           } else {
             t1 = $.$get$atom()._notifications;
-            t1.invoke$3("addSuccess", J.toString$0$(t3) + ": " + H.S(t4) + " finished.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
+            t1.invoke$3("addSuccess", H.S(this) + " finished.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
           }
         }
         t1 = this.manager.get$_launchTerminated();
@@ -37321,7 +37318,10 @@ self._domRemove = function(element) {
           this.kill$0();
       }, "call$0", "get$dispose", 0, 0, 2],
       toString$0: function(_) {
-        return J.toString$0$(this.launchType) + ": " + H.S(this.name);
+        var t1, t2;
+        t1 = this.launchType;
+        t2 = this.name;
+        return t1 != null ? J.toString$0$(t1) + ": " + H.S(t2) : t2;
       },
       killHandler$0: function() {
         return this.killHandler.call$0();
@@ -43480,7 +43480,7 @@ self._domRemove = function(element) {
     FlutterTestRunner: {
       "^": "TestRunner;",
       canRun$2: function(project, path) {
-        return project.isFlutterProject$0() && project.importsPackage$1("test");
+        return project.importsPackage$1("flutter") && project.importsPackage$1("test");
       },
       run$2: function(project, path) {
         var relativePath, args, t1, t2, t3, t4, t5, t6, runner, description, t7, t8, launch;
