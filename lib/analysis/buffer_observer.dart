@@ -112,18 +112,19 @@ class BufferUpdater extends BufferObserver {
 
   String path;
 
-  BufferUpdater(manager, editor) : super(manager, editor) {
+  BufferUpdater(BufferObserverManager manager, TextEditor editor) : super(manager, editor) {
     path = editor.getPath();
 
     // Debounce atom onDidChange events; atom sends us several events as a file
     // is opening. The number of events is proportional to the file size. For
     // a file like dart:html, this is on the order of 800 onDidChange events.
-    var onDidChangeSub = editor.onDidChange
+    StreamSubscription onDidChangeSub = editor.onDidChange
         .transform(new Debounce(new Duration(milliseconds: 10)))
         .listen(_didChange);
 
     _subs.add(onDidChangeSub);
     _subs.add(editor.onDidDestroy.listen(_didDestroy));
+    _subs.add(editor.onDidChangeTitle.listen(_onDidChangeTitle));
 
     addOverlay();
   }
@@ -134,6 +135,12 @@ class BufferUpdater extends BufferObserver {
   bool get dartProject => projectManager.getProjectFor(path) != null;
 
   void _didChange([_]) => changedOverlay();
+
+  void _onDidChangeTitle([_]) {
+    removeOverlay();
+    path = editor.getPath();
+    addOverlay();
+  }
 
   void _didDestroy([_]) => dispose();
 

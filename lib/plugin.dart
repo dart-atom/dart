@@ -18,6 +18,7 @@ import 'package:atom_dartlang/impl/tooltip.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_options.dart';
+import 'analysis/buffer_observer.dart';
 import 'analysis/completions.dart';
 import 'analysis/dartdoc.dart';
 import 'analysis/declaration_nav.dart';
@@ -34,7 +35,6 @@ import 'atom_linter.dart' show LinterService;
 import 'atom_package_deps.dart' as package_deps;
 import 'atom_statusbar.dart';
 import 'atom_utils.dart';
-import 'buffer/buffer_observer.dart';
 import 'dartino/dartino.dart' show dartino;
 import 'debug/breakpoints.dart';
 import 'debug/debugger.dart';
