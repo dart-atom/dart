@@ -1,7 +1,9 @@
 
 /// Return the list of possible test paths. The given [path] must be in the
 /// `lib/` directory.
-List<String> getPossibleTestPaths(String path, { String separator: '/' }) {
+List<String> getPossibleTestPaths(String path, String separator) {
+  assert(separator.length == 1);
+
   if (!path.startsWith('lib${separator}')) return [];
   path = path.substring(4);
 
@@ -22,7 +24,7 @@ List<String> getPossibleTestPaths(String path, { String separator: '/' }) {
   }
 
   // Look for test/file_test.dart.
-  if (path.contains('/')) {   
+  if (path.contains('/')) {
     testPath = 'test' + separator + _basename(path, separator: separator);
     result.add(testPath);
   }

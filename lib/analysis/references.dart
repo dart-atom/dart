@@ -49,7 +49,7 @@ class FindReferencesHelper implements Disposable {
         } else {
           bool isMethod = result.element.parameters != null;
           String name = "${result.element.name}${isMethod ? '()' : ''}";
-          Future<List<SearchResult>> resultsFuture = analysisServer.waitForSearchResults(result.id);
+          Future<List<SearchResult>> resultsFuture = analysisServer.getSearchResults(result.id);
           FindReferencesView.showView(
             new ReferencesSearch('References', name, resultsFuture: resultsFuture),
             refData: { 'path': path, 'offset': offset }

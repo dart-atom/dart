@@ -250,7 +250,7 @@ class AnalysisServer implements Disposable {
     if (isActive) _server.analysis.reanalyze();
   }
 
-  Stream<SearchResult> _filterSearchResults(String id) {
+  Stream<SearchResult> _searchResultsStream(String id) {
     StreamSubscription sub;
     StreamController<SearchResult> controller = new StreamController(
         onCancel: () => sub.cancel());
@@ -271,8 +271,8 @@ class AnalysisServer implements Disposable {
     return controller.stream;
   }
 
-  Future<List<SearchResult>> waitForSearchResults(String id) {
-    return _filterSearchResults(id).toList();
+  Future<List<SearchResult>> getSearchResults(String searchId) {
+    return _searchResultsStream(searchId).toList();
   }
 
   Future<FormatResult> format(String path, int selectionOffset, int selectionLength,

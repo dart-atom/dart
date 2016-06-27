@@ -104,7 +104,7 @@ class TestManager implements Disposable {
     String prefix = project.path;
     String pathFragment = path.substring(prefix.length + 1);
 
-    for (String fragment in getPossibleTestPaths(pathFragment, separator: fs.separator)) {
+    for (String fragment in getPossibleTestPaths(pathFragment, fs.separator)) {
       String testPath = fs.join(prefix, fragment);
       if (fs.existsSync(testPath)) {
         return testPath;
@@ -170,11 +170,13 @@ defineTests() {
 }
 ''');
 
+    // Delay to make sure the file is written to disk.
     await new Future.delayed(Duration.ZERO);
-    atom.workspace.open(testPath);
 
-    await new Future.delayed(Duration.ZERO);
-    runTestFile(testPath);
+    atom.workspace.open(testPath).then((_) {
+      // Once the file is open, run the tests for it the first time.
+      runTestFile(testPath);
+    });
   }
 
   void dispose() => disposables.dispose();
