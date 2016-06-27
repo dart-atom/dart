@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:atom/atom.dart';
 import 'package:atom/node/process.dart';
-import 'package:atom_dartlang/dartino/sdk/sod_repo.dart';
 
 import '../launch_dartino.dart';
 import '../sdk/dartino_sdk.dart';
@@ -15,14 +14,6 @@ class DartuinoBoard extends Device {
   /// Return a target device for the given launch or `null` if none.
   static Future<DartuinoBoard> forLaunch(Sdk sdk, DartinoLaunch launch) async {
     //TODO(danrubel) add Windows support
-
-    // New interaction with device via debug daemon
-    if (sdk is SodRepo) {
-      //TODO(danrubel) need better way to list connected devices
-      if (await sdk.startDebugDaemon(launch)) {
-        return new DartuinoBoard(null);
-      }
-    }
 
     if (isMac || isLinux) {
       String ttyPath;
@@ -51,10 +42,5 @@ class DartuinoBoard extends Device {
   Future<bool> launchDartino(DartinoSdk sdk, DartinoLaunch launch) async {
     atom.notifications.addError('Dartino not yet supported on this board');
     return false;
-  }
-
-  @override
-  Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) {
-    return launchSOD_device(sdk, launch, ttyPath);
   }
 }

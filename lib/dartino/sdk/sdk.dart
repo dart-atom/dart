@@ -7,7 +7,7 @@ import 'package:atom/node/process.dart';
 
 import '../launch_dartino.dart';
 
-/// Abstract SDK implementation shared by Dartino and SOD.
+/// Abstract SDK implementation used by Dartino.
 /// Clients should call <classname>.forPath to instantiate a new SDK
 /// then further call [validate] to verify that the SDK is valid.
 abstract class Sdk {

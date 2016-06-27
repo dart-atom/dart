@@ -18,7 +18,6 @@ import 'dartino_util.dart';
 import 'launch_dartino.dart';
 import 'sdk/dartino_sdk.dart';
 import 'sdk/sdk.dart';
-import 'sdk/sod_repo.dart';
 
 const _pluginId = 'dartino';
 
@@ -64,7 +63,6 @@ class _Dartino implements Disposable {
     }
     path = fs.resolveTilde(path);
     Sdk sdk = DartinoSdk.forPath(path);
-    if (sdk == null) sdk = SodRepo.forPath(path);
     if (sdk == null) {
       if (!quiet) promptSetSdk('Invalid SDK path specified');
       return null;
@@ -164,11 +162,6 @@ class _Dartino implements Disposable {
 
   /// Prompt the user which SDK and where to install, then do it.
   void promptInstallSdk([AtomEvent _]) {
-    // atom.notifications
-    //     .addInfo('Which SDK would you like to install?', buttons: [
-    //   new NotificationButton('Dartino', DartinoSdk.promptInstall),
-    //   new NotificationButton('SOD', SodRepo.promptInstall)
-    // ]);
     DartinoSdk.promptInstall();
   }
 

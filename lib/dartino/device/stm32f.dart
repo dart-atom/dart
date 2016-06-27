@@ -8,7 +8,6 @@ import 'package:atom/node/process.dart';
 import '../launch_dartino.dart';
 import '../sdk/dartino_sdk.dart';
 import '../sdk/sdk.dart';
-import '../sdk/sod_repo.dart';
 import 'device.dart';
 
 /// An STM32F Discovery or Nucleo board
@@ -107,10 +106,5 @@ class Stm32f extends Device {
       return false;
     }
     return true;
-  }
-
-  @override
-  Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) {
-    return launchSOD_device(sdk, launch, ttyPath);
   }
 }

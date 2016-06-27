@@ -1,6 +1,6 @@
 
 /// Return `true` if the specified packages file content
-/// contains references to Dartino or SOD packages.
+/// contains references to Dartino packages.
 bool containsDartinoReferences(String content, String sdkPath) {
   if (content == null || sdkPath == null) return false;
   if (content.isEmpty || sdkPath.isEmpty) return false;

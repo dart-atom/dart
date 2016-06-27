@@ -5,7 +5,6 @@ import 'package:atom/atom.dart';
 import '../launch_dartino.dart';
 import '../sdk/dartino_sdk.dart';
 import '../sdk/sdk.dart';
-import '../sdk/sod_repo.dart';
 import 'device.dart';
 
 /// An emulated device
@@ -25,11 +24,5 @@ class EmulatedDevice extends Device {
       return false;
     }
     return true;
-  }
-
-  @override
-  Future<bool> launchSOD(SodRepo sdk, DartinoLaunch launch) async {
-    atom.notifications.addError('Emulation not supported for SOD');
-    return false;
   }
 }
