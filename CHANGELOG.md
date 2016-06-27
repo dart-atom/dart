@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.29
 - fixed an issue with toString() evaluation in the debugger
 - fixed a race condition in the find references feature
 - the test runner will now run tests associated with the current file (running
