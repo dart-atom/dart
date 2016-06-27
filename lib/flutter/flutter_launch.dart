@@ -193,7 +193,8 @@ class _RunLaunchInstance extends _LaunchInstance {
       mode: _mode.name,
       startPaused: _mode.startPaused,
       target: _target,
-      route: _route
+      route: _route,
+      reloadSources: atom.config.getValue('flutter.reloadSources')
     ).then((AppStartedResult result) {
       _app = daemon.app.createDaemonApp(result.appId, supportsRestart: result.supportsRestart);
       _launch.app = _app;
