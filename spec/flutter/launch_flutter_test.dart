@@ -20,7 +20,7 @@ class FlutterUriTranslatorTest extends TestSuite {
 
   _targetToClient_package() {
     expect(
-      x.targetToClient('packages/flutter/src/material/dialog.dart'),
+      x.targetToClient('package:flutter/src/material/dialog.dart'),
       'package:flutter/src/material/dialog.dart'
     );
   }
@@ -39,7 +39,7 @@ class FlutterUriTranslatorTest extends TestSuite {
   _clientToTarget_package() {
     expect(
       x.clientToTarget('package:flutter/src/material/dialog.dart'),
-      'packages/flutter/src/material/dialog.dart'
+      'package:flutter/src/material/dialog.dart'
     );
   }
 

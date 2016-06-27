@@ -76,6 +76,8 @@ import 'views.dart' show ViewGroupManager;
 
 final Logger _logger = new Logger('plugin');
 
+String pluginVersion;
+
 class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables(catchExceptions: true);
   final StreamSubscriptions subscriptions = new StreamSubscriptions(catchExceptions: true);
@@ -126,6 +128,9 @@ class AtomDartPackage extends AtomPackage {
     state.loadFrom(pluginState);
 
     checkChangelog();
+    atomPackage.getPackageVersion().then((String version) {
+      pluginVersion = version;
+    });
 
     Flutter.setMinSdkVersion();
     disposables.add(dartino);

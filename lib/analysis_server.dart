@@ -18,6 +18,7 @@ import 'package:logging/logging.dart';
 import 'analysis/analysis_server_lib.dart';
 import 'dartino/dartino.dart' show dartino;
 import 'jobs.dart';
+import 'plugin.dart' show pluginVersion;
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
@@ -249,7 +250,7 @@ class AnalysisServer implements Disposable {
     if (isActive) _server.analysis.reanalyze();
   }
 
-  Stream<SearchResult> filterSearchResults(String id) {
+  Stream<SearchResult> _filterSearchResults(String id) {
     StreamSubscription sub;
     StreamController<SearchResult> controller = new StreamController(
         onCancel: () => sub.cancel());
@@ -271,7 +272,7 @@ class AnalysisServer implements Disposable {
   }
 
   Future<List<SearchResult>> waitForSearchResults(String id) {
-    return filterSearchResults(id).toList();
+    return _filterSearchResults(id).toList();
   }
 
   Future<FormatResult> format(String path, int selectionOffset, int selectionLength,
@@ -572,6 +573,9 @@ class _AnalysisServerWrapper extends Server {
       _logger.info('analysis server diagnostics available at '
           '${AnalysisServer.diagnosticsUrl}.');
     }
+
+    arguments.add('--client-id=atom-dartlang');
+    arguments.add('--client-version=${pluginVersion}');
 
     // Allow arbitrary CLI options to the analysis server.
     final String optionsPrefPath = '${pluginId}.analysisServerOptions';

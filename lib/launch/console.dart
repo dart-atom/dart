@@ -284,18 +284,18 @@ class ConsoleView extends View {
   //
   // 'test/utils_test.dart 21 '
   // 'test/utils_test.dart 21:7 '
-  final RegExp _consoleMatcher =
+  final RegExp _hyperlinkMatcher =
       new RegExp(r' \((\S+\.dart):(\d+)(:\d+)?\)|(\S+\.dart) (\d+)(:\d+)? ');
 
   void _emitText(String str, {bool error: false, bool subtle: false, bool highlight: false}) {
     _lastText = str;
 
-    List<Match> matches = _consoleMatcher.allMatches(str).toList();
+    List<Match> matches = _hyperlinkMatcher.allMatches(str).toList();
 
     CoreElement e;
 
     if (matches.isEmpty) {
-      e = span(text: str);
+      e = span(text: _stripAnsi(str));
     } else {
       e = span();
 
@@ -306,10 +306,10 @@ class ConsoleView extends View {
         String line = match.group(2) ?? match.group(5);
         int startIndex = match.start + (match.group(1) != null ? 2 : 0);
 
-        e.add(span(text: str.substring(offset, startIndex)));
+        e.add(span(text: _stripAnsi(str.substring(offset, startIndex))));
 
         String text = '${ref}:${line}';
-        CoreElement link = e.add(span(text: text));
+        CoreElement link = e.add(span(text: _stripAnsi(text)));
 
         offset = startIndex + text.length;
 
@@ -328,7 +328,7 @@ class ConsoleView extends View {
       }
 
       if (offset != str.length) {
-        e.add(span(text: str.substring(offset)));
+        e.add(span(text: _stripAnsi(str.substring(offset))));
       }
     }
 
@@ -342,6 +342,14 @@ class ConsoleView extends View {
     }
 
     _emitElement(e);
+  }
+
+  final RegExp _stripAnsiRegex = new RegExp('\u001B\\[\\d\\d?m');
+
+  String _stripAnsi(String text) {
+    // TODO(devoncarew): Handle ansi reset, bold, and foreground color changes.
+    // \esc[0m, \esc[1m, \esc[30m - \esc[37m
+    return text.replaceAll(_stripAnsiRegex, '');
   }
 
   void _emitElement(CoreElement e) {

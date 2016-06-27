@@ -858,7 +858,7 @@ class ObservatoryInstanceRefValue extends DebugValue {
   }
 
   Future<DebugValue> invokeToString() async {
-    dynamic result = isolate.service.evaluate(isolate.id, value.id, 'toString()');
+    dynamic result = await isolate.service.evaluate(isolate.id, value.id, 'toString()');
 
     // [InstanceRef], [ErrorRef] or [Sentinel]
     if (result is Sentinel) {
