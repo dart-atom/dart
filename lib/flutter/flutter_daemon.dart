@@ -373,7 +373,8 @@ class AppDomain extends Domain {
     bool startPaused,
     String route,
     String mode,
-    String target
+    String target,
+    bool reloadSources
   }) {
     return _call('app.start', _stripNullValues({
       'deviceId': deviceId,
@@ -381,7 +382,8 @@ class AppDomain extends Domain {
       'startPaused': startPaused,
       'route': route,
       'mode': mode,
-      'target': target
+      'target': target,
+      'reload-sources': reloadSources
     })).then((result) {
       return new AppStartedResult(result);
     });
