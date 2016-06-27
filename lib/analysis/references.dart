@@ -49,7 +49,9 @@ class FindReferencesHelper implements Disposable {
         } else {
           bool isMethod = result.element.parameters != null;
           String name = "${result.element.name}${isMethod ? '()' : ''}";
-          FindReferencesView.showView(new ReferencesSearch('References', name, searchId: result.id),
+          Future<List<SearchResult>> resultsFuture = analysisServer.getSearchResults(result.id);
+          FindReferencesView.showView(
+            new ReferencesSearch('References', name, resultsFuture: resultsFuture),
             refData: { 'path': path, 'offset': offset }
           );
         }
@@ -63,10 +65,10 @@ class ReferencesSearch {
   final String searchType;
   final String label;
 
-  final String searchId;
   final List<SearchResult> results;
+  final Future<List<SearchResult>> resultsFuture;
 
-  ReferencesSearch(this.searchType, this.label, {this.searchId, this.results});
+  ReferencesSearch(this.searchType, this.label, {this.results, this.resultsFuture});
 }
 
 class FindReferencesView extends View {
@@ -125,7 +127,7 @@ class FindReferencesView extends View {
     if (search.results != null) {
       resultsList = search.results;
     } else {
-      resultsList = await analysisServer.waitForSearchResults(search.searchId);
+      resultsList = await search.resultsFuture;
     }
 
     subtitle.text = "${commas(resultsList.length)} ${pluralize('result', resultsList.length)} "

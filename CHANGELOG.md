@@ -1,5 +1,14 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an issue with toString() evaluation in the debugger
+- fixed a race condition in the find references feature
+- the test runner will now run tests associated with the current file (running
+  `foo.dart` with the test runner will run the associated `test/foo_test.dart` file)
+- better handle ansi escape codes in the console
+- added a `create test` command; this creates a new test file corresponding to the
+  current active editor
+
 ## 0.6.28
 - added support for running tests (available via a toolbar button or the
   ctrl-option-cmd-t keybinding)

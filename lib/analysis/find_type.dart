@@ -57,7 +57,7 @@ class FindTypeHelper implements Disposable {
           return;
         }
 
-        List<SearchResult> results = await analysisServer.waitForSearchResults(result.id);
+        List<SearchResult> results = await analysisServer.getSearchResults(result.id);
 
         if (results.isEmpty) {
           atom.beep();
