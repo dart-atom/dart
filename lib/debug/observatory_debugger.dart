@@ -359,7 +359,7 @@ class ObservatoryConnection extends DebugConnection {
     }).then((_) {
       isolate._isolateInitializedCompleter.complete();
 
-      if (isolate.isolate.pauseEvent.kind == EventKind.kPauseStart) {
+      if (isolate.isolate.pauseEvent?.kind == EventKind.kPauseStart) {
         isolate._performInitialResume();
       }
 
