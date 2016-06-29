@@ -40,7 +40,7 @@ class AnalysisServer implements Disposable {
 
   static final int DIAGNOSTICS_PORT = 23072;
 
-  static String get diagnosticsUrl => 'http://localhost:${DIAGNOSTICS_PORT}/';
+  static String get diagnosticsUrl => 'http://localhost:${DIAGNOSTICS_PORT}';
 
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
@@ -127,8 +127,15 @@ class AnalysisServer implements Disposable {
     });
 
     onReceive.listen((String message) {
-      if (message.startsWith('Observatory listening') ||
-          message.startsWith('Observatory no longer listening')) {
+      if (message.startsWith('Observatory listening')) {
+        message = message.trim();
+        if (AnalysisServer.startWithDiagnostics) {
+          message += '\nAnalysis server diagnostics on ${AnalysisServer.diagnosticsUrl}';
+        }
+        atom.notifications.addInfo('Analysis server', detail: message, dismissable: true);
+      }
+
+      if (message.startsWith('Observatory no longer listening')) {
         atom.notifications.addInfo('Analysis server', detail: message.trim(), dismissable: true);
       }
 
