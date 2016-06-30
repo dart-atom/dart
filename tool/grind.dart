@@ -49,6 +49,7 @@ runAtomTests() async {
 }
 
 @Task()
+@Depends(build) //analyze, build, test, runAtomTests)
 publish() => publishAtomPlugin();
 
 @Task()

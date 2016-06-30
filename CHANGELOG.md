@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.30
 - fixed an NPE in the debugger
 - made it easier to gather diagnostics from the analysis server
 - exposed the current route of Flutter apps in the debugger UI
