@@ -1,5 +1,10 @@
 # dartlang plugin changelog
 
+## unreleased
+- fixed an NPE in the debugger
+- made it easier to gather diagnostics from the analysis server
+- exposed the current route of Flutter apps in the debugger UI
+
 ## 0.6.29
 - fixed an issue with toString() evaluation in the debugger
 - fixed a race condition in the find references feature
