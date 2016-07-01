@@ -47,6 +47,9 @@ class ProjectManager implements Disposable {
     if (fs.existsSync(fs.join(dir.path, pub.pubspecFileName))) return true;
     if (fs.existsSync(fs.join(dir.path, pub.dotPackagesFileName))) return true;
 
+    // Look for an 'analysis_options.yaml' file.
+    if (fs.existsSync(fs.join(dir.path, 'analysis_options.yaml'))) return true;
+
     // Look for a `BUILD` file with some Dart build rules.
     String buildFilePath = fs.join(dir.path, _bazelBuildFileName);
     if (fs.existsSync(buildFilePath)) {

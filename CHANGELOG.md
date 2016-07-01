@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## 0.6.31
+- support running tests using the `test/all.dart` file name pattern
+- improve the logic for identifying Bazel based Dart projects
+
 ## 0.6.30
 - fixed an NPE in the debugger
 - made it easier to gather diagnostics from the analysis server
