@@ -47,8 +47,10 @@ class TestManager implements Disposable {
     path = _findAssociatedTest(project, path);
 
     if (!allowWithoutTestName) {
-      if (!path.endsWith('_test.dart') && !path.endsWith('${_sep}test${_sep}all.dart')) {
-        return false;
+      if (!path.endsWith('_test.dart')) {
+        // Support `all.dart` files in the test directory.
+        bool isAllDart = path.contains('${_sep}test${_sep}') && path.endsWith('${_sep}all.dart');
+        if (!isAllDart) return false;
       }
     }
 

@@ -43421,15 +43421,12 @@ self._domRemove = function(element) {
           return false;
         path = this._findAssociatedTest$2(project, path);
         t1.path = path;
-        if (!allowWithoutTestName) {
+        if (!allowWithoutTestName)
           if (!J.endsWith$1$s(path, "_test.dart")) {
             t2 = $.$get$_sep();
-            t2 = !J.endsWith$1$s(path, H.S(t2) + "test" + H.S(t2) + "all.dart");
-          } else
-            t2 = false;
-          if (t2)
-            return false;
-        }
+            if (!(J.contains$1$asx(path, H.S(t2) + "test" + H.S(t2)) === true && J.endsWith$1$s(path, H.S(t2) + "all.dart")))
+              return false;
+          }
         return C.JSArray_methods.any$1(this.runners, new K.TestManager_isRunnableTest_closure(t1, project));
       },
       isRunnableTest$1: function(path) {
