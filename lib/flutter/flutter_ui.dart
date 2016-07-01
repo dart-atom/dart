@@ -10,7 +10,7 @@ import '../flutter/flutter_ext.dart';
 class FlutterSection {
   final DebugConnection connection;
 
-  CoreElement routeElement;
+  CoreElement infoElement;
   bool isDebugDrawing = false;
   bool isRepaintRainbow = false;
   bool isSlowAnimations = false;
@@ -20,7 +20,7 @@ class FlutterSection {
     element.add([
       div().add([
         span(text: 'Flutter', c: 'overflow-hidden-ellipsis'),
-        routeElement = span(c: 'debugger-secondary-info')
+        infoElement = span(c: 'debugger-secondary-info')
       ]),
       table()..add([
         tr()..add([
@@ -71,14 +71,6 @@ class FlutterSection {
           element.hidden(false);
         }
       });
-      // TODO: We should have this be automatic with the onExtensionEvent call.
-      obs.service.streamListen('Extension');
-      obs.service.onExtensionEvent
-        .where((event) => event.extensionKind == 'Flutter.RouteChanged')
-        .listen((event) {
-          String route = event.extensionData.data['route'];
-          routeElement.text = route ?? '';
-        });
     }
   }
 

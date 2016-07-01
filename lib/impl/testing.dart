@@ -17,6 +17,8 @@ import 'testing_utils.dart';
 
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
 
+final String _sep = fs.separator;
+
 class TestManager implements Disposable {
   Disposables disposables = new Disposables();
 
@@ -45,7 +47,11 @@ class TestManager implements Disposable {
     path = _findAssociatedTest(project, path);
 
     if (!allowWithoutTestName) {
-      if (!path.endsWith('_test.dart')) return false;
+      if (!path.endsWith('_test.dart')) {
+        // Support `all.dart` files in the test directory.
+        bool isAllDart = path.contains('${_sep}test${_sep}') && path.endsWith('${_sep}all.dart');
+        if (!isAllDart) return false;
+      }
     }
 
     return runners.any((TestRunner runner) => runner.canRun(project, path));
