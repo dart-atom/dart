@@ -40913,6 +40913,8 @@ self._domRemove = function(element) {
             return true;
           if (t1.invoke$2("existsSync", t1.join$2(0, t2.get$path(dir), ".packages")) === true)
             return true;
+          if (t1.invoke$2("existsSync", t1.join$2(0, t2.get$path(dir), "analysis_options.yaml")) === true)
+            return true;
           buildFilePath = t1.join$2(0, t2.get$path(dir), "BUILD");
           if (t1.invoke$2("existsSync", buildFilePath) === true)
             if (L.isDartBuildFile(buildFilePath) === true)
