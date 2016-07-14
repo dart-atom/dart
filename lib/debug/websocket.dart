@@ -3,6 +3,8 @@ import 'dart:js';
 
 import 'package:atom/node/node.dart';
 
+// TODO: This class should move into `package:atom`.
+
 class WebSocket {
   static JsFunction _WebSocket = require('ws');
 

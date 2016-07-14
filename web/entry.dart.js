@@ -19940,8 +19940,8 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.FlutterExt__checkIsolate_closure[1];
     FlutterExt__checkIsolate_closure.prototype = $desc;
     FlutterExt__checkIsolate_closure.$__fields__ = ["$this", "isolate"];
-    function FlutterLaunchType(_lastLaunch, type) {
-      this._lastLaunch = _lastLaunch;
+    function FlutterLaunchType(_lastFlutterLaunch, type) {
+      this._lastFlutterLaunch = _lastFlutterLaunch;
       this.type = type;
       this.$deferredAction();
     }
@@ -19950,7 +19950,7 @@ self._domRemove = function(element) {
       FlutterLaunchType.name = "FlutterLaunchType";
     $desc = $collectedClasses$.FlutterLaunchType[1];
     FlutterLaunchType.prototype = $desc;
-    FlutterLaunchType.$__fields__ = ["_lastLaunch", "type"];
+    FlutterLaunchType.$__fields__ = ["_lastFlutterLaunch", "type"];
     function FlutterLaunchType_connectToApp_closure($this, project, configuration, observatoryPort, pipeStdio) {
       this.$this = $this;
       this.project = project;
@@ -20722,8 +20722,8 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.Promise__jsObjectFromFuture__closure0[1];
     Promise__jsObjectFromFuture__closure0.prototype = $desc;
     Promise__jsObjectFromFuture__closure0.$__fields__ = ["reject"];
-    function DartinoLaunchType(_launch_dartino$_lastLaunch, type) {
-      this._launch_dartino$_lastLaunch = _launch_dartino$_lastLaunch;
+    function DartinoLaunchType(_lastLaunch, type) {
+      this._lastLaunch = _lastLaunch;
       this.type = type;
       this.$deferredAction();
     }
@@ -20732,7 +20732,7 @@ self._domRemove = function(element) {
       DartinoLaunchType.name = "DartinoLaunchType";
     $desc = $collectedClasses$.DartinoLaunchType[1];
     DartinoLaunchType.prototype = $desc;
-    DartinoLaunchType.$__fields__ = ["_launch_dartino$_lastLaunch", "type"];
+    DartinoLaunchType.$__fields__ = ["_lastLaunch", "type"];
     function DartinoLaunch(runner, sdk, launchType, launchConfiguration, name, title, targetName, manager, id, killHandler, cwd, exitCode, servicePort, _stdio, _debugConnection, _pathResolver) {
       this.runner = runner;
       this.sdk = sdk;
@@ -65658,7 +65658,7 @@ self._domRemove = function(element) {
   }], ["", "package:atom_dartlang/flutter/flutter_launch.dart",, O, {
     "^": "",
     FlutterLaunchType: {
-      "^": "LaunchType;_lastLaunch,type",
+      "^": "LaunchType;_lastFlutterLaunch,type",
       get$supportsChecked: function() {
         return false;
       },
@@ -65682,7 +65682,7 @@ self._domRemove = function(element) {
         return false;
       },
       performLaunch$2: function(manager, configuration) {
-        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$returnValue, $async$handler = 2, $async$currentError, $async$self = this, path, project, t1, launch, t2, t3, t4, t5, t6, t7;
+        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$returnValue, $async$handler = 2, $async$currentError, $async$self = this, path, project, t1, t2, newLaunch, t3, t4, t5, t6;
         var $async$performLaunch$2 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
           if ($async$errorCode === 1) {
             $async$currentError = $async$result;
@@ -65710,26 +65710,30 @@ self._domRemove = function(element) {
                   break;
                 } else
                   ;
-                t1 = $async$self._lastLaunch;
+                t1 = $async$self._lastFlutterLaunch;
                 $async$goto = t1 != null ? 3 : 4;
                 break;
               case 3:
                 // then
-                launch = t1._launch;
-                $async$goto = launch.exitCode._utils$_value == null && J.$eq$(launch.launchConfiguration, configuration) ? 5 : 6;
+                $async$goto = J.$eq$(t1.launchConfiguration, configuration) ? 5 : 6;
                 break;
               case 5:
                 // then
-                t1 = launch.app;
-                $async$goto = t1 != null && t1.supportsRestart === true ? 7 : 8;
+                t1 = $async$self._lastFlutterLaunch;
+                if (t1.exitCode._utils$_value == null) {
+                  t2 = t1.app;
+                  t2 = t2 != null && t2.supportsRestart === true;
+                } else
+                  t2 = false;
+                $async$goto = t2 ? 7 : 8;
                 break;
               case 7:
                 // then
                 $async$goto = 9;
-                return P._asyncHelper(launch.restart$0(), $async$performLaunch$2, $async$completer);
+                return P._asyncHelper(t1.restart$0(), $async$performLaunch$2, $async$completer);
               case 9:
                 // returning from await.
-                $async$returnValue = launch;
+                $async$returnValue = $async$self._lastFlutterLaunch;
                 // goto return
                 $async$goto = 1;
                 break;
@@ -65737,45 +65741,33 @@ self._domRemove = function(element) {
                 // join
               case 6:
                 // join
+                $async$goto = 10;
+                return P._asyncHelper($async$self._killLaunch$1($async$self._lastFlutterLaunch), $async$performLaunch$2, $async$completer);
+              case 10:
+                // returning from await.
               case 4:
                 // join
-                t1 = $async$self._lastLaunch;
-                $async$goto = t1 != null ? 10 : 11;
-                break;
-              case 10:
-                // then
-                $async$goto = J.$eq$(t1._launch.launchConfiguration, configuration) ? 12 : 13;
-                break;
-              case 12:
-                // then
-                $async$goto = 14;
-                return P._asyncHelper($async$self._killLastLaunch$0(), $async$performLaunch$2, $async$completer);
-              case 14:
-                // returning from await.
-              case 13:
-                // join
-              case 11:
-                // join
-                t1 = new O._RunLaunchInstance(Q.Dependencies_instance().getDependency$1(C.Type_FlutterDaemonManager_8Wd).get$daemon(), null, null, null, null, project, null, null, null, null);
-                t1._flutter_launch$_device = Q.Dependencies_instance().getDependency$1(C.Type_FlutterDeviceManager_zjY).get$currentSelectedDevice();
-                t1._mode = Q.Dependencies_instance().getDependency$1(C.Type_FlutterDeviceManager_zjY).get$runMode();
-                t2 = configuration.get$typeArgs().$index(0, "route");
-                t1._route = t2;
-                if (t2 != null && J.get$isEmpty$asx(t2) === true)
-                  t1._route = null;
+                newLaunch = new O._RunLaunchInstance(Q.Dependencies_instance().getDependency$1(C.Type_FlutterDaemonManager_8Wd).get$daemon(), null, null, null, null, project, null, null, null, null);
+                newLaunch._flutter_launch$_device = Q.Dependencies_instance().getDependency$1(C.Type_FlutterDeviceManager_zjY).get$currentSelectedDevice();
+                newLaunch._mode = Q.Dependencies_instance().getDependency$1(C.Type_FlutterDeviceManager_zjY).get$runMode();
+                t1 = configuration.get$typeArgs().$index(0, "route");
+                newLaunch._route = t1;
+                if (t1 != null && J.get$isEmpty$asx(t1) === true)
+                  newLaunch._route = null;
                 else
                   ;
-                t2 = J.getInterceptor$x(project);
-                t1._flutter_launch$_target = $.$get$fs().relativize$2(t2.get$path(project), configuration.get$primaryResource());
-                t3 = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK);
-                t4 = configuration.get$shortResourceName();
-                t5 = t1.get$_kill();
-                t2 = t2.get$path(project);
-                t6 = "flutter run " + H.S(t1._flutter_launch$_target) + " (" + t1._mode.name + ")";
-                t7 = t1._flutter_launch$_device;
-                t1._launch = O._FlutterLaunch$(t3, $async$self, configuration, t4, project, t2, t5, t7 == null ? t7 : J.get$name$x(t7), t6);
-                $async$self._lastLaunch = t1;
-                $async$returnValue = t1.launch$0();
+                t1 = J.getInterceptor$x(project);
+                newLaunch._flutter_launch$_target = $.$get$fs().relativize$2(t1.get$path(project), configuration.get$primaryResource());
+                t2 = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK);
+                t3 = configuration.get$shortResourceName();
+                t4 = newLaunch.get$_kill();
+                t1 = t1.get$path(project);
+                t5 = "flutter run " + H.S(newLaunch._flutter_launch$_target) + " (" + newLaunch._mode.name + ")";
+                t6 = newLaunch._flutter_launch$_device;
+                t1 = O._FlutterLaunch$(t2, $async$self, configuration, t3, project, t1, t4, t6 == null ? t6 : J.get$name$x(t6), t5);
+                newLaunch._launch = t1;
+                $async$self._lastFlutterLaunch = t1;
+                $async$returnValue = newLaunch.launch$0();
                 // goto return
                 $async$goto = 1;
                 break;
@@ -65794,7 +65786,7 @@ self._domRemove = function(element) {
           $.$get$_flutterSdk().showInstallationInfo$0();
           return;
         }
-        this._killLastLaunch$0().then$1(new O.FlutterLaunchType_connectToApp_closure(this, project, configuration, observatoryPort, true));
+        this._killLaunch$1(this._lastFlutterLaunch).then$1(new O.FlutterLaunchType_connectToApp_closure(this, project, configuration, observatoryPort, true));
       },
       connectToApp$3: function(project, configuration, observatoryPort) {
         return this.connectToApp$4$pipeStdio(project, configuration, observatoryPort, true);
@@ -65802,43 +65794,62 @@ self._domRemove = function(element) {
       getDefaultConfigText$0: function() {
         return "# The starting route for the app.\nroute:\n# Additional args for the flutter run command.\nargs:\n";
       },
-      _killLastLaunch$0: function() {
-        var t1, launch;
-        t1 = this._lastLaunch;
-        if (t1 == null) {
-          t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
-          t1._asyncComplete$1(null);
-          return t1;
-        }
-        launch = t1._launch;
-        if (launch.exitCode._utils$_value != null) {
-          t1 = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null]);
-          t1._asyncComplete$1(null);
-        } else
-          t1 = launch.kill$0();
-        return t1;
+      _killLaunch$1: function(launch) {
+        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$returnValue, $async$handler = 2, $async$currentError;
+        var $async$_killLaunch$1 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
+          if ($async$errorCode === 1) {
+            $async$currentError = $async$result;
+            $async$goto = $async$handler;
+          }
+          while (true)
+            switch ($async$goto) {
+              case 0:
+                // Function start
+                if (launch == null || launch.exitCode._utils$_value != null) {
+                  // goto return
+                  $async$goto = 1;
+                  break;
+                } else
+                  ;
+                $async$goto = 3;
+                return P._asyncHelper(launch.kill$0(), $async$_killLaunch$1, $async$completer);
+              case 3:
+                // returning from await.
+                $async$goto = 4;
+                return P._asyncHelper(P.Future_Future$delayed(P.Duration$(0, 0, 0, 500, 0, 0), null, null), $async$_killLaunch$1, $async$completer);
+              case 4:
+                // returning from await.
+              case 1:
+                // return
+                return P._asyncHelper($async$returnValue, 0, $async$completer, null);
+              case 2:
+                // rethrow
+                return P._asyncHelper($async$currentError, 1, $async$completer);
+            }
+        });
+        return P._asyncHelper(null, $async$_killLaunch$1, $async$completer, null);
       }
     },
     FlutterLaunchType_connectToApp_closure: {
       "^": "Closure:0;$this,project,configuration,observatoryPort,pipeStdio",
       call$1: [function(_) {
-        var t1, t2, t3, t4, t5, description, t6, t7, t8, t9;
-        t1 = this.$this;
-        t2 = this.project;
-        t3 = this.configuration;
+        var t1, t2, t3, t4, newLaunch, description, t5, t6, t7, t8;
+        t1 = this.project;
+        t2 = this.configuration;
+        t3 = this.$this;
         t4 = this.observatoryPort;
-        t5 = new O._ConnectLaunchInstance(t4, this.pipeStdio, t2, null, null, null, null);
-        t5._flutter_launch$_device = Q.Dependencies_instance().getDependency$1(C.Type_FlutterDeviceManager_zjY).get$currentSelectedDevice();
+        newLaunch = new O._ConnectLaunchInstance(t4, this.pipeStdio, t1, null, null, null, null);
+        newLaunch._flutter_launch$_device = Q.Dependencies_instance().getDependency$1(C.Type_FlutterDeviceManager_zjY).get$currentSelectedDevice();
         description = "Flutter connect to port " + H.S(t4);
         t4 = Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK);
-        t6 = t3.get$shortResourceName();
-        t7 = t5.get$_kill();
-        t8 = J.get$path$x(t2);
-        t9 = t5._flutter_launch$_device;
-        t5._launch = O._FlutterLaunch$(t4, t1, t3, t6, t2, t8, t7, t9 == null ? t9 : J.get$name$x(t9), description);
-        Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).addLaunch$1(t5._launch);
-        t1._lastLaunch = t5;
-        t5.launch$0();
+        t5 = t2.get$shortResourceName();
+        t6 = newLaunch.get$_kill();
+        t7 = J.get$path$x(t1);
+        t8 = newLaunch._flutter_launch$_device;
+        newLaunch._launch = O._FlutterLaunch$(t4, t3, t2, t5, t1, t7, t6, t8 == null ? t8 : J.get$name$x(t8), description);
+        Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).addLaunch$1(newLaunch._launch);
+        t3._lastFlutterLaunch = newLaunch._launch;
+        newLaunch.launch$0();
       }, null, null, 2, 0, null, 1, "call"]
     },
     _LaunchInstance0: {
@@ -67482,7 +67493,7 @@ self._domRemove = function(element) {
   }], ["", "package:atom_dartlang/dartino/launch_dartino.dart",, Q, {
     "^": "",
     DartinoLaunchType: {
-      "^": "LaunchType;_launch_dartino$_lastLaunch,type",
+      "^": "LaunchType;_lastLaunch,type",
       canLaunch$2: function(path, data) {
         var project = Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(path);
         if (project == null || project.isDartinoProject$0() !== true)
@@ -67512,7 +67523,7 @@ self._domRemove = function(element) {
                 else
                   ;
                 $async$goto = 3;
-                return P._asyncHelper($async$self._launch_dartino$_killLastLaunch$0(), $async$performLaunch$2, $async$completer);
+                return P._asyncHelper($async$self._killLastLaunch$0(), $async$performLaunch$2, $async$completer);
               case 3:
                 // returning from await.
                 t1 = configuration.get$shortResourceName();
@@ -67523,10 +67534,10 @@ self._domRemove = function(element) {
                 t4 = H.setRuntimeTypeInfo(new G.Property(null, P.StreamController_StreamController$broadcast(null, null, false, null)), [null]);
                 t4._utils$_value = null;
                 t4 = new Q.DartinoLaunch(null, null, $async$self, configuration, t1, null, null, manager, t2, null, null, t3, t4, P.StreamController_StreamController$broadcast(null, null, false, null), null, null);
-                $async$self._launch_dartino$_lastLaunch = t4;
+                $async$self._lastLaunch = t4;
                 manager.addLaunch$1(t4);
-                sdk.launch$1($async$self._launch_dartino$_lastLaunch);
-                $async$returnValue = $async$self._launch_dartino$_lastLaunch;
+                sdk.launch$1($async$self._lastLaunch);
+                $async$returnValue = $async$self._lastLaunch;
                 // goto return
                 $async$goto = 1;
                 break;
@@ -67543,9 +67554,9 @@ self._domRemove = function(element) {
       getDefaultConfigText$0: function() {
         return "";
       },
-      _launch_dartino$_killLastLaunch$0: function() {
+      _killLastLaunch$0: function() {
         var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$handler = 1, $async$currentError, $async$self = this, t1;
-        var $async$_launch_dartino$_killLastLaunch$0 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
+        var $async$_killLastLaunch$0 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
           if ($async$errorCode === 1) {
             $async$currentError = $async$result;
             $async$goto = $async$handler;
@@ -67554,16 +67565,16 @@ self._domRemove = function(element) {
             switch ($async$goto) {
               case 0:
                 // Function start
-                t1 = $async$self._launch_dartino$_lastLaunch;
+                t1 = $async$self._lastLaunch;
                 $async$goto = t1 != null ? 2 : 3;
                 break;
               case 2:
                 // then
                 $async$goto = 4;
-                return P._asyncHelper(t1.kill$0(), $async$_launch_dartino$_killLastLaunch$0, $async$completer);
+                return P._asyncHelper(t1.kill$0(), $async$_killLastLaunch$0, $async$completer);
               case 4:
                 // returning from await.
-                $async$self._launch_dartino$_lastLaunch = null;
+                $async$self._lastLaunch = null;
               case 3:
                 // join
                 // implicit return
@@ -67573,7 +67584,7 @@ self._domRemove = function(element) {
                 return P._asyncHelper($async$currentError, 1, $async$completer);
             }
         });
-        return P._asyncHelper(null, $async$_launch_dartino$_killLastLaunch$0, $async$completer, null);
+        return P._asyncHelper(null, $async$_killLastLaunch$0, $async$completer, null);
       }
     },
     DartinoLaunch: {
