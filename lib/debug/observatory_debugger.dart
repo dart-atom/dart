@@ -1,7 +1,6 @@
 library atom.observatory_debugger;
 
 import 'dart:async';
-import 'dart:html' show WebSocket, MessageEvent;
 
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
@@ -17,6 +16,7 @@ import 'debugger.dart';
 import 'model.dart';
 import 'observatory.dart';
 import 'utils.dart';
+import 'websocket.dart';
 
 final Logger _logger = new Logger('atom.observatory');
 

@@ -1,5 +1,12 @@
 # dartlang plugin changelog
 
+## unreleased
+- fix an issue with debug protocol changes
+- improve an error message when launching Flutter apps
+- allow more than one Flutter app to run at a time
+- when re-running an already running app, choose to restart the app if the target
+  supports it
+
 ## 0.6.31
 - support running tests using the `test/all.dart` file name pattern
 - improve the logic for identifying Bazel based Dart projects

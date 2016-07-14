@@ -241,10 +241,10 @@ class LaunchConfiguration {
 
   bool operator ==(other) {
     if (other is! LaunchConfiguration) return false;
-    return _file.path == other._file.path;
+    return primaryResource == other.primaryResource && type == other.type;
   }
 
-  int get hashCode => _file.path.hashCode;
+  int get hashCode => primaryResource?.hashCode ?? 0;
 
   String _getRelativeConfigPath() {
     String path = _file.path;

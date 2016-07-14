@@ -33,6 +33,8 @@ class FlutterLaunchType extends LaunchType {
 
   bool get supportsChecked => false;
 
+  bool get supportsDebugArg => false;
+
   bool canLaunch(String path, LaunchData data) {
     DartProject project = projectManager.getProjectFor(path);
     if (project == null) return false;
@@ -68,7 +70,27 @@ class FlutterLaunchType extends LaunchType {
         "settings for the 'flutter' plugin and / or try re-starting Atom.";
     }
 
-    await _killLastLaunch();
+    // Instead of killing the last launch, check if we should re-start it.
+    if (_lastLaunch != null) {
+      Launch launch = _lastLaunch._launch;
+
+      if (!launch.isTerminated && launch.launchConfiguration == configuration) {
+        if (launch.supportsRestart) {
+          await launch.restart();
+          return launch;
+        }
+      }
+    }
+
+    // Terminate the last launch if it's the same application.
+    if (_lastLaunch != null) {
+      Launch launch = _lastLaunch._launch;
+
+      if (launch.launchConfiguration == configuration) {
+        // Kill
+        await _killLastLaunch();
+      }
+    }
 
     _lastLaunch = new _RunLaunchInstance(project, configuration, this, flutterDaemon);
     return _lastLaunch.launch();
@@ -230,6 +252,12 @@ class _RunLaunchInstance extends _LaunchInstance {
       });
 
       return _launch;
+    }).catchError((e) {
+      if (e is RequestError && e.error == 'deviceId is required') {
+        throw new RequestError(e.methodName, 'No target device available.');
+      } else {
+        throw e;
+      }
     });
   }
 
