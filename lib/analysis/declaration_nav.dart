@@ -117,6 +117,9 @@ class NavigationHelper implements Disposable {
             buffer.positionForCharacterIndex(region.offset + region.length));
 
         return flashSelection(editor, sourceRange).then((_) {
+          // TODO(devoncarew): Check for target.startLine == 0, target.startColumn,
+          // target.offset != 0, and parse the indicated file.
+
           navigationManager.jumpToLocation(file,
               target.startLine - 1, target.startColumn - 1, target.length);
         });

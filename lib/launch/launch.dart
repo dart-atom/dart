@@ -156,6 +156,8 @@ abstract class LaunchType {
 
   bool get supportsChecked => true;
 
+  bool get supportsDebugArg => true;
+
   /// Return a yaml fragment with the defaults values for a new launch
   /// configuration.
   String getDefaultConfigText();
@@ -273,7 +275,9 @@ class Launch implements Disposable {
       if (launchType != null) {
         if (launchType.supportsChecked && launchConfiguration.checked) desc.add('checked mode');
       }
-      if (launchConfiguration.debug) desc.add('debug');
+      if (launchType.supportsDebugArg) {
+        if (launchConfiguration.debug) desc.add('debug');
+      }
     }
 
     return desc.isEmpty ? null : desc.join(' • ');

@@ -27,11 +27,11 @@ class FlutterLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
       manager.registerLaunchType(new FlutterLaunchType());
 
-  _LaunchInstance _lastLaunch;
-
   FlutterLaunchType([String launchType = 'flutter']) : super(launchType);
 
   bool get supportsChecked => false;
+
+  bool get supportsDebugArg => false;
 
   bool canLaunch(String path, LaunchData data) {
     DartProject project = projectManager.getProjectFor(path);
@@ -68,11 +68,25 @@ class FlutterLaunchType extends LaunchType {
         "settings for the 'flutter' plugin and / or try re-starting Atom.";
     }
 
-    await _killLastLaunch();
+    if (_lastFlutterLaunch != null) {
+      // Instead of killing the last launch, check if we should re-start it.
+      if (_lastFlutterLaunch.launchConfiguration == configuration) {
+        if (!_lastFlutterLaunch.isTerminated && _lastFlutterLaunch.supportsRestart) {
+          await _lastFlutterLaunch.restart();
+          return _lastFlutterLaunch;
+        }
+      }
 
-    _lastLaunch = new _RunLaunchInstance(project, configuration, this, flutterDaemon);
-    return _lastLaunch.launch();
+      // Terminate any existing Flutter launch.
+      await _killLaunch(_lastFlutterLaunch);
+    }
+
+    _RunLaunchInstance newLaunch = new _RunLaunchInstance(project, configuration, this, flutterDaemon);
+    _lastFlutterLaunch = newLaunch._launch;
+    return newLaunch.launch();
   }
+
+  _FlutterLaunch _lastFlutterLaunch;
 
   void connectToApp(
     DartProject project,
@@ -85,15 +99,16 @@ class FlutterLaunchType extends LaunchType {
       return;
     }
 
-    _killLastLaunch().then((_) {
-      _lastLaunch = new _ConnectLaunchInstance(
+    _killLaunch(_lastFlutterLaunch).then((_) {
+      _ConnectLaunchInstance newLaunch = new _ConnectLaunchInstance(
         project,
         configuration,
         this,
         observatoryPort,
         pipeStdio: pipeStdio
       );
-      _lastLaunch.launch();
+      _lastFlutterLaunch = newLaunch._launch;
+      newLaunch.launch();
     });
   }
 
@@ -106,10 +121,14 @@ args:
 ''';
   }
 
-  Future _killLastLaunch() {
-    if (_lastLaunch == null) return new Future.value();
-    Launch launch = _lastLaunch._launch;
-    return launch.isTerminated ? new Future.value() : launch.kill();
+  Future _killLaunch(Launch launch) async {
+    if (launch == null || launch.isTerminated) return null;
+
+    await launch.kill();
+
+    // flutter_tools is not happy with two applications running at once
+    // (they each have their own notion of a cwd).
+    await new Future.delayed(new Duration(milliseconds: 500));
   }
 }
 
@@ -230,6 +249,12 @@ class _RunLaunchInstance extends _LaunchInstance {
       });
 
       return _launch;
+    }).catchError((e) {
+      if (e is RequestError && e.error == 'deviceId is required') {
+        throw new RequestError(e.methodName, 'No target device available.');
+      } else {
+        throw e;
+      }
     });
   }
 
