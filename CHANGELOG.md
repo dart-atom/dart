@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.32
 - fix an issue with debug protocol changes
 - improve an error message when launching Flutter apps
 - when re-running an already running app, choose to restart the app if the target
