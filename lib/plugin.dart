@@ -202,6 +202,10 @@ class AtomDartPackage extends AtomPackage {
         }
       });
     });
+    // Always register this one Flutter command so that Flutter will be
+    // properly activated/enabled when/if the Flutter plugin is installed
+    // in a running system.
+    _addCmd('atom-workspace', 'flutter:enable', flutter.enable);
     // Always register this one Dartino command so that Dartino will be
     // properly activated/enabled when/if the Dartino plugin is installed
     // in a running system.
