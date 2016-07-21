@@ -213,7 +213,7 @@ class _RunLaunchInstance extends _LaunchInstance {
       startPaused: _mode.startPaused,
       target: _target,
       route: _route,
-      reloadSources: atom.config.getValue('flutter.reloadSources')
+      enableHotPatching: atom.config.getValue('flutter.enableHotPatching')
     ).then((AppStartedResult result) {
       _app = daemon.app.createDaemonApp(result.appId, supportsRestart: result.supportsRestart);
       _launch.app = _app;

@@ -374,7 +374,7 @@ class AppDomain extends Domain {
     String route,
     String mode,
     String target,
-    bool reloadSources
+    bool enableHotPatching
   }) {
     return _call('app.start', _stripNullValues({
       'deviceId': deviceId,
@@ -383,7 +383,7 @@ class AppDomain extends Domain {
       'route': route,
       'mode': mode,
       'target': target,
-      'reload-sources': reloadSources
+      'hot': enableHotPatching
     })).then((result) {
       return new AppStartedResult(result);
     });

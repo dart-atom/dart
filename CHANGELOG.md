@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.6.33
+- Expose the `Enable Hot patching` mode for Flutter apps
+
 ## 0.6.32
 - fix an issue with debug protocol changes
 - improve an error message when launching Flutter apps
