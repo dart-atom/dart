@@ -325,7 +325,7 @@ class FlowControlSection implements Disposable {
   CoreElement stepIn;
   CoreElement stepOver;
   CoreElement stepOut;
-  CoreElement restart;
+  CoreElement reload;
   CoreElement stop;
 
   CoreElement isolateName;
@@ -336,7 +336,7 @@ class FlowControlSection implements Disposable {
     stepIn = button(c: 'btn icon-jump-down')..click(_stepIn)..tooltip = 'Step in';
     stepOver = button(c: 'btn icon-jump-right')..click(_autoStepOver)..tooltip = 'Step over';
     stepOut = button(c: 'btn icon-jump-up')..click(_stepOut)..tooltip = 'Step out';
-    restart = button(c: 'btn icon-sync')..click(_restart)..tooltip = 'Restart';
+    reload = button(c: 'btn icon-sync')..click(_restart)..tooltip = 'Reload';
     stop = button(c: 'btn icon-primitive-square')..click(_terminate)..tooltip = 'Stop';
 
     CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
@@ -349,7 +349,7 @@ class FlowControlSection implements Disposable {
     ]);
 
     if (connection.launch.supportsRestart) {
-      executionControlToolbar.add(restart);
+      executionControlToolbar.add(reload);
     }
     executionControlToolbar.add(stop);
 
@@ -366,7 +366,7 @@ class FlowControlSection implements Disposable {
   }
 
   void _handleIsolateChange(DebugIsolate isolate) {
-    restart.enabled = connection.isAlive && isolate != null;
+    reload.enabled = connection.isAlive && isolate != null;
     stop.enabled = connection.isAlive;
 
     if (isolate == null) {
@@ -429,12 +429,12 @@ class FlowControlSection implements Disposable {
   _autoStepOver() => view.currentIsolate?.autoStepOver();
 
   void _restart() {
-    restart.enabled = false;
+    reload.enabled = false;
 
     connection.launch.restart().catchError((e) {
       atom.notifications.addWarning(e.toString());
     }).whenComplete(() {
-      restart.enabled = connection.isAlive;
+      reload.enabled = connection.isAlive;
     });
   }
 

@@ -3694,7 +3694,7 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.ConsoleController__toggleViews_closure[1];
     ConsoleController__toggleViews_closure.prototype = $desc;
     ConsoleController__toggleViews_closure.$__fields__ = [];
-    function ConsoleView(controller, launch, _launchId, _console$_subs, output, _lastText, _terminateButton, _restartButton, _observatoryButton, _hyperlinkMatcher, _stripAnsiRegex, root, toolbar, content, tabElement, _closeButton, group) {
+    function ConsoleView(controller, launch, _launchId, _console$_subs, output, _lastText, _terminateButton, _reloadButton, _observatoryButton, _hyperlinkMatcher, _stripAnsiRegex, root, toolbar, content, tabElement, _closeButton, group) {
       this.controller = controller;
       this.launch = launch;
       this._launchId = _launchId;
@@ -3702,7 +3702,7 @@ self._domRemove = function(element) {
       this.output = output;
       this._lastText = _lastText;
       this._terminateButton = _terminateButton;
-      this._restartButton = _restartButton;
+      this._reloadButton = _reloadButton;
       this._observatoryButton = _observatoryButton;
       this._hyperlinkMatcher = _hyperlinkMatcher;
       this._stripAnsiRegex = _stripAnsiRegex;
@@ -3719,7 +3719,7 @@ self._domRemove = function(element) {
       ConsoleView.name = "ConsoleView";
     $desc = $collectedClasses$.ConsoleView[1];
     ConsoleView.prototype = $desc;
-    ConsoleView.$__fields__ = ["controller", "launch", "_launchId", "_console$_subs", "output", "_lastText", "_terminateButton", "_restartButton", "_observatoryButton", "_hyperlinkMatcher", "_stripAnsiRegex", "root", "toolbar", "content", "tabElement", "_closeButton", "group"];
+    ConsoleView.$__fields__ = ["controller", "launch", "_launchId", "_console$_subs", "output", "_lastText", "_terminateButton", "_reloadButton", "_observatoryButton", "_hyperlinkMatcher", "_stripAnsiRegex", "root", "toolbar", "content", "tabElement", "_closeButton", "group"];
     ConsoleView.prototype.get$launch = function() {
       return this.launch;
     };
@@ -4248,7 +4248,7 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.DebuggerView__jumpToLocation_closure[1];
     DebuggerView__jumpToLocation_closure.prototype = $desc;
     DebuggerView__jumpToLocation_closure.$__fields__ = ["$this", "location", "addExecMarker"];
-    function FlowControlSection(view, connection, subs, resume, stepIn, stepOver, stepOut, restart, stop, isolateName, isolateState) {
+    function FlowControlSection(view, connection, subs, resume, stepIn, stepOver, stepOut, reload, stop, isolateName, isolateState) {
       this.view = view;
       this.connection = connection;
       this.subs = subs;
@@ -4256,7 +4256,7 @@ self._domRemove = function(element) {
       this.stepIn = stepIn;
       this.stepOver = stepOver;
       this.stepOut = stepOut;
-      this.restart = restart;
+      this.reload = reload;
       this.stop = stop;
       this.isolateName = isolateName;
       this.isolateState = isolateState;
@@ -4267,7 +4267,7 @@ self._domRemove = function(element) {
       FlowControlSection.name = "FlowControlSection";
     $desc = $collectedClasses$.FlowControlSection[1];
     FlowControlSection.prototype = $desc;
-    FlowControlSection.$__fields__ = ["view", "connection", "subs", "resume", "stepIn", "stepOver", "stepOut", "restart", "stop", "isolateName", "isolateState"];
+    FlowControlSection.$__fields__ = ["view", "connection", "subs", "resume", "stepIn", "stepOver", "stepOut", "reload", "stop", "isolateName", "isolateState"];
     FlowControlSection.prototype.get$view = function(receiver) {
       return this.view;
     };
@@ -33680,7 +33680,7 @@ self._domRemove = function(element) {
       }
     },
     ConsoleView: {
-      "^": "View;controller,launch<,_launchId,_console$_subs,output,_lastText,_terminateButton,_restartButton,_observatoryButton,_hyperlinkMatcher,_stripAnsiRegex,root,toolbar,content,tabElement,_closeButton,group",
+      "^": "View;controller,launch<,_launchId,_console$_subs,output,_lastText,_terminateButton,_reloadButton,_observatoryButton,_hyperlinkMatcher,_stripAnsiRegex,root,toolbar,content,tabElement,_closeButton,group",
       get$label: function(_) {
         var t1, t2;
         t1 = this.launch;
@@ -33727,7 +33727,7 @@ self._domRemove = function(element) {
           t1 = this._terminateButton;
           if (!(t1 == null))
             J.set$disabled$x(t1, true);
-          t1 = this._restartButton;
+          t1 = this._reloadButton;
           if (!(t1 == null))
             J.set$disabled$x(t1, true);
           t1 = this._observatoryButton;
@@ -33826,10 +33826,10 @@ self._domRemove = function(element) {
           J.click$1$x(this._terminateButton, new Y.ConsoleView_closure0(this));
         }
         if (t1.get$supportsRestart() === true) {
-          t2 = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-sync", "Restart"));
-          this._restartButton = t2;
-          t2.set$tooltip("Restart application");
-          J.click$1$x(this._restartButton, new Y.ConsoleView_closure1(this));
+          t2 = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-sync", "Reload"));
+          this._reloadButton = t2;
+          t2.set$tooltip("Reload application");
+          J.click$1$x(this._reloadButton, new Y.ConsoleView_closure1(this));
         }
         if (t1.get$launchConfiguration() != null) {
           e = t4.add$1(0, K.CoreElement$("button", null, "btn icon icon-gear", "Configure"));
@@ -33882,7 +33882,7 @@ self._domRemove = function(element) {
       "^": "Closure:1;$this",
       call$0: function() {
         var t1 = this.$this;
-        J.set$disabled$x(t1._restartButton, true);
+        J.set$disabled$x(t1._reloadButton, true);
         t1.launch.restart$0().whenComplete$1(new Y.ConsoleView__closure(t1));
       }
     },
@@ -33890,7 +33890,7 @@ self._domRemove = function(element) {
       "^": "Closure:1;$this",
       call$0: [function() {
         var t1 = this.$this;
-        J.set$disabled$x(t1._restartButton, t1.launch.get$isTerminated());
+        J.set$disabled$x(t1._reloadButton, t1.launch.get$isTerminated());
       }, null, null, 0, 0, null, "call"]
     },
     ConsoleView_closure2: {
@@ -34727,8 +34727,8 @@ self._domRemove = function(element) {
         t2.stepOut = t5;
         t5 = K.CoreElement$("button", null, "btn icon-sync", null);
         t5.click$1(0, t2.get$_restart());
-        J.set$title$x(t5.element, "Restart");
-        t2.restart = t5;
+        J.set$title$x(t5.element, "Reload");
+        t2.reload = t5;
         t5 = K.CoreElement$("button", null, "btn icon-primitive-square", null);
         t5.click$1(0, t2.get$_terminate());
         J.set$title$x(t5.element, "Stop");
@@ -34744,7 +34744,7 @@ self._domRemove = function(element) {
         t10.flex$0(0);
         executionControlToolbar.add$1(0, [t5, t6, t7, t8, t9, t10]);
         if (t1.get$launch().get$supportsRestart() === true)
-          executionControlToolbar.add$1(0, t2.restart);
+          executionControlToolbar.add$1(0, t2.reload);
         executionControlToolbar.add$1(0, t2.stop);
         t5 = K.CoreElement$("div", null, null, null);
         t6 = K.CoreElement$("span", null, null, "no isolate selected");
@@ -34938,10 +34938,10 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 9, "call"]
     },
     FlowControlSection: {
-      "^": "Object;view>,connection,subs,resume,stepIn,stepOver,stepOut,restart,stop,isolateName,isolateState",
+      "^": "Object;view>,connection,subs,resume,stepIn,stepOver,stepOut,reload,stop,isolateName,isolateState",
       _handleIsolateChange$1: [function(isolate) {
         var t1, t2, suspended, t3;
-        t1 = this.restart;
+        t1 = this.reload;
         t2 = this.connection;
         t1.attribute$2("disabled", !(t2.get$isAlive() && isolate != null));
         this.stop.attribute$2("disabled", !t2.get$isAlive());
@@ -35007,7 +35007,7 @@ self._domRemove = function(element) {
         return t1 == null ? t1 : t1.autoStepOver$0();
       }, "call$0", "get$_autoStepOver", 0, 0, 1],
       _restart$0: [function() {
-        this.restart.attribute$2("disabled", true);
+        this.reload.attribute$2("disabled", true);
         this.connection.get$launch().restart$0().catchError$1(new G.FlowControlSection__restart_closure()).whenComplete$1(new G.FlowControlSection__restart_closure0(this));
       }, "call$0", "get$_restart", 0, 0, 2],
       _terminate$0: [function() {
@@ -35027,9 +35027,6 @@ self._domRemove = function(element) {
       },
       stepOut$0: function() {
         return this.stepOut.call$0();
-      },
-      restart$0: function() {
-        return this.restart.call$0();
       },
       $isDisposable: 1
     },
@@ -35053,7 +35050,7 @@ self._domRemove = function(element) {
       "^": "Closure:1;$this",
       call$0: [function() {
         var t1 = this.$this;
-        t1.restart.attribute$2("disabled", !t1.connection.get$isAlive());
+        t1.reload.attribute$2("disabled", !t1.connection.get$isAlive());
       }, null, null, 0, 0, null, "call"]
     },
     ExecutionTab: {
