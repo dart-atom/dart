@@ -120,7 +120,7 @@ class ConsoleView extends View {
   String _lastText = '';
 
   CoreElement _terminateButton;
-  CoreElement _restartButton;
+  CoreElement _reloadButton;
   CoreElement _observatoryButton;
   // CoreElement _debugButton;
 
@@ -156,16 +156,16 @@ class ConsoleView extends View {
       _terminateButton.click(() => launch.kill());
     }
 
-    // Restart
+    // Reload
     if (launch.supportsRestart) {
-      _restartButton = toolbar.add(
-        button(text: 'Restart', c: 'btn icon icon-sync')
+      _reloadButton = toolbar.add(
+        button(text: 'Reload', c: 'btn icon icon-sync')
       );
-      _restartButton.tooltip = 'Restart application';
-      _restartButton.click(() {
-        _restartButton.disabled = true;
+      _reloadButton.tooltip = 'Reload application';
+      _reloadButton.click(() {
+        _reloadButton.disabled = true;
         launch.restart().whenComplete(() {
-          _restartButton.disabled = launch.isTerminated;
+          _reloadButton.disabled = launch.isTerminated;
         });
       });
     }
@@ -252,7 +252,7 @@ class ConsoleView extends View {
         div(text: 'exited with code ${launch.exitCode}', c: 'console-footer');
       _emitElement(footer);
       _terminateButton?.disabled = true;
-      _restartButton?.disabled = true;
+      _reloadButton?.disabled = true;
       _observatoryButton?.disabled = true;
       // _debugButton?.disabled = true;
     }

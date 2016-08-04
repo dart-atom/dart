@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- update css to match the latest atom version
+
 ## 0.6.33
 - Expose the `Enable Hot patching` mode for Flutter apps
 
