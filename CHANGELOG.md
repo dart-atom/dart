@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.34
 - update css to match the latest atom version
 
 ## 0.6.33
