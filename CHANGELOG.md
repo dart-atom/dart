@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- save all open editors when restarting a running application
+
 ## 0.6.34
 - update css to match the latest atom version
 

@@ -512,7 +512,10 @@ class DebugPortAppEvent extends AppEvent {
 
   int get port => data['port'];
 
-  String toString() => '[DebugPortAppEvent: $port]';
+  /// An optional baseUri to resolve and set breakpoints against.
+  int get baseUri => data['baseUri'];
+
+  String toString() => '[DebugPortAppEvent: $port, $baseUri]';
 }
 
 class LogAppEvent extends AppEvent {
