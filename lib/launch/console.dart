@@ -164,6 +164,7 @@ class ConsoleView extends View {
       _reloadButton.tooltip = 'Reload application';
       _reloadButton.click(() {
         _reloadButton.disabled = true;
+        atom.workspace.saveAll();
         launch.restart().whenComplete(() {
           _reloadButton.disabled = launch.isTerminated;
         });

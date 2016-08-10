@@ -33894,6 +33894,7 @@ self._domRemove = function(element) {
       call$0: function() {
         var t1 = this.$this;
         J.set$disabled$x(t1._reloadButton, true);
+        $.$get$atom()._workspace.saveAll$0();
         t1.launch.restart$0().whenComplete$1(new Y.ConsoleView__closure(t1));
       }
     },
@@ -35012,6 +35013,7 @@ self._domRemove = function(element) {
       }, "call$0", "get$_autoStepOver", 0, 0, 1],
       _restart$0: [function() {
         this.reload.attribute$2("disabled", true);
+        $.$get$atom()._workspace.saveAll$0();
         this.connection.get$launch().restart$0().catchError$1(new G.FlowControlSection__restart_closure()).whenComplete$1(new G.FlowControlSection__restart_closure0(this));
       }, "call$0", "get$_restart", 0, 0, 2],
       _terminate$0: [function() {
@@ -64431,11 +64433,16 @@ self._domRemove = function(element) {
         return J.$index$asx(this.data, "port");
       },
       toString$0: function(_) {
-        return "[DebugPortAppEvent: " + H.S(J.$index$asx(this.data, "port")) + "]";
+        var t1, t2;
+        t1 = this.data;
+        t2 = J.getInterceptor$asx(t1);
+        return "[DebugPortAppEvent: " + H.S(t2.$index(t1, "port")) + ", " + H.S(t2.$index(t1, "baseUri")) + "]";
       },
       static: {
         DebugPortAppEvent_parse: [function(data) {
-          return new T.DebugPortAppEvent(data);
+          var e = new T.DebugPortAppEvent(data);
+          P.print(e);
+          return e;
         }, "call$1", "flutter_daemon_DebugPortAppEvent_parse$closure", 2, 0, 248, 11]
       }
     },

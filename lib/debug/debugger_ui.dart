@@ -430,7 +430,7 @@ class FlowControlSection implements Disposable {
 
   void _restart() {
     reload.enabled = false;
-
+    atom.workspace.saveAll();
     connection.launch.restart().catchError((e) {
       atom.notifications.addWarning(e.toString());
     }).whenComplete(() {
