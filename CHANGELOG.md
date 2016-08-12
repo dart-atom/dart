@@ -1,7 +1,8 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.35
 - save all open editors when restarting a running application
+- update to match changes to the API used to launch Flutter applications
 
 ## 0.6.34
 - update css to match the latest atom version

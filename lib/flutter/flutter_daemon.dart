@@ -390,10 +390,11 @@ class AppDomain extends Domain {
   }
 
   /// Restart a running flutter app.
-  Future<bool> restart(String appId) {
-    return _call('app.restart', {
-      'appId': appId
-    }) as Future<bool>;
+  Future<bool> restart(String appId, { bool fullRestart: false }) {
+    return _call('app.restart', _stripNullValues({
+      'appId': appId,
+      'fullRestart': fullRestart
+    })) as Future<bool>;
   }
 
   // Stop a running flutter app.
