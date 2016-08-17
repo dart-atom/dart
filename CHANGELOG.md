@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- add the ability to send in a full application restart
+
 ## 0.6.35
 - save all open editors when restarting a running application
 - update to match changes to the API used to launch Flutter applications

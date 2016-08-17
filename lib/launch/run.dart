@@ -44,10 +44,21 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
       _handleTreeViewRunCommand(event.targetFilePath);
     }));
     disposables.add(
+        atom.commands.add('.tree-view', 'dartlang:app-full-restart', (event) {
+      stop(event);
+      _handleTreeViewFullRestartCommand(event.targetFilePath);
+    }));
+    disposables.add(
         atom.commands.add('atom-text-editor', 'dartlang:run-application', (event) {
       stop(event);
       TextEditor editor = event.editor;
       _handleEditorRunCommand(editor.getPath(), editor.getText());
+    }));
+    disposables.add(
+        atom.commands.add('atom-text-editor', 'dartlang:app-full-restart', (event) {
+      stop(event);
+      TextEditor editor = event.editor;
+      _handleEditorFullRestartCommand(editor.getPath(), editor.getText());
     }));
   }
 
@@ -66,6 +77,15 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
   void _handleEditorRunCommand(String path, String contents) {
     _handleRunCommand(path, new LaunchData(contents));
+  }
+
+  void _handleTreeViewFullRestartCommand(String path) {
+    File file = new File.fromPath(path);
+    _handleFullRestartCommand(path, new LaunchData(file.readSync()));
+  }
+
+  void _handleEditorFullRestartCommand(String path, String contents) {
+    _handleFullRestartCommand(path, new LaunchData(contents));
   }
 
   void _handleRunCommand(String path, LaunchData data, { bool explicitFile: false }) {
@@ -124,6 +144,28 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
             'Unable to locate a suitable execution handler for file ${displayPath}.');
       }
     }
+  }
+
+  void _handleFullRestartCommand(String path, LaunchData data) {
+    // determine the active launch
+    Launch launch = launchManager.activeLaunch;
+
+    // complain if there is none
+    if (launch == null) {
+      atom.notifications.addError('No application running to restart.');
+      return;
+    }
+
+    // complain if it doesn't support restart
+    if (!launch.supportsRestart) {
+      atom.notifications.addError('The currently running application does not support restart.');
+      return;
+    }
+
+    // ask it to do a full restart
+    launch.restart(fullRestart: true).catchError((e) {
+      atom.notifications.addWarning(e.toString());
+    });
   }
 
   void _preRunConfigSearch() {

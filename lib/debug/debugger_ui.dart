@@ -336,7 +336,11 @@ class FlowControlSection implements Disposable {
     stepIn = button(c: 'btn icon-jump-down')..click(_stepIn)..tooltip = 'Step in';
     stepOver = button(c: 'btn icon-jump-right')..click(_autoStepOver)..tooltip = 'Step over';
     stepOut = button(c: 'btn icon-jump-up')..click(_stepOut)..tooltip = 'Step out';
-    reload = button(c: 'btn icon-sync')..click(_restart)..tooltip = 'Reload';
+    reload = button(c: 'btn icon-sync')
+      ..click(
+        _restart,
+        () => _restart(fullRestart: true)
+      )..tooltip = 'Reload';
     stop = button(c: 'btn icon-primitive-square')..click(_terminate)..tooltip = 'Stop';
 
     CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([
@@ -428,10 +432,10 @@ class FlowControlSection implements Disposable {
   _stepOut() => view.currentIsolate?.stepOut();
   _autoStepOver() => view.currentIsolate?.autoStepOver();
 
-  void _restart() {
+  void _restart({ bool fullRestart: false }) {
     reload.enabled = false;
     atom.workspace.saveAll();
-    connection.launch.restart().catchError((e) {
+    connection.launch.restart(fullRestart: fullRestart).catchError((e) {
       atom.notifications.addWarning(e.toString());
     }).whenComplete(() {
       reload.enabled = connection.isAlive;

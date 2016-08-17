@@ -448,7 +448,9 @@ class DaemonApp {
     }));
   }
 
-  Future<bool> restart() => daemon.restart(appId);
+  Future<bool> restart({ bool fullRestart: false }) {
+    return daemon.restart(appId, fullRestart: fullRestart);
+  }
 
   Future<bool> stop() {
     return daemon.stop(appId).timeout(

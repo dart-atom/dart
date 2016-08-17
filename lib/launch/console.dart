@@ -168,6 +168,12 @@ class ConsoleView extends View {
         launch.restart().whenComplete(() {
           _reloadButton.disabled = launch.isTerminated;
         });
+      }, () {
+        _reloadButton.disabled = true;
+        atom.workspace.saveAll();
+        launch.restart(fullRestart: true).whenComplete(() {
+          _reloadButton.disabled = launch.isTerminated;
+        });
       });
     }
 

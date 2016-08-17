@@ -192,10 +192,14 @@ class CoreElement {
   Stream<MouseEvent> get onClick => element.onClick.where((_) => !disabled);
 
   /// Subscribe to the [onClick] event stream with a no-arg handler.
-  StreamSubscription<Event> click(void handle()) {
-    return onClick.listen((e) {
+  StreamSubscription<Event> click(void handle(), [void shiftHandle()]) {
+    return onClick.listen((MouseEvent e) {
       e.stopImmediatePropagation();
-      handle();
+      if (shiftHandle != null && e.shiftKey) {
+        shiftHandle();
+      } else {
+        handle();
+      }
     });
   }
 
