@@ -35,6 +35,7 @@
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
   'cmd-f4': 'dartlang:find-references'
   'cmd-r': 'dartlang:run-application'
+  'cmd-shift-r': 'dartlang:app-full-restart'
   'cmd-alt-b': 'dartlang:dart-format'
   'cmd-alt-o': 'dartlang:organize-directives'
   'cmd-alt-down': 'dartlang:jump-to-declaration'
@@ -44,12 +45,14 @@
 # Handle cmd-r for launch config files.
 'body.platform-darwin atom-text-editor[data-grammar~="yaml"]:not([mini])':
   'cmd-r': 'dartlang:run-application'
+  'cmd-shift-r': 'dartlang:app-full-restart'
 
 # Dart editor commands (windows and linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
   'ctrl-alt-enter': 'dartlang:jump-to-declaration'
   'ctrl-f4': 'dartlang:find-references'
   'ctrl-r': 'dartlang:run-application'
+  'ctrl-shift-r': 'dartlang:app-full-restart'
   'ctrl-alt-b': 'dartlang:dart-format'
   'ctrl-alt-o': 'dartlang:organize-directives'
   'ctrl-shift-t': 'dartlang:find-type'
@@ -57,6 +60,7 @@
 # Handle ctrl-r for launch config files.
 'body.platform-linux atom-text-editor[data-grammar~="yaml"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="yaml"]:not([mini])':
   'ctrl-r': 'dartlang:run-application'
+  'ctrl-shift-r': 'dartlang:app-full-restart'
 
 # Dart editor commands (linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini])':
