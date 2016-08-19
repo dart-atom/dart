@@ -340,7 +340,7 @@ class FlowControlSection implements Disposable {
       ..click(
         _restart,
         () => _restart(fullRestart: true)
-      )..tooltip = 'Reload';
+      )..tooltip = 'Reload (Shift-click: full reload)';
     stop = button(c: 'btn icon-primitive-square')..click(_terminate)..tooltip = 'Stop';
 
     CoreElement executionControlToolbar = div(c: 'debugger-execution-toolbar')..add([

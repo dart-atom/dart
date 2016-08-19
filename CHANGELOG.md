@@ -2,6 +2,7 @@
 
 ## unreleased
 - add the ability to send in a full application restart
+- re-apply flutter debug options between full app restarts
 
 ## 0.6.35
 - save all open editors when restarting a running application

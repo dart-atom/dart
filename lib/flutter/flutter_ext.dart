@@ -22,6 +22,8 @@ class FlutterExt {
   String isolateId;
   Set<String> services = new Set();
 
+  Map<String, dynamic> _reapply = {};
+
   FlutterExt(this.serviceWrapper) {
     _init();
   }
@@ -31,32 +33,64 @@ class FlutterExt {
   bool get isFlutter => enabled.value;
 
   Future debugPaint(bool enabled) {
+    const String key = '$_flutterPrefix.debugPaint';
+
+    if (enabled) {
+      _reapply[key] = () => debugPaint(true);
+    } else {
+      _reapply.remove(key);
+    }
+
     return service.callServiceExtension(
-      '$_flutterPrefix.debugPaint',
+      key,
       isolateId: isolateId,
       args: { 'enabled': enabled }
     );
   }
 
   Future repaintRainbow(bool enabled) {
+    const String key = '$_flutterPrefix.repaintRainbow';
+
+    if (enabled) {
+      _reapply[key] = () => repaintRainbow(true);
+    } else {
+      _reapply.remove(key);
+    }
+
     return service.callServiceExtension(
-      '$_flutterPrefix.repaintRainbow',
+      key,
       isolateId: isolateId,
       args: { 'enabled': enabled }
     );
   }
 
   Future timeDilation(double dilation) {
+    const String key = '$_flutterPrefix.timeDilation';
+
+    if (dilation == 1.0) {
+      _reapply.remove(key);
+    } else {
+      _reapply[key] = () => timeDilation(dilation);
+    }
+
     return service.callServiceExtension(
-      '$_flutterPrefix.timeDilation',
+      key,
       isolateId: isolateId,
       args: { 'timeDilation': dilation }
     );
   }
 
   Future performanceOverlay(bool enabled) {
+    const String key = '$_flutterPrefix.showPerformanceOverlay';
+
+    if (enabled) {
+      _reapply[key] = () => performanceOverlay(true);
+    } else {
+      _reapply.remove(key);
+    }
+
     return service.callServiceExtension(
-      '$_flutterPrefix.showPerformanceOverlay',
+      key,
       isolateId: isolateId,
       args: { 'enabled': enabled }
     );
@@ -87,12 +121,19 @@ class FlutterExt {
 
   void _registerExtension(String isolateId, String extension) {
     if (!isFlutter) {
-      this.isolateId = isolateId;
       enabled.value = true;
     }
 
+    this.isolateId = isolateId;
+
     _logger.fine('Found ${extension}.');
 
-    services.add(extension);
+    if (services.contains(extension)) {
+      if (_reapply.containsKey(extension)) {
+        _reapply[extension]();
+      }
+    } else {
+      services.add(extension);
+    }
   }
 }
