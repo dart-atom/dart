@@ -20216,10 +20216,11 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.JobManager__exec_closure1[1];
     JobManager__exec_closure1.prototype = $desc;
     JobManager__exec_closure1.$__fields__ = ["$this", "jobInstance", "job"];
-    function JobInstance(jobs, job, _completer, _running) {
+    function JobInstance(jobs, job, _completer, stopwatch, _running) {
       this.jobs = jobs;
       this.job = job;
       this._completer = _completer;
+      this.stopwatch = stopwatch;
       this._running = _running;
       this.$deferredAction();
     }
@@ -20228,15 +20229,15 @@ self._domRemove = function(element) {
       JobInstance.name = "JobInstance";
     $desc = $collectedClasses$.JobInstance[1];
     JobInstance.prototype = $desc;
-    JobInstance.$__fields__ = ["jobs", "job", "_completer", "_running"];
+    JobInstance.$__fields__ = ["jobs", "job", "_completer", "stopwatch", "_running"];
     JobInstance.prototype.get$job = function() {
       return this.job;
     };
     JobInstance.prototype.get$_completer = function() {
       return this._completer;
     };
-    JobInstance.prototype.set$_running = function(v) {
-      return this._running = v;
+    JobInstance.prototype.get$stopwatch = function() {
+      return this.stopwatch;
     };
     function ConsoleController(statusElement, disposables, _console$_subs, _allViews, _errorsView) {
       this.statusElement = statusElement;
@@ -39311,6 +39312,11 @@ self._domRemove = function(element) {
           this._stop = null;
         }
       }, "call$0", "get$start", 0, 0, 2],
+      stop$0: function(_) {
+        if (!(this._core$_start != null && this._stop == null))
+          return;
+        this._stop = $.Primitives_timerTicks.call$0();
+      },
       reset$0: function(_) {
         var t1;
         if (this._core$_start == null)
@@ -65791,7 +65797,9 @@ self._domRemove = function(element) {
         var t1, t2;
         $.$get$_logger4().fine$1("scheduling job " + H.S(job.name));
         t1 = H.setRuntimeTypeInfo(new P._AsyncCompleter(H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [null])), [null]);
-        this._jobs.push(new S.JobInstance(this, job, t1, false));
+        H.Primitives_initTicker();
+        $.Stopwatch__frequency = $.Primitives_timerFrequency;
+        this._jobs.push(new S.JobInstance(this, job, t1, new P.Stopwatch(null, null), false));
         this._checkForRunnableJobs$0();
         this._checkNotifyJobChanged$0();
         t2 = this._queueController;
@@ -65827,7 +65835,7 @@ self._domRemove = function(element) {
         var job, current, t1;
         job = jobInstance.get$job();
         $.$get$_logger4().fine$1("starting job " + H.S(job.name));
-        jobInstance.set$_running(true);
+        jobInstance.set$running(true);
         current = this.get$activeJob();
         t1 = this._lastNotifiedJob;
         if (t1 == null ? current != null : t1 !== current) {
@@ -65892,8 +65900,8 @@ self._domRemove = function(element) {
         var t1, t2;
         t1 = this.$this;
         t2 = this.jobInstance;
-        $.$get$_logger4().fine$1("finished job " + H.S(J.get$name$x(t2)));
-        t2.set$_running(false);
+        t2.set$running(false);
+        $.$get$_logger4().fine$1("finished job " + H.S(J.get$name$x(t2)) + " (" + H.S(J.$tdiv$n(J.$mul$ns(t2.get$stopwatch().get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + "ms)");
         C.JSArray_methods.remove$1(t1._jobs, t2);
         t1._checkForRunnableJobs$0();
         t1._checkNotifyJobChanged$0();
@@ -65913,12 +65921,21 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     JobInstance: {
-      "^": "Object;jobs,job<,_completer<,_running?",
+      "^": "Object;jobs,job<,_completer<,stopwatch<,_running",
       get$name: function(_) {
         return this.job.name;
       },
       get$isRunning: function() {
         return this._running;
+      },
+      set$running: function(value) {
+        var t1 = this.stopwatch;
+        if (value) {
+          t1.reset$0(0);
+          t1.start$0(0);
+        } else
+          t1.stop$0(0);
+        this._running = value;
       },
       get$whenComplete: function() {
         return this._completer.future;
@@ -66145,7 +66162,7 @@ self._domRemove = function(element) {
           J.toggle$2$x(J.get$classes$x(e.element), "text-subtle", null);
         children = J.get$children$x(this.output.get$element());
         t1 = J.getInterceptor$asx(children);
-        if (J.$gt$n(t1.get$length(children), 400))
+        if (J.$gt$n(t1.get$length(children), 200))
           t1.removeAt$1(children, 0);
         J.add$1$ax(this.output, e);
         e.scrollIntoView$1$bottom(0, true);

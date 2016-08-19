@@ -201,7 +201,7 @@ class JobManager implements Disposable {
     Job job = jobInstance.job;
 
     _logger.fine('starting job ${job.name}');
-    jobInstance._running = true;
+    jobInstance.running = true;
     _checkNotifyJobChanged();
 
     new Future.sync(job.run).then((result) {
@@ -221,8 +221,8 @@ class JobManager implements Disposable {
   }
 
   void _complete(JobInstance job) {
-    _logger.fine('finished job ${job.name}');
-    job._running = false;
+    job.running = false;
+    _logger.fine('finished job ${job.name} (${job.stopwatch.elapsedMilliseconds}ms)');
     _jobs.remove(job);
     _checkForRunnableJobs();
     _checkNotifyJobChanged();
@@ -243,12 +243,23 @@ class JobInstance {
   final Job job;
 
   Completer<JobStatus> _completer = new Completer();
+  Stopwatch stopwatch = new Stopwatch();
   bool _running = false;
 
   JobInstance(this.jobs, this.job);
 
   String get name => job.name;
-  bool get isRunning => _running;
+  bool get isRunning => running;
+
+  bool get running => _running;
+  set running(bool value) {
+    if (value) {
+      stopwatch..reset()..start();
+    } else {
+      stopwatch..stop();
+    }
+    _running = value;
+  }
 
   Future<JobStatus> get whenComplete => _completer.future;
 }
