@@ -20,6 +20,8 @@ import 'websocket.dart';
 
 final Logger _logger = new Logger('atom.observatory');
 
+const _verbose = false;
+
 class ObservatoryDebugger {
   /// Establish a connection to a service protocol server at the given port.
   static Future<DebugConnection> connect(Launch launch, String host, int port, {
@@ -137,14 +139,14 @@ class ObservatoryConnection extends DebugConnection {
     var trim = (String str) => str.length > 1000 ? str.substring(0, 1000) + '…' : str;
 
     service.onSend.listen((str) {
-      if (_logger.isLoggable(Level.FINER)) {
-        _logger.finer('==> ${trim(str)}');
+      if (_verbose || _logger.isLoggable(Level.FINER)) {
+        _logger.fine('==> ${trim(str)}');
       }
     });
 
     service.onReceive.listen((str) {
-      if (_logger.isLoggable(Level.FINER)) {
-        _logger.finer('<== ${trim(str)}');
+      if (_verbose || _logger.isLoggable(Level.FINER)) {
+        _logger.fine('<== ${trim(str)}');
       }
     });
 

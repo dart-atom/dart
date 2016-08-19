@@ -15,6 +15,8 @@ import 'flutter_sdk.dart';
 
 final Logger _logger = new Logger('flutter_daemon');
 
+const _verbose = false;
+
 class FlutterDaemonManager implements Disposable {
   FlutterDaemon _daemon;
   Disposables _disposables = new Disposables();
@@ -142,14 +144,14 @@ class FlutterDaemonManager implements Disposable {
     });
 
     _daemon.onSend.listen((String message) {
-      if (_logger.isLoggable(Level.FINER)) {
-        _logger.finer('--> ${message}');
+      if (_verbose || _logger.isLoggable(Level.FINER)) {
+        _logger.fine('--> ${message}');
       }
     });
 
     _daemon.onReceive.listen((String message) {
-      if (_logger.isLoggable(Level.FINER)) {
-        _logger.finer('<-- ${message}');
+      if (_verbose || _logger.isLoggable(Level.FINER)) {
+        _logger.fine('<-- ${message}');
       }
     });
 
