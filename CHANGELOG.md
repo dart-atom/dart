@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.6.36
 - add the ability to send in a full application restart
 - re-apply flutter debug options between full app restarts
 

@@ -106,7 +106,7 @@ class ConsoleController implements Disposable {
 
 class ConsoleView extends View {
   // Only show a set amount of lines of output.
-  static const _maxLines = 400;
+  static const _maxLines = 200;
 
   static int _idCount = 0;
 
@@ -291,6 +291,7 @@ class ConsoleView extends View {
   //
   // 'test/utils_test.dart 21 '
   // 'test/utils_test.dart 21:7 '
+  // TODO(devoncarew): Ensure that this regex isn't expensive.
   final RegExp _hyperlinkMatcher =
       new RegExp(r' \((\S+\.dart):(\d+)(:\d+)?\)|(\S+\.dart) (\d+)(:\d+)? ');
 
