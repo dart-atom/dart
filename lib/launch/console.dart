@@ -122,7 +122,6 @@ class ConsoleView extends View {
   CoreElement _terminateButton;
   CoreElement _reloadButton;
   CoreElement _observatoryButton;
-  // CoreElement _debugButton;
 
   ConsoleView(this.controller, this.launch) {
     _launchId = _idCount++;
@@ -144,8 +143,22 @@ class ConsoleView extends View {
     // Allow the text in the console to be selected.
     output.element.tabIndex = -1;
 
-    _subs.add(launch.onStdio.listen((text) => _emitText(
-        text.text, error: text.error, subtle: text.subtle, highlight: text.highlight)));
+    _subs.add(launch.onStdio.listen((TextFragment text) {
+      const maxLines = 12;
+
+      String str = text.text;
+
+      // Only show the first dozen lines of long stack traces.
+      if (text.error) {
+        List<String> lines = str.split('\n');
+        if (lines.length > maxLines) {
+          lines = lines.sublist(0, maxLines);
+          str = lines.join('\n') + "\n…\n\n";
+        }
+      }
+
+     _emitText(str, error: text.error, subtle: text.subtle, highlight: text.highlight);
+    }));
 
     // Terminate
     if (launch.canKill()) {
@@ -236,19 +249,6 @@ class ConsoleView extends View {
         shell.openExternal('http://localhost:${launch.servicePort}/');
       });
     }
-
-    // if (_debugButton != null && port == null) {
-    //   _debugButton.dispose();
-    //   _debugButton = null;
-    // } else if (_debugButton == null && port != null && launch.hasDebugConnection) {
-    //   _debugButton = toolbar.add(
-    //     button(text: 'Debug', c: 'btn icon icon-bug')
-    //   );
-    //   _debugButton.tooltip = 'Open the debugger';
-    //   _debugButton.click(() {
-    //     debugManager.showViewForConnection(launch.debugConnection);
-    //   });
-    // }
   }
 
   void _launchTerminated(Launch l) {
@@ -261,7 +261,6 @@ class ConsoleView extends View {
       _terminateButton?.disabled = true;
       _reloadButton?.disabled = true;
       _observatoryButton?.disabled = true;
-      // _debugButton?.disabled = true;
     }
   }
 
