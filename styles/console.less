@@ -11,10 +11,6 @@
     text-decoration: underline;
   }
 
-  .console-error .trace-link {
-    color: lighten(@text-color-error, 20%);
-  }
-
   .console-line {
     background-color: inherit;
     -webkit-user-select: text;
@@ -27,6 +23,10 @@
 
   .console-error {
     color: @text-color-error;
+
+    .trace-link {
+      color: @text-color-error;
+    }
   }
 
   .console-header {

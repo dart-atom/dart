@@ -265,6 +265,12 @@ class DebuggerView extends View {
 
     if (!location.resolved) {
       _logger.fine('DebuggerView._jumpToLocation - location is not resolved ($location).');
+      return;
+    }
+
+    if (location.line == null || location.column == null) {
+      editorManager.jumpToLocation(location.path);
+      return;
     }
 
     editorManager.jumpToLocation(location.path, location.line - 1, location.column - 1).then(
