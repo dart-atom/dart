@@ -1,6 +1,10 @@
 @import "ui-variables";
 @import "syntax-variables";
 
+.atom-view .console-view .tab-scrollable {
+  overflow-x: auto;
+}
+
 .console-view {
   .trace-link {
     cursor: pointer;
@@ -14,7 +18,6 @@
   .console-line {
     background-color: inherit;
     -webkit-user-select: text;
-    white-space: pre-wrap;
   }
 
   .console-line .badge {

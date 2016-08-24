@@ -2,6 +2,9 @@
 /// A console output view.
 library atom.console;
 
+import 'dart:async';
+import 'dart:html' as html show Element, ScrollAlignment;
+
 import 'package:atom/atom.dart';
 import 'package:atom/node/shell.dart';
 import 'package:atom/utils/disposable.dart';
@@ -106,7 +109,7 @@ class ConsoleController implements Disposable {
 
 class ConsoleView extends View {
   // Only show a set amount of lines of output.
-  static const _maxLines = 200;
+  static const _maxLines = 300;
 
   static int _idCount = 0;
 
@@ -144,20 +147,7 @@ class ConsoleView extends View {
     output.element.tabIndex = -1;
 
     _subs.add(launch.onStdio.listen((TextFragment text) {
-      const maxLines = 12;
-
-      String str = text.text;
-
-      // Only show the first dozen lines of long stack traces.
-      if (text.error) {
-        List<String> lines = str.split('\n');
-        if (lines.length > maxLines) {
-          lines = lines.sublist(0, maxLines);
-          str = lines.join('\n') + "\n…\n\n";
-        }
-      }
-
-     _emitText(str, error: text.error, subtle: text.subtle, highlight: text.highlight);
+      _emitText(text.text, error: text.error, subtle: text.subtle, highlight: text.highlight);
     }));
 
     // Terminate
@@ -176,17 +166,11 @@ class ConsoleView extends View {
       );
       _reloadButton.tooltip = 'Reload application';
       _reloadButton.click(() {
-        _reloadButton.disabled = true;
         atom.workspace.saveAll();
-        launch.restart().whenComplete(() {
-          _reloadButton.disabled = launch.isTerminated;
-        });
+        launch.restart();
       }, () {
-        _reloadButton.disabled = true;
         atom.workspace.saveAll();
-        launch.restart(fullRestart: true).whenComplete(() {
-          _reloadButton.disabled = launch.isTerminated;
-        });
+        launch.restart(fullRestart: true);
       });
     }
 
@@ -205,19 +189,14 @@ class ConsoleView extends View {
     launch.servicePort.observe(_watchServicePort);
 
     // Emit a header.
-    CoreElement header = div(c: 'console-header');
-
+    String header;
     if (launch.title != null) {
-      header.add(span(text: launch.title, c: 'text-highlight'));
+      header = launch.title;
     } else {
-      header.add(span(text: launch.name, c: 'text-highlight'));
+      header = launch.name;
     }
-
-    if (launch.subtitle != null) {
-      header.add(span(text: ' • ${launch.subtitle}', c: 'text-subtle'));
-    }
-
-    _emitElement(header);
+    header += ' • ${launch.subtitle}\n';
+    _emitText(header);
   }
 
   String get label => launch.launchConfiguration?.shortResourceName ?? launch.name;
@@ -255,9 +234,7 @@ class ConsoleView extends View {
     if (launch == l) {
       tabElement.toggleClass('launch-terminated');
       if (!_lastText.endsWith('\n')) _emitText('\n');
-      CoreElement footer =
-        div(text: 'exited with code ${launch.exitCode}', c: 'console-footer');
-      _emitElement(footer);
+      _emitText('process finished • exit code ${launch.exitCode}');
       _terminateButton?.disabled = true;
       _reloadButton?.disabled = true;
       _observatoryButton?.disabled = true;
@@ -280,88 +257,39 @@ class ConsoleView extends View {
 
   void dispose() { }
 
-  // ' (dart:core-patch/errors_patch.dart:27)'
-  // ' (packages/flutter/src/rendering/flex.dart:475)'
-  // ' (/Users/foo/flutter/flutter_playground/lib/main.dart:6)'
-  // ' (file:///Users/foo/flutter/flutter_playground/lib/main.dart:6)'
-  // ' (http:localhost:8080/src/errors.dart:27)'
-  // ' (http:localhost:8080/src/errors.dart:27:12)'
-  // ' (file:///ssd2/sky/engine/src/out/android_Release/gen/sky/bindings/Customhooks.dart:35)'
-  //
-  // 'test/utils_test.dart 21 '
-  // 'test/utils_test.dart 21:7 '
-  // TODO(devoncarew): Ensure that this regex isn't expensive.
-  final RegExp _hyperlinkMatcher =
-      new RegExp(r' \((\S+\.dart):(\d+)(:\d+)?\)|(\S+\.dart) (\d+)(:\d+)? ');
+  String _text = '';
+  Timer _timer;
 
   void _emitText(String str, {bool error: false, bool subtle: false, bool highlight: false}) {
     _lastText = str;
 
-    List<Match> matches = _hyperlinkMatcher.allMatches(str).toList();
+    _text += str;
 
-    CoreElement e;
+    if (_timer == null) {
+      _timer = new Timer(new Duration(milliseconds: 250), () {
+        _timer = null;
 
-    if (matches.isEmpty) {
-      e = span(text: _stripAnsi(str));
-    } else {
-      e = span();
+        List<String> lines = _text.split('\n');
+        if (lines.length > _maxLines) {
+          lines.removeRange(0, lines.length - _maxLines);
+        }
+        String newText = lines.join('\n');
+        if (_text.endsWith('\n')) {
+          newText += '\n';
+        }
+        _text = newText;
 
-      int offset = 0;
-
-      for (Match match in matches) {
-        String ref = match.group(1) ?? match.group(4);
-        String line = match.group(2) ?? match.group(5);
-        int startIndex = match.start + (match.group(1) != null ? 2 : 0);
-
-        e.add(span(text: _stripAnsi(str.substring(offset, startIndex))));
-
-        String text = '${ref}:${line}';
-        CoreElement link = e.add(span(text: _stripAnsi(text)));
-
-        offset = startIndex + text.length;
-
-        launch.resolve(ref).then((String path) {
-          if (path != null) {
-            link.toggleClass('trace-link');
-            link.click(() {
-              editorManager.jumpToLine(
-                path,
-                int.parse(line, onError: (_) => 1) - 1,
-                selectLine: true
-              );
-            });
-          }
-        });
-      }
-
-      if (offset != str.length) {
-        e.add(span(text: _stripAnsi(str.substring(offset))));
-      }
+        if (output.element.children.isEmpty) {
+          html.Element span = new html.Element.span()..text = newText;
+          output.element.children.add(span);
+          span.scrollIntoView(html.ScrollAlignment.BOTTOM);
+        } else {
+          html.Element span = output.element.children.elementAt(0);
+          span.text = newText;
+          span.scrollIntoView(html.ScrollAlignment.BOTTOM);
+        }
+      });
     }
-
-    if (highlight) e.toggleClass('text-highlight');
-    if (error) e.toggleClass('console-error');
-    if (subtle) e.toggleClass('text-subtle');
-
-    List children = output.element.children;
-    if (children.length > _maxLines) {
-      children.removeAt(0);
-    }
-
-    _emitElement(e);
-  }
-
-  final RegExp _stripAnsiRegex = new RegExp('\u001B\\[\\d\\d?m');
-
-  String _stripAnsi(String text) {
-    // TODO(devoncarew): Handle ansi reset, bold, and foreground color changes.
-    // \esc[0m, \esc[1m, \esc[30m - \esc[37m
-    return text.replaceAll(_stripAnsiRegex, '');
-  }
-
-  void _emitElement(CoreElement e) {
-    output.add(e);
-    e.scrollIntoView(bottom: true);
   }
 }
 

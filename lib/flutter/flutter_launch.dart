@@ -371,7 +371,7 @@ class _FlutterLaunch extends Launch {
 
   Future restart({ bool fullRestart: false }) {
     if (fullRestart) {
-      atom.notifications.addInfo('Performing full application restart…');
+      atom.notifications.addInfo('Performing full restart…');
     }
 
     return app.restart(fullRestart: fullRestart).then((bool result) {

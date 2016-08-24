@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.6.38
+- more performance work in the console view
+
 ## 0.6.37
 - address a perf issue with the console view
 
