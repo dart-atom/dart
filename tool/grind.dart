@@ -15,7 +15,7 @@ import 'package:atom/build/publish.dart';
 main(List<String> args) => grind(args);
 
 @Task()
-analyze() => new PubApp.global('tuneup').runAsync(['check']);
+analyze() => new PubApp.global('tuneup').runAsync(['check', '--ignore-infos']);
 
 @DefaultTask()
 build() async {
