@@ -1,2 +1,2 @@
-analyzer:
-  strong-mode: true
+# analyzer:
+#   strong-mode: true

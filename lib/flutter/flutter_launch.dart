@@ -206,6 +206,10 @@ class _RunLaunchInstance extends _LaunchInstance {
   bool get pipeStdio => false;
 
   Future<Launch> launch() async {
+    bool disableHotPatching = atom.config.getValue('flutter.disableHotPatching');
+    // Only pass a value in for disableHotPatching if it's explicitly off.
+    if (disableHotPatching != true) disableHotPatching = null;
+
     return daemon.app.start(
       _device?.id,
       project.path,
@@ -213,7 +217,7 @@ class _RunLaunchInstance extends _LaunchInstance {
       startPaused: _mode.startPaused,
       target: _target,
       route: _route,
-      enableHotPatching: atom.config.getValue('flutter.enableHotPatching')
+      disableHotPatching: disableHotPatching
     ).then((AppStartedResult result) {
       _app = daemon.app.createDaemonApp(result.appId, supportsRestart: result.supportsRestart);
       _launch.app = _app;
