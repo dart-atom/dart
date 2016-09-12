@@ -16,7 +16,7 @@ const String experimental = 'experimental';
 
 final Logger _logger = new Logger('analysis_server_lib');
 
-const String generatedProtocolVersion = '1.16.0';
+const String generatedProtocolVersion = '1.17.0';
 
 typedef void MethodSend(String methodName);
 
@@ -720,11 +720,11 @@ class FindTopLevelDeclarationsResult {
 }
 
 class TypeHierarchyResult {
-  static TypeHierarchyResult parse(Map m) => new TypeHierarchyResult(hierarchyItems: m[
-              'hierarchyItems'] ==
-          null
-      ? null
-      : new List.from(m['hierarchyItems'].map((obj) => TypeHierarchyItem.parse(obj))));
+  static TypeHierarchyResult parse(Map m) => new TypeHierarchyResult(
+      hierarchyItems: m['hierarchyItems'] == null
+          ? null
+          : new List.from(
+              m['hierarchyItems'].map((obj) => TypeHierarchyItem.parse(obj))));
 
   @optional
   final List<TypeHierarchyItem> hierarchyItems;
@@ -1294,6 +1294,7 @@ class HoverInformation {
         dartdoc: m['dartdoc'],
         elementDescription: m['elementDescription'],
         elementKind: m['elementKind'],
+        isDeprecated: m['isDeprecated'],
         parameter: m['parameter'],
         propagatedType: m['propagatedType'],
         staticType: m['staticType']);
@@ -1314,6 +1315,8 @@ class HoverInformation {
   @optional
   final String elementKind;
   @optional
+  final bool isDeprecated;
+  @optional
   final String parameter;
   @optional
   final String propagatedType;
@@ -1327,6 +1330,7 @@ class HoverInformation {
       this.dartdoc,
       this.elementDescription,
       this.elementKind,
+      this.isDeprecated,
       this.parameter,
       this.propagatedType,
       this.staticType});

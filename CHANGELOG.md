@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.6.39
+- change the 'enable hot reload' setting to a 'disable hot reload' one
+
 ## 0.6.38
 - more performance work in the console view
 

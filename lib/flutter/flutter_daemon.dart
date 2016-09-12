@@ -376,7 +376,7 @@ class AppDomain extends Domain {
     String route,
     String mode,
     String target,
-    bool enableHotPatching
+    bool disableHotPatching
   }) {
     return _call('app.start', _stripNullValues({
       'deviceId': deviceId,
@@ -385,7 +385,7 @@ class AppDomain extends Domain {
       'route': route,
       'mode': mode,
       'target': target,
-      'hot': enableHotPatching
+      'hot': disableHotPatching == null ? null : !disableHotPatching
     })).then((result) {
       return new AppStartedResult(result);
     });
@@ -406,12 +406,14 @@ class AppDomain extends Domain {
     }) as Future<bool>;
   }
 
-  Future<List<DiscoveredApp>> discover(String deviceId) {
-    return _call('app.discover', _stripNullValues({
-      'deviceId': deviceId,
-    })).then((List<Map<String, dynamic>> result) => result.map(
-      (Map<String, dynamic> app) => new DiscoveredApp(app['id'], app['observatoryDevicePort'])
-    ));
+  Future<List<DiscoveredApp>> discover(String deviceId) async {
+    List<Map<String, dynamic>> result = await _call(
+      'app.discover', _stripNullValues({ 'deviceId': deviceId })
+    ) as List<Map<String, dynamic>>;
+
+    return result.map((Map<String, dynamic> app) {
+      return new DiscoveredApp(app['id'], app['observatoryDevicePort']);
+    });
   }
 
   DaemonApp createDaemonApp(String appId, { bool supportsRestart: false }) {
