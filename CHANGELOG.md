@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.6.40
+- fixes to the 'enable hot reload' setting
+
 ## 0.6.39
 - change the 'enable hot reload' setting to a 'disable hot reload' one
 

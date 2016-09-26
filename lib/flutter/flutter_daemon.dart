@@ -137,11 +137,7 @@ class FlutterDaemonManager implements Disposable {
       _deviceRemovedController.add(device);
     });
 
-    // TODO(devoncarew): We need to enable and disable device polling as Atom
-    // moves to the foreground and background.
-    _daemon.device.enable().catchError((e) {
-      // Ignore this error - older clients don't understand this call.
-    });
+    _daemon.device.enable();
 
     _daemon.onSend.listen((String message) {
       if (_verbose || _logger.isLoggable(Level.FINER)) {
@@ -295,7 +291,7 @@ abstract class Domain {
       _streams[name] = _controllers[name].stream.map(cvt);
     }
 
-    return _streams[name] as Stream/*<T>*/;
+    return _streams[name];
   }
 
   void _handleEvent(String name, dynamic event) {
@@ -376,7 +372,7 @@ class AppDomain extends Domain {
     String route,
     String mode,
     String target,
-    bool disableHotPatching
+    bool enableHotReload: true
   }) {
     return _call('app.start', _stripNullValues({
       'deviceId': deviceId,
@@ -385,7 +381,7 @@ class AppDomain extends Domain {
       'route': route,
       'mode': mode,
       'target': target,
-      'hot': disableHotPatching == null ? null : !disableHotPatching
+      'hot': enableHotReload
     })).then((result) {
       return new AppStartedResult(result);
     });

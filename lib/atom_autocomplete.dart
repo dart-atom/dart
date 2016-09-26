@@ -33,7 +33,7 @@ Future/*<T>*/ chooseItemUsingCompletions/*<T>*/(TextEditor editor,
     List<dynamic> items, Suggestion renderer(/*T*/ item)) {
   _override = new _AutoCompleteOverride/*<T>*/(editor, items, renderer);
   triggerAutocomplete(editor);
-  return _override.future as Future/*<T>*/;
+  return _override.future;
 }
 
 List<_AutoCompleteEditorOverride> _overrides = [];
