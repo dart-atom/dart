@@ -365,7 +365,6 @@ class _EditorBreakpoint implements Disposable {
   void _checkForLocationChange() {
     Range newRange = marker.getBufferRange();
     if (_range != newRange) {
-
       _range = newRange;
       manager._updateBreakpointLocation(bp, newRange);
     }

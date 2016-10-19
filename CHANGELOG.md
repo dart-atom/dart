@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.6.41
+- fixed an issue with creating breakpoints
+
 ## 0.6.40
 - fixes to the 'enable hot reload' setting
 

@@ -211,6 +211,7 @@ class Editors implements Disposable {
       StreamSubscription sub;
       sub = editor.onDidDestroy.listen((_) {
         _subs.remove(sub);
+        _openEditors.remove(editor);
         _editorClosedController.add(editor);
       });
       _subs.add(sub);
