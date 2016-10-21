@@ -126,7 +126,7 @@ class FlutterExt {
 
     this.isolateId = isolateId;
 
-    _logger.fine('Found ${extension}.');
+    _logger.finer('Found ${extension}.');
 
     if (services.contains(extension)) {
       if (_reapply.containsKey(extension)) {

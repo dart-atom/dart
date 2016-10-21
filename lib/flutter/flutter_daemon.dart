@@ -388,11 +388,19 @@ class AppDomain extends Domain {
   }
 
   /// Restart a running flutter app.
-  Future<bool> restart(String appId, { bool fullRestart: false }) {
-    return _call('app.restart', _stripNullValues({
+  Future<OperationResult> restart(String appId, { bool fullRestart: false }) async {
+    dynamic result = await _call('app.restart', _stripNullValues({
       'appId': appId,
       'fullRestart': fullRestart
-    })) as Future<bool>;
+    }));
+
+    if (result is Map) {
+      return new OperationResult(result);
+    } else {
+      return result == true
+        ? OperationResult.ok
+        : new OperationResult({ 'code': 1, 'message': fullRestart ? 'restart failed' : 'reload failed' });
+    }
   }
 
   // Stop a running flutter app.
@@ -448,7 +456,7 @@ class DaemonApp {
     }));
   }
 
-  Future<bool> restart({ bool fullRestart: false }) {
+  Future<OperationResult> restart({ bool fullRestart: false }) {
     return daemon.restart(appId, fullRestart: fullRestart);
   }
 
@@ -650,4 +658,17 @@ class DaemonRequestJob extends Job {
       }
     });
   }
+}
+
+class OperationResult {
+  static final OperationResult ok = new OperationResult({ 'code': 0, 'message': 'ok' });
+  final Map m;
+
+  OperationResult(this.m);
+
+  int get code => m['code'];
+  String get message => m['message'];
+
+  bool get isOk => code == 0 || code == null;
+  bool get isError => !isOk;
 }
