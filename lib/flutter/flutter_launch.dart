@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
 import '../flutter/flutter_devices.dart';
+import '../flutter/flutter_daemon.dart';
 import '../jobs.dart';
 import '../launch/launch.dart';
 import '../projects.dart';
@@ -371,14 +372,17 @@ class _FlutterLaunch extends Launch {
 
   bool get supportsRestart => app != null && app.supportsRestart;
 
-  Future restart({ bool fullRestart: false }) {
+  Future restart({ bool fullRestart: false }) async {
     if (fullRestart) {
       atom.notifications.addInfo('Performing full restart…');
     }
 
-    return app.restart(fullRestart: fullRestart).then((bool result) {
-      if (!result) {
-        atom.notifications.addWarning('Error restarting application.');
+    return app.restart(fullRestart: fullRestart).then((OperationResult result) {
+      if (result.isError) {
+        atom.notifications.addWarning(
+          'Error restarting application',
+          description: result.message
+        );
       }
     });
   }

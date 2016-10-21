@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dart command line",
+      "type": "dart-cli",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "program": "${workspaceRoot}/tool/test.dart",
+      "args": []
+    }
+  ]
+}
