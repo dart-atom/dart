@@ -360,6 +360,8 @@ class AppDomain extends Domain {
   // app.log; appId, log, [stackTrace], [error](bool)
   Stream<LogAppEvent> get onAppLog => _listen('app.log', LogAppEvent.parse);
 
+  Stream<ProgressAppEvent> get onAppProgress => _listen('app.progress', ProgressAppEvent.parse);
+
   // app.stop; appId, [error]
   Stream<StopAppEvent> get onAppStop => _listen('app.stop', StopAppEvent.parse);
 
@@ -434,6 +436,7 @@ class DaemonApp {
   Completer _stoppedCompleter = new Completer();
   Completer<DebugPortAppEvent> _debugPortCompleter = new Completer<DebugPortAppEvent>();
   StreamController<LogAppEvent> _logController = new StreamController<LogAppEvent>.broadcast();
+  StreamController<ProgressAppEvent> _progressController = new StreamController<ProgressAppEvent>.broadcast();
 
   DaemonApp(this.daemon, this.appId, { this.supportsRestart: false }) {
     // listen for the debugPort event
@@ -445,9 +448,12 @@ class DaemonApp {
       }
     }));
 
-    // listen for logs
+    // listen for logs and progress
     _subs.add(daemon.onAppLog.where((AppEvent event) => event.appId == appId).listen((LogAppEvent event) {
       _logController.add(event);
+    }));
+    _subs.add(daemon.onAppProgress.where((AppEvent event) => event.appId == appId).listen((ProgressAppEvent event) {
+      _progressController.add(event);
     }));
 
     // listen for app termination
@@ -474,6 +480,8 @@ class DaemonApp {
 
   Stream<LogAppEvent> get onAppLog => _logController.stream;
 
+  Stream<ProgressAppEvent> get onAppProgress => _progressController.stream;
+
   Future get onStopped => _stoppedCompleter.future;
 
   void _dispose() {
@@ -481,6 +489,10 @@ class DaemonApp {
 
     if (!_logController.isClosed) {
       _logController.close();
+    }
+
+    if (!_progressController.isClosed) {
+      _progressController.close();
     }
 
     if (!_stoppedCompleter.isCompleted) {
@@ -540,9 +552,15 @@ class LogAppEvent extends AppEvent {
   String get stackTrace => data['stackTrace'];
 
   bool get isError => data['error'] ?? false;
+}
 
-  bool get isProgress => data['progress'] ?? false;
-  bool get isProgressFinished => data['finished'] ?? false;
+class ProgressAppEvent extends AppEvent {
+  static ProgressAppEvent parse(Map data) => new ProgressAppEvent(data);
+
+  ProgressAppEvent(Map data) : super(data);
+
+  String get message => data['message'];
+  bool get isFinished => data['finished'] ?? false;
   String get progressId => data['id'];
 }
 

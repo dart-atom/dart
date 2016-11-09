@@ -231,18 +231,18 @@ class _RunLaunchInstance extends _LaunchInstance {
       });
 
       _app.onAppLog.listen((LogAppEvent log) {
-        if (log.isProgress) {
-          if (!log.isProgressFinished) {
-            job?.cancel();
+        _launch.pipeStdio('${log.log}\n', error: log.isError);
+        if (log.hasStackTrace) _launch.pipeStdio('${log.stackTrace}\n', error: true);
+      });
 
-            job = new _LogStatusJob(log.log);
-            job.schedule();
-          } else {
-            job?.cancel();
-          }
+      _app.onAppProgress.listen((ProgressAppEvent log) {
+        if (!log.isFinished) {
+          job?.cancel();
+
+          job = new _LogStatusJob(log.message);
+          job.schedule();
         } else {
-          _launch.pipeStdio('${log.log}\n', error: log.isError);
-          if (log.hasStackTrace) _launch.pipeStdio('${log.stackTrace}\n', error: true);
+          job?.cancel();
         }
       });
 

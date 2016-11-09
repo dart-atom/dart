@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## 0.6.43
+- update for some changes to the flutter_tools daemon protocol
+
 ## 0.6.42
 - updated hot reloading code to provide better error messages
 
