@@ -14,6 +14,8 @@ import '../state.dart';
 
 final Logger _logger = new Logger('atom.tooltip');
 
+// TODO: This library is unused.
+
 /// Controls the hover tooltip with type information feature, capable of
 /// installing the feature into every active .dart editor.
 class TooltipController implements Disposable {
