@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## 0.6.44
+- removed the experimental `hoverTooltip` option; this feature was never fully
+  implemented
+
 ## 0.6.43
 - update for some changes to the flutter_tools daemon protocol
 
