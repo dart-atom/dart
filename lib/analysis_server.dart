@@ -477,19 +477,24 @@ class _AnalysisServerWrapper extends Server {
 
       _logger.info(error.message, null, st);
 
+      Notification notification;
+
       List<NotificationButton> buttons = [
-        new NotificationButton('Report Error', () => _reportError(error))
+        new NotificationButton('Report Error', () {
+          notification.dismiss();
+          _reportError(error);
+        })
       ];
 
       if (error.isFatal) {
-        atom.notifications.addError(
+        notification = atom.notifications.addError(
           'Error from the analysis server: ${error.message}',
           detail: error.stackTrace,
           dismissable: true,
           buttons: buttons
         );
       } else {
-        atom.notifications.addWarning(
+        notification = atom.notifications.addWarning(
           'Error from the analysis server: ${error.message}',
           detail: error.stackTrace,
           dismissable: true,
@@ -523,7 +528,7 @@ Exception from analysis server (running from Atom)
 ${error.message} ${error.isFatal ? ' (fatal)' : ''}
 
 ```
-${error.stackTrace}
+${error.stackTrace?.trim()}
 ```
 ''';
 

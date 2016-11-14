@@ -14264,7 +14264,8 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$._AnalysisServerWrapper_setup_closure1[1];
     _AnalysisServerWrapper_setup_closure1.prototype = $desc;
     _AnalysisServerWrapper_setup_closure1.$__fields__ = ["$this"];
-    function _AnalysisServerWrapper_setup__closure($this, error) {
+    function _AnalysisServerWrapper_setup__closure(_box_0, $this, error) {
+      this._box_0 = _box_0;
       this.$this = $this;
       this.error = error;
       this.$deferredAction();
@@ -14274,7 +14275,7 @@ self._domRemove = function(element) {
       _AnalysisServerWrapper_setup__closure.name = "_AnalysisServerWrapper_setup__closure";
     $desc = $collectedClasses$._AnalysisServerWrapper_setup__closure[1];
     _AnalysisServerWrapper_setup__closure.prototype = $desc;
-    _AnalysisServerWrapper_setup__closure.$__fields__ = ["$this", "error"];
+    _AnalysisServerWrapper_setup__closure.$__fields__ = ["_box_0", "$this", "error"];
     function _AnalysisServerWrapper_restart_closure($this, sdk) {
       this.$this = $this;
       this.sdk = sdk;
@@ -53565,7 +53566,7 @@ self._domRemove = function(element) {
         H.subtypeCast(this._analysis_server_lib$_server._listen$2("server.error", E.analysis_server_lib_ServerError_parse$closure()), "$isStream", [E.ServerError], "$asStream")._createSubscription$4(new X._AnalysisServerWrapper_setup_closure1(this), null, null, false);
       },
       _reportError$1: function(error) {
-        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$handler = 1, $async$currentError, sdkVersion, pluginVersion, t1, t2, text, filePath;
+        var $async$goto = 0, $async$completer = new P.Completer_Completer$sync(), $async$handler = 1, $async$currentError, sdkVersion, pluginVersion, t1, t2, t3, text, filePath;
         var $async$_reportError$1 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
           if ($async$errorCode === 1) {
             $async$currentError = $async$result;
@@ -53588,7 +53589,9 @@ self._domRemove = function(element) {
                 t1 = "Please report the following to https://github.com/dart-lang/sdk/issues/new:\n\nException from analysis server (running from Atom)\n\n### what happened\n\n<please describe what you were doing when this exception occurred>\n\n### version information\n\n- Dart SDK " + H.S(sdkVersion) + "\n- Atom ";
                 t2 = $.$get$atom();
                 t1 = t1 + H.S(t2.invoke$1("getVersion")) + "\n- dartlang " + H.S(pluginVersion) + "\n\n### the exception\n\n" + H.S(J.get$message$x(error)) + " ";
-                text = t1 + (error.get$isFatal() === true ? " (fatal)" : "") + "\n\n```\n" + H.S(error.get$stackTrace()) + "\n```\n";
+                t1 = t1 + (error.get$isFatal() === true ? " (fatal)" : "") + "\n\n```\n";
+                t3 = error.get$stackTrace();
+                text = t1 + H.S(t3 == null ? t3 : J.trim$0$s(t3)) + "\n```\n";
                 t1 = $.$get$fs();
                 filePath = t1.join$2(0, t1._os.callMethod$1("tmpdir"), "bug.md");
                 t1.invoke$3("writeFileSync", filePath, text);
@@ -53751,24 +53754,27 @@ self._domRemove = function(element) {
     _AnalysisServerWrapper_setup_closure1: {
       "^": "Closure:88;$this",
       call$1: [function(error) {
-        var st, t1, buttons, t2;
+        var t1, st, t2, buttons, t3;
+        t1 = {};
         st = error.get$stackTrace() == null ? null : new P._StringStackTrace(error.get$stackTrace());
-        t1 = J.getInterceptor$x(error);
-        $.$get$_logger5().info$3(t1.get$message(error), null, st);
-        buttons = [new D.NotificationButton("Report Error", new X._AnalysisServerWrapper_setup__closure(this.$this, error))];
+        t2 = J.getInterceptor$x(error);
+        $.$get$_logger5().info$3(t2.get$message(error), null, st);
+        t1.notification = null;
+        buttons = [new D.NotificationButton("Report Error", new X._AnalysisServerWrapper_setup__closure(t1, this.$this, error))];
         if (error.get$isFatal() === true) {
-          t2 = $.$get$atom()._notifications;
-          t2.invoke$3("addError", "Error from the analysis server: " + H.S(t1.get$message(error)), t2._options$5$buttons$description$detail$dismissable$icon(buttons, null, error.get$stackTrace(), true, null));
+          t3 = $.$get$atom()._notifications;
+          t1.notification = new D.Notification(t3.invoke$3("addError", "Error from the analysis server: " + H.S(t2.get$message(error)), t3._options$5$buttons$description$detail$dismissable$icon(buttons, null, error.get$stackTrace(), true, null)));
         } else {
-          t2 = $.$get$atom()._notifications;
-          t2.invoke$3("addWarning", "Error from the analysis server: " + H.S(t1.get$message(error)), t2._options$5$buttons$description$detail$dismissable$icon(buttons, null, error.get$stackTrace(), true, null));
+          t3 = $.$get$atom()._notifications;
+          t1.notification = new D.Notification(t3.invoke$3("addWarning", "Error from the analysis server: " + H.S(t2.get$message(error)), t3._options$5$buttons$description$detail$dismissable$icon(buttons, null, error.get$stackTrace(), true, null)));
         }
       }, null, null, 2, 0, null, 8, "call"]
     },
     _AnalysisServerWrapper_setup__closure: {
-      "^": "Closure:1;$this,error",
+      "^": "Closure:1;_box_0,$this,error",
       call$0: [function() {
-        return this.$this._reportError$1(this.error);
+        this._box_0.notification.invoke$1("dismiss");
+        this.$this._reportError$1(this.error);
       }, null, null, 0, 0, null, "call"]
     },
     _AnalysisServerWrapper_restart_closure: {
