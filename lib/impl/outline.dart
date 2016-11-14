@@ -8,6 +8,7 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 import '../analysis/analysis_server_lib.dart' as analysis;
 import '../analysis_server.dart';
@@ -15,12 +16,25 @@ import '../elements.dart';
 import '../linter.dart';
 import '../projects.dart';
 import '../state.dart';
-import '../utils.dart';
 import '../views.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';
 
 final Logger _logger = new Logger('atom.outline');
+
+bool _atomUsesShadowDOM;
+
+bool get atomUsesShadowDOM {
+  if (_atomUsesShadowDOM == null) {
+    String ver = atom.getVersion();
+    int index = ver.indexOf('-');
+    if (index != -1) ver = ver.substring(0, index);
+    Version v = new Version.parse(ver);
+    _atomUsesShadowDOM = v.compareTo(new Version(1, 13, 0)) < 0;
+  }
+
+  return _atomUsesShadowDOM;
+}
 
 class OutlineController implements Disposable {
   Disposables disposables = new Disposables();
