@@ -6,7 +6,9 @@ library atom.utils;
 
 import 'dart:async';
 
+import 'package:atom/atom.dart';
 import 'package:logging/logging.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 final String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing "
     "elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
@@ -17,6 +19,20 @@ final String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing "
     "mollit anim id est laborum.";
 
 final Logger _logger = new Logger('atom.utils');
+
+bool _atomUsesShadowDOM;
+
+bool get atomUsesShadowDOM {
+  if (_atomUsesShadowDOM == null) {
+    String ver = atom.getVersion();
+    int index = ver.indexOf('-');
+    if (index != -1) ver = ver.substring(0, index);
+    Version v = new Version.parse(ver);
+    _atomUsesShadowDOM = v.compareTo(new Version(1, 13, 0)) < 0;
+  }
+
+  return _atomUsesShadowDOM;
+}
 
 /// A value that fires events when it changes.
 class Property<T> {

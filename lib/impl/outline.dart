@@ -15,6 +15,7 @@ import '../elements.dart';
 import '../linter.dart';
 import '../projects.dart';
 import '../state.dart';
+import '../utils.dart';
 import '../views.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';
@@ -102,9 +103,11 @@ class OutlineView implements Disposable {
     subs.add(analysisServer.onOutline.listen(_handleOutline));
     subs.add(onProcessedErrorsChanged.listen(_handleErrorsChanged));
 
-    root = editor.view['shadowRoot'];
-    if (root == null) {
-      _logger.warning("The editor's shadow root is null");
+    if (atomUsesShadowDOM) {
+      root = editor.view['shadowRoot'];
+      if (root == null) {
+        _logger.warning("The editor's shadow root is null");
+      }
     }
 
     if (controller.showView) _install();

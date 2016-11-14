@@ -9,6 +9,9 @@ library atom.analysis_server;
 import 'dart:async';
 
 import 'package:atom/atom.dart';
+import 'package:atom/node/fs.dart';
+import 'package:atom/node/notification.dart';
+import 'package:atom/node/package.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
@@ -474,20 +477,59 @@ class _AnalysisServerWrapper extends Server {
 
       _logger.info(error.message, null, st);
 
-      if (AnalysisServer.startWithDiagnostics) {
-        if (error.isFatal) {
-          atom.notifications.addError(
-            'Error from the analysis server: ${error.message}',
-            detail: error.stackTrace,
-            dismissable: true);
-        } else {
-          atom.notifications.addWarning(
-            'Error from the analysis server: ${error.message}',
-            detail: error.stackTrace,
-            dismissable: true);
-        }
+      List<NotificationButton> buttons = [
+        new NotificationButton('Report Error', () => _reportError(error))
+      ];
+
+      if (error.isFatal) {
+        atom.notifications.addError(
+          'Error from the analysis server: ${error.message}',
+          detail: error.stackTrace,
+          dismissable: true,
+          buttons: buttons
+        );
+      } else {
+        atom.notifications.addWarning(
+          'Error from the analysis server: ${error.message}',
+          detail: error.stackTrace,
+          dismissable: true,
+          buttons: buttons
+        );
       }
     });
+  }
+
+  Future _reportError(ServerError error) async {
+    String sdkVersion = await sdkManager.sdk.getVersion();
+    String pluginVersion = await atomPackage.getPackageVersion();
+
+    String text = '''
+Please report the following to https://github.com/dart-lang/sdk/issues/new:
+
+Exception from analysis server (running from Atom)
+
+### what happened
+
+<please describe what you were doing when this exception occurred>
+
+### version information
+
+- Dart SDK ${sdkVersion}
+- Atom ${atom.getVersion()}
+- ${pluginId} ${pluginVersion}
+
+### the exception
+
+${error.message} ${error.isFatal ? ' (fatal)' : ''}
+
+```
+${error.stackTrace}
+```
+''';
+
+    String filePath = fs.join(fs.tmpdir, 'bug.md');
+    fs.writeFileSync(filePath, text);
+    atom.workspace.openPending(filePath);
   }
 
   bool get isRunning => process != null;

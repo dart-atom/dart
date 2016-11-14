@@ -1,5 +1,11 @@
 # dartlang plugin changelog
 
+## 0.6.45
+- disabled the outline view on Atom versions 1.13.0 and greater (it will need to
+  be re-written to not use shadow DOM)
+- when the analysis server encounters a fatal exception, give the user a chance
+  to report the issue to Dart's bug tracker
+
 ## 0.6.44
 - removed the experimental `hoverTooltip` option; this feature was never fully
   implemented
