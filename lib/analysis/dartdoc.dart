@@ -42,6 +42,10 @@ class DartdocHelper implements Disposable {
   }
 
   void _handleDartdoc(AtomEvent event) {
+    if (_control != null) {
+      _hideControl();
+      return;
+    }
     if (!analysisServer.isActive) {
       _hideControl();
       atom.beep();
