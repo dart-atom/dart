@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- make max issues per file and project configurable.
+
 ## 0.6.45
 - disabled the outline view on Atom versions 1.13.0 and greater (it will need to
   be re-written to not use shadow DOM)

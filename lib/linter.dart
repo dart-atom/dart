@@ -75,8 +75,8 @@ class DartLinterProvider extends LinterProvider {
   Future<List<LintMessage>> lint(TextEditor editor) => new Future.value([]);
 }
 
-const int _maxIssuesPerFile = 200;
-const int _maxIssuesPerProject = 500;
+int get _maxIssuesPerFile => atom.config.getValue('$pluginId.maxIssuesPerFile');
+int get _maxIssuesPerProject => atom.config.getValue('$pluginId.maxIssuesPerProject');
 
 StreamController<List<AnalysisError>> _processedErrorsController = new StreamController.broadcast();
 
