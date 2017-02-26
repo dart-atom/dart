@@ -374,6 +374,21 @@ class AtomDartPackage extends AtomPackage {
         'order': 12
       },
 
+      // issues
+      'maxIssuesPerProject': {
+        'title': 'Max number of issues displayed per prject',
+        'type': 'integer',
+        'default': 500,
+        'order': 13
+      },
+
+      'maxIssuesPerFile': {
+        'title': 'Max number of issues displayed per file',
+        'type': 'integer',
+        'default': 200,
+        'order': 14
+      },
+
       // experimental features
       // TODO(devoncarew): This option needs some debugging; see #931.
       'formatOnSave': {
@@ -381,7 +396,7 @@ class AtomDartPackage extends AtomPackage {
         'description': 'Format the current editor on save. Note: this does not work well with Atom\'s autosave feature.',
         'type': 'boolean',
         'default': false,
-        'order': 13
+        'order': 15
       }
     };
   }
