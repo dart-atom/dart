@@ -27,6 +27,11 @@
         "^1.0.0": "consumeToolbar"
       }
     },
+    "linter-indie": {
+      "versions": {
+        "2.0.0": "consumeIndie"
+      }
+    },
     "linter-plus-self": {
       "versions": {
         "0.1.0": "consumeLinter"

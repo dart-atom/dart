@@ -15,6 +15,7 @@ import 'utils.dart';
 
 Stream<List<AnalysisError>> get onProcessedErrorsChanged => _processedErrorsController.stream;
 
+@deprecated
 LintMessage _errorToLintMessage(String filePath, AnalysisError error) {
   String text = error.code == null ? error.message : '${error.message} (${error.code})';
 
@@ -23,6 +24,17 @@ LintMessage _errorToLintMessage(String filePath, AnalysisError error) {
       text: text,
       filePath: filePath,
       range: _locationToRange(error.location));
+}
+
+IndieLintMessage _errorToIndieLintMessage(String filePath, AnalysisError error) {
+  String excerpt = error.code == null ? error.message : '${error.message} (${error.code})';
+  Lc location = new Lc(filePath, _locationToRange(error.location));
+
+  return new IndieLintMessage(
+      severity: _indieSeverityMap[error.severity],
+      excerpt: excerpt,
+      location: location
+  );
 }
 
 Rn _locationToRange(Location location) {
@@ -47,10 +59,17 @@ int _sev(String sev) {
   return 0;
 }
 
+@deprecated
 final Map<String, String> _severityMap = {
   'ERROR': LintMessage.ERROR,
   'WARNING': LintMessage.WARNING,
   'INFO': LintMessage.INFO
+};
+
+final Map<String, String> _indieSeverityMap = const {
+  'ERROR': IndieLintMessage.error,
+  'WARNING': IndieLintMessage.warning,
+  'INFO': IndieLintMessage.info
 };
 
 String _configureErrorsPrefPath = '${pluginId}.configureErrorsView';
@@ -66,6 +85,7 @@ bool _shouldShowTodosMessages() {
 }
 
 /// This only class exists to provide linting information to atomlinter/linter.
+@deprecated
 class DartLinterProvider extends LinterProvider {
   DartLinterProvider() : super(grammarScopes: ['source.dart'], scope: 'project');
 
@@ -81,6 +101,7 @@ int get _maxIssuesPerProject => atom.config.getValue('$pluginId.maxIssuesPerProj
 StreamController<List<AnalysisError>> _processedErrorsController = new StreamController.broadcast();
 
 /// Consumes the atomlinter/linter self-service API.
+@deprecated
 class DartLinterConsumer extends LinterConsumer implements Disposable {
   ErrorRepository _errorRepository;
   Duration _reportingDelay = new Duration(milliseconds: 750);
@@ -187,6 +208,133 @@ class DartLinterConsumer extends LinterConsumer implements Disposable {
         _service.deleteMessages(_provider);
         _service.setMessages(_provider,
             newIssues.map((e) => _errorToLintMessage(e.location.file, e)).toList());
+      }
+    }
+  }
+
+  void dispose() => _disposables.dispose();
+}
+
+// --------------------------------------------------------------------------
+// Indie V2 API Classes
+// --------------------------------------------------------------------------
+
+/// This only class exists to provide linting information to atomlinter/linter.
+class DartIndieLinterProvider extends IndieLinterProvider {
+  DartIndieLinterProvider() : super(grammarScopes: ['source.dart'], scope: 'project');
+
+  void register() => IndieLinterProvider.registerLinterProvider('provideLinter', this);
+
+  /// This is a no-op.
+  Future<List<IndieLintMessage>> lint(TextEditor editor) => new Future.value([]);
+}
+
+class DartIndieLinterConsumer extends IndieLinterConsumer implements Disposable {
+  ErrorRepository _errorRepository;
+  Duration _reportingDelay = new Duration(milliseconds: 750);
+  DartIndieLinterProvider _provider = new DartIndieLinterProvider();
+  IndieLinterService _service;
+  Disposables _disposables = new Disposables();
+
+  List<AnalysisError> _oldIssues = [];
+
+  DartIndieLinterConsumer(this._errorRepository) {
+    var regen = (_) => _regenErrors();
+
+    _disposables.add(atom.config.observe(_configureErrorsPrefPath, null, regen));
+
+    Stream errorStream = _errorRepository.onChange.transform(new Debounce(_reportingDelay));
+    errorStream.listen(regen);
+  }
+
+  List<AnalysisError> get errors => _oldIssues;
+
+  void consume(IndieLinterService service) {
+    _service = service;
+  }
+
+  void _regenErrors() {
+    // Get issues per file.
+    Map<String, List<AnalysisError>> issuesMap = _errorRepository.knownErrors;
+    List<AnalysisError> allIssues = [];
+
+    issuesMap.forEach((String path, List<AnalysisError> issues) {
+      issues = _filter(issues)..sort(_errorComparer);
+      if (issues.length > _maxIssuesPerFile) {
+        // Create an issue to say we capped the number of issues.
+        AnalysisError first = issues.first;
+        AnalysisError cap = new AnalysisError(first.severity, first.type,
+          new Location(first.location.file, 0, 1, 1, 1),
+          '${issues.length - _maxIssuesPerFile + 1} additional issues not shown',
+          null);
+        issues = issues.sublist(0, _maxIssuesPerFile - 1);
+        issues.insert(0, cap);
+      }
+      allIssues.addAll(issues);
+    });
+
+    allIssues.sort(_errorComparer);
+
+    // If we have too many total issues, then crop them.
+    List<String> projects = atom.project.getPaths();
+    Map<String, int> projectErrorCount = {};
+
+    if (allIssues.length > projects.length * _maxIssuesPerProject) {
+      for (String project in projects) {
+        projectErrorCount[project] = 0;
+      }
+
+      List<AnalysisError> newIssues = [];
+
+      for (String project in projects) {
+        for (AnalysisError issue in allIssues) {
+          if (issue.location.file.startsWith(project)) {
+            projectErrorCount[project]++;
+
+            if (projectErrorCount[project] < _maxIssuesPerProject) {
+              print(issue.severity + ' ' + issue.type);
+              newIssues.add(issue);
+            } else if (projectErrorCount[project] == _maxIssuesPerProject) {
+              AnalysisError cap = new AnalysisError('ERROR', 'ERROR',
+                new Location(issue.location.file, 0, 1, 1, 1),
+                'Maximum project issue count of ${_maxIssuesPerProject} hit.',
+                null);
+              newIssues.add(cap);
+            }
+          }
+        }
+      }
+
+      allIssues = newIssues;
+      allIssues.sort(_errorComparer);
+    }
+
+    _emit(allIssues);
+  }
+
+  List<AnalysisError> _filter(List<AnalysisError> issues) {
+    bool showInfos = _shouldShowInfoMessages();
+    bool showTodos = _shouldShowTodosMessages();
+
+    return issues.where((AnalysisError issue) {
+      if (!showInfos && issue.severity == 'INFO') return false;
+      if (!showTodos && issue.type == 'TODO') return false;
+      if (issue.message.endsWith('cannot both be unnamed')) return false;
+
+      return true;
+    }).toList();
+  }
+
+  void _emit(List<AnalysisError> newIssues) {
+    if (!listIdentical(_oldIssues, newIssues)) {
+      _oldIssues = newIssues;
+
+      _processedErrorsController.add(newIssues);
+
+      if (_service != null) {
+        _service.clearMessages(_provider);
+        _service.setAllMessages(_provider,
+            newIssues.map((e) => _errorToIndieLintMessage(e.location.file, e)).toList());
       }
     }
   }

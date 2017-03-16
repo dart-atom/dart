@@ -30,7 +30,7 @@ import 'analysis/references.dart';
 import 'analysis/type_hierarchy.dart';
 import 'analysis_server.dart';
 import 'atom_autocomplete.dart' show AutocompleteProvider;
-import 'atom_linter.dart' show LinterService;
+import 'atom_linter.dart' show LinterService, IndieLinterService;
 import 'atom_package_deps.dart' as package_deps;
 import 'atom_statusbar.dart';
 import 'atom_utils.dart';
@@ -65,7 +65,7 @@ import 'launch/launch_cli.dart';
 import 'launch/launch_configs.dart';
 import 'launch/launch_shell.dart';
 import 'launch/run.dart';
-import 'linter.dart' show DartLinterConsumer;
+import 'linter.dart' show DartLinterConsumer, DartIndieLinterConsumer;
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
@@ -83,7 +83,9 @@ class AtomDartPackage extends AtomPackage {
 
   ErrorsController errorsController;
   ConsoleController consoleController;
+  @deprecated
   DartLinterConsumer _consumer;
+  DartIndieLinterConsumer _indieLinterConsumer;
 
   AtomDartPackage() : super(pluginId) {
     // Register a method to consume the `status-bar` service API.
@@ -109,6 +111,12 @@ class AtomDartPackage extends AtomPackage {
     registerServiceConsumer('consumeLinter', (JsObject obj) {
       _consumer.consume(new LinterService(obj));
       return _consumer;
+    });
+
+    // Register a method to consume the `linter-indi` service API.
+    registerServiceConsumer('consumeIndie', (JsObject obj) {
+      _indieLinterConsumer.consume(new IndieLinterService(obj));
+      return _indieLinterConsumer;
     });
 
     final JsObject moduleExports = context['module']['exports'];
@@ -182,6 +190,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(new RebuildManager());
 
     _registerLinter();
+    _registerIndieLinter();
     _registerLaunchTypes();
 
     // Register commands.
@@ -414,6 +423,7 @@ class AtomDartPackage extends AtomPackage {
     ShellLaunchType.register(launchManager);
   }
 
+  @deprecated
   void _registerLinter() {
     // This hoopla allows us to construct an object with Disposable and return
     // it without having to create a new class that just does the same thing,
@@ -423,6 +433,29 @@ class AtomDartPackage extends AtomPackage {
     errorRepository.initStreams(errorController.stream, flushController.stream);
     _consumer = new DartLinterConsumer(errorRepository);
     deps[DartLinterConsumer] = _consumer;
+
+    // Proxy error messages from analysis server to ErrorRepository when the
+    // analysis server becomes active.
+    var registerListeners = () {
+      analysisServer.onAnalysisErrors.listen(errorController.add);
+      analysisServer.onAnalysisFlushResults.listen(flushController.add);
+    };
+
+    if (analysisServer.isActive) registerListeners();
+    analysisServer.onActive.where((active) => active).listen((_) {
+      registerListeners();
+    });
+  }
+
+  void _registerIndieLinter() {
+    // This hoopla allows us to construct an object with Disposable and return
+    // it without having to create a new class that just does the same thing,
+    // but in another file.
+    var errorController = new StreamController<AnalysisErrors>.broadcast();
+    var flushController = new StreamController<AnalysisFlushResults>.broadcast();
+    errorRepository.initStreams(errorController.stream, flushController.stream);
+    _indieLinterConsumer = new DartIndieLinterConsumer(errorRepository);
+    deps[DartIndieLinterConsumer] = _indieLinterConsumer;
 
     // Proxy error messages from analysis server to ErrorRepository when the
     // analysis server becomes active.

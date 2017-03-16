@@ -11,6 +11,7 @@ import 'dart:js';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/src/js.dart';
 
+@deprecated
 abstract class LinterProvider {
   final List<String> grammarScopes;
   final String scope;
@@ -49,10 +50,12 @@ abstract class LinterProvider {
   JsObject _lint(jsEditor) => jsify([]);
 }
 
+@deprecated
 abstract class LinterConsumer {
   void consume(LinterService linterService);
 }
 
+@deprecated
 class LinterService extends ProxyHolder {
   LinterService(obj) : super(obj);
 
@@ -68,6 +71,7 @@ class LinterService extends ProxyHolder {
   }
 }
 
+@deprecated
 class LintMessage {
   static const String ERROR = 'Error';
   static const String WARNING = 'Warning';
@@ -90,6 +94,99 @@ class LintMessage {
     if (range != null) m['range'] = range.toArray();
     return m;
   }
+}
+
+// --------------------------------------------------------------------------
+// Indie V2 API Classes
+// --------------------------------------------------------------------------
+
+abstract class IndieLinterProvider {
+  final List<String> grammarScopes;
+  final String scope;
+  final bool lintOnChange;
+
+  final JsObject _key = jsify({'scope': 'project'});
+
+  static void registerLinterProvider(
+      String methodName, IndieLinterProvider provider) {
+    final JsObject exports = context['module']['exports'];
+    exports[methodName] = () => provider.toProxy();
+  }
+
+  /// [grammarScopes] is a list of scopes, e.g. `['source.js', 'source.php']`.
+  /// [scope] is one of either `file` or `project`. [lintOnChange] must be false
+  /// for the scope `project`.
+  IndieLinterProvider({this.grammarScopes, this.scope, this.lintOnChange: false});
+
+  // A unique identifier for the provider; JS will store this in a hashmap as a
+  // map key;
+  Object get key => _key;
+
+  Future<List<IndieLintMessage>> lint(TextEditor editor);
+
+  JsObject toProxy() {
+    Map map = {
+      'grammarScopes': grammarScopes,
+      'scope': scope,
+      'lintOnFly': lintOnChange,
+      'lint': _lint
+    };
+
+    return jsify(map);
+  }
+
+  JsObject _lint(jsEditor) => jsify([]);
+}
+
+abstract class IndieLinterConsumer {
+  void consume(IndieLinterService linterService);
+}
+
+class IndieLinterService extends ProxyHolder {
+  IndieLinterService(obj) : super(obj);
+
+  void clearMessages(IndieLinterProvider provider) {
+    invoke('clearMessages', provider.key);
+  }
+
+  void setAllMessages(IndieLinterProvider provider, List<IndieLintMessage> messages) {
+    var list = messages.map((m) => m.toMap()).toList();
+    invoke('setAllMessages', provider.key, list);
+  }
+}
+
+class IndieLintMessage {
+  static const String error = 'error';
+  static const String warning = 'warning';
+  static const String info = 'info';
+
+  final String severity;
+  final String excerpt;
+  final Lc location;
+
+  IndieLintMessage({this.severity, this.excerpt, this.location});
+
+  Map toMap() {
+    var m = <String, dynamic>{};
+
+    if (severity != null) m['severity'] = severity;
+    if (excerpt != null) m['excerpt'] = excerpt;
+    if (location != null) m['location'] = location;
+
+    return m;
+  }
+}
+
+class Lc {
+  final String file;
+  final Rn range;
+
+  Lc(this.file, this.range);
+
+  Map toMap() => {
+      'file': file,
+      'range': range.toArray()
+    };
 }
 
 class Rn {
