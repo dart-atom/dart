@@ -138,10 +138,9 @@
         'name': 'comment.block.dart'
       }
       {
-        'captures':
-          '1':
-            'name': 'comment.line.double-slash.dart'
-        'match': '((//).*)$'
+        'name': 'comment.line.double-slash.dart'
+        'begin': '//'
+        'end': '$'
       }
     ]
   'annotations':
