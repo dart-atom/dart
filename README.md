@@ -10,6 +10,16 @@ A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 See our [getting started guide](https://dart-atom.github.io/dartlang/)! This is
 useful for users new to the plugin and users new to Atom as well.
 
+## Contributing!
+
+The original developers are less active on this project; that said, contributions are
+welcome :) Please see our contributors
+[guide](https://github.com/dart-atom/dartlang/blob/master/CONTRIBUTING.md).
+
+For more actively maintained Dart tools, see the
+[Dart plugin](https://plugins.jetbrains.com/plugin/6351-dart) for IntelliJ, and 
+[DartCode](https://github.com/Dart-Code/Dart-Code), the Dart plugin for VSCode.
+
 ## What is it?
 
 This package is a lightweight, streamlined Dart development plugin for Atom. It
