@@ -17,7 +17,7 @@ welcome :) Please see our contributors
 [guide](https://github.com/dart-atom/dartlang/blob/master/CONTRIBUTING.md).
 
 For more actively maintained Dart tools, see the
-[Dart plugin](https://plugins.jetbrains.com/plugin/6351-dart) for IntelliJ, and 
+[Dart plugin for IntelliJ](https://plugins.jetbrains.com/plugin/6351-dart), and 
 [DartCode](https://github.com/Dart-Code/Dart-Code), the Dart plugin for VSCode.
 
 ## What is it?
