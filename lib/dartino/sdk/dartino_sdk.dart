@@ -20,7 +20,10 @@ class DartinoSdk extends Sdk {
   /// to ensure that it is a valid SDK.
   static DartinoSdk forPath(String path) {
     var sdk = new DartinoSdk(path);
-    return fs.existsSync(sdk.dartinoBinary) ? sdk : null;
+    if (fs.existsSync(sdk.dartinoBinary)) return sdk;
+    var repo = new DartinoRepo(path);
+    if (fs.existsSync(repo.dartinoBinary)) return repo;
+    return null;
   }
 
   /// Prompt the user for where to install a new SDK, then do it.
@@ -74,6 +77,10 @@ class DartinoSdk extends Sdk {
     } catch (_) {
       return null;
     }
+  }
+
+  bool get toolsInstalled {
+    return existsSync('tools/gcc-arm-embedded/bin/arm-none-eabi-gcc');
   }
 
   /// Compile the application and return a path to the compiled binary.
@@ -172,6 +179,60 @@ class DartinoSdk extends Sdk {
   }
 }
 
+/// Enables using a repository of the dartino sources in place of a bundled SDK.
+class DartinoRepo extends DartinoSdk {
+
+  DartinoRepo(String repoRoot) : super(repoRoot);
+
+  /// Return the path to the dartino command line binary
+  @override
+  String get dartinoBinary => resolvePath('out/ReleaseX64/dartino');
+
+  @override
+  String get name => 'Dartino Repository';
+
+  bool get toolsInstalled {
+    return existsSync('out/tools/gcc-arm-embedded/bin/arm-none-eabi-gcc');
+  }
+
+  @override
+  String packageRoot(projDir) {
+    if (projDir == null) return null;
+    String localSpecFile = fs.join(projDir, dotPackagesFileName);
+    if (fs.existsSync(localSpecFile)) return localSpecFile;
+    return resolvePath('.packages');
+  }
+
+
+  @override
+  ProcessRunner execBin(String binName, List<String> args,
+      {cwd, bool startProcess: true}) {
+    if (cwd is Directory) cwd = cwd.path;
+    String osBinName = isWindows ? '${binName}.bat' : binName;
+    String binDir;
+    if (["dartfmt", "dartanalyzer", "pub"].contains(binName)) {
+      if (isLinux) {
+        binDir = fs.join('third_party', 'dart-sdk', 'linux', 'bin');
+      } else if (isMac) {
+        binDir = fs.join('third_party', 'dart-sdk', 'mac', 'bin');
+      } else {
+        assert(isWindows);
+        binDir = fs.join('third_party', 'dart-sdk', 'mac', 'bin');
+      }
+    } else {
+      binDir = fs.join(sdkRoot, 'out', 'ReleaseX64');
+    }
+
+    String command = fs.join(binDir, osBinName);
+
+    ProcessRunner runner =
+        new ProcessRunner.underShell(command, args: args, cwd: cwd);
+    if (startProcess) runner.execStreaming();
+    return runner;
+  }
+
+}
+
 /// A flag indicating whether the user has already been prompted to opt into
 /// analytics during this session.
 bool _promptOptIntoAnalyticsStarted = false;
@@ -227,7 +288,7 @@ Future<String> _downloadSdkZip() async {
 /// If there is a problem, notify the user and complete the future with `false`.
 Future _installAdditionalTools(DartinoSdk sdk, DartinoLaunch launch) async {
   // Check to see if tools have already been downloaded
-  if (sdk.existsSync('tools/gcc-arm-embedded/bin/arm-none-eabi-gcc')) {
+  if (sdk.toolsInstalled) {
     return true;
   }
 
