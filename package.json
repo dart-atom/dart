@@ -18,8 +18,7 @@
   },
   "required-packages": [
     "atom-toolbar",
-    "linter",
-    "synced-sidebar"
+    "linter"
   ],
   "consumedServices": {
     "atom-toolbar": {
