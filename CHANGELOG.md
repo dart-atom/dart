@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## 0.6.47
+- remove a dep on a missing plugin (synced-sidebar)
+- improvements to Dart syntax highlighting
+
 ## 0.6.46
 - fix an issue with css styles in the plugin
 - make max issues per file and project configurable.
