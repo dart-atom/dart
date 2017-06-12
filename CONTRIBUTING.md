@@ -32,7 +32,6 @@ and:
 - commit, push to master
 - verify that the package.json version is one minor patch older; apm will rev the last number - we want that to match the changelog and pubspec versions
 - from the CLI: `apm publish patch`
-- Tweet announcement via @dartpluginatom
 
 ## Docs
 
