@@ -8,8 +8,8 @@ environment:
 
 dependencies:
   atom:
-    # git: https://github.com/dart-atom/atom.dart.git
-    path: ../atom.dart-master
+    git: https://github.com/dart-atom/atom.dart.git
+    # path: ../atom.dart
   haikunator: ^0.1.0
   logging: ^0.11.0
   markdown: ^0.11.0
