@@ -54,17 +54,19 @@ abstract class LinterConsumer {
 }
 
 class LinterService extends ProxyHolder {
-  LinterService(obj) : super(obj);
+  ProxyHolder _linter;
+
+  LinterService(obj) : super(obj) {
+    _linter = new ProxyHolder(invoke('register', {'name': 'dartlang'}));
+  }
 
   void deleteMessages(LinterProvider provider) {
-    invoke('deleteMessages', provider.key);
+    _linter.invoke('clearMessages');
   }
 
   void setMessages(LinterProvider provider, List<LintMessage> messages) {
-    // jsify(messages, deep: true) ?
-    // jsifyIterable(messages) ?
     var list = messages.map((m) => m.toMap()).toList();
-    invoke('setMessages', provider.key, list);
+    _linter.invoke('setMessages', list);
   }
 }
 
