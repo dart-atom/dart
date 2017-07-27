@@ -140,8 +140,6 @@ class TooltipElement extends CoreElement {
       : super('div', classes: 'hover-tooltip') {
     id = 'hover-tooltip';
 
-    print(position);
-
     _cmdDispose = atom.commands.add('atom-workspace', 'core:cancel', (_) => dispose());
     _sub = editor.onDidDestroy.listen((_) => dispose());
 
