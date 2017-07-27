@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:html' as html;
-import 'dart:js';
 
 import 'package:atom/atom.dart';
 import 'package:atom/node/workspace.dart';
@@ -13,8 +12,6 @@ import '../projects.dart';
 import '../state.dart';
 
 final Logger _logger = new Logger('atom.tooltip');
-
-// TODO: This library is unused.
 
 /// Controls the hover tooltip with type information feature, capable of
 /// installing the feature into every active .dart editor.
@@ -48,11 +45,11 @@ class TooltipManager implements Disposable {
 
   TooltipManager(TextEditor editor)
       : this._editor = editor,
-        _root = editor.view['shadowRoot'] {
+        _root = editor.view {
     _subs.add(_editor.onDidDestroy.listen((_) => dispose()));
 
     if (_root == null) {
-      _logger.warning("The editor's shadow root is null.");
+      _logger.warning("The editor's view is null.");
     } else {
       _install();
     }
@@ -64,6 +61,11 @@ class TooltipManager implements Disposable {
       if (!_isTooltipEnabled) return;
       if (!analysisServer.isActive) return;
 
+      // TODO don't update if same selection
+      // TODO wait a few milliseconds before showing?
+      // TODO style text with underline if jump key is held and
+      // we have a destination
+
       int offset = _offsetFromMouseEvent(mouseEvent);
 
       analysisServer.getHover(_editor.getPath(), offset).then((HoverResult result) {
@@ -73,7 +75,8 @@ class TooltipManager implements Disposable {
           // Get rid of previous tooltips.
           _tooltipElement?.dispose();
           _tooltipElement = new TooltipElement(_editor,
-            content: _tooltipContent(h), position: mouseEvent.offset as html.Point<num>); // ignore: unnecessary_cast
+            content: _tooltipContent(h),
+            position: _positionForScreenPosition(h.offset));
         });
       }).catchError((_) => null);
     });
@@ -88,9 +91,21 @@ class TooltipManager implements Disposable {
   /// Returns the offset in the current buffer corresponding to the screen
   /// position of the [MouseEvent].
   int _offsetFromMouseEvent(html.MouseEvent e) {
-    JsObject component = _editor.view['component'];
-    Point bufferPt = component.callMethod('screenPositionForMouseEvent', [e]);
+    TextEditorComponent component = _editor.getElement().getComponent();
+    var bufferPt = component.screenPositionForMouseEvent(e);
     return _editor.getBuffer().characterIndexForPosition(bufferPt);
+  }
+
+  html.Point _positionForScreenPosition(int offset) {
+    TextEditorComponent component = _editor.getElement().getComponent();
+    Point bufferPt = _editor.getBuffer().positionForCharacterIndex(offset);
+
+    html.Point pixelPt = component.pixelPositionForScreenPosition(bufferPt);
+    num scrollTop = component.scrollTop;
+    num scrollLeft = component.scrollLeft;
+    num gutterWidth = component.gutterWidth;
+    var pt = new html.Point<num>(pixelPt.x - scrollLeft + gutterWidth, pixelPt.y - scrollTop);
+    return pt;
   }
 
   /// Returns the content to put into the tooltip based on [hover].
@@ -116,19 +131,24 @@ class TooltipElement extends CoreElement {
       : super('div', classes: 'hover-tooltip') {
     id = 'hover-tooltip';
 
+    print(position);
+
     _cmdDispose = atom.commands.add('atom-workspace', 'core:cancel', (_) => dispose());
     _sub = editor.onDidDestroy.listen((_) => dispose());
 
     // Set position at the mouseevent coordinates.
-    int x = position.x + _offset;
-    int y = position.y + _offset;
-    attributes['style'] = 'top: ${y}px; left: ${x}px;';
+    int x = position.x - _offset;
+    int y = position.y;
 
+    var h = (editor.view as html.Element).clientHeight;
+
+    attributes['style'] = 'bottom: ${h - y}px; left: ${x}px;';
     // Actually create the tooltip element.
     add(div(c: 'hover-tooltip-title')).add(div(text: content, c: 'inline-block'));
 
     // Attach the tooltip to the editor view.
-    html.DivElement parent = editor.view['parentElement'];
+    //html.DivElement parent = editor.view['parentElement'];
+    html.Element parent = (editor.view as html.Element).parent;
     if (parent == null) return;
     parent.append(this.element);
   }
