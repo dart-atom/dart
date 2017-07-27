@@ -10,6 +10,7 @@ import '../analysis_server.dart';
 import '../elements.dart';
 import '../projects.dart';
 import '../state.dart';
+import 'debounce.dart';
 
 final Logger _logger = new Logger('atom.tooltip');
 
@@ -41,6 +42,7 @@ class TooltipManager implements Disposable {
   final html.Element _root;
 
   TooltipElement _tooltipElement;
+
   StreamSubscriptions _subs = new StreamSubscriptions();
 
   TooltipManager(TextEditor editor)
@@ -56,33 +58,36 @@ class TooltipManager implements Disposable {
   }
 
   void _install() {
-    _root.addEventListener('mousemove', (html.Event event) {
-      html.MouseEvent mouseEvent = event;
+    _subs.add(_root.onMouseMove
+        .transform(new Debounce(new Duration(milliseconds: 400)))
+        .listen((html.MouseEvent mouseEvent) {
       if (!_isTooltipEnabled) return;
       if (!analysisServer.isActive) return;
 
-      // TODO don't update if same selection
-      // TODO wait a few milliseconds before showing?
-      // TODO style text with underline if jump key is held and
-      // we have a destination
-
       int offset = _offsetFromMouseEvent(mouseEvent);
 
+      // don't update if same selection
+      if (_tooltipElement?.isInRange(offset) ?? false) return;
+
       analysisServer.getHover(_editor.getPath(), offset).then((HoverResult result) {
-        if (result == null) return;
+        if (result == null) {
+          _disposeTooltip();
+          return;
+        }
 
         result.hovers.forEach((HoverInformation h) {
           // Get rid of previous tooltips.
-          _tooltipElement?.dispose();
+          _disposeTooltip();
           _tooltipElement = new TooltipElement(_editor,
+            info: h,
             content: _tooltipContent(h),
             position: _positionForScreenPosition(h.offset));
         });
       }).catchError((_) => null);
-    });
+    }));
 
-    _root.addEventListener('mouseout', (_) => _disposeTooltip());
-    _root.addEventListener('keydown', (_) => _disposeTooltip());
+    _subs.add(_root.onMouseOut.listen((_) => _disposeTooltip()));
+    _subs.add(_root.onKeyDown.listen((_) => _disposeTooltip()));
   }
 
   /// Returns true if the tooltip feature is enabled.
@@ -112,7 +117,10 @@ class TooltipManager implements Disposable {
   String _tooltipContent(HoverInformation hover) =>
       hover.elementDescription ?? hover.staticType ?? hover.propagatedType;
 
-  void _disposeTooltip() => _tooltipElement?.dispose();
+  void _disposeTooltip() {
+    _tooltipElement?.dispose();
+    _tooltipElement = null;
+  }
 
   void dispose() => _disposeTooltip();
 }
@@ -123,11 +131,12 @@ class TooltipElement extends CoreElement {
   static const int _offset = 12;
 
   final String content;
+  final HoverInformation info;
 
   Disposable _cmdDispose;
   StreamSubscription _sub;
 
-  TooltipElement(TextEditor editor, {this.content, html.Point position})
+  TooltipElement(TextEditor editor, {this.content, this.info, html.Point position})
       : super('div', classes: 'hover-tooltip') {
     id = 'hover-tooltip';
 
@@ -158,4 +167,7 @@ class TooltipElement extends CoreElement {
     _cmdDispose.dispose();
     super.dispose();
   }
+
+  bool isInRange(int offset) =>
+    info.offset <= offset && info.offset + info.length > offset;
 }

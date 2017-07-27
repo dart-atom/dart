@@ -19983,8 +19983,9 @@ self._domRemove = function(element) {
     $desc = $collectedClasses$.TooltipManager__install_closure1[1];
     TooltipManager__install_closure1.prototype = $desc;
     TooltipManager__install_closure1.$__fields__ = ["$this"];
-    function TooltipElement(content, _tooltip$_cmdDispose, _tooltip$_sub, element) {
+    function TooltipElement(content, info, _tooltip$_cmdDispose, _tooltip$_sub, element) {
       this.content = content;
+      this.info = info;
       this._tooltip$_cmdDispose = _tooltip$_cmdDispose;
       this._tooltip$_sub = _tooltip$_sub;
       this.element = element;
@@ -19995,7 +19996,7 @@ self._domRemove = function(element) {
       TooltipElement.name = "TooltipElement";
     $desc = $collectedClasses$.TooltipElement[1];
     TooltipElement.prototype = $desc;
-    TooltipElement.$__fields__ = ["content", "_tooltip$_cmdDispose", "_tooltip$_sub", "element"];
+    TooltipElement.$__fields__ = ["content", "info", "_tooltip$_cmdDispose", "_tooltip$_sub", "element"];
     TooltipElement.prototype.get$content = function(receiver) {
       return this.content;
     };
@@ -26125,7 +26126,7 @@ self._domRemove = function(element) {
       }],
       noSuchMethod$1: ["super$Interceptor$noSuchMethod", function(receiver, invocation) {
         throw H.wrapException(P.NoSuchMethodError$(receiver, invocation.get$memberName(), invocation.get$positionalArguments(), invocation.get$namedArguments(), null));
-      }, null, "get$noSuchMethod", 2, 0, null, 50],
+      }, null, "get$noSuchMethod", 2, 0, null, 49],
       get$runtimeType: function(receiver) {
         return new H.TypeImpl(H.getRuntimeTypeString(receiver), null);
       },
@@ -26160,7 +26161,7 @@ self._domRemove = function(element) {
       },
       noSuchMethod$1: [function(receiver, invocation) {
         return this.super$Interceptor$noSuchMethod(receiver, invocation);
-      }, null, "get$noSuchMethod", 2, 0, null, 50],
+      }, null, "get$noSuchMethod", 2, 0, null, 49],
       $isNull: 1
     },
     JavaScriptObject: {
@@ -28344,7 +28345,7 @@ self._domRemove = function(element) {
         case "error":
           throw H.wrapException(t1.$index(msg, "msg"));
       }
-    }, null, null, 4, 0, null, 139, 1],
+    }, null, null, 4, 0, null, 133, 1],
     IsolateNatives__log: function(msg) {
       var trace, t1, t2, exception;
       if (init.globalState.isWorker === true) {
@@ -28401,7 +28402,7 @@ self._domRemove = function(element) {
         _Manager__serializePrintMessage: [function(object) {
           var t1 = P.LinkedHashMap__makeLiteral(["command", "print", "msg", object]);
           return new H._Serializer(true, P._LinkedIdentityHashMap__LinkedIdentityHashMap$es6(null, P.int)).serialize$1(t1);
-        }, null, null, 2, 0, null, 48]
+        }, null, null, 2, 0, null, 52]
       }
     },
     _IsolateContext: {
@@ -29010,7 +29011,7 @@ self._domRemove = function(element) {
         if (!(x instanceof P.Object))
           this.unsupported$1(x);
         return ["dart", init.classIdExtractor(x), this.serializeArrayInPlace$1(init.classFieldsExtractor(x))];
-      }, "call$1", "get$serialize", 2, 0, 0, 49],
+      }, "call$1", "get$serialize", 2, 0, 0, 55],
       unsupported$2: function(x, message) {
         throw H.wrapException(new P.UnsupportedError((message == null ? "Can't transmit:" : message) + " " + H.S(x)));
       },
@@ -29019,7 +29020,7 @@ self._domRemove = function(element) {
       },
       isPrimitive$1: [function(x) {
         return x == null || typeof x === "string" || typeof x === "number" || typeof x === "boolean";
-      }, "call$1", "get$isPrimitive", 2, 0, 34],
+      }, "call$1", "get$isPrimitive", 2, 0, 40],
       serializeJSIndexable$1: function(indexable) {
         var serialized = this.serializeArray$1(indexable);
         if (!!indexable.fixed$length)
@@ -29170,10 +29171,10 @@ self._domRemove = function(element) {
           default:
             throw H.wrapException("couldn't deserialize: " + H.S(x));
         }
-      }, "call$1", "get$deserialize", 2, 0, 0, 49],
+      }, "call$1", "get$deserialize", 2, 0, 0, 55],
       isPrimitive$1: [function(x) {
         return x == null || typeof x === "string" || typeof x === "number" || typeof x === "boolean";
-      }, "call$1", "get$isPrimitive", 2, 0, 34],
+      }, "call$1", "get$isPrimitive", 2, 0, 40],
       deserializeArrayInPlace$1: function(x) {
         var t1, i, t2;
         t1 = J.getInterceptor$asx(x);
@@ -29798,7 +29799,7 @@ self._domRemove = function(element) {
           return H._callInIsolate(isolate, new H.invokeClosure_closure3(closure, arg1, arg2, arg3, arg4));
       }
       throw H.wrapException(P.Exception_Exception("Unsupported number of arguments for wrapped closure"));
-    }, null, null, 14, 0, null, 140, 13, 110, 105, 88, 90, 91],
+    }, null, null, 14, 0, null, 139, 13, 140, 104, 137, 168, 97],
     convertDartClosureToJS: function(closure, arity) {
       var $function;
       if (closure == null)
@@ -30624,7 +30625,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(key) {
         return this.$this._fetch$1(key);
-      }, null, null, 2, 0, null, 79, "call"]
+      }, null, null, 2, 0, null, 51, "call"]
     },
     _ConstantMapKeyIterable: {
       "^": "Iterable;_map,$ti",
@@ -31252,7 +31253,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(each) {
         return this.$this.$index(0, each);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     },
     JsLinkedHashMap_addAll_closure: {
       "^": "Closure;$this",
@@ -31328,7 +31329,7 @@ self._domRemove = function(element) {
       }
     },
     initHooks_closure0: {
-      "^": "Closure:186;getUnknownTag",
+      "^": "Closure:192;getUnknownTag",
       call$2: function(o, tag) {
         return this.getUnknownTag(o, tag);
       }
@@ -32081,14 +32082,14 @@ self._domRemove = function(element) {
     _AsyncRun__scheduleImmediateJsOverride: [function(callback) {
       ++init.globalState.topEventLoop._activeJsAsyncCount;
       self.scheduleImmediate(H.convertDartClosureToJS(new P._AsyncRun__scheduleImmediateJsOverride_internalCallback(callback), 0));
-    }, "call$1", "async__AsyncRun__scheduleImmediateJsOverride$closure", 2, 0, 31],
+    }, "call$1", "async__AsyncRun__scheduleImmediateJsOverride$closure", 2, 0, 33],
     _AsyncRun__scheduleImmediateWithSetImmediate: [function(callback) {
       ++init.globalState.topEventLoop._activeJsAsyncCount;
       self.setImmediate(H.convertDartClosureToJS(new P._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback(callback), 0));
-    }, "call$1", "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", 2, 0, 31],
+    }, "call$1", "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", 2, 0, 33],
     _AsyncRun__scheduleImmediateWithTimer: [function(callback) {
       P.Timer__createTimer(C.Duration_0, callback);
-    }, "call$1", "async__AsyncRun__scheduleImmediateWithTimer$closure", 2, 0, 31],
+    }, "call$1", "async__AsyncRun__scheduleImmediateWithTimer$closure", 2, 0, 33],
     _asyncStart: function(bodyFunction, completer) {
       P._awaitOnObject(null, bodyFunction);
       return completer.get$future();
@@ -32157,14 +32158,14 @@ self._domRemove = function(element) {
         if (H.checkSubtype(t1, "$isFuture", [$T], "$asFuture"))
           return result;
         else {
-          t1 = $.Zone__current;
-          t2 = [$T];
+          t1 = [$T];
+          t2 = $.Zone__current;
           if (!!J.getInterceptor(result).$isFuture) {
-            t1 = new P._Future(0, t1, null, t2);
+            t1 = new P._Future(0, t2, null, t1);
             t1._asyncComplete$1(result);
             return t1;
           } else {
-            t1 = new P._Future(0, t1, null, t2);
+            t1 = new P._Future(0, t2, null, t1);
             t1._state = 4;
             t1._resultOrListeners = result;
             return t1;
@@ -32243,7 +32244,7 @@ self._domRemove = function(element) {
     },
     Future__kTrue: [function(_) {
       return true;
-    }, "call$1", "async_Future__kTrue$closure", 2, 0, 34, 0],
+    }, "call$1", "async_Future__kTrue$closure", 2, 0, 40, 0],
     Future_doWhile: function(f) {
       var t1, t2, doneSignal, nextIteration;
       t1 = {};
@@ -32355,7 +32356,7 @@ self._domRemove = function(element) {
       P._rootHandleUncaughtError(null, null, t1, error, stackTrace);
     }, function(error) {
       return P._nullErrorHandler(error, null);
-    }, "call$2", "call$1", "async___nullErrorHandler$closure", 2, 2, 22, 2, 8, 16],
+    }, "call$2", "call$1", "async___nullErrorHandler$closure", 2, 2, 22, 2, 8, 17],
     _nullDoneHandler: [function() {
     }, "call$0", "async___nullDoneHandler$closure", 0, 0, 2],
     _runUserCode: function(userCode, onSuccess, onError) {
@@ -32524,7 +32525,7 @@ self._domRemove = function(element) {
       "^": "Closure:74;bodyFunction",
       call$2: [function(error, stackTrace) {
         this.bodyFunction.call$2(1, new H.ExceptionAndStackTrace(error, stackTrace));
-      }, null, null, 4, 0, null, 8, 16, "call"]
+      }, null, null, 4, 0, null, 8, 17, "call"]
     },
     _wrapJsFunctionForAsync_closure: {
       "^": "Closure:111;$protected",
@@ -32757,7 +32758,7 @@ self._domRemove = function(element) {
         this._sendError$2(error, stackTrace);
       }, function(error) {
         return this.addError$2(error, null);
-      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 22, 2, 8, 16],
+      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 22, 2, 8, 17],
       close$0: function(_) {
         var doneFuture;
         if ((this._state & 4) !== 0)
@@ -32925,7 +32926,7 @@ self._domRemove = function(element) {
           }
         } else if (t2 === 0 && !this.eagerError)
           this.result._completeError$2(t1.error, t1.stackTrace);
-      }, null, null, 4, 0, null, 104, 96, "call"]
+      }, null, null, 4, 0, null, 156, 167, "call"]
     },
     Future_wait_closure: {
       "^": "Closure;_box_0,eagerError,cleanUp,result,pos",
@@ -32962,7 +32963,7 @@ self._domRemove = function(element) {
       }
     },
     Future_doWhile_closure: {
-      "^": "Closure:20;_box_0,f,doneSignal",
+      "^": "Closure:26;_box_0,f,doneSignal",
       call$1: function(keepGoing) {
         var result, error, stackTrace, t1, t2, exception, t3;
         for (t1 = [P.bool], t2 = this.f; keepGoing === true;) {
@@ -33239,7 +33240,7 @@ self._domRemove = function(element) {
         P._Future__propagateToListeners(this, listeners);
       }, function(error) {
         return this._completeError$2(error, null);
-      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 22, 2, 8, 16],
+      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 22, 2, 8, 17],
       _asyncComplete$1: function(value) {
         var t1;
         if (H.checkSubtype(value, "$isFuture", this.$ti, "$asFuture")) {
@@ -33433,12 +33434,12 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 7, "call"]
     },
     _Future__chainForeignFuture_closure0: {
-      "^": "Closure:45;target",
+      "^": "Closure:44;target",
       call$2: [function(error, stackTrace) {
         this.target._completeError$2(error, stackTrace);
       }, function(error) {
         return this.call$2(error, null);
-      }, "call$1", null, null, null, 2, 2, null, 2, 8, 16, "call"]
+      }, "call$1", null, null, null, 2, 2, null, 2, 8, 17, "call"]
     },
     _Future__chainForeignFuture_closure1: {
       "^": "Closure:1;target,e,s",
@@ -33748,7 +33749,7 @@ self._domRemove = function(element) {
       }
     },
     Stream_contains__closure0: {
-      "^": "Closure:20;_box_0,future",
+      "^": "Closure:26;_box_0,future",
       call$1: function(isMatch) {
         if (isMatch === true)
           P._cancelAndValue(this._box_0.subscription, this.future, true);
@@ -34549,7 +34550,7 @@ self._domRemove = function(element) {
       }, 11],
       _handleError$2: [function(error, stackTrace) {
         this._stream._handleError$3(error, stackTrace, this);
-      }, "call$2", "get$_handleError", 4, 0, 166, 8, 16],
+      }, "call$2", "get$_handleError", 4, 0, 166, 8, 17],
       _handleDone$0: [function() {
         this._async$_close$0();
       }, "call$0", "get$_handleDone", 0, 0, 2],
@@ -34755,7 +34756,7 @@ self._domRemove = function(element) {
         }
       }, function(error) {
         return this._handleError$2(error, null);
-      }, "_handleError$1", "call$2", "call$1", "get$_handleError", 2, 2, 155, 2, 8, 16],
+      }, "_handleError$1", "call$2", "call$1", "get$_handleError", 2, 2, 155, 2, 8, 17],
       _handleDone$0: [function() {
         var e, s, exception;
         try {
@@ -34933,7 +34934,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this,f",
       call$1: [function(arg) {
         return this.$this.runUnaryGuarded$2(this.f, arg);
-      }, null, null, 2, 0, null, 37, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     }
   }], ["dart.collection", "dart:collection",, P, {
     "^": "",
@@ -35362,7 +35363,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(each) {
         return this.$this.$index(0, each);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     },
     _HashMap_addAll_closure: {
       "^": "Closure;$this",
@@ -35794,7 +35795,7 @@ self._domRemove = function(element) {
       "^": "Closure:4;result",
       call$2: [function(k, v) {
         this.result.$indexSet(0, k, v);
-      }, null, null, 4, 0, null, 120, 18, "call"]
+      }, null, null, 4, 0, null, 118, 18, "call"]
     },
     ListBase: {
       "^": "Object_ListMixin;$ti"
@@ -35984,7 +35985,7 @@ self._domRemove = function(element) {
         }
       }, function($receiver, start, end, iterable) {
         return this.setRange$4($receiver, start, end, iterable, 0);
-      }, "setRange$3", null, null, "get$setRange", 6, 2, null, 170],
+      }, "setRange$3", null, null, "get$setRange", 6, 2, null, 171],
       replaceRange$3: function(receiver, start, end, newContents) {
         var removeLength, insertLength, t1, t2, delta, insertEnd, newLength;
         P.RangeError_checkValidRange(start, end, this.get$length(receiver), null, null, null);
@@ -36696,7 +36697,7 @@ self._domRemove = function(element) {
     },
     _defaultToEncodable: [function(object) {
       return object.toJson$0();
-    }, "call$1", "convert___defaultToEncodable$closure", 2, 0, 0, 48],
+    }, "call$1", "convert___defaultToEncodable$closure", 2, 0, 0, 52],
     _JsonMap: {
       "^": "Object;_original,_processed,_data",
       $index: function(_, key) {
@@ -36845,7 +36846,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(each) {
         return this.$this.$index(0, each);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 38, "call"]
     },
     _JsonMap_addAll_closure: {
       "^": "Closure:4;$this",
@@ -38160,7 +38161,7 @@ self._domRemove = function(element) {
     },
     Comparable_compare: [function(a, b) {
       return J.compareTo$1$ns(a, b);
-    }, "call$2", "core_Comparable_compare$closure", 4, 0, 218, 56, 63],
+    }, "call$2", "core_Comparable_compare$closure", 4, 0, 218, 58, 59],
     Error_safeToString: function(object) {
       if (typeof object === "number" || typeof object === "boolean" || null == object)
         return J.toString$0$(object);
@@ -38439,7 +38440,7 @@ self._domRemove = function(element) {
     },
     Uri_decodeComponent: [function(encodedComponent) {
       return P._Uri__uriDecode(encodedComponent, 0, J.get$length$asx(encodedComponent), C.Utf8Codec_false, false);
-    }, "call$1", "core_Uri_decodeComponent$closure", 2, 0, 69, 166],
+    }, "call$1", "core_Uri_decodeComponent$closure", 2, 0, 62, 88],
     Uri__parseIPv4Address: function(host, start, end) {
       var error, t1, result, t2, i, partStart, partIndex, t3, char, part, partIndex0;
       error = new P.Uri__parseIPv4Address_error(host);
@@ -38893,7 +38894,7 @@ self._domRemove = function(element) {
       }
     },
     Duration_toString_sixDigits: {
-      "^": "Closure:50;",
+      "^": "Closure:49;",
       call$1: function(n) {
         if (n >= 100000)
           return H.S(n);
@@ -38909,7 +38910,7 @@ self._domRemove = function(element) {
       }
     },
     Duration_toString_twoDigits: {
-      "^": "Closure:50;",
+      "^": "Closure:49;",
       call$1: function(n) {
         if (n >= 10)
           return "" + n;
@@ -41648,6 +41649,12 @@ self._domRemove = function(element) {
       get$onMouseDown: function(receiver) {
         return new W._EventStream(receiver, "mousedown", false, [W.MouseEvent]);
       },
+      get$onMouseMove: function(receiver) {
+        return new W._EventStream(receiver, "mousemove", false, [W.MouseEvent]);
+      },
+      get$onMouseOut: function(receiver) {
+        return new W._EventStream(receiver, "mouseout", false, [W.MouseEvent]);
+      },
       querySelectorAll$1: function(receiver, selectors) {
         return new W._FrozenElementList(receiver.querySelectorAll(selectors), [null]);
       },
@@ -42052,6 +42059,12 @@ self._domRemove = function(element) {
       get$onMouseDown: function(_) {
         return new W._ElementListEventStreamImpl(this, false, "mousedown", [W.MouseEvent]);
       },
+      get$onMouseMove: function(_) {
+        return new W._ElementListEventStreamImpl(this, false, "mousemove", [W.MouseEvent]);
+      },
+      get$onMouseOut: function(_) {
+        return new W._ElementListEventStreamImpl(this, false, "mouseout", [W.MouseEvent]);
+      },
       $isList: 1,
       $asList: null,
       $isEfficientLengthIterable: 1,
@@ -42221,6 +42234,12 @@ self._domRemove = function(element) {
       get$onMouseDown: function(receiver) {
         return new W._ElementEventStreamImpl(receiver, "mousedown", false, [W.MouseEvent]);
       },
+      get$onMouseMove: function(receiver) {
+        return new W._ElementEventStreamImpl(receiver, "mousemove", false, [W.MouseEvent]);
+      },
+      get$onMouseOut: function(receiver) {
+        return new W._ElementEventStreamImpl(receiver, "mouseout", false, [W.MouseEvent]);
+      },
       hidden$1: function($receiver, arg0) {
         return $receiver.hidden.call$1(arg0);
       },
@@ -42313,9 +42332,6 @@ self._domRemove = function(element) {
     },
     Event: {
       "^": "Interceptor;defaultPrevented=,path=,type=",
-      get$currentTarget: function(receiver) {
-        return W._convertNativeToDart_EventTarget(receiver.currentTarget);
-      },
       get$target: function(receiver) {
         return W._convertNativeToDart_EventTarget(receiver.target);
       },
@@ -42675,7 +42691,7 @@ self._domRemove = function(element) {
       "^": "Closure:106;",
       call$1: [function(xhr) {
         return J.get$responseText$x(xhr);
-      }, null, null, 2, 0, null, 97, "call"]
+      }, null, null, 2, 0, null, 95, "call"]
     },
     HttpRequest_request_closure: {
       "^": "Closure:0;completer,xhr",
@@ -42840,7 +42856,7 @@ self._domRemove = function(element) {
         return receiver.start(timeslice);
       }, function($receiver) {
         return $receiver.start();
-      }, "start$0", "call$1", "call$0", "get$start", 0, 2, 107, 2, 93],
+      }, "start$0", "call$1", "call$0", "get$start", 0, 2, 107, 2, 100],
       "%": "MediaRecorder",
       static: {
         "^": "MediaRecorder_pauseEvent<"
@@ -43239,7 +43255,7 @@ self._domRemove = function(element) {
       "^": "Interceptor;root=",
       previousNode$0: [function(receiver) {
         return receiver.previousNode();
-      }, "call$0", "get$previousNode", 0, 0, 39],
+      }, "call$0", "get$previousNode", 0, 0, 38],
       "%": "NodeIterator"
     },
     NodeList: {
@@ -44265,10 +44281,10 @@ self._domRemove = function(element) {
       "^": "Interceptor;length=",
       end$1: [function(receiver, index) {
         return receiver.end(index);
-      }, "call$1", "get$end", 2, 0, 56, 58],
+      }, "call$1", "get$end", 2, 0, 56, 74],
       start$1: [function(receiver, index) {
         return receiver.start(index);
-      }, "call$1", "get$start", 2, 0, 56, 58],
+      }, "call$1", "get$start", 2, 0, 56, 74],
       "%": "TimeRanges"
     },
     Touch: {
@@ -44389,10 +44405,10 @@ self._domRemove = function(element) {
       "^": "Interceptor;root=",
       parentNode$0: [function(receiver) {
         return receiver.parentNode();
-      }, "call$0", "get$parentNode", 0, 0, 39],
+      }, "call$0", "get$parentNode", 0, 0, 38],
       previousNode$0: [function(receiver) {
         return receiver.previousNode();
-      }, "call$0", "get$previousNode", 0, 0, 39],
+      }, "call$0", "get$previousNode", 0, 0, 38],
       "%": "TreeWalker"
     },
     UIEvent: {
@@ -44406,7 +44422,7 @@ self._domRemove = function(element) {
       "^": "Interceptor;",
       start$1: [function(receiver, stream) {
         return receiver.start(stream);
-      }, "call$1", "get$start", 2, 0, 161, 100],
+      }, "call$1", "get$start", 2, 0, 161, 120],
       "%": "UnderlyingSourceBase"
     },
     Url: {
@@ -44487,6 +44503,12 @@ self._domRemove = function(element) {
       },
       get$onMouseDown: function(receiver) {
         return new W._EventStream(receiver, "mousedown", false, [W.MouseEvent]);
+      },
+      get$onMouseMove: function(receiver) {
+        return new W._EventStream(receiver, "mousemove", false, [W.MouseEvent]);
+      },
+      get$onMouseOut: function(receiver) {
+        return new W._EventStream(receiver, "mouseout", false, [W.MouseEvent]);
       },
       $isWindow: 1,
       $isInterceptor: 1,
@@ -45403,13 +45425,13 @@ self._domRemove = function(element) {
       }
     },
     _MultiElementCssClassSet_toggle_closure: {
-      "^": "Closure:76;value,shouldAdd",
+      "^": "Closure:51;value,shouldAdd",
       call$2: function(changed, e) {
         return J.toggle$2$x(e, this.value, this.shouldAdd) === true || changed === true;
       }
     },
     _MultiElementCssClassSet_remove_closure: {
-      "^": "Closure:76;value",
+      "^": "Closure:51;value",
       call$2: function(changed, e) {
         return J.remove$1$ax(e, this.value) === true || changed === true;
       }
@@ -45696,7 +45718,7 @@ self._domRemove = function(element) {
         },
         _Html5NodeValidator__standardAttributeValidator: [function(element, attributeName, value, context) {
           return true;
-        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 72, 20, 51, 7, 55],
+        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 76, 20, 61, 7, 62],
         _Html5NodeValidator__uriAttributeValidator: [function(element, attributeName, value, context) {
           var t1, t2, t3, t4, t5;
           t1 = context.get$uriPolicy();
@@ -45728,7 +45750,7 @@ self._domRemove = function(element) {
           else
             t1 = true;
           return t1;
-        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 72, 20, 51, 7, 55]
+        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 76, 20, 61, 7, 62]
       }
     },
     ImmutableListMixin: {
@@ -45878,7 +45900,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(attr) {
         return "TEMPLATE::" + H.S(attr);
-      }, null, null, 2, 0, null, 114, "call"]
+      }, null, null, 2, 0, null, 131, "call"]
     },
     _SvgNodeValidator: {
       "^": "Object;",
@@ -46083,7 +46105,7 @@ self._domRemove = function(element) {
       }
     },
     _ValidatingTreeSanitizer_sanitizeTree_walk: {
-      "^": "Closure:184;$this",
+      "^": "Closure:185;$this",
       call$2: function(node, $parent) {
         var child, nextChild, t1, exception, t2, t3;
         t1 = this.$this;
@@ -46414,7 +46436,7 @@ self._domRemove = function(element) {
         if ($.$get$CssClassSetImpl__validTokenRE()._nativeRegExp.test(H.checkString(value)))
           return value;
         throw H.wrapException(P.ArgumentError$value(value, "value", "Not a valid class token"));
-      }, "call$1", "get$_validateToken", 2, 0, 69, 7],
+      }, "call$1", "get$_validateToken", 2, 0, 62, 7],
       toString$0: function(_) {
         return this.readClasses$0().join$1(0, " ");
       },
@@ -46681,7 +46703,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(n) {
         return H.interceptedTypeCast(n, "$isElement");
-      }, null, null, 2, 0, null, 131, "call"]
+      }, null, null, 2, 0, null, 132, "call"]
     },
     FilteredElementList_removeRange_closure: {
       "^": "Closure:0;",
@@ -46707,7 +46729,7 @@ self._domRemove = function(element) {
         receiver.continue(key);
       }, function($receiver) {
         return this.next$1($receiver, null);
-      }, "next$0", "call$1", "call$0", "get$next", 0, 2, 202, 2],
+      }, "next$0", "call$1", "call$0", "get$next", 0, 2, 216, 2],
       "%": ";IDBCursor"
     },
     CursorWithValue: {
@@ -46768,7 +46790,7 @@ self._domRemove = function(element) {
       },
       index$1: [function(receiver, $name) {
         return receiver.index($name);
-      }, "call$1", "get$index", 2, 0, 216, 24],
+      }, "call$1", "get$index", 2, 0, 224, 23],
       "%": "IDBObjectStore"
     },
     Request: {
@@ -46794,7 +46816,7 @@ self._domRemove = function(element) {
       dartArgs = P.List_List$from(J.map$1$ax($arguments, P.js___convertToDart$closure()), true, null);
       t1 = H.Primitives_applyFunctionWithPositionalArguments(callback, dartArgs);
       return P._convertToJS(t1);
-    }, null, null, 8, 0, null, 133, 148, 159, 167],
+    }, null, null, 8, 0, null, 142, 149, 160, 86],
     _defineProperty: function(o, $name, value) {
       var exception;
       try {
@@ -46826,7 +46848,7 @@ self._domRemove = function(element) {
       if (!!t1.$isFunction)
         return P._getJsProxy(o, "$dart_jsFunction", new P._convertToJS_closure());
       return P._getJsProxy(o, "_$dart_jsObject", new P._convertToJS_closure0($.$get$_dartProxyCtor()));
-    }, "call$1", "js___convertToJS$closure", 2, 0, 0, 31],
+    }, "call$1", "js___convertToJS$closure", 2, 0, 0, 28],
     _getJsProxy: function(o, propertyName, createProxy) {
       var jsProxy = P._getOwnProperty(o, propertyName);
       if (jsProxy == null) {
@@ -46857,7 +46879,7 @@ self._domRemove = function(element) {
         else
           return P._wrapToDart(o);
       }
-    }, "call$1", "js___convertToDart$closure", 2, 0, 225, 31],
+    }, "call$1", "js___convertToDart$closure", 2, 0, 225, 28],
     _wrapToDart: function(o) {
       if (typeof o == "function")
         return P._getDartProxy(o, $.$get$DART_CLOSURE_PROPERTY_NAME(), new P._wrapToDart_closure());
@@ -46975,7 +46997,7 @@ self._domRemove = function(element) {
           return convertedList;
         } else
           return P._convertToJS(o);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 28, "call"]
     },
     JsFunction: {
       "^": "JsObject;_jsObject",
@@ -47772,6 +47794,12 @@ self._domRemove = function(element) {
       get$onMouseDown: function(receiver) {
         return new W._ElementEventStreamImpl(receiver, "mousedown", false, [W.MouseEvent]);
       },
+      get$onMouseMove: function(receiver) {
+        return new W._ElementEventStreamImpl(receiver, "mousemove", false, [W.MouseEvent]);
+      },
+      get$onMouseOut: function(receiver) {
+        return new W._ElementEventStreamImpl(receiver, "mouseout", false, [W.MouseEvent]);
+      },
       $isSvgElement: 1,
       $isEventTarget: 1,
       $isInterceptor: 1,
@@ -47970,7 +47998,7 @@ self._domRemove = function(element) {
         return this.start$3($receiver, when, null, null);
       }, "start$1", function($receiver, when, grainOffset) {
         return this.start$3($receiver, when, grainOffset, null);
-      }, "start$2", "call$3", "call$1", "call$2", "get$start", 2, 4, 224, 2, 2, 44, 160, 155],
+      }, "start$2", "call$3", "call$1", "call$2", "get$start", 2, 4, 205, 2, 2, 45, 91, 101],
       "%": "AudioBufferSourceNode"
     },
     AudioContext: {
@@ -48005,7 +48033,7 @@ self._domRemove = function(element) {
         return receiver.start(when);
       }, function($receiver) {
         return $receiver.start();
-      }, "start$0", "call$1", "call$0", "get$start", 0, 2, 205, 2, 44],
+      }, "start$0", "call$1", "call$0", "get$start", 0, 2, 202, 2, 45],
       "%": "Oscillator|OscillatorNode"
     }
   }], ["dart.dom.web_gl", "dart:web_gl",, P, {
@@ -48223,7 +48251,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(item) {
         return item.toJs$0();
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     ContextMenuItem: {
       "^": "Object;",
@@ -48248,9 +48276,6 @@ self._domRemove = function(element) {
     },
     AtomEvent: {
       "^": "ProxyHolder;obj",
-      get$currentTarget: function(_) {
-        return J.$index$asx(this.obj, "currentTarget");
-      },
       get$editor: function() {
         return new Y.TextEditor(Y._cvt0(new Y.TextEditorElement(Y._cvt0(J.$index$asx(this.obj, "currentTarget"))).invoke$1("getModel")));
       },
@@ -48326,7 +48351,7 @@ self._domRemove = function(element) {
         return new P._BroadcastStream(controller, [null]);
       }, function(keyPath) {
         return this.onDidChange$2(keyPath, null);
-      }, "onDidChange$1", "call$2", "call$1", "get$onDidChange", 2, 2, 196, 2]
+      }, "onDidChange$1", "call$2", "call$1", "get$onDidChange", 2, 2, 201, 2]
     },
     Config_onDidChange_closure: {
       "^": "Closure:1;_box_0",
@@ -48466,7 +48491,7 @@ self._domRemove = function(element) {
       call$1: [function(entry) {
         entry = F._cvt(entry);
         return entry.callMethod$1("isFile") === true ? new F.File(entry) : new F.Directory(entry);
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 47, "call"]
     },
     File: {
       "^": "Entry0;obj",
@@ -48584,10 +48609,10 @@ self._domRemove = function(element) {
       }
     },
     NotificationManager__options_closure: {
-      "^": "Closure:193;",
+      "^": "Closure:195;",
       call$1: [function(nb) {
         return nb.toProxy$0();
-      }, null, null, 2, 0, null, 153, "call"]
+      }, null, null, 2, 0, null, 98, "call"]
     },
     Notification: {
       "^": "ProxyHolder;obj",
@@ -48684,7 +48709,7 @@ self._domRemove = function(element) {
         if (this.stderr)
           W._ElementCssClassSet__toggleOnOff(div, "text-error", true);
         return div;
-      }, null, null, 2, 0, null, 47, "call"]
+      }, null, null, 2, 0, null, 48, "call"]
     },
     ProcessNotifier: {
       "^": "Object;title>,_notification,_helper",
@@ -48736,7 +48761,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     ProcessNotifier_watch_closure2: {
-      "^": "Closure:26;$this",
+      "^": "Closure:17;$this",
       call$1: [function(result) {
         var t1, t2, t3;
         t1 = J.$eq$(result, 0);
@@ -48820,7 +48845,7 @@ self._domRemove = function(element) {
         }
       }, function() {
         return this.call$1(null);
-      }, "call$0", null, null, null, 0, 2, null, 2, 147, "call"]
+      }, "call$0", null, null, null, 0, 2, null, 2, 105, "call"]
     },
     registerPackage_closure0: {
       "^": "Closure:1;",
@@ -48843,7 +48868,6 @@ self._domRemove = function(element) {
     registerPackage_closure1: {
       "^": "Closure:4;exports",
       call$2: function(methodName, f) {
-        P.print(C.JSString_methods.$add("Register:", methodName));
         J.$indexSet$ax(this.exports, methodName, new L.registerPackage__closure(f));
       }
     },
@@ -48861,7 +48885,7 @@ self._domRemove = function(element) {
           return result;
         else
           return;
-      }, null, null, 2, 0, null, 37, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     },
     AtomPackage: {
       "^": "Object;id>",
@@ -48886,10 +48910,10 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 4, "call"]
     },
     AtomPackage_getPackageVersion_closure: {
-      "^": "Closure:44;",
+      "^": "Closure:43;",
       call$1: [function(map) {
         return J.$index$asx(map, "version");
-      }, null, null, 2, 0, null, 143, "call"]
+      }, null, null, 2, 0, null, 111, "call"]
     },
     PackageManager: {
       "^": "ProxyHolder;obj"
@@ -48936,7 +48960,7 @@ self._domRemove = function(element) {
       }
     },
     exec_closure: {
-      "^": "Closure:27;",
+      "^": "Closure:34;",
       call$1: [function(result) {
         if (J.$eq$(result.get$exit(), 0))
           return result.get$stdout();
@@ -49260,13 +49284,13 @@ self._domRemove = function(element) {
       "^": "Closure:0;callback",
       call$1: [function(ed) {
         return this.callback.call$1(new Y.TextEditor(Y._cvt0(ed)));
-      }, null, null, 2, 0, null, 142, "call"]
+      }, null, null, 2, 0, null, 143, "call"]
     },
     Workspace_observeActivePaneItem_closure: {
       "^": "Closure:0;callback",
       call$1: [function(item) {
         return this.callback.call$1(item);
-      }, null, null, 2, 0, null, 45, "call"]
+      }, null, null, 2, 0, null, 46, "call"]
     },
     Workspace_open_closure: {
       "^": "Closure:1;$this,url,options",
@@ -49381,10 +49405,10 @@ self._domRemove = function(element) {
       "^": "ProxyHolder;obj",
       isEmpty$0: [function(_) {
         return this.invoke$1("isEmpty");
-      }, "call$0", "get$isEmpty", 0, 0, 17],
+      }, "call$0", "get$isEmpty", 0, 0, 21],
       isNotEmpty$0: [function(_) {
         return this.invoke$1("isEmpty") !== true;
-      }, "call$0", "get$isNotEmpty", 0, 0, 17],
+      }, "call$0", "get$isNotEmpty", 0, 0, 21],
       get$start: function(_) {
         return new Y.Point0(Y._cvt0(J.$index$asx(this.obj, "start")));
       },
@@ -49480,10 +49504,10 @@ self._domRemove = function(element) {
       },
       isEmpty$0: [function(_) {
         return this.invoke$1("isEmpty");
-      }, "call$0", "get$isEmpty", 0, 0, 17],
+      }, "call$0", "get$isEmpty", 0, 0, 21],
       isNotEmpty$0: [function(_) {
         return this.invoke$1("isEmpty") !== true;
-      }, "call$0", "get$isNotEmpty", 0, 0, 17],
+      }, "call$0", "get$isNotEmpty", 0, 0, 21],
       insertText$2$options: function(text, options) {
         var result, t1;
         result = this.invoke$3("insertText", text, options);
@@ -49590,7 +49614,7 @@ self._domRemove = function(element) {
       "^": "Closure:159;",
       call$1: [function(r) {
         return r.get$obj();
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     TextEditor_onDidChangeCursorPosition_closure: {
       "^": "Closure:0;",
@@ -49602,7 +49626,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(g) {
         return new Y.Gutter(Y._cvt0(g));
-      }, null, null, 2, 0, null, 137, "call"]
+      }, null, null, 2, 0, null, 90, "call"]
     }
   }], ["", "package:atom/src/js.dart",, K, {
     "^": "",
@@ -49724,7 +49748,7 @@ self._domRemove = function(element) {
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(evt);
         return;
-      }, null, null, 2, 0, null, 52, "call"]
+      }, null, null, 2, 0, null, 50, "call"]
     },
     JsDisposable: {
       "^": "ProxyHolder;obj",
@@ -49743,7 +49767,7 @@ self._domRemove = function(element) {
       },
       error$1: [function(_, errorCallback) {
         return this.invoke$2("catch", errorCallback);
-      }, "call$1", "get$error", 2, 0, 158, 132],
+      }, "call$1", "get$error", 2, 0, 158, 93],
       static: {
         Promise__jsObjectFromFuture: function(future) {
           return P.JsObject_JsObject(J.$index$asx($.$get$context(), "Promise"), [new K.Promise__jsObjectFromFuture_closure(future)]);
@@ -49754,7 +49778,7 @@ self._domRemove = function(element) {
       "^": "Closure:4;future",
       call$2: [function(resolve, reject) {
         this.future.then$1(new K.Promise__jsObjectFromFuture__closure(resolve)).catchError$1(new K.Promise__jsObjectFromFuture__closure0(reject));
-      }, null, null, 4, 0, null, 118, 111, "call"]
+      }, null, null, 4, 0, null, 94, 96, "call"]
     },
     Promise__jsObjectFromFuture__closure: {
       "^": "Closure:0;resolve",
@@ -51252,19 +51276,19 @@ self._domRemove = function(element) {
         return this.changedOverlay$0();
       }, function() {
         return this._didChange$1(null);
-      }, "_didChange$0", "call$1", "call$0", "get$_didChange", 0, 2, 14, 2, 0],
+      }, "_didChange$0", "call$1", "call$0", "get$_didChange", 0, 2, 13, 2, 0],
       _onDidChangeTitle$1: [function(_) {
         this.removeOverlay$0();
         this.path = this.editor.getPath$0();
         this.addOverlay$0();
       }, function() {
         return this._onDidChangeTitle$1(null);
-      }, "_onDidChangeTitle$0", "call$1", "call$0", "get$_onDidChangeTitle", 0, 2, 14, 2, 0],
+      }, "_onDidChangeTitle$0", "call$1", "call$0", "get$_onDidChangeTitle", 0, 2, 13, 2, 0],
       _didDestroy$1: [function(_) {
         return this.dispose$0();
       }, function() {
         return this._didDestroy$1(null);
-      }, "_didDestroy$0", "call$1", "call$0", "get$_didDestroy", 0, 2, 14, 2, 0],
+      }, "_didDestroy$0", "call$1", "call$0", "get$_didDestroy", 0, 2, 13, 2, 0],
       addOverlay$0: function() {
         if (Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(this.path) == null)
           return;
@@ -51362,7 +51386,7 @@ self._domRemove = function(element) {
           t1.forEach$1(0, new K.OverlayManager__serverActive_closure(toSend));
           K._log(Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$server().get$analysis().updateContent$1(toSend));
         }
-      }, "call$1", "get$_serverActive", 2, 0, 46, 53],
+      }, "call$1", "get$_serverActive", 2, 0, 45, 53],
       dispose$0: [function() {
         Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).set$willSend(null);
         this.sub.cancel$0(0);
@@ -51640,7 +51664,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;_box_0",
       call$1: [function($name) {
         return "${" + ++this._box_0.count + ":" + H.S($name) + "}";
-      }, null, null, 2, 0, null, 24, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     DartAutocompleteProvider__rightLabel_closure: {
       "^": "Closure:1;kind",
@@ -51762,7 +51786,7 @@ self._domRemove = function(element) {
         },
         DartdocHelper__resolve: [function($name) {
           return new T.Element1("code", [new T.Text($name)], P.LinkedHashMap__makeEmpty(), null);
-        }, "call$1", "dartdoc_DartdocHelper__resolve$closure", 2, 0, 250, 24],
+        }, "call$1", "dartdoc_DartdocHelper__resolve$closure", 2, 0, 250, 23],
         DartdocHelper__getLibraryName: function(hover) {
           var $name, t1, index, t2;
           $name = hover.get$containingLibraryName();
@@ -51797,7 +51821,7 @@ self._domRemove = function(element) {
       }
     },
     DartdocHelper__handleDartdoc__closure: {
-      "^": "Closure:47;$this,explicit,editor",
+      "^": "Closure:46;$this,explicit,editor",
       call$1: [function(result) {
         if (result == null)
           return;
@@ -51945,7 +51969,7 @@ self._domRemove = function(element) {
         } catch (exception) {
           H.unwrapException(exception);
         }
-      }, null, null, 2, 0, null, 52, "call"]
+      }, null, null, 2, 0, null, 50, "call"]
     },
     NavigationHelper__handleNavigateEditor_closure: {
       "^": "Closure:130;$this,editor,offset",
@@ -52092,7 +52116,7 @@ self._domRemove = function(element) {
         t2._lastSearchTerm = searchTerm;
         t3 = M.toTitleCase("Find type");
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(new X.AnalysisRequestJob(new G.FindTypeHelper__handleFindType__closure(t1, t2), t3, null));
-      }, null, null, 2, 0, null, 101, "call"]
+      }, null, null, 2, 0, null, 110, "call"]
     },
     FindTypeHelper__handleFindType__closure: {
       "^": "Closure:5;_box_0,$this",
@@ -52222,7 +52246,7 @@ self._domRemove = function(element) {
       }
     },
     FormattingManager_formatFile_closure: {
-      "^": "Closure:27;",
+      "^": "Closure:34;",
       call$1: [function(result) {
         var t1;
         if (J.$eq$(result.get$exit(), 0)) {
@@ -52479,19 +52503,19 @@ self._domRemove = function(element) {
       }
     },
     QuickFixHelper__handleFixesResult__closure: {
-      "^": "Closure:48;fix",
+      "^": "Closure:47;fix",
       call$1: [function(change) {
         return new M._Change(change, J.get$error$x(this.fix));
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     QuickFixHelper__handleFixesResult_closure0: {
-      "^": "Closure:48;",
+      "^": "Closure:47;",
       call$1: [function(change) {
         return new M._Change(change, null);
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     QuickFixHelper__handleFixesResult_closure1: {
-      "^": "Closure:49;_box_0",
+      "^": "Closure:48;_box_0",
       call$1: [function(change) {
         var t1, t2, t3, t4;
         t1 = "fix_" + ++this._box_0.i;
@@ -52499,15 +52523,15 @@ self._domRemove = function(element) {
         t3 = change.get$isAssist() ? "assist" : "quick-fix";
         t4 = change.get$isAssist() ? null : J.get$message$x(J.get$error$x(change));
         return new X.Suggestion(t1, null, t2, "", change.get$isAssist() ? "attribute" : "function", null, null, t3, null, null, null, t4, null, null, null, null);
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     QuickFixHelper__handleFixesResult_closure2: {
-      "^": "Closure:49;editor",
+      "^": "Closure:48;editor",
       call$1: [function(choice) {
         var t1 = this.editor;
         t1.undo$0();
         M._applyChange(t1, choice.get$change());
-      }, null, null, 2, 0, null, 98, "call"]
+      }, null, null, 2, 0, null, 114, "call"]
     },
     _Change: {
       "^": "Object;change<,error>",
@@ -52522,7 +52546,7 @@ self._domRemove = function(element) {
       }
     },
     _applyChange_closure: {
-      "^": "Closure:18;sourceFileEdits,linkedEditGroups",
+      "^": "Closure:23;sourceFileEdits,linkedEditGroups",
       call$1: function(edit) {
         return $.$get$atom()._workspace.open$2$options(0, J.get$file$x(edit), P.LinkedHashMap__makeLiteral(["searchAllPanes", true])).then$1(new M._applyChange__closure0(this.sourceFileEdits, this.linkedEditGroups, edit));
       }
@@ -52561,7 +52585,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(edit) {
         return J.get$file$x(edit);
-      }, null, null, 2, 0, null, 34, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     _applyChange_closure1: {
       "^": "Closure:0;",
@@ -52582,13 +52606,13 @@ self._domRemove = function(element) {
       },
       _handleExtractLocal$4: [function(path, offset, end, text) {
         this._checkRefactoringAvailable$5("EXTRACT_LOCAL_VARIABLE", path, offset, end, new F.RefactoringHelper__handleExtractLocal_closure(this, path, offset, end));
-      }, "call$4", "get$_handleExtractLocal", 8, 0, 42],
+      }, "call$4", "get$_handleExtractLocal", 8, 0, 32],
       _handleInlineLocal$4: [function(path, offset, end, text) {
         this._performRefactoring$6("INLINE_LOCAL_VARIABLE", null, path, offset, end, "Inlined local variable '" + F.RefactoringHelper__findIdentifier(text, offset) + "'.");
-      }, "call$4", "get$_handleInlineLocal", 8, 0, 42],
+      }, "call$4", "get$_handleInlineLocal", 8, 0, 32],
       _handleRenameRefactor$4: [function(path, offset, end, text) {
         this._checkRefactoringAvailable$5("RENAME", path, offset, end, new F.RefactoringHelper__handleRenameRefactor_closure(this, path, offset, end, F.RefactoringHelper__findIdentifier(text, offset)));
-      }, "call$4", "get$_handleRenameRefactor", 8, 0, 42],
+      }, "call$4", "get$_handleRenameRefactor", 8, 0, 32],
       _checkRefactoringAvailable$5: function(refactoringName, path, offset, end, refactor) {
         var t1 = M.toTitleCase(H.stringReplaceAllUnchecked(refactoringName.toLowerCase(), "_", " "));
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(new X.AnalysisRequestJob(new F.RefactoringHelper__checkRefactoringAvailable_closure(refactoringName, path, offset, end, refactor), t1, null));
@@ -52686,7 +52710,7 @@ self._domRemove = function(element) {
       }
     },
     RefactoringHelper__handleExtractLocal_closure: {
-      "^": "Closure:28;$this,path,offset,end",
+      "^": "Closure:30;$this,path,offset,end",
       call$1: function(result) {
         D.promptUser("Extract local variable - enter the variable name:", "", false, false, true).then$1(new F.RefactoringHelper__handleExtractLocal__closure(this.$this, this.path, this.offset, this.end, "", false));
       }
@@ -52700,10 +52724,10 @@ self._domRemove = function(element) {
         if (newName === "" || newName === this.oldName)
           return;
         this.$this._performRefactoring$6("EXTRACT_LOCAL_VARIABLE", new E.ExtractLocalVariableRefactoringOptions(newName, this.extractAll), this.path, this.offset, this.end, "Extracted '" + newName + "'.");
-      }, null, null, 2, 0, null, 43, "call"]
+      }, null, null, 2, 0, null, 56, "call"]
     },
     RefactoringHelper__handleRenameRefactor_closure: {
-      "^": "Closure:28;$this,path,offset,end,oldName",
+      "^": "Closure:30;$this,path,offset,end,oldName",
       call$1: function(result) {
         var t1 = this.oldName;
         D.promptUser("Rename refactor - enter the new name:", t1, false, false, true).then$1(new F.RefactoringHelper__handleRenameRefactor__closure(this.$this, this.path, this.offset, this.end, t1));
@@ -52718,7 +52742,7 @@ self._domRemove = function(element) {
         if (newName === "" || newName === this.oldName)
           return;
         this.$this._performRefactoring$6("RENAME", new E.RenameRefactoringOptions(newName), this.path, this.offset, this.end, "Renamed '" + this.oldName + "' to '" + newName + "'.");
-      }, null, null, 2, 0, null, 43, "call"]
+      }, null, null, 2, 0, null, 56, "call"]
     },
     RefactoringHelper__checkRefactoringAvailable_closure: {
       "^": "Closure:1;refactoringName,path,offset,end,refactor",
@@ -52728,7 +52752,7 @@ self._domRemove = function(element) {
       }
     },
     RefactoringHelper__checkRefactoringAvailable__closure: {
-      "^": "Closure:28;refactoringName,refactor",
+      "^": "Closure:30;refactoringName,refactor",
       call$1: [function(result) {
         if (result == null) {
           $.$get$atom().invoke$1("beep");
@@ -52760,7 +52784,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 3, "call"]
     },
     RefactoringHelper__applyRefactoringResult_closure: {
-      "^": "Closure:18;",
+      "^": "Closure:23;",
       call$1: function(fileEdit) {
         var t1 = fileEdit.get$edits();
         (t1 && C.JSArray_methods).checkGrowable$1(t1, "removeWhere");
@@ -52768,13 +52792,13 @@ self._domRemove = function(element) {
       }
     },
     RefactoringHelper__applyRefactoringResult__closure0: {
-      "^": "Closure:51;",
+      "^": "Closure:50;",
       call$1: function(edit) {
         return J.get$id$x(edit) != null;
       }
     },
     RefactoringHelper__applyRefactoringResult_closure0: {
-      "^": "Closure:18;",
+      "^": "Closure:23;",
       call$1: function(fileEdit) {
         return fileEdit.get$edits().length === 0;
       }
@@ -52802,7 +52826,7 @@ self._domRemove = function(element) {
           return J.$add$ns(J.get$name$x(this.project), t2.substring$1(filePath, J.get$length$asx(t1)));
         else
           return filePath;
-      }, null, null, 2, 0, null, 34, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     RefactoringHelper__applyRefactoringResult_closure3: {
       "^": "Closure:1;_box_0,apply",
@@ -52818,7 +52842,7 @@ self._domRemove = function(element) {
       }, null, null, 0, 0, null, "call"]
     },
     RefactoringHelper__applyEdits_closure: {
-      "^": "Closure:18;",
+      "^": "Closure:23;",
       call$1: function(edit) {
         return $.$get$atom()._workspace.open$2$options(0, J.get$file$x(edit), P.LinkedHashMap__makeLiteral(["searchAllPanes", true])).then$1(new F.RefactoringHelper__applyEdits__closure0(edit));
       }
@@ -52846,7 +52870,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(edit) {
         return J.get$file$x(edit);
-      }, null, null, 2, 0, null, 34, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     RefactoringHelper__applyEdits_closure1: {
       "^": "Closure:0;",
@@ -53028,7 +53052,7 @@ self._domRemove = function(element) {
           l = H.interceptedTypeCast(t1.get$data(node), "$isSearchResult").location;
           Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4(l.file, J.$sub$n(l.startLine, 1), J.$sub$n(l.startColumn, 1), l.length);
         }
-      }, "call$1", "get$_references$_jumpTo", 2, 0, 21, 22],
+      }, "call$1", "get$_references$_jumpTo", 2, 0, 25, 22],
       _doubleClick$1: [function(node) {
         var t1, t2, path;
         t1 = J.getInterceptor$x(node);
@@ -53037,7 +53061,7 @@ self._domRemove = function(element) {
           path = t1.get$data(node);
           $.$get$atom()._workspace.openPending$2$options(path, P.LinkedHashMap__makeLiteral(["searchAllPanes", true]));
         }
-      }, "call$1", "get$_doubleClick", 2, 0, 21, 22],
+      }, "call$1", "get$_doubleClick", 2, 0, 25, 22],
       _renderPath$1: function(originalPath) {
         var relPath, base, t1, index, t2, path, sdk, prefix;
         relPath = P.List_List$from($.$get$atom()._project.invoke$2("relativizePath", originalPath), true, null);
@@ -53118,13 +53142,13 @@ self._domRemove = function(element) {
       "^": "Closure:88;",
       call$2: [function(a, b) {
         return J.$sub$n(J.get$offset$x(J.get$location$x(a)), J.get$offset$x(J.get$location$x(b)));
-      }, null, null, 4, 0, null, 56, 63, "call"]
+      }, null, null, 4, 0, null, 58, 59, "call"]
     },
     FindReferencesView__handleSearchResults_closure0: {
       "^": "Closure:0;node",
       call$1: [function(r) {
         return this.node.children.push(new T.Node0(r, false, [], [null]));
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     _MatchParser: {
       "^": "Object;file>,lines<",
@@ -53353,7 +53377,7 @@ self._domRemove = function(element) {
           Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$4($location.file, J.$sub$n($location.startLine, 1), J.$sub$n($location.startColumn, 1), $location.length);
         else
           $.$get$atom().invoke$1("beep");
-      }, "call$1", "get$_jumpTo", 2, 0, 21, 22],
+      }, "call$1", "get$_jumpTo", 2, 0, 25, 22],
       _render$2: [function(item, intoElement) {
         var t1, t2, t3, span, t4;
         t1 = J.$and$n(item.get$classElement().flags, 1);
@@ -53411,7 +53435,7 @@ self._domRemove = function(element) {
         if (i >>> 0 !== i || i >= t1.length)
           return H.ioore(t1, i);
         return t1[i].get$classElement().name;
-      }, null, null, 2, 0, null, 57, "call"]
+      }, null, null, 2, 0, null, 44, "call"]
     },
     TypeHierarchyView__render_closure0: {
       "^": "Closure:0;$this",
@@ -53420,7 +53444,7 @@ self._domRemove = function(element) {
         if (i >>> 0 !== i || i >= t1.length)
           return H.ioore(t1, i);
         return t1[i].get$classElement().name;
-      }, null, null, 2, 0, null, 57, "call"]
+      }, null, null, 2, 0, null, 44, "call"]
     }
   }], ["atom.analysis_server", "package:atom_dartlang/analysis_server.dart",, X, {
     "^": "",
@@ -53543,10 +53567,10 @@ self._domRemove = function(element) {
         if (removedProjects._collection$_length !== 0 || addedProjects._collection$_length !== 0)
           this.updateRoots$0();
         this._checkTrigger$0();
-      }, "call$1", "get$_reconcileRoots", 2, 0, 83, 95],
+      }, "call$1", "get$_reconcileRoots", 2, 0, 83, 148],
       _handleSdkChange$1: [function(newSdk) {
         this._checkTrigger$0();
-      }, "call$1", "get$_handleSdkChange", 2, 0, 84, 94],
+      }, "call$1", "get$_handleSdkChange", 2, 0, 84, 154],
       _focusedEditorChanged$1: [function(editor) {
         var t1, path, t2;
         t1 = this._server;
@@ -53841,7 +53865,7 @@ self._domRemove = function(element) {
           Q.Dependencies_instance().getDependency$1(C.Type_ErrorRepository_jfx).clearAll$0();
         }
         return;
-      }, null, null, 2, 0, null, 35, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     AnalysisServer__initNewServer_closure1: {
       "^": "Closure:0;$this",
@@ -53899,7 +53923,7 @@ self._domRemove = function(element) {
           t1.start$0(0);
           this.$this._job = t1;
         }
-      }, null, null, 2, 0, null, 84, "call"]
+      }, null, null, 2, 0, null, 161, "call"]
     },
     _AnalyzingJob: {
       "^": "Job;completer,_infoAction,name,_schedulingRule",
@@ -54139,7 +54163,7 @@ self._domRemove = function(element) {
             H.throwExpression(t1._addEventError$0());
           t1._sendData$1(t2);
         }
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 34, "call"]
     },
     _AnalysisServerWrapper_setup_closure1: {
       "^": "Closure:87;$this",
@@ -54233,14 +54257,14 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 4, "call"]
     },
     _AnalysisServerWrapper__startProcess_closure1: {
-      "^": "Closure:26;completer",
+      "^": "Closure:17;completer",
       call$1: [function(exitCode) {
         var t1;
         $.$get$_logger5().fine$1("exited with code " + H.S(exitCode));
         t1 = this.completer;
         if (t1.future._state === 0)
           t1.complete$1(0, exitCode);
-      }, null, null, 2, 0, null, 35, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     _AnalysisServerWrapper__messageWriter_closure: {
       "^": "Closure:3;process",
@@ -54344,7 +54368,7 @@ self._domRemove = function(element) {
           f = this.getSuggestions$1(opts).then$1(new X.AutocompleteProvider__getSuggestions_closure2(t1, timer)).catchError$1(new X.AutocompleteProvider__getSuggestions_closure3());
         }
         return K.Promise__jsObjectFromFuture(f);
-      }, "call$1", "get$_getSuggestions", 2, 0, 80, 82],
+      }, "call$1", "get$_getSuggestions", 2, 0, 80, 60],
       _onDidInsertSuggestion$1: [function(options) {
         var t1, t2, t3, index, selectionOffset;
         t1 = $._override;
@@ -54372,7 +54396,7 @@ self._domRemove = function(element) {
           if (selectionOffset != null)
             t1.invoke$2("setCursorBufferPosition", new Y.Point0(Y._cvt0(new Y.TextBuffer(Y._cvt0(t1.invoke$1("getBuffer"))).invoke$2("positionForCharacterIndex", selectionOffset))));
         }
-      }, "call$1", "get$_onDidInsertSuggestion", 2, 0, 15, 82],
+      }, "call$1", "get$_onDidInsertSuggestion", 2, 0, 16, 60],
       $isDisposable: 1
     },
     AutocompleteProvider__getSuggestions_suggestionToProxy: {
@@ -54508,7 +54532,7 @@ self._domRemove = function(element) {
       },
       _lint$1: [function(jsEditor) {
         return K.jsify([]);
-      }, "call$1", "get$_lint", 2, 0, 80, 86]
+      }, "call$1", "get$_lint", 2, 0, 80, 84]
     },
     LinterConsumer: {
       "^": "Object;"
@@ -54562,7 +54586,7 @@ self._domRemove = function(element) {
       return $._package.loadPackageJson$0().then$1(new F.install_closure());
     },
     install_closure: {
-      "^": "Closure:44;",
+      "^": "Closure:43;",
       call$1: [function(info) {
         var installedPackages, requiredPackages, t1, toInstall;
         installedPackages = P.List_List$from($.$get$atom()._packages.invoke$1("getAvailablePackageNames"), true, null);
@@ -54633,7 +54657,7 @@ self._domRemove = function(element) {
       }
     },
     _InstallJob__install_closure: {
-      "^": "Closure:27;$this,helper,name",
+      "^": "Closure:34;$this,helper,name",
       call$1: [function(result) {
         var t1;
         result.get$stdout();
@@ -54905,12 +54929,12 @@ self._domRemove = function(element) {
         P.Future_Future$delayed(P.Duration$(0, 0, 0, 0, 0, 3), new A._Dartino_enable_closure0(this), null);
       }, function($receiver) {
         return this.enable$1($receiver, null);
-      }, "enable$0", "call$1", "call$0", "get$enable", 0, 2, 29, 2],
+      }, "enable$0", "call$1", "call$0", "get$enable", 0, 2, 28, 2],
       openSettings$1: [function(_) {
         $.$get$atom()._workspace.openConfigPage$1$packageID("dartino");
       }, function() {
         return this.openSettings$1(null);
-      }, "openSettings$0", "call$1", "call$0", "get$openSettings", 0, 2, 14, 2, 0],
+      }, "openSettings$0", "call$1", "call$0", "get$openSettings", 0, 2, 13, 2, 0],
       promptSetSdk$2$detail: function(message, detail) {
         var t1 = $.$get$atom()._notifications;
         t1.invoke$3("addError", message, t1._options$5$buttons$description$detail$dismissable$icon([new D.NotificationButton("Install", this.get$promptInstallSdk()), new D.NotificationButton("Open settings", this.get$openSettings())], null, "Click install to install a new SDK or open the settings\nto specify the path to an already existing installation.", null, null));
@@ -54922,7 +54946,7 @@ self._domRemove = function(element) {
         A.DartinoSdk_promptInstall(null);
       }, function() {
         return this.promptInstallSdk$1(null);
-      }, "promptInstallSdk$0", "call$1", "call$0", "get$promptInstallSdk", 0, 2, 29, 2, 0],
+      }, "promptInstallSdk$0", "call$1", "call$0", "get$promptInstallSdk", 0, 2, 28, 2, 0],
       showSdkDocs$1: [function(_) {
         var t1, uri, t2;
         t1 = this.sdkFor$1(null);
@@ -54987,7 +55011,7 @@ self._domRemove = function(element) {
       "^": "Closure:75;",
       call$1: [function(project) {
         return A._checkDirectory(J.get$directory$x(project));
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 24, "call"]
     },
     _Dartino_enable_closure0: {
       "^": "Closure:1;$this",
@@ -55833,7 +55857,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 4, "call"]
     },
     DartinoLaunch_debug_closure1: {
-      "^": "Closure:26;$this",
+      "^": "Closure:17;$this",
       call$1: [function(exitCode) {
         var t1, t2, t3;
         t1 = this.$this;
@@ -55843,10 +55867,10 @@ self._domRemove = function(element) {
           H.throwExpression(t3._addEventError$0());
         t3._sendData$1(new X.TextFragment(t2, false, false, true));
         t1.launchTerminated$2$quiet(exitCode, true);
-      }, null, null, 2, 0, null, 35, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     DartinoLaunch_debug_closure2: {
-      "^": "Closure:30;$this,observatoryPort",
+      "^": "Closure:41;$this,observatoryPort",
       call$1: [function($debugger) {
         this.$this.servicePort.set$value(0, this.observatoryPort);
         return true;
@@ -56337,7 +56361,7 @@ self._domRemove = function(element) {
       "^": "Closure:73;",
       call$1: [function($status) {
         return $status.get$isOk() && J.$eq$(J.get$result$x($status), 0);
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 34, "call"]
     }
   }], ["", "package:atom_dartlang/dartino/sdk/sdk.dart",, E, {
     "^": "",
@@ -56680,7 +56704,7 @@ self._domRemove = function(element) {
       "^": "Closure:10;",
       call$1: [function(bp) {
         return bp.toJsonable$0();
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     AtomBreakpoint: {
       "^": "Object;path>,_breakpoints$_line,_breakpoints$_column",
@@ -56860,7 +56884,7 @@ self._domRemove = function(element) {
     _displayError: [function(error) {
       var t1 = $.$get$atom()._notifications;
       t1.invoke$3("addError", H.S(error), t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
-    }, "call$1", "debugger___displayError$closure", 2, 0, 15, 8],
+    }, "call$1", "debugger___displayError$closure", 2, 0, 16, 8],
     _fileUriToPath: function(uriStr) {
       var uri, prefix, t1, exception, _i;
       try {
@@ -56938,10 +56962,10 @@ self._domRemove = function(element) {
       }
     },
     DebugManager_closure: {
-      "^": "Closure:30;",
+      "^": "Closure:41;",
       call$1: [function(connection) {
         G.DebuggerView_showViewForConnection(connection);
-      }, null, null, 2, 0, null, 81, "call"]
+      }, null, null, 2, 0, null, 63, "call"]
     },
     DebugManager_closure0: {
       "^": "Closure:71;$this",
@@ -57191,11 +57215,11 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 3, "call"]
     },
     UriResolver_resolvePathToUris_closure: {
-      "^": "Closure:33;path",
+      "^": "Closure:29;path",
       call$1: [function(results) {
         $.$get$_logger10().finer$1("resolve " + H.S(this.path) + " ==> " + H.S(results));
         return results;
-      }, null, null, 2, 0, null, 80, "call"]
+      }, null, null, 2, 0, null, 64, "call"]
     },
     UriResolver_dispose_closure: {
       "^": "Closure:0;",
@@ -57496,7 +57520,7 @@ self._domRemove = function(element) {
       call$1: [function(pos) {
         $.$get$state().$indexSet(0, "debuggerSplitter", pos);
         return pos;
-      }, null, null, 2, 0, null, 27, "call"]
+      }, null, null, 2, 0, null, 26, "call"]
     },
     DebuggerView__handleIsolateTerminated_closure: {
       "^": "Closure:109;isolate",
@@ -57605,7 +57629,7 @@ self._domRemove = function(element) {
         this.connection.get$launch().restart$1$fullRestart(fullRestart).catchError$1(new G.FlowControlSection__restart_closure());
       }, function() {
         return this._restart$1$fullRestart(false);
-      }, "_restart$0", "call$1$fullRestart", "call$0", "get$_restart", 0, 3, 110, 77],
+      }, "_restart$0", "call$1$fullRestart", "call$0", "get$_restart", 0, 3, 110, 65],
       _terminate$0: [function() {
         return J.terminate$0$x(this.connection);
       }, "call$0", "get$_terminate", 0, 0, 1],
@@ -57690,13 +57714,13 @@ self._domRemove = function(element) {
       }
     },
     FlowControlSection__handleIsolateChange_closure: {
-      "^": "Closure:35;$this",
+      "^": "Closure:31;$this",
       call$1: [function($location) {
         var t1 = this.$this.view;
         t1._removeExecutionMarker$0();
         if ($location.get$resolved() === true)
           t1._debugger_ui$_jumpToLocation$2$addExecMarker($location, true);
-      }, null, null, 2, 0, null, 75, "call"]
+      }, null, null, 2, 0, null, 66, "call"]
     },
     FlowControlSection__restart_closure: {
       "^": "Closure:0;",
@@ -57747,7 +57771,7 @@ self._domRemove = function(element) {
         t1.update$1(0, vars == null ? [] : vars);
         if (frame.get$isExceptionFrame() && J.get$isNotEmpty$asx(vars))
           this.locals.selectItem$1(J.get$first$ax(vars));
-      }, "call$1", "get$_selectFrame", 2, 0, 113, 74],
+      }, "call$1", "get$_selectFrame", 2, 0, 113, 67],
       _renderVariable$2: [function(local, element) {
         var t1, value, t2, str;
         t1 = J.getInterceptor$x(local);
@@ -57800,11 +57824,11 @@ self._domRemove = function(element) {
       }
     },
     ExecutionTab__selectFrame_closure: {
-      "^": "Closure:35;$this",
+      "^": "Closure:31;$this",
       call$1: [function($location) {
         if ($location.get$resolved() === true)
           this.$this.view._debugger_ui$_jumpToLocation$1($location);
-      }, null, null, 2, 0, null, 75, "call"]
+      }, null, null, 2, 0, null, 66, "call"]
     },
     _LocalTreeModel: {
       "^": "TreeModel;",
@@ -58040,7 +58064,7 @@ self._domRemove = function(element) {
         col = bp.get$column() == null ? null : J.$sub$n(bp.get$column(), 1);
         t1 = J.getInterceptor$x(bp);
         Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$3(t1.get$path(bp), J.$sub$n(t1.get$line(bp), 1), col);
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     BreakpointsTab__render_closure: {
       "^": "Closure:1;bp",
@@ -58517,7 +58541,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 4, "call"]
     },
     ObservatoryConnection__init_closure2: {
-      "^": "Closure:23;$this",
+      "^": "Closure:24;$this",
       call$1: [function(e) {
         var json, t1, loggerName, message, $name, t2;
         json = J.$index$asx(J.get$json$x(e), "logRecord");
@@ -58546,10 +58570,10 @@ self._domRemove = function(element) {
       "^": "Closure:127;",
       call$1: [function(ver) {
         $.$get$_logger9().fine$1("Observatory version " + H.S(ver.get$major()) + "." + H.S(ver.get$minor()) + ".");
-      }, null, null, 2, 0, null, 72, "call"]
+      }, null, null, 2, 0, null, 68, "call"]
     },
     ObservatoryConnection__init_closure4: {
-      "^": "Closure:23;$this",
+      "^": "Closure:24;$this",
       call$1: [function(e) {
         var t1, t2;
         t1 = e.get$bytes();
@@ -58568,7 +58592,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     ObservatoryConnection__init_closure6: {
-      "^": "Closure:23;$this",
+      "^": "Closure:24;$this",
       call$1: [function(e) {
         var t1, t2;
         t1 = e.get$bytes();
@@ -58615,13 +58639,13 @@ self._domRemove = function(element) {
       call$1: [function(bp) {
         var t1 = this.$this;
         t1.uriResolver.resolvePathToUris$1(J.get$path$x(bp)).then$1(new D.ObservatoryConnection__installBreakpoints__closure1(t1, this.isolate, this.addBreakpoint, bp)).catchError$1(new D.ObservatoryConnection__installBreakpoints__closure2(bp));
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     ObservatoryConnection__installBreakpoints__closure1: {
-      "^": "Closure:33;$this,isolate,addBreakpoint,bp",
+      "^": "Closure:29;$this,isolate,addBreakpoint,bp",
       call$1: [function(uris) {
         return P.Future_forEach(uris, new D.ObservatoryConnection__installBreakpoints___closure0(this.$this, this.isolate, this.addBreakpoint, this.bp));
-      }, null, null, 2, 0, null, 69, "call"]
+      }, null, null, 2, 0, null, 83, "call"]
     },
     ObservatoryConnection__installBreakpoints___closure0: {
       "^": "Closure:3;$this,isolate,addBreakpoint,bp",
@@ -58634,7 +58658,7 @@ self._domRemove = function(element) {
       "^": "Closure:66;addBreakpoint,bp",
       call$1: [function(vmBreakpoint) {
         this.addBreakpoint.call$2(this.bp, vmBreakpoint);
-      }, null, null, 2, 0, null, 68, "call"]
+      }, null, null, 2, 0, null, 70, "call"]
     },
     ObservatoryConnection__installBreakpoints____closure2: {
       "^": "Closure:0;",
@@ -58657,7 +58681,7 @@ self._domRemove = function(element) {
             vmBreakpoint = breakpoints[_i];
             t2._vm_service_lib$_call$2(0, "removeBreakpoint", P.LinkedHashMap__makeLiteral(["isolateId", t4.get$id(t3), "breakpointId", J.get$id$x(vmBreakpoint)])).catchError$1(new D.ObservatoryConnection__installBreakpoints__closure0());
           }
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     ObservatoryConnection__installBreakpoints__closure0: {
       "^": "Closure:0;",
@@ -58676,10 +58700,10 @@ self._domRemove = function(element) {
       }
     },
     ObservatoryConnection__installBreakpoints__closure: {
-      "^": "Closure:33;$this,isolate,addBreakpoint,bp",
+      "^": "Closure:29;$this,isolate,addBreakpoint,bp",
       call$1: [function(uris) {
         return P.Future_forEach(uris, new D.ObservatoryConnection__installBreakpoints___closure(this.$this, this.isolate, this.addBreakpoint, this.bp));
-      }, null, null, 2, 0, null, 69, "call"]
+      }, null, null, 2, 0, null, 83, "call"]
     },
     ObservatoryConnection__installBreakpoints___closure: {
       "^": "Closure:3;$this,isolate,addBreakpoint,bp",
@@ -58692,7 +58716,7 @@ self._domRemove = function(element) {
       "^": "Closure:66;addBreakpoint,bp",
       call$1: [function(vmBreakpoint) {
         this.addBreakpoint.call$2(this.bp, vmBreakpoint);
-      }, null, null, 2, 0, null, 68, "call"]
+      }, null, null, 2, 0, null, 70, "call"]
     },
     ObservatoryConnection__installBreakpoints____closure0: {
       "^": "Closure:0;",
@@ -58718,7 +58742,7 @@ self._domRemove = function(element) {
         obsIsolate.get$isolate().set$runnable(true);
         if (obsIsolate.get$_wasPauseAtStart())
           obsIsolate.get$_isolateInitializedCompleter().future.then$1(new D.ObservatoryConnection__handleIsolateEvent___closure(obsIsolate));
-      }, null, null, 2, 0, null, 67, "call"]
+      }, null, null, 2, 0, null, 71, "call"]
     },
     ObservatoryConnection__handleIsolateEvent___closure: {
       "^": "Closure:0;obsIsolate",
@@ -58731,7 +58755,7 @@ self._domRemove = function(element) {
       call$1: [function(obsIsolate) {
         obsIsolate.set$_wasPauseAtStart(true);
         obsIsolate.get$_isolateInitializedCompleter().future.then$1(new D.ObservatoryConnection__handleDebugEvent__closure(obsIsolate));
-      }, null, null, 2, 0, null, 67, "call"]
+      }, null, null, 2, 0, null, 71, "call"]
     },
     ObservatoryConnection__handleDebugEvent__closure: {
       "^": "Closure:0;obsIsolate",
@@ -58954,7 +58978,7 @@ self._domRemove = function(element) {
           t2.exception = null;
         }
         return obsFrame;
-      }, null, null, 2, 0, null, 74, "call"]
+      }, null, null, 2, 0, null, 67, "call"]
     },
     ObservatoryIsolate__populateFrames___closure: {
       "^": "Closure:136;$this",
@@ -59230,13 +59254,13 @@ self._domRemove = function(element) {
       "^": "Closure:64;$this",
       call$1: [function(field) {
         return new D.ObservatoryFieldVariable(field, D.ObservatoryFieldVariable__createValue(this.$this.isolate, field));
-      }, null, null, 2, 0, null, 66, "call"]
+      }, null, null, 2, 0, null, 72, "call"]
     },
     ObservatoryInstanceRefValue_getChildren__closure1: {
       "^": "Closure:64;$this",
       call$1: [function(field) {
         return new D.ObservatoryFieldVariable(field, D.ObservatoryFieldVariable__createValue(this.$this.isolate, field));
-      }, null, null, 2, 0, null, 66, "call"]
+      }, null, null, 2, 0, null, 72, "call"]
     },
     ObservatoryInstanceRefValue_invokeToString_closure: {
       "^": "Closure:0;$this",
@@ -59495,7 +59519,7 @@ self._domRemove = function(element) {
       }
     },
     ObservatoryLocation_resolve_closure: {
-      "^": "Closure:35;$this",
+      "^": "Closure:31;$this",
       call$1: [function(val) {
         this.$this._observatory_debugger$_completer.complete$1(0, val);
       }, null, null, 2, 0, null, 15, "call"]
@@ -59521,7 +59545,7 @@ self._domRemove = function(element) {
         var t1 = this.$this;
         t1._path = path;
         return t1;
-      }, null, null, 2, 0, null, 65, "call"]
+      }, null, null, 2, 0, null, 73, "call"]
     },
     ObservatoryLibrary: {
       "^": "Object;_ref,_displayUri",
@@ -59835,7 +59859,7 @@ self._domRemove = function(element) {
       }
     },
     applyEdits__closure: {
-      "^": "Closure:51;buffer",
+      "^": "Closure:50;buffer",
       call$1: function(edit) {
         var t1, t2;
         t1 = this.buffer;
@@ -59852,7 +59876,7 @@ self._domRemove = function(element) {
         t1 = this.buffer;
         t2 = J.getInterceptor$x(position);
         return new Y.Range(Y._create0("Range", Y._cvt0(t1.invoke$2("positionForCharacterIndex", t2.get$offset(position))), Y._cvt0(t1.invoke$2("positionForCharacterIndex", J.$add$ns(t2.get$offset(position), J.get$length$asx(this.group))))));
-      }, null, null, 2, 0, null, 41, "call"]
+      }, null, null, 2, 0, null, 29, "call"]
     },
     _sortEdits_closure: {
       "^": "Closure:140;",
@@ -59930,7 +59954,7 @@ self._domRemove = function(element) {
         t1._sendData$1(editor);
       }, function() {
         return this._observeActivePaneItem$1(null);
-      }, "_observeActivePaneItem$0", "call$1", "call$0", "get$_observeActivePaneItem", 0, 2, 14, 2],
+      }, "_observeActivePaneItem$0", "call$1", "call$0", "get$_observeActivePaneItem", 0, 2, 13, 2],
       Editors$_allDartEditors$0: function() {
         this._matches = F.editors_Editors__isDartTypeEditor$closure();
         var t1 = $.$get$atom();
@@ -60120,7 +60144,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;$this",
       call$1: [function(c) {
         return this.$this.add$1(0, c);
-      }, null, null, 2, 0, null, 38, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     CoreElement_onClick_closure: {
       "^": "Closure:0;$this",
@@ -60309,7 +60333,7 @@ self._domRemove = function(element) {
         $.$get$_logger21().info$1("Flutter features enabled");
       }, function($receiver) {
         return this.enable$1($receiver, null);
-      }, "enable$0", "call$1", "call$0", "get$enable", 0, 2, 29, 2]
+      }, "enable$0", "call$1", "call$0", "get$enable", 0, 2, 28, 2]
     }
   }], ["", "package:atom_dartlang/flutter/flutter_connect.dart",, K, {
     "^": "",
@@ -60479,7 +60503,7 @@ self._domRemove = function(element) {
           this._startFlutterDaemon$1$quiet(quiet);
       }, function(sdk) {
         return this._initFromSdk$2$quiet(sdk, false);
-      }, "_initFromSdk$1", "call$2$quiet", "call$1", "get$_initFromSdk", 2, 3, 146, 77, 64, 119],
+      }, "_initFromSdk$1", "call$2$quiet", "call$1", "get$_initFromSdk", 2, 3, 146, 65, 75, 119],
       _killFlutterDaemon$1$quiet: function(quiet) {
         var t1;
         if (this._daemon == null)
@@ -60640,31 +60664,31 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 10, "call"]
     },
     FlutterDaemonManager__startFlutterDaemon_closure4: {
-      "^": "Closure:24;$this",
+      "^": "Closure:20;$this",
       call$1: [function(device) {
         var t1 = this.$this._deviceAddedController;
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(device);
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     FlutterDaemonManager__startFlutterDaemon_closure5: {
-      "^": "Closure:24;$this",
+      "^": "Closure:20;$this",
       call$1: [function(device) {
         var t1 = this.$this._deviceChangedController;
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(device);
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     FlutterDaemonManager__startFlutterDaemon_closure6: {
-      "^": "Closure:24;$this",
+      "^": "Closure:20;$this",
       call$1: [function(device) {
         var t1 = this.$this._deviceRemovedController;
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(device);
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     FlutterDaemonManager__startFlutterDaemon_closure7: {
       "^": "Closure:3;",
@@ -60843,7 +60867,7 @@ self._domRemove = function(element) {
         return this.server._flutter_daemon$_call$2(0, "app.start", T._stripNullValues0(P.LinkedHashMap__makeLiteral(["deviceId", deviceId, "projectDirectory", projectDirectory, "startPaused", startPaused, "route", route, "mode", mode, "target", target, "hot", enableHotReload]))).then$1(new T.AppDomain_start_closure());
       }, function($receiver, deviceId, projectDirectory) {
         return this.start$7$enableHotReload$mode$route$startPaused$target($receiver, deviceId, projectDirectory, true, null, null, null, null);
-      }, "start$2", "call$7$enableHotReload$mode$route$startPaused$target", "call$2", "get$start", 4, 11, 150, 2, 2, 2, 2, 121, 169, 123, 124, 125, 126, 127, 128],
+      }, "start$2", "call$7$enableHotReload$mode$route$startPaused$target", "call$2", "get$start", 4, 11, 150, 2, 2, 2, 2, 121, 122, 123, 124, 125, 126, 127, 170],
       restart$2$fullRestart: function(appId, fullRestart) {
         var $async$goto = 0, $async$completer = P.Completer_Completer$sync(), $async$returnValue, $async$self = this, result, t1;
         var $async$restart$2$fullRestart = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
@@ -60973,7 +60997,7 @@ self._domRemove = function(element) {
       }
     },
     DaemonApp_closure: {
-      "^": "Closure:25;$this",
+      "^": "Closure:18;$this",
       call$1: function($event) {
         return J.$eq$($event.get$appId(), this.$this.appId);
       }
@@ -60987,7 +61011,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 12, "call"]
     },
     DaemonApp_closure1: {
-      "^": "Closure:25;$this",
+      "^": "Closure:18;$this",
       call$1: function($event) {
         return J.$eq$($event.get$appId(), this.$this.appId);
       }
@@ -61002,7 +61026,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 12, "call"]
     },
     DaemonApp_closure3: {
-      "^": "Closure:25;$this",
+      "^": "Closure:18;$this",
       call$1: function($event) {
         return J.$eq$($event.get$appId(), this.$this.appId);
       }
@@ -61017,7 +61041,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 12, "call"]
     },
     DaemonApp_closure5: {
-      "^": "Closure:25;$this",
+      "^": "Closure:18;$this",
       call$1: function($event) {
         return J.$eq$($event.get$appId(), this.$this.appId);
       }
@@ -61312,13 +61336,13 @@ self._domRemove = function(element) {
           H.throwExpression(t2._addEventError$0());
         t2._sendData$1(t1);
         this._validateSelection$0();
-      }, "call$1", "get$_handleDeviceAdd", 2, 0, 36, 17],
+      }, "call$1", "get$_handleDeviceAdd", 2, 0, 35, 16],
       _handleDeviceChanged$1: [function(device) {
         this._devices.add$1(0, device);
         if (J.$eq$(this._selectedDevice, device))
           this._selectedDevice = device;
         this._validateSelection$0();
-      }, "call$1", "get$_handleDeviceChanged", 2, 0, 36, 17],
+      }, "call$1", "get$_handleDeviceChanged", 2, 0, 35, 16],
       _handleDeviceRemoved$1: [function(device) {
         var t1, t2;
         t1 = $.$get$atom()._notifications;
@@ -61331,7 +61355,7 @@ self._domRemove = function(element) {
           H.throwExpression(t2._addEventError$0());
         t2._sendData$1(t1);
         this._validateSelection$0();
-      }, "call$1", "get$_handleDeviceRemoved", 2, 0, 36, 17],
+      }, "call$1", "get$_handleDeviceRemoved", 2, 0, 35, 16],
       _validateSelection$0: function() {
         var selected, t1;
         selected = this._selectedDevice;
@@ -61471,7 +61495,7 @@ self._domRemove = function(element) {
       }, null, null, 0, 0, null, "call"]
     },
     FlutterExt__init_closure: {
-      "^": "Closure:23;$this",
+      "^": "Closure:24;$this",
       call$1: [function($event) {
         if (J.$eq$(J.get$kind$x($event), "ServiceExtensionAdded"))
           if (J.startsWith$1$s($event.get$extensionRPC(), "ext.flutter."))
@@ -61676,12 +61700,12 @@ self._domRemove = function(element) {
       }
     },
     _LaunchInstance__connectToDebugger_closure: {
-      "^": "Closure:30;$this",
+      "^": "Closure:41;$this",
       call$1: [function(connection) {
         var t1 = this.$this;
         t1.debugConnection = connection;
         t1._launch.servicePort.set$value(0, t1._observatoryPort);
-      }, null, null, 2, 0, null, 81, "call"]
+      }, null, null, 2, 0, null, 63, "call"]
     },
     _LaunchInstance__connectToDebugger_closure0: {
       "^": "Closure:0;$this",
@@ -61727,7 +61751,7 @@ self._domRemove = function(element) {
             }
         });
         return P._asyncStart($async$launch$0, $async$completer);
-      }, "call$0", "get$launch", 0, 0, 37],
+      }, "call$0", "get$launch", 0, 0, 36],
       _kill$0: [function() {
         var t1 = this._flutter_launch$_app;
         if (t1 == null) {
@@ -61889,7 +61913,7 @@ self._domRemove = function(element) {
             }
         });
         return P._asyncStart($async$launch$0, $async$completer);
-      }, "call$0", "get$launch", 0, 0, 37],
+      }, "call$0", "get$launch", 0, 0, 36],
       _kill$0: [function() {
         var t1, t2, t3;
         t1 = Q.Dependencies_instance().getDependency$1(C.Type_FlutterDaemonManager_8Wd).get$daemon().get$device();
@@ -62434,7 +62458,7 @@ self._domRemove = function(element) {
           job._args = t1;
           return Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(job);
         }
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     FlutterToolsManager__createProject_closure0: {
       "^": "Closure:0;_box_0",
@@ -62677,7 +62701,7 @@ self._domRemove = function(element) {
             }
         });
         return P._asyncStart($async$launch$0, $async$completer);
-      }, "call$0", "get$launch", 0, 0, 37],
+      }, "call$0", "get$launch", 0, 0, 36],
       _mojo_launch$_kill$0: [function() {
         if (this._runner == null) {
           this._mojo_launch$_launch.launchTerminated$1(1);
@@ -63090,7 +63114,7 @@ self._domRemove = function(element) {
         t1 = $.$get$atom();
         t1._config.invoke$3("set", "linter.showErrorPanel", this.enabled !== true);
         t1._config.invoke$3("set", "linter.displayLinterInfo", this.enabled !== true);
-      }, "call$1", "get$_togglePrefs", 2, 0, 46, 7],
+      }, "call$1", "get$_togglePrefs", 2, 0, 45, 7],
       _focusChanged$1: [function(_) {
         var t1, editor, path, newFocus;
         t1 = $.$get$atom();
@@ -63108,7 +63132,7 @@ self._domRemove = function(element) {
           this._focusedDir = newFocus;
           this._errors$_handleErrorsChanged$1(this._cachedErrors);
         }
-      }, "call$1", "get$_focusChanged", 2, 0, 15],
+      }, "call$1", "get$_focusChanged", 2, 0, 16],
       _errors$_handleErrorsChanged$1: [function(errors) {
         var filteredErrors, t1, shortName;
         this._cachedErrors = errors;
@@ -63117,7 +63141,7 @@ self._domRemove = function(element) {
         shortName = t1 == null ? null : $.$get$fs().basename$1(t1);
         this.statusElement._errors$_handleErrorsChanged$1(filteredErrors);
         this.view._errors$_handleErrorsChanged$2$focus(filteredErrors, shortName);
-      }, "call$1", "get$_errors$_handleErrorsChanged", 2, 0, 165, 61],
+      }, "call$1", "get$_errors$_handleErrorsChanged", 2, 0, 165, 76],
       ErrorsController$0: function() {
         var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11;
         t1 = $.$get$atom();
@@ -63673,7 +63697,7 @@ self._domRemove = function(element) {
         this.errorArea.attribute$2("hidden", !J.get$isNotEmpty$asx(J.get$children$x(this.errorsList.element)));
       }, function() {
         return this._handleErrorsChanged$1(null);
-      }, "_handleErrorsChanged$0", "call$1", "call$0", "get$_handleErrorsChanged", 0, 2, 169, 2, 61],
+      }, "_handleErrorsChanged$0", "call$1", "call$0", "get$_handleErrorsChanged", 0, 2, 169, 2, 76],
       _cursorChanged$1: [function(pos) {
         var offset, selected, t1, t2, _i, sel, e;
         if (pos == null || this.treeBuilder == null)
@@ -63692,7 +63716,7 @@ self._domRemove = function(element) {
           if (e != null)
             J.scrollIntoView$0$x(e);
         }
-      }, "call$1", "get$_cursorChanged", 2, 0, 170, 27],
+      }, "call$1", "get$_cursorChanged", 2, 0, 170, 26],
       _collectSelected$3: function(node, offset, selected) {
         var t1, o, t2, t3;
         t1 = J.getInterceptor$x(node);
@@ -63795,7 +63819,7 @@ self._domRemove = function(element) {
       }, "call$2", "get$_outline$_render", 4, 0, 171],
       _outline$_jumpTo$1: [function(node) {
         return this._jumpToLocation$1(J.get$location$x(J.get$data$x(node).get$element()));
-      }, "call$1", "get$_outline$_jumpTo", 2, 0, 21, 22],
+      }, "call$1", "get$_outline$_jumpTo", 2, 0, 25, 22],
       _jumpToLocation$1: function($location) {
         this.editor.invoke$2("setSelectedBufferRange", new Y.Range(Y._create0("Range", Y._create0("Point", J.$sub$n($location.get$startLine(), 1), J.$sub$n($location.get$startColumn(), 1)), Y._create0("Point", J.$sub$n($location.get$startLine(), 1), J.$add$ns(J.$sub$n($location.get$startColumn(), 1), J.get$length$asx($location))))));
       },
@@ -63863,7 +63887,7 @@ self._domRemove = function(element) {
         t1._amChanging = true;
         $.$get$state().$indexSet(0, this.prefName, pos);
         t1._amChanging = false;
-      }, null, null, 2, 0, null, 27, "call"]
+      }, null, null, 2, 0, null, 26, "call"]
     },
     _ErrorsList: {
       "^": "CoreElement;view>,path>,element",
@@ -63953,7 +63977,7 @@ self._domRemove = function(element) {
       },
       _pub$_handleProjectAdded$1: [function(project) {
         return this._validatePubspecCurrent$1(project);
-      }, "call$1", "get$_pub$_handleProjectAdded", 2, 0, 38, 25],
+      }, "call$1", "get$_pub$_handleProjectAdded", 2, 0, 37, 24],
       _validatePubspecCurrent$1: function(project) {
         var t1, pubspecYamlFile, pubspecLockFile, dotPackagesFile;
         t1 = J.getInterceptor$x(project);
@@ -64053,7 +64077,7 @@ self._domRemove = function(element) {
       }
     },
     PubManager_closure4: {
-      "^": "Closure:16;",
+      "^": "Closure:15;",
       call$1: function($event) {
         var t1, t2;
         $.$get$atom()._workspace.saveAll$0();
@@ -64064,7 +64088,7 @@ self._domRemove = function(element) {
       }
     },
     PubManager_closure5: {
-      "^": "Closure:16;",
+      "^": "Closure:15;",
       call$1: function($event) {
         var t1, t2;
         $.$get$atom()._workspace.saveAll$0();
@@ -64075,13 +64099,13 @@ self._domRemove = function(element) {
       }
     },
     PubManager_closure6: {
-      "^": "Closure:16;$this",
+      "^": "Closure:15;$this",
       call$1: function($event) {
         this.$this._handleRun$1$path($event.get$targetFilePath());
       }
     },
     PubManager_closure7: {
-      "^": "Closure:16;$this",
+      "^": "Closure:15;$this",
       call$1: function($event) {
         this.$this._handleGlobalRun$1$path($event.get$targetFilePath());
       }
@@ -64105,7 +64129,7 @@ self._domRemove = function(element) {
         $.$get$state().$indexSet(0, "lastRunText", response);
         t1 = R.PubRunJob$local(this.dir, response.split(" "), null);
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(t1);
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     PubManager__handleGlobalRun_closure: {
       "^": "Closure:3;dir",
@@ -64120,7 +64144,7 @@ self._domRemove = function(element) {
         t2 = new R.PubRunJob(t1, null, args, true, null, "Pub global run '" + H.S(C.JSArray_methods.get$first(args)) + "'", null);
         t2._pubspecDir = R._locatePubspecDir(t1);
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(t2);
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     PubManager__handleGlobalActivate_closure: {
       "^": "Closure:3;",
@@ -64131,7 +64155,7 @@ self._domRemove = function(element) {
         response = J.trim$0$s(response);
         t1 = "Pub global activate '" + response + "'";
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(new R.PubGlobalActivate(response, false, t1, null));
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     PubManager__showRunPubDialog_closure: {
       "^": "Closure:1;_box_0,project",
@@ -64298,13 +64322,13 @@ self._domRemove = function(element) {
       "^": "Closure:3;$this",
       call$1: [function($name) {
         return this.$this._runBuild$1($name);
-      }, null, null, 2, 0, null, 24, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     RebuildJob_run_closure1: {
       "^": "Closure:174;",
       call$1: [function(results) {
         return J.reduce$1$ax(results, new Z.RebuildJob_run__closure0());
-      }, null, null, 2, 0, null, 80, "call"]
+      }, null, null, 2, 0, null, 64, "call"]
     },
     RebuildJob_run__closure0: {
       "^": "Closure:175;",
@@ -64313,7 +64337,7 @@ self._domRemove = function(element) {
       }
     },
     RebuildJob_run_closure2: {
-      "^": "Closure:20;",
+      "^": "Closure:26;",
       call$1: [function(success) {
         if (success === true)
           P.Future_Future$delayed(P.Duration$(0, 0, 0, 0, 0, 2), null, null).then$1(new Z.RebuildJob_run__closure());
@@ -64341,7 +64365,7 @@ self._domRemove = function(element) {
       "^": "Closure:73;",
       call$1: [function($status) {
         return $status.get$isOk() && J.$eq$(J.get$result$x($status), 0);
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 34, "call"]
     }
   }], ["", "package:atom_dartlang/impl/status.dart",, E, {
     "^": "",
@@ -64673,7 +64697,7 @@ self._domRemove = function(element) {
       "^": "Closure:3;",
       call$1: [function(description) {
         $.$get$shell().invoke$2("openExternal", "https://github.com/dart-atom/dartlang/issues/new?body=" + H.S(P._Uri__uriEncode(C.List_KIf, description, C.Utf8Codec_false, false)));
-      }, null, null, 2, 0, null, 59, "call"]
+      }, null, null, 2, 0, null, 77, "call"]
     },
     StatusView__createDartSdkSection_closure: {
       "^": "Closure:176;_box_0,header",
@@ -64695,13 +64719,13 @@ self._domRemove = function(element) {
           t3 = t3.get$path(sdk);
           J.set$title$x(t2.element, t3);
         }
-      }, null, null, 2, 0, null, 64, "call"]
+      }, null, null, 2, 0, null, 75, "call"]
     },
     StatusView__createDartSdkSection__closure: {
       "^": "Closure:0;header",
       call$1: [function(ver) {
         J.set$text$x(this.header.subtitle.element, ver);
-      }, null, null, 2, 0, null, 72, "call"]
+      }, null, null, 2, 0, null, 68, "call"]
     },
     StatusView__createDartSdkSection_closure0: {
       "^": "Closure:1;",
@@ -64805,7 +64829,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(c) {
         return J.$add$ns(c.get$explicitFileCount(), c.get$implicitFileCount());
-      }, null, null, 2, 0, null, 38, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     StatusView__createDiagnostics__closure1: {
       "^": "Closure:4;",
@@ -64817,7 +64841,7 @@ self._domRemove = function(element) {
       "^": "Closure:179;",
       call$1: [function(c) {
         return c.get$workItemQueueLength();
-      }, null, null, 2, 0, null, 38, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     StatusView__createDiagnostics__closure3: {
       "^": "Closure:4;",
@@ -64826,7 +64850,7 @@ self._domRemove = function(element) {
       }
     },
     StatusView__createDiagnostics_closure: {
-      "^": "Closure:20;$this,updateUI",
+      "^": "Closure:26;$this,updateUI",
       call$1: [function(active) {
         var t1, t2;
         if (active === true) {
@@ -64866,7 +64890,7 @@ self._domRemove = function(element) {
           t2.cancel$0(0);
         t1._diagnosticTimer = null;
         this.updateUI.call$1(null);
-      }, null, null, 4, 0, null, 1, 83, "call"]
+      }, null, null, 4, 0, null, 1, 78, "call"]
     },
     StatusView__createAnalyticsSection_closure: {
       "^": "Closure:0;_key,check",
@@ -64891,7 +64915,7 @@ self._domRemove = function(element) {
       call$1: [function(path) {
         if (typeof path === "string")
           $.$get$atom()._config.invoke$3("set", "dartlang.sdkLocation", path);
-      }, null, null, 2, 0, null, 65, "call"]
+      }, null, null, 2, 0, null, 73, "call"]
     },
     StatusHeader: {
       "^": "Object;title*,subtitle<,toolbar",
@@ -65733,16 +65757,16 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 9, "call"]
     },
     DartToolbarContribution__buildFlutterTile_closure0: {
-      "^": "Closure:40;updateToolbar",
+      "^": "Closure:39;updateToolbar",
       call$1: [function(projects) {
         this.updateToolbar.call$0();
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 41, "call"]
     },
     DartToolbarContribution__buildFlutterTile_closure1: {
-      "^": "Closure:70;updateToolbar",
+      "^": "Closure:72;updateToolbar",
       call$1: [function(config) {
         this.updateToolbar.call$0();
-      }, null, null, 2, 0, null, 73, "call"]
+      }, null, null, 2, 0, null, 43, "call"]
     },
     DartToolbarContribution__buildRightTile_updateToolbar: {
       "^": "Closure:2;_box_0",
@@ -65804,7 +65828,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 144, "call"]
     },
     DartToolbarContribution__bindLaunchManager_closure1: {
-      "^": "Closure:70;updateUI",
+      "^": "Closure:72;updateUI",
       call$1: [function(runnable) {
         return this.updateUI.call$0();
       }, null, null, 2, 0, null, 145, "call"]
@@ -65858,10 +65882,10 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 146, "call"]
     },
     DartToolbarContribution__bindDevicesToSelect_closure1: {
-      "^": "Closure:24;updateSelect",
+      "^": "Closure:20;updateSelect",
       call$1: [function(device) {
         return this.updateSelect.call$0();
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     DartToolbarContribution__bindDevicesToSelect_closure2: {
       "^": "Closure:0;deviceManager,deviceElement",
@@ -65915,12 +65939,14 @@ self._domRemove = function(element) {
     TooltipManager: {
       "^": "Object;_editor,_root,_tooltipElement,_tooltip$_subs",
       _tooltip$_install$0: function() {
-        var t1, t2;
+        var t1, t2, t3, t4;
         t1 = this._root;
         t2 = J.getInterceptor$x(t1);
-        t2.addEventListener$2(t1, "mousemove", new S.TooltipManager__install_closure(this));
-        t2.addEventListener$2(t1, "mouseout", new S.TooltipManager__install_closure0(this));
-        t2.addEventListener$2(t1, "keydown", new S.TooltipManager__install_closure1(this));
+        t3 = t2.get$onMouseMove(t1);
+        t4 = this._tooltip$_subs._subscriptions;
+        t4.push(new M.Debounce(P.Duration$(0, 0, 0, 400, 0, 0), [null]).bind$1(t3).listen$1(new S.TooltipManager__install_closure(this)));
+        t4.push(t2.get$onMouseOut(t1).listen$1(new S.TooltipManager__install_closure0(this)));
+        t4.push(t2.get$onKeyDown(t1).listen$1(new S.TooltipManager__install_closure1(this)));
       },
       dispose$0: [function() {
         var t1 = this._tooltipElement;
@@ -65928,9 +65954,9 @@ self._domRemove = function(element) {
           t1._tooltip$_sub.cancel$0(0);
           t1._tooltip$_cmdDispose.invoke$1("dispose");
           t1.super$CoreElement$dispose();
-          t1 = null;
         }
-        return t1;
+        this._tooltipElement = null;
+        return;
       }, "call$0", "get$dispose", 0, 0, 2],
       TooltipManager$1: function(editor) {
         this._tooltip$_subs._subscriptions.push(this._editor.eventStream$1("onDidDestroy").listen$1(new S.TooltipManager_closure(this)));
@@ -65951,52 +65977,62 @@ self._domRemove = function(element) {
     TooltipManager_closure: {
       "^": "Closure:0;$this",
       call$1: [function(_) {
-        var t1 = this.$this._tooltipElement;
-        if (!(t1 == null)) {
-          t1._tooltip$_sub.cancel$0(0);
-          t1._tooltip$_cmdDispose.invoke$1("dispose");
-          t1.super$CoreElement$dispose();
-          t1 = null;
+        var t1, t2;
+        t1 = this.$this;
+        t2 = t1._tooltipElement;
+        if (!(t2 == null)) {
+          t2._tooltip$_sub.cancel$0(0);
+          t2._tooltip$_cmdDispose.invoke$1("dispose");
+          t2.super$CoreElement$dispose();
         }
-        return t1;
+        t1._tooltipElement = null;
+        return;
       }, null, null, 2, 0, null, 0, "call"]
     },
     TooltipManager__install_closure: {
-      "^": "Closure:41;$this",
-      call$1: [function($event) {
-        var t1, t2, t3, offset, t4, t5;
+      "^": "Closure:11;$this",
+      call$1: [function(mouseEvent) {
+        var t1, t2, t3, offset, t4;
         if ($.$get$atom()._config.getValue$1("dartlang.hoverTooltip") !== true)
           return;
         if (!Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$isActive())
           return;
         t1 = this.$this;
         t2 = t1._editor;
-        t3 = Y._cvt0(new Y.TextEditorComponent(Y._cvt0(J.$index$asx(Y._cvt0(t2.invoke$1("getElement")), "component"))).invoke$2("screenPositionForMouseEvent", $event));
+        t3 = Y._cvt0(new Y.TextEditorComponent(Y._cvt0(J.$index$asx(Y._cvt0(t2.invoke$1("getElement")), "component"))).invoke$2("screenPositionForMouseEvent", mouseEvent));
         offset = new Y.TextBuffer(Y._cvt0(t2.invoke$1("getBuffer"))).invoke$2("characterIndexForPosition", new Y.Point0(t3));
-        t3 = J.getInterceptor$x($event);
-        t4 = H.interceptedTypeCast(t3.get$target($event), "$isElement");
-        t5 = J.getInterceptor$x(t4);
-        t5.get$classes(t4);
-        P.print("classes: " + t5.toString$0(t4));
-        t3 = H.interceptedTypeCast(t3.get$currentTarget($event), "$isElement");
-        t4 = J.getInterceptor$x(t3);
-        t4.get$classes(t3);
-        P.print("cclasses: " + t4.toString$0(t3));
+        t3 = t1._tooltipElement;
+        if (!(t3 == null)) {
+          t3 = t3.info;
+          t4 = J.getInterceptor$x(t3);
+          t3 = J.$le$n(t4.get$offset(t3), offset) && J.$gt$n(J.$add$ns(t4.get$offset(t3), t4.get$length(t3)), offset);
+        }
+        if ((t3 == null ? false : t3) === true)
+          return;
         Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).getHover$2(t2.invoke$1("getPath"), offset).then$1(new S.TooltipManager__install__closure(t1)).catchError$1(new S.TooltipManager__install__closure0());
-      }, null, null, 2, 0, null, 12, "call"]
+      }, null, null, 2, 0, null, 147, "call"]
     },
     TooltipManager__install__closure: {
-      "^": "Closure:47;$this",
+      "^": "Closure:46;$this",
       call$1: [function(result) {
-        var t1;
-        if (result == null)
+        var t1, t2;
+        if (result == null) {
+          t1 = this.$this;
+          t2 = t1._tooltipElement;
+          if (!(t2 == null)) {
+            t2._tooltip$_sub.cancel$0(0);
+            t2._tooltip$_cmdDispose.invoke$1("dispose");
+            t2.super$CoreElement$dispose();
+          }
+          t1._tooltipElement = null;
           return;
+        }
         t1 = result.get$hovers();
         (t1 && C.JSArray_methods).forEach$1(t1, new S.TooltipManager__install___closure(this.$this));
       }, null, null, 2, 0, null, 3, "call"]
     },
     TooltipManager__install___closure: {
-      "^": "Closure:185;$this",
+      "^": "Closure:184;$this",
       call$1: function(h) {
         var t1, t2, t3, t4, component, pt, t5, scrollTop, scrollLeft, gutterWidth;
         t1 = this.$this;
@@ -66006,6 +66042,7 @@ self._domRemove = function(element) {
           t2._tooltip$_cmdDispose.invoke$1("dispose");
           t2.super$CoreElement$dispose();
         }
+        t1._tooltipElement = null;
         t2 = t1._editor;
         t3 = h.get$elementDescription();
         if (t3 == null)
@@ -66021,7 +66058,7 @@ self._domRemove = function(element) {
         scrollTop = component.invoke$1("getScrollTop");
         scrollLeft = component.invoke$1("getScrollLeft");
         gutterWidth = component.invoke$1("getGutterWidth");
-        t1._tooltipElement = S.TooltipElement$(t2, t3, new P.Point(J.$add$ns(J.$sub$n(t5, scrollLeft), gutterWidth), J.$sub$n(t4, scrollTop), [P.num]));
+        t1._tooltipElement = S.TooltipElement$(t2, t3, h, new P.Point(J.$add$ns(J.$sub$n(t5, scrollLeft), gutterWidth), J.$sub$n(t4, scrollTop), [P.num]));
       }
     },
     TooltipManager__install__closure0: {
@@ -66033,37 +66070,41 @@ self._domRemove = function(element) {
     TooltipManager__install_closure0: {
       "^": "Closure:0;$this",
       call$1: [function(_) {
-        var t1 = this.$this._tooltipElement;
-        if (!(t1 == null)) {
-          t1._tooltip$_sub.cancel$0(0);
-          t1._tooltip$_cmdDispose.invoke$1("dispose");
-          t1.super$CoreElement$dispose();
-          t1 = null;
+        var t1, t2;
+        t1 = this.$this;
+        t2 = t1._tooltipElement;
+        if (!(t2 == null)) {
+          t2._tooltip$_sub.cancel$0(0);
+          t2._tooltip$_cmdDispose.invoke$1("dispose");
+          t2.super$CoreElement$dispose();
         }
-        return t1;
+        t1._tooltipElement = null;
+        return;
       }, null, null, 2, 0, null, 0, "call"]
     },
     TooltipManager__install_closure1: {
       "^": "Closure:0;$this",
       call$1: [function(_) {
-        var t1 = this.$this._tooltipElement;
-        if (!(t1 == null)) {
-          t1._tooltip$_sub.cancel$0(0);
-          t1._tooltip$_cmdDispose.invoke$1("dispose");
-          t1.super$CoreElement$dispose();
-          t1 = null;
+        var t1, t2;
+        t1 = this.$this;
+        t2 = t1._tooltipElement;
+        if (!(t2 == null)) {
+          t2._tooltip$_sub.cancel$0(0);
+          t2._tooltip$_cmdDispose.invoke$1("dispose");
+          t2.super$CoreElement$dispose();
         }
-        return t1;
+        t1._tooltipElement = null;
+        return;
       }, null, null, 2, 0, null, 0, "call"]
     },
     TooltipElement: {
-      "^": "CoreElement;content>,_tooltip$_cmdDispose,_tooltip$_sub,element",
+      "^": "CoreElement;content>,info,_tooltip$_cmdDispose,_tooltip$_sub,element",
       dispose$0: function() {
         this._tooltip$_sub.cancel$0(0);
         this._tooltip$_cmdDispose.invoke$1("dispose");
         this.super$CoreElement$dispose();
       },
-      TooltipElement$3$content$position: function(editor, $content, position) {
+      TooltipElement$4$content$info$position: function(editor, $content, info, position) {
         var t1, t2, x, y, t3, h, $parent;
         t1 = this.element;
         t2 = J.getInterceptor$x(t1);
@@ -66087,11 +66128,20 @@ self._domRemove = function(element) {
           return;
         $parent.appendChild(t1);
       },
+      info$1: function(arg0) {
+        return this.info.call$1(arg0);
+      },
+      info$2: function(arg0, arg1) {
+        return this.info.call$2(arg0, arg1);
+      },
+      info$3: function(arg0, arg1, arg2) {
+        return this.info.call$3(arg0, arg1, arg2);
+      },
       static: {
-        TooltipElement$: function(editor, $content, position) {
-          var t1 = new S.TooltipElement($content, null, null, W._ElementFactoryProvider_createElement_tag("div", null));
+        TooltipElement$: function(editor, $content, info, position) {
+          var t1 = new S.TooltipElement($content, info, null, null, W._ElementFactoryProvider_createElement_tag("div", null));
           t1.CoreElement$4$attributes$classes$text("div", null, "hover-tooltip", null);
-          t1.TooltipElement$3$content$position(editor, $content, position);
+          t1.TooltipElement$4$content$info$position(editor, $content, info, position);
           return t1;
         }
       }
@@ -66358,14 +66408,14 @@ self._domRemove = function(element) {
         view = Y.ConsoleView$(this, launch);
         this._allViews.push(view);
         Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).addView$2("bottom", view);
-      }, "call$1", "get$_console$_launchAdded", 2, 0, 13, 71],
+      }, "call$1", "get$_console$_launchAdded", 2, 0, 14, 79],
       _console$_launchRemoved$1: [function(launch) {
         if (this._errorsView != null && Q.Dependencies_instance().getDependency$1(C.Type_LaunchManager_mXK).get$launches().length === 0) {
           if (!Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).hasViewId$1("errors"))
             Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).addView$2("bottom", this._errorsView);
           this._errorsView = null;
         }
-      }, "call$1", "get$_console$_launchRemoved", 2, 0, 13, 71],
+      }, "call$1", "get$_console$_launchRemoved", 2, 0, 14, 79],
       _toggleViews$0: [function() {
         var t1, anyActive, t2, viewShown, _i, view, t3;
         t1 = this._allViews;
@@ -66475,7 +66525,7 @@ self._domRemove = function(element) {
             J.activate$1$x(Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8), this);
           else
             Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).addView$2("bottom", this);
-      }, "call$1", "get$_console$_launchActivated", 2, 0, 13, 42],
+      }, "call$1", "get$_console$_launchActivated", 2, 0, 14, 32],
       _watchServicePort$1: [function(port) {
         var t1, t2;
         if (!this.launch.get$isRunning())
@@ -66491,7 +66541,7 @@ self._domRemove = function(element) {
           t1.set$tooltip("Open the Observatory");
           J.click$1$x(this._observatoryButton, new Y.ConsoleView__watchServicePort_closure(this));
         }
-      }, "call$1", "get$_watchServicePort", 2, 0, 187, 149],
+      }, "call$1", "get$_watchServicePort", 2, 0, 186, 150],
       _console$_launchTerminated$1: [function(l) {
         var t1 = this.launch;
         if (J.$eq$(t1, l)) {
@@ -66509,14 +66559,14 @@ self._domRemove = function(element) {
           if (!(t1 == null))
             J.set$disabled$x(t1, true);
         }
-      }, "call$1", "get$_console$_launchTerminated", 2, 0, 13, 42],
+      }, "call$1", "get$_console$_launchTerminated", 2, 0, 14, 32],
       _console$_launchRemoved$1: [function(l) {
         if (J.$eq$(this.launch, l)) {
           Q.Dependencies_instance().getDependency$1(C.Type_ViewGroupManager_GZ8).removeViewId$1("console." + H.S(this._launchId));
           C.JSArray_methods.remove$1(this.controller._allViews, this);
           this._console$_subs.cancel$0(0);
         }
-      }, "call$1", "get$_console$_launchRemoved", 2, 0, 13, 42],
+      }, "call$1", "get$_console$_launchRemoved", 2, 0, 14, 32],
       handleClose$0: [function() {
         this.super$View$handleClose();
         var t1 = this.launch;
@@ -66595,7 +66645,7 @@ self._domRemove = function(element) {
       }
     },
     ConsoleView_closure: {
-      "^": "Closure:188;$this",
+      "^": "Closure:187;$this",
       call$1: [function(text) {
         var t1, t2, t3, t4;
         t1 = J.getInterceptor$x(text);
@@ -66603,7 +66653,7 @@ self._domRemove = function(element) {
         t3 = t1.get$error(text);
         t4 = t1.get$subtle(text);
         this.$this._emitText$4$error$highlight$subtle(t2, t3, t1.get$highlight(text), t4);
-      }, null, null, 2, 0, null, 150, "call"]
+      }, null, null, 2, 0, null, 151, "call"]
     },
     ConsoleView_closure0: {
       "^": "Closure:1;$this",
@@ -66693,7 +66743,7 @@ self._domRemove = function(element) {
         }
       }, function() {
         return this._handleLaunchesChanged$1(null);
-      }, "_handleLaunchesChanged$0", "call$1", "call$0", "get$_handleLaunchesChanged", 0, 2, 189, 2, 0],
+      }, "_handleLaunchesChanged$0", "call$1", "call$0", "get$_handleLaunchesChanged", 0, 2, 188, 2, 0],
       $isDisposable: 1
     }
   }], ["atom.launch", "package:atom_dartlang/launch/launch.dart",, X, {
@@ -66825,7 +66875,7 @@ self._domRemove = function(element) {
       $isDisposable: 1
     },
     LaunchManager_addLaunch_closure: {
-      "^": "Closure:190;$this,removed",
+      "^": "Closure:189;$this,removed",
       call$1: function(l) {
         var t1, t2;
         if (l.get$isTerminated()) {
@@ -67073,7 +67123,7 @@ self._domRemove = function(element) {
       }
     },
     _ServerResolver_closure: {
-      "^": "Closure:191;$this",
+      "^": "Closure:190;$this",
       call$1: [function(result) {
         return this.$this._contextCompleter.complete$1(0, J.get$id$x(result));
       }, null, null, 2, 0, null, 3, "call"]
@@ -67094,7 +67144,7 @@ self._domRemove = function(element) {
           t2 = P.LinkedHashMap__makeLiteral(["id", id]);
           t1.server._call$2(0, "execution.deleteContext", t2).catchError$1(new X._ServerResolver_dispose__closure());
         }
-      }, null, null, 2, 0, null, 151, "call"]
+      }, null, null, 2, 0, null, 152, "call"]
     },
     _ServerResolver_dispose__closure: {
       "^": "Closure:0;",
@@ -67234,7 +67284,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 4, "call"]
     },
     CliLaunchType_performLaunch_closure2: {
-      "^": "Closure:26;launch",
+      "^": "Closure:17;launch",
       call$1: [function(code) {
         return this.launch.launchTerminated$1(code);
       }, null, null, 2, 0, null, 14, "call"]
@@ -67348,7 +67398,7 @@ self._domRemove = function(element) {
       },
       _handleProjectAdded$1: [function(project) {
         this._getCreateProjectConfig$1(J.get$path$x(project));
-      }, "call$1", "get$_handleProjectAdded", 2, 0, 38, 25],
+      }, "call$1", "get$_handleProjectAdded", 2, 0, 37, 24],
       _handleProjectRemoved$1: [function(project) {
         var config, t1;
         config = this._projectConfigs.remove$1(0, J.get$path$x(project));
@@ -67358,7 +67408,7 @@ self._domRemove = function(element) {
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(null);
-      }, "call$1", "get$_handleProjectRemoved", 2, 0, 38, 25],
+      }, "call$1", "get$_handleProjectRemoved", 2, 0, 37, 24],
       initFromStored$1: function(storedData) {
         if (!!J.getInterceptor(storedData).$isMap)
           this._launchTimestamps = P.LinkedHashMap_LinkedHashMap$from(storedData, null, null);
@@ -67371,7 +67421,7 @@ self._domRemove = function(element) {
       $isDisposable: 1
     },
     LaunchConfigurationManager_getAllConfigs_closure: {
-      "^": "Closure:192;",
+      "^": "Closure:191;",
       call$1: function(configs) {
         return configs.getConfigs$0();
       }
@@ -67380,7 +67430,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(entry) {
         return J.get$path$x(entry);
-      }, null, null, 2, 0, null, 46, "call"]
+      }, null, null, 2, 0, null, 47, "call"]
     },
     LaunchConfiguration: {
       "^": "Object;projectPath<,_launch_configs$_file,_launch_configs$_map",
@@ -67763,7 +67813,7 @@ self._domRemove = function(element) {
       }
     },
     RunApplicationManager_closure: {
-      "^": "Closure:16;",
+      "^": "Closure:15;",
       call$1: function($event) {
         $event.invoke$1("stopImmediatePropagation");
         $event.invoke$1("preventDefault");
@@ -67806,7 +67856,7 @@ self._domRemove = function(element) {
       }
     },
     RunApplicationManager__handleRunCommand_closure: {
-      "^": "Closure:62;path",
+      "^": "Closure:70;path",
       call$1: function(c) {
         return J.$eq$(this.path, c.get$primaryResource());
       }
@@ -67917,10 +67967,10 @@ self._domRemove = function(element) {
       }
     },
     WorkspaceLaunchManager_closure0: {
-      "^": "Closure:40;$this",
+      "^": "Closure:39;$this",
       call$1: [function(projects) {
         this.$this._updateFromActiveEditor$0();
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 41, "call"]
     },
     WorkspaceLaunchManager_closure1: {
       "^": "Closure:0;$this",
@@ -67929,16 +67979,16 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     WorkspaceLaunchManager__updateFromActiveEditor_closure: {
-      "^": "Closure:62;",
+      "^": "Closure:70;",
       call$1: [function(config) {
         return new L.RunnableConfig(null, config);
-      }, null, null, 2, 0, null, 73, "call"]
+      }, null, null, 2, 0, null, 43, "call"]
     },
     WorkspaceLaunchManager__updateFromActiveEditor_closure0: {
-      "^": "Closure:194;",
+      "^": "Closure:193;",
       call$1: [function(launchable) {
         return new L.RunnableConfig(launchable, null);
-      }, null, null, 2, 0, null, 152, "call"]
+      }, null, null, 2, 0, null, 153, "call"]
     },
     RunnableConfig: {
       "^": "Object;_launchable,_run$_config",
@@ -68157,7 +68207,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     DartLinterConsumer__regenErrors_closure: {
-      "^": "Closure:195;_box_0,$this",
+      "^": "Closure:194;_box_0,$this",
       call$2: function(path, issues) {
         var t1, t2, t3, t4, first, t5, t6, t7;
         issues = this.$this._filter$1(0, issues);
@@ -68234,7 +68284,7 @@ self._domRemove = function(element) {
         this._contentContainer.add$1(0, t1.get$content(tab));
         J.hidden$1$x(t1.get$content(tab), true);
         tab.get$_tabElement().click$1(0, new M.MTabGroup__handleTabAdd_closure(this, tab));
-      }, "call$1", "get$_handleTabAdd", 2, 0, 60, 60],
+      }, "call$1", "get$_handleTabAdd", 2, 0, 69, 80],
       _handleTabActivate$1: [function(tab) {
         var t1;
         if (J.$eq$(this._activeTab, tab))
@@ -68252,7 +68302,7 @@ self._domRemove = function(element) {
           J.scrollIntoView$0$x(this._activeTab.get$_tabElement().element);
           J.set$value$x(J.get$active$x(this._activeTab), true);
         }
-      }, "call$1", "get$_handleTabActivate", 2, 0, 60, 60],
+      }, "call$1", "get$_handleTabActivate", 2, 0, 69, 80],
       hasTabId$1: function(id) {
         return C.JSArray_methods.any$1(this.tabs._items, new M.MTabGroup_hasTabId_closure(id));
       },
@@ -68518,7 +68568,7 @@ self._domRemove = function(element) {
         t2 = this._box_0;
         t1._populateChildren$2(items, t2.childContainer);
         t1._makeFirstChildVisible$1(t2.childContainer);
-      }, null, null, 2, 0, null, 154, "call"],
+      }, null, null, 2, 0, null, 155, "call"],
       $signature: function() {
         return H.computeSignature(function(T) {
           return {func: 1, args: [[P.List, T]]};
@@ -68531,7 +68581,7 @@ self._domRemove = function(element) {
         var t1 = $.$get$atom()._notifications;
         t1.invoke$3("addError", H.S(e), t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
         $.$get$_logger28().info$3("unable to expand child", e, st);
-      }, null, null, 4, 0, null, 1, 83, "call"]
+      }, null, null, 4, 0, null, 1, 78, "call"]
     }
   }], ["atom.plugin", "package:atom_dartlang/plugin.dart",, R, {
     "^": "",
@@ -68752,7 +68802,7 @@ self._domRemove = function(element) {
             t1.invoke$3("addWarning", "The emmet package has severe performance issues when editing Dart files. It is recommended to disable emmet until issue https://github.com/emmetio/emmet-atom/issues/319 is fixed.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, true, null));
           }
         }
-      }, "call$1", "get$_verifyPackages", 2, 0, 197, 6],
+      }, "call$1", "get$_verifyPackages", 2, 0, 196, 6],
       _handleSendFeedback$0: function() {
         S.getSystemDescription(false).then$1(new R.AtomDartPackage__handleSendFeedback_closure());
       },
@@ -68866,7 +68916,7 @@ self._domRemove = function(element) {
       "^": "Closure:3;",
       call$1: [function(version) {
         $.pluginVersion = version;
-      }, null, null, 2, 0, null, 70, "call"]
+      }, null, null, 2, 0, null, 81, "call"]
     },
     AtomDartPackage_activate_closure0: {
       "^": "Closure:0;",
@@ -68927,7 +68977,7 @@ self._domRemove = function(element) {
       "^": "Closure:3;",
       call$1: [function(description) {
         $.$get$shell().invoke$2("openExternal", "https://github.com/dart-atom/dartlang/issues/new?body=" + H.S(P._Uri__uriEncode(C.List_KIf, description, C.Utf8Codec_false, false)));
-      }, null, null, 2, 0, null, 59, "call"]
+      }, null, null, 2, 0, null, 77, "call"]
     },
     AtomDartPackage__registerLinter_closure: {
       "^": "Closure:1;errorController,flushController",
@@ -69074,7 +69124,7 @@ self._domRemove = function(element) {
       _handleProjectPathsChanged$1: [function(allPaths) {
         this._updateChangeListeners$1(allPaths);
         this._fullScanForProjects$0();
-      }, "call$1", "get$_handleProjectPathsChanged", 2, 0, 198, 156],
+      }, "call$1", "get$_handleProjectPathsChanged", 2, 0, 197, 157],
       _updateChangeListeners$1: function(allPaths) {
         var t1, previousPaths, currentPaths, removedPaths, addedPaths, t2, t3, addedPath, dir;
         t1 = this._directoryListeners;
@@ -69171,7 +69221,7 @@ self._domRemove = function(element) {
       }
     },
     ProjectManager_dispose_closure: {
-      "^": "Closure:199;",
+      "^": "Closure:198;",
       call$1: function(sub) {
         return J.cancel$0$x(sub);
       }
@@ -69180,7 +69230,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(p) {
         return J.get$directory$x(p);
-      }, null, null, 2, 0, null, 157, "call"]
+      }, null, null, 2, 0, null, 158, "call"]
     },
     ProjectManager__fullScanForProjects_closure0: {
       "^": "Closure:0;dir",
@@ -69218,7 +69268,7 @@ self._domRemove = function(element) {
       }
     },
     ProjectManager__initProjectControllers_closure: {
-      "^": "Closure:40;$this,knownProjects",
+      "^": "Closure:39;$this,knownProjects",
       call$1: [function(projects) {
         var current, t1, t2, t3, t4, project, path, _i, projectPath;
         current = P.LinkedHashSet_LinkedHashSet(null, null, null, null);
@@ -69242,10 +69292,10 @@ self._domRemove = function(element) {
             t3._sendData$1(project);
           }
         }
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 41, "call"]
     },
     ProjectManager__initProjectControllers_closure0: {
-      "^": "Closure:200;$this",
+      "^": "Closure:199;$this",
       call$1: [function(dir) {
         var t1, path, t2, t3, t4;
         t1 = J.getInterceptor$x(dir);
@@ -69365,7 +69415,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(line) {
         return J.trim$0$s(line);
-      }, null, null, 2, 0, null, 47, "call"]
+      }, null, null, 2, 0, null, 48, "call"]
     },
     DartProject_importsPackage_closure0: {
       "^": "Closure:3;packageName",
@@ -69782,7 +69832,7 @@ self._domRemove = function(element) {
       }
     },
     State_saveState_closure: {
-      "^": "Closure:201;$this",
+      "^": "Closure:200;$this",
       call$2: function(key, storable) {
         J.$indexSet$ax(this.$this._pluginState, key, C.JsonCodec_null_null.encode$1(storable.toStorable$0()));
       }
@@ -69805,7 +69855,7 @@ self._domRemove = function(element) {
       if (J.$eq$(command, "newline"))
         return;
       $.$get$_ga().sendEvent$2(category, command);
-    }, "call$1", "usage__trackCommand$closure", 2, 0, 12, 158],
+    }, "call$1", "usage__trackCommand$closure", 2, 0, 12, 159],
     _activePaneItemChanged: [function(_) {
       var editor, path, t1, index, t2, extension;
       editor = $.$get$atom()._workspace.getActiveTextEditor$0();
@@ -69823,7 +69873,7 @@ self._domRemove = function(element) {
           $.$get$_ga().sendScreenView$1("editor/" + extension.toLowerCase());
         }
       }
-    }, "call$1", "usage___activePaneItemChanged$closure", 2, 0, 15],
+    }, "call$1", "usage___activePaneItemChanged$closure", 2, 0, 16],
     _handleLogRecord: [function(log) {
       var t1, fatal, message, t2, desc;
       t1 = J.getInterceptor$x(log);
@@ -69884,7 +69934,7 @@ self._domRemove = function(element) {
         t3.push(new P._BroadcastStream(t4, [H.getTypeArgumentByIndex(t4, 0)]).listen$1(E.usage__trackCommand$closure()));
         t2._editorObserve = t1._workspace.observeActivePaneItem$1(E.usage___activePaneItemChanged$closure());
         Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$onActive().listen$1(new E.UsageManager__init__closure0());
-      }, null, null, 2, 0, null, 70, "call"]
+      }, null, null, 2, 0, null, 81, "call"]
     },
     UsageManager__init__closure: {
       "^": "Closure:0;version",
@@ -70371,7 +70421,7 @@ self._domRemove = function(element) {
         for (t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
           t1[_i].get$_closeButton().attribute$2("hidden", t1.length !== 1);
         this.tabHeader.add$1(0, view.get$tabElement());
-      }, "call$1", "get$_onViewAdded", 2, 0, 32, 29],
+      }, "call$1", "get$_onViewAdded", 2, 0, 27, 35],
       _onActiveChanged$1: [function(view) {
         var t1, t2;
         t1 = this._active;
@@ -70388,7 +70438,7 @@ self._domRemove = function(element) {
         }
         if (this._active == null && this._history.length !== 0)
           this.views.setSelection$1(C.JSArray_methods.get$last(this._history));
-      }, "call$1", "get$_onActiveChanged", 2, 0, 32, 29],
+      }, "call$1", "get$_onActiveChanged", 2, 0, 27, 35],
       _onViewRemoved$1: [function(view) {
         var t1, t2, _i;
         C.JSArray_methods.remove$1(this._history, view);
@@ -70401,7 +70451,7 @@ self._domRemove = function(element) {
         J.get$root$x(view).dispose$0();
         view.get$tabElement().dispose$0();
         view.dispose$0();
-      }, "call$1", "get$_onViewRemoved", 2, 0, 32, 29],
+      }, "call$1", "get$_onViewRemoved", 2, 0, 27, 35],
       _setupResizer$3: function(prefName, resizer, defaultSize) {
         var t1 = $.$get$state();
         resizer.set$_targetSize(J.$index$asx(t1._pluginState, prefName) == null ? defaultSize : J.$index$asx(t1._pluginState, prefName));
@@ -70436,7 +70486,7 @@ self._domRemove = function(element) {
       call$1: [function(pos) {
         $.$get$state().$indexSet(0, this.prefName, pos);
         return pos;
-      }, null, null, 2, 0, null, 27, "call"]
+      }, null, null, 2, 0, null, 26, "call"]
     },
     View: {
       "^": "Object;root>,content>,tabElement<,_closeButton<,group?",
@@ -70580,7 +70630,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     ListTreeBuilder__addNode_closure2: {
-      "^": "Closure:41;$this,node",
+      "^": "Closure:60;$this,node",
       call$1: [function($event) {
         var t1;
         if (J.get$defaultPrevented$x($event) !== true) {
@@ -70592,7 +70642,7 @@ self._domRemove = function(element) {
       }, null, null, 2, 0, null, 12, "call"]
     },
     ListTreeBuilder__addNode_closure3: {
-      "^": "Closure:41;$this,node",
+      "^": "Closure:60;$this,node",
       call$1: [function($event) {
         var t1;
         if (J.get$defaultPrevented$x($event) !== true) {
@@ -71215,7 +71265,7 @@ self._domRemove = function(element) {
       "^": "Closure:53;",
       call$1: [function(child) {
         return child.get$textContent();
-      }, null, null, 2, 0, null, 62, "call"]
+      }, null, null, 2, 0, null, 82, "call"]
     },
     Text: {
       "^": "Object;text>",
@@ -72484,7 +72534,7 @@ self._domRemove = function(element) {
       "^": "Closure:53;",
       call$1: [function(child) {
         return child.get$textContent();
-      }, null, null, 2, 0, null, 62, "call"]
+      }, null, null, 2, 0, null, 82, "call"]
     }
   }], ["", "package:path/path.dart",, D, {
     "^": "",
@@ -72830,7 +72880,7 @@ self._domRemove = function(element) {
       "^": "Closure:0;",
       call$1: [function(arg) {
         return arg == null ? "null" : '"' + H.S(arg) + '"';
-      }, null, null, 2, 0, null, 37, "call"]
+      }, null, null, 2, 0, null, 36, "call"]
     }
   }], ["", "package:path/src/internal_style.dart",, B, {
     "^": "",
@@ -73411,7 +73461,7 @@ self._domRemove = function(element) {
           else
             throw exception;
         }
-      }, null, null, 2, 0, null, 161, "call"]
+      }, null, null, 2, 0, null, 162, "call"]
     }
   }], ["", "package:pub_semver/src/version_range.dart",, X, {
     "^": "",
@@ -73436,10 +73486,10 @@ self._domRemove = function(element) {
         return Y._FileSpan$(this, start, end == null ? this._decodedChars.length - 1 : end);
       }, function($receiver, start) {
         return this.span$2($receiver, start, null);
-      }, "span$1", "call$2", "call$1", "get$span", 2, 2, 209, 2, 162, 163],
+      }, "span$1", "call$2", "call$1", "get$span", 2, 2, 209, 2, 163, 164],
       location$1: [function(_, offset) {
         return Y.FileLocation$_(this, offset);
-      }, "call$1", "get$location", 2, 0, 210, 164],
+      }, "call$1", "get$location", 2, 0, 210, 165],
       getLine$1: function(offset) {
         var t1, t2;
         t1 = J.getInterceptor$n(offset);
@@ -73835,7 +73885,7 @@ self._domRemove = function(element) {
         return t1.charCodeAt(0) == 0 ? t1 : t1;
       }, function($receiver, message) {
         return this.message$2$color($receiver, message, null);
-      }, "message$1", "call$2$color", "call$1", "get$message", 2, 3, 211, 2, 10, 165],
+      }, "message$1", "call$2$color", "call$1", "get$message", 2, 3, 211, 2, 10, 166],
       highlight$1$color: [function(_, color) {
         var t1, column, t2, t3, t4, context, lineStart, endIndex, textLine, toColumn, i;
         if (J.$eq$(color, true))
@@ -74111,7 +74161,7 @@ self._domRemove = function(element) {
         return this.error$4$length$match$position($receiver, message, $length, null, position);
       }, "error$3$length$position", function($receiver, message, $length) {
         return this.error$4$length$match$position($receiver, message, $length, null, null);
-      }, "error$2$length", "call$4$length$match$position", "call$1", "call$3$length$position", "call$2$length", "get$error", 2, 7, 43, 2, 2, 2, 10, 76, 41, 78]
+      }, "error$2$length", "call$4$length$match$position", "call$1", "call$3$length$position", "call$2$length", "get$error", 2, 7, 42, 2, 2, 2, 10, 69, 29, 57]
     }
   }], ["", "package:string_scanner/src/string_scanner.dart",, X, {
     "^": "",
@@ -74212,7 +74262,7 @@ self._domRemove = function(element) {
         return this.error$4$length$match$position($receiver, message, $length, null, position);
       }, "error$3$length$position", function($receiver, message, $length) {
         return this.error$4$length$match$position($receiver, message, $length, null, null);
-      }, "error$2$length", "call$4$length$match$position", "call$1", "call$3$length$position", "call$2$length", "get$error", 2, 7, 43, 2, 2, 2, 10, 76, 41, 78],
+      }, "error$2$length", "call$4$length$match$position", "call$1", "call$3$length$position", "call$2$length", "get$error", 2, 7, 42, 2, 2, 2, 10, 69, 29, 57],
       StringScanner$3$position$sourceUrl: function(string, position, sourceUrl) {
       }
     }
@@ -74251,7 +74301,7 @@ self._domRemove = function(element) {
       call$1: [function(key) {
         var value = H.S(this.map.$index(0, key));
         return H.S(key) + "=" + H.S(P._Uri__uriEncode(C.List_KIf, value, C.Utf8Codec_false, false));
-      }, null, null, 2, 0, null, 79, "call"]
+      }, null, null, 2, 0, null, 51, "call"]
     },
     ThrottlingBucket: {
       "^": "Object;startingCount,drops,_lastReplenish",
@@ -74596,7 +74646,7 @@ self._domRemove = function(element) {
           else
             this._vm_service_lib$_log.warning$1("unknown message type: " + H.S(t1.get$runtimeType(message)));
         }
-      }, "call$1", "get$_vm_service_lib$_processMessage", 2, 0, 15, 10],
+      }, "call$1", "get$_vm_service_lib$_processMessage", 2, 0, 16, 10],
       _processMessageByteData$1: function(bytes) {
         var metaSize, t1, t2, meta, offset, t3, data, map, streamId, $event;
         metaSize = bytes.getUint32(4, false);
@@ -75637,7 +75687,7 @@ self._domRemove = function(element) {
             t1.type = J.$index$asx(json, "type");
           }
           return t1;
-        }, "call$1", "vm_service_lib_Response_parse$closure", 2, 0, 297, 168]
+        }, "call$1", "vm_service_lib_Response_parse$closure", 2, 0, 297, 169]
       }
     },
     Sentinel: {
@@ -76088,7 +76138,7 @@ self._domRemove = function(element) {
     "^": "",
     deepEquals: [function(obj1, obj2) {
       return new U._DeepEquals([], []).equals$2(obj1, obj2);
-    }, "call$2", "equality__deepEquals$closure", 4, 0, 320, 122, 113],
+    }, "call$2", "equality__deepEquals$closure", 4, 0, 320, 128, 113],
     deepHashCode: [function(obj) {
       return new U.deepHashCode__deepHashCode([]).call$1(obj);
     }, "call$1", "equality__deepHashCode$closure", 2, 0, 213, 5],
@@ -78571,7 +78621,7 @@ self._domRemove = function(element) {
       }
     },
     closure4: {
-      "^": "Closure:45;",
+      "^": "Closure:44;",
       call$2: function(message, span) {
         message = span.message$1(0, message);
         P.print(message);
@@ -78737,7 +78787,7 @@ self._domRemove = function(element) {
           P.print(tag + "   " + H.S(t1.get$error(r)));
         if (r.get$stackTrace() != null)
           P.print(tag + "   " + H.S(r.get$stackTrace()));
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     }
   }, 1]];
   setupProgram(dart, 0);
@@ -80185,8 +80235,8 @@ self._domRemove = function(element) {
   }, "yamlWarningCallback"]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
-  init.metadata = ["_", "e", null, "result", "str", "obj", "m", "value", "error", "editor", "message", "data", "event", "isolate", "code", "val", "stackTrace", "device", "v", "s", "element", "dir", "node", "response", "name", "project", "bp", "pos", "projects", "view", "each", "o", "r", "change", "edit", "exitCode", "status", "arg", "c", "log", "sdkPath", "position", "l", "newName", "when", "item", "entry", "line", "object", "x", "invocation", "attributeName", "evt", "active", "navInfo", "context", "a", "i", "index", "description", "tab", "errors", "child", "b", "sdk", "path", "field", "obsIsolate", "vmBreakpoint", "uris", "version", "launch", "ver", "config", "frame", "location", "match", false, "length", "key", "results", "connection", "options", "st", "busy", "suggestions", "jsEditor", "info", "arg2", "debugger", "arg3", "arg4", "gutter", "timeslice", "newSdk", "currentProjects", "theStackTrace", "xhr", "choice", "variable", "stream", "searchTerm", "vm", "didFormat", "theError", "arg1", "libraryRef", "stack", "ret", "association", "numberOfArguments", "reject", "flags", "obj2", "attr", "analysisErrors", "analysisFlushResults", "apps", "resolve", "quiet", "k", true, "obj1", "projectDirectory", "startPaused", "route", "mode", "target", "enableHotReload", "app", "daemon", "n", "errorCallback", "callback", "currentVersion", "contents", "file", "g", "success", "sender", "closure", "pluginVer", "ed", "map", "runnables", "runnable", "devices", "state", "captureThis", "port", "text", "id", "launchable", "nb", "items", "grainDuration", "allPaths", "p", "command", "self", "grainOffset", "part", "start", "end", "offset", "color", "encodedComponent", "arguments", "json", "deviceId", 0];
-  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [P.String]}, {func: 1, args: [,,]}, {func: 1, ret: P.Future}, {func: 1, v: true, args: [D.AtomEvent]}, {func: 1, v: true, args: [Y.TextEditor]}, {func: 1, args: [Y.TextEditor]}, {func: 1, v: true, args: [Z.DebugIsolate]}, {func: 1, args: [A.AtomBreakpoint]}, {func: 1, args: [W.MouseEvent]}, {func: 1, v: true, args: [P.String]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, v: true, opt: [,]}, {func: 1, v: true, args: [,]}, {func: 1, args: [D.AtomEvent]}, {func: 1, ret: P.bool}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, args: [P.JsObject]}, {func: 1, args: [P.bool]}, {func: 1, v: true, args: [T.Node0]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [S.Event1]}, {func: 1, args: [T.Device]}, {func: 1, args: [T.AppEvent]}, {func: 1, args: [P.int]}, {func: 1, args: [X.ProcessResult]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, v: true, opt: [D.AtomEvent]}, {func: 1, args: [Z.DebugConnection]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [T.View]}, {func: 1, args: [[P.List, P.String]]}, {func: 1, ret: P.bool, args: [,]}, {func: 1, args: [Z.DebugLocation]}, {func: 1, v: true, args: [T.Device]}, {func: 1, ret: [P.Future, X.Launch]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, ret: W.Node}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, args: [W.Event]}, {func: 1, v: true, args: [P.String, P.int, P.int, P.String]}, {func: 1, v: true, args: [P.String], named: {length: P.int, match: P.Match, position: P.int}}, {func: 1, args: [P.Map]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [P.bool]}, {func: 1, args: [E.HoverResult]}, {func: 1, args: [E.SourceChange]}, {func: 1, args: [M._Change]}, {func: 1, ret: P.String, args: [P.int]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [T.Node1]}, {func: 1, args: [E.AnalysisError]}, {func: 1, args: [[P.List, T.Device]]}, {func: 1, ret: P.double, args: [P.int]}, {func: 1, args: [T.ProgressAppEvent]}, {func: 1, args: [T.LogAppEvent]}, {func: 1, args: [T.DebugPortAppEvent]}, {func: 1, v: true, args: [M.MTab]}, {func: 1, args: [[P.Map, P.String,,]]}, {func: 1, args: [Q.LaunchConfiguration]}, {func: 1, ret: P.String}, {func: 1, args: [S.BoundField]}, {func: 1, args: [D.ObservatoryIsolate]}, {func: 1, args: [S.Breakpoint]}, {func: 1, v: true, args: [S.Event1]}, {func: 1, args: [Z.DebugValue]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, args: [L.RunnableConfig]}, {func: 1, args: [P.String, P.Function]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [, P.StackTrace]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, v: true, args: [P.Uint8List, P.String, P.int]}, {func: 1, ret: P.Future, opt: [D.AtomEvent]}, {func: 1, args: [[P.List, X.Suggestion]]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.int, P.int]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [E.ServerStatus]}, {func: 1, args: [E.ServerError]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, ret: P.Uint8List, args: [,,]}, {func: 1, ret: P.JsObject, args: [X.Suggestion]}, {func: 1, ret: P.int, args: [P.int, P.int]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, ret: P.Future, args: [D.AtomEvent]}, {func: 1, args: [E.FindElementReferencesResult]}, {func: 1, ret: [P.Future, P.Null], opt: [D.AtomEvent]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, ret: [P.Future, P.bool], args: [A.DartinoSdk], opt: [P.String]}, {func: 1, v: true, args: [P.String], opt: [,]}, {func: 1, ret: P.Future, args: [Q.DartinoLaunch]}, {func: 1, ret: [P.Future, P.bool]}, {func: 1, v: true, args: [P.String, P.int]}, {func: 1, ret: P.Object, opt: [P.Object]}, {func: 1, args: [Y.Gutter]}, {func: 1, ret: [P.Future, W.Blob]}, {func: 1, args: [P.Symbol0,,]}, {func: 1, args: [W.HttpRequest]}, {func: 1, v: true, opt: [P.int]}, {func: 1, args: [A.ExceptionBreakType]}, {func: 1, args: [Z.DebugIsolate]}, {func: 1, v: true, named: {fullRestart: P.bool}}, {func: 1, args: [P.int,,]}, {func: 1, v: true, args: [Z.DebugFrame, K.CoreElement]}, {func: 1, v: true, args: [Z.DebugFrame]}, {func: 1, v: true, args: [Z.DebugVariable, K.CoreElement]}, {func: 1, v: true, args: [Z.DebugVariable]}, {func: 1, ret: P.bool, args: [Z.DebugVariable]}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [D.ObservatoryLibrary, K.CoreElement]}, {func: 1, ret: P.int, args: [D.ObservatoryLibrary, D.ObservatoryLibrary]}, {func: 1, ret: P.bool, args: [D.ObservatoryLibrary]}, {func: 1, v: true, args: [Z.DebugIsolate, K.CoreElement]}, {func: 1, v: true, opt: [A.AtomBreakpoint]}, {func: 1, v: true, args: [A.AtomBreakpoint, K.CoreElement]}, {func: 1, args: [F.MessageEvent]}, {func: 1, args: [E.SearchResult]}, {func: 1, ret: P.Object}, {func: 1, args: [S.Version0]}, {func: 1, args: [S.VM]}, {func: 1, args: [A.AtomBreakpoint, S.Breakpoint]}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, v: true, args: [P.int, P.int]}, {func: 1, opt: [D.ObservatoryIsolate]}, {func: 1, args: [S.Isolate]}, {func: 1, args: [S.Stack]}, {func: 1, args: [S.Frame]}, {func: 1, args: [S.BoundVariable]}, {func: 1, args: [S.MapAssociation]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, v: true, args: [P.String], opt: [P.bool]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, v: true, args: [[P.List, T.DiscoveredApp]]}, {func: 1, v: true, args: [Y.FlutterSdk], named: {quiet: P.bool}}, {func: 1, args: [T.LogMessage]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, ret: [P.Future, P.String]}, {func: 1, ret: [P.Future, T.AppStartedResult], args: [P.String, P.String], named: {enableHotReload: P.bool, mode: P.String, route: P.String, startPaused: P.bool, target: P.String}}, {func: 1, args: [, K.OverlayInfo]}, {func: 1, ret: [P.List, W.RtcStatsReport]}, {func: 1, ret: P.int, args: [, P.int]}, {func: 1, args: [[P.EventSink, P.String]]}, {func: 1, v: true, args: [,], opt: [,]}, {func: 1, args: [P.List]}, {func: 1, v: true, args: [T.FlutterDaemon]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [Y.Range]}, {func: 1, ret: L.Disposable, args: [{func: 1, v: true}]}, {func: 1, ret: P.Future, args: [P.Object]}, {func: 1, args: [T.AppStartedResult]}, {func: 1, args: [T.OperationResult]}, {func: 1, args: [F.File]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, opt: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [Y.Point0]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, args: [W.Element]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [[P.List, P.bool]]}, {func: 1, args: [P.bool, P.bool]}, {func: 1, args: [V.Sdk]}, {func: 1, opt: [P.bool]}, {func: 1, args: [E.DiagnosticsResult]}, {func: 1, args: [E.ContextData]}, {func: 1, args: [K.TestRunner]}, {func: 1, args: [P.String,,]}, {func: 1, opt: [,]}, {func: 1, args: [[P.List, L.RunnableConfig]]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, args: [E.HoverInformation]}, {func: 1, args: [, P.String]}, {func: 1, v: true, args: [P.int]}, {func: 1, args: [X.TextFragment]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, args: [X.Launch]}, {func: 1, args: [E.CreateContextResult]}, {func: 1, args: [Q._ProjectConfigurations]}, {func: 1, args: [D.NotificationButton]}, {func: 1, args: [X.Launchable]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, v: true, args: [P.Map]}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [F.Directory]}, {func: 1, args: [P.String, K.StateStorable]}, {func: 1, v: true, opt: [P.Object]}, {func: 1, args: [P.int, T.Node0]}, {func: 1, v: true, args: [N.Level,,], opt: [P.Object, P.StackTrace, P.Zone]}, {func: 1, v: true, opt: [P.num]}, {func: 1, v: true, args: [U.ListItem]}, {func: 1, ret: P.bool, args: [P.RegExp]}, {func: 1, ret: P.bool, args: [P.int]}, {func: 1, ret: Y.FileSpan, args: [P.int], opt: [P.int]}, {func: 1, ret: Y.FileLocation, args: [P.int]}, {func: 1, ret: P.String, args: [P.String], named: {color: null}}, {func: 1, ret: P.String, named: {color: null}}, {func: 1, ret: P.int, args: [,]}, {func: 1, args: [N.LogRecord]}, {func: 1, ret: P.num}, {func: 1, ret: P.Index, args: [P.String]}, {func: 1, v: true, args: [P.Object]}, {func: 1, ret: P.int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.bool, args: [P.Object, P.Object]}, {func: 1, ret: P.int, args: [P.Object]}, {func: 1, ret: P.int, args: [P.String]}, {func: 1, ret: P.double, args: [P.String]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, v: true, args: [P.num], opt: [P.num, P.num]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, ret: E.ServerError, args: [P.Map]}, {func: 1, ret: E.ServerStatus, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.FindTopLevelDeclarationsResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AssistsResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.CreateContextResult, args: [P.Map]}, {func: 1, ret: E.MapUriResult, args: [P.Map]}, {func: 1, ret: E.DiagnosticsResult, args: [P.Map]}, {func: 1, ret: T.Node1, args: [P.String]}, {func: 1, v: true, args: [F.Directory]}, {func: 1, ret: P.bool, args: [Y.TextEditor]}, {func: 1, ret: T.DebugPortAppEvent, args: [P.Map]}, {func: 1, ret: T.LogAppEvent, args: [P.Map]}, {func: 1, ret: T.ProgressAppEvent, args: [P.Map]}, {func: 1, ret: T.StopAppEvent, args: [P.Map]}, {func: 1, ret: T.Device, args: [P.Map]}, {func: 1, ret: T.LogMessage, args: [P.Map]}, {func: 1, ret: P.int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, ret: S.ExtensionData, args: [P.Map]}, {func: 1, ret: S.BoundField, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.BoundVariable, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Breakpoint, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ClassRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Class, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ClassList, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.CodeRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Code, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ContextRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Context0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ContextElement, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ErrorRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Error0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Event1, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.FieldRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Field, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Flag, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.FlagList, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Frame, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.FuncRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Func, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.InstanceRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Instance, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.IsolateRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Isolate, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.LibraryRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Library, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.LibraryDependency, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.MapAssociation, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Message, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.NullRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Null0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ObjRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Obj, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ReloadReport, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Response, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Sentinel, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ScriptRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Script, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceLocation0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceReport, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceReportCoverage, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceReportRange, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Stack, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Success, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.TimelineEvent, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.TypeArgumentsRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.TypeArguments, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.UnresolvedSourceLocation, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Version0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.VMRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.VM, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.CpuProfile, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.CodeRegion, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ProfileFunction, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.AllocationProfile, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ClassHeapStats, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.HeapSpace, args: [[P.Map, P.String,,]]}, {func: 1, ret: P.bool, args: [,,]}, {func: 1, v: true, args: [D.ObservatoryIsolate]}];
+  init.metadata = ["_", "e", null, "result", "str", "obj", "m", "value", "error", "editor", "message", "data", "event", "isolate", "code", "val", "device", "stackTrace", "v", "s", "element", "dir", "node", "name", "project", "bp", "pos", "response", "o", "position", "change", "edit", "l", "exitCode", "status", "view", "arg", "c", "each", "log", "sdkPath", "projects", "r", "config", "i", "when", "item", "entry", "line", "invocation", "evt", "key", "object", "active", "navInfo", "x", "newName", "length", "a", "b", "options", "attributeName", "context", "connection", "results", false, "location", "frame", "ver", "match", "vmBreakpoint", "obsIsolate", "field", "path", "index", "sdk", "errors", "description", "st", "launch", "tab", "version", "child", "uris", "jsEditor", "suggestions", "arguments", "info", "encodedComponent", "debugger", "g", "grainOffset", "gutter", "errorCallback", "resolve", "xhr", "reject", "arg4", "nb", "variable", "timeslice", "grainDuration", "vm", "didFormat", "arg1", "state", "libraryRef", "stack", "ret", "association", "searchTerm", "map", "flags", "obj2", "choice", "analysisErrors", "analysisFlushResults", "apps", "k", "quiet", "stream", true, "deviceId", "projectDirectory", "startPaused", "route", "mode", "target", "obj1", "app", "daemon", "attr", "n", "sender", "currentVersion", "contents", "file", "arg2", "success", "closure", "numberOfArguments", "pluginVer", "callback", "ed", "runnables", "runnable", "devices", "mouseEvent", "currentProjects", "captureThis", "port", "text", "id", "launchable", "newSdk", "items", "theError", "allPaths", "p", "command", "self", "busy", "part", "start", "end", "offset", "color", "theStackTrace", "arg3", "json", "enableHotReload", 0];
+  init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [P.String]}, {func: 1, args: [,,]}, {func: 1, ret: P.Future}, {func: 1, v: true, args: [D.AtomEvent]}, {func: 1, v: true, args: [Y.TextEditor]}, {func: 1, args: [Y.TextEditor]}, {func: 1, v: true, args: [Z.DebugIsolate]}, {func: 1, args: [A.AtomBreakpoint]}, {func: 1, args: [W.MouseEvent]}, {func: 1, v: true, args: [P.String]}, {func: 1, v: true, opt: [,]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, args: [D.AtomEvent]}, {func: 1, v: true, args: [,]}, {func: 1, args: [P.int]}, {func: 1, args: [T.AppEvent]}, {func: 1, args: [P.JsObject]}, {func: 1, args: [T.Device]}, {func: 1, ret: P.bool}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, args: [S.Event1]}, {func: 1, v: true, args: [T.Node0]}, {func: 1, args: [P.bool]}, {func: 1, v: true, args: [T.View]}, {func: 1, v: true, opt: [D.AtomEvent]}, {func: 1, args: [[P.List, P.String]]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, args: [Z.DebugLocation]}, {func: 1, v: true, args: [P.String, P.int, P.int, P.String]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, args: [X.ProcessResult]}, {func: 1, v: true, args: [T.Device]}, {func: 1, ret: [P.Future, X.Launch]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, ret: W.Node}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, ret: P.bool, args: [,]}, {func: 1, args: [Z.DebugConnection]}, {func: 1, v: true, args: [P.String], named: {length: P.int, match: P.Match, position: P.int}}, {func: 1, args: [P.Map]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [P.bool]}, {func: 1, args: [E.HoverResult]}, {func: 1, args: [E.SourceChange]}, {func: 1, args: [M._Change]}, {func: 1, ret: P.String, args: [P.int]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [T.Node1]}, {func: 1, args: [E.AnalysisError]}, {func: 1, args: [[P.List, T.Device]]}, {func: 1, ret: P.double, args: [P.int]}, {func: 1, args: [T.ProgressAppEvent]}, {func: 1, args: [T.LogAppEvent]}, {func: 1, args: [T.DebugPortAppEvent]}, {func: 1, args: [W.Event]}, {func: 1, args: [[P.Map, P.String,,]]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, ret: P.String}, {func: 1, args: [S.BoundField]}, {func: 1, args: [D.ObservatoryIsolate]}, {func: 1, args: [S.Breakpoint]}, {func: 1, v: true, args: [S.Event1]}, {func: 1, args: [Z.DebugValue]}, {func: 1, v: true, args: [M.MTab]}, {func: 1, args: [Q.LaunchConfiguration]}, {func: 1, args: [P.String, P.Function]}, {func: 1, args: [L.RunnableConfig]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [, P.StackTrace]}, {func: 1, args: [L.DartProject]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, v: true, args: [P.Uint8List, P.String, P.int]}, {func: 1, ret: P.Future, opt: [D.AtomEvent]}, {func: 1, args: [[P.List, X.Suggestion]]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element]}, {func: 1, args: [P.int, P.int]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [E.ServerStatus]}, {func: 1, args: [E.ServerError]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, ret: P.Uint8List, args: [,,]}, {func: 1, ret: P.JsObject, args: [X.Suggestion]}, {func: 1, ret: P.int, args: [P.int, P.int]}, {func: 1, v: true, args: [, W.Element]}, {func: 1, ret: P.Future, args: [D.AtomEvent]}, {func: 1, args: [E.FindElementReferencesResult]}, {func: 1, ret: [P.Future, P.Null], opt: [D.AtomEvent]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, ret: [P.Future, P.bool], args: [A.DartinoSdk], opt: [P.String]}, {func: 1, v: true, args: [P.String], opt: [,]}, {func: 1, ret: P.Future, args: [Q.DartinoLaunch]}, {func: 1, ret: [P.Future, P.bool]}, {func: 1, v: true, args: [P.String, P.int]}, {func: 1, ret: P.Object, opt: [P.Object]}, {func: 1, args: [Y.Gutter]}, {func: 1, ret: [P.Future, W.Blob]}, {func: 1, args: [P.Symbol0,,]}, {func: 1, args: [W.HttpRequest]}, {func: 1, v: true, opt: [P.int]}, {func: 1, args: [A.ExceptionBreakType]}, {func: 1, args: [Z.DebugIsolate]}, {func: 1, v: true, named: {fullRestart: P.bool}}, {func: 1, args: [P.int,,]}, {func: 1, v: true, args: [Z.DebugFrame, K.CoreElement]}, {func: 1, v: true, args: [Z.DebugFrame]}, {func: 1, v: true, args: [Z.DebugVariable, K.CoreElement]}, {func: 1, v: true, args: [Z.DebugVariable]}, {func: 1, ret: P.bool, args: [Z.DebugVariable]}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [D.ObservatoryLibrary, K.CoreElement]}, {func: 1, ret: P.int, args: [D.ObservatoryLibrary, D.ObservatoryLibrary]}, {func: 1, ret: P.bool, args: [D.ObservatoryLibrary]}, {func: 1, v: true, args: [Z.DebugIsolate, K.CoreElement]}, {func: 1, v: true, opt: [A.AtomBreakpoint]}, {func: 1, v: true, args: [A.AtomBreakpoint, K.CoreElement]}, {func: 1, args: [F.MessageEvent]}, {func: 1, args: [E.SearchResult]}, {func: 1, ret: P.Object}, {func: 1, args: [S.Version0]}, {func: 1, args: [S.VM]}, {func: 1, args: [A.AtomBreakpoint, S.Breakpoint]}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, v: true, args: [P.int, P.int]}, {func: 1, opt: [D.ObservatoryIsolate]}, {func: 1, args: [S.Isolate]}, {func: 1, args: [S.Stack]}, {func: 1, args: [S.Frame]}, {func: 1, args: [S.BoundVariable]}, {func: 1, args: [S.MapAssociation]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, v: true, args: [P.String], opt: [P.bool]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, v: true, args: [[P.List, T.DiscoveredApp]]}, {func: 1, v: true, args: [Y.FlutterSdk], named: {quiet: P.bool}}, {func: 1, args: [T.LogMessage]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, ret: [P.Future, P.String]}, {func: 1, ret: [P.Future, T.AppStartedResult], args: [P.String, P.String], named: {enableHotReload: P.bool, mode: P.String, route: P.String, startPaused: P.bool, target: P.String}}, {func: 1, args: [, K.OverlayInfo]}, {func: 1, ret: [P.List, W.RtcStatsReport]}, {func: 1, ret: P.int, args: [, P.int]}, {func: 1, args: [[P.EventSink, P.String]]}, {func: 1, v: true, args: [,], opt: [,]}, {func: 1, args: [P.List]}, {func: 1, v: true, args: [T.FlutterDaemon]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [Y.Range]}, {func: 1, ret: L.Disposable, args: [{func: 1, v: true}]}, {func: 1, ret: P.Future, args: [P.Object]}, {func: 1, args: [T.AppStartedResult]}, {func: 1, args: [T.OperationResult]}, {func: 1, args: [F.File]}, {func: 1, v: true, args: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, ret: W.Element, args: [E.AnalysisError]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, opt: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [Y.Point0]}, {func: 1, v: true, args: [E.Outline, W.Element]}, {func: 1, args: [W.Element]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [[P.List, P.bool]]}, {func: 1, args: [P.bool, P.bool]}, {func: 1, args: [V.Sdk]}, {func: 1, opt: [P.bool]}, {func: 1, args: [E.DiagnosticsResult]}, {func: 1, args: [E.ContextData]}, {func: 1, args: [K.TestRunner]}, {func: 1, args: [P.String,,]}, {func: 1, opt: [,]}, {func: 1, args: [[P.List, L.RunnableConfig]]}, {func: 1, args: [E.HoverInformation]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, v: true, args: [P.int]}, {func: 1, args: [X.TextFragment]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, args: [X.Launch]}, {func: 1, args: [E.CreateContextResult]}, {func: 1, args: [Q._ProjectConfigurations]}, {func: 1, args: [, P.String]}, {func: 1, args: [X.Launchable]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, args: [D.NotificationButton]}, {func: 1, v: true, args: [P.Map]}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [F.Directory]}, {func: 1, args: [P.String, K.StateStorable]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, v: true, opt: [P.num]}, {func: 1, args: [P.int, T.Node0]}, {func: 1, v: true, args: [N.Level,,], opt: [P.Object, P.StackTrace, P.Zone]}, {func: 1, v: true, args: [P.num], opt: [P.num, P.num]}, {func: 1, v: true, args: [U.ListItem]}, {func: 1, ret: P.bool, args: [P.RegExp]}, {func: 1, ret: P.bool, args: [P.int]}, {func: 1, ret: Y.FileSpan, args: [P.int], opt: [P.int]}, {func: 1, ret: Y.FileLocation, args: [P.int]}, {func: 1, ret: P.String, args: [P.String], named: {color: null}}, {func: 1, ret: P.String, named: {color: null}}, {func: 1, ret: P.int, args: [,]}, {func: 1, args: [N.LogRecord]}, {func: 1, ret: P.num}, {func: 1, v: true, opt: [P.Object]}, {func: 1, v: true, args: [P.Object]}, {func: 1, ret: P.int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.bool, args: [P.Object, P.Object]}, {func: 1, ret: P.int, args: [P.Object]}, {func: 1, ret: P.int, args: [P.String]}, {func: 1, ret: P.double, args: [P.String]}, {func: 1, ret: [P.Future, W.HttpRequest], args: [P.String], named: {method: P.String, mimeType: P.String, onProgress: {func: 1, v: true, args: [W.ProgressEvent]}, requestHeaders: [P.Map, P.String, P.String], responseType: P.String, sendData: null, withCredentials: P.bool}}, {func: 1, ret: P.Index, args: [P.String]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, ret: E.ServerError, args: [P.Map]}, {func: 1, ret: E.ServerStatus, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.FindTopLevelDeclarationsResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AssistsResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.CreateContextResult, args: [P.Map]}, {func: 1, ret: E.MapUriResult, args: [P.Map]}, {func: 1, ret: E.DiagnosticsResult, args: [P.Map]}, {func: 1, ret: T.Node1, args: [P.String]}, {func: 1, v: true, args: [F.Directory]}, {func: 1, ret: P.bool, args: [Y.TextEditor]}, {func: 1, ret: T.DebugPortAppEvent, args: [P.Map]}, {func: 1, ret: T.LogAppEvent, args: [P.Map]}, {func: 1, ret: T.ProgressAppEvent, args: [P.Map]}, {func: 1, ret: T.StopAppEvent, args: [P.Map]}, {func: 1, ret: T.Device, args: [P.Map]}, {func: 1, ret: T.LogMessage, args: [P.Map]}, {func: 1, ret: P.int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, ret: S.ExtensionData, args: [P.Map]}, {func: 1, ret: S.BoundField, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.BoundVariable, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Breakpoint, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ClassRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Class, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ClassList, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.CodeRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Code, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ContextRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Context0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ContextElement, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ErrorRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Error0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Event1, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.FieldRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Field, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Flag, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.FlagList, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Frame, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.FuncRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Func, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.InstanceRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Instance, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.IsolateRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Isolate, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.LibraryRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Library, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.LibraryDependency, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.MapAssociation, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Message, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.NullRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Null0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ObjRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Obj, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ReloadReport, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Response, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Sentinel, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ScriptRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Script, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceLocation0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceReport, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceReportCoverage, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceReportRange, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Stack, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Success, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.TimelineEvent, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.TypeArgumentsRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.TypeArguments, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.UnresolvedSourceLocation, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Version0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.VMRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.VM, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.CpuProfile, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.CodeRegion, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ProfileFunction, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.AllocationProfile, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ClassHeapStats, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.HeapSpace, args: [[P.Map, P.String,,]]}, {func: 1, ret: P.bool, args: [,,]}, {func: 1, v: true, args: [D.ObservatoryIsolate]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }
