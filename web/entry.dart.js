@@ -63702,12 +63702,15 @@ self._domRemove = function(element) {
           t2 = J.$lt$n(v.compareTo$1(0, T.Version$_(1, 13, 0, null, null, "1.13.0")), 0);
           $._atomUsesShadowDOM = t2;
         }
+        t3 = $.ViewRegistry__instance;
+        t1 = t1.obj;
         if (t2) {
-          t1 = J.$index$asx($.ViewRegistry__instance.invoke$2("getView", t1.obj), "shadowRoot");
+          t1 = J.$index$asx(t3.invoke$2("getView", t1), "shadowRoot");
           this.root = t1;
           if (t1 == null)
             $.$get$_logger25().warning$1("The editor's shadow root is null");
-        }
+        } else
+          this.root = t3.invoke$2("getView", t1);
         if (this.controller.showView === true)
           this._outline$_install$0();
       },
