@@ -122,6 +122,8 @@ class OutlineView implements Disposable {
       if (root == null) {
         _logger.warning("The editor's shadow root is null");
       }
+    } else {
+      root = editor.view;
     }
 
     if (controller.showView) _install();

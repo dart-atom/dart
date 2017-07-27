@@ -75,7 +75,9 @@ class DartToolbarContribution implements Disposable {
 
     // Bind the device pulldown.
     FlutterDeviceManager deviceManager = deps[FlutterDeviceManager];
-    _bindDevicesToSelect(deviceManager, deviceList, runModeList);
+    if (deviceManager != null) {
+      _bindDevicesToSelect(deviceManager, deviceList, runModeList);
+    }
 
     void updateToolbar() {
       String path = atom.workspace.getActiveTextEditor()?.getPath();
@@ -126,7 +128,7 @@ class DartToolbarContribution implements Disposable {
     void updateToolbar() {
       String path = atom.workspace.getActiveTextEditor()?.getPath();
 
-      runTestsDiv.display = testManager.isRunnableTest(path) ? 'inline-block' : 'none';
+      runTestsDiv.display = (testManager?.isRunnableTest(path) ?? false) ? 'inline-block' : 'none';
       outlineToggleDiv.enabled = isDartFile(path);
     }
 
@@ -198,7 +200,7 @@ class DartToolbarContribution implements Disposable {
       List<Device> devices = deviceManager.devices;
       deviceList.enabled = devices.isNotEmpty;
 
-      if (devices.isEmpty) {
+      if (devices == null || devices.isEmpty) {
         deviceList.add(new CoreElement('option')..text = 'No devices connected');
       } else {
         for (Device device in devices) {
@@ -260,7 +262,7 @@ class DartToolbarContribution implements Disposable {
     if (path == null) {
       atom.notifications.addWarning('No active editor.');
     } else {
-      testManager.runTestFile(path);
+      testManager?.runTestFile(path);
     }
   }
 

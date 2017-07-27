@@ -26,9 +26,9 @@
         "^1.0.0": "consumeToolbar"
       }
     },
-    "linter-plus-self": {
+    "linter-indie": {
       "versions": {
-        "0.1.0": "consumeLinter"
+        "1.0.0": "consumeLinter"
       }
     },
     "status-bar": {

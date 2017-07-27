@@ -2,7 +2,6 @@
 library atom.declaration_nav;
 
 import 'dart:async';
-import 'dart:js';
 
 import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
@@ -46,9 +45,9 @@ class NavigationHelper implements Disposable {
     // This view is an HtmlElement, but I can't use it as one. I have to access
     // it through JS interop.
     var view = editor.view;
-    var fn = (JsObject evt) {
+    var fn = (evt) {
       try {
-        bool shouldJump = evt[_jumpKey()];
+        bool shouldJump = _isJumpKey(evt);
         if (shouldJump) {
           _handleNavigateEditor(editor);
         }
@@ -58,12 +57,12 @@ class NavigationHelper implements Disposable {
     _eventListener = new EventListener(view, 'mousedown', fn);
   }
 
-  static String _jumpKey() {
+  static bool _isJumpKey(evt) {
     String key = atom.config.getValue(_keyPref);
-    if (key == 'command') return 'metaKey';
-    if (key == 'control') return 'ctrlKey';
-    if (key == 'option' || key == 'alt') return 'altKey';
-    return isMac ? 'metaKey' : 'ctrlKey';
+    if (key == 'command') return evt.metaKey;
+    if (key == 'control') return evt.ctrlKey;
+    if (key == 'option' || key == 'alt') return evt.altKey;
+    return isMac ? evt.metaKey : evt.ctrlKey;
   }
 
   void _navigationEvent(AnalysisNavigation navInfo) {
