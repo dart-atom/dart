@@ -320,6 +320,14 @@ class AtomDartPackage extends AtomPackage {
         'order': 4
       },
 
+      'showPubCheck': {
+        'title': 'Show a \'pub get\' notification',
+        'description': 'Check to see if pub needs to run for the current project.',
+        'type': 'boolean',
+        'default': true,
+        'order': 4
+      },
+
       // show infos and todos
       'configureErrorsView': {
         'title': "Errors view configuration",
