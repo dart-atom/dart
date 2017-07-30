@@ -1,6 +1,7 @@
 First up, please join our [dart-atom-dev mailing list][list].
 
-Contributions welcome! You can help out by testing and filing issues, helping with docs, or writing code.
+Contributions welcome! You can help out by testing and filing issues, helping
+with docs, or writing code.
 
 ## Developing the plugin
 To work on `dartlang` plugin:
@@ -30,13 +31,19 @@ and:
 - rev the changelog version from 'unreleased' to the next version
 - rev the pubspec version to the same
 - commit, push to master
-- verify that the package.json version is one minor patch older; apm will rev the last number - we want that to match the changelog and pubspec versions
+- verify that the package.json version is one minor patch older; apm will rev
+  the last number - we want that to match the changelog and pubspec versions
 - from the CLI: `apm publish patch`
 
 ## Docs
 
-Some of our docs are in the main readme.md file. We try and keep that file short and sweet.
+Some of our docs are in the main readme.md file. We try and keep that file short
+and sweet.
 
-Most of our docs are in the `gh-pages` branch on the repo. We author the docs in markdown, and github's gh-pages system automatically converts it the html (we're using the 'SinglePaged' jekyll template). Changes pushed to the `gh-pages` branch go live automatically. When working on the docs, run `jekyll serve -w --force_polling` to see a preview version of the rendered docs.
+Most of our docs are in the `gh-pages` branch on the repo. We author the docs in
+markdown, and github's gh-pages system automatically converts it the html (we're
+using the 'SinglePaged' jekyll template). Changes pushed to the `gh-pages`
+branch go live automatically. When working on the docs, run `jekyll serve -w
+--force_polling` to see a preview version of the rendered docs.
 
 [list]: https://groups.google.com/forum/#!forum/dart-atom-dev

@@ -1,5 +1,12 @@
 # dartlang plugin changelog
 
+## 0.6.48
+- from @cdavidjean:
+  - fixed startup for atom 1.18
+  - fixed pub calls
+  - fixed linter / issues squiggles
+  - improvements to dartdoc tooltips
+
 ## 0.6.47
 - remove a dep on a missing plugin (synced-sidebar)
 - improvements to Dart syntax highlighting
