@@ -1,5 +1,8 @@
 # dartlang plugin changelog
 
+## unreleased
+- some fixes to the outline view's styles
+
 ## 0.6.48
 - from @cdavidjean:
   - fixed startup for atom 1.18
