@@ -305,25 +305,25 @@ class OutlineView implements Disposable {
 
     if (e.kind == 'CLASS') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.add('keyword')
+          ..classes.add('syntax--keyword')
           ..text = 'class ');
     } else if (e.kind == 'ENUM') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.add('keyword')
+          ..classes.add('syntax--keyword')
           ..text = 'enum ');
     } else if (e.kind == 'FUNCTION_TYPE_ALIAS') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.add('keyword')
+          ..classes.add('syntax--keyword')
           ..text = 'typedef ');
     }
 
     if (e.kind == 'GETTER') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.add('comment')
+          ..classes.add('syntax--comment')
           ..text = 'get ');
     } else if (e.kind == 'SETTER') {
       intoElement.children.add(new html.SpanElement()
-          ..classes.add('comment')
+          ..classes.add('syntax--comment')
           ..text = 'set ');
     }
 
@@ -334,11 +334,11 @@ class OutlineView implements Disposable {
 
     String name = e.name;
 
-    if (e.kind == 'CLASS') span.classes.addAll(['support', 'class']);
-    if (e.kind == 'CONSTRUCTOR') span.classes.addAll(['support', 'class']);
+    if (e.kind == 'CLASS') span.classes.addAll(['syntax--support', 'syntax--class']);
+    if (e.kind == 'CONSTRUCTOR') span.classes.addAll(['syntax--support', 'syntax--class']);
     if (e.kind == 'FUNCTION' || e.kind == 'METHOD' || e.kind == 'GETTER' ||
         e.kind == 'SETTER') {
-      span.classes.addAll(['entity', 'name', 'function']);
+      span.classes.addAll(['syntax--entity', 'syntax--name', 'syntax--function']);
     }
 
     if (e.parameters != null && e.kind != 'GETTER') {
@@ -352,7 +352,7 @@ class OutlineView implements Disposable {
 
     if (e.typeParameters != null) {
       intoElement.children.add(
-          new html.SpanElement()..classes.add('comment')..text = e.typeParameters);
+          new html.SpanElement()..classes.add('syntax--comment')..text = e.typeParameters);
       //name += e.typeParameters;
     }
 
@@ -361,7 +361,7 @@ class OutlineView implements Disposable {
       int index = type.indexOf('<');
       if (index != -1) type = '${type.substring(0, index)}<…>';
       intoElement.children.add(
-          new html.SpanElement()..classes.add('comment')..text = ' → ${type}');
+          new html.SpanElement()..classes.add('syntax--comment')..text = ' → ${type}');
     }
   }
 
