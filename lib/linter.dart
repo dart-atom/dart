@@ -41,7 +41,6 @@ List<LintSolution> _addSolutionMessages(String filePath, AnalysisError error) {
 
 void showQuickFixes() {
   // Show the quick fix menu.
-  print('QUICK FIX');
   QuickFixHelper helper = deps[QuickFixHelper];
   helper.displayQuickFixes(atom.workspace.getActiveTextEditor());
 }
