@@ -1,5 +1,16 @@
 # dartlang plugin changelog
 
+## unreleased
+- some fixes to the outline view's styles
+
+## 0.6.48
+- from @cdavidjean:
+  - fixed startup for atom 1.18
+  - fixed pub calls
+  - fixed linter / issues squiggles
+  - improvements to dartdoc tooltips
+- added a preference for checking to see if 'pub get' needs to be run
+
 ## 0.6.47
 - remove a dep on a missing plugin (synced-sidebar)
 - improvements to Dart syntax highlighting

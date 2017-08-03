@@ -148,10 +148,14 @@ class PubManager implements Disposable, ContextMenuContributor {
 
   void _handleProjectAdded(DartProject project) => _validatePubspecCurrent(project);
 
-  // TODO: Remove pubspec.lock checking when the SDK revs.
   void _validatePubspecCurrent(DartProject project) {
+    final String pubPref = '${pluginId}.showPubCheck';
+    final bool enabled = atom.config.getValue(pubPref);
+    if (!enabled) {
+      return;
+    }
+
     File pubspecYamlFile = project.directory.getFile(pubspecFileName);
-    File pubspecLockFile = project.directory.getFile(pubspecLockFileName);
     File dotPackagesFile = project.directory.getFile(dotPackagesFileName);
 
     if (!pubspecYamlFile.existsSync()) return;
@@ -161,11 +165,6 @@ class PubManager implements Disposable, ContextMenuContributor {
       var pubspecTime = fs.statSync(pubspecYamlFile.path).mtime;
       var packagesTime = fs.statSync(dotPackagesFile.path).mtime;
       bool dirty = pubspecTime.compareTo(packagesTime) > 0;
-      if (dirty) _showRunPubDialog(project);
-    } else if (pubspecLockFile.existsSync()) {
-      var pubspecTime = fs.statSync(pubspecYamlFile.path).mtime;
-      var lockTime = fs.statSync(pubspecLockFile.path).mtime;
-      bool dirty = pubspecTime.compareTo(lockTime) > 0;
       if (dirty) _showRunPubDialog(project);
     } else {
       _showRunPubDialog(project, neverRun: true);

@@ -45,16 +45,14 @@ class NavigationHelper implements Disposable {
     // This view is an HtmlElement, but I can't use it as one. I have to access
     // it through JS interop.
     var view = editor.view;
-    var fn = (evt) {
+
+    _eventListener = new EventListener(view, 'mousedown', (evt) {
       try {
-        bool shouldJump = _isJumpKey(evt);
-        if (shouldJump) {
+        if (_isJumpKey(evt)) {
           _handleNavigateEditor(editor);
         }
       } catch (e) { }
-    };
-
-    _eventListener = new EventListener(view, 'mousedown', fn);
+    });
   }
 
   static bool _isJumpKey(evt) {
