@@ -71,12 +71,14 @@ class LinterService extends ProxyHolder {
   }
 }
 
+typedef void LintSolutionVoidFunc();
+
 class LintSolution {
 
   final String title;
   final num priority;
   final Rn position;
-  Function apply;
+  LintSolutionVoidFunc apply;
 
   LintSolution({this.title, this.priority: 0, this.position, this.apply});
 
