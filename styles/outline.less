@@ -58,17 +58,32 @@ atom-text-editor.editor .outline-view {
       overflow-x: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      display: flex;
 
       .item-info {
         color: @syntax-color-renamed;
+        flex: 0 0 auto;
       }
 
       .item-warning {
         color: @syntax-color-modified;
+        flex: 0 0 auto;
       }
 
       .item-error {
         color: @syntax-color-removed;
+        flex: 0 0 auto;
+      }
+
+      .item-text {
+        flex: 1 1 auto;
+        overflow-x: inherit;
+        text-overflow: inherit;
+        padding-left: 8px;
+      }
+
+      .item-icon {
+        flex: 0 0 auto;
       }
     }
   }

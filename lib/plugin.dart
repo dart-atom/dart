@@ -49,7 +49,6 @@ import 'flutter/flutter_tools.dart';
 import 'flutter/mojo_launch.dart';
 import 'impl/changelog.dart';
 import 'impl/editing.dart' as editing;
-import 'impl/errors.dart';
 import 'impl/navigation.dart';
 import 'impl/outline.dart';
 import 'impl/pub.dart';
@@ -82,7 +81,6 @@ class AtomDartPackage extends AtomPackage {
   final Disposables disposables = new Disposables(catchExceptions: true);
   final StreamSubscriptions subscriptions = new StreamSubscriptions(catchExceptions: true);
 
-  ErrorsController errorsController;
   ConsoleController consoleController;
   DartLinterConsumer _consumer;
 
@@ -91,7 +89,6 @@ class AtomDartPackage extends AtomPackage {
     registerServiceConsumer('consumeStatusBar', (JsObject obj) {
       StatusBar statusBar = new StatusBar(obj);
 
-      if (errorsController != null) errorsController.initStatusBar(statusBar);
       if (consoleController != null) consoleController.initStatusBar(statusBar);
 
       StatusDisplay statusDisplay = new StatusDisplay(statusBar);
@@ -160,7 +157,6 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[StatusViewManager] = new StatusViewManager());
     disposables.add(new FlutterToolsManager());
     disposables.add(new DartdocHelper());
-    disposables.add(errorsController = new ErrorsController());
     disposables.add(new FormattingManager());
     disposables.add(new NavigationHelper());
     disposables.add(new OrganizeFileManager());
@@ -312,14 +308,6 @@ class AtomDartPackage extends AtomPackage {
         'order': 3
       },
 
-      'showErrorsView': {
-        'title': 'Show errors view',
-        'description': 'Show the error and warnings view.',
-        'type': 'boolean',
-        'default': true,
-        'order': 4
-      },
-
       'showPubCheck': {
         'title': 'Show a \'pub get\' notification',
         'description': 'Check to see if pub needs to run for the current project.',
@@ -331,7 +319,7 @@ class AtomDartPackage extends AtomPackage {
       // show infos and todos
       'configureErrorsView': {
         'title': "Errors view configuration",
-        'description': 'Choose which types of items to show in the errors view.',
+        'description': 'Choose which types of items to show in the Linter.',
         'type': 'string',
         'default': 'infos',
         'enum': ['errors+warnings', 'infos', 'todos'],

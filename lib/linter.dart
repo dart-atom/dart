@@ -7,10 +7,11 @@ import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 
 import 'analysis/analysis_server_lib.dart' show AnalysisError, Location;
+import 'analysis/quick_fixes.dart';
 import 'atom_linter.dart';
 import 'error_repository.dart';
 import 'impl/debounce.dart';
-import 'state.dart' show pluginId;
+import 'state.dart' show pluginId, deps;
 import 'utils.dart';
 
 Stream<List<AnalysisError>> get onProcessedErrorsChanged => _processedErrorsController.stream;
@@ -21,8 +22,28 @@ LintMessage _errorToLintMessage(String filePath, AnalysisError error) {
   return new LintMessage(
       type: _severityMap[error.severity],
       text: text,
+      correction: error.correction,
       filePath: filePath,
-      range: _locationToRange(error.location));
+      hasFix: error.hasFix,
+      range: _locationToRange(error.location),
+      solutions: _addSolutionMessages(filePath, error));
+}
+
+List<LintSolution> _addSolutionMessages(String filePath, AnalysisError error) {
+  if (!error.hasFix) return null;
+  // We can't give all the quick fixes at this point, so we just give the
+  // hint button that will compute and open all fixes.
+  return [new LintSolution(
+      title: 'Quick Fixes for ${error.message}',
+      position: _locationToRange(error.location),
+      apply: showQuickFixes)];
+}
+
+void showQuickFixes() {
+  // Show the quick fix menu.
+  print('QUICK FIX');
+  QuickFixHelper helper = deps[QuickFixHelper];
+  helper.displayQuickFixes(atom.workspace.getActiveTextEditor());
 }
 
 Rn _locationToRange(Location location) {
