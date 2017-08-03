@@ -42,6 +42,7 @@ class TooltipManager implements Disposable {
   final html.Element _root;
 
   TooltipElement _tooltipElement;
+  Debounce<html.MouseEvent> _debouncer;
 
   StreamSubscriptions _subs = new StreamSubscriptions();
 
@@ -58,11 +59,13 @@ class TooltipManager implements Disposable {
   }
 
   void _install() {
+    _debouncer = new Debounce(new Duration(milliseconds: 400));
     _subs.add(_root.onMouseMove
-        .transform(new Debounce(new Duration(milliseconds: 400)))
+        .transform(_debouncer)
         .listen((html.MouseEvent mouseEvent) {
       if (!_isTooltipEnabled) return;
       if (!analysisServer.isActive) return;
+      // TODO: find a way to hide this tooltip while linter tooltip is up.
 
       int offset = _offsetFromMouseEvent(mouseEvent);
 
@@ -120,6 +123,7 @@ class TooltipManager implements Disposable {
   void _disposeTooltip() {
     _tooltipElement?.dispose();
     _tooltipElement = null;
+    _debouncer.cancel();
   }
 
   void dispose() => _disposeTooltip();

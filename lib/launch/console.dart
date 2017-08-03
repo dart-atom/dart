@@ -12,7 +12,6 @@ import 'package:atom/utils/string_utils.dart';
 
 import '../atom_statusbar.dart';
 import '../elements.dart';
-import '../impl/errors.dart';
 import '../state.dart';
 import '../views.dart';
 import 'launch.dart';
@@ -26,7 +25,6 @@ class ConsoleController implements Disposable {
   StreamSubscriptions _subs = new StreamSubscriptions();
 
   List<View> _allViews = [];
-  View _errorsView;
 
   ConsoleController() {
     statusElement = new ConsoleStatusElement(this, false);
@@ -47,26 +45,12 @@ class ConsoleController implements Disposable {
   }
 
   void _launchAdded(Launch launch) {
-    // Check if we should auto-toggle hide the errors view.
-    ViewGroup group = viewGroupManager.getGroup(_viewGroup);
-    if (group.views.length == 1 && group.hasViewId(errorViewId)) {
-      _errorsView = group.getViewById(errorViewId);
-      group.removeView(_errorsView);
-    }
-
     ConsoleView view = new ConsoleView(this, launch);
     _allViews.add(view);
     viewGroupManager.addView(_viewGroup, view);
   }
 
   void _launchRemoved(Launch launch) {
-    // Re-show the errors view if we auto-hide it.
-    if (_errorsView != null && launchManager.launches.isEmpty) {
-      if (!viewGroupManager.hasViewId(errorViewId)) {
-        viewGroupManager.addView(_viewGroup, _errorsView);
-      }
-      _errorsView = null;
-    }
   }
 
   void _toggleViews() {

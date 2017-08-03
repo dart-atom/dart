@@ -8,6 +8,7 @@ library atom.linter;
 import 'dart:async';
 import 'dart:js';
 
+import 'package:atom/atom.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/src/js.dart';
 
@@ -57,7 +58,7 @@ class LinterService extends ProxyHolder {
   ProxyHolder _linter;
 
   LinterService(obj) : super(obj) {
-    _linter = new ProxyHolder(invoke('register', {'name': 'dartlang'}));
+    _linter = new ProxyHolder((obj as JsFunction).apply([jsify({'name': 'dartlang'})]));
   }
 
   void deleteMessages(LinterProvider provider) {
@@ -66,7 +67,28 @@ class LinterService extends ProxyHolder {
 
   void setMessages(LinterProvider provider, List<LintMessage> messages) {
     var list = messages.map((m) => m.toMap()).toList();
-    _linter.invoke('setMessages', list);
+    _linter.invoke('setAllMessages', list);
+  }
+}
+
+typedef void LintSolutionVoidFunc();
+
+class LintSolution {
+
+  final String title;
+  final num priority;
+  final Rn position;
+  LintSolutionVoidFunc apply;
+
+  LintSolution({this.title, this.priority: 0, this.position, this.apply});
+
+  Map toMap() {
+    Map m = {};
+    if (title != null) m['title'] = title;
+    if (priority != null) m['priority'] = priority;
+    if (position != null) m['position'] = position;
+    if (apply != null) m['apply'] = apply;
+    return m;
   }
 }
 
@@ -77,19 +99,29 @@ class LintMessage {
 
   final String type;
   final String text;
-  final String html;
+  final String correction;
   final String filePath;
   final Rn range;
+  final bool hasFix;
+  final List<LintSolution> solutions;
 
-  LintMessage({this.type, this.text, this.html, this.filePath, this.range});
+  LintMessage({this.type, this.text, this.correction, this.hasFix,
+      this.filePath, this.range, this.solutions});
 
   Map toMap() {
     Map m = {};
-    if (type != null) m['type'] = type;
-    if (text != null) m['text'] = text;
-    if (html != null) m['html'] = html;
-    if (filePath != null) m['filePath'] = filePath;
-    if (range != null) m['range'] = range.toArray();
+    if (type != null) m['severity'] = type.toLowerCase();
+    if (text != null) m['excerpt'] = text;
+    if (correction != null) m['description'] = correction;
+    if (filePath != null && range != null) {
+      m['location'] = {
+        'file': filePath,
+        'position': range.toArray()
+      };
+    }
+    if (solutions != null) {
+      m['solutions'] = solutions.map((e) => e.toMap()).toList();
+    }
     return m;
   }
 }
