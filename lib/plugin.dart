@@ -319,7 +319,7 @@ class AtomDartPackage extends AtomPackage {
       // show infos and todos
       'configureErrorsView': {
         'title': "Errors view configuration",
-        'description': 'Choose which types of items to show in the Linter.',
+        'description': 'Choose which types of items to show in Linter.',
         'type': 'string',
         'default': 'infos',
         'enum': ['errors+warnings', 'infos', 'todos'],
