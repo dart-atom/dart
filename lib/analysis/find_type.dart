@@ -57,7 +57,8 @@ class FindTypeHelper implements Disposable {
           return;
         }
 
-        List<SearchResult> results = await analysisServer.getSearchResults(result.id);
+        List<SearchResult> results =
+            await analysisServer.getSearchResults(result.id);
 
         if (results.isEmpty) {
           atom.beep();
@@ -73,7 +74,8 @@ class FindTypeHelper implements Disposable {
           navigationManager.jumpToLocation(location.file,
               location.startLine - 1, location.startColumn - 1, location.length);
         } else {
-          FindReferencesView.showView(new ReferencesSearch('Find Type', searchTerm, results: results));
+          deps[FindReferencesHelper].openView(new ReferencesSearch('Find Type',
+              searchTerm, results: results));
         }
       });
       job.schedule();

@@ -225,10 +225,12 @@ class ConsoleView extends View {
     }
   }
 
+  // TODO(djean): this belongs on ConsoleController
   void _launchRemoved(Launch l) {
     if (launch == l) {
       viewGroupManager.removeViewId(id);
       controller._allViews.remove(this);
+      // TODO except this one
       _subs.cancel();
     }
   }

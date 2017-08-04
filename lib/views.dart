@@ -8,6 +8,7 @@ import 'dart:math' as math;
 import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
 import 'package:atom/node/workspace.dart' hide Point;
+import 'package:atom/src/js.dart';
 import 'package:atom/utils/disposable.dart';
 
 import 'elements.dart';
@@ -385,6 +386,78 @@ abstract class View implements Disposable {
   }
 
   String toString() => '[${label} ${id}]';
+}
+
+// A view that is docked on atom's side docks.
+abstract class DockedView {
+  final CoreElement root;
+  final CoreElement content;
+  final String id;
+
+  String get label;
+  String get defaultLocation => 'right';
+
+  DockedView(this.id, this.content) : root = div() {
+    root
+      ..toggleClass('atom-view')
+      ..toggleClass('tree-view')
+      ..add(content);
+  }
+
+  void handleClose() {}
+  void dispose();
+}
+
+// Manages a single or multiple DockedView.
+abstract class DockedViewManager<T extends DockedView> implements Disposable {
+  final String prefixUri;
+
+  Disposables disposables = new Disposables();
+
+  DockedViewManager(this.prefixUri) {
+    atom.workspace.addOpener(_createView);
+
+    disposables.add(new JsDisposable(atom.workspace.invoke(
+        'onDidDestroyPaneItem', (event) {
+      ProxyHolder p = new ProxyHolder(event['item']);
+      String uri = p.invoke('getURI');
+      if (uri.startsWith(prefixUri)) {
+        viewFromUri(uri).handleClose();
+      }
+    })));
+  }
+
+  String viewUri(String id) => '$prefixUri/$id';
+  String viewId(String uri) => uri.replaceFirst("$prefixUri/", '');
+
+  Map<String, T> _views = {};
+  T viewFromId(String id) => _views[viewUri(id)] ??= instantiateView(id);
+  T viewFromUri(String uri) => _views[uri] ??= instantiateView(viewId(uri));
+  T instantiateView(String id);
+
+  T get singleton => viewFromId('0');
+
+  void dispose() => disposables.dispose();
+
+  dynamic _createView(String uri, Map options) {
+    if (uri.startsWith(prefixUri)) {
+      DockedView v = viewFromUri(uri);
+      return jsify({
+        'element': v.root.element,
+        'getTitle': () => v.label,
+        'getURI': () => uri,
+        'getDefaultLocation': () => v.defaultLocation,
+        'dispose': () => v.dispose(),
+      });
+    }
+    return context['___undefined'];
+  }
+
+  void showView({String id: '0'}) {
+    atom.workspace.open(viewUri(id), options: {
+      'searchAllPanes': true
+    });
+  }
 }
 
 class ViewSection extends CoreElement {

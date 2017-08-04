@@ -165,7 +165,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(pubManager);
     disposables.add(runAppManager);
     disposables.add(new RefactoringHelper());
-    disposables.add(new FindReferencesHelper());
+    disposables.add(deps[FindReferencesHelper] = new FindReferencesHelper());
     disposables.add(new FindTypeHelper());
     disposables.add(new TypeHierarchyHelper());
     disposables.add(deps[QuickFixHelper] = new QuickFixHelper());
@@ -270,7 +270,7 @@ class AtomDartPackage extends AtomPackage {
     }
   }
 
-  void _showFirstRun() => statusViewManager.toggleView();
+  void _showFirstRun() => statusViewManager.showView();
 
   void _handleSendFeedback() {
     getSystemDescription().then((String description) {
