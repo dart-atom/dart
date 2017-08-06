@@ -54,7 +54,8 @@ class TypeHierarchyHelper extends DockedViewManager<TypeHierarchyView> {
     singleton._buildHierarchy(result);
   }
 
-  TypeHierarchyView instantiateView(String id) => new TypeHierarchyView(id);
+  TypeHierarchyView instantiateView(String id, [dynamic data]) =>
+      new TypeHierarchyView(id);
 }
 
 class TypeHierarchyView extends DockedView {

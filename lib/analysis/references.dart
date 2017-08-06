@@ -63,7 +63,8 @@ class FindReferencesHelper extends DockedViewManager<FindReferencesView> {
     singleton._handleSearchResults(search, refData: refData);
   }
 
-  FindReferencesView instantiateView(String id) => new FindReferencesView(id);
+  FindReferencesView instantiateView(String id, [dynamic data]) =>
+      new FindReferencesView(id);
 }
 
 class ReferencesSearch {

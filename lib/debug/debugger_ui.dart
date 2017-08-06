@@ -29,31 +29,34 @@ final Logger _logger = new Logger('atom.debugger_ui');
 // and that a new one is not created after a debugger tab is closed, and that
 // closing a debugger tab doesn't tear down any listening state.
 
+class DebuggerViewManager extends DockedViewManager<DebuggerView> {
+  static const debugURIPrefix = 'atom://dartlang/debug';
+
+  DebuggerViewManager() : super(debugURIPrefix);
+
+  String connectionId(DebugConnection connection) => '${connection.hashCode}';
+
+  DebuggerView showViewForConnection(DebugConnection connection) {
+    showView(id: connectionId(connection), data: connection);
+    return views[connectionId(connection)];
+  }
+
+  DebuggerView instantiateView(String id, [dynamic data]) {
+    DebugConnection connection = data as DebugConnection;
+    // Close debugger when connection is terminated. 
+    connection.onTerminated.then((_) {
+      removeView(id: id);
+    });
+    return new DebuggerView(id, connection);
+  }
+}
+
 // TODO: Breakpoints move to its own section.
 
-class DebuggerView extends View {
-  static String viewIdForConnection(DebugConnection connection) {
-    return 'debug.${connection.hashCode}';
-  }
-
-  static DebuggerView showViewForConnection(DebugConnection connection) {
-    // TODO: also check for any debugger views that were removed from the view
-    // group manager but that are still active.
-
-    String id = viewIdForConnection(connection);
-
-    if (viewGroupManager.hasViewId(id)) {
-      DebuggerView view = viewGroupManager.getGroup('right').getViewById(id);
-      viewGroupManager.activateView(id);
-      return view;
-    } else {
-      DebuggerView view = new DebuggerView(connection);
-      viewGroupManager.addView('right', view);
-      return view;
-    }
-  }
-
+class DebuggerView extends DockedView {
   final DebugConnection connection;
+
+  final CoreElement toolbar;
 
   FocusManager focusManager = new FocusManager();
   // final Property<DebugFrame> currentFrame = new Property();
@@ -69,15 +72,15 @@ class DebuggerView extends View {
 
   final Disposables disposables = new Disposables();
 
-  DebuggerView(this.connection) {
+  DebuggerView(String id, this.connection)
+      : toolbar = div(),
+        super(id, div()) {
     // Close the debugger view when the launch is collected?
 
-    // Close the debugger view on termination.
+    // Clean the debugger view on termination.
     if (connection.isAlive) {
       connection.onTerminated.then((_) {
         _removeExecutionMarker();
-        handleClose();
-        dispose();
       });
     }
 
@@ -89,6 +92,10 @@ class DebuggerView extends View {
     CoreElement secondarySection;
 
     root.toggleClass('debugger');
+    root.add([
+      div(c: 'button-bar')..flex()..add([
+        toolbar,
+      ])]);
 
     content..toggleClass('tab-non-scrollable')..layoutVertical()..add([
       titleSection = div(c: 'debugger-section view-header'),
@@ -232,8 +239,6 @@ class DebuggerView extends View {
   }
 
   String get label => 'Debug ${connection.launch.name}';
-
-  String get id => viewIdForConnection(connection);
 
   DebugIsolate get currentIsolate => focusManager.isolate;
 

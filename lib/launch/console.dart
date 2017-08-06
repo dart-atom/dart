@@ -16,17 +16,12 @@ import '../state.dart';
 import '../views.dart';
 import 'launch.dart';
 
-final String _viewGroup = ViewGroup.bottom;
+class ConsoleController extends DockedViewManager<ConsoleView> {
+  static const consoleURIPrefix = 'atom://dartlang/console';
 
-class ConsoleController implements Disposable {
   ConsoleStatusElement statusElement;
 
-  Disposables disposables = new Disposables();
-  StreamSubscriptions _subs = new StreamSubscriptions();
-
-  List<View> _allViews = [];
-
-  ConsoleController() {
+  ConsoleController() : super(consoleURIPrefix) {
     statusElement = new ConsoleStatusElement(this, false);
 
     disposables.add(atom.commands.add(
@@ -36,44 +31,42 @@ class ConsoleController implements Disposable {
 
     disposables.add(new DoubleCancelCommand(_handleDoubleEscape));
 
-    _subs.add(launchManager.onLaunchAdded.listen(_launchAdded));
-    _subs.add(launchManager.onLaunchRemoved.listen(_launchRemoved));
+    subs.add(launchManager.onLaunchAdded.listen(_launchAdded));
+    subs.add(launchManager.onLaunchRemoved.listen(_launchRemoved));
+    subs.add(launchManager.onLaunchActivated.listen(_launchActivated));
+    subs.add(launchManager.onLaunchTerminated.listen(_launchTerminated));
   }
 
   void initStatusBar(StatusBar statusBar) {
     statusElement._init(statusBar);
   }
 
+  String launchId(Launch launch) => '${launch.id}';
+
   void _launchAdded(Launch launch) {
-    ConsoleView view = new ConsoleView(this, launch);
-    _allViews.add(view);
-    viewGroupManager.addView(_viewGroup, view);
+    showView(id: launchId(launch), data: launch);
   }
 
   void _launchRemoved(Launch launch) {
+    removeView(id: launchId(launch));
+  }
+
+  void _launchActivated(Launch launch) {
+    showView(id: launchId(launch));
+  }
+
+  void _launchTerminated(Launch launch) {
+    // Update tab title
+    new Future.delayed(const Duration(milliseconds: 300), () {
+      DockedView v = viewFromId(launchId(launch));
+      v?.item?.title = v.label;
+    });
   }
 
   void _toggleViews() {
-    if (_allViews.isEmpty) return;
-
-    bool anyActive = _allViews.any((view) => viewGroupManager.isActiveId(view.id));
-    bool viewShown = false;
-
-    for (View view in _allViews) {
-      if (!viewGroupManager.hasViewId(view.id)) {
-        viewShown = true;
-        viewGroupManager.addView(_viewGroup, view);
-      }
-    }
-
-    if (!anyActive) {
-      viewGroupManager.activate(_allViews.first);
-    } else if (!viewShown) {
-      // Hide all the views.
-      for (View view in _allViews.toList()) {
-        viewGroupManager.removeViewId(view.id);
-      }
-    }
+    if (views.isEmpty) return;
+    // Show latest run
+    showView(id: views.values.last.id);
   }
 
   void _handleDoubleEscape() {
@@ -85,22 +78,21 @@ class ConsoleController implements Disposable {
   }
 
   void dispose() {
+    super.dispose();
     statusElement.dispose();
-    disposables.dispose();
-    _subs.cancel();
   }
+
+  ConsoleView instantiateView(String id, [dynamic data]) =>
+      new ConsoleView(id, data as Launch);
 }
 
-class ConsoleView extends View {
+class ConsoleView extends DockedView {
   // Only show a set amount of lines of output.
   static const _maxLines = 300;
 
-  static int _idCount = 0;
-
-  final ConsoleController controller;
+  final CoreElement toolbar;
   final Launch launch;
 
-  int _launchId;
   StreamSubscriptions _subs = new StreamSubscriptions();
 
   CoreElement output;
@@ -110,10 +102,15 @@ class ConsoleView extends View {
   CoreElement _reloadButton;
   CoreElement _observatoryButton;
 
-  ConsoleView(this.controller, this.launch) {
-    _launchId = _idCount++;
-
+  ConsoleView(String id, this.launch)
+      : toolbar = div(),
+        super(id, div()) {
     root.toggleClass('console-view');
+    root.add([
+      div(c: 'button-bar')..flex()..add([
+        toolbar,
+      ])]);
+
     toolbar.toggleClass('btn-group');
     toolbar.toggleClass('btn-group-sm');
     content.toggleClass('tab-scrollable-container');
@@ -121,7 +118,6 @@ class ConsoleView extends View {
       new CoreElement('pre', classes: 'console-line tab-scrollable')
     );
 
-    _subs.add(launchManager.onLaunchActivated.listen(_launchActivated));
     _subs.add(launchManager.onLaunchTerminated.listen(_launchTerminated));
     _subs.add(launchManager.onLaunchRemoved.listen(_launchRemoved));
 
@@ -183,19 +179,10 @@ class ConsoleView extends View {
     _emitText(header);
   }
 
-  String get label => launch.launchConfiguration?.shortResourceName ?? launch.name;
+  String get defaultLocation => 'bottom';
 
-  String get id => 'console.${_launchId}';
-
-  void _launchActivated(Launch l) {
-    if (launch == l) {
-      if (viewGroupManager.hasViewId(id)) {
-        viewGroupManager.activate(this);
-      } else {
-        viewGroupManager.addView(_viewGroup, this);
-      }
-    }
-  }
+  String get label => "${!launch.isTerminated ? '• ' : ''}" +
+      launch.launchConfiguration?.shortResourceName ?? launch.name;
 
   void _watchServicePort(int port) {
     if (!launch.isRunning) return;
@@ -216,7 +203,6 @@ class ConsoleView extends View {
 
   void _launchTerminated(Launch l) {
     if (launch == l) {
-      tabElement.toggleClass('launch-terminated');
       if (!_lastText.endsWith('\n')) _emitText('\n');
       _emitText('process finished • exit code ${launch.exitCode}');
       _terminateButton?.disabled = true;
@@ -225,23 +211,15 @@ class ConsoleView extends View {
     }
   }
 
-  // TODO(djean): this belongs on ConsoleController
   void _launchRemoved(Launch l) {
     if (launch == l) {
-      viewGroupManager.removeViewId(id);
-      controller._allViews.remove(this);
-      // TODO except this one
       _subs.cancel();
     }
   }
 
   void handleClose() {
-    super.handleClose();
-
     if (launch.isTerminated) launchManager.removeLaunch(launch);
   }
-
-  void dispose() { }
 
   String _text = '';
   Timer _timer;

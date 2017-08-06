@@ -36,7 +36,7 @@ class DebugManager implements Disposable {
 
   DebugManager() {
     onAdded.listen((DebugConnection connection) {
-      DebuggerView.showViewForConnection(connection);
+      deps[DebuggerViewManager].showViewForConnection(connection);
     });
 
     var add = (String cmd, Function closure) {
@@ -52,7 +52,7 @@ class DebugManager implements Disposable {
   }
 
   DebuggerView showViewForConnection(DebugConnection connection) {
-    return DebuggerView.showViewForConnection(connection);
+    return deps[DebuggerViewManager].showViewForConnection(connection);
   }
 
   Stream<DebugConnection> get onAdded => _addedController.stream;

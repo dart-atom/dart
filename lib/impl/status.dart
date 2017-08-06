@@ -45,7 +45,8 @@ class StatusViewManager extends DockedViewManager<StatusView> {
     singleton.showSection(sectionName);
   }
 
-  StatusView instantiateView(String id) => new StatusView(id);
+  StatusView instantiateView(String id, [dynamic data]) =>
+      new StatusView(id);
 }
 
 class StatusView extends DockedView {

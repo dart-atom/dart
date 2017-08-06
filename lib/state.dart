@@ -21,7 +21,6 @@ import 'launch/launch.dart';
 import 'launch/launch_configs.dart';
 import 'projects.dart';
 import 'sdk.dart';
-import 'views.dart';
 
 export 'package:atom/utils/dependencies.dart' show deps;
 
@@ -37,7 +36,6 @@ DebugManager get debugManager => deps[DebugManager];
 BreakpointManager get breakpointManager => deps[BreakpointManager];
 ProjectManager get projectManager => deps[ProjectManager];
 SdkManager get sdkManager => deps[SdkManager];
-ViewGroupManager get viewGroupManager => deps[ViewGroupManager];
 NavigationManager get navigationManager => deps[NavigationManager];
 StatusViewManager get statusViewManager => deps[StatusViewManager];
 

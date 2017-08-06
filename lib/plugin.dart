@@ -37,6 +37,7 @@ import 'atom_statusbar.dart';
 import 'atom_utils.dart';
 import 'dartino/dartino.dart' show dartino;
 import 'debug/breakpoints.dart';
+import 'debug/debugger_ui.dart';
 import 'debug/debugger.dart';
 import 'editors.dart';
 import 'error_repository.dart';
@@ -70,8 +71,6 @@ import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 import 'usage.dart' show UsageManager;
-import 'views.dart';
-import 'views.dart' show ViewGroupManager;
 
 final Logger _logger = new Logger('plugin');
 
@@ -143,7 +142,6 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[WorkspaceLaunchManager] = new WorkspaceLaunchManager());
     disposables.add(deps[BreakpointManager] = new BreakpointManager());
     disposables.add(deps[DebugManager] = new DebugManager());
-    disposables.add(deps[ViewGroupManager] = new ViewGroupManager());
     disposables.add(deps[NavigationManager] = new NavigationManager());
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();
@@ -171,6 +169,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[QuickFixHelper] = new QuickFixHelper());
     disposables.add(consoleController = new ConsoleController());
     disposables.add(deps[TestManager] = new TestManager());
+    disposables.add(deps[DebuggerViewManager] = new DebuggerViewManager());
 
     disposables.add(deps[FlutterSdkManager] = new FlutterSdkManager());
     disposables.add(deps[FlutterDaemonManager] = new FlutterDaemonManager());
