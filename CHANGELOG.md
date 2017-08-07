@@ -3,6 +3,7 @@
 ## unreleased
 - some fixes to the outline view's styles
 - redo custom view management to use atom docks
+- fixed rename
 
 ## 0.6.48
 - from @cdavidjean:

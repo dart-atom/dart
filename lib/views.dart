@@ -157,8 +157,8 @@ abstract class DockedViewManager<T extends DockedView> implements Disposable {
     subs.add(atom.workspace.onDidDestroyPaneItem
         .listen((event) {
       Item item = new Item(event['item']);
-      if (item.uri.startsWith(prefixUri)) {
-        viewFromUri(item.uri).handleClose();
+      if (item.uri != null && item.uri.startsWith(prefixUri)) {
+        viewFromUri(item.uri)?.handleClose();
       }
     }));
   }
