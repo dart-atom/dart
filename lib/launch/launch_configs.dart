@@ -90,6 +90,14 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
     String projectPath,
     String primaryResource
   ) {
+    String parent = fs.dirname(projectPath);
+    if (primaryResource.startsWith(parent)) {
+      primaryResource = primaryResource.substring(parent.length);
+      if (primaryResource.startsWith(fs.separator)) {
+        primaryResource = primaryResource.substring(1);
+      }
+    }
+
     String defaultTypeParams  = new ServeLaunchType().getDefaultConfigText();
     String content =
       '# pub serve launch configuration for ${primaryResource}.\n'
