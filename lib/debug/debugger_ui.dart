@@ -43,7 +43,7 @@ class DebuggerViewManager extends DockedViewManager<DebuggerView> {
 
   DebuggerView instantiateView(String id, [dynamic data]) {
     DebugConnection connection = data as DebugConnection;
-    // Close debugger when connection is terminated. 
+    // Close debugger when connection is terminated.
     connection.onTerminated.then((_) {
       removeView(id: id);
     });
@@ -77,7 +77,7 @@ class DebuggerView extends DockedView {
         super(id, div()) {
     // Close the debugger view when the launch is collected?
 
-    // Clean the debugger view on termination.
+    // Reset the debugger view on termination.
     if (connection.isAlive) {
       connection.onTerminated.then((_) {
         _removeExecutionMarker();

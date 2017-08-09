@@ -122,7 +122,7 @@ class ViewResizer extends CoreElement {
   }
 }
 
-// A view that is docked on atom's side docks.
+/// A view that is docked on atom's side docks.
 abstract class DockedView {
   final CoreElement root;
   final CoreElement content;
@@ -144,7 +144,7 @@ abstract class DockedView {
   void dispose() {}
 }
 
-// Manages a single or multiple DockedView.
+/// Manages a single or multiple DockedView.
 abstract class DockedViewManager<T extends DockedView> implements Disposable {
   final String prefixUri;
 
