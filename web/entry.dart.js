@@ -12,8 +12,7 @@ self.setInterval = function(f, millis) { return window.setInterval(f, millis); }
 self.clearInterval = function(id) { window.clearInterval(id); };
 
 // Work around interop issues.
-self.getTextEditorForElement = function(element) { return element.o.getModel(); };
-self.uncrackDart2js = function(obj) { return obj.o; };
+self.getTextEditorForElement = function(element) { return element.getModel(); };
 
 self._domHoist = function(element, targetQuery) {
   var target = document.querySelector(targetQuery);
@@ -32095,14 +32094,14 @@ self._domRemove = function(element) {
         if (H.checkSubtype(t1, "$isFuture", [$T], "$asFuture"))
           return result;
         else {
-          t1 = $.Zone__current;
-          t2 = [$T];
+          t1 = [$T];
+          t2 = $.Zone__current;
           if (!!J.getInterceptor(result).$isFuture) {
-            t1 = new P._Future(0, t1, null, t2);
+            t1 = new P._Future(0, t2, null, t1);
             t1._asyncComplete$1(result);
             return t1;
           } else {
-            t1 = new P._Future(0, t1, null, t2);
+            t1 = new P._Future(0, t2, null, t1);
             t1._state = 4;
             t1._resultOrListeners = result;
             return t1;
@@ -47010,6 +47009,9 @@ self._domRemove = function(element) {
           return false;
         return other instanceof P.JsObject && this._jsObject === other._jsObject;
       },
+      hasProperty$1: function(property) {
+        return property in this._jsObject;
+      },
       toString$0: function(_) {
         var t1, exception;
         try {
@@ -48683,9 +48685,10 @@ self._domRemove = function(element) {
       completer = new P._AsyncCompleter(t1, [null]);
       t2 = [];
       element = document.createElement("div");
-      C.DivElement_methods.setInnerHtml$2$treeSanitizer(element, "    <label>" + $prompt + "</label>\n    <atom-text-editor mini>" + H.S(defaultText) + "</atom-text-editor>\n", new M.TrustedHtmlTreeSanitizer());
+      C.DivElement_methods.setInnerHtml$2$treeSanitizer(element, "    <label>" + $prompt + "</label>\n    <atom-text-editor mini></atom-text-editor>\n", new M.TrustedHtmlTreeSanitizer());
       editorElement = element.querySelector("atom-text-editor");
       editor = new Y.TextEditor(Y._cvt0(J.$index$asx($.$get$context(), "getTextEditorForElement").apply$1([editorElement])));
+      editor.invoke$2("setText", defaultText);
       if (selectText)
         editor.invoke$1("selectAll");
       else if (selectLastWord) {
@@ -48907,7 +48910,7 @@ self._domRemove = function(element) {
     promptUser_closure: {
       "^": "Closure:1;editorElement",
       call$0: function() {
-        new Y.TextEditorElement(Y._cvt0(P.JsObject_JsObject$fromBrowserObject($.$get$context().callMethod$2("uncrackDart2js", [this.editorElement])))).invoke$1("focused");
+        new Y.TextEditorElement(Y._cvt0(P.JsObject_JsObject$fromBrowserObject(this.editorElement))).invoke$1("focused");
       }
     },
     promptUser_closure0: {
@@ -49369,13 +49372,14 @@ self._domRemove = function(element) {
     Item: {
       "^": "ProxyHolder;onDidChangeTitle<,_title,obj",
       get$uri: function() {
-        return this.invoke$1("getURI");
+        return this.obj.hasProperty$1("getURI") ? this.invoke$1("getURI") : null;
       },
       get$title: function(_) {
-        return this.invoke$1("getTitle");
+        return this.obj.hasProperty$1("getTitle") ? this.invoke$1("getTitle") : null;
       },
       set$title: function(_, newTitle) {
-        return this.invoke$2("setTitle", newTitle);
+        if (this.obj.hasProperty$1("setTitle"))
+          this.invoke$2("setTitle", newTitle);
       },
       Item$fromFields$5$defaultLocation$destroy$element$title$uri: function(defaultLocation, destroy, element, title, uri) {
         var t1, t2, t3;
@@ -63715,8 +63719,8 @@ self._domRemove = function(element) {
           t2 = J.$lt$n(v.compareTo$1(0, T.Version$_(1, 13, 0, null, null, "1.13.0")), 0);
           $._atomUsesShadowDOM = t2;
         }
-        t1 = t1.obj;
         t3 = $.ViewRegistry__instance;
+        t1 = t1.obj;
         if (t2) {
           t1 = J.$index$asx(t3.invoke$2("getView", t1), "shadowRoot");
           this.root = t1;
@@ -66362,8 +66366,11 @@ self._domRemove = function(element) {
         t2 = H.S(J.get$id$x(this.launch));
         v = t1.views.$index(0, t1.prefixUri + "/" + t2);
         t1 = v == null ? v : v.item;
-        if (!(t1 == null))
-          t1.invoke$2("setTitle", v.get$label(v));
+        if (!(t1 == null)) {
+          t2 = v.get$label(v);
+          if (t1.get$obj().hasProperty$1("setTitle"))
+            t1.invoke$2("setTitle", t2);
+        }
       }
     },
     ConsoleView: {
@@ -70144,11 +70151,20 @@ self._domRemove = function(element) {
     DockedViewManager_closure: {
       "^": "Closure:0;$this",
       call$1: [function($event) {
-        var item, t1;
-        item = new Y.Item(new Y.JsChangeListener([]), null, J.$index$asx($event, "item"));
-        t1 = this.$this;
-        if (J.startsWith$1$s(item.invoke$1("getURI"), t1.prefixUri))
-          t1.views.$index(0, item.invoke$1("getURI")).handleClose$0();
+        var t1, item, t2;
+        t1 = J.$index$asx($event, "item");
+        item = new Y.Item(new Y.JsChangeListener([]), null, t1);
+        if ((t1.hasProperty$1("getURI") ? item.invoke$1("getURI") : null) != null) {
+          t2 = t1.hasProperty$1("getURI") ? item.invoke$1("getURI") : null;
+          t2 = J.startsWith$1$s(t2, this.$this.prefixUri);
+        } else
+          t2 = false;
+        if (t2) {
+          t1 = t1.hasProperty$1("getURI") ? item.invoke$1("getURI") : null;
+          t1 = this.$this.views.$index(0, t1);
+          if (!(t1 == null))
+            t1.handleClose$0();
+        }
       }, null, null, 2, 0, null, 12, "call"]
     },
     ListTreeBuilder: {
