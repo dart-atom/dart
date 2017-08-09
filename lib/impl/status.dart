@@ -21,12 +21,12 @@ final String _statusOpenKey = 'statusOpen';
 
 final Logger _logger = new Logger('atom.status');
 
-class StatusViewManager implements Disposable {
-  Disposables disposables = new Disposables();
+class StatusViewManager extends DockedViewManager<StatusView> {
+  static const statusURI = 'atom://dartlang/status';
 
-  StatusViewManager() {
+  StatusViewManager() : super(statusURI) {
     disposables.add(atom.commands.add('atom-workspace', '${pluginId}:show-plugin-status', (_) {
-      toggleView();
+      showView();
     }));
     disposables.add(atom.commands.add('atom-workspace', '${pluginId}:analysis-server-status', (_) {
       showSection('analysis-server');
@@ -36,41 +36,25 @@ class StatusViewManager implements Disposable {
     }));
 
     if (state[_statusOpenKey] == true) {
-      toggleView();
+      showView();
     }
   }
-
-  void dispose() => disposables.dispose();
 
   void showSection(String sectionName) {
-    if (!viewGroupManager.hasViewId(pluginId)) {
-      toggleView();
-    }
-
-    StatusView view = viewGroupManager.getViewById(pluginId);
-    view.showSection(sectionName);
+    showView();
+    singleton.showSection(sectionName);
   }
 
-  void toggleView() {
-    if (viewGroupManager.hasViewId(pluginId)) {
-      if (viewGroupManager.isActiveId(pluginId)) {
-        viewGroupManager.removeViewId(pluginId);
-        state[_statusOpenKey] = false;
-      } else {
-        viewGroupManager.activateView(pluginId);
-      }
-    } else {
-      viewGroupManager.addView('right', new StatusView());
-    }
-  }
+  StatusView instantiateView(String id, [dynamic data]) =>
+      new StatusView(id);
 }
 
-class StatusView extends View {
+class StatusView extends DockedView {
   StreamSubscriptions subs = new StreamSubscriptions();
 
   final Map<String, CoreElement> _sections = {};
 
-  StatusView() {
+  StatusView(String id) : super(id, div()) {
     CoreElement subtitle;
     CoreElement container;
 
@@ -382,8 +366,6 @@ class StatusView extends View {
 
   String get label => 'Plugin status';
 
-  String get id => pluginId;
-
   void showSection(String sectionName) {
     CoreElement element = _sections[sectionName];
 
@@ -398,8 +380,6 @@ class StatusView extends View {
   }
 
   void handleClose() {
-    super.handleClose();
-
     state[_statusOpenKey] = false;
   }
 

@@ -11,8 +11,6 @@ import 'package:atom/node/workspace.dart' hide Point;
 import 'package:atom/utils/disposable.dart';
 
 import 'elements.dart';
-import 'state.dart';
-import 'utils.dart';
 
 class ViewResizer extends CoreElement {
   StreamController<num> _controller = new StreamController.broadcast();
@@ -124,267 +122,93 @@ class ViewResizer extends CoreElement {
   }
 }
 
-class ViewGroupManager implements Disposable {
-  Map<String, ViewGroup> _groups = {};
+/// A view that is docked on atom's side docks.
+abstract class DockedView {
+  final CoreElement root;
+  final CoreElement content;
+  final String id;
 
-  ViewGroupManager();
+  String get label;
+  String get defaultLocation => 'right';
 
-  ViewGroup getGroup(String groupName) {
-    if (!_groups.containsKey(groupName)) {
-      _groups[groupName] = new ViewGroup(groupName);
-    }
-    return _groups[groupName];
+  Item item;
+
+  DockedView(this.id, this.content) : root = div() {
+    root
+      ..toggleClass('atom-view')
+      ..toggleClass('tree-view')
+      ..add(content);
   }
 
-  void addView(String groupName, View view, {bool activate: true}) {
-    getGroup(groupName).addView(view, activate: activate);
-  }
+  void handleClose() {}
+  void dispose() {}
+}
 
-  void activateView(String viewId) {
-    for (ViewGroup group in _groups.values) {
-      if (group.hasViewId(viewId)) {
-        group.activateViewById(viewId);
+/// Manages a single or multiple DockedView.
+abstract class DockedViewManager<T extends DockedView> implements Disposable {
+  final String prefixUri;
+
+  Disposables disposables = new Disposables();
+  StreamSubscriptions subs = new StreamSubscriptions();
+
+  DockedViewManager(this.prefixUri) {
+    atom.workspace.addOpener(_createView);
+
+    subs.add(atom.workspace.onDidDestroyPaneItem
+        .listen((event) {
+      Item item = new Item(event['item']);
+      if (item.uri != null && item.uri.startsWith(prefixUri)) {
+        viewFromUri(item.uri)?.handleClose();
       }
+    }));
+  }
+
+  String viewUri(String id) => '$prefixUri/$id';
+  String viewId(String uri) => uri.replaceFirst("$prefixUri/", '');
+
+  Map<String, T> views = {};
+  Map<String, dynamic> datas = {};
+  T viewFromId(String id) => views[viewUri(id)];
+  T viewFromUri(String uri) => views[uri];
+  T instantiateView(String id, [dynamic data]);
+
+  T get singleton => viewFromId('0');
+
+  void dispose() {
+    subs.dispose();
+    disposables.dispose();
+  }
+
+  dynamic _createView(String uri, Map options) {
+    if (uri.startsWith(prefixUri)) {
+      DockedView v = views[uri] = instantiateView(viewId(uri), datas[uri]);
+      v.item = new Item.fromFields(
+        element: v.root.element,
+        title: v.label,
+        uri: uri,
+        defaultLocation: v.defaultLocation,
+        destroy: v.dispose
+      );
+      return v.item.obj;
     }
-  }
-
-  void activate(View view) {
-    for (ViewGroup group in _groups.values) {
-      if (group.hasView(view)) {
-        group.activateView(view);
-      }
-    }
-  }
-
-  bool isActiveId(String viewId) {
-    return _groups.values.any((group) => group.isActiveId(viewId));
-  }
-
-  bool hasViewId(String viewId) {
-    return _groups.values.any((group) => group.hasViewId(viewId));
-  }
-
-  View getViewById(String id) {
-    for (ViewGroup group in _groups.values) {
-      if (group.hasViewId(id)) return group.getViewById(id);
-    }
-
     return null;
   }
 
-  void dispose() {
-    for (ViewGroup group in _groups.values.toList()) {
-      group.dispose();
-    }
+  void showView({String id: '0', dynamic data}) {
+    datas[viewUri(id)] = data;
+    atom.workspace.open(viewUri(id), options: {
+      'searchAllPanes': true,
+    });
   }
 
-  void removeViewId(String id) {
-    for (ViewGroup group in _groups.values) {
-      if (group.hasViewId(id)) {
-        group.removeView(group.getViewById(id));
-      }
-    }
+  void removeView({String id: '0'}) {
+    // JsObject item = viewFromId(id)?.item;
+    Item item = viewFromId(id)?.item;
+    if (item == null) return;
+    Pane p = atom.workspace.paneForItem(item);
+    if (p == null) return;
+    p.destroyItem(item);
   }
-}
-
-class ViewGroup implements Disposable {
-  static const String top = 'top';
-  static const String right = 'right';
-  static const String bottom = 'bottom';
-
-  static const int _defaultWidth = 300;
-  static const int _defaultHeight = 125;
-
-  final String name;
-  final SelectionGroup<View> views = new SelectionGroup();
-
-  CoreElement root;
-  CoreElement tabHeader;
-  CoreElement tabContainer;
-
-  Panel _panel;
-
-  View _active;
-  List<View> _history = [];
-
-  ViewGroup(this.name) {
-    bool topPanel = name == top;
-    bool rightPanel = name == right;
-    bool bottomPanel = name == bottom;
-
-    String c = 'atom-view tree-view';
-    root = div(c: c)..layoutVertical();
-    ViewResizer resizer;
-
-    root.add([
-      tabHeader = ul(c: 'list-inline tab-bar inset-panel')..hidden(),
-      tabContainer = div(c: 'tab-container')..flex(),
-      resizer = rightPanel
-          ? new ViewResizer.createVertical()
-          : new ViewResizer.createHorizontal(top: !bottomPanel)
-    ]);
-
-    if (rightPanel) {
-      _panel = atom.workspace.addRightPanel(item: root.element, visible: false);
-    } else if (topPanel) {
-      _panel = atom.workspace.addTopPanel(item: root.element, visible: false);
-    } else {
-      _panel = atom.workspace.addBottomPanel(item: root.element, visible: false);
-    }
-
-    _setupResizer(
-      '${name}Panel', resizer, rightPanel ? _defaultWidth : _defaultHeight);
-
-    views.onAdded.listen(_onViewAdded);
-    views.onSelectionChanged.listen(_onActiveChanged);
-    views.onRemoved.listen(_onViewRemoved);
-  }
-
-  bool get hidden => !showing;
-  bool get showing => _panel.isVisible();
-
-  void addView(View view, {bool activate: true}) {
-    if (views.items.contains(view)) return;
-
-    view.group = this;
-
-    view.handleDeactivate();
-    tabContainer.add(view.root);
-    views.add(view);
-    if (views.length > 1 && activate) views.setSelection(view);
-  }
-
-  bool hasViewId(String viewId) => getViewById(viewId) != null;
-
-  bool hasView(View view) => views.items.contains(view);
-
-  View getViewById(String viewId) {
-    return views.items.firstWhere((view) => view.id == viewId, orElse: () => null);
-  }
-
-  void activateViewById(String viewId) {
-    View view = getViewById(viewId);
-    if (view != null) views.setSelection(view);
-  }
-
-  void activateView(View view) {
-    views.setSelection(view);
-  }
-
-  bool isActiveId(String viewId) {
-    return _active != null ? _active.id == viewId : false;
-  }
-
-  void removeView(View view) {
-    if (view != null) views.remove(view);
-  }
-
-  void _onViewAdded(View view) {
-    if (hidden && views.items.isNotEmpty) _setVisible(true);
-    tabHeader.hidden(views.length < 2);
-    for (View v in views.items) {
-      v._closeButton.hidden(views.length != 1);
-    }
-    tabHeader.add(view.tabElement);
-  }
-
-  void _onActiveChanged(View view) {
-    _active?.handleDeactivate();
-    _active = view;
-    _active?.handleActivate();
-
-    if (_active != null) {
-      _history.remove(_active);
-      _history.add(_active);
-    }
-
-    if (_active == null && _history.isNotEmpty) {
-      views.setSelection(_history.last);
-    }
-  }
-
-  void _onViewRemoved(View view) {
-    _history.remove(view);
-    if (showing && views.items.isEmpty) _setVisible(false);
-    tabHeader.hidden(views.length < 2);
-    for (View v in views.items) {
-      v._closeButton.hidden(views.length != 1);
-    }
-    view.root.dispose();
-    view.tabElement.dispose();
-    view.dispose();
-  }
-
-  void _setVisible(bool value) {
-    value ? _panel.show() : _panel.hide();
-  }
-
-  void _setupResizer(String prefName, ViewResizer resizer, int defaultSize) {
-    resizer.position = state[prefName] == null ? defaultSize : state[prefName];
-    resizer.onPositionChanged.listen((pos) => state[prefName] = pos);
-  }
-
-  void dispose() {
-    _panel.destroy();
-
-    for (View view in views.items) {
-      view.dispose();
-    }
-  }
-}
-
-abstract class View implements Disposable {
-  final CoreElement root;
-  final CoreElement toolbar;
-  final CoreElement content;
-
-  CoreElement tabElement;
-  CloseButton _closeButton;
-
-  ViewGroup group;
-
-  View() :
-      root = div(c: 'tab-content'),
-      toolbar = div(),
-      content = div() {
-    root.add([
-      div(c: 'button-bar')..flex()..add([
-        toolbar,
-        _closeButton = new CloseButton()..click(handleClose)
-      ]),
-      content
-    ]);
-
-    tabElement = li(c: 'tab')..add([
-      div(text: label, c: 'title'),
-      div(c: 'close-icon')..click(handleClose)
-    ])..click(_handleTab)..element.attributes['data-type'] = 'ViewPartEditor';
-  }
-
-  String get id;
-  String get label;
-
-  void dispose();
-
-  void handleActivate() {
-    root.toggleAttribute('hidden', false);
-    tabElement.toggleClass('active', true);
-  }
-
-  void handleDeactivate() {
-    root.toggleAttribute('hidden', true);
-    tabElement.toggleClass('active', false);
-  }
-
-  void _handleTab() {
-    group.activateView(this);
-  }
-
-  void handleClose() {
-    group.removeView(this);
-  }
-
-  String toString() => '[${label} ${id}]';
 }
 
 class ViewSection extends CoreElement {

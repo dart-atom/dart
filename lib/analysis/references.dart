@@ -22,16 +22,14 @@ import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('references');
 
-class FindReferencesHelper implements Disposable {
-  Disposable _command;
+class FindReferencesHelper extends DockedViewManager<FindReferencesView> {
+  static const referencesURI = 'atom://dartlang/references';
 
-  FindReferencesHelper() {
-    _command = atom.commands.add(
+  FindReferencesHelper() : super(referencesURI) {
+    disposables.add(atom.commands.add(
       'atom-text-editor', 'dartlang:find-references', _handleReferences
-    );
+    ));
   }
-
-  void dispose() => _command.dispose();
 
   void _handleReferences(AtomEvent event) => _handleReferencesEditor(event.editor);
 
@@ -50,7 +48,7 @@ class FindReferencesHelper implements Disposable {
           bool isMethod = result.element.parameters != null;
           String name = "${result.element.name}${isMethod ? '()' : ''}";
           Future<List<SearchResult>> resultsFuture = analysisServer.getSearchResults(result.id);
-          FindReferencesView.showView(
+          openView(
             new ReferencesSearch('References', name, resultsFuture: resultsFuture),
             refData: { 'path': path, 'offset': offset }
           );
@@ -59,6 +57,14 @@ class FindReferencesHelper implements Disposable {
     });
     job.schedule();
   }
+
+  void openView(ReferencesSearch search, { Map refData }) {
+    showView();
+    singleton._handleSearchResults(search, refData: refData);
+  }
+
+  FindReferencesView instantiateView(String id, [dynamic data]) =>
+      new FindReferencesView(id);
 }
 
 class ReferencesSearch {
@@ -71,19 +77,7 @@ class ReferencesSearch {
   ReferencesSearch(this.searchType, this.label, {this.results, this.resultsFuture});
 }
 
-class FindReferencesView extends View {
-  static void showView(ReferencesSearch search, { Map refData }) {
-    FindReferencesView view = viewGroupManager.getViewById('findReferences');
-
-    if (view != null) {
-      view._handleSearchResults(search, refData: refData);
-      viewGroupManager.activate(view);
-    } else {
-      FindReferencesView view = new FindReferencesView();
-      view._handleSearchResults(search, refData: refData);
-      viewGroupManager.addView('right', view);
-    }
-  }
+class FindReferencesView extends DockedView {
 
   CoreElement title;
   CoreElement subtitle;
@@ -91,7 +85,7 @@ class FindReferencesView extends View {
   Disposables disposables = new Disposables();
   _MatchParser matchParser = new _MatchParser();
 
-  FindReferencesView() {
+  FindReferencesView(String id) : super(id, div()) {
     content.toggleClass('find-references');
     content.toggleClass('tab-scrollable-container');
     content.add([
@@ -108,8 +102,6 @@ class FindReferencesView extends View {
 
     disposables.add(new DoubleCancelCommand(handleClose));
   }
-
-  String get id => 'findReferences';
 
   String get label => 'References';
 

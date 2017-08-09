@@ -87,7 +87,9 @@ class LaunchManager implements Disposable {
     }
 
     _launchRemoved.add(launch);
-    if (activeChanged) _launchActivated.add(_activeLaunch);
+    if (activeChanged && _activeLaunch != null) {
+      _launchActivated.add(_activeLaunch);
+    }
   }
 
   Stream<Launch> get onLaunchAdded => _launchAdded.stream;

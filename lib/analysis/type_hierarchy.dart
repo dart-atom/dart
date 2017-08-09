@@ -18,16 +18,14 @@ import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('type_hierarchy');
 
-class TypeHierarchyHelper implements Disposable {
-  Disposable _command;
+class TypeHierarchyHelper extends DockedViewManager<TypeHierarchyView> {
+  static const typesURI = 'atom://dartlang/types';
 
-  TypeHierarchyHelper() {
-    _command = atom.commands.add(
+  TypeHierarchyHelper() : super(typesURI) {
+    disposables.add(atom.commands.add(
       'atom-text-editor', 'dartlang:type-hierarchy', _handleHierarchy
-    );
+    ));
   }
-
-  void dispose() => _command.dispose();
 
   void _handleHierarchy(AtomEvent event) => _handleHierarchyEditor(event.editor);
 
@@ -45,26 +43,22 @@ class TypeHierarchyHelper implements Disposable {
           return;
         }
 
-        TypeHierarchyView.showHierarchy(result);
+        openView(result);
       });
     });
     job.schedule();
   }
+
+  void openView(TypeHierarchyResult result) {
+    showView();
+    singleton._buildHierarchy(result);
+  }
+
+  TypeHierarchyView instantiateView(String id, [dynamic data]) =>
+      new TypeHierarchyView(id);
 }
 
-class TypeHierarchyView extends View {
-  static void showHierarchy(TypeHierarchyResult result) {
-    TypeHierarchyView view = viewGroupManager.getViewById('typeHierarchy');
-
-    if (view != null) {
-      view._buildHierarchy(result);
-      viewGroupManager.activate(view);
-    } else {
-      TypeHierarchyView view = new TypeHierarchyView();
-      view._buildHierarchy(result);
-      viewGroupManager.addView('right', view);
-    }
-  }
+class TypeHierarchyView extends DockedView {
 
   CoreElement title;
   CoreElement subtitle;
@@ -72,7 +66,7 @@ class TypeHierarchyView extends View {
   Disposables disposables = new Disposables();
   List<TypeHierarchyItem> _items;
 
-  TypeHierarchyView() {
+  TypeHierarchyView(String id) : super(id, div()) {
     content.toggleClass('type-hierarchy');
     content.toggleClass('tab-scrollable-container');
     content.add([
@@ -87,8 +81,6 @@ class TypeHierarchyView extends View {
 
     disposables.add(new DoubleCancelCommand(handleClose));
   }
-
-  String get id => 'typeHierarchy';
 
   String get label => 'Type Hierarchy';
 
