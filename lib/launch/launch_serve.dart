@@ -17,7 +17,7 @@ class ServeLaunchType extends LaunchType {
   ServeLaunchType() : super('serve');
 
   bool canLaunch(String path, LaunchData data) {
-    return path.endsWith('.yaml');
+    return path.endsWith('pubspec.yaml');
   }
 
   bool get supportsChecked => false;

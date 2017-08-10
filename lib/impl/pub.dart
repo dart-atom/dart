@@ -84,9 +84,9 @@ class PubManager implements Disposable, ContextMenuContributor {
 
   List<ContextMenuItem> getTreeViewContributions() {
     return [
-      new PubContextCommand('Pub Serve', 'dartlang:pub-serve', true),
       new PubContextCommand('Pub Get', 'dartlang:pub-get', true),
       new PubContextCommand('Pub Upgrade', 'dartlang:pub-upgrade', true),
+      new PubContextCommand('Pub Serve', 'dartlang:pub-serve', true),
       new PubContextCommand('Pub Run…', 'dartlang:pub-run', false),
       new PubContextCommand('Pub Global Run…', 'dartlang:pub-global-run', false)
     ];

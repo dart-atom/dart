@@ -67583,7 +67583,7 @@ self._domRemove = function(element) {
     ServeLaunchType: {
       "^": "LaunchType;type",
       canLaunch$2: function(path, data) {
-        return J.endsWith$1$s(path, ".yaml");
+        return J.endsWith$1$s(path, "pubspec.yaml");
       },
       get$supportsChecked: function() {
         return false;
@@ -68848,7 +68848,7 @@ self._domRemove = function(element) {
         t3 = $.$get$ContextMenuItem_separator();
         treeItems = [t3];
         C.JSArray_methods.addAll$1(treeItems, [new L._RunAppContextCommand("Run Application", "dartlang:run-application")]);
-        C.JSArray_methods.addAll$1(treeItems, [new R.PubContextCommand(true, "Pub Serve", "dartlang:pub-serve"), new R.PubContextCommand(true, "Pub Get", "dartlang:pub-get"), new R.PubContextCommand(true, "Pub Upgrade", "dartlang:pub-upgrade"), new R.PubContextCommand(false, "Pub Run\u2026", "dartlang:pub-run"), new R.PubContextCommand(false, "Pub Global Run\u2026", "dartlang:pub-global-run")]);
+        C.JSArray_methods.addAll$1(treeItems, [new R.PubContextCommand(true, "Pub Get", "dartlang:pub-get"), new R.PubContextCommand(true, "Pub Upgrade", "dartlang:pub-upgrade"), new R.PubContextCommand(true, "Pub Serve", "dartlang:pub-serve"), new R.PubContextCommand(false, "Pub Run\u2026", "dartlang:pub-run"), new R.PubContextCommand(false, "Pub Global Run\u2026", "dartlang:pub-global-run")]);
         C.JSArray_methods.addAll$1(treeItems, []);
         treeItems.push(t3);
         t4.push(t2._contextMenu.add$2(0, ".tree-view", treeItems));
