@@ -285,9 +285,9 @@ abstract class Domain {
 
   Future<dynamic> _call(String method, [Map args]) => server._call(method, args);
 
-  Stream/*<T>*/ _listen/*<T>*/(String name, Function cvt) {
+  Stream<T> _listen<T>(String name, Function cvt) {
     if (_streams[name] == null) {
-      _controllers[name] = new StreamController/*<T>*/.broadcast();
+      _controllers[name] = new StreamController<T>.broadcast();
       _streams[name] = _controllers[name].stream.map(cvt);
     }
 
@@ -332,7 +332,7 @@ class DaemonDomain extends Domain {
   DaemonDomain(FlutterDaemon server) : super(server, 'daemon');
 
   Stream<LogMessage> get onLogMessage {
-    return _listen/*<LogMessage>*/('daemon.logMessage', LogMessage.parse);
+    return _listen<LogMessage>('daemon.logMessage', LogMessage.parse);
   }
 
   Future<String> version() => _call('daemon.version') as Future<String>;
