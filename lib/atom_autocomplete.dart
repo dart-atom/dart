@@ -29,9 +29,9 @@ void triggerAutocomplete(TextEditor editor) {
 
 /// Display the code completion UI with the given list of items, and return the
 /// user's selection.
-Future/*<T>*/ chooseItemUsingCompletions/*<T>*/(TextEditor editor,
-    List<dynamic> items, Suggestion renderer(/*T*/ item)) {
-  _override = new _AutoCompleteOverride/*<T>*/(editor, items, renderer);
+Future<T> chooseItemUsingCompletions<T>(TextEditor editor,
+    List<dynamic> items, Suggestion renderer(T item)) {
+  _override = new _AutoCompleteOverride<T>(editor, items, renderer);
   triggerAutocomplete(editor);
   return _override.future;
 }
