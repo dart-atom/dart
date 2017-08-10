@@ -13,6 +13,7 @@ import 'package:yaml/yaml.dart';
 
 import '../projects.dart';
 import '../state.dart';
+import 'launch_serve.dart';
 
 final Logger _logger = new Logger('atom.launch_configs');
 
@@ -77,6 +78,43 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
     atom.notifications.addInfo(
       'Created a ${type} launch configuration for `${primaryResource}`.',
       description: 'Created ${config._getRelativeConfigPath()}.'
+    );
+
+    _changeController.add(null);
+
+    return config;
+  }
+
+  /// Create a new pub serve launch configuration for the [projectPath] project.
+  LaunchConfiguration createServeConfig(
+    String projectPath,
+    String primaryResource
+  ) {
+    String parent = fs.dirname(projectPath);
+    if (primaryResource.startsWith(parent)) {
+      primaryResource = primaryResource.substring(parent.length);
+      if (primaryResource.startsWith(fs.separator)) {
+        primaryResource = primaryResource.substring(1);
+      }
+    }
+
+    String defaultTypeParams  = new ServeLaunchType().getDefaultConfigText();
+    String content =
+      '# pub serve launch configuration for ${primaryResource}.\n'
+      'type: serve\n'
+      'path: ${primaryResource}\n\n'
+      ''
+      'serve:'
+      '\n  ' + defaultTypeParams.replaceAll('\n', '\n  ');
+    content = content.trim() + '\n';
+
+    _ProjectConfigurations configs = _getCreateProjectConfig(projectPath);
+    LaunchConfiguration config = configs.createConfig("_pub_serve.yaml",
+        content, forceCreate: false);
+
+    atom.notifications.addInfo(
+      'Launching pub serve for `${primaryResource}`.',
+      description: 'Launched ${config._getRelativeConfigPath()}.'
     );
 
     _changeController.add(null);
@@ -297,13 +335,14 @@ class _ProjectConfigurations implements Disposable {
     return _configs;
   }
 
-  LaunchConfiguration createConfig(String filename, String contents) {
+  LaunchConfiguration createConfig(String filename, String contents,
+      {bool forceCreate: true}) {
     _configs = null;
 
     File file = launchDir.getFile(filename);
 
     if (file.existsSync()) {
-      file.writeSync(contents);
+      if (forceCreate) file.writeSync(contents);
     } else {
       file.create().then((_) {
         file.writeSync(contents);

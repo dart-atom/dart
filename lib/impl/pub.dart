@@ -21,6 +21,8 @@ import 'package:pub_semver/pub_semver.dart';
 import '../jobs.dart';
 import '../projects.dart';
 import '../state.dart';
+import '../launch/launch.dart';
+import '../launch/run.dart';
 
 const String pubspecFileName = 'pubspec.yaml';
 const String pubspecLockFileName = 'pubspec.lock';
@@ -40,6 +42,10 @@ class PubManager implements Disposable, ContextMenuContributor {
     _addSdkCmd('atom-text-editor', 'dartlang:pub-upgrade', (event) {
       atom.workspace.saveAll();
       new PubJob.upgrade(fs.dirname(event.editor.getPath())).schedule();
+    });
+    _addSdkCmd('atom-text-editor', 'dartlang:pub-serve', (event) {
+      atom.workspace.saveAll();
+      _handleServe(fs.dirname(event.editor.getPath()));
     });
     _addSdkCmd('atom-text-editor', 'dartlang:pub-run', (event) {
       _handleRun(editor: atom.workspace.getActiveTextEditor());
@@ -61,6 +67,10 @@ class PubManager implements Disposable, ContextMenuContributor {
       atom.workspace.saveAll();
       new PubJob.upgrade(event.targetFilePath).schedule();
     });
+    _addSdkCmd('.tree-view', 'dartlang:pub-serve', (AtomEvent event) {
+      atom.workspace.saveAll();
+      _handleServe(event.targetFilePath);
+    });
     _addSdkCmd('.tree-view', 'dartlang:pub-run', (AtomEvent event) {
       _handleRun(path: event.targetFilePath);
     });
@@ -76,6 +86,7 @@ class PubManager implements Disposable, ContextMenuContributor {
     return [
       new PubContextCommand('Pub Get', 'dartlang:pub-get', true),
       new PubContextCommand('Pub Upgrade', 'dartlang:pub-upgrade', true),
+      new PubContextCommand('Pub Serve', 'dartlang:pub-serve', true),
       new PubContextCommand('Pub Run…', 'dartlang:pub-run', false),
       new PubContextCommand('Pub Global Run…', 'dartlang:pub-global-run', false)
     ];
@@ -121,6 +132,13 @@ class PubManager implements Disposable, ContextMenuContributor {
       List<String> args = response.split(' ');
       new PubRunJob.local(dir, args).schedule();
     });
+  }
+
+  void _handleServe(String path) {
+    RunApplicationManager runApplicationManager = deps[RunApplicationManager];
+    LaunchConfiguration config = launchConfigurationManager.createServeConfig(
+        _locatePubspecDir(path), path);
+    runApplicationManager.run(config);
   }
 
   void _handleGlobalRun({TextEditor editor, String path}) {
