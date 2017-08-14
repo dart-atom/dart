@@ -1,9 +1,9 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.7.0
 - removed the Dart errors view in favor of using the Linter's default UI
 - some fixes to the outline view's styles
-- redo custom view management to use atom docks
+- updated view management to use atom's docks
 - fixed rename
 
 ## 0.6.48
