@@ -68,6 +68,7 @@ import 'launch/launch_serve.dart';
 import 'launch/launch_shell.dart';
 import 'launch/run.dart';
 import 'linter.dart' show DartLinterConsumer;
+import 'browser.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
@@ -134,6 +135,7 @@ class AtomDartPackage extends AtomPackage {
 
     disposables.add(deps[JobManager] = new JobManager());
     disposables.add(deps[SdkManager] = new SdkManager());
+    disposables.add(deps[BrowserManager] = new BrowserManager());
     disposables.add(deps[ProjectManager] = new ProjectManager());
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
@@ -297,6 +299,15 @@ class AtomDartPackage extends AtomPackage {
         'type': 'string',
         'default': '',
         'order': 1
+      },
+
+      // debugger
+      'debugBrowserLocation': {
+        'title': 'Debug Browser',
+        'description': 'The location of a Browser with Chrome DevTools Protocol.',
+        'type': 'string',
+        'default': '',
+        'order': 2
       },
 
       // custom views
