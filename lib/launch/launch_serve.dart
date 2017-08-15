@@ -64,6 +64,20 @@ class ServeLaunchType extends LaunchType {
     return '''
 # Additional args for pub serve
 args:
+  # Mode to run transformers in. (defaults to "debug")
+  # --mode=debug
+  # Use all default source directories.
+  # --all
+  # The JavaScript compiler to use to build the app. [dart2js, dartdevc, none]
+  # --web-compiler=dartdevc
+  # Defines an environment constant for dart2js.
+  # --define
+  # The hostname to listen on. (defaults to "localhost")
+  # --hostname=localhost
+  # The base port to listen on. (defaults to "8080")
+  # --port=8080
+  # Force the use of a polling filesystem watcher.
+  # --[no-]force-poll
 ''';
   }
 }

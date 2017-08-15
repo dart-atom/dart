@@ -67627,7 +67627,7 @@ self.showOpenDialog = function(options) {
           if (C.JSString_methods.startsWith$1(primaryResource, t1.separator))
             primaryResource = C.JSString_methods.substring$1(primaryResource, 1);
         }
-        $content = C.JSString_methods.trim$0("# pub serve launch configuration for " + H.S(primaryResource) + ".\ntype: serve\npath: " + H.S(primaryResource) + "\n\nserve:\n  " + H.stringReplaceAllUnchecked("# Additional args for pub serve\nargs:\n", "\n", "\n  ")) + "\n";
+        $content = C.JSString_methods.trim$0("# pub serve launch configuration for " + H.S(primaryResource) + ".\ntype: serve\npath: " + H.S(projectPath) + "\n\nserve:\n  " + H.stringReplaceAllUnchecked('# Additional args for pub serve\nargs:\n  # Mode to run transformers in. (defaults to "debug")\n  # --mode=debug\n  # Use all default source directories.\n  # --all\n  # The JavaScript compiler to use to build the app. [dart2js, dartdevc, none]\n  # --web-compiler=dartdevc\n  # Defines an environment constant for dart2js.\n  # --define\n  # The hostname to listen on. (defaults to "localhost")\n  # --hostname=localhost\n  # The base port to listen on. (defaults to "8080")\n  # --port=8080\n  # Force the use of a polling filesystem watcher.\n  # --[no-]force-poll\n', "\n", "\n  ")) + "\n";
         config = this._getCreateProjectConfig$1(projectPath).createConfig$3$forceCreate("_pub_serve.yaml", $content, false);
         t1 = $.$get$atom()._notifications;
         t1.invoke$3("addInfo", "Launching pub serve for `" + H.S(primaryResource) + "`.", t1._options$5$buttons$description$detail$dismissable$icon(null, "Launched " + H.S(config._getRelativeConfigPath$0()) + ".", null, null, null));
@@ -67939,7 +67939,7 @@ self.showOpenDialog = function(options) {
         return t1;
       },
       getDefaultConfigText$0: function() {
-        return "# Additional args for pub serve\nargs:\n";
+        return '# Additional args for pub serve\nargs:\n  # Mode to run transformers in. (defaults to "debug")\n  # --mode=debug\n  # Use all default source directories.\n  # --all\n  # The JavaScript compiler to use to build the app. [dart2js, dartdevc, none]\n  # --web-compiler=dartdevc\n  # Defines an environment constant for dart2js.\n  # --define\n  # The hostname to listen on. (defaults to "localhost")\n  # --hostname=localhost\n  # The base port to listen on. (defaults to "8080")\n  # --port=8080\n  # Force the use of a polling filesystem watcher.\n  # --[no-]force-poll\n';
       }
     },
     ServeLaunchType_performLaunch_closure: {

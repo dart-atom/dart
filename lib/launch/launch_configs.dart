@@ -102,7 +102,7 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
     String content =
       '# pub serve launch configuration for ${primaryResource}.\n'
       'type: serve\n'
-      'path: ${primaryResource}\n\n'
+      'path: ${projectPath}\n\n'
       ''
       'serve:'
       '\n  ' + defaultTypeParams.replaceAll('\n', '\n  ');
