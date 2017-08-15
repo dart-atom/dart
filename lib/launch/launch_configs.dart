@@ -102,7 +102,7 @@ class LaunchConfigurationManager implements Disposable, StateStorable {
     String content =
       '# pub serve launch configuration for ${primaryResource}.\n'
       'type: serve\n'
-      'path: ${projectPath}\n\n'
+      'path: ${projectPath}/pubspec.yaml\n\n'
       ''
       'serve:'
       '\n  ' + defaultTypeParams.replaceAll('\n', '\n  ');
@@ -302,6 +302,7 @@ class LaunchConfiguration {
         var parsed = loadYaml(contents == null ? _file.readSync(true) : contents);
         _map = parsed is Map ? parsed : {};
       } catch (e) {
+        _logger.warning(e);
         _map = {};
       }
     }

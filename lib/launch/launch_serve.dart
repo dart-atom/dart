@@ -9,6 +9,8 @@ import 'package:atom/node/process.dart';
 import '../state.dart';
 import 'launch.dart';
 
+const singletonBoolParameters = const ['all', 'force-poll', 'no-force-poll'];
+
 /// Pub serve launch.
 class ServeLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -24,7 +26,7 @@ class ServeLaunchType extends LaunchType {
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
     String cwd = configuration.cwd;
-    List<String> args = configuration.argsAsList;
+    var args = configuration.typeArgs['args'];
 
     String launchName = 'pub serve';
 
@@ -39,12 +41,20 @@ class ServeLaunchType extends LaunchType {
       launchName = fs.relativize(cwd, launchName);
     }
 
-    List execArgs = ['serve']..addAll(args);
-
+    List execArgs = ['serve'];
+    if (args is Map) {
+      args.forEach((k, v) {
+        if (singletonBoolParameters.contains(k)) {
+          if (v) execArgs.add('--$k');
+        } else {
+          execArgs.add('--$k=$v');
+        }
+      });
+    }
     ProcessRunner runner = sdkManager.sdk.execBin('pub', execArgs, cwd: cwd,
         startProcess: false);
 
-    String description = (args == null || args.isEmpty) ? launchName : '${launchName} ${args.join(' ')}';
+    String description = launchName;
     Launch launch = new Launch(manager, this, configuration, launchName,
       killHandler: () => runner.kill(),
       cwd: cwd,
@@ -65,19 +75,20 @@ class ServeLaunchType extends LaunchType {
 # Additional args for pub serve
 args:
   # Mode to run transformers in. (defaults to "debug")
-  # --mode=debug
+  #mode: debug
   # Use all default source directories.
-  # --all
+  #all: true
   # The JavaScript compiler to use to build the app. [dart2js, dartdevc, none]
-  # --web-compiler=dartdevc
+  #web-compiler: dartdevc
   # Defines an environment constant for dart2js.
-  # --define
+  #define: variable=value[,variable=value]
   # The hostname to listen on. (defaults to "localhost")
-  # --hostname=localhost
+  #hostname: localhost
   # The base port to listen on. (defaults to "8080")
-  # --port=8080
+  #port: 8080
   # Force the use of a polling filesystem watcher.
-  # --[no-]force-poll
+  #force-poll: true
+  #no-force-poll: true
 ''';
   }
 }
