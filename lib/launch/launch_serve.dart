@@ -6,6 +6,7 @@ import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 
+import '../projects.dart';
 import '../state.dart';
 import 'launch.dart';
 
@@ -54,11 +55,11 @@ class ServeLaunchType extends LaunchType {
     ProcessRunner runner = sdkManager.sdk.execBin('pub', execArgs, cwd: cwd,
         startProcess: false);
 
-    String description = launchName;
-    Launch launch = new Launch(manager, this, configuration, launchName,
+    String root = 'http://${args['hostname'] ?? 'localhost'}:${args['port'] ?? 'port'}';
+    Launch launch = new ServeLaunch(manager, this, configuration, launchName, root,
       killHandler: () => runner.kill(),
       cwd: cwd,
-      title: description
+      title: launchName
     );
     manager.addLaunch(launch);
 
@@ -91,4 +92,16 @@ args:
   #no-force-poll: true
 ''';
   }
+}
+
+class ServeLaunch extends Launch {
+  String _root;
+  String get root => _root;
+
+  ServeLaunch(LaunchManager manager, LaunchType launchType,
+    LaunchConfiguration launchConfiguration, String name, String root,
+    { Function killHandler, String cwd, DartProject project, String title }
+  ) : _root = root,
+      super(manager, launchType, launchConfiguration, name,
+            killHandler: killHandler, cwd: cwd, title: title);
 }

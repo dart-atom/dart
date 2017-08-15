@@ -54,6 +54,9 @@ class BrowserManager implements Disposable {
 }
 
 class Browser {
+  static const singletonBoolParameters =
+      const ['no-default-browser-check', 'no-first-run'];
+
   final String path;
 
   Browser(this.path);
@@ -70,5 +73,19 @@ class Browser {
     runner.onStdout.listen((str) => buf.write(str));
 
     return runner.onExit.then((_) => buf.toString());
+  }
+
+  List<String> execArgsFromYaml(yamlArgs) {
+    List execArgs = [];
+    if (yamlArgs is Map) {
+      yamlArgs.forEach((k, v) {
+        if (singletonBoolParameters.contains(k)) {
+          if (v) execArgs.add('--$k');
+        } else {
+          execArgs.add('--$k=$v');
+        }
+      });
+    }
+    return execArgs;
   }
 }

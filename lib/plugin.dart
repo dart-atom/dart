@@ -66,6 +66,7 @@ import 'launch/launch_cli.dart';
 import 'launch/launch_configs.dart';
 import 'launch/launch_serve.dart';
 import 'launch/launch_shell.dart';
+import 'launch/launch_web.dart';
 import 'launch/run.dart';
 import 'linter.dart' show DartLinterConsumer;
 import 'browser.dart';
@@ -428,6 +429,7 @@ class AtomDartPackage extends AtomPackage {
     CliLaunchType.register(launchManager);
     ShellLaunchType.register(launchManager);
     ServeLaunchType.register(launchManager);
+    WebLaunchType.register(launchManager);
   }
 
   void _registerLinter() {
