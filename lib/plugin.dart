@@ -295,7 +295,7 @@ class AtomDartPackage extends AtomPackage {
     return {
       // sdk
       'sdkLocation': {
-        'title': 'Dart SDK Location',
+        'title': 'Dart SDK location',
         'description': 'The location of the Dart SDK.',
         'type': 'string',
         'default': '',
@@ -303,8 +303,8 @@ class AtomDartPackage extends AtomPackage {
       },
 
       // debugger
-      'debugBrowserLocation': {
-        'title': 'Debug Browser',
+      'browserLocation': {
+        'title': 'Browser location',
         'description': 'The location of a Browser with Chrome DevTools Protocol.',
         'type': 'string',
         'default': '',

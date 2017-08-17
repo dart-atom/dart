@@ -11,7 +11,7 @@ import 'impl/debounce.dart';
 import 'state.dart';
 
 class BrowserManager implements Disposable {
-  final String browserKey = '${pluginId}.debugBrowserLocation';
+  final String browserKey = '${pluginId}.browserLocation';
   final List<StreamSubscription> subs = [];
 
   String get browserPath => atom.config.getValue(browserKey);
