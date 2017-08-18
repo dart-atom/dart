@@ -65,8 +65,7 @@ class ConsoleController extends DockedViewManager<ConsoleView> {
 
   void _toggleViews() {
     if (views.isEmpty) return;
-    // Show latest run
-    showView(id: views.values.last.id);
+    views.values.forEach((v) => showView(id: v.id));
   }
 
   void _handleDoubleEscape() {
@@ -218,7 +217,9 @@ class ConsoleView extends DockedView {
   }
 
   void handleClose() {
-    if (launch.isTerminated) launchManager.removeLaunch(launch);
+    if (launch.isTerminated) {
+      launchManager.removeLaunch(launch);
+    }
   }
 
   String _text = '';

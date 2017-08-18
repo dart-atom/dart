@@ -66,8 +66,10 @@ import 'launch/launch_cli.dart';
 import 'launch/launch_configs.dart';
 import 'launch/launch_serve.dart';
 import 'launch/launch_shell.dart';
+import 'launch/launch_web.dart';
 import 'launch/run.dart';
 import 'linter.dart' show DartLinterConsumer;
+import 'browser.dart';
 import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
@@ -134,6 +136,7 @@ class AtomDartPackage extends AtomPackage {
 
     disposables.add(deps[JobManager] = new JobManager());
     disposables.add(deps[SdkManager] = new SdkManager());
+    disposables.add(deps[BrowserManager] = new BrowserManager());
     disposables.add(deps[ProjectManager] = new ProjectManager());
     disposables.add(deps[AnalysisServer] = new AnalysisServer());
     disposables.add(deps[EditorManager] = new EditorManager());
@@ -292,11 +295,20 @@ class AtomDartPackage extends AtomPackage {
     return {
       // sdk
       'sdkLocation': {
-        'title': 'Dart SDK Location',
+        'title': 'Dart SDK location',
         'description': 'The location of the Dart SDK.',
         'type': 'string',
         'default': '',
         'order': 1
+      },
+
+      // debugger
+      'browserLocation': {
+        'title': 'Browser location',
+        'description': 'The path to Chrome (or other browser supporting the Chrome DevTools protocol).',
+        'type': 'string',
+        'default': '',
+        'order': 2
       },
 
       // custom views
@@ -417,6 +429,7 @@ class AtomDartPackage extends AtomPackage {
     CliLaunchType.register(launchManager);
     ShellLaunchType.register(launchManager);
     ServeLaunchType.register(launchManager);
+    WebLaunchType.register(launchManager);
   }
 
   void _registerLinter() {

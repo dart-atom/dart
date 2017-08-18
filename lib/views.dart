@@ -166,7 +166,9 @@ abstract class DockedViewManager<T extends DockedView> implements Disposable {
   String viewUri(String id) => '$prefixUri/$id';
   String viewId(String uri) => uri.replaceFirst("$prefixUri/", '');
 
+  // Views by uri.
   Map<String, T> views = {};
+  // Instantiation data by uri.
   Map<String, dynamic> datas = {};
   T viewFromId(String id) => views[viewUri(id)];
   T viewFromUri(String uri) => views[uri];
@@ -195,16 +197,17 @@ abstract class DockedViewManager<T extends DockedView> implements Disposable {
   }
 
   void showView({String id: '0', dynamic data}) {
-    datas[viewUri(id)] = data;
+    if (data != null) datas[viewUri(id)] = data;
     atom.workspace.open(viewUri(id), options: {
       'searchAllPanes': true,
     });
   }
 
   void removeView({String id: '0'}) {
-    // JsObject item = viewFromId(id)?.item;
     Item item = viewFromId(id)?.item;
     if (item == null) return;
+    views.remove(viewUri(id));
+    datas.remove(viewUri(id));
     Pane p = atom.workspace.paneForItem(item);
     if (p == null) return;
     p.destroyItem(item);

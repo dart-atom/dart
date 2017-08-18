@@ -6,8 +6,11 @@ import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 
+import '../projects.dart';
 import '../state.dart';
 import 'launch.dart';
+
+const singletonBoolParameters = const ['all', 'force-poll', 'no-force-poll'];
 
 /// Pub serve launch.
 class ServeLaunchType extends LaunchType {
@@ -24,7 +27,7 @@ class ServeLaunchType extends LaunchType {
 
   Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
     String cwd = configuration.cwd;
-    List<String> args = configuration.argsAsList;
+    var args = configuration.typeArgs['args'];
 
     String launchName = 'pub serve';
 
@@ -39,16 +42,24 @@ class ServeLaunchType extends LaunchType {
       launchName = fs.relativize(cwd, launchName);
     }
 
-    List execArgs = ['serve']..addAll(args);
-
+    List execArgs = ['serve'];
+    if (args is Map) {
+      args.forEach((k, v) {
+        if (singletonBoolParameters.contains(k)) {
+          if (v) execArgs.add('--$k');
+        } else {
+          execArgs.add('--$k=$v');
+        }
+      });
+    }
     ProcessRunner runner = sdkManager.sdk.execBin('pub', execArgs, cwd: cwd,
         startProcess: false);
 
-    String description = (args == null || args.isEmpty) ? launchName : '${launchName} ${args.join(' ')}';
-    Launch launch = new Launch(manager, this, configuration, launchName,
+    String root = 'http://${args['hostname'] ?? 'localhost'}:${args['port'] ?? 'port'}';
+    Launch launch = new ServeLaunch(manager, this, configuration, launchName, root,
       killHandler: () => runner.kill(),
       cwd: cwd,
-      title: description
+      title: launchName
     );
     manager.addLaunch(launch);
 
@@ -64,6 +75,33 @@ class ServeLaunchType extends LaunchType {
     return '''
 # Additional args for pub serve
 args:
+  # Mode to run transformers in. (defaults to "debug")
+  #mode: debug
+  # Use all default source directories.
+  #all: true
+  # The JavaScript compiler to use to build the app. [dart2js, dartdevc, none]
+  #web-compiler: dartdevc
+  # Defines an environment constant for dart2js.
+  #define: variable=value[,variable=value]
+  # The hostname to listen on. (defaults to "localhost")
+  #hostname: localhost
+  # The base port to listen on. (defaults to "8080")
+  #port: 8080
+  # Force the use of a polling filesystem watcher.
+  #force-poll: true
+  #no-force-poll: true
 ''';
   }
+}
+
+class ServeLaunch extends Launch {
+  String _root;
+  String get root => _root;
+
+  ServeLaunch(LaunchManager manager, LaunchType launchType,
+    LaunchConfiguration launchConfiguration, String name, String root,
+    { Function killHandler, String cwd, DartProject project, String title }
+  ) : _root = root,
+      super(manager, launchType, launchConfiguration, name,
+            killHandler: killHandler, cwd: cwd, title: title);
 }

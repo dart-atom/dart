@@ -10,6 +10,7 @@ import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' show DiagnosticsResult, ContextData;
 import '../atom_utils.dart';
+import '../browser.dart';
 import '../elements.dart';
 import '../material.dart';
 import '../sdk.dart';
@@ -76,6 +77,7 @@ class StatusView extends DockedView {
 
     last = _registerSection('plugin', _createPluginSection(container));
     last = _registerSection('dart-sdk', _createDartSdkSection(container));
+    last = _registerSection('debug', _createDebugSection(container));
     last = _registerSection('analysis-server', _createAnalysisServerSection(container));
     last = _registerSection('analytics', _createAnalyticsSection(container));
 
@@ -364,6 +366,36 @@ class StatusView extends DockedView {
     return section;
   }
 
+  ViewSection _createDebugSection(CoreElement container) {
+    CoreElement section = container.add(div(c: 'view-section'));
+    StatusHeader header = new StatusHeader(section);
+    header.title.text = 'Web Debugging';
+
+    // TODO: This should be an editable text field.
+    CoreElement pathElement;
+
+    section.add([
+      pathElement = div(c: 'overflow-hidden-ellipsis bottom-margin')
+        ..element.style.alignSelf = 'flex-end'
+    ]);
+
+    updateBrowser(browser) => pathElement.text = pathElement.tooltip = browser?.path ?? '';
+    updateVersion(version) => header.subtitle.text = version ?? 'no Browser configured';
+
+    updateBrowser(deps[BrowserManager].browser);
+    updateVersion(deps[BrowserManager].version);
+
+    subs.add(deps[BrowserManager].onBrowserChange.listen(updateBrowser));
+    subs.add(deps[BrowserManager].onBrowserVersionChange.listen(updateVersion));
+
+    CoreElement buttons = _addButtons(section);
+    buttons.add(button(text: 'Browse…', c: 'btn')..click(() {
+      _handleDebugBrowse(deps[BrowserManager].browser?.path);
+    }));
+
+    return section;
+  }
+
   String get label => 'Plugin status';
 
   void showSection(String sectionName) {
@@ -392,6 +424,14 @@ class StatusView extends DockedView {
     atom.pickFolder().then((path) {
       if (path is String) {
         atom.config.setValue('${pluginId}.sdkLocation', path);
+      }
+    });
+  }
+
+  void _handleDebugBrowse(String path) {
+    atom.pickFile(path).then((path) {
+      if (path is String) {
+        atom.config.setValue(deps[BrowserManager].browserKey, path);
       }
     });
   }
