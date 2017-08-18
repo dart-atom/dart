@@ -305,7 +305,7 @@ class AtomDartPackage extends AtomPackage {
       // debugger
       'browserLocation': {
         'title': 'Browser location',
-        'description': 'The location of a Browser with Chrome DevTools Protocol.',
+        'description': 'The path to Chrome (or other browser supporting the Chrome DevTools protocol).',
         'type': 'string',
         'default': '',
         'order': 2
