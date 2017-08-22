@@ -522,10 +522,23 @@ class ExecutionTab extends MTab {
     });
 
     List<DebugVariable> vars = frame.locals;
-    locals.update(vars ?? []);
+    if (vars == null) {
+      locals.update([]);
+      frame.resolveLocals().then((vars) {
+        if (vars != null) {
+          locals.update(vars);
 
-    if (frame.isExceptionFrame && vars.isNotEmpty) {
-      locals.selectItem(vars.first);
+          if (frame.isExceptionFrame && vars.isNotEmpty) {
+            locals.selectItem(vars.first);
+          }
+        }
+      });
+    } else {
+      locals.update(vars);
+
+      if (frame.isExceptionFrame && vars.isNotEmpty) {
+        locals.selectItem(vars.first);
+      }
     }
   }
 

@@ -68,6 +68,8 @@ abstract class DebugFrame {
 
   List<DebugVariable> get locals;
 
+  Future<List<DebugVariable>> resolveLocals() => new Future.value(locals);
+
   DebugLocation get location;
 
   Future<String> eval(String expression);

@@ -12,8 +12,12 @@ import 'launch_serve.dart';
 
 import '../browser.dart';
 import '../state.dart';
+import '../debug/chrome_debugger.dart';
 
 final Logger _logger = new Logger('atom.launch.web');
+
+// TODO: option?
+bool debugging = true;
 
 class WebLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -42,12 +46,17 @@ class WebLaunchType extends LaunchType {
       return new Future.value();
     }
 
-    List<String> args = browser.execArgsFromYaml(configuration.typeArgs['args']);
+    Map yamlArgs = configuration.typeArgs['args'];
+    List<String> args = browser.execArgsFromYaml(yamlArgs);
     String htmlFile = configuration.shortResourceName;
     if (htmlFile.startsWith('web/')) {
       htmlFile = htmlFile.substring(4);
     }
-    args.add('${pubServe.root}/$htmlFile');
+
+    String root = pubServe.root;
+    if (!debugging) {
+      args.add('$root/$htmlFile');
+    }
 
     ProcessRunner runner = new ProcessRunner.underShell(browser.path, args: args);
 
@@ -62,6 +71,14 @@ class WebLaunchType extends LaunchType {
     runner.onStdout.listen((str) => launch.pipeStdio(str));
     runner.onStderr.listen((str) => launch.pipeStdio(str, error: true));
     runner.onExit.then((code) => launch.launchTerminated(code));
+
+    if (debugging) {
+      String debugHost = 'localhost:${yamlArgs['remote-debugging-port']}';
+      ChromeDebugger.connect(launch, configuration, debugHost, root, htmlFile)
+          .catchError((e) {
+        launch.pipeStdio('Unable to connect to chrome.\n', error: true);
+      });
+    }
 
     return new Future.value(launch);
   }
