@@ -468,14 +468,18 @@ String _refToString(dynamic value) {
 
 Point _calcPos(Script script, int tokenPos) {
   List<List<int>> table = script.tokenPosTable;
+  if (table == null) return null;
 
   for (List<int> row in table) {
-    int line = row[0];
-
+    if (row == null || row.isEmpty) continue;
+    //int line = row[0]; <- this crashed, don't know why
+    int line = row.elementAt(0);
     int index = 1;
 
     while (index < row.length - 1) {
-      if (row[index] == tokenPos) return new Point.coords(line, row[index + 1]);
+      if (row.elementAt(index) == tokenPos) {
+        return new Point.coords(line, row.elementAt(index + 1));
+      }
       index += 2;
     }
   }

@@ -18,6 +18,7 @@ final Logger _logger = new Logger('atom.launch.web');
 
 // TODO: option?
 bool debugging = true;
+bool pub_serve_check = true;
 
 class WebLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -34,16 +35,21 @@ class WebLaunchType extends LaunchType {
       return new Future.value();
     }
 
-    // Find pub serve for 'me'.
-    ServeLaunch pubServe = manager.launches.firstWhere((l) =>
-        l is ServeLaunch &&
-        l.isRunning &&
-        l.launchConfiguration.projectPath == configuration.projectPath,
-        orElse: () => null);
+    // TODO add a config for this
+    String root = 'http://localhost:8081';
+    if (pub_serve_check) {
+      // Find pub serve for 'me'.
+      ServeLaunch pubServe = manager.launches.firstWhere((l) =>
+          l is ServeLaunch &&
+          l.isRunning &&
+          l.launchConfiguration.projectPath == configuration.projectPath,
+          orElse: () => null);
 
-    if (pubServe == null) {
-      atom.notifications.addWarning('No pub serve launch found.');
-      return new Future.value();
+      if (pubServe == null) {
+        atom.notifications.addWarning('No pub serve launch found.');
+        return new Future.value();
+      }
+      root = pubServe.root;
     }
 
     Map yamlArgs = configuration.typeArgs['args'];
@@ -53,7 +59,6 @@ class WebLaunchType extends LaunchType {
       htmlFile = htmlFile.substring(4);
     }
 
-    String root = pubServe.root;
     if (!debugging) {
       args.add('$root/$htmlFile');
     }

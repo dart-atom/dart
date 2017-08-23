@@ -23,7 +23,6 @@ final Logger _logger = new Logger('atom.chrome');
 
 const _verbose = false;
 
-// TODO figure out why it doesn't work with ddc turned on (maps related)
 // TODO figure out how to set breakpoints them without needing a restart
 // calling pause/resume ?
 // TODO on restart, should we remove all breakpoints and reset them?
@@ -31,11 +30,13 @@ const _verbose = false;
 // TODO restore expanded/focus state of variables panel
 // TODO (same for outline panel)
 // TODO tooltips observation of variables
+// TODO investigate why debug launch gets closed properly when restarting
+//   but not serve launch
 
 class ChromeDebugger {
   /// Establish a connection to a service protocol server at the given port.
   static Future<DebugConnection> connect(Launch launch, LaunchConfiguration configuration,
-    String debugHost, String root, String htmlFile, {bool pipeStdio: false}) {
+    String debugHost, String root, String htmlFile) {
     var cdp = new ChromeDebuggingProtocol();
     int maxTries = 6;
     return Future.doWhile(() {
@@ -51,7 +52,6 @@ class ChromeDebugger {
           ]).then((_) {
           String fullPath =
               '${configuration.projectPath}/${configuration.shortResourceName}';
-          print(root);
           UriResolver uriResolver = new UriResolver(root,
               translator: new WebUriTranslator(fs.fs.dirname(fullPath),
                   prefix: '${Uri.parse(root)}/'),
@@ -65,7 +65,7 @@ class ChromeDebugger {
           });
         });
       }).catchError((e) {
-        print(e);
+        launch.pipeStdio('Launched failed, retrying\n');
         return new Future.delayed(new Duration(seconds: 1)).then((_) => true);
       });
     });
@@ -100,6 +100,7 @@ class ChromeConnection extends DebugConnection {
     });
 
     chrome.debugger.scriptParsed((script) {
+      if (script.url == null || script.url.isEmpty) return;
       launch.pipeStdio('Script Parsed: ${script.url}\n');
       scripts[script.scriptId] = script;
       // TODO: should we use script.sourceMapURL (which isn't a full url, but just
@@ -107,22 +108,26 @@ class ChromeConnection extends DebugConnection {
       if (script.sourceMapURL != null && script.sourceMapURL.isNotEmpty) {
         // start load source map
         loadinMaps.putIfAbsent(script.scriptId, () {
+          launch.pipeStdio('  fetching ${script.url}.map\n');
           return HttpRequest.getString('${script.url}.map')
             .then((text) => parse(text))
             .then((map) {
-              _logger.info('fetched ${script.url}.map');
+              launch.pipeStdio('    parsing ${script.url}.map\n');
               maps[script.scriptId] = map;
               // create reverse map into separate  for each .dart targets.
               createReverseMaps(script.url, map);
               return installBreakpoints().then((_) => map);
             })
             .catchError((e) {
-              _logger.info('error fetching ${script.url}.map');
+              launch.pipeStdio(
+                  '    error fetching or parsing ${script.url}.map\n'
+                  '      $e\n');
             });
         });
       }
     });
     chrome.debugger.scriptFailedToParse((script) {
+      if (script.url == null || script.url.isEmpty) return;
       launch.pipeStdio('Script Parsed Failed: ${script.url}\n');
     });
     chrome.debugger.breakpointResolved((bkpt) {
@@ -131,7 +136,7 @@ class ChromeConnection extends DebugConnection {
     });
 
     chrome.debugger.paused((paused) {
-      _logger.info('Pausing.');
+      launch.pipeStdio('Pausing.');
       isPaused = true;
       _isolate = new ChromeDebugIsolate(this, this.chrome, paused);
       _isolatePaused.add(_isolate);
@@ -155,7 +160,8 @@ class ChromeConnection extends DebugConnection {
           Entry e = new Entry(
               new RevSourceLocation(entry.column, line.line, sourceUrl),
               new RevSourceLocation(entry.sourceColumn, entry.sourceLine, destinationUrl),
-              entry.sourceNameId >= 0 ? map.names[entry.sourceNameId] : null);
+              entry.sourceNameId != null && entry.sourceNameId >= 0
+                  ? map.names[entry.sourceNameId] : null);
           entries.putIfAbsent(destinationUrl, () => []).add(e);
         }
       }
@@ -166,7 +172,7 @@ class ChromeConnection extends DebugConnection {
           pathSegments..removeLast()..add(k);
           k = src.replace(pathSegments: pathSegments).toString();
         }
-        _logger.info('Adding reverse map for $k');
+        launch.pipeStdio('      Adding reverse map for $k -> $sourceUrl\n');
         reversedMaps[k] = new SingleMapping.fromEntries(v, k);
       });
     }
@@ -176,8 +182,10 @@ class ChromeConnection extends DebugConnection {
 
   Future addBreakpoint(AtomBreakpoint atomBreakpoint) {
     return uriResolver.resolvePathToUris(atomBreakpoint.path).then((List<String> uris) {
+      launch.pipeStdio('Set breakpoint for: $atomBreakpoint\n  $uris\n');
       return Future.forEach(uris, (String uri) {
         Mapping m = reversedMaps[uri];
+        launch.pipeStdio('Set breakpoint for: $uri\n');
         if (m == null) return new Future.value();
 
         SourceMapSpan span = SingleMappingProxy.spanFor(m, atomBreakpoint.line - 1, atomBreakpoint.column ?? 0);
@@ -185,12 +193,17 @@ class ChromeConnection extends DebugConnection {
 
         return setBreakpointByUrl(span.sourceUrl.toString(), span.start.line, span.start.column)
             .then((Breakpoint chromeBreakpoint) {
+              launch.pipeStdio('  Set breakpoint: $chromeBreakpoint\n');
               if (chromeBreakpoint == null) return;
               breakpoints.putIfAbsent(atomBreakpoint, () => []).add(chromeBreakpoint);
-            }).catchError((e) { /* ignore */});
+            }).catchError((e) {
+              launch.pipeStdio('  Fail to set breakpoint: $atomBreakpoint\n');
+            });
       });
     }).catchError((e) {
-      _logger.info('Error resolving uri: ${atomBreakpoint.path}', '${e}');
+      launch.pipeStdio(
+          '  Error resolving uri: ${atomBreakpoint.path}\n'
+          '    ${e}\n');
     });
   }
 
@@ -200,7 +213,7 @@ class ChromeConnection extends DebugConnection {
       return Future.forEach(bkpts, (Breakpoint breakpoint) {
         return chrome.debugger.removeBreakpoint(breakpoint.breakpointId)
             .catchError((e) {
-          _logger.info('Error removing breakpoint', e);
+          launch.pipeStdio('Error removing breakpoint:\n  $e\n');
         });
       });
     }
@@ -219,10 +232,10 @@ class ChromeConnection extends DebugConnection {
   Future setBreakpointByUrl(String url, int line, int column) {
     return chrome.debugger.setBreakpointByUrl(line, url: url, columnNumber: column)
         .then((bk) {
-      _logger.info('Breakpoint added: $bk');
+      launch.pipeStdio('Breakpoint added: $bk\n');
       return bk;
     }).catchError((e) {
-      _logger.info('Breakpoint not added: $url($line,$column) -> $e');
+      launch.pipeStdio('Breakpoint not added: $url($line,$column)\n  $e\n');
     });
   }
 

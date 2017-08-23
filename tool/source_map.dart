@@ -11,7 +11,8 @@ void main(List<String> args) {
   Map<String, SingleMapping> maps = {};
 
   List<Future> futures = [];
-  for (var file in ['main.dart', 'main.dart.js', 'main.dart.js.map']) {
+  //for (var file in ['main.dart', 'main.dart.js', 'main.dart.js.map']) {
+  for (var file in ['main.dart', 'web__main.js', 'web__main.js.map']) {
     futures.add(getFile(file).then((lines) => files[file] = lines));
   }
   Future.wait(futures).then((_) {
