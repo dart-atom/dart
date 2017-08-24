@@ -9,6 +9,7 @@ import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
+import '../material.dart';
 import '../projects.dart';
 import '../state.dart';
 import 'utils.dart';
@@ -226,7 +227,7 @@ class BreakpointManager implements Disposable, StateStorable {
   }
 }
 
-class AtomBreakpoint implements Comparable {
+class AtomBreakpoint extends MItem implements Comparable {
   final String path;
   int _line;
   int _column;

@@ -103,9 +103,13 @@ typedef void ListRenderer(dynamic obj, CoreElement element);
 typedef bool ListFilter(dynamic obj);
 typedef int ListSort<T>(T obj1, T obj2);
 
+abstract class MItem {
+  String get id;
+}
+
 // TODO: use cmd, ctrl to toggle list items
 
-class MList<T> extends CoreElement {
+class MList<T extends MItem> extends CoreElement {
   final ListRenderer renderer;
   final ListSort<T> sort;
   final ListFilter filter;
@@ -143,7 +147,7 @@ class MList<T> extends CoreElement {
 
     T _sel = selectedItem.value;
 
-    _populateChildren(modelObjects, _ul);
+    _populateChildren('', modelObjects, _ul);
 
     if (_sel != null) {
       if (_itemToElement[_sel] != null) {
@@ -171,12 +175,12 @@ class MList<T> extends CoreElement {
     }
   }
 
-  void _populateChildren(List<T> modelObjects, CoreElement container) {
+  void _populateChildren(String root, List<T> modelObjects, CoreElement container) {
     for (T item in modelObjects) {
       CoreElement element = container.add(li());
 
       try {
-        _render(item, element);
+        _render('$root/${item.id}', item, element);
       } catch (e, st) {
         print('${e}: ${st}');
       }
@@ -194,7 +198,7 @@ class MList<T> extends CoreElement {
     }
   }
 
-  void _render(T item, CoreElement element) {
+  void _render(String id, T item, CoreElement element) {
     renderer(item, element);
   }
 
@@ -207,15 +211,28 @@ abstract class TreeModel<T> {
   Future<List<T>> getChildren(T obj);
 }
 
-// TODO: restore expansion state between update() calls
-
-class MTree<T> extends MList<T> {
+class MTree<T extends MItem> extends MList<T> {
   final TreeModel<T> treeModel;
+
+  final Set<String> expandedNodes = new Set();
+  final Map<T, String> itemToKey = {};
+
+  String _focusedItemKey;
 
   MTree(this.treeModel, ListRenderer renderer, {ListFilter filter}) :
       super(renderer, filter: filter);
 
-  void _render(T item, CoreElement element) {
+  void update(List<T> modelObjects) {
+    itemToKey.clear();
+    super.update(modelObjects);
+  }
+
+  void selectItem(T item) {
+    if (item != null) _focusedItemKey = itemToKey[item];
+    super.selectItem(item);
+  }
+
+  void _render(String id, T item, CoreElement element) {
     if (treeModel.canHaveChildren(item)) {
       CoreElement expansionTriangle;
       CoreElement childContainer;
@@ -232,7 +249,7 @@ class MTree<T> extends MList<T> {
           childContainer = ul(c: 'material-list-indent');
           // TODO: Show feedback during an expansion.
           treeModel.getChildren(item).then((List<T> items) {
-            _populateChildren(items, childContainer);
+            _populateChildren(id, items, childContainer);
             _makeFirstChildVisible(childContainer);
           }).catchError((e, st) {
             atom.notifications.addError('${e}');
@@ -240,8 +257,15 @@ class MTree<T> extends MList<T> {
           });
           int index = element.element.parent.children.indexOf(element.element);
           element.element.parent.children.insert(index + 1, childContainer.element);
+          expandedNodes.add(id);
         } else {
-          childContainer.hidden(!childContainer.hasAttribute('hidden'));
+          bool isHidden = !childContainer.hasAttribute('hidden');
+          if (isHidden) {
+            expandedNodes.remove(id);
+          } else {
+            expandedNodes.add(id);
+          }
+          childContainer.hidden(isHidden);
           if (!childContainer.hasAttribute('hidden')) {
             _makeFirstChildVisible(childContainer);
           }
@@ -250,13 +274,22 @@ class MTree<T> extends MList<T> {
 
       element.dblclick(toggleExpand);
       expansionTriangle.click(toggleExpand);
+
+      if (expandedNodes.contains(id)) toggleExpand();
     } else {
       element.add(
         span(c: 'icon-triangle-right visibility-hidden')
       );
     }
 
-    super._render(item, element);
+    super._render(id, item, element);
+
+    itemToKey[item] = id;
+    if (_focusedItemKey == id) {
+      new Future(() {
+        element.scrollIntoView();
+      });
+    }
   }
 
   void _makeFirstChildVisible(CoreElement element) {

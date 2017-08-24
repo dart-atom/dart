@@ -27,8 +27,6 @@ const _verbose = false;
 // calling pause/resume ?
 // TODO on restart, should we remove all breakpoints and reset them?
 // TODO put up message when pausing (running -> waiting to pause)
-// TODO restore expanded/focus state of variables panel
-// TODO (same for outline panel)
 // TODO tooltips observation of variables
 // TODO investigate why debug launch gets closed properly when restarting
 //   but not serve launch
@@ -381,7 +379,7 @@ class ChromeDebugFrame extends DebugFrame {
 
   Future<List<DebugVariable>> resolveLocals() {
     if (!connection.isPaused) return new Future.value([]);
-    _logger.info('Getting frame locals: ${frame.self}');
+    // _logger.info('Getting frame locals: ${frame.self}');
     _locals = [];
     _locals.add(new ChromeThis(connection, frame.self));
     // TODO make scopes more identifiable
@@ -413,6 +411,9 @@ class ChromeScope extends DebugVariable {
   final Scope scope;
   ChromeDebugValue _value;
 
+  // We have multiple scope with same name.
+  String get id => '$name.${scope.startLocation}';
+
   String get name => scope.name ?? scope.type;
   DebugValue get value => _value ??= new ChromeDebugValue(connection, scope.object);
 
@@ -427,10 +428,8 @@ class ChromeDebugVariable extends DebugVariable {
   String get name => property.name;
   DebugValue get value => _value ??= new ChromeDebugValue(connection, property.value);
 
-  ChromeDebugVariable(this.connection, this.property) {
-    // TODO integrate
-    if (property.symbol != null) print('$name: ${property.symbol}');
-  }
+  ChromeDebugVariable(this.connection, this.property);
+  // TODO can we integrate property.symbol ?
 }
 
 class ChromeDebugValue extends DebugValue {
@@ -440,16 +439,13 @@ class ChromeDebugValue extends DebugValue {
   List<DebugVariable> _variables;
 
   String get className => value == null
-      ? 'Null' : (value?.className ?? "${value.type}.${value.subtype}");
+      ? 'Null' : (value.className ?? "${value.type}.${value.subtype}");
 
-  String get valueAsString {
-    return value == null ? 'null'
-        : value.description ?? value.unserializableValue;
-  }
+  String get valueAsString =>
+      value?.value ?? value?.description ?? value?.unserializableValue;
 
-  // TODO
-  bool get isString => false;
-  bool get isPlainInstance => false;
+  bool get isString => value?.type == 'string';
+  bool get isPlainInstance => !isPrimitive;
 
   bool get isPrimitive => !isList && !isMap;
   bool get isList => value?.subtype == 'array' && value?.objectId != null;
@@ -466,19 +462,19 @@ class ChromeDebugValue extends DebugValue {
 
   Future<List<DebugVariable>> getChildren() {
     if (!connection.isPaused) return new Future.value([]);
-    _logger.info('Getting children: ${value}');
+    // _logger.info('Getting children: ${value}');
     return connection.chrome.runtime.getProperties(value.objectId,
-        ownProperties: true,
+        ownProperties: false,
         accessorPropertiesOnly: false,
         generatePreview: true).then((properties) {
       _variables = [];
+      // TODO add exceptionDetails
       properties.result.where((p) => p.isUseable).forEach((property) {
         _variables.add(new ChromeDebugVariable(connection, property));
       });
       properties.internalProperties.where((p) => p.isUseable).forEach((property) {
         _variables.add(new ChromeDebugVariable(connection, property));
       });
-      // TODO add exceptionDetails
       return _variables;
     });
   }
@@ -555,7 +551,7 @@ class WebUriTranslator implements UriTranslator {
 
   String targetToClient(String str) {
     String result = _targetToClient(str);
-    _logger.finer('targetToClient ${str} ==> ${result}');
+    // _logger.finer('targetToClient ${str} ==> ${result}');
     return result;
   }
 
@@ -577,7 +573,7 @@ class WebUriTranslator implements UriTranslator {
 
   String clientToTarget(String str) {
     String result = _clientToTarget(str);
-    _logger.finer('clientToTarget ${str} ==> ${result}');
+    // _logger.finer('clientToTarget ${str} ==> ${result}');
     return result;
   }
 

@@ -10,6 +10,7 @@ import 'package:vm_service_lib/vm_service_lib.dart';
 
 import '../flutter/flutter_ext.dart';
 import '../launch/launch.dart';
+import '../material.dart';
 import '../state.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
@@ -1091,11 +1092,13 @@ class ObservatoryLocation extends DebugLocation {
   }
 }
 
-class ObservatoryLibrary implements Comparable<ObservatoryLibrary> {
+class ObservatoryLibrary extends MItem implements Comparable<ObservatoryLibrary> {
   final LibraryRef _ref;
   String _displayUri;
 
   ObservatoryLibrary._(LibraryRef ref) : _ref = ref;
+
+  String get id => name;
 
   String get name => _ref.name;
   String get uri => _ref.uri;

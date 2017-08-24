@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../launch/launch.dart';
+import '../material.dart';
 import '../utils.dart';
 
 abstract class DebugConnection {
@@ -33,8 +34,10 @@ abstract class DebugConnection {
 // TODO: Add an IsolateState class.
 
 /// A representation of a VM Isolate.
-abstract class DebugIsolate {
+abstract class DebugIsolate extends MItem {
   DebugIsolate();
+
+  String get id => name;
 
   String get name;
 
@@ -58,8 +61,10 @@ abstract class DebugIsolate {
   autoStepOver();
 }
 
-abstract class DebugFrame {
+abstract class DebugFrame extends MItem {
   DebugFrame();
+
+  String get id => title;
 
   String get title;
 
@@ -77,7 +82,9 @@ abstract class DebugFrame {
   String toString() => title;
 }
 
-abstract class DebugVariable {
+abstract class DebugVariable extends MItem {
+  String get id => name;
+
   String get name;
   DebugValue get value;
 
