@@ -14827,7 +14827,8 @@ self.showOpenDialog = function(options) {
     $desc = $collectedClasses$.Browser_getVersion_closure0[1];
     Browser_getVersion_closure0.prototype = $desc;
     Browser_getVersion_closure0.$__fields__ = ["buf"];
-    function Browser_execArgsFromYaml_closure(execArgs) {
+    function Browser_execArgsFromYaml_closure(exceptKeys, execArgs) {
+      this.exceptKeys = exceptKeys;
       this.execArgs = execArgs;
       this.$deferredAction();
     }
@@ -14836,7 +14837,7 @@ self.showOpenDialog = function(options) {
       Browser_execArgsFromYaml_closure.name = "Browser_execArgsFromYaml_closure";
     $desc = $collectedClasses$.Browser_execArgsFromYaml_closure[1];
     Browser_execArgsFromYaml_closure.prototype = $desc;
-    Browser_execArgsFromYaml_closure.$__fields__ = ["execArgs"];
+    Browser_execArgsFromYaml_closure.$__fields__ = ["exceptKeys", "execArgs"];
     function _Dartino(disposables, enabled) {
       this.disposables = disposables;
       this.enabled = enabled;
@@ -56666,12 +56667,12 @@ self.showOpenDialog = function(options) {
         new P._ControllerStream(t1, [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new Z.Browser_getVersion_closure(buf));
         return runner._exitCompleter.future.then$1(new Z.Browser_getVersion_closure0(buf));
       },
-      execArgsFromYaml$1: function(yamlArgs) {
+      execArgsFromYaml$2$exceptKeys: function(yamlArgs, exceptKeys) {
         var execArgs, t1;
         execArgs = [];
         t1 = J.getInterceptor(yamlArgs);
         if (!!t1.$isMap)
-          t1.forEach$1(yamlArgs, new Z.Browser_execArgsFromYaml_closure(execArgs));
+          t1.forEach$1(yamlArgs, new Z.Browser_execArgsFromYaml_closure(exceptKeys, execArgs));
         return execArgs;
       }
     },
@@ -56690,8 +56691,10 @@ self.showOpenDialog = function(options) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     Browser_execArgsFromYaml_closure: {
-      "^": "Closure:4;execArgs",
+      "^": "Closure:4;exceptKeys,execArgs",
       call$2: function(k, v) {
+        if (C.JSArray_methods.contains$1(this.exceptKeys, k))
+          return;
         if (C.JSArray_methods.contains$1(C.List_Jik, k)) {
           if (v === true)
             this.execArgs.push("--" + H.S(k));
@@ -71296,7 +71299,7 @@ self.showOpenDialog = function(options) {
         return J.endsWith$1$s(path, ".html");
       },
       performLaunch$2: function(manager, configuration) {
-        var browser, t1, pubServe, root, yamlArgs, args, htmlFile, runner, t2, t3, t4, t5, launch;
+        var browser, t1, yamlArgs, debugging, pubServe, root, args, htmlFile, t2, runner, t3, t4, t5, t6, launch;
         browser = Q.Dependencies_instance().getDependency$1(C.Type_BrowserManager_I5H).get$browser();
         if (browser == null) {
           t1 = $.$get$atom()._notifications;
@@ -71305,7 +71308,10 @@ self.showOpenDialog = function(options) {
           t1._asyncComplete$1(null);
           return t1;
         }
-        if ($.pub_serve_check) {
+        yamlArgs = configuration.get$typeArgs().$index(0, "args");
+        t1 = J.getInterceptor$asx(yamlArgs);
+        debugging = J.$eq$(t1.$index(yamlArgs, "debugging"), true);
+        if (J.$eq$(t1.$index(yamlArgs, "local_pub_serve"), true)) {
           pubServe = C.JSArray_methods.firstWhere$2$orElse(manager.get$launches(), new G.WebLaunchType_performLaunch_closure(configuration), new G.WebLaunchType_performLaunch_closure0());
           if (pubServe == null) {
             t1 = $.$get$atom()._notifications;
@@ -71315,39 +71321,41 @@ self.showOpenDialog = function(options) {
             return t1;
           }
           root = J.get$root$x(pubServe);
-        } else
-          root = "http://localhost:8084";
-        yamlArgs = configuration.get$typeArgs().$index(0, "args");
-        args = browser.execArgsFromYaml$1(yamlArgs);
+        } else {
+          root = t1.$index(yamlArgs, "pub_serve_host");
+          if (root == null)
+            root = "http://localhost:8084";
+        }
+        args = browser.execArgsFromYaml$2$exceptKeys(yamlArgs, C.List_0YN);
         htmlFile = configuration.get$shortResourceName();
-        t1 = J.getInterceptor$s(htmlFile);
-        if (t1.startsWith$1(htmlFile, "web/"))
-          htmlFile = t1.substring$1(htmlFile, 4);
-        if (!$.debugging)
+        t2 = J.getInterceptor$s(htmlFile);
+        if (t2.startsWith$1(htmlFile, "web/"))
+          htmlFile = t2.substring$1(htmlFile, 4);
+        if (!debugging)
           args.push(H.S(root) + "/" + H.S(htmlFile));
         runner = X.ProcessRunner_ProcessRunner$underShell(browser.path, args, null, null);
-        t1 = configuration.get$shortResourceName();
         t2 = configuration.get$shortResourceName();
-        t3 = $.Launch__id + 1;
-        $.Launch__id = t3;
-        t4 = [null];
+        t3 = configuration.get$shortResourceName();
+        t4 = $.Launch__id + 1;
+        $.Launch__id = t4;
         t5 = [null];
-        launch = new X.Launch(this, configuration, t1, t2, null, manager, t3, new G.WebLaunchType_performLaunch_closure1(runner), null, new G.Property(null, new P._AsyncBroadcastStreamController(null, null, 0, null, null, null, null, t4), t5), new G.Property(null, new P._AsyncBroadcastStreamController(null, null, 0, null, null, null, null, t4), t5), new P._AsyncBroadcastStreamController(null, null, 0, null, null, null, null, t4), null, null);
+        t6 = [null];
+        launch = new X.Launch(this, configuration, t2, t3, null, manager, t4, new G.WebLaunchType_performLaunch_closure1(runner), null, new G.Property(null, new P._AsyncBroadcastStreamController(null, null, 0, null, null, null, null, t5), t6), new G.Property(null, new P._AsyncBroadcastStreamController(null, null, 0, null, null, null, null, t5), t6), new P._AsyncBroadcastStreamController(null, null, 0, null, null, null, null, t5), null, null);
         manager.addLaunch$1(launch);
         runner.execStreaming$0();
-        t1 = runner._stdoutController;
-        new P._ControllerStream(t1, [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new G.WebLaunchType_performLaunch_closure2(launch));
-        t1 = runner._stderrController;
-        new P._ControllerStream(t1, [H.getTypeArgumentByIndex(t1, 0)]).listen$1(new G.WebLaunchType_performLaunch_closure3(launch));
+        t2 = runner._stdoutController;
+        new P._ControllerStream(t2, [H.getTypeArgumentByIndex(t2, 0)]).listen$1(new G.WebLaunchType_performLaunch_closure2(launch));
+        t2 = runner._stderrController;
+        new P._ControllerStream(t2, [H.getTypeArgumentByIndex(t2, 0)]).listen$1(new G.WebLaunchType_performLaunch_closure3(launch));
         runner._exitCompleter.future.then$1(new G.WebLaunchType_performLaunch_closure4(launch));
-        if ($.debugging)
-          S.ChromeDebugger_connect(launch, configuration, "localhost:" + H.S(J.$index$asx(yamlArgs, "remote-debugging-port")), root, htmlFile).catchError$1(new G.WebLaunchType_performLaunch_closure5(launch));
+        if (debugging)
+          S.ChromeDebugger_connect(launch, configuration, "localhost:" + H.S(t1.$index(yamlArgs, "remote-debugging-port")), root, htmlFile).catchError$1(new G.WebLaunchType_performLaunch_closure5(launch));
         t1 = new P._Future(0, $.Zone__current, null, [null]);
         t1._asyncComplete$1(launch);
         return t1;
       },
       getDefaultConfigText$0: function() {
-        return "# Additional args for browser.\nargs:\n  remote-debugging-port: 9222\n  user-data-dir: " + H.S($.$get$fs()._os.callMethod$1("tmpdir")) + "/dartlang-dbg-host\n  no-default-browser-check: true\n  no-first-run: true\n";
+        return "# Additional args for browser.\nargs:\n  # options\n  debugging: true\n  local_pub_serve: true\n  # if local_pub_serve is false, specify pub serve endpoint\n  pub_serve_host: http://localhost:8084\n\n  # chrome\n  remote-debugging-port: 9222\n  user-data-dir: " + H.S($.$get$fs()._os.callMethod$1("tmpdir")) + "/dartlang-dbg-host\n  no-default-browser-check: true\n  no-first-run: true\n";
       }
     },
     WebLaunchType_performLaunch_closure: {
@@ -84019,6 +84027,7 @@ self.showOpenDialog = function(options) {
   C.Level_OFF_2000 = new N.Level("OFF", 2000);
   C.Level_SEVERE_1000 = new N.Level("SEVERE", 1000);
   C.Level_WARNING_900 = new N.Level("WARNING", 900);
+  C.List_0YN = Isolate.makeConstantList(["debugging", "local_pub_serve", "pub_serve_host"]);
   C.List_127_2047_65535_1114111 = H.setRuntimeTypeInfo(Isolate.makeConstantList([127, 2047, 65535, 1114111]), [P.int]);
   C.List_2Vk = Isolate.makeConstantList([0, 0, 32776, 33792, 1, 10240, 0, 0]);
   C.List_2Zi = H.setRuntimeTypeInfo(Isolate.makeConstantList(["*::class", "*::dir", "*::draggable", "*::hidden", "*::id", "*::inert", "*::itemprop", "*::itemref", "*::itemscope", "*::lang", "*::spellcheck", "*::title", "*::translate", "A::accesskey", "A::coords", "A::hreflang", "A::name", "A::shape", "A::tabindex", "A::target", "A::type", "AREA::accesskey", "AREA::alt", "AREA::coords", "AREA::nohref", "AREA::shape", "AREA::tabindex", "AREA::target", "AUDIO::controls", "AUDIO::loop", "AUDIO::mediagroup", "AUDIO::muted", "AUDIO::preload", "BDO::dir", "BODY::alink", "BODY::bgcolor", "BODY::link", "BODY::text", "BODY::vlink", "BR::clear", "BUTTON::accesskey", "BUTTON::disabled", "BUTTON::name", "BUTTON::tabindex", "BUTTON::type", "BUTTON::value", "CANVAS::height", "CANVAS::width", "CAPTION::align", "COL::align", "COL::char", "COL::charoff", "COL::span", "COL::valign", "COL::width", "COLGROUP::align", "COLGROUP::char", "COLGROUP::charoff", "COLGROUP::span", "COLGROUP::valign", "COLGROUP::width", "COMMAND::checked", "COMMAND::command", "COMMAND::disabled", "COMMAND::label", "COMMAND::radiogroup", "COMMAND::type", "DATA::value", "DEL::datetime", "DETAILS::open", "DIR::compact", "DIV::align", "DL::compact", "FIELDSET::disabled", "FONT::color", "FONT::face", "FONT::size", "FORM::accept", "FORM::autocomplete", "FORM::enctype", "FORM::method", "FORM::name", "FORM::novalidate", "FORM::target", "FRAME::name", "H1::align", "H2::align", "H3::align", "H4::align", "H5::align", "H6::align", "HR::align", "HR::noshade", "HR::size", "HR::width", "HTML::version", "IFRAME::align", "IFRAME::frameborder", "IFRAME::height", "IFRAME::marginheight", "IFRAME::marginwidth", "IFRAME::width", "IMG::align", "IMG::alt", "IMG::border", "IMG::height", "IMG::hspace", "IMG::ismap", "IMG::name", "IMG::usemap", "IMG::vspace", "IMG::width", "INPUT::accept", "INPUT::accesskey", "INPUT::align", "INPUT::alt", "INPUT::autocomplete", "INPUT::autofocus", "INPUT::checked", "INPUT::disabled", "INPUT::inputmode", "INPUT::ismap", "INPUT::list", "INPUT::max", "INPUT::maxlength", "INPUT::min", "INPUT::multiple", "INPUT::name", "INPUT::placeholder", "INPUT::readonly", "INPUT::required", "INPUT::size", "INPUT::step", "INPUT::tabindex", "INPUT::type", "INPUT::usemap", "INPUT::value", "INS::datetime", "KEYGEN::disabled", "KEYGEN::keytype", "KEYGEN::name", "LABEL::accesskey", "LABEL::for", "LEGEND::accesskey", "LEGEND::align", "LI::type", "LI::value", "LINK::sizes", "MAP::name", "MENU::compact", "MENU::label", "MENU::type", "METER::high", "METER::low", "METER::max", "METER::min", "METER::value", "OBJECT::typemustmatch", "OL::compact", "OL::reversed", "OL::start", "OL::type", "OPTGROUP::disabled", "OPTGROUP::label", "OPTION::disabled", "OPTION::label", "OPTION::selected", "OPTION::value", "OUTPUT::for", "OUTPUT::name", "P::align", "PRE::width", "PROGRESS::max", "PROGRESS::min", "PROGRESS::value", "SELECT::autocomplete", "SELECT::disabled", "SELECT::multiple", "SELECT::name", "SELECT::required", "SELECT::size", "SELECT::tabindex", "SOURCE::type", "TABLE::align", "TABLE::bgcolor", "TABLE::border", "TABLE::cellpadding", "TABLE::cellspacing", "TABLE::frame", "TABLE::rules", "TABLE::summary", "TABLE::width", "TBODY::align", "TBODY::char", "TBODY::charoff", "TBODY::valign", "TD::abbr", "TD::align", "TD::axis", "TD::bgcolor", "TD::char", "TD::charoff", "TD::colspan", "TD::headers", "TD::height", "TD::nowrap", "TD::rowspan", "TD::scope", "TD::valign", "TD::width", "TEXTAREA::accesskey", "TEXTAREA::autocomplete", "TEXTAREA::cols", "TEXTAREA::disabled", "TEXTAREA::inputmode", "TEXTAREA::name", "TEXTAREA::placeholder", "TEXTAREA::readonly", "TEXTAREA::required", "TEXTAREA::rows", "TEXTAREA::tabindex", "TEXTAREA::wrap", "TFOOT::align", "TFOOT::char", "TFOOT::charoff", "TFOOT::valign", "TH::abbr", "TH::align", "TH::axis", "TH::bgcolor", "TH::char", "TH::charoff", "TH::colspan", "TH::headers", "TH::height", "TH::nowrap", "TH::rowspan", "TH::scope", "TH::valign", "TH::width", "THEAD::align", "THEAD::char", "THEAD::charoff", "THEAD::valign", "TR::align", "TR::bgcolor", "TR::char", "TR::charoff", "TR::valign", "TRACK::default", "TRACK::kind", "TRACK::label", "TRACK::srclang", "UL::compact", "UL::type", "VIDEO::controls", "VIDEO::height", "VIDEO::loop", "VIDEO::mediagroup", "VIDEO::muted", "VIDEO::preload", "VIDEO::width"]), [P.String]);
@@ -84197,8 +84206,6 @@ self.showOpenDialog = function(options) {
   $._promptOptIntoAnalyticsStarted = false;
   $._atomUsesShadowDOM = null;
   $.Launch__id = 0;
-  $.debugging = true;
-  $.pub_serve_check = false;
   $._configureErrorsPrefPath = "dartlang.configureErrorsView";
   $.pluginVersion = null;
   $.SdkManager__minVersion = null;

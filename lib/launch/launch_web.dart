@@ -16,9 +16,7 @@ import '../debug/chrome_debugger.dart';
 
 final Logger _logger = new Logger('atom.launch.web');
 
-// TODO: option?
-bool debugging = true;
-bool pub_serve_check = true;
+const launchOptionKeys = const ['debugging', 'local_pub_serve', 'pub_serve_host'];
 
 class WebLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -35,8 +33,11 @@ class WebLaunchType extends LaunchType {
       return new Future.value();
     }
 
-    // TODO add a config for this (pub_serve_check or url)
-    String root = 'http://localhost:8084';
+    Map yamlArgs = configuration.typeArgs['args'];
+    bool debugging = yamlArgs['debugging'] == true;
+    bool pub_serve_check = yamlArgs['local_pub_serve'] == true;
+
+    String root;
     if (pub_serve_check) {
       // Find pub serve for 'me'.
       ServeLaunch pubServe = manager.launches.firstWhere((l) =>
@@ -50,10 +51,11 @@ class WebLaunchType extends LaunchType {
         return new Future.value();
       }
       root = pubServe.root;
+    } else {
+      root = yamlArgs['pub_serve_host'] ?? 'http://localhost:8084';
     }
 
-    Map yamlArgs = configuration.typeArgs['args'];
-    List<String> args = browser.execArgsFromYaml(yamlArgs);
+    List<String> args = browser.execArgsFromYaml(yamlArgs, exceptKeys: launchOptionKeys);
     String htmlFile = configuration.shortResourceName;
     if (htmlFile.startsWith('web/')) {
       htmlFile = htmlFile.substring(4);
@@ -91,6 +93,13 @@ class WebLaunchType extends LaunchType {
   String getDefaultConfigText() => '''
 # Additional args for browser.
 args:
+  # options
+  debugging: true
+  local_pub_serve: true
+  # if local_pub_serve is false, specify pub serve endpoint
+  pub_serve_host: http://localhost:8084
+
+  # chrome
   remote-debugging-port: 9222
   user-data-dir: ${fs.tmpdir}/dartlang-dbg-host
   no-default-browser-check: true

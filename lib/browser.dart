@@ -75,10 +75,11 @@ class Browser {
     return runner.onExit.then((_) => buf.toString());
   }
 
-  List<String> execArgsFromYaml(yamlArgs) {
+  List<String> execArgsFromYaml(yamlArgs, {List<String>exceptKeys: const []}) {
     List execArgs = [];
     if (yamlArgs is Map) {
       yamlArgs.forEach((k, v) {
+        if (exceptKeys.contains(k)) return;
         if (singletonBoolParameters.contains(k)) {
           if (v) execArgs.add('--$k');
         } else {
