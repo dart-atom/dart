@@ -136,8 +136,7 @@ class BreakpointManager implements Disposable, StateStorable {
   void _createEditorBreakpoint(TextEditor editor, AtomBreakpoint bp) {
     _logger.finer('creating editor breakpoint: ${bp}');
     Marker marker = editor.markBufferRange(
-        debuggerCoordsToEditorRange(bp.line, bp.column),
-        persistent: false);
+        debuggerCoordsToEditorRange(bp.line, bp.column));
     _editorBreakpoints.add(new _EditorBreakpoint(this, editor, bp, marker));
   }
 

@@ -32,6 +32,7 @@ const _verbose = false;
 // TODO tooltips observation of variables
 // TODO investigate why debug launch gets closed properly when restarting
 //   but not serve launch
+// TODO console + find in console
 
 class ChromeDebugger {
   /// Establish a connection to a service protocol server at the given port.
@@ -332,7 +333,7 @@ class ChromeDebugIsolate extends DebugIsolate {
 
   ChromeDebugIsolate(this.connection, this.chrome, this.paused) : super();
 
-  // TODO: Web workers?
+  // TODO: add Web Workers / Service Workers as isolates
   String get name => 'main';
 
   /// Return a more human readable name for the Isolate.
@@ -381,26 +382,14 @@ class ChromeDebugFrame extends DebugFrame {
   Future<List<DebugVariable>> resolveLocals() {
     if (!connection.isPaused) return new Future.value([]);
     _logger.info('Getting frame locals: ${frame.self}');
-    return connection.chrome.runtime.getProperties(frame.self.objectId,
-        ownProperties: true,
-        accessorPropertiesOnly: false,
-        generatePreview: true).then((properties) {
-      _locals = [];
-      properties.result.where((p) => p.isUseable).forEach((property) {
-        _locals.add(new ChromeDebugVariable(connection, property));
-      });
-      // TODO make scopes more identifiable
-      for (var property in frame.scopeChain) {
-        _locals.add(new ChromeScope(connection, property));
-      }
-      // TODO add exceptionDetails
-      properties.internalProperties.where((p) => p.isUseable).forEach((property) {
-        _locals.add(new ChromeDebugVariable(connection, property));
-      });
-      return _locals;
-    });
+    _locals = [];
+    _locals.add(new ChromeThis(connection, frame.self));
+    // TODO make scopes more identifiable
+    for (var property in frame.scopeChain) {
+      _locals.add(new ChromeScope(connection, property));
+    }
+    return new Future.value(_locals);
   }
-
 
   Future<String> eval(String expression) {
     // TODO (enable expression tab)
@@ -408,61 +397,26 @@ class ChromeDebugFrame extends DebugFrame {
   }
 }
 
+class ChromeThis extends DebugVariable {
+  final ChromeConnection connection;
+  final RemoteObject object;
+  ChromeDebugValue _value;
+
+  String get name => 'this';
+  DebugValue get value => _value ??= new ChromeDebugValue(connection, object);
+
+  ChromeThis(this.connection, this.object);
+}
+
 class ChromeScope extends DebugVariable {
   final ChromeConnection connection;
   final Scope scope;
-  ChromeScopeValue _value;
+  ChromeDebugValue _value;
 
   String get name => scope.name ?? scope.type;
-  DebugValue get value => _value ??= new ChromeScopeValue(connection, scope.object);
+  DebugValue get value => _value ??= new ChromeDebugValue(connection, scope.object);
 
   ChromeScope(this.connection, this.scope);
-}
-
-class ChromeScopeValue extends DebugValue {
-  final ChromeConnection connection;
-  final RemoteObject value;
-
-  List<DebugVariable> _variables;
-
-  String get className => value == null
-      ? 'Null' : (value?.className ?? '${value.type}.${value.subtype}');
-
-  String get valueAsString => value == null
-      ? 'null' : value.description ?? value.unserializableValue;
-
-  bool get isPrimitive =>  false;
-  bool get isString => false;
-  bool get isPlainInstance => false;
-  bool get isList => false;
-  bool get isMap => true;
-
-  bool get valueIsTruncated => false;
-
-  int get itemsLength => _variables?.length;
-
-  ChromeScopeValue(this.connection, this.value);
-
-  Future<List<DebugVariable>> getChildren() {
-    if (!connection.isPaused) return new Future.value([]);
-    _logger.info('Getting scope: ${value}');
-    return connection.chrome.runtime.getProperties(value.objectId,
-        ownProperties: true,
-        accessorPropertiesOnly: false,
-        generatePreview: true).then((properties) {
-      _variables = [];
-      properties.result.where((p) => p.isUseable).forEach((property) {
-        _variables.add(new ChromeDebugVariable(connection, property));
-      });
-      properties.internalProperties.where((p) => p.isUseable).forEach((property) {
-        _variables.add(new ChromeDebugVariable(connection, property));
-      });
-      // TODO add exceptionDetails
-      return _variables;
-    });
-  }
-
-  Future<DebugValue> invokeToString() => new Future.value(this);
 }
 
 class ChromeDebugVariable extends DebugVariable {
@@ -473,7 +427,10 @@ class ChromeDebugVariable extends DebugVariable {
   String get name => property.name;
   DebugValue get value => _value ??= new ChromeDebugValue(connection, property.value);
 
-  ChromeDebugVariable(this.connection, this.property);
+  ChromeDebugVariable(this.connection, this.property) {
+    // TODO integrate
+    if (property.symbol != null) print('$name: ${property.symbol}');
+  }
 }
 
 class ChromeDebugValue extends DebugValue {
@@ -518,6 +475,10 @@ class ChromeDebugValue extends DebugValue {
       properties.result.where((p) => p.isUseable).forEach((property) {
         _variables.add(new ChromeDebugVariable(connection, property));
       });
+      properties.internalProperties.where((p) => p.isUseable).forEach((property) {
+        _variables.add(new ChromeDebugVariable(connection, property));
+      });
+      // TODO add exceptionDetails
       return _variables;
     });
   }
@@ -588,7 +549,7 @@ class WebUriTranslator implements UriTranslator {
 
   String _rootPrefix;
 
-  WebUriTranslator(this.root, {this.prefix: 'http://localhost:8081/'}) {
+  WebUriTranslator(this.root, {this.prefix: 'http://localhost:8084/'}) {
     _rootPrefix = new Uri.directory(root, windows: isWindows).toString();
   }
 

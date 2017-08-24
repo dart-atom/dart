@@ -289,8 +289,7 @@ class DebuggerView extends DockedView {
 
         // Update the execution location markers.
         _execMarker = editor.markBufferRange(
-            debuggerCoordsToEditorRange(location.line, location.column),
-            persistent: false);
+            debuggerCoordsToEditorRange(location.line, location.column));
 
         // The executing line color.
         editor.decorateMarker(_execMarker, {

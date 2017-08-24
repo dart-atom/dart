@@ -35,8 +35,8 @@ class WebLaunchType extends LaunchType {
       return new Future.value();
     }
 
-    // TODO add a config for this
-    String root = 'http://localhost:8081';
+    // TODO add a config for this (pub_serve_check or url)
+    String root = 'http://localhost:8084';
     if (pub_serve_check) {
       // Find pub serve for 'me'.
       ServeLaunch pubServe = manager.launches.firstWhere((l) =>
