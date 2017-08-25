@@ -1,5 +1,11 @@
 # dartlang plugin changelog
 
+## unreleased
+- added browser selection
+- added html launch
+- added web debugger from identifying
+- fixes to console window and pub servce launch
+
 ## 0.7.0
 - removed the Dart errors view in favor of using the Linter's default UI
 - some fixes to the outline view's styles
