@@ -506,7 +506,10 @@ class RemoteObject extends ProxyHolder {
   bool get isUseable =>
       (value != null) ||
       (value == null && subtype == 'null') ||
+      (value == null && type == 'error') ||
       (value == null && objectId != null);
+
+  bool get isException => subtype == 'error';
 
   RemoteObject(JsObject obj) : super(obj);
 

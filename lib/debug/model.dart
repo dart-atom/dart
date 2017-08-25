@@ -106,6 +106,24 @@ abstract class DebugValue {
 
   int get itemsLength;
 
+  String get hint {
+    if (isString) {
+      // We choose not to escape double quotes here; it doesn't work well visually.
+      String str = valueAsString;
+      return valueIsTruncated ? '"$str…' : '"$str"';
+    } else if (isList) {
+      return '[ $itemsLength ]';
+    } else if (isMap) {
+      return '{ $itemsLength }';
+    } else if (itemsLength != null) {
+      return '$className [ $itemsLength ]';
+    } else if (isPlainInstance) {
+      return className;
+    } else {
+      return valueAsString;
+    }
+  }
+
   Future<List<DebugVariable>> getChildren();
 
   Future<DebugValue> invokeToString();

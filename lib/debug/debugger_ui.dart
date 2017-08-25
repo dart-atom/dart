@@ -550,21 +550,10 @@ class ExecutionTab extends MTab {
 
     if (value == null) {
       element.add(span(text: '', c: valueClass));
-    } else if (value.isString) {
-      // We choose not to escape double quotes here; it doesn't work well visually.
-      String str = value.valueAsString;
-      str = value.valueIsTruncated ? '"${str}…' : '"${str}"';
-      element.add(span(text: str, c: valueClass));
-    } else if (value.isList) {
-      element.add(span(text: '[ ${value.itemsLength} ]', c: valueClass));
-    } else if (value.isMap) {
-      element.add(span(text: '{ ${value.itemsLength} }', c: valueClass));
-    } else if (value.itemsLength != null) {
-      element.add(span(text: '${value.className} [ ${value.itemsLength} ]', c: valueClass));
     } else if (value.isPlainInstance) {
-      element.add(italic(text: value.className, c: valueClass));
+      element.add(italic(text: value.hint, c: valueClass));
     } else {
-      element.add(span(text: value.valueAsString, c: valueClass));
+      element.add(span(text: value.hint, c: valueClass));
     }
 
     element.layoutHorizontal();

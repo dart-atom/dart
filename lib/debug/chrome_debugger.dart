@@ -31,6 +31,7 @@ const _verbose = false;
 // TODO investigate why debug launch gets closed properly when restarting
 //   but not serve launch
 // TODO console + find in console
+// TODO add continueToLocation
 
 class ChromeDebugger {
   /// Establish a connection to a service protocol server at the given port.
@@ -57,7 +58,7 @@ class ChromeDebugger {
               selfRefName: launch.project?.getSelfRefName());
 
           ChromeConnection connection = new ChromeConnection(launch, client, uriResolver);
-          return client.page.navigate('$root/$htmlFile').then((s) {
+          return connection.navigate('$root/$htmlFile').then((s) {
             launch.addDebugConnection(connection);
             launch.pipeStdio('Launched ($s)\n');
             return false;
@@ -135,7 +136,7 @@ class ChromeConnection extends DebugConnection {
     });
 
     chrome.debugger.paused((paused) {
-      launch.pipeStdio('Pausing.');
+      launch.pipeStdio('Pausing (${paused.reason}).\n');
       isPaused = true;
       _isolate = new ChromeDebugIsolate(this, this.chrome, paused);
       _isolatePaused.add(_isolate);
@@ -143,6 +144,27 @@ class ChromeConnection extends DebugConnection {
 
     subs.add(breakpointManager.onAdd.listen(addBreakpoint));
     subs.add(breakpointManager.onRemove.listen(removeBreakpoint));
+    subs.add(breakpointManager.onBreakOnExceptionTypeChanged.listen((ExceptionBreakType val) {
+      chrome.debugger.setPauseOnExceptions(exceptionTypes[val]).catchError((e) {
+        launch.pipeStdio('Error setting exception mode ($e).\n');
+      });
+    }));
+  }
+
+  Map<ExceptionBreakType, String> exceptionTypes = {
+    ExceptionBreakType.all: 'all',
+    ExceptionBreakType.uncaught: 'uncaught',
+    ExceptionBreakType.none: 'none',
+  };
+
+  Future<String> navigate(String url) {
+    return chrome.debugger.setPauseOnExceptions(
+      exceptionTypes[breakpointManager.breakOnExceptionType]).
+      catchError((e) {
+        launch.pipeStdio('Error setting excption mode ($e).\n');
+      }).then((_) {
+      return chrome.page.navigate(url);
+    });
   }
 
   void createReverseMaps(String sourceUrl, Mapping map) {
@@ -343,9 +365,14 @@ class ChromeDebugIsolate extends DebugIsolate {
 
   bool get hasFrames => frames != null && frames.isNotEmpty;
 
+  bool get isInException => paused.reason == 'exception';
+
+  RemoteObject get exception =>
+      isInException ? new RemoteObject(paused.data) : null;
+
   List<DebugFrame> get frames =>
       paused.callFrames.map((frame) =>
-          new ChromeDebugFrame(connection, frame)).toList();
+          new ChromeDebugFrame(connection, exception, frame)).toList();
 
   pause() => chrome.debugger.pause();
 
@@ -360,6 +387,7 @@ class ChromeDebugIsolate extends DebugIsolate {
 class ChromeDebugFrame extends DebugFrame {
   final ChromeConnection connection;
   final CallFrame frame;
+  final RemoteObject exception;
 
   List<DebugVariable> _locals;
 
@@ -375,14 +403,16 @@ class ChromeDebugFrame extends DebugFrame {
   DebugLocation get location =>
       new ChromeDebugLocation(connection, frame.location);
 
-  ChromeDebugFrame(this.connection, this.frame) : super();
+  ChromeDebugFrame(this.connection, this.exception, this.frame) : super();
 
   Future<List<DebugVariable>> resolveLocals() {
     if (!connection.isPaused) return new Future.value([]);
-    // _logger.info('Getting frame locals: ${frame.self}');
     _locals = [];
+    // TODO make scopes and exceptions more identifiable
+    if (exception != null) {
+      _locals.add(new ChromeThis(connection, exception));
+    }
     _locals.add(new ChromeThis(connection, frame.self));
-    // TODO make scopes more identifiable
     for (var property in frame.scopeChain) {
       _locals.add(new ChromeScope(connection, property));
     }
@@ -400,7 +430,7 @@ class ChromeThis extends DebugVariable {
   final RemoteObject object;
   ChromeDebugValue _value;
 
-  String get name => 'this';
+  String get name => object.isException ? 'exception' : 'this';
   DebugValue get value => _value ??= new ChromeDebugValue(connection, object);
 
   ChromeThis(this.connection, this.object);
@@ -453,8 +483,21 @@ class ChromeDebugValue extends DebugValue {
 
   bool get valueIsTruncated => false;
 
-  // TODO fix debugger_ui.dart to update the tree with [itemsLength] after
-  // get children.  Consider renaming to hint and as a string.
+  String get hint {
+    if (isString) {
+      // We choose not to escape double quotes here; it doesn't work well visually.
+      String str = valueAsString;
+      return valueIsTruncated ? '"$str…' : '"$str"';
+    } else if (isList || isMap || isPlainInstance) {
+      return className;
+    } else {
+      return valueAsString;
+    }
+  }
+
+  // We don't know this until getChildren() is called so we use hint instead.
+  // Even after getChildren() we would have to count elements that are actual
+  // values.
   int get itemsLength => null;
 
   // Warning: value can be null.
@@ -468,7 +511,6 @@ class ChromeDebugValue extends DebugValue {
         accessorPropertiesOnly: false,
         generatePreview: true).then((properties) {
       _variables = [];
-      // TODO add exceptionDetails
       properties.result.where((p) => p.isUseable).forEach((property) {
         _variables.add(new ChromeDebugVariable(connection, property));
       });
@@ -479,7 +521,8 @@ class ChromeDebugValue extends DebugValue {
     });
   }
 
-  // TODO needed for longer details, needs valueAsString + valueIsTruncated
+  // TODO needed for longer details if we need, the return needs
+  // valueAsString + valueIsTruncated
   Future<DebugValue> invokeToString() => new Future.value(this);
 }
 
