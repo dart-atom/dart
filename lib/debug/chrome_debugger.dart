@@ -354,6 +354,7 @@ class ChromeDebugIsolate extends DebugIsolate {
   ChromeDebugIsolate(this.connection, this.chrome, this.paused) : super();
 
   // TODO: add Web Workers / Service Workers as isolates
+  // TODO: should we use asyncStackTrace?
   String get name => 'main';
 
   /// Return a more human readable name for the Isolate.
@@ -421,6 +422,7 @@ class ChromeDebugFrame extends DebugFrame {
 
   Future<String> eval(String expression) {
     // TODO (enable expression tab)
+    // connection.debugger.evaluateOnCallFrame
     return new Future.value();
   }
 }
