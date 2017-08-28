@@ -152,9 +152,7 @@ class MList<T extends MItem> extends CoreElement {
 
     CoreElement _newUl = ul()..flex();
     _itemKeyToElement.clear();
-    // TODO lock UI
     return _populateChildren('', modelObjects, _newUl).whenComplete(() {
-      // TODO unlock UI
       _ul.element.children = _newUl.element.children;
       if (refreshSelection) {
         if (_itemKeyToElement[_selKey] != null) {

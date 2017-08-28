@@ -465,8 +465,11 @@ class ExecutionTab extends MTab {
   ExecutionTab(this.view, this.connection) : super('execution', 'Execution') {
     content..layoutVertical()..flex();
     content.add([
-      list = new MList(_renderFrame)..toggleClass('debugger-frame-area'),
-      locals = new MTree(new _LocalTreeModel(), _renderVariable)..flex()
+      list = new MList(_renderFrame)
+          ..toggleClass('debugger-frame-area'),
+      locals = new MTree(new _LocalTreeModel(), _renderVariable)
+          ..flex()
+          ..toggleClass('debugger-local-area')
     ]);
 
     list.selectedItem.onChanged.listen(_selectFrame);
@@ -513,7 +516,7 @@ class ExecutionTab extends MTab {
 
   void _selectFrame(DebugFrame frame) {
     if (frame == null) {
-      locals.update([], refreshSelection: true);
+      _updateLocals([]);
       return;
     }
 
@@ -525,17 +528,17 @@ class ExecutionTab extends MTab {
     if (vars == null) {
       frame.resolveLocals().then((vars) {
         if (vars != null) {
-          locals.update(vars, refreshSelection: true).then((_) {
+          _updateLocals(vars).then((_) {
             if (frame.isExceptionFrame && vars.isNotEmpty) {
               locals.selectItem(vars.first);
             }
           });
         }
       }).catchError((e) {
-        locals.update([], refreshSelection: true);
+        _updateLocals([]);
       });
     } else {
-      locals.update(vars, refreshSelection: true).then((_) {
+      _updateLocals(vars).then((_) {
         if (frame.isExceptionFrame && vars.isNotEmpty) {
           locals.selectItem(vars.first);
         }
@@ -563,6 +566,13 @@ class ExecutionTab extends MTab {
 
   void _showObjectDetails(DebugVariable variable) {
     view.detailSection.showDetails(variable);
+  }
+
+  Future _updateLocals(List<DebugVariable> vars) {
+    locals.toggleClass('debugger-locked', true);
+    return locals.update(vars, refreshSelection: true).whenComplete(() {
+      locals.toggleClass('debugger-locked', false);
+    });
   }
 
   void dispose() => subs.dispose();
