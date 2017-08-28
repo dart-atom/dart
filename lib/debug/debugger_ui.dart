@@ -489,8 +489,9 @@ class ExecutionTab extends MTab {
     // When stepping, only change the frames after a short delay.
     _framesClearTimer = new Timer(_framesDebounceDuration, () {
       if (frames == null) frames = [];
-      list.update(frames);
-      if (frames.isNotEmpty) list.selectItem(frames.first);
+      list.update(frames).then((_) {
+        if (frames.isNotEmpty) list.selectItem(frames.first);
+      });
     });
   }
 
@@ -512,7 +513,7 @@ class ExecutionTab extends MTab {
 
   void _selectFrame(DebugFrame frame) {
     if (frame == null) {
-      locals.update([]);
+      locals.update([], refreshSelection: true);
       return;
     }
 
@@ -522,22 +523,23 @@ class ExecutionTab extends MTab {
 
     List<DebugVariable> vars = frame.locals;
     if (vars == null) {
-      locals.update([]);
       frame.resolveLocals().then((vars) {
         if (vars != null) {
-          locals.update(vars);
-
-          if (frame.isExceptionFrame && vars.isNotEmpty) {
-            locals.selectItem(vars.first);
-          }
+          locals.update(vars, refreshSelection: true).then((_) {
+            if (frame.isExceptionFrame && vars.isNotEmpty) {
+              locals.selectItem(vars.first);
+            }
+          });
         }
+      }).catchError((e) {
+        locals.update([], refreshSelection: true);
       });
     } else {
-      locals.update(vars);
-
-      if (frame.isExceptionFrame && vars.isNotEmpty) {
-        locals.selectItem(vars.first);
-      }
+      locals.update(vars, refreshSelection: true).then((_) {
+        if (frame.isExceptionFrame && vars.isNotEmpty) {
+          locals.selectItem(vars.first);
+        }
+      });
     }
   }
 
