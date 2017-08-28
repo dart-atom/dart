@@ -141,6 +141,11 @@ class ChromeConnection extends DebugConnection {
       _isolate = new ChromeDebugIsolate(this, this.chrome, paused);
       _isolatePaused.add(_isolate);
     });
+    chrome.debugger.resumed(() {
+      launch.pipeStdio('Resumed.\n');
+      isPaused = false;
+      _isolateResumed.add(_isolate);
+    });
 
     subs.add(breakpointManager.onAdd.listen(addBreakpoint));
     subs.add(breakpointManager.onRemove.listen(removeBreakpoint));
@@ -274,12 +279,7 @@ class ChromeConnection extends DebugConnection {
 
   Future get onTerminated => completer.future;
 
-  Future resume() {
-    return chrome.debugger.resume().then((_) {
-      isPaused = false;
-      _isolateResumed.add(_isolate);
-    });
-  }
+  Future resume() => chrome.debugger.resume();
 
   stepIn() {
     if (isPaused) {
@@ -351,6 +351,8 @@ class ChromeDebugIsolate extends DebugIsolate {
   final ChromeDebugConnection chrome;
   final Paused paused;
 
+  List<DebugFrame> _frames;
+
   ChromeDebugIsolate(this.connection, this.chrome, this.paused) : super();
 
   // TODO: add Web Workers / Service Workers as isolates
@@ -371,7 +373,7 @@ class ChromeDebugIsolate extends DebugIsolate {
   RemoteObject get exception =>
       isInException ? new RemoteObject(paused.data) : null;
 
-  List<DebugFrame> get frames =>
+  List<DebugFrame> get frames => _frames ??=
       paused.callFrames.map((frame) =>
           new ChromeDebugFrame(connection, exception, frame)).toList();
 
