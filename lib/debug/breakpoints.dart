@@ -9,9 +9,9 @@ import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../material.dart';
 import '../projects.dart';
 import '../state.dart';
+import '../utils.dart';
 import 'utils.dart';
 
 final Logger _logger = new Logger('atom.breakpoints');

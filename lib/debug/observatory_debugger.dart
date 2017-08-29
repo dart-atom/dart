@@ -10,8 +10,8 @@ import 'package:vm_service_lib/vm_service_lib.dart';
 
 import '../flutter/flutter_ext.dart';
 import '../launch/launch.dart';
-import '../material.dart';
 import '../state.dart';
+import '../utils.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
 import 'model.dart';
@@ -473,7 +473,6 @@ Point _calcPos(Script script, int tokenPos) {
 
   for (List<int> row in table) {
     if (row == null || row.isEmpty) continue;
-    //int line = row[0]; <- this crashed, don't know why
     int line = row.elementAt(0);
     int index = 1;
 

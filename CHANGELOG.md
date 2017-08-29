@@ -4,7 +4,7 @@
 - added browser selection
 - added html launch
 - added web debugger from identifying
-- fixes to console window and pub servce launch
+- fixes to console window and pub service launch
 
 ## 0.7.0
 - removed the Dart errors view in favor of using the Linter's default UI

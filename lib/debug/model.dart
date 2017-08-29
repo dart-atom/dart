@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import '../launch/launch.dart';
-import '../material.dart';
 import '../utils.dart';
 
 abstract class DebugConnection {

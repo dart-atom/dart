@@ -217,6 +217,7 @@ class ChromeConnection extends DebugConnection {
         SourceMapSpan span = SingleMappingProxy.spanFor(m, atomBreakpoint.line - 1, atomBreakpoint.column ?? 0);
         if (span == null) return new Future.value();
 
+        // TODO: explore setting by regex (urlRegex)
         return setBreakpointByUrl(span.sourceUrl.toString(), span.start.line, span.start.column)
             .then((Breakpoint chromeBreakpoint) {
               launch.pipeStdio('  Set breakpoint: $chromeBreakpoint\n');
@@ -302,7 +303,6 @@ class ChromeConnection extends DebugConnection {
 
   autoStepOver() => stepOver();
 
-  // TODO: do we need this?
   stepOverAsyncSuspension() {}
 
   Future terminate() => launch.kill();

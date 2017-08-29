@@ -28,7 +28,8 @@ class BrowserManager implements Disposable {
       new StreamController.broadcast(sync: true);
 
   Stream<Browser> get onBrowserChange => _onBrowserChangeController.stream;
-  Stream<String> get onBrowserVersionChange => _onVersionChangeController.stream;
+  Stream<String> get onBrowserVersionChange =>
+      _onVersionChangeController.stream;
 
   BrowserManager() {
     void update(String path) {
@@ -40,7 +41,9 @@ class BrowserManager implements Disposable {
         _onVersionChangeController.add(version);
       });
     }
-    subs.add(atom.config.onDidChange(browserKey)
+
+    subs.add(atom.config
+        .onDidChange(browserKey)
         .transform(new Debounce(new Duration(seconds: 1)))
         .listen(update));
     if (browserPath != null) {
@@ -54,8 +57,10 @@ class BrowserManager implements Disposable {
 }
 
 class Browser {
-  static const singletonBoolParameters =
-      const ['no-default-browser-check', 'no-first-run'];
+  static const singletonBoolParameters = const [
+    'no-default-browser-check',
+    'no-first-run'
+  ];
 
   final String path;
 
@@ -75,7 +80,7 @@ class Browser {
     return runner.onExit.then((_) => buf.toString());
   }
 
-  List<String> execArgsFromYaml(yamlArgs, {List<String>exceptKeys: const []}) {
+  List<String> execArgsFromYaml(yamlArgs, {List<String> exceptKeys: const []}) {
     List execArgs = [];
     if (yamlArgs is Map) {
       yamlArgs.forEach((k, v) {

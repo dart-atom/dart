@@ -103,17 +103,6 @@ typedef void ListRenderer(dynamic obj, CoreElement element);
 typedef bool ListFilter(dynamic obj);
 typedef int ListSort<T>(T obj1, T obj2);
 
-abstract class MItem {
-  String get id;
-  String key;
-}
-
-class Pair<L, R> {
-  final L left;
-  final R right;
-  Pair(this.left, this.right);
-}
-
 // TODO: use cmd, ctrl to toggle list items
 
 class MList<T extends MItem> extends CoreElement {
