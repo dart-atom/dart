@@ -289,8 +289,7 @@ class DebuggerView extends DockedView {
 
         // Update the execution location markers.
         _execMarker = editor.markBufferRange(
-            debuggerCoordsToEditorRange(location.line, location.column),
-            persistent: false);
+            debuggerCoordsToEditorRange(location.line, location.column));
 
         // The executing line color.
         editor.decorateMarker(_execMarker, {
@@ -466,8 +465,11 @@ class ExecutionTab extends MTab {
   ExecutionTab(this.view, this.connection) : super('execution', 'Execution') {
     content..layoutVertical()..flex();
     content.add([
-      list = new MList(_renderFrame)..toggleClass('debugger-frame-area'),
-      locals = new MTree(new _LocalTreeModel(), _renderVariable)..flex()
+      list = new MList(_renderFrame)
+          ..toggleClass('debugger-frame-area'),
+      locals = new MTree(new _LocalTreeModel(), _renderVariable)
+          ..flex()
+          ..toggleClass('debugger-local-area')
     ]);
 
     list.selectedItem.onChanged.listen(_selectFrame);
@@ -490,8 +492,9 @@ class ExecutionTab extends MTab {
     // When stepping, only change the frames after a short delay.
     _framesClearTimer = new Timer(_framesDebounceDuration, () {
       if (frames == null) frames = [];
-      list.update(frames);
-      if (frames.isNotEmpty) list.selectItem(frames.first);
+      list.update(frames).then((_) {
+        if (frames.isNotEmpty) list.selectItem(frames.first);
+      });
     });
   }
 
@@ -513,7 +516,7 @@ class ExecutionTab extends MTab {
 
   void _selectFrame(DebugFrame frame) {
     if (frame == null) {
-      locals.update([]);
+      _updateLocals([]);
       return;
     }
 
@@ -522,10 +525,24 @@ class ExecutionTab extends MTab {
     });
 
     List<DebugVariable> vars = frame.locals;
-    locals.update(vars ?? []);
-
-    if (frame.isExceptionFrame && vars.isNotEmpty) {
-      locals.selectItem(vars.first);
+    if (vars == null) {
+      frame.resolveLocals().then((vars) {
+        if (vars != null) {
+          _updateLocals(vars).then((_) {
+            if (frame.isExceptionFrame && vars.isNotEmpty) {
+              locals.selectItem(vars.first);
+            }
+          });
+        }
+      }).catchError((e) {
+        _updateLocals([]);
+      });
+    } else {
+      _updateLocals(vars).then((_) {
+        if (frame.isExceptionFrame && vars.isNotEmpty) {
+          locals.selectItem(vars.first);
+        }
+      });
     }
   }
 
@@ -538,21 +555,10 @@ class ExecutionTab extends MTab {
 
     if (value == null) {
       element.add(span(text: '', c: valueClass));
-    } else if (value.isString) {
-      // We choose not to escape double quotes here; it doesn't work well visually.
-      String str = value.valueAsString;
-      str = value.valueIsTruncated ? '"${str}…' : '"${str}"';
-      element.add(span(text: str, c: valueClass));
-    } else if (value.isList) {
-      element.add(span(text: '[ ${value.itemsLength} ]', c: valueClass));
-    } else if (value.isMap) {
-      element.add(span(text: '{ ${value.itemsLength} }', c: valueClass));
-    } else if (value.itemsLength != null) {
-      element.add(span(text: '${value.className} [ ${value.itemsLength} ]', c: valueClass));
     } else if (value.isPlainInstance) {
-      element.add(italic(text: value.className, c: valueClass));
+      element.add(italic(text: value.hint, c: valueClass));
     } else {
-      element.add(span(text: value.valueAsString, c: valueClass));
+      element.add(span(text: value.hint, c: valueClass));
     }
 
     element.layoutHorizontal();
@@ -560,6 +566,13 @@ class ExecutionTab extends MTab {
 
   void _showObjectDetails(DebugVariable variable) {
     view.detailSection.showDetails(variable);
+  }
+
+  Future _updateLocals(List<DebugVariable> vars) {
+    locals.toggleClass('debugger-locked', true);
+    return locals.update(vars, refreshSelection: true).whenComplete(() {
+      locals.toggleClass('debugger-locked', false);
+    });
   }
 
   void dispose() => subs.dispose();

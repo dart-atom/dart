@@ -148,6 +148,17 @@ class FutureSerializer<T> {
   }
 }
 
+abstract class MItem {
+  String get id;
+  String key;
+}
+
+class Pair<L, R> {
+  final L left;
+  final R right;
+  Pair(this.left, this.right);
+}
+
 bool listIdentical(List a, List b) {
   if (a.length != b.length) return false;
 

@@ -105,7 +105,7 @@ typedef int ListSort<T>(T obj1, T obj2);
 
 // TODO: use cmd, ctrl to toggle list items
 
-class MList<T> extends CoreElement {
+class MList<T extends MItem> extends CoreElement {
   final ListRenderer renderer;
   final ListSort<T> sort;
   final ListFilter filter;
@@ -113,7 +113,7 @@ class MList<T> extends CoreElement {
   final Property<T> selectedItem = new Property();
 
   CoreElement _ul;
-  Map<T, CoreElement> _itemToElement = {};
+  Map<String, Pair<T, CoreElement>> _itemKeyToElement = {};
 
   StreamController<T> _singleClick = new StreamController.broadcast();
   StreamController<T> _doubleClick = new StreamController.broadcast();
@@ -126,7 +126,7 @@ class MList<T> extends CoreElement {
     click(() => selectItem(null));
   }
 
-  void update(List<T> modelObjects) {
+  Future update(List<T> modelObjects, {bool refreshSelection: false}) {
     if (filter != null || sort != null) {
       if (filter != null) {
         modelObjects = modelObjects.where((o) => !filter(o)).toList();
@@ -137,33 +137,33 @@ class MList<T> extends CoreElement {
       if (sort != null) modelObjects.sort(sort);
     }
 
-    // TODO: optimize this
-    _ul.clear();
-    _itemToElement.clear();
+    String _selKey = selectedItem.value?.key;
 
-    T _sel = selectedItem.value;
-
-    _populateChildren(modelObjects, _ul);
-
-    if (_sel != null) {
-      if (_itemToElement[_sel] != null) {
-        CoreElement e = _itemToElement[_sel];
-        e.toggleClass('material-list-selected', true);
-      } else {
-        selectedItem.value = null;
+    CoreElement _newUl = ul()..flex();
+    _itemKeyToElement.clear();
+    return _populateChildren('', modelObjects, _newUl).whenComplete(() {
+      _ul.element.children = _newUl.element.children;
+      if (refreshSelection) {
+        if (_itemKeyToElement[_selKey] != null) {
+          CoreElement e = _itemKeyToElement[_selKey].right;
+          e.toggleClass('material-list-selected', true);
+          selectedItem.value = _itemKeyToElement[_selKey].left;
+        } else if (selectedItem.value != null){
+          selectedItem.value = null;
+        }
       }
-    }
+    });
   }
 
   void selectItem(T item) {
     if (selectedItem.value != null) {
-      CoreElement oldSelected = _itemToElement[selectedItem.value];
+      CoreElement oldSelected = _itemKeyToElement[selectedItem.value.key].right;
       if (oldSelected != null) {
         oldSelected.toggleClass('material-list-selected', false);
       }
     }
 
-    CoreElement element = _itemToElement[item];
+    CoreElement element = _itemKeyToElement[item.key].right;
     if (element == null) item = null;
     selectedItem.value = item;
     if (element != null) {
@@ -171,17 +171,19 @@ class MList<T> extends CoreElement {
     }
   }
 
-  void _populateChildren(List<T> modelObjects, CoreElement container) {
+  Future _populateChildren(String root, List<T> modelObjects, CoreElement container) {
+    List<Future> futures = [];
     for (T item in modelObjects) {
       CoreElement element = container.add(li());
-
+      String key = '$root/${item.id}';
       try {
-        _render(item, element);
+        futures.add(_render(key, item, element));
       } catch (e, st) {
         print('${e}: ${st}');
       }
 
-      _itemToElement[item] = element;
+      item.key = key;
+      _itemKeyToElement[key] = new Pair(item, element);
 
       element.click(() {
         selectItem(item);
@@ -192,10 +194,12 @@ class MList<T> extends CoreElement {
         _doubleClick.add(item);
       });
     }
+    return Future.wait(futures);
   }
 
-  void _render(T item, CoreElement element) {
+  Future _render(String id, T item, CoreElement element) {
     renderer(item, element);
+    return new Future.value();
   }
 
   Stream<T> get onSingleClick => _singleClick.stream;
@@ -207,15 +211,16 @@ abstract class TreeModel<T> {
   Future<List<T>> getChildren(T obj);
 }
 
-// TODO: restore expansion state between update() calls
-
-class MTree<T> extends MList<T> {
+class MTree<T extends MItem> extends MList<T> {
   final TreeModel<T> treeModel;
+
+  final Set<String> expandedNodes = new Set();
 
   MTree(this.treeModel, ListRenderer renderer, {ListFilter filter}) :
       super(renderer, filter: filter);
 
-  void _render(T item, CoreElement element) {
+  Future _render(String id, T item, CoreElement element) {
+    List<Future> futures = [];
     if (treeModel.canHaveChildren(item)) {
       CoreElement expansionTriangle;
       CoreElement childContainer;
@@ -230,33 +235,44 @@ class MTree<T> extends MList<T> {
 
         if (childContainer == null) {
           childContainer = ul(c: 'material-list-indent');
+          int index = element.element.parent.children.indexOf(element.element);
+          element.element.parent.children.insert(index + 1, childContainer.element);
+          expandedNodes.add(id);
           // TODO: Show feedback during an expansion.
-          treeModel.getChildren(item).then((List<T> items) {
-            _populateChildren(items, childContainer);
-            _makeFirstChildVisible(childContainer);
+          return treeModel.getChildren(item).then((List<T> items) {
+            return _populateChildren(id, items, childContainer);
           }).catchError((e, st) {
             atom.notifications.addError('${e}');
             _logger.info('unable to expand child', e, st);
           });
-          int index = element.element.parent.children.indexOf(element.element);
-          element.element.parent.children.insert(index + 1, childContainer.element);
         } else {
-          childContainer.hidden(!childContainer.hasAttribute('hidden'));
+          bool isHidden = !childContainer.hasAttribute('hidden');
+          if (isHidden) {
+            expandedNodes.remove(id);
+          } else {
+            expandedNodes.add(id);
+          }
+          childContainer.hidden(isHidden);
           if (!childContainer.hasAttribute('hidden')) {
             _makeFirstChildVisible(childContainer);
           }
+          return new Future.value();
         }
       };
 
       element.dblclick(toggleExpand);
       expansionTriangle.click(toggleExpand);
+
+      if (expandedNodes.contains(id)) futures.add(toggleExpand());
     } else {
       element.add(
         span(c: 'icon-triangle-right visibility-hidden')
       );
     }
 
-    super._render(item, element);
+    futures.add(super._render(id, item, element));
+
+    return Future.wait(futures);
   }
 
   void _makeFirstChildVisible(CoreElement element) {

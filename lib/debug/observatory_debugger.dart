@@ -11,6 +11,7 @@ import 'package:vm_service_lib/vm_service_lib.dart';
 import '../flutter/flutter_ext.dart';
 import '../launch/launch.dart';
 import '../state.dart';
+import '../utils.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
 import 'model.dart';
@@ -468,14 +469,17 @@ String _refToString(dynamic value) {
 
 Point _calcPos(Script script, int tokenPos) {
   List<List<int>> table = script.tokenPosTable;
+  if (table == null) return null;
 
   for (List<int> row in table) {
-    int line = row[0];
-
+    if (row == null || row.isEmpty) continue;
+    int line = row.elementAt(0);
     int index = 1;
 
     while (index < row.length - 1) {
-      if (row[index] == tokenPos) return new Point.coords(line, row[index + 1]);
+      if (row.elementAt(index) == tokenPos) {
+        return new Point.coords(line, row.elementAt(index + 1));
+      }
       index += 2;
     }
   }
@@ -1087,11 +1091,13 @@ class ObservatoryLocation extends DebugLocation {
   }
 }
 
-class ObservatoryLibrary implements Comparable<ObservatoryLibrary> {
+class ObservatoryLibrary extends MItem implements Comparable<ObservatoryLibrary> {
   final LibraryRef _ref;
   String _displayUri;
 
   ObservatoryLibrary._(LibraryRef ref) : _ref = ref;
+
+  String get id => name;
 
   String get name => _ref.name;
   String get uri => _ref.uri;

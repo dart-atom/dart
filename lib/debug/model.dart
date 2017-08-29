@@ -33,8 +33,10 @@ abstract class DebugConnection {
 // TODO: Add an IsolateState class.
 
 /// A representation of a VM Isolate.
-abstract class DebugIsolate {
+abstract class DebugIsolate extends MItem {
   DebugIsolate();
+
+  String get id => name;
 
   String get name;
 
@@ -58,8 +60,10 @@ abstract class DebugIsolate {
   autoStepOver();
 }
 
-abstract class DebugFrame {
+abstract class DebugFrame extends MItem {
   DebugFrame();
+
+  String get id => title;
 
   String get title;
 
@@ -68,6 +72,8 @@ abstract class DebugFrame {
 
   List<DebugVariable> get locals;
 
+  Future<List<DebugVariable>> resolveLocals() => new Future.value(locals);
+
   DebugLocation get location;
 
   Future<String> eval(String expression);
@@ -75,7 +81,9 @@ abstract class DebugFrame {
   String toString() => title;
 }
 
-abstract class DebugVariable {
+abstract class DebugVariable extends MItem {
+  String get id => name;
+
   String get name;
   DebugValue get value;
 
@@ -96,6 +104,24 @@ abstract class DebugValue {
   bool get valueIsTruncated;
 
   int get itemsLength;
+
+  String get hint {
+    if (isString) {
+      // We choose not to escape double quotes here; it doesn't work well visually.
+      String str = valueAsString;
+      return valueIsTruncated ? '"$str…' : '"$str"';
+    } else if (isList) {
+      return '[ $itemsLength ]';
+    } else if (isMap) {
+      return '{ $itemsLength }';
+    } else if (itemsLength != null) {
+      return '$className [ $itemsLength ]';
+    } else if (isPlainInstance) {
+      return className;
+    } else {
+      return valueAsString;
+    }
+  }
 
   Future<List<DebugVariable>> getChildren();
 
