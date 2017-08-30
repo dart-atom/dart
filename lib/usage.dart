@@ -35,7 +35,7 @@ class UsageManager implements Disposable {
         // Disable Google Analytics if the UA is the placeholder one.
         if (_UA.startsWith('UA-0000')) value = false;
 
-        if (value == true) {
+        if (kAnalyticsEnabled && value == true) {
           _ga = new AnalyticsHtml(_UA, pluginId, version);
           _ga.optIn = true;
           _ga.sendScreenView('editor');
