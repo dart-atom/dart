@@ -12,7 +12,12 @@ import 'package:usage/usage_html.dart';
 import 'projects.dart';
 import 'state.dart';
 
-final String _UA = 'UA-26406144-22';
+// TODO: If re-enabling analytics, replace with a real UA ID.
+final String _UA = 'UA-0000';
+
+// TODO: Remove this constant if re-enabling analytics. Also, see plugin.dart,
+//       'sendUsage'.
+final bool kAnalyticsEnabled = false;
 
 Analytics _ga = new AnalyticsMock();
 

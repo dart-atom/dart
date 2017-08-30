@@ -359,14 +359,14 @@ class AtomDartPackage extends AtomPackage {
         'order': 8
       },
 
-      // google analytics
-      'sendUsage': {
-        'title': 'Report usage information to Google Analytics',
-        'description': "Report anonymized usage information to Google Analytics.",
-        'type': 'boolean',
-        'default': true,
-        'order': 10
-      },
+      // // google analytics
+      // 'sendUsage': {
+      //   'title': 'Report usage information to Google Analytics',
+      //   'description': "Report anonymized usage information to Google Analytics.",
+      //   'type': 'boolean',
+      //   'default': true,
+      //   'order': 10
+      // },
 
       'logging': {
         'title': '[Diagnostics] Log plugin diagnostics to the DevTools console',
