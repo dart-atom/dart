@@ -15,7 +15,7 @@ import '../elements.dart';
 import '../material.dart';
 import '../sdk.dart';
 import '../state.dart';
-import '../usage.dart' show trackCommand;
+import '../usage.dart' as usage;
 import '../views.dart';
 
 final String _statusOpenKey = 'statusOpen';
@@ -79,7 +79,9 @@ class StatusView extends DockedView {
     last = _registerSection('dart-sdk', _createDartSdkSection(container));
     last = _registerSection('debug', _createDebugSection(container));
     last = _registerSection('analysis-server', _createAnalysisServerSection(container));
-    last = _registerSection('analytics', _createAnalyticsSection(container));
+    if (usage.kAnalyticsEnabled) {
+      last = _registerSection('analytics', _createAnalyticsSection(container));
+    }
 
     last.toggleClass('view-section-last');
 
@@ -437,17 +439,17 @@ class StatusView extends DockedView {
   }
 
   void _handleServerStart() {
-    trackCommand('dartlang:analysis-server-start');
+    usage.trackCommand('dartlang:analysis-server-start');
     analysisServer.start();
   }
 
   void _handleReanalyze() {
-    trackCommand('dartlang:reanalyze-sources');
+    usage.trackCommand('dartlang:reanalyze-sources');
     analysisServer.reanalyzeSources();
   }
 
   void _handleServerStop() {
-    trackCommand('dartlang:analysis-server-stop');
+    usage.trackCommand('dartlang:analysis-server-stop');
     analysisServer.shutdown();
   }
 

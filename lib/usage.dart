@@ -12,7 +12,12 @@ import 'package:usage/usage_html.dart';
 import 'projects.dart';
 import 'state.dart';
 
-final String _UA = 'UA-26406144-22';
+// TODO: If re-enabling analytics, replace with a real UA ID.
+final String _UA = 'UA-0000';
+
+// TODO: Remove this constant if re-enabling analytics. Also, see plugin.dart,
+//       'sendUsage'.
+final bool kAnalyticsEnabled = false;
 
 Analytics _ga = new AnalyticsMock();
 
@@ -30,7 +35,7 @@ class UsageManager implements Disposable {
         // Disable Google Analytics if the UA is the placeholder one.
         if (_UA.startsWith('UA-0000')) value = false;
 
-        if (value == true) {
+        if (kAnalyticsEnabled && value == true) {
           _ga = new AnalyticsHtml(_UA, pluginId, version);
           _ga.optIn = true;
           _ga.sendScreenView('editor');
