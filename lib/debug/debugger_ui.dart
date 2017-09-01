@@ -1,7 +1,7 @@
 library atom.debugger_ui;
 
 import 'dart:async';
-import 'dart:html' show Element, InputElement, MouseEvent;
+import 'dart:html' show Element, MouseEvent;
 import 'dart:js' show context, JsFunction;
 
 import 'package:atom/atom.dart';
@@ -126,24 +126,24 @@ class DebuggerView extends DockedView {
     MIconButton button = new MIconButton('icon-gear'); // 'icon-tools'
     button.element.style.position = 'relative';
 
-    CoreElement checkbox;
-    InputElement checkElement;
+    Map<DebugOption, CoreElement> checkboxes = {};
 
-    void _toggleExceptions() {
-      breakpointManager.breakOnExceptionType =
-        checkElement.checked ? ExceptionBreakType.all : ExceptionBreakType.uncaught;
-    };
+    CoreElement createOption(DebugOption option) {
+      CoreElement checkbox;
+      checkbox = new CoreElement('input')
+        ..setAttribute('type', 'checkbox')
+        ..click(() => option.checked = checkbox.input.checked);
+      checkbox.input.checked = option.checked;
+      checkboxes[option] = checkbox;
+      return new CoreElement('label')..add([checkbox, span(text: option.label)]);
+    }
+
+    DebugOption caughExceptionsOption = new CaughtExceptionsOption();
+    List<DebugOption> options = [caughExceptionsOption];
 
     CoreElement menu = div(c: 'tooltip bottom dart-inline-dialog')..add([
       div(c: 'tooltip-arrow'),
-      div(c: 'tooltip-inner')..add([
-        new CoreElement('label')..add([
-          checkbox = new CoreElement('input')
-            ..setAttribute('type', 'checkbox')
-            ..click(_toggleExceptions),
-          span(text: 'Break on caught exceptions')
-        ])
-      ])
+      div(c: 'tooltip-inner')..add(options.map(createOption))
     ]);
     menu.element.onClick.listen((MouseEvent e) {
       e.preventDefault();
@@ -151,11 +151,9 @@ class DebuggerView extends DockedView {
     });
     menu.hidden(true);
 
-    checkElement = checkbox.element;
-    checkElement.checked = breakpointManager.breakOnExceptionType != ExceptionBreakType.none;
-
     subs.add(breakpointManager.onBreakOnExceptionTypeChanged.listen((ExceptionBreakType val) {
-      checkElement.checked = breakpointManager.breakOnExceptionType == ExceptionBreakType.all;
+      checkboxes[caughExceptionsOption].input.checked = 
+          breakpointManager.breakOnExceptionType == ExceptionBreakType.all;
     }));
 
     button
@@ -314,6 +312,17 @@ class DebuggerView extends DockedView {
       _execMarker.destroy();
       _execMarker = null;
     }
+  }
+}
+
+class CaughtExceptionsOption extends DebugOption {
+  String get label => 'Break on caught exceptions';
+
+  bool get checked =>
+      breakpointManager.breakOnExceptionType == ExceptionBreakType.all;
+  set checked(bool state) {
+    breakpointManager.breakOnExceptionType =
+      state ? ExceptionBreakType.all : ExceptionBreakType.uncaught;
   }
 }
 

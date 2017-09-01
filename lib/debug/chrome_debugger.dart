@@ -395,6 +395,8 @@ class ChromeDebugFrame extends DebugFrame {
 
   List<DebugVariable> _locals;
 
+  String get id => frame.callFrameId;
+
   String get title =>
       frame.functionName != null && frame.functionName.isNotEmpty
           ? frame.functionName : 'anonymous';
@@ -533,7 +535,7 @@ class ChromeDebugValue extends DebugValue {
       return connection.chrome.runtime.getProperties(value.objectId,
           ownProperties: own,
           accessorPropertiesOnly: !own,
-          generatePreview: true).then(addProperties);
+          generatePreview: false).then(addProperties);
     }
     _variables = [];
     return getProperties(true)

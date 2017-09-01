@@ -58,6 +58,8 @@ CoreElement td() => new CoreElement('td');
 class CoreElement {
   final Element element;
 
+  InputElement get input => element as InputElement;
+
   CoreElement.from(this.element);
 
   CoreElement(String tag, {String text, String classes, String attributes}) :
@@ -124,7 +126,7 @@ class CoreElement {
   /// Add the given child to this element's list of children. [child] must be
   /// either a `CoreElement` or an `Element`.
   dynamic add(dynamic child) {
-    if (child is List) {
+    if (child is Iterable) {
       return child.map((c) => add(c)).toList();
     } else if (child is CoreElement) {
       element.children.add(child.element);

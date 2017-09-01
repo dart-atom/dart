@@ -30,6 +30,13 @@ abstract class DebugConnection {
   void dispose();
 }
 
+abstract class DebugOption {
+  String get label;
+
+  bool get checked;
+  set checked(bool state);
+}
+
 // TODO: Add an IsolateState class.
 
 /// A representation of a VM Isolate.
