@@ -344,7 +344,7 @@ class ScriptSource extends ProxyHolder {
       obj['callFrames']?.map((obj) => new CallFrame(obj))?.toList() ?? [];
 
   /// Whether current call stack was modified after applying the changes.
-  bool get stackChanged => obj['stackChanged'];
+  bool get stackChanged => obj['stackChanged'] == true;
 
   /// Async stack trace, if any.
   StackTrace get asyncStackTrace => obj['asyncStackTrace'] == null
@@ -502,12 +502,6 @@ class ExceptionDetails extends ProxyHolder {
 
 /// Mirror object referencing original JavaScript object.
 class RemoteObject extends ProxyHolder {
-
-  bool get isUseable =>
-      (value != null) ||
-      (value == null && subtype == 'null') ||
-      (value == null && type == 'error') ||
-      (value == null && objectId != null);
 
   bool get isException => subtype == 'error';
 
@@ -704,9 +698,6 @@ class Property extends ProxyHolder {
 /// in JavaScript code.
 class InternalPropertyDescriptor extends ProxyHolder {
 
-  bool get isUseable => name != null && name.isNotEmpty &&
-      value != null && value.isUseable;
-
   InternalPropertyDescriptor(JsObject obj) : super(obj);
 
   String toString([String indent = '  ']) =>
@@ -728,13 +719,13 @@ class PropertyDescriptor extends InternalPropertyDescriptor {
   String toString([String indent = '  ']) =>
       "PD: $name ${value?.toString(indent + '  ')}\n"
       "${indent}fg: w: $writable c:$configurable e:$enumerable t:$wasThrown o:$isOwn\n"
-      "${indent}get: $getFunction\n"
-      "${indent}set: $setFunction\n"
+      "${indent}get: ${getFunction.toString(indent + '  ')}\n"
+      "${indent}set: ${setFunction.toString(indent + '  ')}\n"
       "${indent}sym: ${symbol?.toString(indent + '  ')}";
 
   /// True if the value associated with the property may be changed
   /// (data descriptors only).
-  bool get writable => obj['writable'];
+  bool get writable => obj['writable'] == true;
 
   /// A function which serves as a getter for the property, or undefined if
   /// there is no getter (accessor descriptors only).
@@ -748,17 +739,17 @@ class PropertyDescriptor extends InternalPropertyDescriptor {
 
   /// True if the type of this property descriptor may be changed and if the
   /// property may be deleted from the corresponding object.
-  bool get configurable => obj['configurable'];
+  bool get configurable => obj['configurable'] == true;
 
   /// True if this property shows up during enumeration of the properties on
   /// the corresponding object.
-  bool get enumerable => obj['enumerable'];
+  bool get enumerable => obj['enumerable'] == true;
 
   /// True if the result was thrown during the evaluation.
-  bool get wasThrown => obj['wasThrown'];
+  bool get wasThrown => obj['wasThrown'] == true;
 
   /// True if the property is owned for the object.
-  bool get isOwn => obj['isOwn'];
+  bool get isOwn => obj['isOwn'] == true;
 
   /// Property symbol object, if the property is of the symbol type.
   RemoteObject get symbol => obj['symbol'] == null

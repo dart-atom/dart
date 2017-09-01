@@ -6,6 +6,7 @@ import 'dart:html' show HttpRequest;
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart' as fs;
 import 'package:atom/node/process.dart';
+import 'package:atom/src/js.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:source_maps/source_maps.dart';
@@ -460,10 +461,13 @@ class ChromeDebugVariable extends DebugVariable {
   ChromeDebugValue _value;
 
   String get name => property.name;
-  DebugValue get value => _value ??= new ChromeDebugValue(connection, property.value);
+  DebugValue get value => _value ??= new ChromeDebugValue(connection,
+      property.value ?? property.getFunction);
 
   ChromeDebugVariable(this.connection, this.property);
   // TODO can we integrate property.symbol ?
+
+  String toString() => '${jsObjectToDart(property.obj)}';
 }
 
 class ChromeDebugValue extends DebugValue {
@@ -483,7 +487,9 @@ class ChromeDebugValue extends DebugValue {
 
   bool get isPrimitive => !isList && !isMap;
   bool get isList => value?.subtype == 'array' && value?.objectId != null;
-  bool get isMap => !isList && value.type == 'object' && value?.objectId != null;
+  bool get isMap => !isList && !isSymbol && value?.objectId != null;
+
+  bool get isSymbol => value?.type == 'symbol';
 
   bool get valueIsTruncated => false;
 
@@ -492,6 +498,8 @@ class ChromeDebugValue extends DebugValue {
       // We choose not to escape double quotes here; it doesn't work well visually.
       String str = valueAsString;
       return valueIsTruncated ? '"$str…' : '"$str"';
+    } else if (isSymbol) {
+      return value?.description;
     } else if (isList || isMap || isPlainInstance) {
       return className;
     } else {
@@ -509,18 +517,43 @@ class ChromeDebugValue extends DebugValue {
 
   Future<List<DebugVariable>> getChildren() {
     if (!connection.isPaused) return new Future.value([]);
-    // _logger.info('Getting children: ${value}');
-    return connection.chrome.runtime.getProperties(value.objectId,
-        ownProperties: false,
-        accessorPropertiesOnly: false,
-        generatePreview: true).then((properties) {
-      _variables = [];
-      properties.result.where((p) => p.isUseable).forEach((property) {
+    List<DebugVariable> addProperties(Property properties) {
+      properties.result.forEach((property) {
         _variables.add(new ChromeDebugVariable(connection, property));
       });
-      properties.internalProperties.where((p) => p.isUseable).forEach((property) {
+      properties.internalProperties.forEach((property) {
         _variables.add(new ChromeDebugVariable(connection, property));
       });
+      return _variables;
+    }
+    Future getProperties(bool own) {
+      return connection.chrome.runtime.getProperties(value.objectId,
+          ownProperties: own,
+          accessorPropertiesOnly: !own,
+          generatePreview: true).then(addProperties);
+    }
+    _variables = [];
+    return getProperties(true)
+        .then((_) => getProperties(false))
+        .then((_) {
+      _variables.sort((a, b) => a.name.compareTo(b.name));
+      // TODO sort __ at the end
+      // Dedup by priority (isOwn for now, seems to cover known cases)
+      for (int i = 1; i < _variables.length; ) {
+        ChromeDebugVariable v0 = _variables[i - 1], v1 = _variables[i];
+        if (v0.name == v1.name) {
+          if (v0.property.isOwn) {
+            _variables.removeAt(i);
+          } else if (v1.property.isOwn) {
+            _variables.removeAt(i - 1);
+          } else {
+            _logger.info('duplicate property: ${v0.name}');
+            i++;
+          }
+        } else {
+          i++;
+        }
+      }
       return _variables;
     });
   }
@@ -528,6 +561,8 @@ class ChromeDebugValue extends DebugValue {
   // TODO needed for longer details if we need, the return needs
   // valueAsString + valueIsTruncated
   Future<DebugValue> invokeToString() => new Future.value(this);
+
+  String toString() => value?.toString(' ');
 }
 
 class ChromeDebugLocation extends DebugLocation {
