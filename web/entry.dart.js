@@ -60250,14 +60250,16 @@ self.showOpenDialog = function(options) {
     ChromeDebugValue: {
       "^": "DebugValue;connection,value>,_variables",
       get$className: function(_) {
-        var t1, t2, t3;
+        var t1, t2;
         t1 = this.value;
         if (t1 == null)
           t1 = "Null";
         else {
           t2 = J.getInterceptor$x(t1);
-          t3 = t2.get$className(t1);
-          t1 = t3 == null ? H.S(t2.get$type(t1)) + "." + H.S(t1.get$subtype()) : t3;
+          if (t2.get$className(t1) != null)
+            t1 = t2.get$className(t1);
+          else
+            t1 = t2.get$type(t1) != null && t1.get$subtype() != null ? H.S(t2.get$type(t1)) + "." + H.S(t1.get$subtype()) : t2.get$type(t1);
         }
         return t1;
       },
@@ -60498,9 +60500,19 @@ self.showOpenDialog = function(options) {
       call$1: [function(map) {
         var t1, t2, t3;
         t1 = this.$this;
-        t2 = t1.location;
-        t3 = J.getInterceptor$x(t2);
-        t1._chrome_debugger$_span = map.spanFor$2(t3.get$lineNumber(t2), t3.get$columnNumber(t2));
+        if (map == null)
+          t2 = map;
+        else {
+          t2 = t1.location;
+          t3 = J.getInterceptor$x(t2);
+          t2 = map.spanFor$2(t3.get$lineNumber(t2), t3.get$columnNumber(t2));
+        }
+        t1._chrome_debugger$_span = t2;
+        if (t2 == null) {
+          t2 = new P._Future(0, $.Zone__current, null, [null]);
+          t2._asyncComplete$1(t1);
+          return t2;
+        }
         return t1._resolvePath$0().then$1(new S.ChromeDebugLocation_resolve__closure(t1));
       }, null, null, 2, 0, null, 41, "call"]
     },
@@ -72321,11 +72333,15 @@ self.showOpenDialog = function(options) {
         return this.update$2$refreshSelection($receiver, modelObjects, false);
       },
       selectItem$1: function(item) {
-        var t1, t2, element;
+        var t1, t2, oldSelected, element;
         t1 = this.selectedItem;
         t2 = t1._utils$_value;
-        if (t2 != null)
-          this._itemKeyToElement.$index(0, J.get$key$x(t2)).right.toggleClass$2("material-list-selected", false);
+        if (t2 != null) {
+          oldSelected = this._itemKeyToElement.$index(0, J.get$key$x(t2));
+          oldSelected = oldSelected == null ? oldSelected : oldSelected.right;
+          if (oldSelected != null)
+            oldSelected.toggleClass$2("material-list-selected", false);
+        }
         t2 = item == null ? item : J.get$key$x(item);
         element = this._itemKeyToElement.$index(0, t2);
         element = element == null ? element : element.right;

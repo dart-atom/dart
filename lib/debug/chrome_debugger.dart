@@ -476,8 +476,11 @@ class ChromeDebugValue extends DebugValue {
 
   List<DebugVariable> _variables;
 
-  String get className => value == null
-      ? 'Null' : (value.className ?? "${value.type}.${value.subtype}");
+  String get className =>
+      value == null ? 'Null' :
+      value.className != null ? value.className :
+      value.type != null && value.subtype != null ?
+          "${value.type}.${value.subtype}" : value.type;
 
   String get valueAsString =>
       value?.value ?? value?.description ?? value?.unserializableValue;
@@ -597,7 +600,8 @@ class ChromeDebugLocation extends DebugLocation {
     // TOOD catch error and don't try again
     if (_span == null && connection.loadinMaps[location.scriptId] != null) {
       return connection.loadinMaps[location.scriptId].then((map) {
-        _span = map.spanFor(location.lineNumber, location.columnNumber);
+        _span = map?.spanFor(location.lineNumber, location.columnNumber);
+        if (_span == null) return new Future.value(this);
         return _resolvePath().then((_) => this);
       });
     }
