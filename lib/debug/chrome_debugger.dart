@@ -372,7 +372,7 @@ class ChromeDebugIsolate extends DebugIsolate {
   bool get isInException => paused.reason == 'exception';
 
   RemoteObject get exception =>
-      isInException ? new RemoteObject(paused.data) : null;
+      isInException ? new RemoteObject(paused.data, RemoteObjectType.exception) : null;
 
   List<DebugFrame> get frames => _frames ??=
       paused.callFrames.map((frame) =>
@@ -416,11 +416,14 @@ class ChromeDebugFrame extends DebugFrame {
     _locals = [];
     // TODO make scopes and exceptions more identifiable
     if (exception != null) {
-      _locals.add(new ChromeThis(connection, exception));
+      _locals.add(new ChromeThis(connection, this, exception));
     }
-    _locals.add(new ChromeThis(connection, frame.self));
+    _locals.add(new ChromeThis(connection, this, frame.self));
     for (var property in frame.scopeChain) {
-      _locals.add(new ChromeScope(connection, property));
+      _locals.add(new ChromeScope(connection, this, property));
+    }
+    if (frame.returnValue != null) {
+      _locals.add(new ChromeThis(connection, this, frame.returnValue));
     }
     return new Future.value(_locals);
   }
@@ -432,51 +435,83 @@ class ChromeDebugFrame extends DebugFrame {
   }
 }
 
-class ChromeThis extends DebugVariable {
+abstract class ChromeDebugBaseVariable extends DebugVariable {
   final ChromeConnection connection;
-  final RemoteObject object;
+  final ChromeDebugFrame frame;
+  final ChromeDebugBaseVariable parent;
+
+  RemoteObject get object;
+
   ChromeDebugValue _value;
+  DebugValue get value => _value ??= new ChromeDebugValue(connection, this, object);
 
-  String get name => object.isException ? 'exception' : 'this';
-  DebugValue get value => _value ??= new ChromeDebugValue(connection, object);
+  /// element in the chain to evaluate this field, i.e. this.field1.field2
+  String get pathPart => name;
 
-  ChromeThis(this.connection, this.object);
+  ChromeDebugBaseVariable(this.connection, this.frame, [this.parent]);
 }
 
-class ChromeScope extends DebugVariable {
-  final ChromeConnection connection;
+const Map<RemoteObjectType, String> _metaLabels = const {
+  RemoteObjectType.self: 'this',
+  RemoteObjectType.exception: 'exception',
+  RemoteObjectType.scope: 'scope',
+  RemoteObjectType.setter: 'set',
+  RemoteObjectType.getter: 'get',
+  RemoteObjectType.value: 'value',
+  RemoteObjectType.returnValue: 'return',
+  RemoteObjectType.result: 'result',
+  RemoteObjectType.symbol: 'symbol'
+};
+
+class ChromeThis extends ChromeDebugBaseVariable {
+  final RemoteObject object;
+
+  String get name => _metaLabels[object.meta];
+
+  String get pathPart => 'this';
+
+  ChromeThis(ChromeConnection connection, ChromeDebugFrame frame, this.object)
+      : super(connection, frame);
+}
+
+class ChromeScope extends ChromeDebugBaseVariable {
   final Scope scope;
-  ChromeDebugValue _value;
+
+  RemoteObject get object => scope.object;
 
   // We have multiple scope with same name.
   String get id => '$name.${scope.startLocation}';
 
   String get name => scope.name ?? scope.type;
-  DebugValue get value => _value ??= new ChromeDebugValue(connection, scope.object);
 
-  ChromeScope(this.connection, this.scope);
+  // Scopes are not referenceable.
+  String get pathPart => null;
+
+  ChromeScope(ChromeConnection connection, ChromeDebugFrame frame, this.scope)
+      : super(connection, frame);
 }
 
-class ChromeDebugVariable extends DebugVariable {
-  final ChromeConnection connection;
+class ChromeDebugVariable extends ChromeDebugBaseVariable {
   final PropertyDescriptor property;
-  ChromeDebugValue _value;
+
+  RemoteObject get object => property.value ?? property.getFunction;
 
   String get name => property.name;
-  DebugValue get value => _value ??= new ChromeDebugValue(connection,
-      property.value ?? property.getFunction);
 
-  ChromeDebugVariable(this.connection, this.property);
-  // TODO can we integrate property.symbol ?
+  ChromeDebugVariable(ChromeConnection connection, ChromeDebugFrame frame,
+      ChromeDebugBaseVariable parent, this.property) : super(connection, frame, parent);
 
   String toString() => '${jsObjectToDart(property.obj)}';
 }
 
 class ChromeDebugValue extends DebugValue {
   final ChromeConnection connection;
+  final ChromeDebugBaseVariable variable;
   final RemoteObject value;
 
   List<DebugVariable> _variables;
+
+  ChromeDebugFrame get frame => variable.frame;
 
   String get className =>
       value == null ? 'Null' :
@@ -505,6 +540,8 @@ class ChromeDebugValue extends DebugValue {
       return valueIsTruncated ? '"$str…' : '"$str"';
     } else if (isSymbol) {
       return value?.description;
+    } else if (value?.meta == RemoteObjectType.getter) {
+      return 'get...';
     } else if (isList || isMap || isPlainInstance) {
       return className;
     } else {
@@ -518,16 +555,16 @@ class ChromeDebugValue extends DebugValue {
   int get itemsLength => null;
 
   // Warning: value can be null.
-  ChromeDebugValue(this.connection, this.value);
+  ChromeDebugValue(this.connection, this.variable, this.value);
 
   Future<List<DebugVariable>> getChildren() {
     if (!connection.isPaused) return new Future.value([]);
     List<DebugVariable> addProperties(Property properties) {
       properties.result.forEach((property) {
-        _variables.add(new ChromeDebugVariable(connection, property));
+        _variables.add(new ChromeDebugVariable(connection, frame, variable, property));
       });
       properties.internalProperties.forEach((property) {
-        _variables.add(new ChromeDebugVariable(connection, property));
+        _variables.add(new ChromeDebugVariable(connection, frame, variable, property));
       });
       return _variables;
     }
@@ -563,9 +600,25 @@ class ChromeDebugValue extends DebugValue {
     });
   }
 
-  // TODO needed for longer details if we need, the return needs
-  // valueAsString + valueIsTruncated
-  Future<DebugValue> invokeToString() => new Future.value(this);
+  String get path {
+    List<String> tokens = [];
+    for (var chain = variable; chain != null; chain = chain.parent) {
+      if (chain.pathPart == null || chain.pathPart == '__proto__') continue;
+      tokens.add(chain.pathPart);
+    }
+    return tokens.reversed.join('.');
+  }
+
+  Future<DebugValue> invokeToString() {
+    if (value?.meta == RemoteObjectType.getter) {
+      return connection.chrome.debugger
+          .evaluateOnCallFrame(frame.id, path).then((result) {
+        RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
+        return object != null ? new ChromeDebugValue(connection, variable, object) : this;
+      });
+    }
+    return new Future.value(this);
+  }
 
   String toString() => value?.toString(' ');
 }

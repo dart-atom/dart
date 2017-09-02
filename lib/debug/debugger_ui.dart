@@ -152,7 +152,7 @@ class DebuggerView extends DockedView {
     menu.hidden(true);
 
     subs.add(breakpointManager.onBreakOnExceptionTypeChanged.listen((ExceptionBreakType val) {
-      checkboxes[caughExceptionsOption].input.checked = 
+      checkboxes[caughExceptionsOption].input.checked =
           breakpointManager.breakOnExceptionType == ExceptionBreakType.all;
     }));
 
