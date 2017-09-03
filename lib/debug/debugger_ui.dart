@@ -139,7 +139,7 @@ class DebuggerView extends DockedView {
     }
 
     DebugOption caughExceptionsOption = new CaughtExceptionsOption();
-    List<DebugOption> options = [caughExceptionsOption];
+    List<DebugOption> options = [caughExceptionsOption]..addAll(connection.options);
 
     CoreElement menu = div(c: 'tooltip bottom dart-inline-dialog')..add([
       div(c: 'tooltip-arrow'),

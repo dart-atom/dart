@@ -34,6 +34,8 @@ const _verbose = false;
 // TODO console + find in console
 // TODO add continueToLocation
 
+const String _debuggerDdcParsing = 'dartlang.debuggerDdcParsing';
+
 class ChromeDebugger {
   /// Establish a connection to a service protocol server at the given port.
   static Future<DebugConnection> connect(Launch launch, LaunchConfiguration configuration,
@@ -90,6 +92,9 @@ class ChromeConnection extends DebugConnection {
   Map<String, Future<Mapping>> loadinMaps = {};
   Map<String, Mapping> maps = {};
   Map<String, Mapping> reversedMaps = {};
+
+  DebugOption ddcParsing = new DdcParsingOption();
+  List<DebugOption> get options => [ddcParsing];
 
   bool isPaused = false;
 
@@ -154,6 +159,14 @@ class ChromeConnection extends DebugConnection {
       chrome.debugger.setPauseOnExceptions(exceptionTypes[val]).catchError((e) {
         launch.pipeStdio('Error setting exception mode ($e).\n');
       });
+    }));
+
+    subs.add(atom.config.onDidChange(_debuggerDdcParsing).listen((bool val) {
+      // Force update
+      if (isPaused && _isolate != null) {
+        _isolate = new ChromeDebugIsolate(this, this.chrome, _isolate.paused);
+        _isolatePaused.add(_isolate);
+      }
     }));
   }
 
@@ -309,6 +322,13 @@ class ChromeConnection extends DebugConnection {
   Future terminate() => launch.kill();
 }
 
+class DdcParsingOption extends DebugOption {
+  String get label => 'Map stack to DDC output';
+
+  bool get checked => atom.config.getValue(_debuggerDdcParsing);
+  set checked(bool state) => atom.config.setValue(_debuggerDdcParsing, state);
+}
+
 class RevSourceLocation extends SourceLocation {
   RevSourceLocation(int column, int line, sourceUrl)
       : super(column, sourceUrl: sourceUrl, line: line);
@@ -414,18 +434,46 @@ class ChromeDebugFrame extends DebugFrame {
   Future<List<DebugVariable>> resolveLocals() {
     if (!connection.isPaused) return new Future.value([]);
     _locals = [];
-    // TODO make scopes and exceptions more identifiable
+    // TODO make scopes and exceptions more identifiable (UI)
+    addException();
+    addThis();
+    addScopes();
+    addReturnValue();
+    return new Future.value(_locals);
+  }
+
+  void addException() {
     if (exception != null) {
       _locals.add(new ChromeThis(connection, this, exception));
     }
+  }
+
+  void addThis() {
     _locals.add(new ChromeThis(connection, this, frame.self));
-    for (var property in frame.scopeChain) {
-      _locals.add(new ChromeScope(connection, this, property));
+  }
+
+  void addScopes() {
+    if (connection.ddcParsing.checked) {
+      int i = 0;
+      while (frame.scopeChain[i].name == frame.functionName) i++;
+      // combine all starting scopes with the current frame name (if any).
+      if (i > 0) {
+        _locals.add(new ChromeScopes(connection, this, frame.scopeChain.sublist(0, i)));
+      }
+      for (; i < frame.scopeChain.length; i++) {
+        _locals.add(new ChromeScope(connection, this, frame.scopeChain[i]));
+      }
+    } else {
+      for (var property in frame.scopeChain) {
+        _locals.add(new ChromeScope(connection, this, property));
+      }
     }
+  }
+
+  void addReturnValue() {
     if (frame.returnValue != null) {
       _locals.add(new ChromeThis(connection, this, frame.returnValue));
     }
-    return new Future.value(_locals);
   }
 
   Future<String> eval(String expression) {
@@ -442,6 +490,8 @@ abstract class ChromeDebugBaseVariable extends DebugVariable {
 
   RemoteObject get object;
 
+  bool get isSymbol => false;
+
   ChromeDebugValue _value;
   DebugValue get value => _value ??= new ChromeDebugValue(connection, this, object);
 
@@ -449,6 +499,45 @@ abstract class ChromeDebugBaseVariable extends DebugVariable {
   String get pathPart => name;
 
   ChromeDebugBaseVariable(this.connection, this.frame, [this.parent]);
+
+  Future getChildren(bool own, Map<String, DebugVariable> children) {
+    return Future.wait([getProperties(true, object), getProperties(false, object)])
+        .then((properties) {
+      properties.forEach((property) => addProperties(children, property));
+    });
+  }
+
+  Future<Property> getProperties(bool own, RemoteObject object) {
+    return connection.chrome.runtime.getProperties(object.objectId,
+        ownProperties: own,
+        accessorPropertiesOnly: !own,
+        generatePreview: false);
+  }
+
+  void addProperties(Map<String, DebugVariable> children, Property property) {
+    property.result.forEach((descriptor) {
+      addProperty(children, descriptor);
+    });
+    property.internalProperties.forEach((descriptor) {
+      addProperty(children, descriptor);
+    });
+  }
+
+  void addProperty(Map<String, DebugVariable> children, PropertyDescriptor property) {
+    // Dedup by priority (isOwn for now, seems to cover known cases)
+    bool add = false;
+    if (children.containsKey(property.name)) {
+      // Dedup by priority (isOwn for now, seems to cover known cases)
+      ChromeDebugVariable variable = children[property.name];
+      add = !variable.property.isOwn && property.isOwn;
+    } else {
+      add = true;
+    }
+    if (add) {
+      children[property.name] = new ChromeDebugVariable(connection, frame,
+          this, property);
+    }
+  }
 }
 
 const Map<RemoteObjectType, String> _metaLabels = const {
@@ -491,8 +580,43 @@ class ChromeScope extends ChromeDebugBaseVariable {
       : super(connection, frame);
 }
 
+class ChromeScopes extends ChromeDebugBaseVariable {
+  final List<Scope> scopes;
+
+  RemoteObject get object => scopes.first.object;
+
+  // We have multiple scope with same name - use last for re-expending in MTree.
+  String get id => '$name.${scopes.last.startLocation}';
+
+  String get name => 'local';
+
+  // Scopes are not referenceable.
+  String get pathPart => null;
+
+  ChromeScopes(ChromeConnection connection, ChromeDebugFrame frame, this.scopes)
+      : super(connection, frame);
+
+  Future getChildren(bool own, Map<String, DebugVariable> children) {
+    // Respect order of scopes.
+    return Future.forEach(scopes, (scope) {
+      return getProperties(true, scope.object).then((property) =>
+          addProperties(children, property));
+    });
+  }
+
+  void addProperty(Map<String, DebugVariable> children, PropertyDescriptor property) {
+    // Dedup by respect order of scopes, i.e. fields hiding other fields.
+    if (!children.containsKey(property.name)) {
+      children[property.name] = new ChromeDebugVariable(connection, frame,
+          this, property);
+    }
+  }
+}
+
 class ChromeDebugVariable extends ChromeDebugBaseVariable {
   final PropertyDescriptor property;
+
+  bool get isSymbol => property.symbol != null;
 
   RemoteObject get object => property.value ?? property.getFunction;
 
@@ -509,7 +633,7 @@ class ChromeDebugValue extends DebugValue {
   final ChromeDebugBaseVariable variable;
   final RemoteObject value;
 
-  List<DebugVariable> _variables;
+  Map<String, DebugVariable> children;
 
   ChromeDebugFrame get frame => variable.frame;
 
@@ -559,44 +683,13 @@ class ChromeDebugValue extends DebugValue {
 
   Future<List<DebugVariable>> getChildren() {
     if (!connection.isPaused) return new Future.value([]);
-    List<DebugVariable> addProperties(Property properties) {
-      properties.result.forEach((property) {
-        _variables.add(new ChromeDebugVariable(connection, frame, variable, property));
-      });
-      properties.internalProperties.forEach((property) {
-        _variables.add(new ChromeDebugVariable(connection, frame, variable, property));
-      });
-      return _variables;
-    }
-    Future getProperties(bool own) {
-      return connection.chrome.runtime.getProperties(value.objectId,
-          ownProperties: own,
-          accessorPropertiesOnly: !own,
-          generatePreview: false).then(addProperties);
-    }
-    _variables = [];
-    return getProperties(true)
-        .then((_) => getProperties(false))
-        .then((_) {
-      _variables.sort((a, b) => a.name.compareTo(b.name));
+
+    children = {};
+    return variable.getChildren(true, children).then((_) {
       // TODO sort __ at the end
-      // Dedup by priority (isOwn for now, seems to cover known cases)
-      for (int i = 1; i < _variables.length; ) {
-        ChromeDebugVariable v0 = _variables[i - 1], v1 = _variables[i];
-        if (v0.name == v1.name) {
-          if (v0.property.isOwn) {
-            _variables.removeAt(i);
-          } else if (v1.property.isOwn) {
-            _variables.removeAt(i - 1);
-          } else {
-            _logger.info('duplicate property: ${v0.name}');
-            i++;
-          }
-        } else {
-          i++;
-        }
-      }
-      return _variables;
+      List<DebugVariable> variables = new List.from(children.values)
+          ..sort((a, b) => a.name.compareTo(b.name));
+      return variables;
     });
   }
 
@@ -611,8 +704,14 @@ class ChromeDebugValue extends DebugValue {
 
   Future<DebugValue> invokeToString() {
     if (value?.meta == RemoteObjectType.getter) {
+      String expression;
+      if (variable.isSymbol) {
+        expression = '(${value.description})()';
+      } else {
+        expression = path;
+      }
       return connection.chrome.debugger
-          .evaluateOnCallFrame(frame.id, path).then((result) {
+          .evaluateOnCallFrame(frame.id, expression).then((result) {
         RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
         return object != null ? new ChromeDebugValue(connection, variable, object) : this;
       });

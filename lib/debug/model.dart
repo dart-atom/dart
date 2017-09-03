@@ -11,6 +11,8 @@ abstract class DebugConnection {
 
   DebugConnection(this.launch);
 
+  List<DebugOption> get options => [];
+
   bool get isAlive;
 
   Stream<DebugIsolate> get onPaused;
