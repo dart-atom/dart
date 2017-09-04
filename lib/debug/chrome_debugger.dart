@@ -182,10 +182,13 @@ class ChromeConnection extends DebugConnection {
 
   Future<String> navigate(String url) {
     return chrome.debugger.setPauseOnExceptions(
-      exceptionTypes[breakpointManager.breakOnExceptionType]).
-      catchError((e) {
-        launch.pipeStdio('Error setting excption mode ($e).\n');
-      }).then((_) {
+      exceptionTypes[breakpointManager.breakOnExceptionType]).catchError((e) {
+      launch.pipeStdio('Error setting exception mode ($e).\n');
+    }).then((_) {
+      return chrome.debugger.setAsyncCallStackDepth(16);
+    }).catchError((e) {
+      launch.pipeStdio('Error setting async call depth ($e).\n');
+    }).then((_) {
       return chrome.page.navigate(url);
     });
   }
@@ -381,7 +384,6 @@ class ChromeDebugIsolate extends DebugIsolate {
   ChromeDebugIsolate(this.connection, this.chrome, this.paused) : super();
 
   // TODO: add Web Workers / Service Workers as isolates
-  // TODO: should we use asyncStackTrace?
   String get name => 'main';
 
   /// Return a more human readable name for the Isolate.
@@ -398,9 +400,14 @@ class ChromeDebugIsolate extends DebugIsolate {
   RemoteObject get exception =>
       isInException ? new RemoteObject(paused.data, RemoteObjectType.exception) : null;
 
-  List<DebugFrame> get frames => _frames ??=
-      paused.callFrames.map((frame) =>
-          new ChromeDebugFrame(connection, exception, frame)).toList();
+  List<DebugFrame> get frames {
+    return _frames ??= []
+        ..addAll(paused.callFrames?.map((frame) =>
+            new ChromeDebugFrame(connection, exception, frame)) ?? [])
+        // TODO id async frames in UI
+        ..addAll(paused.asyncStackTrace?.callFrames?.map((frame) =>
+            new ChromeDebugAsyncFrame(connection, frame)) ?? []);
+  }
 
   pause() => chrome.debugger.pause();
 
@@ -439,10 +446,11 @@ class ChromeDebugFrame extends DebugFrame {
     if (!connection.isPaused) return new Future.value([]);
     _locals = [];
     addException();
-    addThis();
-    addScopes();
-    addReturnValue();
-    return new Future.value(_locals);
+    return addThis().then((_) {
+      addScopes();
+      addReturnValue();
+      return _locals;
+    });
   }
 
   void addException() {
@@ -451,8 +459,23 @@ class ChromeDebugFrame extends DebugFrame {
     }
   }
 
-  void addThis() {
-    _locals.add(new ChromeThis(connection, this, frame.self));
+  Future addThis() {
+    if (frame?.self?.type == 'undefined') {
+      return connection.chrome.debugger.evaluateOnCallFrame(id, 'this').then((result) {
+        RemoteObject object = result?.result;
+        if (object != null) {
+          object = new RemoteObject(object.obj, RemoteObjectType.self);
+          _locals.add(new ChromeThis(connection, this, object));
+        }
+      }).catchError((e) {
+        _logger.info('problem getting missing this: $e');
+      }).then((_) {
+        return _locals;
+      });
+    } else {
+      _locals.add(new ChromeThis(connection, this, frame.self));
+      return new Future.value();
+    }
   }
 
   void addScopes() {
@@ -484,6 +507,28 @@ class ChromeDebugFrame extends DebugFrame {
     // connection.debugger.evaluateOnCallFrame
     return new Future.value();
   }
+}
+
+class ChromeDebugAsyncFrame extends DebugFrame {
+  final ChromeConnection connection;
+  final RuntimeCallFrame frame;
+
+  String get id => frame.location.toString();
+
+  String get title =>
+      frame.functionName != null && frame.functionName.isNotEmpty
+          ? frame.functionName : 'anonymous';
+
+  bool get isSystem => false;
+  bool get isExceptionFrame => false;
+
+  List<DebugVariable> get locals => [];
+  DebugLocation get location => new ChromeDebugLocation(connection, frame.location);
+
+  ChromeDebugAsyncFrame(this.connection, this.frame) : super();
+
+  Future<List<DebugVariable>> resolveLocals() => new Future.value([]);
+  Future<String> eval(String expression) => new Future.value();
 }
 
 abstract class ChromeDebugBaseVariable extends DebugVariable {

@@ -15641,35 +15641,6 @@ self.showOpenDialog = function(options) {
     $desc = $collectedClasses$.CallFrame_scopeChain_closure[1];
     CallFrame_scopeChain_closure.prototype = $desc;
     CallFrame_scopeChain_closure.$__fields__ = [];
-    function StackTrace0(obj) {
-      this.obj = obj;
-      this.$deferredAction();
-    }
-    StackTrace0.builtin$cls = "StackTrace0";
-    if (!("name" in StackTrace0))
-      StackTrace0.name = "StackTrace0";
-    $desc = $collectedClasses$.StackTrace0[1];
-    StackTrace0.prototype = $desc;
-    StackTrace0.$__fields__ = ["obj"];
-    function StackTrace_toString_closure(indent) {
-      this.indent = indent;
-      this.$deferredAction();
-    }
-    StackTrace_toString_closure.builtin$cls = "StackTrace_toString_closure";
-    if (!("name" in StackTrace_toString_closure))
-      StackTrace_toString_closure.name = "StackTrace_toString_closure";
-    $desc = $collectedClasses$.StackTrace_toString_closure[1];
-    StackTrace_toString_closure.prototype = $desc;
-    StackTrace_toString_closure.$__fields__ = ["indent"];
-    function StackTrace_callFrames_closure() {
-      this.$deferredAction();
-    }
-    StackTrace_callFrames_closure.builtin$cls = "StackTrace_callFrames_closure";
-    if (!("name" in StackTrace_callFrames_closure))
-      StackTrace_callFrames_closure.name = "StackTrace_callFrames_closure";
-    $desc = $collectedClasses$.StackTrace_callFrames_closure[1];
-    StackTrace_callFrames_closure.prototype = $desc;
-    StackTrace_callFrames_closure.$__fields__ = [];
     function ExceptionDetails(obj) {
       this.obj = obj;
       this.$deferredAction();
@@ -15738,6 +15709,45 @@ self.showOpenDialog = function(options) {
     $desc = $collectedClasses$.Location0[1];
     Location0.prototype = $desc;
     Location0.$__fields__ = ["obj"];
+    function StackTrace0(obj) {
+      this.obj = obj;
+      this.$deferredAction();
+    }
+    StackTrace0.builtin$cls = "StackTrace0";
+    if (!("name" in StackTrace0))
+      StackTrace0.name = "StackTrace0";
+    $desc = $collectedClasses$.StackTrace0[1];
+    StackTrace0.prototype = $desc;
+    StackTrace0.$__fields__ = ["obj"];
+    function StackTrace_toString_closure(indent) {
+      this.indent = indent;
+      this.$deferredAction();
+    }
+    StackTrace_toString_closure.builtin$cls = "StackTrace_toString_closure";
+    if (!("name" in StackTrace_toString_closure))
+      StackTrace_toString_closure.name = "StackTrace_toString_closure";
+    $desc = $collectedClasses$.StackTrace_toString_closure[1];
+    StackTrace_toString_closure.prototype = $desc;
+    StackTrace_toString_closure.$__fields__ = ["indent"];
+    function StackTrace_callFrames_closure() {
+      this.$deferredAction();
+    }
+    StackTrace_callFrames_closure.builtin$cls = "StackTrace_callFrames_closure";
+    if (!("name" in StackTrace_callFrames_closure))
+      StackTrace_callFrames_closure.name = "StackTrace_callFrames_closure";
+    $desc = $collectedClasses$.StackTrace_callFrames_closure[1];
+    StackTrace_callFrames_closure.prototype = $desc;
+    StackTrace_callFrames_closure.$__fields__ = [];
+    function RuntimeCallFrame(obj) {
+      this.obj = obj;
+      this.$deferredAction();
+    }
+    RuntimeCallFrame.builtin$cls = "RuntimeCallFrame";
+    if (!("name" in RuntimeCallFrame))
+      RuntimeCallFrame.name = "RuntimeCallFrame";
+    $desc = $collectedClasses$.RuntimeCallFrame[1];
+    RuntimeCallFrame.prototype = $desc;
+    RuntimeCallFrame.$__fields__ = ["obj"];
     function Property0(obj) {
       this.obj = obj;
       this.$deferredAction();
@@ -16093,9 +16103,8 @@ self.showOpenDialog = function(options) {
     $desc = $collectedClasses$.ChromeConnection_navigate_closure[1];
     ChromeConnection_navigate_closure.prototype = $desc;
     ChromeConnection_navigate_closure.$__fields__ = ["$this"];
-    function ChromeConnection_navigate_closure0($this, url) {
+    function ChromeConnection_navigate_closure0($this) {
       this.$this = $this;
-      this.url = url;
       this.$deferredAction();
     }
     ChromeConnection_navigate_closure0.builtin$cls = "ChromeConnection_navigate_closure0";
@@ -16103,7 +16112,28 @@ self.showOpenDialog = function(options) {
       ChromeConnection_navigate_closure0.name = "ChromeConnection_navigate_closure0";
     $desc = $collectedClasses$.ChromeConnection_navigate_closure0[1];
     ChromeConnection_navigate_closure0.prototype = $desc;
-    ChromeConnection_navigate_closure0.$__fields__ = ["$this", "url"];
+    ChromeConnection_navigate_closure0.$__fields__ = ["$this"];
+    function ChromeConnection_navigate_closure1($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    ChromeConnection_navigate_closure1.builtin$cls = "ChromeConnection_navigate_closure1";
+    if (!("name" in ChromeConnection_navigate_closure1))
+      ChromeConnection_navigate_closure1.name = "ChromeConnection_navigate_closure1";
+    $desc = $collectedClasses$.ChromeConnection_navigate_closure1[1];
+    ChromeConnection_navigate_closure1.prototype = $desc;
+    ChromeConnection_navigate_closure1.$__fields__ = ["$this"];
+    function ChromeConnection_navigate_closure2($this, url) {
+      this.$this = $this;
+      this.url = url;
+      this.$deferredAction();
+    }
+    ChromeConnection_navigate_closure2.builtin$cls = "ChromeConnection_navigate_closure2";
+    if (!("name" in ChromeConnection_navigate_closure2))
+      ChromeConnection_navigate_closure2.name = "ChromeConnection_navigate_closure2";
+    $desc = $collectedClasses$.ChromeConnection_navigate_closure2[1];
+    ChromeConnection_navigate_closure2.prototype = $desc;
+    ChromeConnection_navigate_closure2.$__fields__ = ["$this", "url"];
     function ChromeConnection_createReverseMaps_closure() {
       this.$deferredAction();
     }
@@ -16307,6 +16337,16 @@ self.showOpenDialog = function(options) {
     $desc = $collectedClasses$.ChromeDebugIsolate_frames_closure[1];
     ChromeDebugIsolate_frames_closure.prototype = $desc;
     ChromeDebugIsolate_frames_closure.$__fields__ = ["$this"];
+    function ChromeDebugIsolate_frames_closure0($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    ChromeDebugIsolate_frames_closure0.builtin$cls = "ChromeDebugIsolate_frames_closure0";
+    if (!("name" in ChromeDebugIsolate_frames_closure0))
+      ChromeDebugIsolate_frames_closure0.name = "ChromeDebugIsolate_frames_closure0";
+    $desc = $collectedClasses$.ChromeDebugIsolate_frames_closure0[1];
+    ChromeDebugIsolate_frames_closure0.prototype = $desc;
+    ChromeDebugIsolate_frames_closure0.$__fields__ = ["$this"];
     function ChromeDebugFrame(connection, frame, exception, _locals, key) {
       this.connection = connection;
       this.frame = frame;
@@ -16324,6 +16364,57 @@ self.showOpenDialog = function(options) {
     ChromeDebugFrame.prototype.get$exception = function() {
       return this.exception;
     };
+    function ChromeDebugFrame_resolveLocals_closure($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    ChromeDebugFrame_resolveLocals_closure.builtin$cls = "ChromeDebugFrame_resolveLocals_closure";
+    if (!("name" in ChromeDebugFrame_resolveLocals_closure))
+      ChromeDebugFrame_resolveLocals_closure.name = "ChromeDebugFrame_resolveLocals_closure";
+    $desc = $collectedClasses$.ChromeDebugFrame_resolveLocals_closure[1];
+    ChromeDebugFrame_resolveLocals_closure.prototype = $desc;
+    ChromeDebugFrame_resolveLocals_closure.$__fields__ = ["$this"];
+    function ChromeDebugFrame_addThis_closure($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    ChromeDebugFrame_addThis_closure.builtin$cls = "ChromeDebugFrame_addThis_closure";
+    if (!("name" in ChromeDebugFrame_addThis_closure))
+      ChromeDebugFrame_addThis_closure.name = "ChromeDebugFrame_addThis_closure";
+    $desc = $collectedClasses$.ChromeDebugFrame_addThis_closure[1];
+    ChromeDebugFrame_addThis_closure.prototype = $desc;
+    ChromeDebugFrame_addThis_closure.$__fields__ = ["$this"];
+    function ChromeDebugFrame_addThis_closure0() {
+      this.$deferredAction();
+    }
+    ChromeDebugFrame_addThis_closure0.builtin$cls = "ChromeDebugFrame_addThis_closure0";
+    if (!("name" in ChromeDebugFrame_addThis_closure0))
+      ChromeDebugFrame_addThis_closure0.name = "ChromeDebugFrame_addThis_closure0";
+    $desc = $collectedClasses$.ChromeDebugFrame_addThis_closure0[1];
+    ChromeDebugFrame_addThis_closure0.prototype = $desc;
+    ChromeDebugFrame_addThis_closure0.$__fields__ = [];
+    function ChromeDebugFrame_addThis_closure1($this) {
+      this.$this = $this;
+      this.$deferredAction();
+    }
+    ChromeDebugFrame_addThis_closure1.builtin$cls = "ChromeDebugFrame_addThis_closure1";
+    if (!("name" in ChromeDebugFrame_addThis_closure1))
+      ChromeDebugFrame_addThis_closure1.name = "ChromeDebugFrame_addThis_closure1";
+    $desc = $collectedClasses$.ChromeDebugFrame_addThis_closure1[1];
+    ChromeDebugFrame_addThis_closure1.prototype = $desc;
+    ChromeDebugFrame_addThis_closure1.$__fields__ = ["$this"];
+    function ChromeDebugAsyncFrame(connection, frame, key) {
+      this.connection = connection;
+      this.frame = frame;
+      this.key = key;
+      this.$deferredAction();
+    }
+    ChromeDebugAsyncFrame.builtin$cls = "ChromeDebugAsyncFrame";
+    if (!("name" in ChromeDebugAsyncFrame))
+      ChromeDebugAsyncFrame.name = "ChromeDebugAsyncFrame";
+    $desc = $collectedClasses$.ChromeDebugAsyncFrame[1];
+    ChromeDebugAsyncFrame.prototype = $desc;
+    ChromeDebugAsyncFrame.$__fields__ = ["connection", "frame", "key"];
     function ChromeDebugBaseVariable(parent) {
       this.parent = parent;
       this.$deferredAction();
@@ -27457,7 +27548,7 @@ self.showOpenDialog = function(options) {
     $desc = $collectedClasses$.main_closure[1];
     main_closure.prototype = $desc;
     main_closure.$__fields__ = [];
-    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JavaScriptFunction, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, CodeUnits, EfficientLengthIterable, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, SkipIterable, EfficientLengthSkipIterable, SkipIterator, EmptyIterable, EmptyIterator, FixedLengthListMixin, UnmodifiableListMixin, UnmodifiableListBase, ReversedListIterable, Symbol, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, _Serializer, _Deserializer, ConstantMapView, ConstantMap, ConstantStringMap, ConstantStringMap_values_closure, _ConstantMapKeyIterable, GeneralConstantMap, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, ExceptionAndStackTrace, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, CastErrorImplementation, RuntimeError, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, JsLinkedHashMap_addAll_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, _StringAllMatchesIterable, _StringAllMatchesIterator, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _awaitOnObject_closure, _awaitOnObject_closure0, _wrapJsFunctionForAsync_closure, _IterationMarker, _SyncStarIterator, _SyncStarIterable, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _SyncBroadcastStreamController__sendError_closure, _SyncBroadcastStreamController__sendDone_closure, _AsyncBroadcastStreamController, Future, closure0, Future_wait_handleError, Future_wait_closure, Future_forEach_closure, Future_doWhile_closure, _Completer, _AsyncCompleter, _SyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__prependListeners_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__chainFuture_closure, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future_timeout_closure, _Future_timeout_closure0, _Future_timeout_closure1, _AsyncCallbackEntry, Stream, Stream_reduce_closure, Stream_reduce__closure, Stream_reduce__closure0, Stream_reduce_closure0, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_elementAt_closure, Stream_elementAt_closure0, StreamSubscription, EventSink, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _AsyncStreamControllerDispatch, _AsyncStreamController, _ControllerStream, _ControllerSubscription, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _StreamIterator, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _HandleErrorStream, _StateStreamSubscription, _SkipStream, _EventSinkWrapper, _SinkTransformerStreamSubscription, _BoundSinkStream, AsyncError, Zone, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _HashMap, _HashMap_values_closure, _HashMap_addAll_closure, _IdentityHashMap, _CustomHashMap, _CustomHashMap_closure, _HashMapKeyIterable, _HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, _LinkedHashSetCell, _LinkedHashSetIterator, UnmodifiableListView, _HashSetBase, IterableBase, closure4, ListBase, Object_ListMixin, ListMixin, MapMixin, _MapBaseValueIterable, _MapBaseValueIterator, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMap_addAll_closure, _JsonMapKeyIterable, Base64Codec, Base64Encoder, Base64Decoder, _Base64Decoder, Codec, Converter, Encoding, HtmlEscapeMode, HtmlEscape, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, LineSplitter, LineSplitter_bind_closure, _LineSplitterSink, _LineSplitterEventSink, StringConversionSinkBase, StringConversionSinkMixin, _StringAdapterSink, Utf8Codec, Utf8Encoder, _Utf8Encoder, Utf8Decoder, _Utf8Decoder, _Utf8Decoder_convert_scanOneByteCharacters, _Utf8Decoder_convert_addSingleBytes, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _Exception, FormatException, IntegerDivisionByZeroException, Expando, Function, int, Iterable, Iterator, List, Map, Null, num, Object, Match, RegExp, StackTrace, _StringStackTrace, Stopwatch, String, StringBuffer, Symbol0, Uri__parseIPv4Address_error, Uri_parseIPv6Address_error, Uri_parseIPv6Address_parseHex, _Uri, closure1, _Uri__checkNonWindowsPathReservedCharacters_closure, _Uri__makePath_closure, UriData, _createTables_closure, _createTables_build, _createTables_setChars, _createTables_setRange, _SimpleUri, _DataUri, HtmlElement, AnchorElement, Animation, ApplicationCacheErrorEvent, AreaElement, AudioTrack, AudioTrackList, EventTarget_ListMixin, EventTarget_ListMixin_ImmutableListMixin, BaseElement, BatteryManager, BeforeUnloadEvent, Blob, BlobEvent, Body, BodyElement, ButtonElement, CanvasElement, CanvasRenderingContext2D, CharacterData, Client, CloseEvent, CompositionEvent, CompositorWorker, Credential, Crypto, CryptoKey, CssFontFaceRule, CssImportRule, CssKeyframeRule, CssKeyframesRule, CssNamespaceRule, CssPageRule, CssRule, CssStyleDeclaration, Interceptor_CssStyleDeclarationBase, _CssStyleDeclarationSet, Object_CssStyleDeclarationBase, _CssStyleDeclarationSet_closure, _CssStyleDeclarationSet_setProperty_closure, CssStyleDeclarationBase, CssStyleRule, CssViewportRule, CustomEvent, DataTransfer, DataTransferItem, DataTransferItemList, DeviceAcceleration, DeviceLightEvent, DialogElement, DirectoryEntry, DirectoryEntry__getFile_closure0, DirectoryEntry__getFile_closure, DivElement, Document0, DocumentFragment, DomError, DomException, DomIterator, DomPoint, DomPointReadOnly, DomRectReadOnly, DomStringList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, DomTokenList, _ChildrenElementList, _FrozenElementList, Element0, closure3, ScrollAlignment, EmbedElement, Entry, Entry_getParent_closure, Entry_getParent_closure0, Entry_remove_closure, Entry_remove_closure0, ErrorEvent, Event, EventSource, EventTarget, ExtendableEvent, ExtendableMessageEvent, FieldSetElement, File0, FileEntry, FileEntry_file_closure, FileEntry_file_closure0, FileError, FileList, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, FileReader, FileStream, FileSystem, FileWriter, FontFace, FontFaceSet, FormElement, Gamepad, GamepadButton, GeofencingEvent, GeofencingRegion, Geoposition, History, HtmlCollection, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, HtmlDocument, HttpRequest, HttpRequest_getString_closure, HttpRequest_request_closure, HttpRequestEventTarget, IFrameElement, ImageBitmap, ImageData, ImageElement, InputElement, IntersectionObserver, IntersectionObserverEntry, KeyboardEvent, KeygenElement, LIElement, LengthValue, LinkElement, Location1, MapElement, MediaDeviceInfo, MediaElement, MediaError, MediaKeyMessageEvent, MediaKeySession, MediaList, MediaMetadata, MediaQueryList, MediaRecorder, MediaStream, MediaStreamTrack, MenuElement, MenuItemElement, MessageEvent0, MessagePort, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, MidiOutput, MidiPort, MimeType, MimeTypeArray, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, MouseEvent, MutationRecord, Navigator, NavigatorUserMediaError, NetworkInformation, _ChildNodeListLazy, Node, NodeIterator, NodeList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, Notification0, NumberValue, OListElement, ObjectElement, OffscreenCanvas, OptGroupElement, OptionElement, OutputElement, ParamElement, Path2D, PerformanceEntry, PerformanceNavigation, PermissionStatus, Perspective, Plugin, PluginArray, Interceptor_ListMixin4, Interceptor_ListMixin_ImmutableListMixin4, PositionError, PositionValue, PresentationAvailability, PresentationConnection, PresentationConnectionCloseEvent, PresentationRequest, ProcessingInstruction, ProgressElement0, PushEvent, PushMessageData, Range0, ReadableByteStream, ReadableByteStreamReader, ReadableStreamReader, Rotation, RtcDataChannel, RtcPeerConnection, RtcSessionDescription, RtcStatsReport, RtcStatsResponse, ScreenOrientation, ScriptElement0, SecurityPolicyViolationEvent, SelectElement, Selection, ServicePort, ServiceWorkerMessageEvent, ServiceWorkerRegistration, ShadowRoot, SharedWorker, SharedWorkerGlobalScope, SimpleLength, SlotElement, SourceBuffer, SourceBufferList, EventTarget_ListMixin0, EventTarget_ListMixin_ImmutableListMixin0, SourceElement, SourceInfo, SpeechGrammar, SpeechGrammarList, Interceptor_ListMixin5, Interceptor_ListMixin_ImmutableListMixin5, SpeechRecognition, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesis, SpeechSynthesisEvent, SpeechSynthesisUtterance, SpeechSynthesisVoice, Storage, Storage_addAll_closure, Storage_keys_closure, Storage_values_closure, StorageEvent, StyleElement, StyleMedia, StyleSheet, StyleValue, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, TextAreaElement, TextEvent, TextTrack, TextTrackCue, TextTrackCueList, Interceptor_ListMixin6, Interceptor_ListMixin_ImmutableListMixin6, TextTrackList, EventTarget_ListMixin1, EventTarget_ListMixin_ImmutableListMixin1, TimeRanges, Touch, TouchEvent, TouchList, Interceptor_ListMixin7, Interceptor_ListMixin_ImmutableListMixin7, TrackDefault, TrackDefaultList, TrackElement, TransformComponent, Translation, TreeWalker, UIEvent, UnderlyingSourceBase, Url, VideoElement, VideoTrack, VideoTrackList, VttCue, VttRegion, VttRegionList, WebSocket0, Window, Worker, WorkerGlobalScope, XsltProcessor, _Attr, _ClientRect, _ClientRectList, Interceptor_ListMixin8, Interceptor_ListMixin_ImmutableListMixin8, _CssRuleList, Interceptor_ListMixin9, Interceptor_ListMixin_ImmutableListMixin9, _DocumentType, _DomRect, _GamepadList, Interceptor_ListMixin10, Interceptor_ListMixin_ImmutableListMixin10, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin11, Interceptor_ListMixin_ImmutableListMixin11, _Request, _ServiceWorker, _SpeechRecognitionResultList, Interceptor_ListMixin12, Interceptor_ListMixin_ImmutableListMixin12, _StyleSheetList, Interceptor_ListMixin13, Interceptor_ListMixin_ImmutableListMixin13, _WorkerLocation, _WorkerNavigator, _AttributeMap, _AttributeMap_addAll_closure, _ElementAttributeMap, _MarginCssRect, CssRect, _MultiElementCssClassSet, closure5, _MultiElementCssClassSet_readClasses_closure, _MultiElementCssClassSet_modify_closure, _MultiElementCssClassSet_toggle_closure, _MultiElementCssClassSet_remove_closure, _ElementCssClassSet, Dimension, _EventStream, _ElementEventStreamImpl, _ElementListEventStreamImpl, _EventStreamSubscription, _EventStreamSubscription_closure, _StreamPool, _StreamPool_add_closure, _Html5NodeValidator, ImmutableListMixin, NodeValidatorBuilder, NodeValidatorBuilder_allowsElement_closure, NodeValidatorBuilder_allowsAttribute_closure, _SimpleNodeValidator, _SimpleNodeValidator_closure, _SimpleNodeValidator_closure0, _TemplatingNodeValidator, _TemplatingNodeValidator_closure, _SvgNodeValidator, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, NodeValidator, _SameOriginUriPolicy, _ValidatingTreeSanitizer, _ValidatingTreeSanitizer_sanitizeTree_walk, _StructuredClone, _StructuredClone_walk_closure, _AcceptStructuredClone, _AcceptStructuredClone_walk_closure, _StructuredCloneDart2Js, _AcceptStructuredCloneDart2Js, convertNativePromiseToDartFuture_closure, convertNativePromiseToDartFuture_closure0, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, CssClassSetImpl_removeAll_closure, FilteredElementList, FilteredElementList__iterable_closure, FilteredElementList__iterable_closure0, FilteredElementList_removeRange_closure, Cursor, CursorWithValue, Database, _completeRequest_closure, Index, KeyRange, ObjectStore, Request, Transaction, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, _JSRandom, Point, _RectangleBase, Rectangle, AElement, Angle, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, Length, LengthList, Interceptor_ListMixin14, Interceptor_ListMixin_ImmutableListMixin14, MarkerElement, MaskElement, Number, NumberList, Interceptor_ListMixin15, Interceptor_ListMixin_ImmutableListMixin15, PatternElement, Point1, PointList, Rect, RectElement, ScriptElement, StringList, Interceptor_ListMixin16, Interceptor_ListMixin_ImmutableListMixin16, StyleElement0, AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, Transform, TransformList, Interceptor_ListMixin17, Interceptor_ListMixin_ImmutableListMixin17, UseElement, ViewElement, ViewSpec, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGMPathElement, Uint8List, AudioBuffer, AudioBufferSourceNode, AudioContext, AudioNode, AudioParam, AudioSourceNode, BiquadFilterNode, OscillatorNode, ActiveInfo, RenderingContext, RenderingContext2, _WebGL2RenderingContextBase, SqlDatabase, SqlError, SqlResultSetRowList, Interceptor_ListMixin18, Interceptor_ListMixin_ImmutableListMixin18, Atom, Atom_pickFolder_closure, TrustedHtmlTreeSanitizer, which_closure, which_closure0, CommandRegistry, CommandRegistry_add_closure, ContextMenuManager, ContextMenuManager_add_closure, ContextMenuItem, ContextMenuItem_toJs_closure, _SeparatorMenuItem, AtomEvent, Config, Config_onDidChange_closure, Config_onDidChange_closure0, Grammar, GrammarRegistry, ScopeDescriptor, FS, Stats, Directory, Directory_getEntriesSync_closure, File, Entry0, NotificationManager, NotificationManager__options_closure, Notification, NotificationButton, NotificationButton_toProxy_closure, NotificationHelper, NotificationHelper_appendText_closure, ProcessNotifier, ProcessNotifier_watch_closure, ProcessNotifier_watch_closure0, ProcessNotifier_watch_closure1, ProcessNotifier_watch_closure2, promptUser_closure, promptUser_closure0, promptUser_closure1, promptUser_closure2, registerPackage_closure, registerPackage_closure0, registerPackage_closure1, registerPackage__closure, AtomPackage, AtomPackage_loadPackageJson_closure, AtomPackage_getPackageVersion_closure, PackageManager, Process, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure2, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure, ProcessRunner_execStreaming_closure0, ProcessRunner_kill_closure, ProcessResult, ShellWrangler, BufferedProcess, BufferedProcess_create_closure, Shell, ViewRegistry, JsChangeListener, JsChangeListener_add_closure, Item, Item$fromFields_closure, Item$fromFields_closure0, Item$fromFields_closure1, Item$fromFields_closure2, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Workspace_open__closure, Workspace_addOpener_closure, Project, Project_getDirectories_closure, Panel, Panel_onDidDestroy_closure, Pane, Gutter, Marker, Decoration, Point0, Range, TextBuffer, TextEditorElement, TextEditorComponent, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextEditor_onDidChangeCursorPosition_closure, TextEditor_onDidAddGutter_closure, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, JsDisposable, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, FutureSerializer, FutureSerializer__serviceQueue_closure, FutureSerializer__serviceQueue_closure0, FutureSerializer__serviceQueue_closure1, Dependencies, Disposable, Disposables, EventListener, StreamSubscriptions, Edit, AnalysisOptionsManager, Server, Domain, RefactoringOptions, RequestError, ServerDomain, ServerError, ServerStatus, VersionResult, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, AnalysisOutline, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, SearchResults, SearchResults_parse_closure, FindElementReferencesResult, FindTopLevelDeclarationsResult, TypeHierarchyResult, TypeHierarchyResult_parse_closure, EditDomain, FormatResult, FormatResult_parse_closure, AssistsResult, AssistsResult_parse_closure, AvailableRefactoringsResult, FixesResult, FixesResult_parse_closure, RefactoringResult, RefactoringResult_parse_closure, RefactoringResult_parse_closure0, RefactoringResult_parse_closure1, SortMembersResult, OrganizeDirectivesResult, ExecutionDomain, CreateContextResult, MapUriResult, DiagnosticDomain, DiagnosticsResult, DiagnosticsResult_parse_closure, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisOptions, AnalysisStatus, ChangeContentOverlay, CompletionSuggestion, ContextData, Element, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Outline, Outline_parse_closure, Position, PubStatus, RefactoringProblem, RemoveContentOverlay, SearchResult, SearchResult_parse_closure, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, TypeHierarchyItem, ExtractLocalVariableRefactoringOptions, RenameRefactoringOptions, RefactoringFeedback, BufferObserverManager, BufferObserverManager_closure, BufferObserverManager__closure, BufferObserverManager_dispose_closure, BufferObserver, BufferFormatter, BufferFormatter_closure, BufferFormatter__closure, BufferFormatter___closure, BufferFormatter_closure0, BufferUpdater, OverlayManager, OverlayManager__serverActive_closure, OverlayInfo, OverlayInfo__flush_closure, _log_closure, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions_closure1, DartAutocompleteProvider_getSuggestions_closure0, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__makeSuggestion_closure, DartAutocompleteProvider__rightLabel_closure, DartdocHelper, DartdocHelper_closure, DartdocHelper__handleDartdoc_closure, DartdocHelper__handleDartdoc__closure, DartdocHelper__render_writeTitle, DartdocControl, DartdocControl_closure, DartdocControl_closure0, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__processNavInfo_closure, _NavCompleterHelper, _NavCompleterHelper_handleNavInfo_closure, _NavCompleterHelper_getNavigationInfo_closure, FindTypeHelper, FindTypeHelper_closure, FindTypeHelper__handleFindType_closure, FindTypeHelper__handleFindType__closure, FindTypeHelper__handleFindType___closure, FormattingManager, FormattingManager_closure, FormattingManager_closure0, FormattingManager_formatFile_closure, FormattingManager_formatEditor_closure, FormattingManager_formatEditor_closure0, OrganizeFileManager, OrganizeFileManager__addEditorCommand_closure, OrganizeFileManager__handleSortMembers_closure, OrganizeFileManager__handleSortMembers__closure, OrganizeFileManager__handleOrganizeDirectives_closure, OrganizeFileManager__handleOrganizeDirectives__closure, OrganizeFileManager__handleOrganizeDirectives__closure0, QuickFixHelper, QuickFixHelper_closure, QuickFixHelper__handleQuickFix_closure, QuickFixHelper__handleFixesResult_closure, QuickFixHelper__handleFixesResult__closure, QuickFixHelper__handleFixesResult_closure0, QuickFixHelper__handleFixesResult_closure1, QuickFixHelper__handleFixesResult_closure2, _Change, _applyChange_closure, _applyChange__closure0, _applyChange_closure0, _applyChange__closure, _applyChange_closure1, RefactoringHelper, RefactoringHelper__addCommand_closure, RefactoringHelper__handleExtractLocal_closure, RefactoringHelper__handleExtractLocal__closure, RefactoringHelper__handleRenameRefactor_closure, RefactoringHelper__handleRenameRefactor__closure, RefactoringHelper__checkRefactoringAvailable_closure, RefactoringHelper__checkRefactoringAvailable__closure, RefactoringHelper__performRefactoring_closure, RefactoringHelper__performRefactoring__closure, RefactoringHelper__applyRefactoringResult_closure, RefactoringHelper__applyRefactoringResult__closure0, RefactoringHelper__applyRefactoringResult_closure0, RefactoringHelper__applyRefactoringResult_closure1, RefactoringHelper__applyRefactoringResult__closure, RefactoringHelper__applyRefactoringResult_closure2, RefactoringHelper__applyRefactoringResult_closure3, RefactoringHelper__applyRefactoringResult_closure4, RefactoringHelper__applyEdits_closure, RefactoringHelper__applyEdits__closure0, RefactoringHelper__applyEdits_closure0, RefactoringHelper__applyEdits__closure, RefactoringHelper__applyEdits_closure1, FindReferencesHelper, FindReferencesHelper__handleReferencesEditor_closure, FindReferencesHelper__handleReferencesEditor__closure, ReferencesSearch, FindReferencesView, FindReferencesView__handleSearchResults_closure, FindReferencesView__handleSearchResults_closure0, _MatchParser, TypeHierarchyHelper, TypeHierarchyHelper__handleHierarchyEditor_closure, TypeHierarchyHelper__handleHierarchyEditor__closure, TypeHierarchyView, TypeHierarchyView__sort_closure, TypeHierarchyView__render_closure, TypeHierarchyView__render_closure0, AnalysisServer, AnalysisServer_closure, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__setup_closure1, AnalysisServer_updateRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__focusedEditorChanged_closure, AnalysisServer__searchResultsStream_closure, AnalysisServer__searchResultsStream_closure0, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, AnalysisServer__initNewServer_closure5, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_closure, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_setup_closure0, _AnalysisServerWrapper_setup_closure1, _AnalysisServerWrapper_setup__closure, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart__closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, AnalysisRequestJob, AnalysisRequestJob_run_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_suggestionToProxy, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions_closure0, AutocompleteProvider__getSuggestions_closure1, AutocompleteProvider__getSuggestions_closure2, AutocompleteProvider__getSuggestions_closure3, AutocompleteOptions, Suggestion, _AutoCompleteOverride, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintSolution, LintMessage, LintMessage_toMap_closure, Rn, Pt, install_closure, _InstallJob, _InstallJob_run_closure, _InstallJob_run_closure0, _InstallJob_run_closure1, _InstallJob__install_closure, StatusBar, Tile, PermissiveNodeValidator, BrowserManager, BrowserManager_update, BrowserManager_update_closure, BrowserManager_dispose_closure, Browser, Browser_getVersion_closure, Browser_getVersion_closure0, Browser_execArgsFromYaml_closure, _Dartino, _Dartino_enable_closure, _Dartino_enable_closure0, _promptCreateDartinoYaml_closure, _promptCreateDartinoYaml_closure0, DartinoProjectSettings, DartinoProjectSettings_operator$indexSet_closure, DartuinoBoard, Device0, LocalDevice, Stm32f, DartinoLaunchType, DartinoLaunch, DartinoLaunch_run_closure, DartinoLaunch_run_closure0, DartinoLaunch_debug_closure, DartinoLaunch_debug_closure0, DartinoLaunch_debug_closure1, DartinoLaunch_debug_closure2, DartinoLaunch_debug_closure3, DartinoSdk, DartinoSdk_promptOptIntoAnalytics_recordChoice, DartinoSdk_promptOptIntoAnalytics_optIn, DartinoSdk_promptOptIntoAnalytics_optOut, _installAdditionalTools_closure, DartinoCmd, DartinoCmd_start_closure, Sdk0, ExceptionBreakType, BreakpointManager, BreakpointManager_closure, BreakpointManager_closure0, BreakpointManager_getBreakpontsFor_closure, BreakpointManager__processEditor_closure, BreakpointManager__findSimilar_closure, BreakpointManager__findSimilar_closure0, BreakpointManager_toStorable_closure, AtomBreakpoint, _GutterTracker, _GutterTracker_closure, _GutterTracker__initLineNumberGutter_closure, _GutterTracker__initLineNumberGutter_closure0, _EditorBreakpoint, _EditorBreakpoint_closure, _c_closure, ChromeDebuggingProtocol, ChromeDebuggingProtocol_connect_closure, ChromeDebugConnection, ChromePage, ChromePage_navigate_closure, ChromeDebugger, ChromeDebugger_setBreakpointByUrl_closure, ChromeDebugger_evaluateOnCallFrame_closure, ChromeDebugger_scriptParsed_closure, ChromeDebugger_scriptFailedToParse_closure, ChromeDebugger_breakpointResolved_closure, ChromeDebugger_paused_closure, ChromeDebugger_resumed_closure, ChromeRuntime, ChromeRuntime_getProperties_closure, Paused, Paused_toString_closure, Paused_callFrames_closure, EvaluateOn, CallFrame, CallFrame_toString_closure, CallFrame_scopeChain_closure, StackTrace0, StackTrace_toString_closure, StackTrace_callFrames_closure, ExceptionDetails, RemoteObjectType, RemoteObject, Scope, ScriptParsed, Location0, Property0, Property_toString_closure, Property_toString_closure0, Property_result_closure, Property_internalProperties_closure, InternalPropertyDescriptor, PropertyDescriptor, Breakpoint0, Breakpoint$setBreakpointByUrl_closure, ChromeDebugger_connect_closure, ChromeDebugger_connect__closure, ChromeDebugger_connect___closure0, ChromeDebugger_connect____closure, ChromeDebugger_connect__closure0, ChromeDebugger_connect___closure, ChromeConnection, ChromeConnection_closure, ChromeConnection_closure0, ChromeConnection__closure0, ChromeConnection___closure, ChromeConnection___closure0, ChromeConnection____closure, ChromeConnection___closure1, ChromeConnection_closure1, ChromeConnection_closure2, ChromeConnection_closure3, ChromeConnection_closure4, ChromeConnection_closure5, ChromeConnection__closure, ChromeConnection_closure6, ChromeConnection_navigate_closure, ChromeConnection_navigate_closure0, ChromeConnection_createReverseMaps_closure, ChromeConnection_createReverseMaps_closure0, ChromeConnection_addBreakpoint_closure, ChromeConnection_addBreakpoint__closure, ChromeConnection_addBreakpoint___closure, ChromeConnection_addBreakpoint____closure, ChromeConnection_addBreakpoint___closure0, ChromeConnection_addBreakpoint_closure0, ChromeConnection_removeBreakpoint_closure, ChromeConnection_removeBreakpoint__closure, ChromeConnection_installBreakpoints_closure, ChromeConnection_setBreakpointByUrl_closure, ChromeConnection_setBreakpointByUrl_closure0, DdcParsingOption, RevSourceLocation, SingleMappingProxy__findColumn_closure, SingleMappingProxy__findLine_closure, ChromeDebugIsolate, ChromeDebugIsolate_frames_closure, ChromeDebugFrame, ChromeDebugBaseVariable, ChromeDebugBaseVariable_getChildren_closure, ChromeDebugBaseVariable_getChildren__closure, ChromeDebugBaseVariable_addProperties_closure, ChromeDebugBaseVariable_addProperties_closure0, ChromeThis, ChromeScope, ChromeScopes, ChromeScopes_getChildren_closure, ChromeScopes_getChildren__closure, ChromeDebugVariable, ChromeDebugValue, ChromeDebugValue_getChildren_closure, ChromeDebugValue_invokeToString_closure, ChromeDebugLocation, ChromeDebugLocation_resolve_closure, ChromeDebugLocation_resolve__closure, ChromeDebugLocation__resolvePath_closure, ChromeDebugLocation__resolvePath_closure0, WebUriTranslator, DebugManager, DebugManager_closure, DebugManager_closure0, DebugManager__closure, DebugManager_closure1, DebugManager_closure2, DebugManager_closure3, DebugManager_closure4, DebugManager_dispose_closure, UriTranslator, UriResolver, UriResolver_closure, UriResolver_closure0, UriResolver_resolveUriToPath_closure, UriResolver_resolvePathToUris_closure, UriResolver_dispose_closure, DebuggerViewManager, DebuggerViewManager_instantiateView_closure, DebuggerView, DebuggerView_closure, DebuggerView__createConfigMenu_createOption, DebuggerView__createConfigMenu_createOption_closure, DebuggerView__createConfigMenu_closure, DebuggerView__createConfigMenu_closure0, DebuggerView__createConfigMenu_closure1, DebuggerView__createSecondarySection_closure, DebuggerView__handleIsolateTerminated_closure, DebuggerView__handleIsolateTerminated_closure0, DebuggerView__jumpToLocation_closure, CaughtExceptionsOption, FlowControlSection, FlowControlSection_closure, FlowControlSection__handleIsolateChange_closure, FlowControlSection__restart_closure, ExecutionTab, ExecutionTab__updateFrames_closure, ExecutionTab__updateFrames__closure, ExecutionTab__selectFrame_closure, ExecutionTab__selectFrame_closure0, ExecutionTab__selectFrame__closure, ExecutionTab__selectFrame_closure1, ExecutionTab__selectFrame_closure2, ExecutionTab__updateLocals_closure, _LocalTreeModel, DetailSection, DetailSection_showDetails_closure, DetailSection_showDetails_closure0, DetailSection_showDetails_closure1, LibrariesTab, IsolatesTab, IsolatesTab_closure, BreakpointsTab, BreakpointsTab_closure, BreakpointsTab__render_closure, FocusManager, _TabTitlebar, DebugConnection, DebugOption, DebugIsolate, DebugFrame, DebugVariable, DebugValue, DebugLocation, ObservatoryDebugger_connect_closure, ObservatoryDebugger_connect__closure, ObservatoryDebugger_connect__closure0, ObservatoryDebugger_connect_closure0, ObservatoryDebugger_connect_closure1, ObservatoryConnection, ObservatoryConnection_closure, ObservatoryConnection__init_closure, ObservatoryConnection__init_closure0, ObservatoryConnection__init_closure1, ObservatoryConnection__init_closure2, ObservatoryConnection__init_closure3, ObservatoryConnection__init_closure4, ObservatoryConnection__init_closure5, ObservatoryConnection__init_closure6, ObservatoryConnection__init_closure7, ObservatoryConnection__init_closure8, ObservatoryConnection__installBreakpoints_closure, ObservatoryConnection__installBreakpoints_closure0, ObservatoryConnection__installBreakpoints__closure1, ObservatoryConnection__installBreakpoints___closure0, ObservatoryConnection__installBreakpoints____closure1, ObservatoryConnection__installBreakpoints____closure2, ObservatoryConnection__installBreakpoints__closure2, ObservatoryConnection__installBreakpoints_closure1, ObservatoryConnection__installBreakpoints__closure0, ObservatoryConnection__installBreakpoints_closure2, ObservatoryConnection__installBreakpoints__closure, ObservatoryConnection__installBreakpoints___closure, ObservatoryConnection__installBreakpoints____closure, ObservatoryConnection__installBreakpoints____closure0, ObservatoryConnection__installBreakpoints_closure3, ObservatoryConnection__handleIsolateEvent_closure, ObservatoryConnection__handleIsolateEvent__closure, ObservatoryConnection__handleIsolateEvent___closure, ObservatoryConnection__handleDebugEvent_closure, ObservatoryConnection__handleDebugEvent__closure, ObservatoryConnection__handleDebugEvent_closure0, ObservatoryConnection__registerNewIsolate_closure, ObservatoryConnection__registerNewIsolate_closure0, ObservatoryConnection__printExceptionToConsole_closure, ObservatoryConnection__printExceptionToConsole_closure0, ObservatoryLog, ObservatoryIsolate, ObservatoryIsolate_libraries_closure, ObservatoryIsolate__updateIsolateInfo_closure, ObservatoryIsolate__populateFrames_closure, ObservatoryIsolate__populateFrames__closure, ObservatoryIsolate__populateFrames___closure, ObservatoryFrame, ObservatoryFrame_eval_closure, ObservatoryVariable, ObservatoryFieldVariable, ObservatoryMapVariable, ObservatoryArrayVariable, ObservatoryCustomVariable, ObservatoryObjRefVariable, ObservatoryInstanceRefValue, ObservatoryInstanceRefValue_getChildren_closure, ObservatoryInstanceRefValue_getChildren__closure, ObservatoryInstanceRefValue_getChildren__closure0, ObservatoryInstanceRefValue_getChildren__closure1, ObservatoryInstanceRefValue_invokeToString_closure, ObservatoryObjRefValue, SimpleDebugValue, SentinelDebugValue, ObservatoryLocation, ObservatoryLocation_resolve_closure, ObservatoryLocation_resolve_closure0, ObservatoryLocation_resolve_closure1, ObservatoryLocation__resolve_closure, ObservatoryLibrary, ScriptManager, ScriptManager_resolveScript_closure, ScriptManager_resolveScript_closure0, ScriptManager_resolveScript_closure1, _ObservatoryServiceWrapper, _VmSourceCache, LineColumn, WebSocket, WebSocket_onOpen_closure, WebSocket_onMessage_closure, WebSocket_onError_closure, WebSocket_onClose_closure, MessageEvent, applyEdits_closure, applyEdits__closure, selectEditGroup_closure, _sortEdits_closure, EditorManager, EditorManager_jumpToLocation_closure, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_onClick_closure, CoreElement_click_closure, CoreElement_dblclick_closure, ProgressElement, CloseButton, TitledModelDialog, TitledModelDialog_closure, TitledModelDialog_closure0, Strobe, Strobe_strobe_closure, Strobe_strobe_closure0, ErrorRepository, Flutter, FlutterConnectManager, ConnectDialog, ConnectDialog_show_closure, ConnectDialog_show__closure, ConnectDialog__updateApps_closure, FlutterDaemonManager, FlutterDaemonManager_closure, FlutterDaemonManager__startFlutterDaemon_closure2, FlutterDaemonManager__startFlutterDaemon_closure1, FlutterDaemonManager__startFlutterDaemon_closure0, FlutterDaemonManager__startFlutterDaemon_closure, FlutterDaemonManager__startFlutterDaemon_closure3, FlutterDaemonManager__startFlutterDaemon_closure4, FlutterDaemonManager__startFlutterDaemon_closure5, FlutterDaemonManager__startFlutterDaemon_closure6, FlutterDaemonManager__startFlutterDaemon_closure7, FlutterDaemonManager__startFlutterDaemon_closure8, _ProcessDisposable, FlutterDaemon, Domain0, RequestError0, DaemonDomain, DiscoveredApp, AppDomain, AppDomain_start_closure, AppDomain_discover_closure, DaemonApp, DaemonApp_closure, DaemonApp_closure0, DaemonApp_closure1, DaemonApp_closure2, DaemonApp_closure3, DaemonApp_closure4, DaemonApp_closure5, DaemonApp_closure6, DaemonApp_stop_closure, AppStartedResult, AppEvent, DebugPortAppEvent, LogAppEvent, ProgressAppEvent, StopAppEvent, DeviceDomain, DeviceDomain_getDevices_closure, DeviceDomain_forward_closure, Device, LogMessage, DaemonRequestJob, DaemonRequestJob_run_closure, OperationResult, FlutterDeviceManager, FlutterDeviceManager__updateForDaemon_closure, BuildMode, FlutterExt, FlutterExt_debugPaint_closure, FlutterExt_repaintRainbow_closure, FlutterExt_timeDilation_closure, FlutterExt_performanceOverlay_closure, FlutterExt__init_closure, FlutterExt__checkIsolate_closure, FlutterLaunchType, FlutterLaunchType_connectToApp_closure, _LaunchInstance0, _LaunchInstance__connectToDebugger_closure, _LaunchInstance__connectToDebugger_closure0, _RunLaunchInstance, _RunLaunchInstance_launch_closure, _RunLaunchInstance_launch__closure, _RunLaunchInstance_launch__closure0, _RunLaunchInstance_launch__closure1, _RunLaunchInstance_launch__closure2, _RunLaunchInstance_launch_closure0, _RunLaunchInstance__kill_closure, _RunLaunchInstance__kill_closure0, _LogStatusJob, _ConnectLaunchInstance, _FlutterLaunch, _FlutterLaunch_closure, _FlutterLaunch_restart_closure, FlutterUriTranslator, FlutterSdkManager, FlutterSdkManager_closure, FlutterSdkManager_closure0, FlutterSdkManager_closure1, FlutterSdkManager_closure2, FlutterSdkManager_tryToAutoConfigure_closure, FlutterSdkManager_showInstallationInfo_closure, FlutterSdkManager_showInstallationInfo_closure0, _discoverSdk_closure, _discoverSdk_closure0, _discoverSdk_closure1, _discoverSdk_closure2, _discoverSdk_closure3, _discoverSdk_closure4, FlutterSdk, FlutterTool, _FlutterToolJob, SdkLocationJob, FlutterToolsManager, FlutterToolsManager__createProject_closure, FlutterToolsManager__createProject_closure0, FlutterToolsManager__createProject__closure, FlutterSection, FlutterSection_closure, MojoLaunchType, _LaunchInstance, _LaunchInstance_launch_closure, _LaunchInstance_launch_closure0, _LaunchInstance_launch_closure1, _LaunchInstance__kill_closure, ChangelogManager, ChangelogManager_closure, ChangelogManager_closure0, ChangelogManager__handleReleaseNotes_closure, ChangelogManager__handleReleaseNotes_closure0, Debounce, Debounce_bind_closure, Debounce_bind__closure, Debounce_bind_closure0, _handleEnterKey_closure, _handleEnterKey_closure0, _handleEnterKey_closure1, _handleEnterKey_closure2, _handleEnterKey_closure3, _handleEnterKey_closure4, _handleEnterKey_closure5, _handleEnterKey_closure6, NavigationManager, NavigationPosition, OutlineController, OutlineController_closure, OutlineController_closure0, OutlineController_closure1, OutlineView, OutlineView_closure, OutlineView__setupResizer_closure, OutlineView__setupResizer_closure0, _ErrorsList, _ErrorsList_updateWith_closure, _ErrorsList_updateWith_closure0, _ErrorsList__quickFix_closure, _ErrorsList__jumpTo_closure, PubManager, PubManager_closure, PubManager_closure0, PubManager_closure1, PubManager_closure2, PubManager_closure3, PubManager_closure4, PubManager_closure5, PubManager_closure6, PubManager_closure7, PubManager_closure8, PubManager_closure9, PubManager__addSdkCmd_closure, PubManager__handleRun_closure, PubManager__handleGlobalRun_closure, PubManager__handleGlobalActivate_closure, PubManager__showRunPubDialog_closure, PubJob, PubRunJob, PubGlobalActivate, PubContextCommand, RebuildManager, RebuildManager_closure, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run__closure0, RebuildJob_run_closure2, RebuildJob_run__closure, RebuildJob__runBuild_closure, RebuildJob__runBuild_closure0, RebuildJob__runBuild_closure1, StatusViewManager, StatusViewManager_closure, StatusViewManager_closure0, StatusViewManager_closure1, StatusView, StatusView_closure, StatusView__registerSection_closure, StatusView__createPluginSection_closure, StatusView__createPluginSection_closure0, StatusView__createPluginSection_closure1, StatusView__createPluginSection_closure2, StatusView__createPluginSection__closure, StatusView__createDartSdkSection_closure, StatusView__createDartSdkSection__closure, StatusView__createDartSdkSection_closure0, StatusView__createAnalysisServerSection_closure, StatusView__createAnalysisServerSection__closure, StatusView__createAnalysisServerSection__closure0, StatusView__createAnalysisServerSection_closure0, StatusView__createAnalysisServerSection_closure1, StatusView__createAnalysisServerSection_closure2, StatusView__createDiagnostics_closure0, StatusView__createDiagnostics__closure0, StatusView__createDiagnostics__closure1, StatusView__createDiagnostics__closure2, StatusView__createDiagnostics__closure3, StatusView__createDiagnostics_closure, StatusView__createDiagnostics__closure, StatusView__createDiagnostics___closure, StatusView__createDiagnostics___closure0, StatusView__createDebugSection_updateBrowser, StatusView__createDebugSection_updateVersion, StatusView__createDebugSection_closure, StatusView_showSection_closure, StatusView__handleSdkBrowse_closure, StatusView__handleDebugBrowse_closure, StatusHeader, _getPlatformVersions_closure, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay__closure0, StatusDisplay_closure0, JobsDialog, TestManager, TestManager_isRunnableTest_closure, TestManager__createTest_closure, TestRunner, FlutterTestRunner, FlutterTestRunner_run_closure, FlutterTestRunner_run_closure0, FlutterTestRunner_run_closure1, FlutterTestRunner_run_closure2, TestPackageTestRunner, TestPackageTestRunner_run_closure, TestPackageTestRunner_run_closure0, TestPackageTestRunner_run_closure1, TestPackageTestRunner_run_closure2, CliTestRunner, CliTestRunner_run_closure, CliTestRunner_run_closure0, CliTestRunner_run_closure1, CliTestRunner_run_closure2, Toolbar, ToolbarTile, DartToolbarContribution, DartToolbarContribution_closure, DartToolbarContribution__buildFlutterTile_updateToolbar, DartToolbarContribution__buildFlutterTile_closure, DartToolbarContribution__buildFlutterTile_closure0, DartToolbarContribution__buildFlutterTile_closure1, DartToolbarContribution__buildRightTile_updateToolbar, DartToolbarContribution__buildRightTile_closure, DartToolbarContribution__bindLaunchManager_closure, DartToolbarContribution__bindLaunchManager_closure0, DartToolbarContribution__bindLaunchManager_closure1, DartToolbarContribution__bindLaunchManager_closure2, DartToolbarContribution__bindDevicesToSelect_closure, DartToolbarContribution__bindDevicesToSelect_closure0, DartToolbarContribution__bindDevicesToSelect_closure1, DartToolbarContribution__bindDevicesToSelect_closure2, DartToolbarContribution__bindDevicesToSelect_closure3, TooltipController, TooltipController_closure, TooltipManager, TooltipManager_closure, TooltipManager__install_closure, TooltipManager__install__closure, TooltipManager__install___closure, TooltipManager__install__closure0, TooltipManager__install_closure0, TooltipManager__install_closure1, TooltipElement, TooltipElement_closure, TooltipElement_closure0, Job, Status, JobStatus, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager_runningJobs_closure, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, ConsoleController, ConsoleController_closure, ConsoleController__launchTerminated_closure, ConsoleController__toggleViews_closure, ConsoleView, ConsoleView_closure, ConsoleView_closure0, ConsoleView_closure1, ConsoleView_closure2, ConsoleView_closure3, ConsoleView__watchServicePort_closure, ConsoleView__emitText_closure, ConsoleStatusElement, LaunchManager, LaunchManager_addLaunch_closure, LaunchManager_addLaunch_closure0, LaunchType, LaunchData, Launchable, Launch, TextFragment, CachingServerResolver, CachingServerResolver_resolve_closure, _PathResolver, _ServerResolver, _ServerResolver_closure, _ServerResolver_closure0, _ServerResolver_dispose_closure, _ServerResolver_dispose__closure, CliLaunchType, CliLaunchType_performLaunch_closure, CliLaunchType_performLaunch_closure0, CliLaunchType_performLaunch__closure, CliLaunchType_performLaunch_closure1, CliLaunchType_performLaunch_closure2, _CliLaunch, _CliLaunch_closure, LaunchConfigurationManager, LaunchConfigurationManager_getAllConfigs_closure, _createUniqueFilename_closure, LaunchConfiguration, _ProjectConfigurations, _ProjectConfigurations_createConfig_closure, _ProjectConfigurations__listenToLaunchDir_closure, ServeLaunchType, ServeLaunchType_performLaunch_closure, ServeLaunchType_performLaunch_closure0, ServeLaunchType_performLaunch_closure1, ServeLaunchType_performLaunch_closure2, ServeLaunchType_performLaunch_closure3, ServeLaunch, ShellLaunchType, ShellLaunchType_performLaunch_closure, ShellLaunchType_performLaunch_closure0, ShellLaunchType_performLaunch_closure1, ShellLaunchType_performLaunch_closure2, WebLaunchType, WebLaunchType_performLaunch_closure, WebLaunchType_performLaunch_closure0, WebLaunchType_performLaunch_closure1, WebLaunchType_performLaunch_closure2, WebLaunchType_performLaunch_closure3, WebLaunchType_performLaunch_closure4, WebLaunchType_performLaunch_closure5, RunApplicationManager, RunApplicationManager_closure, RunApplicationManager_closure0, RunApplicationManager_closure1, RunApplicationManager_closure2, RunApplicationManager_closure3, RunApplicationManager__handleRunCommand_closure, RunApplicationManager__handleFullRestartCommand_closure, RunApplicationManager_run_closure, WorkspaceLaunchManager, WorkspaceLaunchManager_closure, WorkspaceLaunchManager_closure0, WorkspaceLaunchManager_closure1, WorkspaceLaunchManager__updateFromActiveEditor_closure, WorkspaceLaunchManager__updateFromActiveEditor_closure0, RunnableConfig, _RunAppContextCommand, DartLinterProvider, DartLinterConsumer, DartLinterConsumer_closure, DartLinterConsumer__regenErrors_closure, DartLinterConsumer__filter_closure, DartLinterConsumer__emit_closure, MIconButton, MTabGroup, MTabGroup__handleTabAdd_closure, MTabGroup_hasTabId_closure, MTab, MTab_closure, MList, MList_closure, MList_update_closure, MList_update_closure0, MList__populateChildren_closure, MList__populateChildren_closure0, TreeModel, MTree, MTree__render_closure, MTree__render__closure, MTree__render__closure0, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage_closure1, AtomDartPackage_closure2, AtomDartPackage_activate_closure, AtomDartPackage_activate_closure0, AtomDartPackage_activate_closure1, AtomDartPackage_activate__closure, AtomDartPackage_activate__closure0, AtomDartPackage_activate_closure2, AtomDartPackage__validateSettings_closure, AtomDartPackage__validateSettings_closure0, AtomDartPackage__handleSendFeedback_closure, AtomDartPackage__registerLinter_closure, AtomDartPackage__registerLinter_closure0, AtomDartPackage__registerLinter_closure1, AtomDartPackage__setupLogging_closure, ProjectManager, ProjectManager_closure, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, ProjectManager__initProjectControllers_closure, ProjectManager__initProjectControllers_closure0, DartProject, DartProject_importsPackage_closure, DartProject_importsPackage_closure0, ProjectScanJob, SdkManager, SdkManager_closure, SdkManager_closure0, SdkManager_closure1, SdkManager_tryToAutoConfigure_closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery__discoverSdk_closure, SdkDiscovery__discoverSdk_closure0, SdkDiscovery__discoverSdk_closure1, SdkDiscovery__discoverSdk_closure2, SdkDiscovery__discoverSdk_closure3, SdkDiscovery__discoverSdk_closure4, SdkLocationJob0, State, State_onValueChanged_closure, State_saveState_closure, StateStorable, UsageManager, UsageManager_closure, UsageManager__init_closure, UsageManager__init__closure, UsageManager__init__closure0, Property, SelectionGroup, SelectionGroup_observeMutation_closure, MItem, Pair0, ViewResizer, ViewResizer__init_closure0, ViewResizer__init_closure, ViewResizer__init__closure, ViewResizer__init__closure0, ViewResizer__minSize_closure, ViewResizer__targetSize_closure, DockedView, DockedViewManager, DockedViewManager_closure, ListTreeBuilder, ListTreeBuilder__addNode_closure, ListTreeBuilder__addNode_closure0, ListTreeBuilder__addNode_closure1, ListTreeBuilder__addNode_closure2, ListTreeBuilder__addNode_closure3, Node0, Node_decendentCount_closure, DoubleCancelCommand, DoubleCancelCommand__handleCancel_closure, DefaultEquality, IterableEquality, _UnorderedEquality, UnorderedIterableEquality, QueueList, Object_ListMixin0, UnmodifiableMapMixin, Haikunator_haikunate_closure, Logger, closure, Level, LogRecord, Node1, Element1, Element_textContent_closure, Text, UnparsedContent, BlockParser, BlockSyntax, BlockSyntax_isAtBlockEnd_closure, EmptyBlockSyntax, SetextHeaderSyntax, HeaderSyntax, BlockquoteSyntax, BlockquoteSyntax_parseChildLines_closure, CodeBlockSyntax, FencedCodeBlockSyntax, HorizontalRuleSyntax, BlockHtmlSyntax, BlockTagBlockHtmlSyntax, OtherTagBlockHtmlSyntax, LongBlockHtmlSyntax, ListItem, ListSyntax, ListSyntax_parse_endItem, ListSyntax_parse_tryMatch, UnorderedListSyntax, OrderedListSyntax, ParagraphSyntax, ParagraphSyntax__extractReflinkDefinitions_lineStartsReflinkDefinition, ParagraphSyntax__parseReflinkDefinition_closure, Document, Link, ExtensionSet, HtmlRenderer, HtmlRenderer_visitElementBefore_closure, InlineParser, InlineParser_closure, InlineSyntax, LineBreakSyntax, TextSyntax, EscapeSyntax, InlineHtmlSyntax, AutolinkSyntax, TagSyntax, LinkSyntax, LinkSyntax_getLink__contents, ImageSyntax, CodeSyntax, TagState, TagState_textContent_closure, Context, Context_join_closure, Context_joinAll_closure, Context_split_closure, _validateArgList_closure, InternalStyle, ParsedPath, ParsedPath_normalize_closure, PathException, Style, PosixStyle, UrlStyle, WindowsStyle, Version, Version__splitParts_closure, VersionRange, Entry1, Mapping, MultiSectionMapping, SingleMapping, closure6, closure7, SingleMapping__findLine_closure, SingleMapping__findColumn_closure, TargetLineEntry, TargetEntry, _MappingTokenizer, _TokenKind, SourceMapSpan, closure8, SourceFile, FileLocation, FileSpan, _FileSpan, SourceLocation, SourceLocationMixin, SourceSpan, SourceSpanBase, SourceSpanException, SourceSpanFormatException, SourceSpanMixin, EagerSpanScanner, _EagerSpanScannerState, StringScannerException, SpanScanner, StringScanner, AnalyticsMock, _createObject_closure, _createSpecificObject_closure, VmService, VmService_dispose_closure, RPCError, ExtensionData, Log, BoundField, BoundVariable, Breakpoint, ClassRef, Class, ClassList, CodeRef, Code, ContextRef, Context0, ContextElement, ErrorRef, Error0, Event1, FieldRef, Field, Flag, FlagList, Frame, FuncRef, Func, InstanceRef, Instance, IsolateRef, Isolate, LibraryRef, Library, LibraryDependency, MapAssociation, Message, NullRef, Null0, ObjRef, Obj, ReloadReport, Response, Sentinel, ScriptRef, Script, SourceLocation0, SourceReport, SourceReportCoverage, SourceReportRange, Stack, Success, TimelineEvent, TypeArgumentsRef, TypeArguments, UnresolvedSourceLocation, Version0, VMRef, VM, CpuProfile, CodeRegion, ProfileFunction, AllocationProfile, ClassHeapStats, HeapSpace, _DeepEquals, deepHashCode__deepHashCode, deepHashCode__deepHashCode_closure, Event0, DocumentStartEvent, DocumentEndEvent, AliasEvent, _ValueEvent, ScalarEvent, SequenceStartEvent, MappingStartEvent, EventType, Loader, Loader__parseNumberValue_closure, Loader__parseNumberValue_closure0, Loader__parseNumberValue_closure1, Loader__parseNumberValue_closure2, Loader__parseNumberValue_closure3, Parser, Parser__parseNode_parseAnchor, Parser__parseNode_parseTag, _State, Scanner, Scanner__fetchMoreTokens_closure, _SimpleKey, _Chomping, ScalarStyle, CollectionStyle, Token, VersionDirectiveToken, TagDirectiveToken, AnchorToken, AliasToken, TagToken, ScalarToken, TokenType, Pair, closure2, YamlDocument, VersionDirective, TagDirective, YamlException, YamlNode, YamlMap, YamlNode_MapMixin, YamlNode_MapMixin_UnmodifiableMapMixin, YamlMap_keys_closure, YamlList, YamlNode_ListMixin, YamlScalar, main_closure];
+    return [JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JavaScriptFunction, JSArray, JSUnmodifiableArray, ArrayIterator, JSNumber, JSInt, JSDouble, JSString, CodeUnits, EfficientLengthIterable, ListIterable, SubListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, MappedListIterable, WhereIterable, WhereIterator, ExpandIterable, ExpandIterator, TakeIterable, EfficientLengthTakeIterable, TakeIterator, SkipIterable, EfficientLengthSkipIterable, SkipIterator, EmptyIterable, EmptyIterator, FixedLengthListMixin, UnmodifiableListMixin, UnmodifiableListBase, ReversedListIterable, Symbol, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, _Serializer, _Deserializer, ConstantMapView, ConstantMap, ConstantStringMap, ConstantStringMap_values_closure, _ConstantMapKeyIterable, GeneralConstantMap, JSInvocationMirror, ReflectionInfo, Primitives_initTicker_closure, Primitives_functionNoSuchMethod_closure, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, ExceptionAndStackTrace, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, StaticClosure, BoundClosure, CastErrorImplementation, RuntimeError, TypeImpl, JsLinkedHashMap, JsLinkedHashMap_values_closure, JsLinkedHashMap_addAll_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, initHooks_closure, initHooks_closure0, initHooks_closure1, JSSyntaxRegExp, _MatchImplementation, _AllMatchesIterable, _AllMatchesIterator, StringMatch, _StringAllMatchesIterable, _StringAllMatchesIterator, NativeByteBuffer, NativeTypedData, NativeByteData, NativeTypedArray, NativeTypedArrayOfDouble, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, NativeTypedArrayOfInt, NativeTypedArray_ListMixin0, NativeTypedArray_ListMixin_FixedLengthListMixin0, NativeFloat32List, NativeFloat64List, NativeInt16List, NativeInt32List, NativeInt8List, NativeUint16List, NativeUint32List, NativeUint8ClampedList, NativeUint8List, _AsyncRun__initializeScheduleImmediate_internalCallback, _AsyncRun__initializeScheduleImmediate_closure, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, _awaitOnObject_closure, _awaitOnObject_closure0, _wrapJsFunctionForAsync_closure, _IterationMarker, _SyncStarIterator, _SyncStarIterable, _BroadcastStream, _BroadcastSubscription, _BroadcastStreamController, _SyncBroadcastStreamController, _SyncBroadcastStreamController__sendData_closure, _SyncBroadcastStreamController__sendError_closure, _SyncBroadcastStreamController__sendDone_closure, _AsyncBroadcastStreamController, Future, closure0, Future_wait_handleError, Future_wait_closure, Future_forEach_closure, Future_doWhile_closure, _Completer, _AsyncCompleter, _SyncCompleter, _FutureListener, _Future, _Future__addListener_closure, _Future__prependListeners_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__chainForeignFuture_closure1, _Future__asyncComplete_closure, _Future__chainFuture_closure, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future_timeout_closure, _Future_timeout_closure0, _Future_timeout_closure1, _AsyncCallbackEntry, Stream, Stream_reduce_closure, Stream_reduce__closure, Stream_reduce__closure0, Stream_reduce_closure0, Stream_contains_closure, Stream_contains__closure, Stream_contains__closure0, Stream_contains_closure0, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_isEmpty_closure, Stream_isEmpty_closure0, Stream_toList_closure, Stream_toList_closure0, Stream_first_closure, Stream_first_closure0, Stream_elementAt_closure, Stream_elementAt_closure0, StreamSubscription, EventSink, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _AsyncStreamControllerDispatch, _AsyncStreamController, _ControllerStream, _ControllerSubscription, _BufferingStreamSubscription, _BufferingStreamSubscription__sendError_sendError, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedError, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _DoneStreamSubscription, _StreamIterator, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _ForwardingStream, _ForwardingStreamSubscription, _WhereStream, _MapStream, _HandleErrorStream, _StateStreamSubscription, _SkipStream, _EventSinkWrapper, _SinkTransformerStreamSubscription, _BoundSinkStream, AsyncError, Zone, _Zone, _rootHandleUncaughtError_closure, _RootZone, _RootZone_bindCallback_closure, _RootZone_bindCallback_closure0, _RootZone_bindUnaryCallback_closure, _HashMap, _HashMap_values_closure, _HashMap_addAll_closure, _IdentityHashMap, _CustomHashMap, _CustomHashMap_closure, _HashMapKeyIterable, _HashMapKeyIterator, _LinkedIdentityHashMap, _LinkedHashSet, _LinkedHashSetCell, _LinkedHashSetIterator, UnmodifiableListView, _HashSetBase, IterableBase, closure4, ListBase, Object_ListMixin, ListMixin, MapMixin, _MapBaseValueIterable, _MapBaseValueIterator, _UnmodifiableMapMixin, MapView, UnmodifiableMapView, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, _JsonMap, _JsonMap_values_closure, _JsonMap_addAll_closure, _JsonMapKeyIterable, Base64Codec, Base64Encoder, Base64Decoder, _Base64Decoder, Codec, Converter, Encoding, HtmlEscapeMode, HtmlEscape, JsonUnsupportedObjectError, JsonCyclicError, JsonCodec, JsonEncoder, JsonDecoder, _JsonStringifier, _JsonStringifier_writeMap_closure, _JsonStringStringifier, LineSplitter, LineSplitter_bind_closure, _LineSplitterSink, _LineSplitterEventSink, StringConversionSinkBase, StringConversionSinkMixin, _StringAdapterSink, Utf8Codec, Utf8Encoder, _Utf8Encoder, Utf8Decoder, _Utf8Decoder, _Utf8Decoder_convert_scanOneByteCharacters, _Utf8Decoder_convert_addSingleBytes, NoSuchMethodError_toString_closure, bool, Comparable, DateTime, double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, IndexError, NoSuchMethodError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, OutOfMemoryError, StackOverflowError, CyclicInitializationError, _Exception, FormatException, IntegerDivisionByZeroException, Expando, Function, int, Iterable, Iterator, List, Map, Null, num, Object, Match, RegExp, StackTrace, _StringStackTrace, Stopwatch, String, StringBuffer, Symbol0, Uri__parseIPv4Address_error, Uri_parseIPv6Address_error, Uri_parseIPv6Address_parseHex, _Uri, closure1, _Uri__checkNonWindowsPathReservedCharacters_closure, _Uri__makePath_closure, UriData, _createTables_closure, _createTables_build, _createTables_setChars, _createTables_setRange, _SimpleUri, _DataUri, HtmlElement, AnchorElement, Animation, ApplicationCacheErrorEvent, AreaElement, AudioTrack, AudioTrackList, EventTarget_ListMixin, EventTarget_ListMixin_ImmutableListMixin, BaseElement, BatteryManager, BeforeUnloadEvent, Blob, BlobEvent, Body, BodyElement, ButtonElement, CanvasElement, CanvasRenderingContext2D, CharacterData, Client, CloseEvent, CompositionEvent, CompositorWorker, Credential, Crypto, CryptoKey, CssFontFaceRule, CssImportRule, CssKeyframeRule, CssKeyframesRule, CssNamespaceRule, CssPageRule, CssRule, CssStyleDeclaration, Interceptor_CssStyleDeclarationBase, _CssStyleDeclarationSet, Object_CssStyleDeclarationBase, _CssStyleDeclarationSet_closure, _CssStyleDeclarationSet_setProperty_closure, CssStyleDeclarationBase, CssStyleRule, CssViewportRule, CustomEvent, DataTransfer, DataTransferItem, DataTransferItemList, DeviceAcceleration, DeviceLightEvent, DialogElement, DirectoryEntry, DirectoryEntry__getFile_closure0, DirectoryEntry__getFile_closure, DivElement, Document0, DocumentFragment, DomError, DomException, DomIterator, DomPoint, DomPointReadOnly, DomRectReadOnly, DomStringList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, DomTokenList, _ChildrenElementList, _FrozenElementList, Element0, closure3, ScrollAlignment, EmbedElement, Entry, Entry_getParent_closure, Entry_getParent_closure0, Entry_remove_closure, Entry_remove_closure0, ErrorEvent, Event, EventSource, EventTarget, ExtendableEvent, ExtendableMessageEvent, FieldSetElement, File0, FileEntry, FileEntry_file_closure, FileEntry_file_closure0, FileError, FileList, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, FileReader, FileStream, FileSystem, FileWriter, FontFace, FontFaceSet, FormElement, Gamepad, GamepadButton, GeofencingEvent, GeofencingRegion, Geoposition, History, HtmlCollection, Interceptor_ListMixin1, Interceptor_ListMixin_ImmutableListMixin1, HtmlDocument, HttpRequest, HttpRequest_getString_closure, HttpRequest_request_closure, HttpRequestEventTarget, IFrameElement, ImageBitmap, ImageData, ImageElement, InputElement, IntersectionObserver, IntersectionObserverEntry, KeyboardEvent, KeygenElement, LIElement, LengthValue, LinkElement, Location1, MapElement, MediaDeviceInfo, MediaElement, MediaError, MediaKeyMessageEvent, MediaKeySession, MediaList, MediaMetadata, MediaQueryList, MediaRecorder, MediaStream, MediaStreamTrack, MenuElement, MenuItemElement, MessageEvent0, MessagePort, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, MidiOutput, MidiPort, MimeType, MimeTypeArray, Interceptor_ListMixin2, Interceptor_ListMixin_ImmutableListMixin2, MouseEvent, MutationRecord, Navigator, NavigatorUserMediaError, NetworkInformation, _ChildNodeListLazy, Node, NodeIterator, NodeList, Interceptor_ListMixin3, Interceptor_ListMixin_ImmutableListMixin3, Notification0, NumberValue, OListElement, ObjectElement, OffscreenCanvas, OptGroupElement, OptionElement, OutputElement, ParamElement, Path2D, PerformanceEntry, PerformanceNavigation, PermissionStatus, Perspective, Plugin, PluginArray, Interceptor_ListMixin4, Interceptor_ListMixin_ImmutableListMixin4, PositionError, PositionValue, PresentationAvailability, PresentationConnection, PresentationConnectionCloseEvent, PresentationRequest, ProcessingInstruction, ProgressElement0, PushEvent, PushMessageData, Range0, ReadableByteStream, ReadableByteStreamReader, ReadableStreamReader, Rotation, RtcDataChannel, RtcPeerConnection, RtcSessionDescription, RtcStatsReport, RtcStatsResponse, ScreenOrientation, ScriptElement0, SecurityPolicyViolationEvent, SelectElement, Selection, ServicePort, ServiceWorkerMessageEvent, ServiceWorkerRegistration, ShadowRoot, SharedWorker, SharedWorkerGlobalScope, SimpleLength, SlotElement, SourceBuffer, SourceBufferList, EventTarget_ListMixin0, EventTarget_ListMixin_ImmutableListMixin0, SourceElement, SourceInfo, SpeechGrammar, SpeechGrammarList, Interceptor_ListMixin5, Interceptor_ListMixin_ImmutableListMixin5, SpeechRecognition, SpeechRecognitionError, SpeechRecognitionEvent, SpeechRecognitionResult, SpeechSynthesis, SpeechSynthesisEvent, SpeechSynthesisUtterance, SpeechSynthesisVoice, Storage, Storage_addAll_closure, Storage_keys_closure, Storage_values_closure, StorageEvent, StyleElement, StyleMedia, StyleSheet, StyleValue, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, TextAreaElement, TextEvent, TextTrack, TextTrackCue, TextTrackCueList, Interceptor_ListMixin6, Interceptor_ListMixin_ImmutableListMixin6, TextTrackList, EventTarget_ListMixin1, EventTarget_ListMixin_ImmutableListMixin1, TimeRanges, Touch, TouchEvent, TouchList, Interceptor_ListMixin7, Interceptor_ListMixin_ImmutableListMixin7, TrackDefault, TrackDefaultList, TrackElement, TransformComponent, Translation, TreeWalker, UIEvent, UnderlyingSourceBase, Url, VideoElement, VideoTrack, VideoTrackList, VttCue, VttRegion, VttRegionList, WebSocket0, Window, Worker, WorkerGlobalScope, XsltProcessor, _Attr, _ClientRect, _ClientRectList, Interceptor_ListMixin8, Interceptor_ListMixin_ImmutableListMixin8, _CssRuleList, Interceptor_ListMixin9, Interceptor_ListMixin_ImmutableListMixin9, _DocumentType, _DomRect, _GamepadList, Interceptor_ListMixin10, Interceptor_ListMixin_ImmutableListMixin10, _HTMLFrameSetElement, _NamedNodeMap, Interceptor_ListMixin11, Interceptor_ListMixin_ImmutableListMixin11, _Request, _ServiceWorker, _SpeechRecognitionResultList, Interceptor_ListMixin12, Interceptor_ListMixin_ImmutableListMixin12, _StyleSheetList, Interceptor_ListMixin13, Interceptor_ListMixin_ImmutableListMixin13, _WorkerLocation, _WorkerNavigator, _AttributeMap, _AttributeMap_addAll_closure, _ElementAttributeMap, _MarginCssRect, CssRect, _MultiElementCssClassSet, closure5, _MultiElementCssClassSet_readClasses_closure, _MultiElementCssClassSet_modify_closure, _MultiElementCssClassSet_toggle_closure, _MultiElementCssClassSet_remove_closure, _ElementCssClassSet, Dimension, _EventStream, _ElementEventStreamImpl, _ElementListEventStreamImpl, _EventStreamSubscription, _EventStreamSubscription_closure, _StreamPool, _StreamPool_add_closure, _Html5NodeValidator, ImmutableListMixin, NodeValidatorBuilder, NodeValidatorBuilder_allowsElement_closure, NodeValidatorBuilder_allowsAttribute_closure, _SimpleNodeValidator, _SimpleNodeValidator_closure, _SimpleNodeValidator_closure0, _TemplatingNodeValidator, _TemplatingNodeValidator_closure, _SvgNodeValidator, FixedSizeListIterator, _DOMWindowCrossFrame, _LocationCrossFrame, NodeValidator, _SameOriginUriPolicy, _ValidatingTreeSanitizer, _ValidatingTreeSanitizer_sanitizeTree_walk, _StructuredClone, _StructuredClone_walk_closure, _AcceptStructuredClone, _AcceptStructuredClone_walk_closure, _StructuredCloneDart2Js, _AcceptStructuredCloneDart2Js, convertNativePromiseToDartFuture_closure, convertNativePromiseToDartFuture_closure0, CssClassSetImpl, CssClassSetImpl_add_closure, CssClassSetImpl_addAll_closure, CssClassSetImpl_removeAll_closure, FilteredElementList, FilteredElementList__iterable_closure, FilteredElementList__iterable_closure0, FilteredElementList_removeRange_closure, Cursor, CursorWithValue, Database, _completeRequest_closure, Index, KeyRange, ObjectStore, Request, Transaction, JsObject, JsObject__convertDataTree__convert, JsFunction, JsArray, JsObject_ListMixin, _convertToJS_closure, _convertToJS_closure0, _wrapToDart_closure, _wrapToDart_closure0, _wrapToDart_closure1, _JSRandom, Point, _RectangleBase, Rectangle, AElement, Angle, AnimationElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEFloodElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GeometryElement, GraphicsElement, ImageElement0, Length, LengthList, Interceptor_ListMixin14, Interceptor_ListMixin_ImmutableListMixin14, MarkerElement, MaskElement, Number, NumberList, Interceptor_ListMixin15, Interceptor_ListMixin_ImmutableListMixin15, PatternElement, Point1, PointList, Rect, RectElement, ScriptElement, StringList, Interceptor_ListMixin16, Interceptor_ListMixin_ImmutableListMixin16, StyleElement0, AttributeClassSet, SvgElement, SvgSvgElement, SymbolElement, TextContentElement, TextPathElement, TextPositioningElement, Transform, TransformList, Interceptor_ListMixin17, Interceptor_ListMixin_ImmutableListMixin17, UseElement, ViewElement, ViewSpec, _GradientElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGMPathElement, Uint8List, AudioBuffer, AudioBufferSourceNode, AudioContext, AudioNode, AudioParam, AudioSourceNode, BiquadFilterNode, OscillatorNode, ActiveInfo, RenderingContext, RenderingContext2, _WebGL2RenderingContextBase, SqlDatabase, SqlError, SqlResultSetRowList, Interceptor_ListMixin18, Interceptor_ListMixin_ImmutableListMixin18, Atom, Atom_pickFolder_closure, TrustedHtmlTreeSanitizer, which_closure, which_closure0, CommandRegistry, CommandRegistry_add_closure, ContextMenuManager, ContextMenuManager_add_closure, ContextMenuItem, ContextMenuItem_toJs_closure, _SeparatorMenuItem, AtomEvent, Config, Config_onDidChange_closure, Config_onDidChange_closure0, Grammar, GrammarRegistry, ScopeDescriptor, FS, Stats, Directory, Directory_getEntriesSync_closure, File, Entry0, NotificationManager, NotificationManager__options_closure, Notification, NotificationButton, NotificationButton_toProxy_closure, NotificationHelper, NotificationHelper_appendText_closure, ProcessNotifier, ProcessNotifier_watch_closure, ProcessNotifier_watch_closure0, ProcessNotifier_watch_closure1, ProcessNotifier_watch_closure2, promptUser_closure, promptUser_closure0, promptUser_closure1, promptUser_closure2, registerPackage_closure, registerPackage_closure0, registerPackage_closure1, registerPackage__closure, AtomPackage, AtomPackage_loadPackageJson_closure, AtomPackage_getPackageVersion_closure, PackageManager, Process, exec_closure, ProcessRunner, ProcessRunner_execSimple_closure, ProcessRunner_execSimple_closure0, ProcessRunner_execSimple_closure1, ProcessRunner_execStreaming_closure2, ProcessRunner_execStreaming_closure1, ProcessRunner_execStreaming_closure, ProcessRunner_execStreaming_closure0, ProcessRunner_kill_closure, ProcessResult, ShellWrangler, BufferedProcess, BufferedProcess_create_closure, Shell, ViewRegistry, JsChangeListener, JsChangeListener_add_closure, Item, Item$fromFields_closure, Item$fromFields_closure0, Item$fromFields_closure1, Item$fromFields_closure2, Workspace, Workspace_getTextEditors_closure, Workspace_observeTextEditors_closure, Workspace_observeActivePaneItem_closure, Workspace_open_closure, Workspace_open__closure, Workspace_addOpener_closure, Project, Project_getDirectories_closure, Panel, Panel_onDidDestroy_closure, Pane, Gutter, Marker, Decoration, Point0, Range, TextBuffer, TextEditorElement, TextEditorComponent, TextEditor, TextEditor_setSelectedBufferRanges_closure, TextEditor_onDidChangeCursorPosition_closure, TextEditor_onDidAddGutter_closure, promiseToFuture_closure, promiseToFuture_closure0, ProxyHolder, ProxyHolder_eventStream_closure, ProxyHolder_eventStream_closure0, JsDisposable, Promise, Promise__jsObjectFromFuture_closure, Promise__jsObjectFromFuture__closure, Promise__jsObjectFromFuture__closure0, FutureSerializer, FutureSerializer__serviceQueue_closure, FutureSerializer__serviceQueue_closure0, FutureSerializer__serviceQueue_closure1, Dependencies, Disposable, Disposables, EventListener, StreamSubscriptions, Edit, AnalysisOptionsManager, Server, Domain, RefactoringOptions, RequestError, ServerDomain, ServerError, ServerStatus, VersionResult, AnalysisDomain, AnalysisErrors, AnalysisErrors_parse_closure, AnalysisFlushResults, AnalysisNavigation, AnalysisNavigation_parse_closure, AnalysisNavigation_parse_closure0, AnalysisOutline, HoverResult, HoverResult_parse_closure, CompletionDomain, CompletionResults, CompletionResults_parse_closure, SuggestionsResult, SearchDomain, SearchResults, SearchResults_parse_closure, FindElementReferencesResult, FindTopLevelDeclarationsResult, TypeHierarchyResult, TypeHierarchyResult_parse_closure, EditDomain, FormatResult, FormatResult_parse_closure, AssistsResult, AssistsResult_parse_closure, AvailableRefactoringsResult, FixesResult, FixesResult_parse_closure, RefactoringResult, RefactoringResult_parse_closure, RefactoringResult_parse_closure0, RefactoringResult_parse_closure1, SortMembersResult, OrganizeDirectivesResult, ExecutionDomain, CreateContextResult, MapUriResult, DiagnosticDomain, DiagnosticsResult, DiagnosticsResult_parse_closure, AddContentOverlay, AnalysisError, AnalysisErrorFixes, AnalysisErrorFixes_parse_closure, AnalysisOptions, AnalysisStatus, ChangeContentOverlay, CompletionSuggestion, ContextData, Element, HoverInformation, LinkedEditGroup, LinkedEditGroup_parse_closure, LinkedEditGroup_parse_closure0, LinkedEditSuggestion, Location, NavigationRegion, NavigationTarget, Outline, Outline_parse_closure, Position, PubStatus, RefactoringProblem, RemoveContentOverlay, SearchResult, SearchResult_parse_closure, SourceChange, SourceChange_parse_closure, SourceChange_parse_closure0, SourceEdit, SourceFileEdit, SourceFileEdit_parse_closure, TypeHierarchyItem, ExtractLocalVariableRefactoringOptions, RenameRefactoringOptions, RefactoringFeedback, BufferObserverManager, BufferObserverManager_closure, BufferObserverManager__closure, BufferObserverManager_dispose_closure, BufferObserver, BufferFormatter, BufferFormatter_closure, BufferFormatter__closure, BufferFormatter___closure, BufferFormatter_closure0, BufferUpdater, OverlayManager, OverlayManager__serverActive_closure, OverlayInfo, OverlayInfo__flush_closure, _log_closure, DartAutocompleteProvider, DartAutocompleteProvider_getSuggestions_closure, DartAutocompleteProvider_getSuggestions_closure1, DartAutocompleteProvider_getSuggestions_closure0, DartAutocompleteProvider__handleCompletionResults_closure, DartAutocompleteProvider__makeSuggestion_closure, DartAutocompleteProvider__rightLabel_closure, DartdocHelper, DartdocHelper_closure, DartdocHelper__handleDartdoc_closure, DartdocHelper__handleDartdoc__closure, DartdocHelper__render_writeTitle, DartdocControl, DartdocControl_closure, DartdocControl_closure0, NavigationHelper, NavigationHelper__activate_closure, NavigationHelper__handleNavigateEditor_closure, NavigationHelper__handleNavigateEditor_closure0, NavigationHelper__processNavInfo_closure, _NavCompleterHelper, _NavCompleterHelper_handleNavInfo_closure, _NavCompleterHelper_getNavigationInfo_closure, FindTypeHelper, FindTypeHelper_closure, FindTypeHelper__handleFindType_closure, FindTypeHelper__handleFindType__closure, FindTypeHelper__handleFindType___closure, FormattingManager, FormattingManager_closure, FormattingManager_closure0, FormattingManager_formatFile_closure, FormattingManager_formatEditor_closure, FormattingManager_formatEditor_closure0, OrganizeFileManager, OrganizeFileManager__addEditorCommand_closure, OrganizeFileManager__handleSortMembers_closure, OrganizeFileManager__handleSortMembers__closure, OrganizeFileManager__handleOrganizeDirectives_closure, OrganizeFileManager__handleOrganizeDirectives__closure, OrganizeFileManager__handleOrganizeDirectives__closure0, QuickFixHelper, QuickFixHelper_closure, QuickFixHelper__handleQuickFix_closure, QuickFixHelper__handleFixesResult_closure, QuickFixHelper__handleFixesResult__closure, QuickFixHelper__handleFixesResult_closure0, QuickFixHelper__handleFixesResult_closure1, QuickFixHelper__handleFixesResult_closure2, _Change, _applyChange_closure, _applyChange__closure0, _applyChange_closure0, _applyChange__closure, _applyChange_closure1, RefactoringHelper, RefactoringHelper__addCommand_closure, RefactoringHelper__handleExtractLocal_closure, RefactoringHelper__handleExtractLocal__closure, RefactoringHelper__handleRenameRefactor_closure, RefactoringHelper__handleRenameRefactor__closure, RefactoringHelper__checkRefactoringAvailable_closure, RefactoringHelper__checkRefactoringAvailable__closure, RefactoringHelper__performRefactoring_closure, RefactoringHelper__performRefactoring__closure, RefactoringHelper__applyRefactoringResult_closure, RefactoringHelper__applyRefactoringResult__closure0, RefactoringHelper__applyRefactoringResult_closure0, RefactoringHelper__applyRefactoringResult_closure1, RefactoringHelper__applyRefactoringResult__closure, RefactoringHelper__applyRefactoringResult_closure2, RefactoringHelper__applyRefactoringResult_closure3, RefactoringHelper__applyRefactoringResult_closure4, RefactoringHelper__applyEdits_closure, RefactoringHelper__applyEdits__closure0, RefactoringHelper__applyEdits_closure0, RefactoringHelper__applyEdits__closure, RefactoringHelper__applyEdits_closure1, FindReferencesHelper, FindReferencesHelper__handleReferencesEditor_closure, FindReferencesHelper__handleReferencesEditor__closure, ReferencesSearch, FindReferencesView, FindReferencesView__handleSearchResults_closure, FindReferencesView__handleSearchResults_closure0, _MatchParser, TypeHierarchyHelper, TypeHierarchyHelper__handleHierarchyEditor_closure, TypeHierarchyHelper__handleHierarchyEditor__closure, TypeHierarchyView, TypeHierarchyView__sort_closure, TypeHierarchyView__render_closure, TypeHierarchyView__render_closure0, AnalysisServer, AnalysisServer_closure, AnalysisServer__setup_closure, AnalysisServer__setup_closure0, AnalysisServer__setup_closure1, AnalysisServer_updateRoots_closure, AnalysisServer__reconcileRoots_closure, AnalysisServer__focusedEditorChanged_closure, AnalysisServer__searchResultsStream_closure, AnalysisServer__searchResultsStream_closure0, AnalysisServer__initNewServer_closure, AnalysisServer__initNewServer_closure0, AnalysisServer__initNewServer_closure1, AnalysisServer__initNewServer_closure2, AnalysisServer__initNewServer_closure3, AnalysisServer__initNewServer_closure4, AnalysisServer__initNewServer_closure5, _AnalyzingJob, _AnalyzingJob_closure, _AnalyzingJob_start_closure, _AnalysisServerWrapper, _AnalysisServerWrapper_closure, _AnalysisServerWrapper_setup_closure, _AnalysisServerWrapper_setup_closure0, _AnalysisServerWrapper_setup_closure1, _AnalysisServerWrapper_setup__closure, _AnalysisServerWrapper_restart_closure, _AnalysisServerWrapper_restart__closure, _AnalysisServerWrapper_restart_closure0, _AnalysisServerWrapper_kill_closure, _AnalysisServerWrapper__startProcess_closure, _AnalysisServerWrapper__startProcess_closure0, _AnalysisServerWrapper__startProcess_closure1, _AnalysisServerWrapper__messageWriter_closure, AnalysisRequestJob, AnalysisRequestJob_run_closure, AutocompleteProvider, AutocompleteProvider__getSuggestions_suggestionToProxy, AutocompleteProvider__getSuggestions_closure, AutocompleteProvider__getSuggestions_closure0, AutocompleteProvider__getSuggestions_closure1, AutocompleteProvider__getSuggestions_closure2, AutocompleteProvider__getSuggestions_closure3, AutocompleteOptions, Suggestion, _AutoCompleteOverride, LinterProvider, LinterConsumer, LinterService, LinterService_setMessages_closure, LintSolution, LintMessage, LintMessage_toMap_closure, Rn, Pt, install_closure, _InstallJob, _InstallJob_run_closure, _InstallJob_run_closure0, _InstallJob_run_closure1, _InstallJob__install_closure, StatusBar, Tile, PermissiveNodeValidator, BrowserManager, BrowserManager_update, BrowserManager_update_closure, BrowserManager_dispose_closure, Browser, Browser_getVersion_closure, Browser_getVersion_closure0, Browser_execArgsFromYaml_closure, _Dartino, _Dartino_enable_closure, _Dartino_enable_closure0, _promptCreateDartinoYaml_closure, _promptCreateDartinoYaml_closure0, DartinoProjectSettings, DartinoProjectSettings_operator$indexSet_closure, DartuinoBoard, Device0, LocalDevice, Stm32f, DartinoLaunchType, DartinoLaunch, DartinoLaunch_run_closure, DartinoLaunch_run_closure0, DartinoLaunch_debug_closure, DartinoLaunch_debug_closure0, DartinoLaunch_debug_closure1, DartinoLaunch_debug_closure2, DartinoLaunch_debug_closure3, DartinoSdk, DartinoSdk_promptOptIntoAnalytics_recordChoice, DartinoSdk_promptOptIntoAnalytics_optIn, DartinoSdk_promptOptIntoAnalytics_optOut, _installAdditionalTools_closure, DartinoCmd, DartinoCmd_start_closure, Sdk0, ExceptionBreakType, BreakpointManager, BreakpointManager_closure, BreakpointManager_closure0, BreakpointManager_getBreakpontsFor_closure, BreakpointManager__processEditor_closure, BreakpointManager__findSimilar_closure, BreakpointManager__findSimilar_closure0, BreakpointManager_toStorable_closure, AtomBreakpoint, _GutterTracker, _GutterTracker_closure, _GutterTracker__initLineNumberGutter_closure, _GutterTracker__initLineNumberGutter_closure0, _EditorBreakpoint, _EditorBreakpoint_closure, _c_closure, ChromeDebuggingProtocol, ChromeDebuggingProtocol_connect_closure, ChromeDebugConnection, ChromePage, ChromePage_navigate_closure, ChromeDebugger, ChromeDebugger_setBreakpointByUrl_closure, ChromeDebugger_evaluateOnCallFrame_closure, ChromeDebugger_scriptParsed_closure, ChromeDebugger_scriptFailedToParse_closure, ChromeDebugger_breakpointResolved_closure, ChromeDebugger_paused_closure, ChromeDebugger_resumed_closure, ChromeRuntime, ChromeRuntime_getProperties_closure, Paused, Paused_toString_closure, Paused_callFrames_closure, EvaluateOn, CallFrame, CallFrame_toString_closure, CallFrame_scopeChain_closure, ExceptionDetails, RemoteObjectType, RemoteObject, Scope, ScriptParsed, Location0, StackTrace0, StackTrace_toString_closure, StackTrace_callFrames_closure, RuntimeCallFrame, Property0, Property_toString_closure, Property_toString_closure0, Property_result_closure, Property_internalProperties_closure, InternalPropertyDescriptor, PropertyDescriptor, Breakpoint0, Breakpoint$setBreakpointByUrl_closure, ChromeDebugger_connect_closure, ChromeDebugger_connect__closure, ChromeDebugger_connect___closure0, ChromeDebugger_connect____closure, ChromeDebugger_connect__closure0, ChromeDebugger_connect___closure, ChromeConnection, ChromeConnection_closure, ChromeConnection_closure0, ChromeConnection__closure0, ChromeConnection___closure, ChromeConnection___closure0, ChromeConnection____closure, ChromeConnection___closure1, ChromeConnection_closure1, ChromeConnection_closure2, ChromeConnection_closure3, ChromeConnection_closure4, ChromeConnection_closure5, ChromeConnection__closure, ChromeConnection_closure6, ChromeConnection_navigate_closure, ChromeConnection_navigate_closure0, ChromeConnection_navigate_closure1, ChromeConnection_navigate_closure2, ChromeConnection_createReverseMaps_closure, ChromeConnection_createReverseMaps_closure0, ChromeConnection_addBreakpoint_closure, ChromeConnection_addBreakpoint__closure, ChromeConnection_addBreakpoint___closure, ChromeConnection_addBreakpoint____closure, ChromeConnection_addBreakpoint___closure0, ChromeConnection_addBreakpoint_closure0, ChromeConnection_removeBreakpoint_closure, ChromeConnection_removeBreakpoint__closure, ChromeConnection_installBreakpoints_closure, ChromeConnection_setBreakpointByUrl_closure, ChromeConnection_setBreakpointByUrl_closure0, DdcParsingOption, RevSourceLocation, SingleMappingProxy__findColumn_closure, SingleMappingProxy__findLine_closure, ChromeDebugIsolate, ChromeDebugIsolate_frames_closure, ChromeDebugIsolate_frames_closure0, ChromeDebugFrame, ChromeDebugFrame_resolveLocals_closure, ChromeDebugFrame_addThis_closure, ChromeDebugFrame_addThis_closure0, ChromeDebugFrame_addThis_closure1, ChromeDebugAsyncFrame, ChromeDebugBaseVariable, ChromeDebugBaseVariable_getChildren_closure, ChromeDebugBaseVariable_getChildren__closure, ChromeDebugBaseVariable_addProperties_closure, ChromeDebugBaseVariable_addProperties_closure0, ChromeThis, ChromeScope, ChromeScopes, ChromeScopes_getChildren_closure, ChromeScopes_getChildren__closure, ChromeDebugVariable, ChromeDebugValue, ChromeDebugValue_getChildren_closure, ChromeDebugValue_invokeToString_closure, ChromeDebugLocation, ChromeDebugLocation_resolve_closure, ChromeDebugLocation_resolve__closure, ChromeDebugLocation__resolvePath_closure, ChromeDebugLocation__resolvePath_closure0, WebUriTranslator, DebugManager, DebugManager_closure, DebugManager_closure0, DebugManager__closure, DebugManager_closure1, DebugManager_closure2, DebugManager_closure3, DebugManager_closure4, DebugManager_dispose_closure, UriTranslator, UriResolver, UriResolver_closure, UriResolver_closure0, UriResolver_resolveUriToPath_closure, UriResolver_resolvePathToUris_closure, UriResolver_dispose_closure, DebuggerViewManager, DebuggerViewManager_instantiateView_closure, DebuggerView, DebuggerView_closure, DebuggerView__createConfigMenu_createOption, DebuggerView__createConfigMenu_createOption_closure, DebuggerView__createConfigMenu_closure, DebuggerView__createConfigMenu_closure0, DebuggerView__createConfigMenu_closure1, DebuggerView__createSecondarySection_closure, DebuggerView__handleIsolateTerminated_closure, DebuggerView__handleIsolateTerminated_closure0, DebuggerView__jumpToLocation_closure, CaughtExceptionsOption, FlowControlSection, FlowControlSection_closure, FlowControlSection__handleIsolateChange_closure, FlowControlSection__restart_closure, ExecutionTab, ExecutionTab__updateFrames_closure, ExecutionTab__updateFrames__closure, ExecutionTab__selectFrame_closure, ExecutionTab__selectFrame_closure0, ExecutionTab__selectFrame__closure, ExecutionTab__selectFrame_closure1, ExecutionTab__selectFrame_closure2, ExecutionTab__updateLocals_closure, _LocalTreeModel, DetailSection, DetailSection_showDetails_closure, DetailSection_showDetails_closure0, DetailSection_showDetails_closure1, LibrariesTab, IsolatesTab, IsolatesTab_closure, BreakpointsTab, BreakpointsTab_closure, BreakpointsTab__render_closure, FocusManager, _TabTitlebar, DebugConnection, DebugOption, DebugIsolate, DebugFrame, DebugVariable, DebugValue, DebugLocation, ObservatoryDebugger_connect_closure, ObservatoryDebugger_connect__closure, ObservatoryDebugger_connect__closure0, ObservatoryDebugger_connect_closure0, ObservatoryDebugger_connect_closure1, ObservatoryConnection, ObservatoryConnection_closure, ObservatoryConnection__init_closure, ObservatoryConnection__init_closure0, ObservatoryConnection__init_closure1, ObservatoryConnection__init_closure2, ObservatoryConnection__init_closure3, ObservatoryConnection__init_closure4, ObservatoryConnection__init_closure5, ObservatoryConnection__init_closure6, ObservatoryConnection__init_closure7, ObservatoryConnection__init_closure8, ObservatoryConnection__installBreakpoints_closure, ObservatoryConnection__installBreakpoints_closure0, ObservatoryConnection__installBreakpoints__closure1, ObservatoryConnection__installBreakpoints___closure0, ObservatoryConnection__installBreakpoints____closure1, ObservatoryConnection__installBreakpoints____closure2, ObservatoryConnection__installBreakpoints__closure2, ObservatoryConnection__installBreakpoints_closure1, ObservatoryConnection__installBreakpoints__closure0, ObservatoryConnection__installBreakpoints_closure2, ObservatoryConnection__installBreakpoints__closure, ObservatoryConnection__installBreakpoints___closure, ObservatoryConnection__installBreakpoints____closure, ObservatoryConnection__installBreakpoints____closure0, ObservatoryConnection__installBreakpoints_closure3, ObservatoryConnection__handleIsolateEvent_closure, ObservatoryConnection__handleIsolateEvent__closure, ObservatoryConnection__handleIsolateEvent___closure, ObservatoryConnection__handleDebugEvent_closure, ObservatoryConnection__handleDebugEvent__closure, ObservatoryConnection__handleDebugEvent_closure0, ObservatoryConnection__registerNewIsolate_closure, ObservatoryConnection__registerNewIsolate_closure0, ObservatoryConnection__printExceptionToConsole_closure, ObservatoryConnection__printExceptionToConsole_closure0, ObservatoryLog, ObservatoryIsolate, ObservatoryIsolate_libraries_closure, ObservatoryIsolate__updateIsolateInfo_closure, ObservatoryIsolate__populateFrames_closure, ObservatoryIsolate__populateFrames__closure, ObservatoryIsolate__populateFrames___closure, ObservatoryFrame, ObservatoryFrame_eval_closure, ObservatoryVariable, ObservatoryFieldVariable, ObservatoryMapVariable, ObservatoryArrayVariable, ObservatoryCustomVariable, ObservatoryObjRefVariable, ObservatoryInstanceRefValue, ObservatoryInstanceRefValue_getChildren_closure, ObservatoryInstanceRefValue_getChildren__closure, ObservatoryInstanceRefValue_getChildren__closure0, ObservatoryInstanceRefValue_getChildren__closure1, ObservatoryInstanceRefValue_invokeToString_closure, ObservatoryObjRefValue, SimpleDebugValue, SentinelDebugValue, ObservatoryLocation, ObservatoryLocation_resolve_closure, ObservatoryLocation_resolve_closure0, ObservatoryLocation_resolve_closure1, ObservatoryLocation__resolve_closure, ObservatoryLibrary, ScriptManager, ScriptManager_resolveScript_closure, ScriptManager_resolveScript_closure0, ScriptManager_resolveScript_closure1, _ObservatoryServiceWrapper, _VmSourceCache, LineColumn, WebSocket, WebSocket_onOpen_closure, WebSocket_onMessage_closure, WebSocket_onError_closure, WebSocket_onClose_closure, MessageEvent, applyEdits_closure, applyEdits__closure, selectEditGroup_closure, _sortEdits_closure, EditorManager, EditorManager_jumpToLocation_closure, Editors, Editors__observeTextEditors_closure, CoreElement, CoreElement_add_closure, CoreElement_onClick_closure, CoreElement_click_closure, CoreElement_dblclick_closure, ProgressElement, CloseButton, TitledModelDialog, TitledModelDialog_closure, TitledModelDialog_closure0, Strobe, Strobe_strobe_closure, Strobe_strobe_closure0, ErrorRepository, Flutter, FlutterConnectManager, ConnectDialog, ConnectDialog_show_closure, ConnectDialog_show__closure, ConnectDialog__updateApps_closure, FlutterDaemonManager, FlutterDaemonManager_closure, FlutterDaemonManager__startFlutterDaemon_closure2, FlutterDaemonManager__startFlutterDaemon_closure1, FlutterDaemonManager__startFlutterDaemon_closure0, FlutterDaemonManager__startFlutterDaemon_closure, FlutterDaemonManager__startFlutterDaemon_closure3, FlutterDaemonManager__startFlutterDaemon_closure4, FlutterDaemonManager__startFlutterDaemon_closure5, FlutterDaemonManager__startFlutterDaemon_closure6, FlutterDaemonManager__startFlutterDaemon_closure7, FlutterDaemonManager__startFlutterDaemon_closure8, _ProcessDisposable, FlutterDaemon, Domain0, RequestError0, DaemonDomain, DiscoveredApp, AppDomain, AppDomain_start_closure, AppDomain_discover_closure, DaemonApp, DaemonApp_closure, DaemonApp_closure0, DaemonApp_closure1, DaemonApp_closure2, DaemonApp_closure3, DaemonApp_closure4, DaemonApp_closure5, DaemonApp_closure6, DaemonApp_stop_closure, AppStartedResult, AppEvent, DebugPortAppEvent, LogAppEvent, ProgressAppEvent, StopAppEvent, DeviceDomain, DeviceDomain_getDevices_closure, DeviceDomain_forward_closure, Device, LogMessage, DaemonRequestJob, DaemonRequestJob_run_closure, OperationResult, FlutterDeviceManager, FlutterDeviceManager__updateForDaemon_closure, BuildMode, FlutterExt, FlutterExt_debugPaint_closure, FlutterExt_repaintRainbow_closure, FlutterExt_timeDilation_closure, FlutterExt_performanceOverlay_closure, FlutterExt__init_closure, FlutterExt__checkIsolate_closure, FlutterLaunchType, FlutterLaunchType_connectToApp_closure, _LaunchInstance0, _LaunchInstance__connectToDebugger_closure, _LaunchInstance__connectToDebugger_closure0, _RunLaunchInstance, _RunLaunchInstance_launch_closure, _RunLaunchInstance_launch__closure, _RunLaunchInstance_launch__closure0, _RunLaunchInstance_launch__closure1, _RunLaunchInstance_launch__closure2, _RunLaunchInstance_launch_closure0, _RunLaunchInstance__kill_closure, _RunLaunchInstance__kill_closure0, _LogStatusJob, _ConnectLaunchInstance, _FlutterLaunch, _FlutterLaunch_closure, _FlutterLaunch_restart_closure, FlutterUriTranslator, FlutterSdkManager, FlutterSdkManager_closure, FlutterSdkManager_closure0, FlutterSdkManager_closure1, FlutterSdkManager_closure2, FlutterSdkManager_tryToAutoConfigure_closure, FlutterSdkManager_showInstallationInfo_closure, FlutterSdkManager_showInstallationInfo_closure0, _discoverSdk_closure, _discoverSdk_closure0, _discoverSdk_closure1, _discoverSdk_closure2, _discoverSdk_closure3, _discoverSdk_closure4, FlutterSdk, FlutterTool, _FlutterToolJob, SdkLocationJob, FlutterToolsManager, FlutterToolsManager__createProject_closure, FlutterToolsManager__createProject_closure0, FlutterToolsManager__createProject__closure, FlutterSection, FlutterSection_closure, MojoLaunchType, _LaunchInstance, _LaunchInstance_launch_closure, _LaunchInstance_launch_closure0, _LaunchInstance_launch_closure1, _LaunchInstance__kill_closure, ChangelogManager, ChangelogManager_closure, ChangelogManager_closure0, ChangelogManager__handleReleaseNotes_closure, ChangelogManager__handleReleaseNotes_closure0, Debounce, Debounce_bind_closure, Debounce_bind__closure, Debounce_bind_closure0, _handleEnterKey_closure, _handleEnterKey_closure0, _handleEnterKey_closure1, _handleEnterKey_closure2, _handleEnterKey_closure3, _handleEnterKey_closure4, _handleEnterKey_closure5, _handleEnterKey_closure6, NavigationManager, NavigationPosition, OutlineController, OutlineController_closure, OutlineController_closure0, OutlineController_closure1, OutlineView, OutlineView_closure, OutlineView__setupResizer_closure, OutlineView__setupResizer_closure0, _ErrorsList, _ErrorsList_updateWith_closure, _ErrorsList_updateWith_closure0, _ErrorsList__quickFix_closure, _ErrorsList__jumpTo_closure, PubManager, PubManager_closure, PubManager_closure0, PubManager_closure1, PubManager_closure2, PubManager_closure3, PubManager_closure4, PubManager_closure5, PubManager_closure6, PubManager_closure7, PubManager_closure8, PubManager_closure9, PubManager__addSdkCmd_closure, PubManager__handleRun_closure, PubManager__handleGlobalRun_closure, PubManager__handleGlobalActivate_closure, PubManager__showRunPubDialog_closure, PubJob, PubRunJob, PubGlobalActivate, PubContextCommand, RebuildManager, RebuildManager_closure, RebuildJob, RebuildJob_run_closure, RebuildJob_run_closure0, RebuildJob_run_closure1, RebuildJob_run__closure0, RebuildJob_run_closure2, RebuildJob_run__closure, RebuildJob__runBuild_closure, RebuildJob__runBuild_closure0, RebuildJob__runBuild_closure1, StatusViewManager, StatusViewManager_closure, StatusViewManager_closure0, StatusViewManager_closure1, StatusView, StatusView_closure, StatusView__registerSection_closure, StatusView__createPluginSection_closure, StatusView__createPluginSection_closure0, StatusView__createPluginSection_closure1, StatusView__createPluginSection_closure2, StatusView__createPluginSection__closure, StatusView__createDartSdkSection_closure, StatusView__createDartSdkSection__closure, StatusView__createDartSdkSection_closure0, StatusView__createAnalysisServerSection_closure, StatusView__createAnalysisServerSection__closure, StatusView__createAnalysisServerSection__closure0, StatusView__createAnalysisServerSection_closure0, StatusView__createAnalysisServerSection_closure1, StatusView__createAnalysisServerSection_closure2, StatusView__createDiagnostics_closure0, StatusView__createDiagnostics__closure0, StatusView__createDiagnostics__closure1, StatusView__createDiagnostics__closure2, StatusView__createDiagnostics__closure3, StatusView__createDiagnostics_closure, StatusView__createDiagnostics__closure, StatusView__createDiagnostics___closure, StatusView__createDiagnostics___closure0, StatusView__createDebugSection_updateBrowser, StatusView__createDebugSection_updateVersion, StatusView__createDebugSection_closure, StatusView_showSection_closure, StatusView__handleSdkBrowse_closure, StatusView__handleDebugBrowse_closure, StatusHeader, _getPlatformVersions_closure, StatusDisplay, StatusDisplay_closure, StatusDisplay__closure, StatusDisplay__closure0, StatusDisplay_closure0, JobsDialog, TestManager, TestManager_isRunnableTest_closure, TestManager__createTest_closure, TestRunner, FlutterTestRunner, FlutterTestRunner_run_closure, FlutterTestRunner_run_closure0, FlutterTestRunner_run_closure1, FlutterTestRunner_run_closure2, TestPackageTestRunner, TestPackageTestRunner_run_closure, TestPackageTestRunner_run_closure0, TestPackageTestRunner_run_closure1, TestPackageTestRunner_run_closure2, CliTestRunner, CliTestRunner_run_closure, CliTestRunner_run_closure0, CliTestRunner_run_closure1, CliTestRunner_run_closure2, Toolbar, ToolbarTile, DartToolbarContribution, DartToolbarContribution_closure, DartToolbarContribution__buildFlutterTile_updateToolbar, DartToolbarContribution__buildFlutterTile_closure, DartToolbarContribution__buildFlutterTile_closure0, DartToolbarContribution__buildFlutterTile_closure1, DartToolbarContribution__buildRightTile_updateToolbar, DartToolbarContribution__buildRightTile_closure, DartToolbarContribution__bindLaunchManager_closure, DartToolbarContribution__bindLaunchManager_closure0, DartToolbarContribution__bindLaunchManager_closure1, DartToolbarContribution__bindLaunchManager_closure2, DartToolbarContribution__bindDevicesToSelect_closure, DartToolbarContribution__bindDevicesToSelect_closure0, DartToolbarContribution__bindDevicesToSelect_closure1, DartToolbarContribution__bindDevicesToSelect_closure2, DartToolbarContribution__bindDevicesToSelect_closure3, TooltipController, TooltipController_closure, TooltipManager, TooltipManager_closure, TooltipManager__install_closure, TooltipManager__install__closure, TooltipManager__install___closure, TooltipManager__install__closure0, TooltipManager__install_closure0, TooltipManager__install_closure1, TooltipElement, TooltipElement_closure, TooltipElement_closure0, Job, Status, JobStatus, JobManager, JobManager_activeJob_closure, JobManager_activeJob_closure0, JobManager_runningJobs_closure, JobManager__exec_closure, JobManager__exec_closure0, JobManager__exec_closure1, JobInstance, ConsoleController, ConsoleController_closure, ConsoleController__launchTerminated_closure, ConsoleController__toggleViews_closure, ConsoleView, ConsoleView_closure, ConsoleView_closure0, ConsoleView_closure1, ConsoleView_closure2, ConsoleView_closure3, ConsoleView__watchServicePort_closure, ConsoleView__emitText_closure, ConsoleStatusElement, LaunchManager, LaunchManager_addLaunch_closure, LaunchManager_addLaunch_closure0, LaunchType, LaunchData, Launchable, Launch, TextFragment, CachingServerResolver, CachingServerResolver_resolve_closure, _PathResolver, _ServerResolver, _ServerResolver_closure, _ServerResolver_closure0, _ServerResolver_dispose_closure, _ServerResolver_dispose__closure, CliLaunchType, CliLaunchType_performLaunch_closure, CliLaunchType_performLaunch_closure0, CliLaunchType_performLaunch__closure, CliLaunchType_performLaunch_closure1, CliLaunchType_performLaunch_closure2, _CliLaunch, _CliLaunch_closure, LaunchConfigurationManager, LaunchConfigurationManager_getAllConfigs_closure, _createUniqueFilename_closure, LaunchConfiguration, _ProjectConfigurations, _ProjectConfigurations_createConfig_closure, _ProjectConfigurations__listenToLaunchDir_closure, ServeLaunchType, ServeLaunchType_performLaunch_closure, ServeLaunchType_performLaunch_closure0, ServeLaunchType_performLaunch_closure1, ServeLaunchType_performLaunch_closure2, ServeLaunchType_performLaunch_closure3, ServeLaunch, ShellLaunchType, ShellLaunchType_performLaunch_closure, ShellLaunchType_performLaunch_closure0, ShellLaunchType_performLaunch_closure1, ShellLaunchType_performLaunch_closure2, WebLaunchType, WebLaunchType_performLaunch_closure, WebLaunchType_performLaunch_closure0, WebLaunchType_performLaunch_closure1, WebLaunchType_performLaunch_closure2, WebLaunchType_performLaunch_closure3, WebLaunchType_performLaunch_closure4, WebLaunchType_performLaunch_closure5, RunApplicationManager, RunApplicationManager_closure, RunApplicationManager_closure0, RunApplicationManager_closure1, RunApplicationManager_closure2, RunApplicationManager_closure3, RunApplicationManager__handleRunCommand_closure, RunApplicationManager__handleFullRestartCommand_closure, RunApplicationManager_run_closure, WorkspaceLaunchManager, WorkspaceLaunchManager_closure, WorkspaceLaunchManager_closure0, WorkspaceLaunchManager_closure1, WorkspaceLaunchManager__updateFromActiveEditor_closure, WorkspaceLaunchManager__updateFromActiveEditor_closure0, RunnableConfig, _RunAppContextCommand, DartLinterProvider, DartLinterConsumer, DartLinterConsumer_closure, DartLinterConsumer__regenErrors_closure, DartLinterConsumer__filter_closure, DartLinterConsumer__emit_closure, MIconButton, MTabGroup, MTabGroup__handleTabAdd_closure, MTabGroup_hasTabId_closure, MTab, MTab_closure, MList, MList_closure, MList_update_closure, MList_update_closure0, MList__populateChildren_closure, MList__populateChildren_closure0, TreeModel, MTree, MTree__render_closure, MTree__render__closure, MTree__render__closure0, AtomDartPackage, AtomDartPackage_closure, AtomDartPackage_closure0, AtomDartPackage_closure1, AtomDartPackage_closure2, AtomDartPackage_activate_closure, AtomDartPackage_activate_closure0, AtomDartPackage_activate_closure1, AtomDartPackage_activate__closure, AtomDartPackage_activate__closure0, AtomDartPackage_activate_closure2, AtomDartPackage__validateSettings_closure, AtomDartPackage__validateSettings_closure0, AtomDartPackage__handleSendFeedback_closure, AtomDartPackage__registerLinter_closure, AtomDartPackage__registerLinter_closure0, AtomDartPackage__registerLinter_closure1, AtomDartPackage__setupLogging_closure, ProjectManager, ProjectManager_closure, ProjectManager_dispose_closure, ProjectManager__fullScanForProjects_closure, ProjectManager__fullScanForProjects_closure0, ProjectManager__fullScanForProjects_closure1, ProjectManager__fullScanForProjects_closure2, ProjectManager__updateChangeListeners_closure, ProjectManager__handleDirectoryChanged_closure, ProjectManager__initProjectControllers_closure, ProjectManager__initProjectControllers_closure0, DartProject, DartProject_importsPackage_closure, DartProject_importsPackage_closure0, ProjectScanJob, SdkManager, SdkManager_closure, SdkManager_closure0, SdkManager_closure1, SdkManager_tryToAutoConfigure_closure, Sdk, Sdk_getVersion_closure, SdkDiscovery, SdkDiscovery_discoverSdk_closure, SdkDiscovery__discoverSdk_closure, SdkDiscovery__discoverSdk_closure0, SdkDiscovery__discoverSdk_closure1, SdkDiscovery__discoverSdk_closure2, SdkDiscovery__discoverSdk_closure3, SdkDiscovery__discoverSdk_closure4, SdkLocationJob0, State, State_onValueChanged_closure, State_saveState_closure, StateStorable, UsageManager, UsageManager_closure, UsageManager__init_closure, UsageManager__init__closure, UsageManager__init__closure0, Property, SelectionGroup, SelectionGroup_observeMutation_closure, MItem, Pair0, ViewResizer, ViewResizer__init_closure0, ViewResizer__init_closure, ViewResizer__init__closure, ViewResizer__init__closure0, ViewResizer__minSize_closure, ViewResizer__targetSize_closure, DockedView, DockedViewManager, DockedViewManager_closure, ListTreeBuilder, ListTreeBuilder__addNode_closure, ListTreeBuilder__addNode_closure0, ListTreeBuilder__addNode_closure1, ListTreeBuilder__addNode_closure2, ListTreeBuilder__addNode_closure3, Node0, Node_decendentCount_closure, DoubleCancelCommand, DoubleCancelCommand__handleCancel_closure, DefaultEquality, IterableEquality, _UnorderedEquality, UnorderedIterableEquality, QueueList, Object_ListMixin0, UnmodifiableMapMixin, Haikunator_haikunate_closure, Logger, closure, Level, LogRecord, Node1, Element1, Element_textContent_closure, Text, UnparsedContent, BlockParser, BlockSyntax, BlockSyntax_isAtBlockEnd_closure, EmptyBlockSyntax, SetextHeaderSyntax, HeaderSyntax, BlockquoteSyntax, BlockquoteSyntax_parseChildLines_closure, CodeBlockSyntax, FencedCodeBlockSyntax, HorizontalRuleSyntax, BlockHtmlSyntax, BlockTagBlockHtmlSyntax, OtherTagBlockHtmlSyntax, LongBlockHtmlSyntax, ListItem, ListSyntax, ListSyntax_parse_endItem, ListSyntax_parse_tryMatch, UnorderedListSyntax, OrderedListSyntax, ParagraphSyntax, ParagraphSyntax__extractReflinkDefinitions_lineStartsReflinkDefinition, ParagraphSyntax__parseReflinkDefinition_closure, Document, Link, ExtensionSet, HtmlRenderer, HtmlRenderer_visitElementBefore_closure, InlineParser, InlineParser_closure, InlineSyntax, LineBreakSyntax, TextSyntax, EscapeSyntax, InlineHtmlSyntax, AutolinkSyntax, TagSyntax, LinkSyntax, LinkSyntax_getLink__contents, ImageSyntax, CodeSyntax, TagState, TagState_textContent_closure, Context, Context_join_closure, Context_joinAll_closure, Context_split_closure, _validateArgList_closure, InternalStyle, ParsedPath, ParsedPath_normalize_closure, PathException, Style, PosixStyle, UrlStyle, WindowsStyle, Version, Version__splitParts_closure, VersionRange, Entry1, Mapping, MultiSectionMapping, SingleMapping, closure6, closure7, SingleMapping__findLine_closure, SingleMapping__findColumn_closure, TargetLineEntry, TargetEntry, _MappingTokenizer, _TokenKind, SourceMapSpan, closure8, SourceFile, FileLocation, FileSpan, _FileSpan, SourceLocation, SourceLocationMixin, SourceSpan, SourceSpanBase, SourceSpanException, SourceSpanFormatException, SourceSpanMixin, EagerSpanScanner, _EagerSpanScannerState, StringScannerException, SpanScanner, StringScanner, AnalyticsMock, _createObject_closure, _createSpecificObject_closure, VmService, VmService_dispose_closure, RPCError, ExtensionData, Log, BoundField, BoundVariable, Breakpoint, ClassRef, Class, ClassList, CodeRef, Code, ContextRef, Context0, ContextElement, ErrorRef, Error0, Event1, FieldRef, Field, Flag, FlagList, Frame, FuncRef, Func, InstanceRef, Instance, IsolateRef, Isolate, LibraryRef, Library, LibraryDependency, MapAssociation, Message, NullRef, Null0, ObjRef, Obj, ReloadReport, Response, Sentinel, ScriptRef, Script, SourceLocation0, SourceReport, SourceReportCoverage, SourceReportRange, Stack, Success, TimelineEvent, TypeArgumentsRef, TypeArguments, UnresolvedSourceLocation, Version0, VMRef, VM, CpuProfile, CodeRegion, ProfileFunction, AllocationProfile, ClassHeapStats, HeapSpace, _DeepEquals, deepHashCode__deepHashCode, deepHashCode__deepHashCode_closure, Event0, DocumentStartEvent, DocumentEndEvent, AliasEvent, _ValueEvent, ScalarEvent, SequenceStartEvent, MappingStartEvent, EventType, Loader, Loader__parseNumberValue_closure, Loader__parseNumberValue_closure0, Loader__parseNumberValue_closure1, Loader__parseNumberValue_closure2, Loader__parseNumberValue_closure3, Parser, Parser__parseNode_parseAnchor, Parser__parseNode_parseTag, _State, Scanner, Scanner__fetchMoreTokens_closure, _SimpleKey, _Chomping, ScalarStyle, CollectionStyle, Token, VersionDirectiveToken, TagDirectiveToken, AnchorToken, AliasToken, TagToken, ScalarToken, TokenType, Pair, closure2, YamlDocument, VersionDirective, TagDirective, YamlException, YamlNode, YamlMap, YamlNode_MapMixin, YamlNode_MapMixin_UnmodifiableMapMixin, YamlMap_keys_closure, YamlList, YamlNode_ListMixin, YamlScalar, main_closure];
   };
   function setupProgram(programData, typesOffset) {
     "use strict";
@@ -34273,7 +34364,7 @@ self.showOpenDialog = function(options) {
       P._rootHandleUncaughtError(null, null, t1, error, stackTrace);
     }, function(error) {
       return P._nullErrorHandler(error, null);
-    }, "call$2", "call$1", "async___nullErrorHandler$closure", 2, 2, 24, 2, 8, 18],
+    }, "call$2", "call$1", "async___nullErrorHandler$closure", 2, 2, 24, 3, 8, 18],
     _nullDoneHandler: [function() {
     }, "call$0", "async___nullDoneHandler$closure", 0, 0, 2],
     _runUserCode: function(userCode, onSuccess, onError) {
@@ -34436,7 +34527,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;bodyFunction",
       call$1: [function(result) {
         return this.bodyFunction.call$2(0, result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     _awaitOnObject_closure0: {
       "^": "Closure:70;bodyFunction",
@@ -34675,7 +34766,7 @@ self.showOpenDialog = function(options) {
         this._sendError$2(error, stackTrace);
       }, function(error) {
         return this.addError$2(error, null);
-      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 24, 2, 8, 18],
+      }, "addError$1", "call$2", "call$1", "get$addError", 2, 2, 24, 3, 8, 18],
       close$0: function(_) {
         var doneFuture;
         if ((this._state & 4) !== 0)
@@ -34915,7 +35006,7 @@ self.showOpenDialog = function(options) {
         this._completeError$2(error, stackTrace);
       }, function(error) {
         return this.completeError$2(error, null);
-      }, "completeError$1", "call$2", "call$1", "get$completeError", 2, 2, 24, 2]
+      }, "completeError$1", "call$2", "call$1", "get$completeError", 2, 2, 24, 3]
     },
     _AsyncCompleter: {
       "^": "_Completer;future,$ti",
@@ -35157,7 +35248,7 @@ self.showOpenDialog = function(options) {
         P._Future__propagateToListeners(this, listeners);
       }, function(error) {
         return this._completeError$2(error, null);
-      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 24, 2, 8, 18],
+      }, "_completeError$1", "call$2", "call$1", "get$_completeError", 2, 2, 24, 3, 8, 18],
       _asyncComplete$1: function(value) {
         var t1;
         if (H.checkSubtype(value, "$isFuture", this.$ti, "$asFuture")) {
@@ -35356,7 +35447,7 @@ self.showOpenDialog = function(options) {
         this.target._completeError$2(error, stackTrace);
       }, function(error) {
         return this.call$2(error, null);
-      }, "call$1", null, null, null, 2, 2, null, 2, 8, 18, "call"]
+      }, "call$1", null, null, null, 2, 2, null, 3, 8, 18, "call"]
     },
     _Future__chainForeignFuture_closure1: {
       "^": "Closure:1;target,e,s",
@@ -36706,7 +36797,7 @@ self.showOpenDialog = function(options) {
         }
       }, function(error) {
         return this._handleError$2(error, null);
-      }, "_handleError$1", "call$2", "call$1", "get$_handleError", 2, 2, 183, 2, 8, 18],
+      }, "_handleError$1", "call$2", "call$1", "get$_handleError", 2, 2, 183, 3, 8, 18],
       _handleDone$0: [function() {
         var e, s, exception;
         try {
@@ -36884,7 +36975,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;$this,f",
       call$1: [function(arg) {
         return this.$this.runUnaryGuarded$2(this.f, arg);
-      }, null, null, 2, 0, null, 42, "call"]
+      }, null, null, 2, 0, null, 44, "call"]
     }
   }], ["dart.collection", "dart:collection",, P, {
     "^": "",
@@ -43729,7 +43820,7 @@ self.showOpenDialog = function(options) {
         return receiver.next(value);
       }, function($receiver) {
         return $receiver.next();
-      }, "next$0", "call$1", "call$0", "get$next", 0, 2, 136, 2],
+      }, "next$0", "call$1", "call$0", "get$next", 0, 2, 136, 3],
       "%": "Iterator"
     },
     DomPoint: {
@@ -44203,7 +44294,7 @@ self.showOpenDialog = function(options) {
         return fragment;
       }, function($receiver, html, treeSanitizer) {
         return this.createFragment$3$treeSanitizer$validator($receiver, html, treeSanitizer, null);
-      }, "createFragment$2$treeSanitizer", null, null, "get$createFragment", 2, 5, null, 2, 2],
+      }, "createFragment$2$treeSanitizer", null, null, "get$createFragment", 2, 5, null, 3, 3],
       set$innerHtml: function(receiver, html) {
         this.setInnerHtml$1(receiver, html);
       },
@@ -44870,7 +44961,7 @@ self.showOpenDialog = function(options) {
         return receiver.start(timeslice);
       }, function($receiver) {
         return $receiver.start();
-      }, "start$0", "call$1", "call$0", "get$start", 0, 2, 160, 2, 92],
+      }, "start$0", "call$1", "call$0", "get$start", 0, 2, 160, 3, 92],
       "%": "MediaRecorder",
       static: {
         "^": "MediaRecorder_pauseEvent<"
@@ -48439,13 +48530,13 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;completer",
       call$1: [function(result) {
         return this.completer.complete$1(0, result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     convertNativePromiseToDartFuture_closure0: {
       "^": "Closure:0;completer",
       call$1: [function(result) {
         return this.completer.completeError$1(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     CssClassSetImpl: {
       "^": "Object;",
@@ -48746,7 +48837,7 @@ self.showOpenDialog = function(options) {
         receiver.continue(key);
       }, function($receiver) {
         return this.next$1($receiver, null);
-      }, "next$0", "call$1", "call$0", "get$next", 0, 2, 94, 2],
+      }, "next$0", "call$1", "call$0", "get$next", 0, 2, 94, 3],
       "%": ";IDBCursor"
     },
     CursorWithValue: {
@@ -48807,7 +48898,7 @@ self.showOpenDialog = function(options) {
       },
       index$1: [function(receiver, $name) {
         return receiver.index($name);
-      }, "call$1", "get$index", 2, 0, 96, 25],
+      }, "call$1", "get$index", 2, 0, 96, 26],
       "%": "IDBObjectStore"
     },
     Request: {
@@ -48865,7 +48956,7 @@ self.showOpenDialog = function(options) {
       if (!!t1.$isFunction)
         return P._getJsProxy(o, "$dart_jsFunction", new P._convertToJS_closure());
       return P._getJsProxy(o, "_$dart_jsObject", new P._convertToJS_closure0($.$get$_dartProxyCtor()));
-    }, "call$1", "js___convertToJS$closure", 2, 0, 0, 33],
+    }, "call$1", "js___convertToJS$closure", 2, 0, 0, 35],
     _getJsProxy: function(o, propertyName, createProxy) {
       var jsProxy = P._getOwnProperty(o, propertyName);
       if (jsProxy == null) {
@@ -48896,7 +48987,7 @@ self.showOpenDialog = function(options) {
         else
           return P._wrapToDart(o);
       }
-    }, "call$1", "js___convertToDart$closure", 2, 0, 226, 33],
+    }, "call$1", "js___convertToDart$closure", 2, 0, 226, 35],
     _wrapToDart: function(o) {
       if (typeof o == "function")
         return P._getDartProxy(o, $.$get$DART_CLOSURE_PROPERTY_NAME(), new P._wrapToDart_closure());
@@ -49017,7 +49108,7 @@ self.showOpenDialog = function(options) {
           return convertedList;
         } else
           return P._convertToJS(o);
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 35, "call"]
     },
     JsFunction: {
       "^": "JsObject;_jsObject",
@@ -50025,7 +50116,7 @@ self.showOpenDialog = function(options) {
         return this.start$3($receiver, when, null, null);
       }, "start$1", function($receiver, when, grainOffset) {
         return this.start$3($receiver, when, grainOffset, null);
-      }, "start$2", "call$3", "call$1", "call$2", "get$start", 2, 4, 98, 2, 2, 68, 133, 139],
+      }, "start$2", "call$3", "call$1", "call$2", "get$start", 2, 4, 98, 3, 3, 68, 133, 139],
       "%": "AudioBufferSourceNode"
     },
     AudioContext: {
@@ -50060,7 +50151,7 @@ self.showOpenDialog = function(options) {
         return receiver.start(when);
       }, function($receiver) {
         return $receiver.start();
-      }, "start$0", "call$1", "call$0", "get$start", 0, 2, 100, 2, 68],
+      }, "start$0", "call$1", "call$0", "get$start", 0, 2, 100, 3, 68],
       "%": "Oscillator|OscillatorNode"
     }
   }], ["dart.dom.web_gl", "dart:web_gl",, P, {
@@ -50073,7 +50164,7 @@ self.showOpenDialog = function(options) {
       "^": "Interceptor;",
       hint$2: [function(receiver, target, mode) {
         return receiver.hint(target, mode);
-      }, "call$2", "get$hint", 4, 0, 28, 38, 37],
+      }, "call$2", "get$hint", 4, 0, 28, 39, 38],
       $isObject: 1,
       "%": "WebGLRenderingContext"
     },
@@ -50081,7 +50172,7 @@ self.showOpenDialog = function(options) {
       "^": "Interceptor;",
       hint$2: [function(receiver, target, mode) {
         return receiver.hint(target, mode);
-      }, "call$2", "get$hint", 4, 0, 28, 38, 37],
+      }, "call$2", "get$hint", 4, 0, 28, 39, 38],
       $isInterceptor: 1,
       $isObject: 1,
       "%": "WebGL2RenderingContext"
@@ -50212,7 +50303,7 @@ self.showOpenDialog = function(options) {
           t3.complete$1(0, t1.get$first(result));
         else
           t3.complete$1(0, null);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     }
   }], ["atom_utils", "package:atom/atom_utils.dart",, M, {
     "^": "",
@@ -50240,14 +50331,14 @@ self.showOpenDialog = function(options) {
       call$1: [function(result) {
         result = J.trim$0$s(result);
         return C.JSString_methods.contains$1(result, "\n") ? C.JSArray_methods.get$first(result.split("\n")) : result;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     which_closure0: {
       "^": "Closure:3;",
       call$1: [function(result) {
         result = J.trim$0$s(result);
         return C.JSString_methods.contains$1(result, "\n") ? C.JSArray_methods.get$first(result.split("\n")) : result;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     }
   }], ["", "package:atom/node/command.dart",, D, {
     "^": "",
@@ -50384,7 +50475,7 @@ self.showOpenDialog = function(options) {
         return new P._BroadcastStream(controller, [null]);
       }, function(keyPath) {
         return this.onDidChange$2(keyPath, null);
-      }, "onDidChange$1", "call$2", "call$1", "get$onDidChange", 2, 2, 102, 2]
+      }, "onDidChange$1", "call$2", "call$1", "get$onDidChange", 2, 2, 102, 3]
     },
     Config_onDidChange_closure: {
       "^": "Closure:1;_box_0",
@@ -50811,7 +50902,7 @@ self.showOpenDialog = function(options) {
           t1._description.textContent = t2;
         }
         return result;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     promptUser_closure: {
       "^": "Closure:1;editorElement",
@@ -50880,7 +50971,7 @@ self.showOpenDialog = function(options) {
         }
       }, function() {
         return this.call$1(null);
-      }, "call$0", null, null, null, 0, 2, null, 2, 179, "call"]
+      }, "call$0", null, null, null, 0, 2, null, 3, 179, "call"]
     },
     registerPackage_closure0: {
       "^": "Closure:1;",
@@ -50920,7 +51011,7 @@ self.showOpenDialog = function(options) {
           return result;
         else
           return;
-      }, null, null, 2, 0, null, 42, "call"]
+      }, null, null, 2, 0, null, 44, "call"]
     },
     AtomPackage: {
       "^": "Object;id>",
@@ -50948,7 +51039,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:54;",
       call$1: [function(map) {
         return J.$index$asx(map, "version");
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     PackageManager: {
       "^": "ProxyHolder;obj"
@@ -51000,7 +51091,7 @@ self.showOpenDialog = function(options) {
         if (J.$eq$(result.get$exit(), 0))
           return result.get$stdout();
         throw H.wrapException(result.get$exit());
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     ProcessRunner: {
       "^": "Object;command,args,cwd<,env,_process,_exitCompleter,_exit,_stdoutController,_stderrController",
@@ -51420,14 +51511,14 @@ self.showOpenDialog = function(options) {
           return;
         editor = new Y.TextEditor(Y._cvt0(result));
         return editor.isValid$0() === true ? editor : null;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     Workspace_addOpener_closure: {
       "^": "Closure:4;opener",
       call$2: [function(url, options) {
         var m = options == null ? P.LinkedHashMap__makeEmpty() : K.jsObjectToDart(options);
         return this.opener.call$2(url, m);
-      }, null, null, 4, 0, null, 91, 35, "call"]
+      }, null, null, 4, 0, null, 91, 36, "call"]
     },
     Project: {
       "^": "ProxyHolder;obj",
@@ -51442,7 +51533,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;",
       call$1: [function(dir) {
         return new F.Directory(dir);
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     },
     Panel: {
       "^": "ProxyHolder;obj",
@@ -51733,7 +51824,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:130;",
       call$1: [function(r) {
         return r.get$obj();
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     TextEditor_onDidChangeCursorPosition_closure: {
       "^": "Closure:0;",
@@ -51789,7 +51880,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;completer",
       call$1: [function(result) {
         this.completer.complete$1(0, result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     promiseToFuture_closure0: {
       "^": "Closure:0;completer",
@@ -51903,7 +51994,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;resolve",
       call$1: [function(result) {
         this.resolve.apply$1([K.jsify(result)]);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     Promise__jsObjectFromFuture__closure0: {
       "^": "Closure:0;reject",
@@ -53395,19 +53486,19 @@ self.showOpenDialog = function(options) {
         return this.changedOverlay$0();
       }, function() {
         return this._didChange$1(null);
-      }, "_didChange$0", "call$1", "call$0", "get$_didChange", 0, 2, 16, 2, 0],
+      }, "_didChange$0", "call$1", "call$0", "get$_didChange", 0, 2, 16, 3, 0],
       _onDidChangeTitle$1: [function(_) {
         this.removeOverlay$0();
         this.path = this.editor.getPath$0();
         this.addOverlay$0();
       }, function() {
         return this._onDidChangeTitle$1(null);
-      }, "_onDidChangeTitle$0", "call$1", "call$0", "get$_onDidChangeTitle", 0, 2, 16, 2, 0],
+      }, "_onDidChangeTitle$0", "call$1", "call$0", "get$_onDidChangeTitle", 0, 2, 16, 3, 0],
       _didDestroy$1: [function(_) {
         return this.dispose$0();
       }, function() {
         return this._didDestroy$1(null);
-      }, "_didDestroy$0", "call$1", "call$0", "get$_didDestroy", 0, 2, 16, 2, 0],
+      }, "_didDestroy$0", "call$1", "call$0", "get$_didDestroy", 0, 2, 16, 3, 0],
       addOverlay$0: function() {
         if (Q.Dependencies_instance().getDependency$1(C.Type_ProjectManager_CvJ).getProjectFor$1(this.path) == null)
           return;
@@ -53783,7 +53874,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;_box_0",
       call$1: [function($name) {
         return "${" + ++this._box_0.count + ":" + H.S($name) + "}";
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 26, "call"]
     },
     DartAutocompleteProvider__rightLabel_closure: {
       "^": "Closure:1;kind",
@@ -53905,7 +53996,7 @@ self.showOpenDialog = function(options) {
         },
         DartdocHelper__resolve: [function($name) {
           return new T.Element1("code", [new T.Text($name)], P.LinkedHashMap__makeEmpty(), null);
-        }, "call$1", "dartdoc_DartdocHelper__resolve$closure", 2, 0, 251, 25],
+        }, "call$1", "dartdoc_DartdocHelper__resolve$closure", 2, 0, 251, 26],
         DartdocHelper__getLibraryName: function(hover) {
           var $name, t1, index, t2;
           $name = hover.get$containingLibraryName();
@@ -53945,7 +54036,7 @@ self.showOpenDialog = function(options) {
         if (result == null)
           return;
         this.$this._handleHoverResult$3(result, this.editor, this.explicit);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     DartdocHelper__render_writeTitle: {
       "^": "Closure:158;buf",
@@ -54374,7 +54465,7 @@ self.showOpenDialog = function(options) {
           t1 = $.$get$atom()._notifications;
           t1.invoke$3("addError", "Error while formatting", t1._options$5$buttons$description$detail$dismissable$icon(null, result.get$stderr(), null, null, null));
         }
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     FormattingManager_formatEditor_closure: {
       "^": "Closure:173;editor,quiet,buffer",
@@ -54397,7 +54488,7 @@ self.showOpenDialog = function(options) {
           t1.setSelectedBufferRange$1(new Y.Range(Y._create0("Range", Y._cvt0(t2.invoke$2("positionForCharacterIndex", result.get$selectionOffset())), Y._cvt0(t2.invoke$2("positionForCharacterIndex", J.$add$ns(result.get$selectionOffset(), result.get$selectionLength()))))));
           return true;
         }
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     FormattingManager_formatEditor_closure0: {
       "^": "Closure:0;quiet",
@@ -54474,7 +54565,7 @@ self.showOpenDialog = function(options) {
           t1.invoke$3("addSuccess", "Sort members successful.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
           F.applyEdits(this.editor, edit.get$edits());
         }
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     OrganizeFileManager__handleOrganizeDirectives_closure: {
       "^": "Closure:1;editor,path",
@@ -54495,7 +54586,7 @@ self.showOpenDialog = function(options) {
           t1.invoke$3("addSuccess", "Organize directives successful.", t1._options$5$buttons$description$detail$dismissable$icon(null, null, null, null, null));
           F.applyEdits(this.editor, edit.get$edits());
         }
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     OrganizeFileManager__handleOrganizeDirectives__closure0: {
       "^": "Closure:0;",
@@ -54624,13 +54715,13 @@ self.showOpenDialog = function(options) {
       "^": "Closure:48;fix",
       call$1: [function(change) {
         return new M._Change(change, J.get$error$x(this.fix));
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     QuickFixHelper__handleFixesResult_closure0: {
       "^": "Closure:48;",
       call$1: [function(change) {
         return new M._Change(change, null);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     QuickFixHelper__handleFixesResult_closure1: {
       "^": "Closure:47;_box_0",
@@ -54641,7 +54732,7 @@ self.showOpenDialog = function(options) {
         t3 = change.get$isAssist() ? "assist" : "quick-fix";
         t4 = change.get$isAssist() ? null : J.get$message$x(J.get$error$x(change));
         return new X.Suggestion(t1, null, t2, "", change.get$isAssist() ? "attribute" : "function", null, null, t3, null, null, null, t4, null, null, null, null);
-      }, null, null, 2, 0, null, 30, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     QuickFixHelper__handleFixesResult_closure2: {
       "^": "Closure:47;editor",
@@ -54881,7 +54972,7 @@ self.showOpenDialog = function(options) {
           return;
         }
         this.refactor.call$1(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     RefactoringHelper__performRefactoring_closure: {
       "^": "Closure:1;$this,refactoringName,options,path,offset,end,successMsg",
@@ -54899,7 +54990,7 @@ self.showOpenDialog = function(options) {
         if (result == null)
           return;
         this.$this._applyRefactoringResult$4(this.refactoringName, result, this.successMsg, this.path);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     RefactoringHelper__applyRefactoringResult_closure: {
       "^": "Closure:25;",
@@ -55081,7 +55172,7 @@ self.showOpenDialog = function(options) {
           t2.showView$0();
           t2.views.$index(0, t2.prefixUri + "/0")._handleSearchResults$2$refData(new V.ReferencesSearch("References", $name, null, resultsFuture), t3);
         }
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     ReferencesSearch: {
       "^": "Object;searchType,label>,results>,resultsFuture"
@@ -55259,7 +55350,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;node",
       call$1: [function(r) {
         return this.node.children.push(new T.Node0(r, false, [], [null]));
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     _MatchParser: {
       "^": "Object;file>,lines<",
@@ -55404,7 +55495,7 @@ self.showOpenDialog = function(options) {
         t1 = this.$this;
         t1.showView$0();
         t1.views.$index(0, t1.prefixUri + "/0")._buildHierarchy$1(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     TypeHierarchyView: {
       "^": "DockedView;title*,subtitle,treeBuilder,disposables,_type_hierarchy$_items,root,content,id,item",
@@ -55894,7 +55985,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;",
       call$1: [function(dir) {
         return J.get$path$x(dir);
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     },
     AnalysisServer__reconcileRoots_closure: {
       "^": "Closure:0;",
@@ -55942,7 +56033,7 @@ self.showOpenDialog = function(options) {
             t2.close$0(0);
           }
         }
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     AnalysisServer__initNewServer_closure: {
       "^": "Closure:0;$this",
@@ -56248,7 +56339,7 @@ self.showOpenDialog = function(options) {
           H.throwExpression(t2._addEventError$0());
         t2._sendData$1(result);
         t1.process = null;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     _AnalysisServerWrapper_setup_closure: {
       "^": "Closure:0;",
@@ -56325,7 +56416,7 @@ self.showOpenDialog = function(options) {
           H.throwExpression(t2._addEventError$0());
         t2._sendData$1(result);
         t1.process = null;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     _AnalysisServerWrapper_restart_closure0: {
       "^": "Closure:0;startServer",
@@ -56474,7 +56565,7 @@ self.showOpenDialog = function(options) {
           f = this.getSuggestions$1(opts).then$1(new X.AutocompleteProvider__getSuggestions_closure2(t1, timer)).catchError$1(new X.AutocompleteProvider__getSuggestions_closure3());
         }
         return K.Promise__jsObjectFromFuture(f);
-      }, "call$1", "get$_getSuggestions", 2, 0, 43, 35],
+      }, "call$1", "get$_getSuggestions", 2, 0, 43, 36],
       _onDidInsertSuggestion$1: [function(options) {
         var t1, t2, t3, index, selectionOffset;
         t1 = $._override;
@@ -56502,7 +56593,7 @@ self.showOpenDialog = function(options) {
           if (selectionOffset != null)
             t1.invoke$2("setCursorBufferPosition", new Y.Point0(Y._cvt0(new Y.TextBuffer(Y._cvt0(t1.invoke$1("getBuffer"))).invoke$2("positionForCharacterIndex", selectionOffset))));
         }
-      }, "call$1", "get$_onDidInsertSuggestion", 2, 0, 27, 35],
+      }, "call$1", "get$_onDidInsertSuggestion", 2, 0, 27, 36],
       $isDisposable: 1
     },
     AutocompleteProvider__getSuggestions_suggestionToProxy: {
@@ -56804,7 +56895,7 @@ self.showOpenDialog = function(options) {
           ++this.$this.errorCount;
         else
           K.promiseToFuture($.$get$atom()._packages.invoke$2("activatePackage", this.name));
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     }
   }], ["atom.statusbar", "package:atom_dartlang/atom_statusbar.dart",, T, {
     "^": "",
@@ -56927,7 +57018,7 @@ self.showOpenDialog = function(options) {
           H.throwExpression(t3._addEventError$0());
         t3._sendData$1(t2);
         t1._browser.getVersion$0().then$1(new Z.BrowserManager_update_closure(t1));
-      }, null, null, 2, 0, null, 22, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     BrowserManager_update_closure: {
       "^": "Closure:0;$this",
@@ -56938,7 +57029,7 @@ self.showOpenDialog = function(options) {
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(version);
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 29, "call"]
     },
     BrowserManager_dispose_closure: {
       "^": "Closure:0;",
@@ -57026,7 +57117,7 @@ self.showOpenDialog = function(options) {
         return;
       if (A._hasDartFile(dir, 2))
         A._promptCreateDartinoYaml(dir, settings);
-    }, "call$1", "dartino___checkDirectory$closure", 2, 0, 252, 23],
+    }, "call$1", "dartino___checkDirectory$closure", 2, 0, 252, 22],
     _hasDartFile: function(dir, depth) {
       var t1, t2, t3, t4, _i, entry, t5;
       for (t1 = dir.getEntriesSync$0(), t2 = t1.length, t3 = depth > 1, t4 = depth - 1, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
@@ -57137,7 +57228,7 @@ self.showOpenDialog = function(options) {
         return P._asyncStart($async$createNewProject$1, $async$completer);
       }, function() {
         return this.createNewProject$1(null);
-      }, "createNewProject$0", "call$1", "call$0", "get$createNewProject", 0, 2, 42, 2],
+      }, "createNewProject$0", "call$1", "call$0", "get$createNewProject", 0, 2, 42, 3],
       openSamples$1: [function(e) {
         var $async$goto = 0, $async$completer = P.Completer_Completer$sync(), $async$self = this, samplesRoot, t1;
         var $async$openSamples$1 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
@@ -57181,12 +57272,12 @@ self.showOpenDialog = function(options) {
         P.Future_Future$delayed(P.Duration$(0, 0, 0, 0, 0, 3), new A._Dartino_enable_closure0(this), null);
       }, function($receiver) {
         return this.enable$1($receiver, null);
-      }, "enable$0", "call$1", "call$0", "get$enable", 0, 2, 40, 2],
+      }, "enable$0", "call$1", "call$0", "get$enable", 0, 2, 40, 3],
       openSettings$1: [function(_) {
         $.$get$atom()._workspace.openConfigPage$1$packageID("dartino");
       }, function() {
         return this.openSettings$1(null);
-      }, "openSettings$0", "call$1", "call$0", "get$openSettings", 0, 2, 16, 2, 0],
+      }, "openSettings$0", "call$1", "call$0", "get$openSettings", 0, 2, 16, 3, 0],
       promptSetSdk$2$detail: function(message, detail) {
         var t1 = $.$get$atom()._notifications;
         t1.invoke$3("addError", message, t1._options$5$buttons$description$detail$dismissable$icon([new D.NotificationButton("Install", this.get$promptInstallSdk()), new D.NotificationButton("Open settings", this.get$openSettings())], null, "Click install to install a new SDK or open the settings\nto specify the path to an already existing installation.", null, null));
@@ -57198,7 +57289,7 @@ self.showOpenDialog = function(options) {
         A.DartinoSdk_promptInstall(null);
       }, function() {
         return this.promptInstallSdk$1(null);
-      }, "promptInstallSdk$0", "call$1", "call$0", "get$promptInstallSdk", 0, 2, 40, 2, 0],
+      }, "promptInstallSdk$0", "call$1", "call$0", "get$promptInstallSdk", 0, 2, 40, 3, 0],
       showSdkDocs$1: [function(_) {
         var t1, uri, t2;
         t1 = this.sdkFor$1(null);
@@ -57256,14 +57347,14 @@ self.showOpenDialog = function(options) {
         return P._asyncStart($async$validateSdk$1, $async$completer);
       }, function() {
         return this.validateSdk$1(null);
-      }, "validateSdk$0", "call$1", "call$0", "get$validateSdk", 0, 2, 97, 2],
+      }, "validateSdk$0", "call$1", "call$0", "get$validateSdk", 0, 2, 97, 3],
       $isDisposable: 1
     },
     _Dartino_enable_closure: {
       "^": "Closure:44;",
       call$1: [function(project) {
         return A._checkDirectory(J.get$directory$x(project));
-      }, null, null, 2, 0, null, 27, "call"]
+      }, null, null, 2, 0, null, 28, "call"]
     },
     _Dartino_enable_closure0: {
       "^": "Closure:1;$this",
@@ -58049,7 +58140,7 @@ self.showOpenDialog = function(options) {
         return P._asyncStart($async$debug$2, $async$completer);
       }, function(sdk) {
         return this.debug$2(sdk, null);
-      }, "debug$1", "call$2", "call$1", "get$debug", 2, 2, 99, 2]
+      }, "debug$1", "call$2", "call$1", "get$debug", 2, 2, 99, 3]
     },
     DartinoLaunch_run_closure: {
       "^": "Closure:0;$this,subtle",
@@ -58955,7 +59046,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:10;",
       call$1: [function(bp) {
         return bp.toJsonable$0();
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     AtomBreakpoint: {
       "^": "MItem;path>,_breakpoints$_line,_breakpoints$_column,key",
@@ -59308,12 +59399,12 @@ self.showOpenDialog = function(options) {
     Paused: {
       "^": "ProxyHolder;obj",
       toString$1: function(_, indent) {
-        var t1, t2, t3;
+        var t1, t2;
         t1 = this.obj;
         t2 = J.getInterceptor$asx(t1);
-        t3 = "PAUSED: " + H.S(t2.$index(t1, "reason")) + "\n" + indent + "data: " + H.S(K.jsObjectToDart(t2.$index(t1, "data"))) + "\n" + indent + "bk: " + H.S(t2.$index(t1, "hitBreakpoints")) + "\n" + indent + "fr: " + P.IterableBase_iterableToShortString(J.map$1$ax(this.get$callFrames(), new O.Paused_toString_closure(indent)), "(", ")") + "\n" + indent + "as: ";
-        t1 = t2.$index(t1, "asyncStackTrace") == null ? null : new O.StackTrace0(t2.$index(t1, "asyncStackTrace"));
-        return t3 + H.S(t1 == null ? t1 : t1.toString$1(0, indent + "  "));
+        t1 = "PAUSED: " + H.S(t2.$index(t1, "reason")) + "\n" + indent + "data: " + H.S(K.jsObjectToDart(t2.$index(t1, "data"))) + "\n" + indent + "bk: " + H.S(t2.$index(t1, "hitBreakpoints")) + "\n" + indent + "fr: " + P.IterableBase_iterableToShortString(J.map$1$ax(this.get$callFrames(), new O.Paused_toString_closure(indent)), "(", ")") + "\n" + indent + "as: ";
+        t2 = this.get$asyncStackTrace();
+        return t1 + H.S(t2 == null ? t2 : t2.toString$1(0, indent + "  "));
       },
       toString$0: function($receiver) {
         return this.toString$1($receiver, "  ");
@@ -59326,6 +59417,12 @@ self.showOpenDialog = function(options) {
       },
       get$data: function(_) {
         return J.$index$asx(this.obj, "data");
+      },
+      get$asyncStackTrace: function() {
+        var t1, t2;
+        t1 = this.obj;
+        t2 = J.getInterceptor$asx(t1);
+        return t2.$index(t1, "asyncStackTrace") == null ? null : new O.StackTrace0(t2.$index(t1, "asyncStackTrace"));
       }
     },
     Paused_toString_closure: {
@@ -59422,42 +59519,6 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;",
       call$1: [function(obj) {
         return new O.Scope(obj);
-      }, null, null, 2, 0, null, 4, "call"]
-    },
-    StackTrace0: {
-      "^": "ProxyHolder;obj",
-      toString$1: function(_, indent) {
-        return "STACK: " + H.S(J.$index$asx(this.obj, "description")) + "\n" + indent + "fr: " + P.IterableBase_iterableToShortString(J.map$1$ax(this.get$callFrames(), new O.StackTrace_toString_closure(indent)), "(", ")") + "\n" + indent + "parent: " + J.toString$0$(this.get$parent(this));
-      },
-      toString$0: function($receiver) {
-        return this.toString$1($receiver, "  ");
-      },
-      get$description: function(_) {
-        return J.$index$asx(this.obj, "description");
-      },
-      get$callFrames: function() {
-        var t1 = J.$index$asx(this.obj, "callFrames");
-        t1 = t1 == null ? t1 : J.map$1$ax(t1, new O.StackTrace_callFrames_closure());
-        t1 = t1 == null ? t1 : J.toList$0$ax(t1);
-        return t1 == null ? [] : t1;
-      },
-      get$parent: function(_) {
-        var t1, t2;
-        t1 = this.obj;
-        t2 = J.getInterceptor$asx(t1);
-        return t2.$index(t1, "description") == null ? null : new O.StackTrace0(t2.$index(t1, "description"));
-      }
-    },
-    StackTrace_toString_closure: {
-      "^": "Closure:0;indent",
-      call$1: [function(f) {
-        return J.toString$1$(f, this.indent + "  ");
-      }, null, null, 2, 0, null, 88, "call"]
-    },
-    StackTrace_callFrames_closure: {
-      "^": "Closure:0;",
-      call$1: [function(obj) {
-        return new O.CallFrame(obj);
       }, null, null, 2, 0, null, 4, "call"]
     },
     ExceptionDetails: {
@@ -59608,12 +59669,12 @@ self.showOpenDialog = function(options) {
     },
     Location0: {
       "^": "ProxyHolder;obj",
-      toString$0: function(_) {
+      toString$0: ["super$Location$toString", function(_) {
         var t1, t2;
         t1 = this.obj;
         t2 = J.getInterceptor$asx(t1);
         return "LOC: " + H.S(t2.$index(t1, "scriptId")) + " (" + H.S(t2.$index(t1, "lineNumber")) + "," + H.S(t2.$index(t1, "columnNumber")) + ")";
-      },
+      }],
       get$scriptId: function() {
         return J.$index$asx(this.obj, "scriptId");
       },
@@ -59628,6 +59689,63 @@ self.showOpenDialog = function(options) {
         t1 = this.obj;
         t2 = J.getInterceptor$asx(t1);
         return P.LinkedHashMap__makeLiteral(["scriptId", t2.$index(t1, "scriptId"), "lineNumber", t2.$index(t1, "lineNumber"), "columnNumber", t2.$index(t1, "columnNumber")]);
+      }
+    },
+    StackTrace0: {
+      "^": "ProxyHolder;obj",
+      toString$1: function(_, indent) {
+        return "STACK: " + H.S(J.$index$asx(this.obj, "description")) + "\n" + indent + "fr: " + P.IterableBase_iterableToShortString(J.map$1$ax(this.get$callFrames(), new O.StackTrace_toString_closure(indent)), "(", ")") + "\n" + indent + "parent: " + J.toString$0$(this.get$parent(this));
+      },
+      toString$0: function($receiver) {
+        return this.toString$1($receiver, "  ");
+      },
+      get$description: function(_) {
+        return J.$index$asx(this.obj, "description");
+      },
+      get$callFrames: function() {
+        var t1 = J.$index$asx(this.obj, "callFrames");
+        t1 = t1 == null ? t1 : J.map$1$ax(t1, new O.StackTrace_callFrames_closure());
+        t1 = t1 == null ? t1 : J.toList$0$ax(t1);
+        return t1 == null ? [] : t1;
+      },
+      get$parent: function(_) {
+        var t1, t2;
+        t1 = this.obj;
+        t2 = J.getInterceptor$asx(t1);
+        return t2.$index(t1, "parent") == null ? null : new O.StackTrace0(t2.$index(t1, "parent"));
+      }
+    },
+    StackTrace_toString_closure: {
+      "^": "Closure:0;indent",
+      call$1: [function(f) {
+        return J.toString$1$(f, this.indent + "  ");
+      }, null, null, 2, 0, null, 88, "call"]
+    },
+    StackTrace_callFrames_closure: {
+      "^": "Closure:0;",
+      call$1: [function(obj) {
+        return new O.RuntimeCallFrame(obj);
+      }, null, null, 2, 0, null, 4, "call"]
+    },
+    RuntimeCallFrame: {
+      "^": "Location0;obj",
+      toString$1: function(_, indent) {
+        var t1, t2;
+        t1 = this.obj;
+        t2 = J.getInterceptor$asx(t1);
+        return "RTFRAME: " + H.S(t2.$index(t1, "functionName")) + "\n" + indent + "u: " + H.S(t2.$index(t1, "url")) + "\n" + indent + "loc: " + this.super$Location$toString(0);
+      },
+      toString$0: function($receiver) {
+        return this.toString$1($receiver, "  ");
+      },
+      get$functionName: function() {
+        return J.$index$asx(this.obj, "functionName");
+      },
+      get$url: function(_) {
+        return J.$index$asx(this.obj, "url");
+      },
+      get$location: function(_) {
+        return this;
       }
     },
     Property0: {
@@ -59889,7 +60007,7 @@ self.showOpenDialog = function(options) {
         t1 = this.chrome.get$$debugger();
         t2 = this.exceptionTypes.$index(0, Q.Dependencies_instance().getDependency$1(C.Type_BreakpointManager_erm).get$breakOnExceptionType());
         t1.toString;
-        return K.promiseToFuture(t1.invoke$2("setPauseOnExceptions", P.LinkedHashMap__makeLiteral(["state", t2]))).catchError$1(new S.ChromeConnection_navigate_closure(this)).then$1(new S.ChromeConnection_navigate_closure0(this, url));
+        return K.promiseToFuture(t1.invoke$2("setPauseOnExceptions", P.LinkedHashMap__makeLiteral(["state", t2]))).catchError$1(new S.ChromeConnection_navigate_closure(this)).then$1(new S.ChromeConnection_navigate_closure0(this)).catchError$1(new S.ChromeConnection_navigate_closure1(this)).then$1(new S.ChromeConnection_navigate_closure2(this, url));
       },
       createReverseMaps$2: function(sourceUrl, map) {
         var entries, t1, t2, t3, t4, t5, _i, line, t6, t7, entry, t8, destinationUrl, t9, t10, t11, t12;
@@ -60088,7 +60206,7 @@ self.showOpenDialog = function(options) {
         t3.maps.$indexSet(0, t2.$index(t1, "scriptId"), map);
         t3.createReverseMaps$2(t2.$index(t1, "url"), map);
         return t3.installBreakpoints$0().then$1(new S.ChromeConnection____closure(map));
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     ChromeConnection____closure: {
       "^": "Closure:0;map",
@@ -60210,7 +60328,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;$this",
       call$1: [function(e) {
         var t1, t2;
-        t1 = "Error setting excption mode (" + H.S(e) + ").\n";
+        t1 = "Error setting exception mode (" + H.S(e) + ").\n";
         t2 = this.$this.launch._stdio;
         if (!t2.get$_mayAddEvent())
           H.throwExpression(t2._addEventError$0());
@@ -60218,6 +60336,25 @@ self.showOpenDialog = function(options) {
       }, null, null, 2, 0, null, 1, "call"]
     },
     ChromeConnection_navigate_closure0: {
+      "^": "Closure:0;$this",
+      call$1: [function(_) {
+        var t1 = this.$this.chrome.get$$debugger();
+        t1.toString;
+        return K.promiseToFuture(t1.invoke$2("setAsyncCallStackDepth", P.LinkedHashMap__makeLiteral(["maxDepth", 16])));
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    ChromeConnection_navigate_closure1: {
+      "^": "Closure:0;$this",
+      call$1: [function(e) {
+        var t1, t2;
+        t1 = "Error setting async call depth (" + H.S(e) + ").\n";
+        t2 = this.$this.launch._stdio;
+        if (!t2.get$_mayAddEvent())
+          H.throwExpression(t2._addEventError$0());
+        t2._sendData$1(new X.TextFragment(t1, false, false, false));
+      }, null, null, 2, 0, null, 1, "call"]
+    },
+    ChromeConnection_navigate_closure2: {
       "^": "Closure:0;$this,url",
       call$1: [function(_) {
         return J.navigate$1$x(J.get$page$x(this.$this.chrome), this.url);
@@ -60450,9 +60587,17 @@ self.showOpenDialog = function(options) {
         return J.$eq$(t2.$index(t1, "reason"), "exception") ? new O.RemoteObject(C.RemoteObjectType_1, t2.$index(t1, "data")) : null;
       },
       get$frames: function() {
-        var t1 = this._frames;
+        var t1, t2, t3;
+        t1 = this._frames;
         if (t1 == null) {
-          t1 = J.map$1$ax(this.paused.get$callFrames(), new S.ChromeDebugIsolate_frames_closure(this)).toList$0(0);
+          t1 = [];
+          t2 = this.paused;
+          t3 = J.map$1$ax(t2.get$callFrames(), new S.ChromeDebugIsolate_frames_closure(this));
+          C.JSArray_methods.addAll$1(t1, t3);
+          t2 = t2.get$asyncStackTrace();
+          t2 = t2 == null ? t2 : t2.get$callFrames();
+          t2 = t2 == null ? t2 : J.map$1$ax(t2, new S.ChromeDebugIsolate_frames_closure0(this));
+          C.JSArray_methods.addAll$1(t1, t2 == null ? [] : t2);
           this._frames = t1;
         }
         return t1;
@@ -60485,7 +60630,13 @@ self.showOpenDialog = function(options) {
         t3 = J.getInterceptor$asx(t2);
         t2 = J.$eq$(t3.$index(t2, "reason"), "exception") ? new O.RemoteObject(C.RemoteObjectType_1, t3.$index(t2, "data")) : null;
         return new S.ChromeDebugFrame(t1.connection, frame, t2, null, null);
-      }, null, null, 2, 0, null, 44, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
+    },
+    ChromeDebugIsolate_frames_closure0: {
+      "^": "Closure:0;$this",
+      call$1: [function(frame) {
+        return new S.ChromeDebugAsyncFrame(this.$this.connection, frame, null);
+      }, null, null, 2, 0, null, 25, "call"]
     },
     ChromeDebugFrame: {
       "^": "DebugFrame;connection,frame,exception<,_locals,key",
@@ -60506,20 +60657,7 @@ self.showOpenDialog = function(options) {
         return this._locals;
       },
       get$location: function(_) {
-        var t1, t2, t3, t4;
-        t1 = this.connection;
-        t2 = J.get$location$x(this.frame);
-        t3 = new S.ChromeDebugLocation(t1, t2, null, null, false, false);
-        t1 = t1.maps.$index(0, t2.get$scriptId());
-        if (!(t1 == null)) {
-          t4 = J.getInterceptor$x(t2);
-          t2 = t1.spanFor$2(t4.get$lineNumber(t2), t4.get$columnNumber(t2));
-          t1 = t2;
-        }
-        t3._chrome_debugger$_span = t1;
-        if (t1 != null)
-          t3._resolvePath$0();
-        return t3;
+        return S.ChromeDebugLocation$(this.connection, J.get$location$x(this.frame));
       },
       resolveLocals$0: function() {
         var t1, t2, t3;
@@ -60534,16 +60672,21 @@ self.showOpenDialog = function(options) {
         t3 = this.exception;
         if (t3 != null)
           t2.push(new S.ChromeThis(t3, t1, this, null, null, null));
-        t2 = this.frame;
-        t3 = J.getInterceptor$x(t2);
-        this._locals.push(new S.ChromeThis(t3.get$self(t2), t1, this, null, null, null));
-        this.addScopes$0();
-        if (t3.get$returnValue(t2) != null)
-          this._locals.push(new S.ChromeThis(t3.get$returnValue(t2), t1, this, null, null, null));
-        t1 = this._locals;
-        t2 = new P._Future(0, $.Zone__current, null, [null]);
-        t2._asyncComplete$1(t1);
-        return t2;
+        return this.addThis$0().then$1(new S.ChromeDebugFrame_resolveLocals_closure(this));
+      },
+      addThis$0: function() {
+        var t1, t2, t3;
+        t1 = this.frame;
+        t2 = t1 == null ? t1 : J.get$self$x(t1);
+        t3 = this.connection;
+        if (J.$eq$(t2 == null ? t2 : J.get$type$x(t2), "undefined"))
+          return t3.chrome.get$$debugger().evaluateOnCallFrame$2(t1.get$callFrameId(), "this").then$1(new S.ChromeDebugFrame_addThis_closure(this)).catchError$1(new S.ChromeDebugFrame_addThis_closure0()).then$1(new S.ChromeDebugFrame_addThis_closure1(this));
+        else {
+          this._locals.push(new S.ChromeThis(J.get$self$x(t1), t3, this, null, null, null));
+          t1 = new P._Future(0, $.Zone__current, null, [null]);
+          t1._asyncComplete$1(null);
+          return t1;
+        }
       },
       addScopes$0: function() {
         var t1, i, t2, property;
@@ -60559,6 +60702,75 @@ self.showOpenDialog = function(options) {
             property = t1.__interceptors$_current;
             this._locals.push(new S.ChromeScope(property, t2, this, null, null, null));
           }
+      },
+      eval$1: function(expression) {
+        var t1 = new P._Future(0, $.Zone__current, null, [null]);
+        t1._asyncComplete$1(null);
+        return t1;
+      }
+    },
+    ChromeDebugFrame_resolveLocals_closure: {
+      "^": "Closure:0;$this",
+      call$1: [function(_) {
+        var t1, t2, t3;
+        t1 = this.$this;
+        t1.addScopes$0();
+        t2 = t1.frame;
+        t3 = J.getInterceptor$x(t2);
+        if (t3.get$returnValue(t2) != null)
+          t1._locals.push(new S.ChromeThis(t3.get$returnValue(t2), t1.connection, t1, null, null, null));
+        return t1._locals;
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    ChromeDebugFrame_addThis_closure: {
+      "^": "Closure:0;$this",
+      call$1: [function(result) {
+        var object, t1, t2;
+        object = result == null ? result : J.get$result$x(result);
+        if (object != null) {
+          t1 = object.get$obj();
+          t2 = this.$this;
+          t2._locals.push(new S.ChromeThis(new O.RemoteObject(C.RemoteObjectType_0, t1), t2.connection, t2, null, null, null));
+        }
+      }, null, null, 2, 0, null, 2, "call"]
+    },
+    ChromeDebugFrame_addThis_closure0: {
+      "^": "Closure:0;",
+      call$1: [function(e) {
+        $.$get$_logger31().info$1("problem getting missing this: " + H.S(e));
+      }, null, null, 2, 0, null, 1, "call"]
+    },
+    ChromeDebugFrame_addThis_closure1: {
+      "^": "Closure:0;$this",
+      call$1: [function(_) {
+        return this.$this._locals;
+      }, null, null, 2, 0, null, 0, "call"]
+    },
+    ChromeDebugAsyncFrame: {
+      "^": "DebugFrame;connection,frame,key",
+      get$id: function(_) {
+        return J.toString$0$(J.get$location$x(this.frame));
+      },
+      get$title: function(_) {
+        var t1 = this.frame;
+        return t1.get$functionName() != null && J.get$isNotEmpty$asx(t1.get$functionName()) === true ? t1.get$functionName() : "anonymous";
+      },
+      get$isSystem: function() {
+        return false;
+      },
+      get$isExceptionFrame: function() {
+        return false;
+      },
+      get$locals: function() {
+        return [];
+      },
+      get$location: function(_) {
+        return S.ChromeDebugLocation$(this.connection, J.get$location$x(this.frame));
+      },
+      resolveLocals$0: function() {
+        var t1 = new P._Future(0, $.Zone__current, null, [null]);
+        t1._asyncComplete$1([]);
+        return t1;
       },
       eval$1: function(expression) {
         var t1 = new P._Future(0, $.Zone__current, null, [null]);
@@ -60939,7 +61151,7 @@ self.showOpenDialog = function(options) {
         }
         t1 = this.$this;
         return object != null ? new S.ChromeDebugValue(t1.connection, t1.variable, object, null) : t1;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     ChromeDebugLocation: {
       "^": "DebugLocation;connection,location>,_chrome_debugger$_span,_resolvedPath,resolved:ChromeDebugLocation_resolved<,resolved",
@@ -60989,6 +61201,27 @@ self.showOpenDialog = function(options) {
         t1 = new P._Future(0, $.Zone__current, null, [null]);
         t1._asyncComplete$1(this);
         return t1;
+      },
+      ChromeDebugLocation$2: function(connection, $location) {
+        var t1, t2, t3;
+        t1 = this.location;
+        t2 = this.connection.maps.$index(0, t1.get$scriptId());
+        if (t2 == null)
+          t1 = t2;
+        else {
+          t3 = J.getInterceptor$x(t1);
+          t1 = t2.spanFor$2(t3.get$lineNumber(t1), t3.get$columnNumber(t1));
+        }
+        this._chrome_debugger$_span = t1;
+        if (t1 != null)
+          this._resolvePath$0();
+      },
+      static: {
+        ChromeDebugLocation$: function(connection, $location) {
+          var t1 = new S.ChromeDebugLocation(connection, $location, null, null, false, false);
+          t1.ChromeDebugLocation$2(connection, $location);
+          return t1;
+        }
       }
     },
     ChromeDebugLocation_resolve_closure: {
@@ -61010,7 +61243,7 @@ self.showOpenDialog = function(options) {
           return t2;
         }
         return t1._resolvePath$0().then$1(new S.ChromeDebugLocation_resolve__closure(t1));
-      }, null, null, 2, 0, null, 36, "call"]
+      }, null, null, 2, 0, null, 37, "call"]
     },
     ChromeDebugLocation_resolve__closure: {
       "^": "Closure:0;$this",
@@ -61024,7 +61257,7 @@ self.showOpenDialog = function(options) {
         var t1 = this.$this;
         t1._resolvedPath = path;
         t1.ChromeDebugLocation_resolved = true;
-      }, null, null, 2, 0, null, 22, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     ChromeDebugLocation__resolvePath_closure0: {
       "^": "Closure:0;$this",
@@ -61377,7 +61610,7 @@ self.showOpenDialog = function(options) {
         t2 = J.get$id$x(result);
         t1._contextId = t2;
         t1._debugger$_completer.complete$1(0, t2);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     UriResolver_closure0: {
       "^": "Closure:0;$this",
@@ -61390,7 +61623,7 @@ self.showOpenDialog = function(options) {
       call$1: [function(result) {
         $.$get$_logger10().finer$1("resolve " + H.S(this.uri) + " <== " + H.S(result));
         return result;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     UriResolver_resolvePathToUris_closure: {
       "^": "Closure:22;path",
@@ -62000,7 +62233,7 @@ self.showOpenDialog = function(options) {
           frame.resolveLocals$0().then$1(new G.ExecutionTab__selectFrame_closure0(this, frame)).catchError$1(new G.ExecutionTab__selectFrame_closure1(this));
         else
           this._updateLocals$1(vars).then$1(new G.ExecutionTab__selectFrame_closure2(this, frame, vars));
-      }, "call$1", "get$_selectFrame", 2, 0, 118, 44],
+      }, "call$1", "get$_selectFrame", 2, 0, 118, 25],
       _renderVariable$2: [function(local, element) {
         var t1, value, t2;
         t1 = J.getInterceptor$x(local);
@@ -62020,7 +62253,6 @@ self.showOpenDialog = function(options) {
       }, "call$2", "get$_renderVariable", 4, 0, 119],
       _showObjectDetails$1: [function(variable) {
         this.view.detailSection.showDetails$1(variable);
-        P.print(variable);
       }, "call$1", "get$_showObjectDetails", 2, 0, 120, 119],
       _updateLocals$1: function(vars) {
         J.toggle$2$x(J.get$classes$x(this.locals.element), "debugger-locked", true);
@@ -62125,7 +62357,7 @@ self.showOpenDialog = function(options) {
         J.clear$0$ax(J.get$children$x(t1._detailsElement.element));
         t1._detailsElement.add$1(0, [K.CoreElement$("i", null, null, J.get$className$x(J.get$value$x(this.variable))), K.CoreElement$("span", null, null, ": "), K.CoreElement$("span", null, "text-subtle", str)]);
         J.toggle$2$x(J.get$classes$x(t1._detailsElement.element), "text-error", false);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     DetailSection_showDetails_closure0: {
       "^": "Closure:0;$this",
@@ -62237,7 +62469,7 @@ self.showOpenDialog = function(options) {
         this.list.update$1(0, bps);
       }, function($receiver) {
         return this._update$1($receiver, null);
-      }, "_update$0", "call$1", "call$0", "get$_update", 0, 2, 127, 2, 0],
+      }, "_update$0", "call$1", "call$0", "get$_update", 0, 2, 127, 3, 0],
       _render$2: [function(bp, element) {
         var t1, pathText, rel, t2, t3, t4, lineText;
         t1 = J.getInterceptor$x(bp);
@@ -62330,7 +62562,7 @@ self.showOpenDialog = function(options) {
         col = bp.get$column() == null ? null : J.$sub$n(bp.get$column(), 1);
         t1 = J.getInterceptor$x(bp);
         Q.Dependencies_instance().getDependency$1(C.Type_EditorManager_25m).jumpToLocation$3(t1.get$path(bp), J.$sub$n(t1.get$line(bp), 1), col);
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     BreakpointsTab__render_closure: {
       "^": "Closure:1;bp",
@@ -62939,7 +63171,7 @@ self.showOpenDialog = function(options) {
       call$1: [function(bp) {
         var t1 = this.$this;
         t1.uriResolver.resolvePathToUris$1(J.get$path$x(bp)).then$1(new D.ObservatoryConnection__installBreakpoints__closure1(t1, this.isolate, this.addBreakpoint, bp)).catchError$1(new D.ObservatoryConnection__installBreakpoints__closure2(bp));
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     ObservatoryConnection__installBreakpoints__closure1: {
       "^": "Closure:22;$this,isolate,addBreakpoint,bp",
@@ -62981,7 +63213,7 @@ self.showOpenDialog = function(options) {
             vmBreakpoint = breakpoints[_i];
             t2._vm_service_lib$_call$2(0, "removeBreakpoint", P.LinkedHashMap__makeLiteral(["isolateId", t4.get$id(t3), "breakpointId", J.get$id$x(vmBreakpoint)])).catchError$1(new D.ObservatoryConnection__installBreakpoints__closure0());
           }
-      }, null, null, 2, 0, null, 26, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     },
     ObservatoryConnection__installBreakpoints__closure0: {
       "^": "Closure:0;",
@@ -63079,7 +63311,7 @@ self.showOpenDialog = function(options) {
           return this.$this._installBreakpoints$1(this.ref);
       }, function() {
         return this.call$1(null);
-      }, "call$0", null, null, null, 0, 2, null, 2, 0, "call"]
+      }, "call$0", null, null, null, 0, 2, null, 3, 0, "call"]
     },
     ObservatoryConnection__registerNewIsolate_closure0: {
       "^": "Closure:0;$this,isolate",
@@ -63107,7 +63339,7 @@ self.showOpenDialog = function(options) {
         if (!t2.get$_mayAddEvent())
           H.throwExpression(t2._addEventError$0());
         t2._sendData$1(new X.TextFragment(t1, true, false, false));
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     ObservatoryConnection__printExceptionToConsole_closure0: {
       "^": "Closure:0;$this",
@@ -63278,7 +63510,7 @@ self.showOpenDialog = function(options) {
           t2.exception = null;
         }
         return obsFrame;
-      }, null, null, 2, 0, null, 44, "call"]
+      }, null, null, 2, 0, null, 25, "call"]
     },
     ObservatoryIsolate__populateFrames___closure: {
       "^": "Closure:141;$this",
@@ -63317,7 +63549,7 @@ self.showOpenDialog = function(options) {
           throw H.wrapException(result.message);
         else
           return D._refToString(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     ObservatoryVariable: {
       "^": "DebugVariable;_variable,value>,key",
@@ -63589,7 +63821,7 @@ self.showOpenDialog = function(options) {
           return P.Future_Future$error(result.message, null, null);
         else
           return P.Future_Future$error("unexpected result type: " + H.S(result), null, null);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     ObservatoryObjRefValue: {
       "^": "DebugValue;isolate<,ref",
@@ -63846,7 +64078,7 @@ self.showOpenDialog = function(options) {
         var t1 = this.$this;
         t1._path = path;
         return t1;
-      }, null, null, 2, 0, null, 22, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     ObservatoryLibrary: {
       "^": "MItem;_ref,_displayUri,key",
@@ -63931,7 +64163,7 @@ self.showOpenDialog = function(options) {
           t1.complete$1(0, result);
         } else
           t1.completeError$1(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     ScriptManager_resolveScript_closure0: {
       "^": "Closure:0;completer",
@@ -64258,7 +64490,7 @@ self.showOpenDialog = function(options) {
         t1._sendData$1(editor);
       }, function() {
         return this._observeActivePaneItem$1(null);
-      }, "_observeActivePaneItem$0", "call$1", "call$0", "get$_observeActivePaneItem", 0, 2, 16, 2],
+      }, "_observeActivePaneItem$0", "call$1", "call$0", "get$_observeActivePaneItem", 0, 2, 16, 3],
       Editors$_allDartEditors$0: function() {
         this._matches = F.editors_Editors__isDartTypeEditor$closure();
         var t1 = $.$get$atom();
@@ -64314,7 +64546,7 @@ self.showOpenDialog = function(options) {
           J.get$attributes$x(t1).remove$1(0, $name);
       }, function($name) {
         return this.attribute$2($name, null);
-      }, "attribute$1", "call$2", "call$1", "get$attribute", 2, 2, 146, 2],
+      }, "attribute$1", "call$2", "call$1", "get$attribute", 2, 2, 146, 3],
       get$attributes: function(_) {
         return J.get$attributes$x(this.element);
       },
@@ -64640,7 +64872,7 @@ self.showOpenDialog = function(options) {
         $.$get$_logger20().info$1("Flutter features enabled");
       }, function($receiver) {
         return this.enable$1($receiver, null);
-      }, "enable$0", "call$1", "call$0", "get$enable", 0, 2, 40, 2]
+      }, "enable$0", "call$1", "call$0", "get$enable", 0, 2, 40, 3]
     }
   }], ["", "package:atom_dartlang/flutter/flutter_connect.dart",, K, {
     "^": "",
@@ -65174,7 +65406,7 @@ self.showOpenDialog = function(options) {
         return this.server._flutter_daemon$_call$2(0, "app.start", T._stripNullValues0(P.LinkedHashMap__makeLiteral(["deviceId", deviceId, "projectDirectory", projectDirectory, "startPaused", startPaused, "route", route, "mode", mode, "target", target, "hot", enableHotReload]))).then$1(new T.AppDomain_start_closure());
       }, function($receiver, deviceId, projectDirectory) {
         return this.start$7$enableHotReload$mode$route$startPaused$target($receiver, deviceId, projectDirectory, true, null, null, null, null);
-      }, "start$2", "call$7$enableHotReload$mode$route$startPaused$target", "call$2", "get$start", 4, 11, 155, 2, 2, 2, 2, 140, 141, 142, 143, 144, 37, 38, 145],
+      }, "start$2", "call$7$enableHotReload$mode$route$startPaused$target", "call$2", "get$start", 4, 11, 155, 3, 3, 3, 3, 140, 141, 142, 143, 144, 38, 39, 145],
       restart$2$fullRestart: function(appId, fullRestart) {
         var $async$goto = 0, $async$completer = P.Completer_Completer$sync(), $async$returnValue, $async$self = this, result, t1;
         var $async$restart$2$fullRestart = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
@@ -65243,7 +65475,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;",
       call$1: [function(result) {
         return new T.AppStartedResult(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     AppDomain_discover_closure: {
       "^": "Closure:63;",
@@ -65464,13 +65696,13 @@ self.showOpenDialog = function(options) {
       "^": "Closure:161;",
       call$1: [function(result) {
         return J.map$1$ax(result, T.flutter_daemon_Device_parse$closure()).toList$0(0);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     DeviceDomain_forward_closure: {
       "^": "Closure:63;",
       call$1: [function(result) {
         return J.$index$asx(result, "hostPort");
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     Device: {
       "^": "Object;id>,name>,platform,available",
@@ -65691,7 +65923,7 @@ self.showOpenDialog = function(options) {
           H.throwExpression(t3._addEventError$0());
         t3._sendData$1(t2);
         t1._validateSelection$0();
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     BuildMode: {
       "^": "Object;name>,supportsDebugging,startPaused",
@@ -66086,7 +66318,7 @@ self.showOpenDialog = function(options) {
         new P._BroadcastStream(t5, [H.getTypeArgumentByIndex(t5, 0)]).listen$1(new O._RunLaunchInstance_launch__closure1(t1));
         t2._flutter_launch$_app._stoppedCompleter.future.then$1(new O._RunLaunchInstance_launch__closure2(t1, t2));
         return t2._launch;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     _RunLaunchInstance_launch__closure: {
       "^": "Closure:65;$this",
@@ -66309,7 +66541,7 @@ self.showOpenDialog = function(options) {
           t1 = $.$get$atom()._notifications;
           t1.invoke$3("addWarning", "Error restarting application", t1._options$5$buttons$description$detail$dismissable$icon(null, J.get$message$x(result), null, null, null));
         }
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     FlutterUriTranslator: {
       "^": "Object;root>",
@@ -66554,7 +66786,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;",
       call$1: [function(result) {
         return Y._resolveSdkFromFlutterPath(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     _discoverSdk_closure0: {
       "^": "Closure:0;",
@@ -66566,7 +66798,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;",
       call$1: [function(result) {
         return Y._resolveSdkFromFlutterPath(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     _discoverSdk_closure2: {
       "^": "Closure:0;",
@@ -66578,7 +66810,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:3;",
       call$1: [function(result) {
         return Y._resolveSdkFromFlutterPath(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     _discoverSdk_closure4: {
       "^": "Closure:0;",
@@ -66762,7 +66994,7 @@ self.showOpenDialog = function(options) {
           job._args = t1;
           return Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(job);
         }
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     FlutterToolsManager__createProject_closure0: {
       "^": "Closure:0;_box_0",
@@ -67649,7 +67881,7 @@ self.showOpenDialog = function(options) {
         this.errorArea.attribute$2("hidden", !J.get$isNotEmpty$asx(J.get$children$x(this.errorsList.element)));
       }, function() {
         return this._handleErrorsChanged$1(null);
-      }, "_handleErrorsChanged$0", "call$1", "call$0", "get$_handleErrorsChanged", 0, 2, 170, 2, 154],
+      }, "_handleErrorsChanged$0", "call$1", "call$0", "get$_handleErrorsChanged", 0, 2, 170, 3, 154],
       _cursorChanged$1: [function(pos) {
         var offset, selected, t1, t2, _i, sel, e;
         if (pos == null || this.treeBuilder == null)
@@ -67794,8 +68026,8 @@ self.showOpenDialog = function(options) {
           t2 = J.$lt$n(v.compareTo$1(0, T.Version$_(1, 13, 0, null, null, "1.13.0")), 0);
           $._atomUsesShadowDOM = t2;
         }
-        t3 = $.ViewRegistry__instance;
         t1 = t1.obj;
+        t3 = $.ViewRegistry__instance;
         if (t2) {
           t1 = J.$index$asx(t3.invoke$2("getView", t1), "shadowRoot");
           this.root = t1;
@@ -67982,7 +68214,7 @@ self.showOpenDialog = function(options) {
       },
       _pub$_handleProjectAdded$1: [function(project) {
         return this._validatePubspecCurrent$1(project);
-      }, "call$1", "get$_pub$_handleProjectAdded", 2, 0, 30, 27],
+      }, "call$1", "get$_pub$_handleProjectAdded", 2, 0, 30, 28],
       _validatePubspecCurrent$1: function(project) {
         var t1, pubspecYamlFile, dotPackagesFile;
         if ($.$get$atom()._config.getValue$1("dartlang.showPubCheck") !== true)
@@ -68147,7 +68379,7 @@ self.showOpenDialog = function(options) {
         $.$get$state().$indexSet(0, "lastRunText", response);
         t1 = R.PubRunJob$local(this.dir, response.split(" "), null);
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(t1);
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     PubManager__handleGlobalRun_closure: {
       "^": "Closure:3;dir",
@@ -68162,7 +68394,7 @@ self.showOpenDialog = function(options) {
         t2 = new R.PubRunJob(t1, null, args, true, null, "Pub global run '" + H.S(C.JSArray_methods.get$first(args)) + "'", null);
         t2._pubspecDir = R._locatePubspecDir(t1);
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(t2);
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     PubManager__handleGlobalActivate_closure: {
       "^": "Closure:3;",
@@ -68173,7 +68405,7 @@ self.showOpenDialog = function(options) {
         response = J.trim$0$s(response);
         t1 = "Pub global activate '" + response + "'";
         Q.Dependencies_instance().getDependency$1(C.Type_JobManager_cMb).schedule$1(new R.PubGlobalActivate(response, false, t1, null));
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 30, "call"]
     },
     PubManager__showRunPubDialog_closure: {
       "^": "Closure:1;_box_0,project",
@@ -68340,7 +68572,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:3;$this",
       call$1: [function($name) {
         return this.$this._runBuild$1($name);
-      }, null, null, 2, 0, null, 25, "call"]
+      }, null, null, 2, 0, null, 26, "call"]
     },
     RebuildJob_run_closure1: {
       "^": "Closure:175;",
@@ -68788,7 +69020,7 @@ self.showOpenDialog = function(options) {
         }
       }, function() {
         return this.call$1(null);
-      }, "call$0", null, null, null, 0, 2, null, 2, 0, "call"]
+      }, "call$0", null, null, null, 0, 2, null, 3, 0, "call"]
     },
     StatusView__createAnalysisServerSection__closure: {
       "^": "Closure:0;",
@@ -68906,7 +69138,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;updateUI",
       call$1: [function(result) {
         this.updateUI.call$1(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     StatusView__createDiagnostics___closure0: {
       "^": "Closure:4;$this,updateUI",
@@ -68944,7 +69176,7 @@ self.showOpenDialog = function(options) {
         t2 = version == null ? "no Browser configured" : version;
         J.set$text$x(t1.element, t2);
         return t2;
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 29, "call"]
     },
     StatusView__createDebugSection_closure: {
       "^": "Closure:1;$this",
@@ -68965,14 +69197,14 @@ self.showOpenDialog = function(options) {
       call$1: [function(path) {
         if (typeof path === "string")
           $.$get$atom()._config.invoke$3("set", "dartlang.sdkLocation", path);
-      }, null, null, 2, 0, null, 22, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     StatusView__handleDebugBrowse_closure: {
       "^": "Closure:0;",
       call$1: [function(path) {
         if (typeof path === "string")
           $.$get$atom()._config.invoke$3("set", Q.Dependencies_instance().getDependency$1(C.Type_BrowserManager_I5H).get$browserKey(), path);
-      }, null, null, 2, 0, null, 22, "call"]
+      }, null, null, 2, 0, null, 23, "call"]
     },
     StatusHeader: {
       "^": "Object;title*,subtitle,toolbar",
@@ -69351,7 +69583,7 @@ self.showOpenDialog = function(options) {
         return P._asyncStart($async$_createTest$1, $async$completer);
       }, function() {
         return this._createTest$1(null);
-      }, "_createTest$0", "call$1", "call$0", "get$_createTest", 0, 2, 42, 2],
+      }, "_createTest$0", "call$1", "call$0", "get$_createTest", 0, 2, 42, 3],
       dispose$0: [function() {
         return this.disposables.dispose$0();
       }, "call$0", "get$dispose", 0, 0, 2],
@@ -69817,7 +70049,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:29;updateToolbar",
       call$1: [function(projects) {
         this.updateToolbar.call$0();
-      }, null, null, 2, 0, null, 39, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     DartToolbarContribution__buildFlutterTile_closure1: {
       "^": "Closure:73;updateToolbar",
@@ -70076,7 +70308,7 @@ self.showOpenDialog = function(options) {
         }
         t1 = result.get$hovers();
         (t1 && C.JSArray_methods).forEach$1(t1, new S.TooltipManager__install___closure(this.$this));
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     TooltipManager__install___closure: {
       "^": "Closure:185;$this",
@@ -70353,7 +70585,7 @@ self.showOpenDialog = function(options) {
           t1.invoke$3("addSuccess", t2, t1._options$5$buttons$description$detail$dismissable$icon(null, null, detail, false, null));
         }
         this.jobInstance.get$_completer().complete$1(0, new S.JobStatus(C.Status_0, result));
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     JobManager__exec_closure0: {
       "^": "Closure:1;$this,jobInstance",
@@ -70759,7 +70991,7 @@ self.showOpenDialog = function(options) {
         }
       }, function() {
         return this._handleLaunchesChanged$1(null);
-      }, "_handleLaunchesChanged$0", "call$1", "call$0", "get$_handleLaunchesChanged", 0, 2, 189, 2, 0],
+      }, "_handleLaunchesChanged$0", "call$1", "call$0", "get$_handleLaunchesChanged", 0, 2, 189, 3, 0],
       $isDisposable: 1
     }
   }], ["atom.launch", "package:atom_dartlang/launch/launch.dart",, X, {
@@ -71182,7 +71414,7 @@ self.showOpenDialog = function(options) {
       call$1: [function(result) {
         this.$this._cache.$indexSet(0, this.url, result);
         return result;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     _PathResolver: {
       "^": "Object;cwd<",
@@ -71318,7 +71550,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:191;$this",
       call$1: [function(result) {
         return this.$this._contextCompleter.complete$1(0, J.get$id$x(result));
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     _ServerResolver_closure0: {
       "^": "Closure:0;$this",
@@ -71613,7 +71845,7 @@ self.showOpenDialog = function(options) {
       },
       _handleProjectAdded$1: [function(project) {
         this._getCreateProjectConfig$1(J.get$path$x(project));
-      }, "call$1", "get$_handleProjectAdded", 2, 0, 30, 27],
+      }, "call$1", "get$_handleProjectAdded", 2, 0, 30, 28],
       _handleProjectRemoved$1: [function(project) {
         var config, t1;
         config = this._projectConfigs.remove$1(0, J.get$path$x(project));
@@ -71623,7 +71855,7 @@ self.showOpenDialog = function(options) {
         if (!t1.get$_mayAddEvent())
           H.throwExpression(t1._addEventError$0());
         t1._sendData$1(null);
-      }, "call$1", "get$_handleProjectRemoved", 2, 0, 30, 27],
+      }, "call$1", "get$_handleProjectRemoved", 2, 0, 30, 28],
       initFromStored$1: function(storedData) {
         if (!!J.getInterceptor(storedData).$isMap)
           this._launchTimestamps = P.LinkedHashMap_LinkedHashMap$from(storedData, null, null);
@@ -72418,7 +72650,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:29;$this",
       call$1: [function(projects) {
         this.$this._updateFromActiveEditor$0();
-      }, null, null, 2, 0, null, 39, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     WorkspaceLaunchManager_closure1: {
       "^": "Closure:0;$this",
@@ -73410,7 +73642,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:3;",
       call$1: [function(version) {
         $.pluginVersion = version;
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 29, "call"]
     },
     AtomDartPackage_activate_closure0: {
       "^": "Closure:0;",
@@ -73747,7 +73979,7 @@ self.showOpenDialog = function(options) {
         t1.pubspecFile = t2.getFile$1(dir, "pubspec.yaml");
         t1.dotPackages = t2.getFile$1(dir, ".packages");
         return t1;
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     },
     ProjectManager__updateChangeListeners_closure: {
       "^": "Closure:0;$this,dir",
@@ -73786,7 +74018,7 @@ self.showOpenDialog = function(options) {
             t3._sendData$1(project);
           }
         }
-      }, null, null, 2, 0, null, 39, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     ProjectManager__initProjectControllers_closure0: {
       "^": "Closure:201;$this",
@@ -73805,7 +74037,7 @@ self.showOpenDialog = function(options) {
             t2.invoke$3("addWarning", t3, t2._options$5$buttons$description$detail$dismissable$icon(null, t4 + H.S(t1.get$path(t1)), null, true, null));
           }
         }
-      }, null, null, 2, 0, null, 23, "call"]
+      }, null, null, 2, 0, null, 22, "call"]
     },
     DartProject: {
       "^": "Object;directory>,pubspecFile,dotPackages,_analysisOptions,_pubspecDigest,_pubspecContents",
@@ -74230,7 +74462,7 @@ self.showOpenDialog = function(options) {
             result = t1.substring$2(result, 0, index) + "/opt/dart/libexec";
         }
         return result;
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     SdkDiscovery__discoverSdk_closure0: {
       "^": "Closure:0;",
@@ -74242,7 +74474,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:3;$this",
       call$1: [function(result) {
         return this.$this._resolveSdkFromVm$1(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     SdkDiscovery__discoverSdk_closure2: {
       "^": "Closure:0;",
@@ -74254,7 +74486,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:3;$this",
       call$1: [function(result) {
         return this.$this._resolveSdkFromVm$1(result);
-      }, null, null, 2, 0, null, 3, "call"]
+      }, null, null, 2, 0, null, 2, "call"]
     },
     SdkDiscovery__discoverSdk_closure4: {
       "^": "Closure:0;",
@@ -74429,7 +74661,7 @@ self.showOpenDialog = function(options) {
         t3.push(new P._BroadcastStream(t4, [H.getTypeArgumentByIndex(t4, 0)]).listen$1(E.usage__trackCommand$closure()));
         t2._editorObserve = t1._workspace.observeActivePaneItem$1(E.usage___activePaneItemChanged$closure());
         Q.Dependencies_instance().getDependency$1(C.Type_AnalysisServer_bhC).get$onActive().listen$1(new E.UsageManager__init__closure0());
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 29, "call"]
     },
     UsageManager__init__closure: {
       "^": "Closure:0;version",
@@ -75348,7 +75580,7 @@ self.showOpenDialog = function(options) {
         return this.log$5(logLevel, message, error, null, null);
       }, "log$3", function(logLevel, message, error, stackTrace) {
         return this.log$5(logLevel, message, error, stackTrace, null);
-      }, "log$4", "call$5", "call$2", "call$3", "call$4", "get$log", 4, 6, 206, 2, 2, 2],
+      }, "log$4", "call$5", "call$2", "call$3", "call$4", "get$log", 4, 6, 206, 3, 3, 3],
       finer$3: function(message, error, stackTrace) {
         return this.log$4(C.Level_FINER_400, message, error, stackTrace);
       },
@@ -77139,7 +77371,7 @@ self.showOpenDialog = function(options) {
       "^": "Closure:0;",
       call$1: [function(arg) {
         return arg == null ? "null" : '"' + H.S(arg) + '"';
-      }, null, null, 2, 0, null, 42, "call"]
+      }, null, null, 2, 0, null, 44, "call"]
     }
   }], ["", "package:path/src/internal_style.dart",, B, {
     "^": "",
@@ -78340,7 +78572,7 @@ self.showOpenDialog = function(options) {
         return Y._FileSpan$(this, start, end == null ? this._decodedChars.length - 1 : end);
       }, function($receiver, start) {
         return this.span$2($receiver, start, null);
-      }, "span$1", "call$2", "call$1", "get$span", 2, 2, 211, 2, 175, 176],
+      }, "span$1", "call$2", "call$1", "get$span", 2, 2, 211, 3, 175, 176],
       location$1: [function(_, offset) {
         return Y.FileLocation$_(this, offset);
       }, "call$1", "get$location", 2, 0, 212, 177],
@@ -78834,7 +79066,7 @@ self.showOpenDialog = function(options) {
         return t1.charCodeAt(0) == 0 ? t1 : t1;
       }, function($receiver, message) {
         return this.message$2$color($receiver, message, null);
-      }, "message$1", "call$2$color", "call$1", "get$message", 2, 3, 213, 2, 10, 178],
+      }, "message$1", "call$2$color", "call$1", "get$message", 2, 3, 213, 3, 10, 178],
       highlight$1$color: [function(_, color) {
         var column, context, lineStart, t1, endIndex, textLine, t2, t3, t4, toColumn, i;
         if (J.$eq$(color, true))
@@ -78885,7 +79117,7 @@ self.showOpenDialog = function(options) {
         return t1.charCodeAt(0) == 0 ? t1 : t1;
       }, function($receiver) {
         return this.highlight$1$color($receiver, null);
-      }, "highlight$0", "call$1$color", "call$0", "get$highlight", 0, 3, 322, 2],
+      }, "highlight$0", "call$1$color", "call$0", "get$highlight", 0, 3, 322, 3],
       $eq: ["super$SourceSpanMixin$$eq", function(_, other) {
         var t1;
         if (other == null)
@@ -79095,7 +79327,7 @@ self.showOpenDialog = function(options) {
         return this.error$4$length$match$position($receiver, message, $length, null, position);
       }, "error$3$length$position", function($receiver, message, $length) {
         return this.error$4$length$match$position($receiver, message, $length, null, null);
-      }, "error$2$length", "call$4$length$match$position", "call$1", "call$3$length$position", "call$2$length", "get$error", 2, 7, 79, 2, 2, 2, 10, 82, 46, 75]
+      }, "error$2$length", "call$4$length$match$position", "call$1", "call$3$length$position", "call$2$length", "get$error", 2, 7, 79, 3, 3, 3, 10, 82, 46, 75]
     }
   }], ["", "package:string_scanner/src/string_scanner.dart",, X, {
     "^": "",
@@ -79196,7 +79428,7 @@ self.showOpenDialog = function(options) {
         return this.error$4$length$match$position($receiver, message, $length, null, position);
       }, "error$3$length$position", function($receiver, message, $length) {
         return this.error$4$length$match$position($receiver, message, $length, null, null);
-      }, "error$2$length", "call$4$length$match$position", "call$1", "call$3$length$position", "call$2$length", "get$error", 2, 7, 79, 2, 2, 2, 10, 82, 46, 75],
+      }, "error$2$length", "call$4$length$match$position", "call$1", "call$3$length$position", "call$2$length", "get$error", 2, 7, 79, 3, 3, 3, 10, 82, 46, 75],
       StringScanner$3$position$sourceUrl: function(string, position, sourceUrl) {
       }
     }
@@ -83697,7 +83929,7 @@ self.showOpenDialog = function(options) {
           P.print(tag + "   " + H.S(t1.get$error(r)));
         if (r.get$stackTrace() != null)
           P.print(tag + "   " + H.S(r.get$stackTrace()));
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     }
   }, 1]];
   setupProgram(dart, 0);
@@ -84029,6 +84261,9 @@ self.showOpenDialog = function(options) {
   };
   J.get$search$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$search(receiver);
+  };
+  J.get$self$x = function(receiver) {
+    return J.getInterceptor$x(receiver).get$self(receiver);
   };
   J.get$span$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$span(receiver);
@@ -85204,7 +85439,7 @@ self.showOpenDialog = function(options) {
   }, "yamlWarningCallback"]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
-  init.metadata = ["_", "e", null, "result", "obj", "str", "m", "value", "error", "editor", "message", "data", "event", "isolate", "code", "val", "s", "device", "stackTrace", "v", "element", "launch", "path", "dir", "node", "name", "bp", "project", "version", "response", "change", "edit", "r", "o", "status", "options", "map", "mode", "target", "projects", "p", "l", "arg", "uris", "frame", "pos", "position", "c", "each", "log", "sdkPath", "exitCode", "b", "config", "line", "invocation", "object", "x", "evt", "a", false, "active", "navInfo", "newName", "attributeName", "i", "context", "tab", "when", "field", "obsIsolate", "vmBreakpoint", "ver", "entry", "st", "length", "description", "location", "results", "connection", "property", "item", "match", "child", "text", "atomBreakpoint", "sdk", "callback", "f", "client", "index", "url", "timeslice", "jsEditor", "stream", "debugger", "nb", "n", "gutter", "suggestions", "xhr", "sender", "busy", "newSdk", "captureThis", "currentProjects", "self", "chromeBreakpoint", "bk", "arguments", "properties", "encodedComponent", "descriptor", "choice", "closure", "option", "numberOfArguments", "attr", "searchTerm", "variable", "vars", "obj2", 0, "vm", "k", "reject", "libraryRef", "stack", "ret", "association", "resolve", "flags", "errorCallback", "grainOffset", "analysisErrors", "analysisFlushResults", "apps", "g", "obj1", "grainDuration", true, "deviceId", "projectDirectory", "startPaused", "route", "enableHotReload", "app", "daemon", "arg1", "arg2", "key", "currentVersion", "contents", "file", "errors", "success", "arg4", "ed", "browser", "pluginVer", "newTitle", "quiet", "runnables", "runnable", "devices", "mouseEvent", "port", "id", "launchable", "arg3", "items", "allPaths", "command", "theStackTrace", "part", "start", "end", "offset", "color", "state", "theError", "json", "didFormat", "info"];
+  init.metadata = ["_", "e", "result", null, "obj", "str", "m", "value", "error", "editor", "message", "data", "event", "isolate", "code", "val", "s", "device", "stackTrace", "v", "element", "launch", "dir", "path", "node", "frame", "name", "bp", "project", "version", "response", "edit", "change", "r", "status", "o", "options", "map", "mode", "target", "p", "l", "projects", "uris", "arg", "pos", "position", "c", "each", "log", "sdkPath", "exitCode", "b", "config", "line", "invocation", "object", "x", "evt", "a", false, "active", "navInfo", "newName", "attributeName", "i", "context", "tab", "when", "field", "obsIsolate", "vmBreakpoint", "ver", "entry", "st", "length", "description", "location", "results", "connection", "property", "item", "match", "child", "text", "atomBreakpoint", "sdk", "callback", "f", "client", "index", "url", "timeslice", "jsEditor", "stream", "debugger", "nb", "n", "gutter", "suggestions", "xhr", "sender", "busy", "newSdk", "captureThis", "currentProjects", "self", "chromeBreakpoint", "bk", "arguments", "properties", "encodedComponent", "descriptor", "choice", "closure", "option", "numberOfArguments", "attr", "searchTerm", "variable", "vars", "obj2", 0, "vm", "k", "reject", "libraryRef", "stack", "ret", "association", "resolve", "flags", "errorCallback", "grainOffset", "analysisErrors", "analysisFlushResults", "apps", "g", "obj1", "grainDuration", true, "deviceId", "projectDirectory", "startPaused", "route", "enableHotReload", "app", "daemon", "arg1", "arg2", "key", "currentVersion", "contents", "file", "errors", "success", "arg4", "ed", "browser", "pluginVer", "newTitle", "quiet", "runnables", "runnable", "devices", "mouseEvent", "port", "id", "launchable", "arg3", "items", "allPaths", "command", "theStackTrace", "part", "start", "end", "offset", "color", "state", "theError", "json", "didFormat", "info"];
   init.types = [{func: 1, args: [,]}, {func: 1}, {func: 1, v: true}, {func: 1, args: [P.String]}, {func: 1, args: [,,]}, {func: 1, ret: P.Future}, {func: 1, v: true, args: [D.AtomEvent]}, {func: 1, v: true, args: [Y.TextEditor]}, {func: 1, args: [Y.TextEditor]}, {func: 1, v: true, args: [Z.DebugIsolate]}, {func: 1, args: [A.AtomBreakpoint]}, {func: 1, v: true, args: [P.String]}, {func: 1, args: [W.MouseEvent]}, {func: 1, v: true, args: [X.Launch]}, {func: 1, args: [D.AtomEvent]}, {func: 1, args: [P.bool]}, {func: 1, v: true, opt: [,]}, {func: 1, args: [T.AppEvent]}, {func: 1, args: [T.Device]}, {func: 1, args: [S.Event1]}, {func: 1, args: [P.int]}, {func: 1, args: [P.JsObject]}, {func: 1, args: [[P.List, P.String]]}, {func: 1, ret: P.bool}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [E.SourceFileEdit]}, {func: 1, v: true, args: [T.Node0]}, {func: 1, v: true, args: [,]}, {func: 1, v: true, args: [P.int, P.int]}, {func: 1, args: [[P.List, L.DartProject]]}, {func: 1, v: true, args: [L.DartProject]}, {func: 1, ret: W.Node}, {func: 1, v: true, args: [T.Device]}, {func: 1, args: [Z.DebugLocation]}, {func: 1, args: [X.ProcessResult]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, ret: P.bool, args: [,]}, {func: 1, v: true, args: [P.String, P.int, P.int, P.String]}, {func: 1, args: [E.AvailableRefactoringsResult]}, {func: 1, args: [Z.DebugConnection]}, {func: 1, v: true, opt: [D.AtomEvent]}, {func: 1, args: [[P.List, X.Suggestion]]}, {func: 1, ret: P.Future, opt: [D.AtomEvent]}, {func: 1, ret: P.JsObject, args: [,]}, {func: 1, args: [L.DartProject]}, {func: 1, args: [E.SourceEdit]}, {func: 1, args: [S.JobStatus]}, {func: 1, args: [M._Change]}, {func: 1, args: [E.SourceChange]}, {func: 1, ret: P.Future, args: [A.AtomBreakpoint]}, {func: 1, args: [A.ExceptionBreakType]}, {func: 1, args: [E.HoverResult]}, {func: 1, args: [O.Breakpoint0]}, {func: 1, ret: P.bool, args: [W.Element0, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [P.Map]}, {func: 1, ret: P.String, args: [P.String]}, {func: 1, args: [Z.DebugValue]}, {func: 1, v: true, args: [S.Event1]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, args: [S.Breakpoint]}, {func: 1, args: [D.ObservatoryIsolate]}, {func: 1, args: [S.BoundField]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [[P.Map, P.String,,]]}, {func: 1, ret: P.double, args: [P.int]}, {func: 1, args: [T.DebugPortAppEvent]}, {func: 1, args: [T.LogAppEvent]}, {func: 1, args: [T.ProgressAppEvent]}, {func: 1, ret: P.String}, {func: 1, args: [[P.List, T.Device]]}, {func: 1, args: [, P.StackTrace]}, {func: 1, v: true, args: [P.Uint8List, P.String, P.int]}, {func: 1, ret: P.String, args: [P.int]}, {func: 1, args: [L.RunnableConfig]}, {func: 1, args: [,], opt: [,]}, {func: 1, args: [Q.LaunchConfiguration]}, {func: 1, v: true, args: [M.MTab]}, {func: 1, args: [W.Event]}, {func: 1, args: [T.Node1]}, {func: 1, v: true, args: [P.String], named: {length: P.int, match: P.Match, position: P.int}}, {func: 1, args: [P.String, P.Function]}, {func: 1, v: true, args: [P.JsFunction]}, {func: 1, args: [E.SearchResult, E.SearchResult]}, {func: 1, v: true, args: [E.TypeHierarchyItem, W.Element0]}, {func: 1, args: [P.int, P.int]}, {func: 1, v: true, args: [[P.List, L.DartProject]]}, {func: 1, v: true, args: [V.Sdk]}, {func: 1, args: [E.SearchResults]}, {func: 1, args: [E.ServerStatus]}, {func: 1, args: [E.ServerError]}, {func: 1, args: [P.String,,]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, ret: P.JsObject, args: [X.Suggestion]}, {func: 1, args: [P.Symbol0,,]}, {func: 1, v: true, opt: [P.Object]}, {func: 1, ret: P.Future, args: [D.AtomEvent]}, {func: 1, ret: P.Index, args: [P.String]}, {func: 1, ret: [P.Future, P.Null], opt: [D.AtomEvent]}, {func: 1, v: true, args: [P.num], opt: [P.num, P.num]}, {func: 1, ret: [P.Future, P.bool], args: [A.DartinoSdk], opt: [P.String]}, {func: 1, v: true, opt: [P.num]}, {func: 1, ret: [P.Future, P.bool]}, {func: 1, ret: P.Stream, args: [P.String], opt: [P.Map]}, {func: 1, args: [D.NotificationButton]}, {func: 1, args: [Y.Gutter]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, opt: [,]}, {func: 1, v: true, args: [P.String, P.int]}, {func: 1, v: true, args: [P.String], opt: [,]}, {func: 1, ret: P.int, args: [P.int, P.int]}, {func: 1, ret: P.int, args: [Z.DebugVariable, Z.DebugVariable]}, {func: 1, ret: P.Uint8List, args: [,,]}, {func: 1, v: true, args: [P.List]}, {func: 1, ret: K.CoreElement, args: [Z.DebugOption]}, {func: 1, args: [Z.DebugIsolate]}, {func: 1, v: true, named: {fullRestart: P.bool}}, {func: 1, ret: L.Disposable, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [Z.DebugFrame, K.CoreElement]}, {func: 1, v: true, args: [Z.DebugFrame]}, {func: 1, v: true, args: [Z.DebugVariable, K.CoreElement]}, {func: 1, v: true, args: [Z.DebugVariable]}, {func: 1, ret: P.bool, args: [Z.DebugVariable]}, {func: 1, args: [, P.String]}, {func: 1, v: true, args: [D.ObservatoryLibrary, K.CoreElement]}, {func: 1, ret: P.int, args: [D.ObservatoryLibrary, D.ObservatoryLibrary]}, {func: 1, ret: P.bool, args: [D.ObservatoryLibrary]}, {func: 1, v: true, args: [Z.DebugIsolate, K.CoreElement]}, {func: 1, v: true, opt: [A.AtomBreakpoint]}, {func: 1, v: true, args: [A.AtomBreakpoint, K.CoreElement]}, {func: 1, args: [F.MessageEvent]}, {func: 1, args: [Y.Range]}, {func: 1, v: true, args: [{func: 1, v: true, args: [,]}]}, {func: 1, args: [S.Version0]}, {func: 1, args: [S.VM]}, {func: 1, args: [A.AtomBreakpoint, S.Breakpoint]}, {func: 1, args: [P.int,,]}, {func: 1, ret: P.Object, opt: [P.Object]}, {func: 1, opt: [D.ObservatoryIsolate]}, {func: 1, args: [S.Isolate]}, {func: 1, args: [S.Stack]}, {func: 1, args: [S.Frame]}, {func: 1, args: [S.BoundVariable]}, {func: 1, args: [S.MapAssociation]}, {func: 1, ret: [P.Future, W.Blob]}, {func: 1, args: [E.Position]}, {func: 1, args: [E.SourceEdit, E.SourceEdit]}, {func: 1, v: true, args: [P.String], opt: [P.bool]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, v: true, args: [E.AnalysisErrors]}, {func: 1, v: true, args: [E.AnalysisFlushResults]}, {func: 1, v: true, args: [[P.List, T.DiscoveredApp]]}, {func: 1, v: true, args: [Y.FlutterSdk], named: {quiet: P.bool}}, {func: 1, args: [T.LogMessage]}, {func: 1, v: true, args: [P.bool]}, {func: 1, ret: [P.Future, P.String]}, {func: 1, ret: [P.Future, T.AppStartedResult], args: [P.String, P.String], named: {enableHotReload: P.bool, mode: P.String, route: P.String, startPaused: P.bool, target: P.String}}, {func: 1, args: [, K.OverlayInfo]}, {func: 1, args: [W.HttpRequest]}, {func: 1, v: true, args: [P.String, P.String]}, {func: 1, v: true, args: [E.AnalysisNavigation]}, {func: 1, v: true, opt: [P.int]}, {func: 1, args: [P.List]}, {func: 1, v: true, args: [T.FlutterDaemon]}, {func: 1, args: [E.AnalysisNavigation]}, {func: 1, args: [E.SearchResult]}, {func: 1, v: true, args: [D.ObservatoryIsolate]}, {func: 1, args: [T.AppStartedResult]}, {func: 1, args: [T.OperationResult]}, {func: 1, args: [F.File]}, {func: 1, v: true, args: [E.AnalysisOutline]}, {func: 1, v: true, opt: [[P.List, E.AnalysisError]]}, {func: 1, v: true, args: [Y.Point0]}, {func: 1, v: true, args: [E.Outline, W.Element0]}, {func: 1, args: [E.FormatResult]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, args: [[P.List, P.bool]]}, {func: 1, args: [P.bool, P.bool]}, {func: 1, args: [V.Sdk]}, {func: 1, opt: [P.bool]}, {func: 1, args: [E.DiagnosticsResult]}, {func: 1, args: [E.ContextData]}, {func: 1, args: [K.TestRunner]}, {func: 1, ret: P.Object}, {func: 1, v: true, args: [,], opt: [,]}, {func: 1, args: [[P.List, L.RunnableConfig]]}, {func: 1, args: [E.HoverInformation]}, {func: 1, ret: [P.List, W.RtcStatsReport]}, {func: 1, v: true, args: [P.int]}, {func: 1, args: [X.TextFragment]}, {func: 1, v: true, opt: [X.Launch]}, {func: 1, args: [X.Launch]}, {func: 1, args: [E.CreateContextResult]}, {func: 1, args: [Q._ProjectConfigurations]}, {func: 1, args: [[P.EventSink, P.String]]}, {func: 1, args: [X.Launchable]}, {func: 1, args: [P.String, [P.List, E.AnalysisError]]}, {func: 1, args: [E.AnalysisError]}, {func: 1, ret: P.Future, args: [P.Object]}, {func: 1, v: true, args: [P.Map]}, {func: 1, v: true, args: [[P.List, P.String]]}, {func: 1, args: [P.StreamSubscription]}, {func: 1, args: [F.Directory]}, {func: 1, args: [P.String, K.StateStorable]}, {func: 1, args: [P.String, P.Map]}, {func: 1, args: [E.RefactoringResult]}, {func: 1, args: [P.int, T.Node0]}, {func: 1, v: true, args: [N.Level,,], opt: [P.Object, P.StackTrace, P.Zone]}, {func: 1, args: [W.Element0]}, {func: 1, v: true, args: [U.ListItem]}, {func: 1, ret: P.bool, args: [P.RegExp]}, {func: 1, ret: P.bool, args: [P.int]}, {func: 1, ret: Y.FileSpan, args: [P.int], opt: [P.int]}, {func: 1, ret: Y.FileLocation, args: [P.int]}, {func: 1, ret: P.String, args: [P.String], named: {color: null}}, {func: 1, ret: P.int, args: [,]}, {func: 1, args: [E.FindElementReferencesResult]}, {func: 1, args: [N.LogRecord]}, {func: 1, ret: P.num}, {func: 1, v: true, args: [, W.Element0]}, {func: 1, v: true, args: [P.Object]}, {func: 1, ret: P.int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.bool, args: [P.Object, P.Object]}, {func: 1, ret: P.int, args: [P.Object]}, {func: 1, ret: P.int, args: [P.String]}, {func: 1, ret: P.double, args: [P.String]}, {func: 1, ret: P.int, args: [, P.int]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, ret: E.ServerError, args: [P.Map]}, {func: 1, ret: E.ServerStatus, args: [P.Map]}, {func: 1, ret: E.VersionResult, args: [P.Map]}, {func: 1, ret: E.AnalysisErrors, args: [P.Map]}, {func: 1, ret: E.AnalysisFlushResults, args: [P.Map]}, {func: 1, ret: E.AnalysisNavigation, args: [P.Map]}, {func: 1, ret: E.AnalysisOutline, args: [P.Map]}, {func: 1, ret: E.HoverResult, args: [P.Map]}, {func: 1, ret: E.CompletionResults, args: [P.Map]}, {func: 1, ret: E.SuggestionsResult, args: [P.Map]}, {func: 1, ret: E.SearchResults, args: [P.Map]}, {func: 1, ret: E.FindElementReferencesResult, args: [P.Map]}, {func: 1, ret: E.FindTopLevelDeclarationsResult, args: [P.Map]}, {func: 1, ret: E.TypeHierarchyResult, args: [P.Map]}, {func: 1, ret: E.FormatResult, args: [P.Map]}, {func: 1, ret: E.AssistsResult, args: [P.Map]}, {func: 1, ret: E.AvailableRefactoringsResult, args: [P.Map]}, {func: 1, ret: E.FixesResult, args: [P.Map]}, {func: 1, ret: E.RefactoringResult, args: [P.Map]}, {func: 1, ret: E.SortMembersResult, args: [P.Map]}, {func: 1, ret: E.OrganizeDirectivesResult, args: [P.Map]}, {func: 1, ret: E.CreateContextResult, args: [P.Map]}, {func: 1, ret: E.MapUriResult, args: [P.Map]}, {func: 1, ret: E.DiagnosticsResult, args: [P.Map]}, {func: 1, ret: T.Node1, args: [P.String]}, {func: 1, v: true, args: [F.Directory]}, {func: 1, ret: P.bool, args: [Y.TextEditor]}, {func: 1, ret: T.DebugPortAppEvent, args: [P.Map]}, {func: 1, ret: T.LogAppEvent, args: [P.Map]}, {func: 1, ret: T.ProgressAppEvent, args: [P.Map]}, {func: 1, ret: T.StopAppEvent, args: [P.Map]}, {func: 1, ret: T.Device, args: [P.Map]}, {func: 1, ret: T.LogMessage, args: [P.Map]}, {func: 1, ret: P.int, args: [E.AnalysisError, E.AnalysisError]}, {func: 1, v: true, args: [N.LogRecord]}, {func: 1, ret: S.ExtensionData, args: [P.Map]}, {func: 1, ret: S.BoundField, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.BoundVariable, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Breakpoint, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ClassRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Class, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ClassList, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.CodeRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Code, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ContextRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Context0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ContextElement, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ErrorRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Error0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Event1, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.FieldRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Field, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Flag, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.FlagList, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Frame, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.FuncRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Func, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.InstanceRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Instance, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.IsolateRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Isolate, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.LibraryRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Library, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.LibraryDependency, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.MapAssociation, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Message, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.NullRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Null0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ObjRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Obj, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ReloadReport, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Response, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Sentinel, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ScriptRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Script, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceLocation0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceReport, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceReportCoverage, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.SourceReportRange, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Stack, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Success, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.TimelineEvent, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.TypeArgumentsRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.TypeArguments, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.UnresolvedSourceLocation, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.Version0, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.VMRef, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.VM, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.CpuProfile, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.CodeRegion, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ProfileFunction, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.AllocationProfile, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.ClassHeapStats, args: [[P.Map, P.String,,]]}, {func: 1, ret: S.HeapSpace, args: [[P.Map, P.String,,]]}, {func: 1, ret: P.bool, args: [,,]}, {func: 1, ret: P.String, named: {color: null}}];
   function convertToFastObject(properties) {
     function MyClass() {

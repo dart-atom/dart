@@ -431,30 +431,6 @@ class CallFrame extends ProxyHolder {
       ? null : new RemoteObject(obj['returnValue'], RemoteObjectType.returnValue);
 }
 
-/// Call frames for assertions or error messages.
-class StackTrace extends ProxyHolder {
-
-  StackTrace(JsObject obj) : super(obj);
-
-  String toString([String indent = '  ']) =>
-      "STACK: $description\n"
-      "${indent}fr: ${callFrames.map((f) => f.toString(indent + '  '))}\n"
-      "${indent}parent: $parent";
-
-  /// String label of this stack trace. For async traces this may be a name of
-  /// the function that initiated the async call.
-  String get description => obj['description'];
-
-  /// JavaScript function name.
-  List<CallFrame> get callFrames =>
-      obj['callFrames']?.map((obj) => new CallFrame(obj))?.toList() ?? [];
-
-  /// Asynchronous JavaScript stack trace that preceded this stack, if
-  /// available.
-  StackTrace get parent => obj['description'] == null
-      ? null : new StackTrace(obj['description']);
-}
-
 /// Detailed information about exception (or error) that was thrown during
 /// script compilation or execution.
 class ExceptionDetails extends ProxyHolder {
@@ -682,6 +658,48 @@ class Location extends ProxyHolder {
     'lineNumber': lineNumber,
     'columnNumber': columnNumber
   };
+}
+
+/// Call frames for assertions or error messages.
+class StackTrace extends ProxyHolder {
+
+  StackTrace(JsObject obj) : super(obj);
+
+  String toString([String indent = '  ']) =>
+      "STACK: $description\n"
+      "${indent}fr: ${callFrames.map((f) => f.toString(indent + '  '))}\n"
+      "${indent}parent: $parent";
+
+  /// String label of this stack trace. For async traces this may be a name of
+  /// the function that initiated the async call.
+  String get description => obj['description'];
+
+  /// JavaScript function name.
+  List<RuntimeCallFrame> get callFrames =>
+      obj['callFrames']?.map((obj) => new RuntimeCallFrame(obj))?.toList() ?? [];
+
+  /// Asynchronous JavaScript stack trace that preceded this stack, if
+  /// available.
+  StackTrace get parent => obj['parent'] == null
+      ? null : new StackTrace(obj['parent']);
+}
+
+class RuntimeCallFrame extends Location {
+
+  RuntimeCallFrame(JsObject obj) : super(obj);
+
+  String toString([String indent = '  ']) =>
+      "RTFRAME: $functionName\n"
+      "${indent}u: $url\n"
+      "${indent}loc: ${super.toString()}";
+
+  /// JavaScript function name.
+  String get functionName => obj['functionName'];
+
+  /// JavaScript script name or url.
+  String get url => obj['url'];
+
+  Location get location => this;
 }
 
 class Property extends ProxyHolder {
