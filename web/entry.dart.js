@@ -31337,7 +31337,7 @@ self.showOpenDialog = function(options) {
       } else
         $name = null;
       if ($name == null || interceptor === C.Interceptor_methods || !!J.getInterceptor(object).$isUnknownJavaScriptObject) {
-        dispatchName = C.JS_CONST_u2C(object);
+        dispatchName = C.JS_CONST_TSE(object);
         if (dispatchName === "Object") {
           objectConstructor = object.constructor;
           if (typeof objectConstructor == "function") {
@@ -32447,8 +32447,8 @@ self.showOpenDialog = function(options) {
     },
     initHooks: function() {
       var hooks, transformers, i, transformer, getTag, getUnknownTag, prototypeForTag;
-      hooks = C.JS_CONST_bDt();
-      hooks = H.applyHooksTransformer(C.JS_CONST_0, H.applyHooksTransformer(C.JS_CONST_rr7, H.applyHooksTransformer(C.JS_CONST_Fs4, H.applyHooksTransformer(C.JS_CONST_Fs4, H.applyHooksTransformer(C.JS_CONST_gkc, H.applyHooksTransformer(C.JS_CONST_4hp, H.applyHooksTransformer(C.JS_CONST_QJm(C.JS_CONST_u2C), hooks)))))));
+      hooks = C.JS_CONST_4IJ();
+      hooks = H.applyHooksTransformer(C.JS_CONST_EKH, H.applyHooksTransformer(C.JS_CONST_EyN, H.applyHooksTransformer(C.JS_CONST_AgZ, H.applyHooksTransformer(C.JS_CONST_AgZ, H.applyHooksTransformer(C.JS_CONST_c0o, H.applyHooksTransformer(C.JS_CONST_LlX, H.applyHooksTransformer(C.JS_CONST_nuk(C.JS_CONST_TSE), hooks)))))));
       if (typeof dartNativeDispatchHooksTransformer != "undefined") {
         transformers = dartNativeDispatchHooksTransformer;
         if (typeof transformers == "function")
@@ -56196,12 +56196,12 @@ self.showOpenDialog = function(options) {
               case 3:
                 // returning from await.
                 pluginVersion = $async$result;
-                t1 = "Please report the following to https://github.com/dart-lang/sdk/issues/new:\n\nException from analysis server (running from Atom)\n\n### what happened\n\n<please describe what you were doing when this exception occurred>\n\n### version information\n\n- Dart SDK " + H.S(sdkVersion) + "\n- Atom ";
+                t1 = "Please report the following to https://github.com/dart-lang/sdk/issues/new:\r\n\r\nException from analysis server (running from Atom)\r\n\r\n### what happened\r\n\r\n<please describe what you were doing when this exception occurred>\r\n\r\n### version information\r\n\r\n- Dart SDK " + H.S(sdkVersion) + "\r\n- Atom ";
                 t2 = $.$get$atom();
-                t1 = t1 + H.S(t2.invoke$1("getVersion")) + "\n- dartlang " + H.S(pluginVersion) + "\n\n### the exception\n\n" + H.S(J.get$message$x(error)) + " ";
-                t1 = t1 + (error.get$isFatal() === true ? " (fatal)" : "") + "\n\n```\n";
+                t1 = t1 + H.S(t2.invoke$1("getVersion")) + "\r\n- dartlang " + H.S(pluginVersion) + "\r\n\r\n### the exception\r\n\r\n" + H.S(J.get$message$x(error)) + " ";
+                t1 = t1 + (error.get$isFatal() === true ? " (fatal)" : "") + "\r\n\r\n```\r\n";
                 t3 = error.get$stackTrace();
-                text = t1 + H.S(t3 == null ? t3 : J.trim$0$s(t3)) + "\n```\n";
+                text = t1 + H.S(t3 == null ? t3 : J.trim$0$s(t3)) + "\r\n```\r\n";
                 t1 = $.$get$fs();
                 filePath = t1.join$2(0, t1._os.callMethod$1("tmpdir"), "bug.md");
                 t1.invoke$3("writeFileSync", filePath, text);
@@ -57048,6 +57048,11 @@ self.showOpenDialog = function(options) {
           t1._asyncComplete$1(null);
           return t1;
         }
+        if ($.$get$isWindows() === true) {
+          t1 = new P._Future(0, $.Zone__current, null, [null]);
+          t1._asyncComplete$1("windows");
+          return t1;
+        }
         runner = X.ProcessRunner_ProcessRunner$underShell(t2, ["--version"], null, null);
         runner.execStreaming$0();
         buf = new P.StringBuffer("");
@@ -57371,7 +57376,7 @@ self.showOpenDialog = function(options) {
         this._box_0.info.invoke$1("dismiss");
         try {
           $.$get$dartino().toString;
-          J.getFile$1$x(this.dir, "dartino.yaml").writeSync$1("# This is an empty configuration file. Currently this is only used as a\n# placeholder to enable the Dartino Atom package.");
+          J.getFile$1$x(this.dir, "dartino.yaml").writeSync$1("# This is an empty configuration file. Currently this is only used as a\r\n# placeholder to enable the Dartino Atom package.");
         } catch (exception) {
           e = H.unwrapException(exception);
           s = H.getTraceFromException(exception);
@@ -66168,7 +66173,7 @@ self.showOpenDialog = function(options) {
         return this.connectToApp$4$pipeStdio(project, configuration, observatoryPort, true);
       },
       getDefaultConfigText$0: function() {
-        return "# The starting route for the app.\nroute:\n# Additional args for the flutter run command.\nargs:\n";
+        return "# The starting route for the app.\r\nroute:\r\n# Additional args for the flutter run command.\r\nargs:\r\n";
       },
       _killLaunch$1: function(launch) {
         var $async$goto = 0, $async$completer = P.Completer_Completer$sync(), $async$returnValue;
@@ -69569,7 +69574,7 @@ self.showOpenDialog = function(options) {
                 groupName = t3.basename$1(pathFragment);
                 t3 = J.getInterceptor$asx(groupName);
                 groupName = t3.substring$2(groupName, 0, J.$sub$n(t3.get$length(groupName), 5));
-                new F.File(F._create("File", testPath, null)).invoke$2("writeSync", "import 'package:" + H.S(packageName) + "/" + pathFragment + "';\nimport 'package:test/test.dart';\n\nmain() => defineTests();\n\ndefineTests() {\n  group('" + groupName + "', () {\n    test('todo', () {\n      // TODO: Implement test.\n\n    });\n  });\n}\n");
+                new F.File(F._create("File", testPath, null)).invoke$2("writeSync", "import 'package:" + H.S(packageName) + "/" + pathFragment + "';\r\nimport 'package:test/test.dart';\r\n\r\nmain() => defineTests();\r\n\r\ndefineTests() {\r\n  group('" + groupName + "', () {\r\n    test('todo', () {\r\n      // TODO: Implement test.\r\n\r\n    });\r\n  });\r\n}\r\n");
                 $async$goto = 3;
                 return P._asyncAwait(P.Future_Future$delayed(C.Duration_0, null, null), $async$_createTest$1);
               case 3:
@@ -71658,7 +71663,7 @@ self.showOpenDialog = function(options) {
         return t1;
       },
       getDefaultConfigText$0: function() {
-        return "# Additional args for the application.\nargs:\n# The working directory to use for the launch.\ncwd:\n# Enable or disable checked mode.\nchecked: true\n# Enable or disable debugging.\ndebug: true\n";
+        return "# Additional args for the application.\r\nargs:\r\n# The working directory to use for the launch.\r\ncwd:\r\n# Enable or disable checked mode.\r\nchecked: true\r\n# Enable or disable debugging.\r\ndebug: true\r\n";
       }
     },
     CliLaunchType_performLaunch_closure: {
@@ -71806,7 +71811,7 @@ self.showOpenDialog = function(options) {
           if (C.JSString_methods.startsWith$1(primaryResource, t1.separator))
             primaryResource = C.JSString_methods.substring$1(primaryResource, 1);
         }
-        $content = C.JSString_methods.trim$0("# pub serve launch configuration for " + H.S(primaryResource) + ".\ntype: serve\npath: pubspec.yaml\n\nserve:\n  " + H.stringReplaceAllUnchecked('# Additional args for pub serve\nargs:\n  # Mode to run transformers in. (defaults to "debug")\n  #mode: debug\n  # Use all default source directories.\n  #all: true\n  # The JavaScript compiler to use to build the app. [dart2js, dartdevc, none]\n  #web-compiler: dartdevc\n  # Defines an environment constant for dart2js.\n  #define: variable=value[,variable=value]\n  # The hostname to listen on. (defaults to "localhost")\n  #hostname: localhost\n  # The base port to listen on. (defaults to "8080")\n  #port: 8080\n  # Force the use of a polling filesystem watcher.\n  #force-poll: true\n  #no-force-poll: true\n', "\n", "\n  ")) + "\n";
+        $content = C.JSString_methods.trim$0("# pub serve launch configuration for " + H.S(primaryResource) + ".\ntype: serve\npath: pubspec.yaml\n\nserve:\n  " + H.stringReplaceAllUnchecked('# Additional args for pub serve\r\nargs:\r\n  # Mode to run transformers in. (defaults to "debug")\r\n  #mode: debug\r\n  # Use all default source directories.\r\n  #all: true\r\n  # The JavaScript compiler to use to build the app. [dart2js, dartdevc, none]\r\n  #web-compiler: dartdevc\r\n  # Defines an environment constant for dart2js.\r\n  #define: variable=value[,variable=value]\r\n  # The hostname to listen on. (defaults to "localhost")\r\n  #hostname: localhost\r\n  # The base port to listen on. (defaults to "8080")\r\n  #port: 8080\r\n  # Force the use of a polling filesystem watcher.\r\n  #force-poll: true\r\n  #no-force-poll: true\r\n', "\n", "\n  ")) + "\n";
         config = this._getCreateProjectConfig$1(projectPath).createConfig$3$forceCreate("_pub_serve.yaml", $content, false);
         t1 = $.$get$atom()._notifications;
         t1.invoke$3("addInfo", "Launching pub serve for `" + H.S(primaryResource) + "`.", t1._options$5$buttons$description$detail$dismissable$icon(null, "Launched " + H.S(config._getRelativeConfigPath$0()) + ".", null, null, null));
@@ -72080,6 +72085,8 @@ self.showOpenDialog = function(options) {
         var cwd, args, paths, t1, cwd0, launchName, execArgs, runner, t2, root, t3, launch;
         cwd = configuration.get$cwd();
         args = configuration.get$typeArgs().$index(0, "args");
+        if (args == null)
+          args = P.LinkedHashMap__makeEmpty();
         if (cwd == null) {
           paths = P.List_List$from($.$get$atom()._project.invoke$2("relativizePath", configuration.get$primaryResource()), true, null);
           t1 = paths.length;
@@ -72123,7 +72130,7 @@ self.showOpenDialog = function(options) {
         return t1;
       },
       getDefaultConfigText$0: function() {
-        return '# Additional args for pub serve\nargs:\n  # Mode to run transformers in. (defaults to "debug")\n  #mode: debug\n  # Use all default source directories.\n  #all: true\n  # The JavaScript compiler to use to build the app. [dart2js, dartdevc, none]\n  #web-compiler: dartdevc\n  # Defines an environment constant for dart2js.\n  #define: variable=value[,variable=value]\n  # The hostname to listen on. (defaults to "localhost")\n  #hostname: localhost\n  # The base port to listen on. (defaults to "8080")\n  #port: 8080\n  # Force the use of a polling filesystem watcher.\n  #force-poll: true\n  #no-force-poll: true\n';
+        return '# Additional args for pub serve\r\nargs:\r\n  # Mode to run transformers in. (defaults to "debug")\r\n  #mode: debug\r\n  # Use all default source directories.\r\n  #all: true\r\n  # The JavaScript compiler to use to build the app. [dart2js, dartdevc, none]\r\n  #web-compiler: dartdevc\r\n  # Defines an environment constant for dart2js.\r\n  #define: variable=value[,variable=value]\r\n  # The hostname to listen on. (defaults to "localhost")\r\n  #hostname: localhost\r\n  # The base port to listen on. (defaults to "8080")\r\n  #port: 8080\r\n  # Force the use of a polling filesystem watcher.\r\n  #force-poll: true\r\n  #no-force-poll: true\r\n';
       }
     },
     ServeLaunchType_performLaunch_closure: {
@@ -72230,7 +72237,7 @@ self.showOpenDialog = function(options) {
         return t1;
       },
       getDefaultConfigText$0: function() {
-        return "# Additional args for the application.\nargs:\n";
+        return "# Additional args for the application.\r\nargs:\r\n";
       }
     },
     ShellLaunchType_performLaunch_closure: {
@@ -72283,6 +72290,8 @@ self.showOpenDialog = function(options) {
           return t1;
         }
         yamlArgs = configuration.get$typeArgs().$index(0, "args");
+        if (yamlArgs == null)
+          yamlArgs = P.LinkedHashMap__makeEmpty();
         t1 = J.getInterceptor$asx(yamlArgs);
         debugging = J.$eq$(t1.$index(yamlArgs, "debugging"), true);
         if (J.$eq$(t1.$index(yamlArgs, "local_pub_serve"), true)) {
@@ -72303,11 +72312,14 @@ self.showOpenDialog = function(options) {
         args = browser.execArgsFromYaml$2$exceptKeys(yamlArgs, C.List_0YN);
         htmlFile = configuration.get$shortResourceName();
         t2 = J.getInterceptor$s(htmlFile);
-        if (t2.startsWith$1(htmlFile, "web/"))
+        if (t2.startsWith$1(htmlFile, "web/") || t2.startsWith$1(htmlFile, "web\\"))
           htmlFile = t2.substring$1(htmlFile, 4);
         if (!debugging)
           args.push(H.S(root) + "/" + H.S(htmlFile));
-        runner = X.ProcessRunner_ProcessRunner$underShell(browser.path, args, null, null);
+        t2 = browser.path;
+        P.print(t2);
+        P.print(args);
+        runner = X.ProcessRunner_ProcessRunner$underShell(t2, args, null, null);
         t2 = configuration.get$shortResourceName();
         t3 = configuration.get$shortResourceName();
         t4 = $.Launch__id + 1;
@@ -72329,7 +72341,7 @@ self.showOpenDialog = function(options) {
         return t1;
       },
       getDefaultConfigText$0: function() {
-        return "# Additional args for browser.\nargs:\n  # options\n  debugging: true\n  local_pub_serve: true\n  # if local_pub_serve is false, specify pub serve endpoint\n  pub_serve_host: http://localhost:8084\n\n  # chrome\n  remote-debugging-port: 9222\n  user-data-dir: " + H.S($.$get$fs()._os.callMethod$1("tmpdir")) + "/dartlang-dbg-host\n  no-default-browser-check: true\n  no-first-run: true\n";
+        return "# Additional args for browser.\r\nargs:\r\n  # options\r\n  debugging: true\r\n  local_pub_serve: true\r\n  # if local_pub_serve is false, specify pub serve endpoint\r\n  pub_serve_host: http://localhost:8084\r\n\r\n  # chrome\r\n  remote-debugging-port: 9222\r\n  user-data-dir: " + H.S($.$get$fs()._os.callMethod$1("tmpdir")) + "/dartlang-dbg-host\r\n  no-default-browser-check: true\r\n  no-first-run: true\r\n";
       }
     },
     WebLaunchType_performLaunch_closure: {
@@ -84746,126 +84758,14 @@ self.showOpenDialog = function(options) {
   C.HtmlEscape_uMl = new P.HtmlEscape(C.HtmlEscapeMode_2oY);
   C.C_DefaultEquality = new U.DefaultEquality([null]);
   C.IterableEquality_DefaultEquality = new U.IterableEquality(C.C_DefaultEquality, [null]);
-  C.JS_CONST_0 = function(hooks) {
-  if (typeof dartExperimentalFixupGetTag != "function") return hooks;
-  hooks.getTag = dartExperimentalFixupGetTag(hooks.getTag);
-};
-  C.JS_CONST_4hp = function(hooks) {
-  var userAgent = typeof navigator == "object" ? navigator.userAgent : "";
-  if (userAgent.indexOf("Firefox") == -1) return hooks;
-  var getTag = hooks.getTag;
-  var quickMap = {
-    "BeforeUnloadEvent": "Event",
-    "DataTransfer": "Clipboard",
-    "GeoGeolocation": "Geolocation",
-    "Location": "!Location",
-    "WorkerMessageEvent": "MessageEvent",
-    "XMLDocument": "!Document"};
-  function getTagFirefox(o) {
-    var tag = getTag(o);
-    return quickMap[tag] || tag;
-  }
-  hooks.getTag = getTagFirefox;
-};
-  C.JS_CONST_Fs4 = function(hooks) { return hooks; }
-;
-  C.JS_CONST_QJm = function(getTagFallback) {
-  return function(hooks) {
-    if (typeof navigator != "object") return hooks;
-    var ua = navigator.userAgent;
-    if (ua.indexOf("DumpRenderTree") >= 0) return hooks;
-    if (ua.indexOf("Chrome") >= 0) {
-      function confirm(p) {
-        return typeof window == "object" && window[p] && window[p].name == p;
-      }
-      if (confirm("Window") && confirm("HTMLElement")) return hooks;
-    }
-    hooks.getTag = getTagFallback;
-  };
-};
-  C.JS_CONST_bDt = function() {
-  var toStringFunction = Object.prototype.toString;
-  function getTag(o) {
-    var s = toStringFunction.call(o);
-    return s.substring(8, s.length - 1);
-  }
-  function getUnknownTag(object, tag) {
-    if (/^HTML[A-Z].*Element$/.test(tag)) {
-      var name = toStringFunction.call(object);
-      if (name == "[object Object]") return null;
-      return "HTMLElement";
-    }
-  }
-  function getUnknownTagGenericBrowser(object, tag) {
-    if (self.HTMLElement && object instanceof HTMLElement) return "HTMLElement";
-    return getUnknownTag(object, tag);
-  }
-  function prototypeForTag(tag) {
-    if (typeof window == "undefined") return null;
-    if (typeof window[tag] == "undefined") return null;
-    var constructor = window[tag];
-    if (typeof constructor != "function") return null;
-    return constructor.prototype;
-  }
-  function discriminator(tag) { return null; }
-  var isBrowser = typeof navigator == "object";
-  return {
-    getTag: getTag,
-    getUnknownTag: isBrowser ? getUnknownTagGenericBrowser : getUnknownTag,
-    prototypeForTag: prototypeForTag,
-    discriminator: discriminator };
-};
-  C.JS_CONST_gkc = function(hooks) {
-  var userAgent = typeof navigator == "object" ? navigator.userAgent : "";
-  if (userAgent.indexOf("Trident/") == -1) return hooks;
-  var getTag = hooks.getTag;
-  var quickMap = {
-    "BeforeUnloadEvent": "Event",
-    "DataTransfer": "Clipboard",
-    "HTMLDDElement": "HTMLElement",
-    "HTMLDTElement": "HTMLElement",
-    "HTMLPhraseElement": "HTMLElement",
-    "Position": "Geoposition"
-  };
-  function getTagIE(o) {
-    var tag = getTag(o);
-    var newTag = quickMap[tag];
-    if (newTag) return newTag;
-    if (tag == "Object") {
-      if (window.DataView && (o instanceof window.DataView)) return "DataView";
-    }
-    return tag;
-  }
-  function prototypeForTagIE(tag) {
-    var constructor = window[tag];
-    if (constructor == null) return null;
-    return constructor.prototype;
-  }
-  hooks.getTag = getTagIE;
-  hooks.prototypeForTag = prototypeForTagIE;
-};
-  C.JS_CONST_rr7 = function(hooks) {
-  var getTag = hooks.getTag;
-  var prototypeForTag = hooks.prototypeForTag;
-  function getTagFixed(o) {
-    var tag = getTag(o);
-    if (tag == "Document") {
-      if (!!o.xmlVersion) return "!Document";
-      return "!HTMLDocument";
-    }
-    return tag;
-  }
-  function prototypeForTagFixed(tag) {
-    if (tag == "Document") return null;
-    return prototypeForTag(tag);
-  }
-  hooks.getTag = getTagFixed;
-  hooks.prototypeForTag = prototypeForTagFixed;
-};
-  C.JS_CONST_u2C = function getTagFallback(o) {
-  var s = Object.prototype.toString.call(o);
-  return s.substring(8, s.length - 1);
-};
+  C.JS_CONST_4IJ = function() {  var toStringFunction = Object.prototype.toString;  function getTag(o) {    var s = toStringFunction.call(o);    return s.substring(8, s.length - 1);  }  function getUnknownTag(object, tag) {    if (/^HTML[A-Z].*Element$/.test(tag)) {      var name = toStringFunction.call(object);      if (name == "[object Object]") return null;      return "HTMLElement";    }  }  function getUnknownTagGenericBrowser(object, tag) {    if (self.HTMLElement && object instanceof HTMLElement) return "HTMLElement";    return getUnknownTag(object, tag);  }  function prototypeForTag(tag) {    if (typeof window == "undefined") return null;    if (typeof window[tag] == "undefined") return null;    var constructor = window[tag];    if (typeof constructor != "function") return null;    return constructor.prototype;  }  function discriminator(tag) { return null; }  var isBrowser = typeof navigator == "object";  return {    getTag: getTag,    getUnknownTag: isBrowser ? getUnknownTagGenericBrowser : getUnknownTag,    prototypeForTag: prototypeForTag,    discriminator: discriminator };};
+  C.JS_CONST_AgZ = function(hooks) { return hooks; };
+  C.JS_CONST_EKH = function(hooks) {  if (typeof dartExperimentalFixupGetTag != "function") return hooks;  hooks.getTag = dartExperimentalFixupGetTag(hooks.getTag);};
+  C.JS_CONST_EyN = function(hooks) {  var getTag = hooks.getTag;  var prototypeForTag = hooks.prototypeForTag;  function getTagFixed(o) {    var tag = getTag(o);    if (tag == "Document") {      // "Document", so we check for the xmlVersion property, which is the empty      if (!!o.xmlVersion) return "!Document";      return "!HTMLDocument";    }    return tag;  }  function prototypeForTagFixed(tag) {    if (tag == "Document") return null;    return prototypeForTag(tag);  }  hooks.getTag = getTagFixed;  hooks.prototypeForTag = prototypeForTagFixed;};
+  C.JS_CONST_LlX = function(hooks) {  var userAgent = typeof navigator == "object" ? navigator.userAgent : "";  if (userAgent.indexOf("Firefox") == -1) return hooks;  var getTag = hooks.getTag;  var quickMap = {    "BeforeUnloadEvent": "Event",    "DataTransfer": "Clipboard",    "GeoGeolocation": "Geolocation",    "Location": "!Location",    "WorkerMessageEvent": "MessageEvent",    "XMLDocument": "!Document"};  function getTagFirefox(o) {    var tag = getTag(o);    return quickMap[tag] || tag;  }  hooks.getTag = getTagFirefox;};
+  C.JS_CONST_TSE = function getTagFallback(o) {  var s = Object.prototype.toString.call(o);  return s.substring(8, s.length - 1);};
+  C.JS_CONST_c0o = function(hooks) {  var userAgent = typeof navigator == "object" ? navigator.userAgent : "";  if (userAgent.indexOf("Trident/") == -1) return hooks;  var getTag = hooks.getTag;  var quickMap = {    "BeforeUnloadEvent": "Event",    "DataTransfer": "Clipboard",    "HTMLDDElement": "HTMLElement",    "HTMLDTElement": "HTMLElement",    "HTMLPhraseElement": "HTMLElement",    "Position": "Geoposition"  };  function getTagIE(o) {    var tag = getTag(o);    var newTag = quickMap[tag];    if (newTag) return newTag;    if (tag == "Object") {      if (window.DataView && (o instanceof window.DataView)) return "DataView";    }    return tag;  }  function prototypeForTagIE(tag) {    var constructor = window[tag];    if (constructor == null) return null;    return constructor.prototype;  }  hooks.getTag = getTagIE;  hooks.prototypeForTag = prototypeForTagIE;};
+  C.JS_CONST_nuk = function(getTagFallback) {  return function(hooks) {    if (typeof navigator != "object") return hooks;    var ua = navigator.userAgent;    if (ua.indexOf("DumpRenderTree") >= 0) return hooks;    if (ua.indexOf("Chrome") >= 0) {      function confirm(p) {        return typeof window == "object" && window[p] && window[p].name == p;      }      if (confirm("Window") && confirm("HTMLElement")) return hooks;    }    hooks.getTag = getTagFallback;  };};
   C.JsonCodec_null_null = new P.JsonCodec(null, null);
   C.JsonDecoder_null = new P.JsonDecoder(null);
   C.JsonEncoder_null_null = new P.JsonEncoder(null, null);

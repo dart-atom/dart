@@ -70,6 +70,9 @@ class Browser {
     if (!fs.existsSync(path) || !fs.statSync(path).isFile()) {
       return new Future.value(null);
     }
+    if (isWindows) {
+      return new Future.value('windows');
+    }
     ProcessRunner runner =
         new ProcessRunner.underShell(path, args: ['--version']);
     runner.execStreaming();

@@ -16,7 +16,11 @@ import '../debug/chrome_debugger.dart';
 
 final Logger _logger = new Logger('atom.launch.web');
 
-const launchOptionKeys = const ['debugging', 'local_pub_serve', 'pub_serve_host'];
+const launchOptionKeys = const [
+  'debugging',
+  'local_pub_serve',
+  'pub_serve_host'
+];
 
 class WebLaunchType extends LaunchType {
   static void register(LaunchManager manager) =>
@@ -26,24 +30,26 @@ class WebLaunchType extends LaunchType {
 
   bool canLaunch(String path, LaunchData data) => path.endsWith('.html');
 
-  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
+  Future<Launch> performLaunch(
+      LaunchManager manager, LaunchConfiguration configuration) {
     Browser browser = deps[BrowserManager].browser;
     if (browser == null) {
       atom.notifications.addWarning('No browser configured.');
       return new Future.value();
     }
 
-    Map yamlArgs = configuration.typeArgs['args'];
+    Map yamlArgs = configuration.typeArgs['args'] ?? {};
     bool debugging = yamlArgs['debugging'] == true;
     bool pub_serve_check = yamlArgs['local_pub_serve'] == true;
 
     String root;
     if (pub_serve_check) {
       // Find pub serve for 'me'.
-      ServeLaunch pubServe = manager.launches.firstWhere((l) =>
-          l is ServeLaunch &&
-          l.isRunning &&
-          l.launchConfiguration.projectPath == configuration.projectPath,
+      ServeLaunch pubServe = manager.launches.firstWhere(
+          (l) =>
+              l is ServeLaunch &&
+              l.isRunning &&
+              l.launchConfiguration.projectPath == configuration.projectPath,
           orElse: () => null);
 
       if (pubServe == null) {
@@ -55,9 +61,10 @@ class WebLaunchType extends LaunchType {
       root = yamlArgs['pub_serve_host'] ?? 'http://localhost:8084';
     }
 
-    List<String> args = browser.execArgsFromYaml(yamlArgs, exceptKeys: launchOptionKeys);
+    List<String> args =
+        browser.execArgsFromYaml(yamlArgs, exceptKeys: launchOptionKeys);
     String htmlFile = configuration.shortResourceName;
-    if (htmlFile.startsWith('web/')) {
+    if (htmlFile.startsWith('web/') || htmlFile.startsWith('web\\')) {
       htmlFile = htmlFile.substring(4);
     }
 
@@ -65,13 +72,16 @@ class WebLaunchType extends LaunchType {
       args.add('$root/$htmlFile');
     }
 
-    ProcessRunner runner = new ProcessRunner.underShell(browser.path, args: args);
+    print(browser.path);
+    print(args);
 
-    Launch launch = new Launch(manager, this, configuration,
-      configuration.shortResourceName,
-      killHandler: () => runner.kill(),
-      title: configuration.shortResourceName
-    );
+    ProcessRunner runner =
+        new ProcessRunner.underShell(browser.path, args: args);
+
+    Launch launch = new Launch(
+        manager, this, configuration, configuration.shortResourceName,
+        killHandler: () => runner.kill(),
+        title: configuration.shortResourceName);
     manager.addLaunch(launch);
 
     runner.execStreaming();
@@ -81,7 +91,8 @@ class WebLaunchType extends LaunchType {
 
     if (debugging) {
       String debugHost = 'localhost:${yamlArgs['remote-debugging-port']}';
-      ChromeDebugger.connect(launch, configuration, debugHost, root, htmlFile)
+      ChromeDebugger
+          .connect(launch, configuration, debugHost, root, htmlFile)
           .catchError((e) {
         launch.pipeStdio('Unable to connect to chrome.\n', error: true);
       });

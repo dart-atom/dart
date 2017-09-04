@@ -25,15 +25,17 @@ class ServeLaunchType extends LaunchType {
 
   bool get supportsChecked => false;
 
-  Future<Launch> performLaunch(LaunchManager manager, LaunchConfiguration configuration) {
+  Future<Launch> performLaunch(
+      LaunchManager manager, LaunchConfiguration configuration) {
     String cwd = configuration.cwd;
-    var args = configuration.typeArgs['args'];
+    var args = configuration.typeArgs['args'] ?? {};
 
     String launchName = 'pub serve';
 
     // Determine the best cwd.
     if (cwd == null) {
-      List<String> paths = atom.project.relativizePath(configuration.primaryResource);
+      List<String> paths =
+          atom.project.relativizePath(configuration.primaryResource);
       if (paths[0] != null) {
         cwd = paths[0];
         launchName = paths[1];
@@ -52,15 +54,14 @@ class ServeLaunchType extends LaunchType {
         }
       });
     }
-    ProcessRunner runner = sdkManager.sdk.execBin('pub', execArgs, cwd: cwd,
-        startProcess: false);
+    ProcessRunner runner =
+        sdkManager.sdk.execBin('pub', execArgs, cwd: cwd, startProcess: false);
 
-    String root = 'http://${args['hostname'] ?? 'localhost'}:${args['port'] ?? 'port'}';
-    Launch launch = new ServeLaunch(manager, this, configuration, launchName, root,
-      killHandler: () => runner.kill(),
-      cwd: cwd,
-      title: launchName
-    );
+    String root =
+        'http://${args['hostname'] ?? 'localhost'}:${args['port'] ?? 'port'}';
+    Launch launch = new ServeLaunch(
+        manager, this, configuration, launchName, root,
+        killHandler: () => runner.kill(), cwd: cwd, title: launchName);
     manager.addLaunch(launch);
 
     runner.execStreaming();
@@ -99,9 +100,9 @@ class ServeLaunch extends Launch {
   String get root => _root;
 
   ServeLaunch(LaunchManager manager, LaunchType launchType,
-    LaunchConfiguration launchConfiguration, String name, String root,
-    { Function killHandler, String cwd, DartProject project, String title }
-  ) : _root = root,
-      super(manager, launchType, launchConfiguration, name,
+      LaunchConfiguration launchConfiguration, String name, String root,
+      {Function killHandler, String cwd, DartProject project, String title})
+      : _root = root,
+        super(manager, launchType, launchConfiguration, name,
             killHandler: killHandler, cwd: cwd, title: title);
 }
