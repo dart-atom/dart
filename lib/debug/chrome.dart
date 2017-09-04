@@ -708,12 +708,22 @@ class Property extends ProxyHolder {
 
 /// Object internal property descriptor. This property isn't normally visible
 /// in JavaScript code.
-class InternalPropertyDescriptor extends ProxyHolder {
+class InternalPropertyDescriptor extends PropertyDescriptor {
 
   InternalPropertyDescriptor(JsObject obj) : super(obj);
 
+  bool get isInternal => true;
+
   String toString([String indent = '  ']) =>
       "IPD: $name ${value?.toString(indent + '  ')}";
+}
+
+/// Object property descriptor.
+class PropertyDescriptor extends ProxyHolder {
+
+  PropertyDescriptor(JsObject obj) : super(obj);
+
+  bool get isInternal => false;
 
   /// Conventional property name or symbol description.
   String get name => obj['name'];
@@ -721,12 +731,6 @@ class InternalPropertyDescriptor extends ProxyHolder {
   /// The value associated with the property.
   RemoteObject get value => obj['value'] == null
       ? null : new RemoteObject(obj['value'], RemoteObjectType.value);
-}
-
-/// Object property descriptor.
-class PropertyDescriptor extends InternalPropertyDescriptor {
-
-  PropertyDescriptor(JsObject obj) : super(obj);
 
   String toString([String indent = '  ']) =>
       "PD: $name ${value?.toString(indent + '  ')}\n"
