@@ -22,6 +22,8 @@ import 'model.dart';
 
 final Logger _logger = new Logger('atom.chrome');
 
+final RegExp extractSymbolKey = new RegExp(r'Symbol\((.+)\)');
+
 const _verbose = false;
 
 // TODO figure out how to set breakpoints them without needing a restart
@@ -33,6 +35,8 @@ const _verbose = false;
 //   but not serve launch
 // TODO console + find in console
 // TODO add continueToLocation
+// TODO make scopes, exceptions and super more identifiable (UI)
+// TODO fix hint being truncated at the right because italic.
 
 const String _debuggerDdcParsing = 'dartlang.debuggerDdcParsing';
 
@@ -434,7 +438,6 @@ class ChromeDebugFrame extends DebugFrame {
   Future<List<DebugVariable>> resolveLocals() {
     if (!connection.isPaused) return new Future.value([]);
     _locals = [];
-    // TODO make scopes and exceptions more identifiable (UI)
     addException();
     addThis();
     addScopes();
@@ -524,18 +527,37 @@ abstract class ChromeDebugBaseVariable extends DebugVariable {
   }
 
   void addProperty(Map<String, DebugVariable> children, PropertyDescriptor property) {
+    String name = property.name;
+    if (connection.ddcParsing.checked) {
+      // Filter out symbols not defined on this object.
+      if (property.symbol != null && !property.isOwn) {
+        return;
+      }
+      // Rename __proto__ to super just to keep same 'lingo'.
+      if (property.name == '__proto__') {
+        name = 'super';
+      }
+      // Rename Symbol(a.b.c) to c, and let dedup do it's job below.
+      if (extractSymbolKey.hasMatch(name)) {
+        name = extractSymbolKey.firstMatch(name).group(1).split('.').last;
+      }
+    }
+    // Filter out symbols functions, not a getter.
+    if (property.symbol != null && property.value?.type == 'function') {
+      return;
+    }
     // Dedup by priority (isOwn for now, seems to cover known cases)
     bool add = false;
-    if (children.containsKey(property.name)) {
+    if (children.containsKey(name)) {
       // Dedup by priority (isOwn for now, seems to cover known cases)
-      ChromeDebugVariable variable = children[property.name];
+      ChromeDebugVariable variable = children[name];
       add = !variable.property.isOwn && property.isOwn;
     } else {
       add = true;
     }
     if (add) {
-      children[property.name] = new ChromeDebugVariable(connection, frame,
-          this, property);
+      children[name] = new ChromeDebugVariable(connection, frame,
+          this, property, rename: name);
     }
   }
 }
@@ -615,15 +637,17 @@ class ChromeScopes extends ChromeDebugBaseVariable {
 
 class ChromeDebugVariable extends ChromeDebugBaseVariable {
   final PropertyDescriptor property;
+  final String rename;
 
   bool get isSymbol => property.symbol != null;
 
   RemoteObject get object => property.value ?? property.getFunction;
 
-  String get name => property.name;
+  String get name => rename ?? property.name;
 
   ChromeDebugVariable(ChromeConnection connection, ChromeDebugFrame frame,
-      ChromeDebugBaseVariable parent, this.property) : super(connection, frame, parent);
+      ChromeDebugBaseVariable parent, this.property, {this.rename})
+      : super(connection, frame, parent);
 
   String toString() => '${jsObjectToDart(property.obj)}';
 }
@@ -686,30 +710,49 @@ class ChromeDebugValue extends DebugValue {
 
     children = {};
     return variable.getChildren(true, children).then((_) {
-      // TODO sort __ at the end
-      List<DebugVariable> variables = new List.from(children.values)
-          ..sort((a, b) => a.name.compareTo(b.name));
-      return variables;
+      return new List.from(children.values)..sort(variableSorter);
     });
   }
 
-  String get path {
+  // Sort __ / super to the end
+  int variableSorter(DebugVariable a, DebugVariable b) {
+    if (a.name == b.name) return 0;
+    if (a.name.startsWith('_')) {
+      if (b.name.startsWith('_')) return a.name.compareTo(b.name);
+      return 1;
+    } else if (b.name.startsWith('_')) {
+      return -1;
+    }
+    if (a.name == 'super') return 1;
+    if (b.name == 'super') return -1;
+    return a.name.compareTo(b.name);
+  }
+
+  Iterable<String> get pathParts {
     List<String> tokens = [];
     for (var chain = variable; chain != null; chain = chain.parent) {
-      if (chain.pathPart == null || chain.pathPart == '__proto__') continue;
+      if (chain.pathPart == null ||
+          chain.pathPart == '__proto__' || chain.pathPart == 'super') {
+        continue;
+      }
       tokens.add(chain.pathPart);
     }
-    return tokens.reversed.join('.');
+    return tokens.reversed;
+  }
+
+  String get path => pathParts.join('.');
+
+  String get symbolEval {
+    String lookup = '';
+    Match m = extractSymbolKey.firstMatch(variable.name);
+    if (m != null) lookup = '[${m.group(1)}]';
+    List<String> root = pathParts;
+    return '${root.take(root.length - 1).join('.')}$lookup';
   }
 
   Future<DebugValue> invokeToString() {
     if (value?.meta == RemoteObjectType.getter) {
-      String expression;
-      if (variable.isSymbol) {
-        expression = '(${value.description})()';
-      } else {
-        expression = path;
-      }
+      String expression = variable.isSymbol ? symbolEval: path;
       return connection.chrome.debugger
           .evaluateOnCallFrame(frame.id, expression).then((result) {
         RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
