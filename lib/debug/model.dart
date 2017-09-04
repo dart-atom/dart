@@ -11,6 +11,8 @@ abstract class DebugConnection {
 
   DebugConnection(this.launch);
 
+  List<DebugOption> get options => [];
+
   bool get isAlive;
 
   Stream<DebugIsolate> get onPaused;
@@ -28,6 +30,13 @@ abstract class DebugConnection {
   autoStepOver();
 
   void dispose();
+}
+
+abstract class DebugOption {
+  String get label;
+
+  bool get checked;
+  set checked(bool state);
 }
 
 // TODO: Add an IsolateState class.

@@ -157,7 +157,7 @@ class MList<T extends MItem> extends CoreElement {
 
   void selectItem(T item) {
     if (selectedItem.value != null) {
-      CoreElement oldSelected = _itemKeyToElement[selectedItem.value.key].right;
+      CoreElement oldSelected = _itemKeyToElement[selectedItem.value.key]?.right;
       if (oldSelected != null) {
         oldSelected.toggleClass('material-list-selected', false);
       }

@@ -383,7 +383,7 @@ class EvaluateOn extends ProxyHolder {
 
   /// Object wrapper for the evaluation result.
   RemoteObject get result => obj['result'] == null
-      ? null : new RemoteObject(obj['result']);
+      ? null : new RemoteObject(obj['result'], RemoteObjectType.result);
 
   /// Exception details.
   ExceptionDetails get exceptionDetails => obj['exceptionDetails'] == null
@@ -424,35 +424,11 @@ class CallFrame extends ProxyHolder {
 
   /// this object for this call frame.
   RemoteObject get self => obj['this'] == null
-      ? null : new RemoteObject(obj['this']);
+      ? null : new RemoteObject(obj['this'], RemoteObjectType.self);
 
   /// The value being returned, if the function is at return point.
   RemoteObject get returnValue => obj['returnValue'] == null
-      ? null : new RemoteObject(obj['returnValue']);
-}
-
-/// Call frames for assertions or error messages.
-class StackTrace extends ProxyHolder {
-
-  StackTrace(JsObject obj) : super(obj);
-
-  String toString([String indent = '  ']) =>
-      "STACK: $description\n"
-      "${indent}fr: ${callFrames.map((f) => f.toString(indent + '  '))}\n"
-      "${indent}parent: $parent";
-
-  /// String label of this stack trace. For async traces this may be a name of
-  /// the function that initiated the async call.
-  String get description => obj['description'];
-
-  /// JavaScript function name.
-  List<CallFrame> get callFrames =>
-      obj['callFrames']?.map((obj) => new CallFrame(obj))?.toList() ?? [];
-
-  /// Asynchronous JavaScript stack trace that preceded this stack, if
-  /// available.
-  StackTrace get parent => obj['description'] == null
-      ? null : new StackTrace(obj['description']);
+      ? null : new RemoteObject(obj['returnValue'], RemoteObjectType.returnValue);
 }
 
 /// Detailed information about exception (or error) that was thrown during
@@ -494,18 +470,30 @@ class ExceptionDetails extends ProxyHolder {
 
   /// Exception object if available.
   RemoteObject get exception => obj['exception'] == null
-      ? null : new RemoteObject(obj['exception']);
+      ? null : new RemoteObject(obj['exception'], RemoteObjectType.exception);
 
   /// Identifier of the context where exception happened.
   int get executionContextId => obj['executionContextId'];
 }
 
+enum RemoteObjectType {
+  self,
+  exception,
+  scope,
+  setter,
+  getter,
+  value,
+  returnValue,
+  result,
+  symbol
+}
+
 /// Mirror object referencing original JavaScript object.
 class RemoteObject extends ProxyHolder {
 
-  bool get isException => subtype == 'error';
+  final RemoteObjectType meta;
 
-  RemoteObject(JsObject obj) : super(obj);
+  RemoteObject(JsObject obj, this.meta) : super(obj);
 
   String toString([String indent = '  ']) =>
       "RO: $objectId: $className $type.$subtype $value\n"
@@ -588,7 +576,7 @@ class Scope extends ProxyHolder {
   /// the actual object; for the rest of the scopes, it is artificial transient
   /// object enumerating scope variables as its properties.
   RemoteObject get object => obj['object'] == null
-      ? null : new RemoteObject(obj['object']);
+      ? null : new RemoteObject(obj['object'], RemoteObjectType.scope);
 
   String get name => obj['name'];
 
@@ -672,6 +660,48 @@ class Location extends ProxyHolder {
   };
 }
 
+/// Call frames for assertions or error messages.
+class StackTrace extends ProxyHolder {
+
+  StackTrace(JsObject obj) : super(obj);
+
+  String toString([String indent = '  ']) =>
+      "STACK: $description\n"
+      "${indent}fr: ${callFrames.map((f) => f.toString(indent + '  '))}\n"
+      "${indent}parent: $parent";
+
+  /// String label of this stack trace. For async traces this may be a name of
+  /// the function that initiated the async call.
+  String get description => obj['description'];
+
+  /// JavaScript function name.
+  List<RuntimeCallFrame> get callFrames =>
+      obj['callFrames']?.map((obj) => new RuntimeCallFrame(obj))?.toList() ?? [];
+
+  /// Asynchronous JavaScript stack trace that preceded this stack, if
+  /// available.
+  StackTrace get parent => obj['parent'] == null
+      ? null : new StackTrace(obj['parent']);
+}
+
+class RuntimeCallFrame extends Location {
+
+  RuntimeCallFrame(JsObject obj) : super(obj);
+
+  String toString([String indent = '  ']) =>
+      "RTFRAME: $functionName\n"
+      "${indent}u: $url\n"
+      "${indent}loc: ${super.toString()}";
+
+  /// JavaScript function name.
+  String get functionName => obj['functionName'];
+
+  /// JavaScript script name or url.
+  String get url => obj['url'];
+
+  Location get location => this;
+}
+
 class Property extends ProxyHolder {
 
   Property(JsObject obj) : super(obj);
@@ -696,25 +726,29 @@ class Property extends ProxyHolder {
 
 /// Object internal property descriptor. This property isn't normally visible
 /// in JavaScript code.
-class InternalPropertyDescriptor extends ProxyHolder {
+class InternalPropertyDescriptor extends PropertyDescriptor {
 
   InternalPropertyDescriptor(JsObject obj) : super(obj);
 
+  bool get isInternal => true;
+
   String toString([String indent = '  ']) =>
       "IPD: $name ${value?.toString(indent + '  ')}";
+}
+
+/// Object property descriptor.
+class PropertyDescriptor extends ProxyHolder {
+
+  PropertyDescriptor(JsObject obj) : super(obj);
+
+  bool get isInternal => false;
 
   /// Conventional property name or symbol description.
   String get name => obj['name'];
 
   /// The value associated with the property.
   RemoteObject get value => obj['value'] == null
-      ? null : new RemoteObject(obj['value']);
-}
-
-/// Object property descriptor.
-class PropertyDescriptor extends InternalPropertyDescriptor {
-
-  PropertyDescriptor(JsObject obj) : super(obj);
+      ? null : new RemoteObject(obj['value'], RemoteObjectType.value);
 
   String toString([String indent = '  ']) =>
       "PD: $name ${value?.toString(indent + '  ')}\n"
@@ -730,12 +764,12 @@ class PropertyDescriptor extends InternalPropertyDescriptor {
   /// A function which serves as a getter for the property, or undefined if
   /// there is no getter (accessor descriptors only).
   RemoteObject get getFunction => obj['get'] == null
-      ? null : new RemoteObject(obj['get']);
+      ? null : new RemoteObject(obj['get'], RemoteObjectType.getter);
 
   /// A function which serves as a setter for the property, or undefined if
   /// there is no setter (accessor descriptors only).
   RemoteObject get setFunction => obj['set'] == null
-      ? null : new RemoteObject(obj['set']);
+      ? null : new RemoteObject(obj['set'], RemoteObjectType.setter);
 
   /// True if the type of this property descriptor may be changed and if the
   /// property may be deleted from the corresponding object.
@@ -753,7 +787,7 @@ class PropertyDescriptor extends InternalPropertyDescriptor {
 
   /// Property symbol object, if the property is of the symbol type.
   RemoteObject get symbol => obj['symbol'] == null
-      ? null : new RemoteObject(obj['symbol']);
+      ? null : new RemoteObject(obj['symbol'], RemoteObjectType.symbol);
 }
 
 class Breakpoint {
