@@ -47,35 +47,35 @@ class ChromeDebugger {
     String debugHost, String root, String htmlFile) {
     var cdp = new ChromeDebuggingProtocol();
     int maxTries = 6;
-    return Future.doWhile(() {
-      if (maxTries-- == 0) {
-        atom.notifications.addWarning("Coudn't connect to debugger at '$debugHost'.");
-        return false;
-      }
-      return cdp.connect(host: debugHost).then((client) {
-        return Future.wait([
-            client.debugger.enable(),
-            client.page.enable(),
-            client.runtime.enable()
-          ]).then((_) {
-          String fullPath =
-              '${configuration.projectPath}/${configuration.shortResourceName}';
-          UriResolver uriResolver = new UriResolver(root,
-              translator: new WebUriTranslator(fs.fs.dirname(fullPath),
-                  prefix: '${Uri.parse(root)}/'),
-              selfRefName: launch.project?.getSelfRefName());
+    return Future.doWhile(() async {
+      try {
+        if (maxTries-- == 0) {
+          atom.notifications.addWarning("Coudn't connect to debugger at '$debugHost'.");
+          return false;
+        }
+        var client = await cdp.connect(host: debugHost);
+        await Future.wait([
+          client.debugger.enable(),
+          client.page.enable(),
+          client.runtime.enable()
+        ]);
 
-          ChromeConnection connection = new ChromeConnection(launch, client, uriResolver);
-          return connection.navigate('$root/$htmlFile').then((s) {
-            launch.addDebugConnection(connection);
-            launch.pipeStdio('Launched ($s)\n');
-            return false;
-          });
-        });
-      }).catchError((e) {
+        String fullPath =
+            '${configuration.projectPath}/${configuration.shortResourceName}';
+        UriResolver uriResolver = new UriResolver(root,
+            translator: new WebUriTranslator(fs.fs.dirname(fullPath),
+                prefix: '${Uri.parse(root)}/'),
+            selfRefName: launch.project?.getSelfRefName());
+
+        ChromeConnection connection = new ChromeConnection(launch, client, uriResolver);
+        var launchId = await connection.navigate('$root/$htmlFile');
+        launch.addDebugConnection(connection);
+        launch.pipeStdio('Launched ($launchId)\n');
+        return false;
+      } catch(e) {
         launch.pipeStdio('Launched failed, retrying\n');
         return new Future.delayed(new Duration(seconds: 1)).then((_) => true);
-      });
+      }
     });
   }
 }
@@ -119,31 +119,33 @@ class ChromeConnection extends DebugConnection {
       if (script.url == null || script.url.isEmpty) return;
       launch.pipeStdio('Script Parsed: ${script.url}\n');
       scripts[script.scriptId] = script;
-      // TODO: should we use script.sourceMapURL (which isn't a full url, but just
-      // the filename with .map tagged onto it)
       if (script.sourceMapURL != null && script.sourceMapURL.isNotEmpty) {
         // start load source map
-        loadinMaps.putIfAbsent(script.scriptId, () {
+        loadinMaps.putIfAbsent(script.scriptId, () async {
           String mapFile = makeAbsolute(script.url, script.sourceMapURL);
           launch.pipeStdio('  fetching $mapFile\n');
-          return HttpRequest.getString(mapFile)
-            .catchError((e) {
-              launch.pipeStdio('  error fetching $mapFile\n');
-            })
-            .then((text) => text != null ? parse(text) : null)
-            .catchError((e) {
-              launch.pipeStdio('  error parsing $mapFile\n');
-            })
-            .then((map) {
-              if (map == null) return null;
-              launch.pipeStdio('  parsing $mapFile\n');
-              // create reverse map into separate for each .dart targets.
-              createMaps(script.scriptId, script.url, map);
-              return map;
-            })
-            .catchError((e) {
-              launch.pipeStdio('  error creating reverse maps for ${script.url}.map\n');
-            });
+          String text;
+          try {
+            text = await HttpRequest.getString(mapFile);
+          } catch(e) {
+            launch.pipeStdio('  error fetching $mapFile\n');
+          }
+          if (text == null) return null;
+          Mapping map;
+          try {
+            map = parse(text);
+          } catch(e) {
+            launch.pipeStdio('  error parsing $mapFile\n');
+          }
+          if (map == null) return null;
+          launch.pipeStdio('  parsing $mapFile\n');
+          try {
+            // create reverse map into separate for each .dart targets.
+            createMaps(script.scriptId, script.url, map);
+            return map;
+          } catch(e) {
+            launch.pipeStdio('  error creating reverse maps for ${script.url}.map\n');
+          }
         });
       }
     });
@@ -200,19 +202,20 @@ class ChromeConnection extends DebugConnection {
     ExceptionBreakType.none: 'none',
   };
 
-  Future<String> navigate(String url) {
-    return chrome.debugger.setPauseOnExceptions(
-      exceptionTypes[breakpointManager.breakOnExceptionType]).catchError((e) {
+  Future<String> navigate(String url) async {
+    try {
+      await chrome.debugger.setPauseOnExceptions(
+          exceptionTypes[breakpointManager.breakOnExceptionType]);
+    } catch(e) {
       launch.pipeStdio('Error setting exception mode ($e).\n');
-    }).then((_) {
-      return chrome.debugger.setAsyncCallStackDepth(16);
-    }).catchError((e) {
+    }
+    try {
+      await chrome.debugger.setAsyncCallStackDepth(16);
+    } catch(e) {
       launch.pipeStdio('Error setting async call depth ($e).\n');
-    }).then((_) {
-      return installBreakpoints();
-    }).then((_) {
-      return chrome.page.navigate(url);
-    });
+    }
+    await installBreakpoints();
+    return chrome.page.navigate(url);
   }
 
   // TODO handle .. and . ?
@@ -265,36 +268,39 @@ class ChromeConnection extends DebugConnection {
     }
   }
 
-  Future addBreakpoint(AtomBreakpoint atomBreakpoint) {
-    return uriResolver.resolvePathToUris(atomBreakpoint.path).then((List<String> uris) {
+  Future addBreakpoint(AtomBreakpoint atomBreakpoint) async {
+    try {
+      List<String> uris = await uriResolver.resolvePathToUris(atomBreakpoint.path);
       var breakpoint = new ChromeDebugBreakpoint(atomBreakpoint, uris);
       breakpoints[atomBreakpoint] = breakpoint;
       _breakpointsUpdated.add(breakpoint);
-    }).catchError((e) {
+    } catch(e) {
       launch.pipeStdio(
           '  Error resolving uri: ${atomBreakpoint.path}\n'
           '    ${e}\n');
-    });
+    }
   }
 
   Future resolveBreakpoint(ChromeDebugBreakpoint breakpoint) {
-    return Future.forEach(breakpoint.uris, (String uri) {
+    return Future.forEach(breakpoint.uris, (String uri) async {
       Mapping m = reversedMaps[uri];
-      if (m == null) return new Future.value();
+      if (m == null) return;
 
       SourceMapSpan span = SingleMappingProxy.spanFor(m,
           breakpoint.atomBreakpoint.line - 1,
           breakpoint.atomBreakpoint.column ?? 0);
-      if (span == null) return new Future.value();
+      if (span == null) return;
 
-      return setBreakpointByUrl(span.sourceUrl.toString(), span.start.line, span.start.column)
-          .then((Breakpoint chromeBreakpoint) {
-            if (chromeBreakpoint == null) return;
-            breakpoint.resolved = true;
-            breakpoint.chromeBreakpoints.add(chromeBreakpoint);
-          }).catchError((e) {
-            launch.pipeStdio('Fail to set breakpoint: ${breakpoint.atomBreakpoint}\n');
-          });
+      try {
+        Breakpoint chromeBreakpoint =
+            await setBreakpointByUrl(span.sourceUrl.toString(), span.start.line, span.start.column);
+        if (chromeBreakpoint != null) {
+          breakpoint.resolved = true;
+          breakpoint.chromeBreakpoints.add(chromeBreakpoint);
+        }
+      } catch (e) {
+        launch.pipeStdio('Fail to set breakpoint: ${breakpoint.atomBreakpoint}\n');
+      }
     });
   }
 
@@ -320,12 +326,10 @@ class ChromeConnection extends DebugConnection {
     });
   }
 
-  Future setBreakpointByUrl(String url, int line, int column) {
-    return chrome.debugger.setBreakpointByUrl(line, url: url, columnNumber: column)
-        .then((bk) {
-      launch.pipeStdio('Breakpoint added: $bk\n');
-      return bk;
-    });
+  Future<Breakpoint> setBreakpointByUrl(String url, int line, int column) async {
+    var bk = await chrome.debugger.setBreakpointByUrl(line, url: url, columnNumber: column);
+    launch.pipeStdio('Breakpoint added: $bk\n');
+    return bk;
   }
 
   void dispose() {
@@ -493,15 +497,14 @@ class ChromeDebugFrame extends DebugFrame {
 
   ChromeDebugFrame(this.connection, this.exception, this.frame) : super();
 
-  Future<List<DebugVariable>> resolveLocals() {
-    if (!connection.isPaused) return new Future.value([]);
+  Future<List<DebugVariable>> resolveLocals() async {
+    if (!connection.isPaused) return [];
     _locals = [];
     addException();
-    return addThis().then((_) {
-      addScopes();
-      addReturnValue();
-      return _locals;
-    });
+    await addThis();
+    addScopes();
+    addReturnValue();
+    return _locals;
   }
 
   void addException() {
@@ -510,22 +513,21 @@ class ChromeDebugFrame extends DebugFrame {
     }
   }
 
-  Future addThis() {
+  Future addThis() async {
     if (frame?.self?.type == 'undefined') {
-      return connection.chrome.debugger.evaluateOnCallFrame(id, 'this').then((result) {
+      try {
+        var result = await connection.chrome.debugger.evaluateOnCallFrame(id, 'this');
         RemoteObject object = result?.result;
         if (object != null) {
           object = new RemoteObject(object.obj, RemoteObjectType.self);
           _locals.add(new ChromeThis(connection, this, object));
         }
-      }).catchError((e) {
+      } catch(e) {
         _logger.info('problem getting missing this: $e');
-      }).then((_) {
-        return _locals;
-      });
+      }
+      return _locals;
     } else {
       _locals.add(new ChromeThis(connection, this, frame.self));
-      return new Future.value();
     }
   }
 
@@ -801,13 +803,11 @@ class ChromeDebugValue extends DebugValue {
   // Warning: value can be null.
   ChromeDebugValue(this.connection, this.variable, this.value);
 
-  Future<List<DebugVariable>> getChildren() {
-    if (!connection.isPaused) return new Future.value([]);
-
+  Future<List<DebugVariable>> getChildren() async {
+    if (!connection.isPaused) return [];
     children = {};
-    return variable.getChildren(true, children).then((_) {
-      return new List.from(children.values)..sort(variableSorter);
-    });
+    await variable.getChildren(true, children);
+    return new List.from(children.values)..sort(variableSorter);
   }
 
   // Sort __ / super to the end
@@ -846,16 +846,14 @@ class ChromeDebugValue extends DebugValue {
     return '${root.take(root.length - 1).join('.')}$lookup';
   }
 
-  Future<DebugValue> invokeToString() {
+  Future<DebugValue> invokeToString() async {
     if (value?.meta == RemoteObjectType.getter) {
       String expression = variable.isSymbol ? symbolEval: path;
-      return connection.chrome.debugger
-          .evaluateOnCallFrame(frame.id, expression).then((result) {
-        RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
-        return object != null ? new ChromeDebugValue(connection, variable, object) : this;
-      });
+      var result = await connection.chrome.debugger.evaluateOnCallFrame(frame.id, expression);
+      RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
+      return object != null ? new ChromeDebugValue(connection, variable, object) : this;
     }
-    return new Future.value(this);
+    return this;
   }
 
   String toString() => value?.toString(' ');
@@ -890,30 +888,28 @@ class ChromeDebugLocation extends DebugLocation {
     if (_span != null) _resolvePath();
   }
 
-  Future<DebugLocation> resolve() {
+  Future<DebugLocation> resolve() async {
     // TOOD catch error and don't try again
     if (_span == null && connection.loadinMaps[location.scriptId] != null) {
-      return connection.loadinMaps[location.scriptId].then((map) {
-        _span = map?.spanFor(location.lineNumber, location.columnNumber);
-        if (_span == null) return new Future.value(this);
-        return _resolvePath().then((_) => this);
-      });
+      var map = await connection.loadinMaps[location.scriptId];
+      _span = map?.spanFor(location.lineNumber, location.columnNumber);
+      if (_span != null) await _resolvePath();
     }
-    return new Future.value(this);
+    return this;
   }
 
-  Future _resolvePath() {
+  Future _resolvePath() async {
     Uri sourceUrl = _span?.start?.sourceUrl;
     if (sourceUrl != null) {
-      return connection.uriResolver.resolveUriToPath('$sourceUrl')
-          .then((path) {
+      try {
+        var path = await connection.uriResolver.resolveUriToPath('$sourceUrl');
         _resolvedPath = path;
         resolved = true;
-      }).catchError((e) {
+      } catch(e) {
         _logger.warning('Failed to resolve: $sourceUrl');
-      });
+      }
     }
-    return new Future.value(this);
+    return this;
   }
 }
 
