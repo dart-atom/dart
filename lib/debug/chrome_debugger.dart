@@ -97,7 +97,7 @@ class ChromeConnection extends DebugConnection {
   UriResolver uriResolver;
 
   Map<String, ScriptParsed> scripts = {};
-  Map<String, Future<Mapping>> loadinMaps = {};
+  Map<String, Future<Mapping>> loadingMaps = {};
   Map<String, Mapping> maps = {};
   Map<String, Mapping> reversedMaps = {};
 
@@ -121,7 +121,7 @@ class ChromeConnection extends DebugConnection {
       scripts[script.scriptId] = script;
       if (script.sourceMapURL != null && script.sourceMapURL.isNotEmpty) {
         // start load source map
-        loadinMaps.putIfAbsent(script.scriptId, () async {
+        loadingMaps.putIfAbsent(script.scriptId, () async {
           String mapFile = makeAbsolute(script.url, script.sourceMapURL);
           launch.pipeStdio('  fetching $mapFile\n');
           String text;
@@ -141,8 +141,7 @@ class ChromeConnection extends DebugConnection {
           launch.pipeStdio('  parsing $mapFile\n');
           try {
             // create reverse map into separate for each .dart targets.
-            createMaps(script.scriptId, script.url, map);
-            return map;
+            return createMaps(script.scriptId, script.url, map);
           } catch(e) {
             launch.pipeStdio('  error creating reverse maps for ${script.url}.map\n');
           }
@@ -230,7 +229,7 @@ class ChromeConnection extends DebugConnection {
   }
 
   /// Create forward and reverse maps from the given source map.
-  void createMaps(String scriptId, String sourceUrl, Mapping map) {
+  Mapping createMaps(String scriptId, String sourceUrl, Mapping map) {
     if (map is SingleMapping) {
       // TODO: rewrite for efficiency, creating forward and reverse mappings
       // as we read original map.
@@ -257,7 +256,8 @@ class ChromeConnection extends DebugConnection {
         }
       }
       // forward map
-      maps[scriptId] = new SingleMapping.fromEntries(forwardEntries, sourceUrl);
+      Mapping forwardMap = new SingleMapping.fromEntries(forwardEntries, sourceUrl);
+      maps[scriptId] = forwardMap;
       // backward maps
       entries.forEach((k, v) {
         k = makeAbsolute(sourceUrl, k);
@@ -265,7 +265,10 @@ class ChromeConnection extends DebugConnection {
         reversedMaps[k] = new SingleMapping.fromEntries(v, k);
         _dartMapUpdated.add(k);
       });
+      return forwardMap;
     }
+    // Better than nothing?
+    return map;
   }
 
   Future addBreakpoint(AtomBreakpoint atomBreakpoint) async {
@@ -885,13 +888,12 @@ class ChromeDebugLocation extends DebugLocation {
   ChromeDebugLocation(this.connection, this.location) {
     var map = connection.maps[location.scriptId];
     _span = map?.spanFor(location.lineNumber, location.columnNumber);
-    if (_span != null) _resolvePath();
   }
 
   Future<DebugLocation> resolve() async {
     // TOOD catch error and don't try again
-    if (_span == null && connection.loadinMaps[location.scriptId] != null) {
-      var map = await connection.loadinMaps[location.scriptId];
+    if (!resolved && connection.loadingMaps[location.scriptId] != null) {
+      var map = await connection.loadingMaps[location.scriptId];
       _span = map?.spanFor(location.lineNumber, location.columnNumber);
       if (_span != null) await _resolvePath();
     }
@@ -902,11 +904,10 @@ class ChromeDebugLocation extends DebugLocation {
     Uri sourceUrl = _span?.start?.sourceUrl;
     if (sourceUrl != null) {
       try {
-        var path = await connection.uriResolver.resolveUriToPath('$sourceUrl');
-        _resolvedPath = path;
+        _resolvedPath = await connection.uriResolver.resolveUriToPath('$sourceUrl');
         resolved = true;
       } catch(e) {
-        _logger.warning('Failed to resolve: $sourceUrl');
+        _logger.warning('Failed to resolve: $sourceUrl -> $e');
       }
     }
     return this;

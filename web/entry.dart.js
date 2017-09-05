@@ -15918,7 +15918,7 @@ self.showOpenDialog = function(options) {
     $desc = $collectedClasses$.ChromeDebugger_connect__closure[1];
     ChromeDebugger_connect__closure.prototype = $desc;
     ChromeDebugger_connect__closure.$__fields__ = [];
-    function ChromeConnection(completer, _chrome_debugger$_isolate, _chrome_debugger$_isolatePaused, _chrome_debugger$_isolateResumed, _dartMapUpdated, _breakpointsUpdated, subs, chrome, uriResolver, scripts, loadinMaps, maps, reversedMaps, breakpoints, ddcParsing, isPaused, exceptionTypes, launch, metadata, isolates) {
+    function ChromeConnection(completer, _chrome_debugger$_isolate, _chrome_debugger$_isolatePaused, _chrome_debugger$_isolateResumed, _dartMapUpdated, _breakpointsUpdated, subs, chrome, uriResolver, scripts, loadingMaps, maps, reversedMaps, breakpoints, ddcParsing, isPaused, exceptionTypes, launch, metadata, isolates) {
       this.completer = completer;
       this._chrome_debugger$_isolate = _chrome_debugger$_isolate;
       this._chrome_debugger$_isolatePaused = _chrome_debugger$_isolatePaused;
@@ -15929,7 +15929,7 @@ self.showOpenDialog = function(options) {
       this.chrome = chrome;
       this.uriResolver = uriResolver;
       this.scripts = scripts;
-      this.loadinMaps = loadinMaps;
+      this.loadingMaps = loadingMaps;
       this.maps = maps;
       this.reversedMaps = reversedMaps;
       this.breakpoints = breakpoints;
@@ -15946,7 +15946,7 @@ self.showOpenDialog = function(options) {
       ChromeConnection.name = "ChromeConnection";
     $desc = $collectedClasses$.ChromeConnection[1];
     ChromeConnection.prototype = $desc;
-    ChromeConnection.$__fields__ = ["completer", "_chrome_debugger$_isolate", "_chrome_debugger$_isolatePaused", "_chrome_debugger$_isolateResumed", "_dartMapUpdated", "_breakpointsUpdated", "subs", "chrome", "uriResolver", "scripts", "loadinMaps", "maps", "reversedMaps", "breakpoints", "ddcParsing", "isPaused", "exceptionTypes", "launch", "metadata", "isolates"];
+    ChromeConnection.$__fields__ = ["completer", "_chrome_debugger$_isolate", "_chrome_debugger$_isolatePaused", "_chrome_debugger$_isolateResumed", "_dartMapUpdated", "_breakpointsUpdated", "subs", "chrome", "uriResolver", "scripts", "loadingMaps", "maps", "reversedMaps", "breakpoints", "ddcParsing", "isPaused", "exceptionTypes", "launch", "metadata", "isolates"];
     ChromeConnection.prototype.get$breakpoints = function() {
       return this.breakpoints;
     };
@@ -59957,7 +59957,7 @@ self.showOpenDialog = function(options) {
       }, null, null, 2, 0, null, 0, "call"]
     },
     ChromeConnection: {
-      "^": "DebugConnection;completer,_chrome_debugger$_isolate,_chrome_debugger$_isolatePaused,_chrome_debugger$_isolateResumed,_dartMapUpdated,_breakpointsUpdated,subs,chrome,uriResolver,scripts,loadinMaps,maps,reversedMaps,breakpoints<,ddcParsing,isPaused<,exceptionTypes,launch,metadata,isolates",
+      "^": "DebugConnection;completer,_chrome_debugger$_isolate,_chrome_debugger$_isolatePaused,_chrome_debugger$_isolateResumed,_dartMapUpdated,_breakpointsUpdated,subs,chrome,uriResolver,scripts,loadingMaps,maps,reversedMaps,breakpoints<,ddcParsing,isPaused<,exceptionTypes,launch,metadata,isolates",
       get$options: function(_) {
         return [this.ddcParsing];
       },
@@ -60054,7 +60054,7 @@ self.showOpenDialog = function(options) {
         return P._asyncStart($async$navigate$1, $async$completer);
       },
       createMaps$3: function(scriptId, sourceUrl, map) {
-        var entries, forwardEntries, t1, t2, t3, t4, t5, _i, line, t6, t7, entry, t8, destinationUrl, t9, t10, t11, t12, t13, t14;
+        var entries, forwardEntries, t1, t2, t3, t4, t5, _i, line, t6, t7, entry, t8, destinationUrl, t9, t10, t11, t12, t13, t14, forwardMap;
         if (!!map.$isSingleMapping) {
           entries = P.LinkedHashMap__makeEmpty();
           forwardEntries = [];
@@ -60110,9 +60110,12 @@ self.showOpenDialog = function(options) {
               forwardEntries.push(new L.Entry1(t9, t8, t10));
             }
           }
-          this.maps.$indexSet(0, scriptId, T.SingleMapping_SingleMapping$fromEntries(forwardEntries, sourceUrl));
+          forwardMap = T.SingleMapping_SingleMapping$fromEntries(forwardEntries, sourceUrl);
+          this.maps.$indexSet(0, scriptId, forwardMap);
           entries.forEach$1(0, new S.ChromeConnection_createMaps_closure0(this, sourceUrl));
+          return forwardMap;
         }
+        return map;
       },
       addBreakpoint$1: [function(atomBreakpoint) {
         var $async$goto = 0, $async$completer = P.Completer_Completer$sync(), $async$handler = 1, $async$currentError, $async$next = [], $async$self = this, uris, breakpoint, e, t1, exception, t2, $async$exception;
@@ -60336,7 +60339,7 @@ self.showOpenDialog = function(options) {
         t4 = this.$this;
         t4.scripts.$indexSet(0, t2.$index(t1, "scriptId"), script);
         if (t2.$index(t1, "sourceMapURL") != null && J.get$isNotEmpty$asx(t2.$index(t1, "sourceMapURL")) === true)
-          t4.loadinMaps.putIfAbsent$2(0, t2.$index(t1, "scriptId"), new S.ChromeConnection__closure2(t4, t3, script));
+          t4.loadingMaps.putIfAbsent$2(0, t2.$index(t1, "scriptId"), new S.ChromeConnection__closure2(t4, t3, script));
       }
     },
     ChromeConnection__closure2: {
@@ -60415,8 +60418,7 @@ self.showOpenDialog = function(options) {
                   H.throwExpression(t4._addEventError$0());
                 t4._sendData$1(new X.TextFragment(t3, false, false, false));
                 try {
-                  $async$self.$this.createMaps$3(t2.$index(t1, "scriptId"), t2.$index(t1, "url"), map);
-                  t3 = map;
+                  t3 = $async$self.$this.createMaps$3(t2.$index(t1, "scriptId"), t2.$index(t1, "url"), map);
                   $async$returnValue = t3;
                   // goto return
                   $async$goto = 1;
@@ -61442,13 +61444,13 @@ self.showOpenDialog = function(options) {
             switch ($async$goto) {
               case 0:
                 // Function start
-                $async$goto = $async$self._chrome_debugger$_span == null && $async$self.connection.loadinMaps.$index(0, $async$self.location.get$scriptId()) != null ? 3 : 4;
+                $async$goto = !$async$self.ChromeDebugLocation_resolved && $async$self.connection.loadingMaps.$index(0, $async$self.location.get$scriptId()) != null ? 3 : 4;
                 break;
               case 3:
                 // then
                 t1 = $async$self.location;
                 $async$goto = 5;
-                return P._asyncAwait($async$self.connection.loadinMaps.$index(0, t1.get$scriptId()), $async$resolve$0);
+                return P._asyncAwait($async$self.connection.loadingMaps.$index(0, t1.get$scriptId()), $async$resolve$0);
               case 5:
                 // returning from await.
                 map = $async$result;
@@ -61483,7 +61485,7 @@ self.showOpenDialog = function(options) {
         return P._asyncStart($async$resolve$0, $async$completer);
       },
       _resolvePath$0: function() {
-        var $async$goto = 0, $async$completer = P.Completer_Completer$sync(), $async$returnValue, $async$handler = 2, $async$currentError, $async$next = [], $async$self = this, sourceUrl, path, t1, sourceUrl0, exception, $async$exception;
+        var $async$goto = 0, $async$completer = P.Completer_Completer$sync(), $async$returnValue, $async$handler = 2, $async$currentError, $async$next = [], $async$self = this, sourceUrl, e, t1, sourceUrl0, exception, $async$exception, $async$temp1;
         var $async$_resolvePath$0 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
           if ($async$errorCode === 1) {
             $async$currentError = $async$result;
@@ -61501,12 +61503,12 @@ self.showOpenDialog = function(options) {
               case 3:
                 // then
                 $async$handler = 6;
+                $async$temp1 = $async$self;
                 $async$goto = 9;
                 return P._asyncAwait($async$self.connection.uriResolver.resolveUriToPath$1(H.S(sourceUrl)), $async$_resolvePath$0);
               case 9:
                 // returning from await.
-                path = $async$result;
-                $async$self._resolvedPath = path;
+                $async$temp1._resolvedPath = $async$result;
                 $async$self.ChromeDebugLocation_resolved = true;
                 $async$handler = 2;
                 // goto after finally
@@ -61516,8 +61518,8 @@ self.showOpenDialog = function(options) {
                 // catch
                 $async$handler = 5;
                 $async$exception = $async$currentError;
-                H.unwrapException($async$exception);
-                $.$get$_logger31().warning$1("Failed to resolve: " + H.S(sourceUrl));
+                e = H.unwrapException($async$exception);
+                $.$get$_logger31().warning$1("Failed to resolve: " + H.S(sourceUrl) + " -> " + H.S(e));
                 // goto after finally
                 $async$goto = 8;
                 break;
@@ -61555,8 +61557,6 @@ self.showOpenDialog = function(options) {
           t1 = map.spanFor$2(t2.get$lineNumber(t1), t2.get$columnNumber(t1));
         }
         this._chrome_debugger$_span = t1;
-        if (t1 != null)
-          this._resolvePath$0();
       },
       static: {
         ChromeDebugLocation$: function(connection, $location) {
