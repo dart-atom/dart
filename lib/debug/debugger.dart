@@ -3,12 +3,14 @@ library atom.debugger;
 import 'dart:async';
 
 import 'package:atom/atom.dart';
+import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis/analysis_server_lib.dart' show MapUriResult;
+import '../analysis_server.dart';
 import '../state.dart';
 import 'debugger_ui.dart';
 import 'model.dart';
@@ -120,6 +122,7 @@ class UriTranslator {
 class UriResolver implements Disposable {
   final String root;
   final String selfRefName;
+  final String projectPath;
 
   UriTranslator _translator;
   String _selfRefPrefix;
@@ -130,7 +133,7 @@ class UriResolver implements Disposable {
   Completer<String> _completer = new Completer<String>();
   String _contextId;
 
-  UriResolver(this.root, {UriTranslator translator, this.selfRefName}) {
+  UriResolver(this.root, {UriTranslator translator, this.selfRefName, this.projectPath}) {
     this._translator = translator ?? new UriTranslator();
     if (selfRefName != null) _selfRefPrefix = 'package:${selfRefName}/';
 
@@ -160,8 +163,26 @@ class UriResolver implements Disposable {
     if (_uriToPath.containsKey(uri)) return _uriToPath[uri];
 
     String contextId = await _completer.future;
-    MapUriResult result = await analysisServer.server.execution.mapUri(contextId, uri: uri);
-    String path = result.file;
+    String path;
+    try {
+      MapUriResult result = await analysisServer.server.execution.mapUri(contextId, uri: uri);
+      path = result.file;
+    } catch (e) {
+      // Broken and to be deprecated:
+      //var result = await
+      // analysisServer.server.analysis.getLibraryDependencies();
+      if (this.projectPath != null) {
+        String fakePath = '$projectPath${fs.separator}debugger000.dart';
+        await analysisServer.server.analysis.updateContent({
+          fakePath: new AddContentOverlay('add', "import '$uri';")
+        });
+        var result = await analysisServer.server.analysis.getNavigation(fakePath, 9, 1);
+        await analysisServer.server.analysis.updateContent({
+          fakePath: new RemoveContentOverlay('remove')
+        });
+        path = result?.files?.first;
+      }
+    }
     _uriToPath[uri] = path;
     return path;
   }

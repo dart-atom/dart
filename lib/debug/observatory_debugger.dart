@@ -1091,7 +1091,7 @@ class ObservatoryLocation extends DebugLocation {
   }
 }
 
-class ObservatoryLibrary extends MItem implements Comparable<ObservatoryLibrary> {
+class ObservatoryLibrary extends MItem implements DebugLibrary {
   final LibraryRef _ref;
   String _displayUri;
 
@@ -1117,11 +1117,13 @@ class ObservatoryLibrary extends MItem implements Comparable<ObservatoryLibrary>
     return 0;
   }
 
-  int compareTo(ObservatoryLibrary other) {
+  int compareTo(other) {
     int val = _kind - other._kind;
     if (val != 0) return val;
     return displayUri.compareTo(other.displayUri);
   }
+
+  DebugLocation get location => null;
 }
 
 class ScriptManager {

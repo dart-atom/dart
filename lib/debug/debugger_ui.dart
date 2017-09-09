@@ -69,6 +69,7 @@ class DebuggerView extends DockedView {
   DetailSection detailSection;
   MTabGroup primaryTabGroup;
   MTabGroup secondaryTabGroup;
+  LibrariesTab librariesTab;
 
   final Disposables disposables = new Disposables();
 
@@ -120,6 +121,9 @@ class DebuggerView extends DockedView {
     subs.add(connection.onPaused.listen(_handleIsolatePaused));
     subs.add(connection.onResumed.listen(_handleIsolateResumed));
     subs.add(connection.isolates.onRemoved.listen(_handleIsolateTerminated));
+
+    // Optional events
+    subs.add(connection.onLibrariesChanged?.listen(_handleLibrariesChanged));
   }
 
   void _createConfigMenu() {
@@ -187,7 +191,7 @@ class DebuggerView extends DockedView {
 
     // Set up the tab group.
     primaryTabGroup.tabs.add(new ExecutionTab(this, connection));
-    primaryTabGroup.tabs.add(new LibrariesTab(this, connection));
+    primaryTabGroup.tabs.add(librariesTab = new LibrariesTab(this, connection));
     primaryTabGroup.tabs.add(new IsolatesTab(this, connection));
   }
 
@@ -234,6 +238,10 @@ class DebuggerView extends DockedView {
       }, orElse: () => null);
       focusManager.focusOn(nextFocused);
     }
+  }
+
+  void _handleLibrariesChanged(List<DebugLibrary> libraries) {
+    librariesTab.updateLibraries(libraries);
   }
 
   String get label => 'Debug ${connection.launch.name}';
@@ -650,20 +658,22 @@ class LibrariesTab extends MTab {
       )..flex()
     ]);
 
-    // TODO: On double click, jump to the library source.
-    // list.onDoubleClick.listen(_selectIsolate);
+    list.selectedItem.onChanged.listen(_selectLibrary);
+    list.onDoubleClick.listen(_selectLibrary);
 
-    view.observeIsolate(_updateLibraries);
+    view.observeIsolate((isolate) => updateLibraries(isolate?.libraries));
   }
 
-  void _updateLibraries(DebugIsolate isolate) {
-    if (isolate is ObservatoryIsolate) {
-      ObservatoryIsolate obsIsolate = isolate;
-      List<ObservatoryLibrary> libraries = obsIsolate.libraries;
-      list.update(libraries == null ? [] : libraries);
-    } else {
-      list.update([]);
-    }
+  void updateLibraries(List<DebugLibrary> libraries) {
+    list.update(libraries ?? []);
+  }
+
+  void _selectLibrary(DebugLibrary library) {
+    if (library == null) return;
+
+    library.location?.resolve()?.then((DebugLocation location) {
+      if (location.resolved) view._jumpToLocation(location);
+    });
   }
 
   void _render(ObservatoryLibrary lib, CoreElement element) {
