@@ -8,7 +8,6 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
-import 'package:pub_semver/pub_semver.dart';
 
 import '../analysis/analysis_server_lib.dart' as analysis;
 import '../analysis/quick_fixes.dart';
@@ -23,205 +22,115 @@ final String _keyPath = '${pluginId}.showOutlineView';
 
 final Logger _logger = new Logger('atom.outline');
 
-bool _atomUsesShadowDOM;
+class OutlineController extends DockedViewManager<OutlineView> {
+  static const outlineURI = 'atom://dartlang/outline';
 
-bool get atomUsesShadowDOM {
-  if (_atomUsesShadowDOM == null) {
-    String ver = atom.getVersion();
-    int index = ver.indexOf('-');
-    if (index != -1) ver = ver.substring(0, index);
-    Version v = new Version.parse(ver);
-    _atomUsesShadowDOM = v.compareTo(new Version(1, 13, 0)) < 0;
-  }
+  AnalysisOutline lastOutline;
+  List<analysis.AnalysisError> lastErrors;
 
-  return _atomUsesShadowDOM;
-}
-
-class OutlineController implements Disposable {
-  Disposables disposables = new Disposables();
-
-  bool showView = true;
-
-  List<OutlineView> views = [];
-
-  OutlineController() {
-    disposables.add(atom.config.observe(_keyPath, null, (val) {
-      showView = val;
-      for (OutlineView view in views) {
-        view._update(showView);
-      }
-    }));
+  OutlineController() : super(outlineURI) {
+    subs.add(analysisServer.onOutline.listen(_handleOutline));
+    subs.add(onProcessedErrorsChanged.listen(_handleErrorsChanged));
 
     disposables.add(
       atom.commands.add('atom-workspace', '${pluginId}:toggle-outline-view', (_) {
-        _close();
+        showView();
       })
     );
 
-    Timer.run(() {
-      disposables.add(atom.workspace.observeTextEditors(_handleEditor));
-    });
-  }
+    disposables.add(atom.config.observe(_keyPath, null, (val) {
+      showView();
+    }));
 
-  void dispose() {
-    disposables.dispose();
-    for (OutlineView view in views.toList()) {
-      view.dispose();
+    if (state[_keyPath] == true) {
+      showView();
     }
   }
 
-  void _handleEditor(TextEditor editor) {
-    String path = editor.getPath();
-    if (!isDartFile(path)) return;
-
-    _installInto(editor);
+  void _handleOutline(AnalysisOutline data) {
+    lastOutline = data;
+    if (singleton != null) singleton._handleOutline(data);
   }
 
-  void _installInto(TextEditor editor) {
-    views.add(new OutlineView(this, editor));
+  void _handleErrorsChanged(List<analysis.AnalysisError> errors) {
+    lastErrors = errors;
+    if (singleton != null) singleton._handleErrorsChanged(errors);
   }
 
-  bool _removeView(OutlineView outlineView) => views.remove(outlineView);
-
-  void _close() => atom.config.setValue(_keyPath, !showView);
-
-  analysis.AnalysisOutline _getLastOutlineData(String path) {
-    for (OutlineView view in views) {
-      if (path == view.path && view.lastOutline != null) {
-        return view.lastOutline;
-      }
-    }
-
-    return null;
-  }
+  OutlineView instantiateView(String id, [dynamic data]) =>
+      new OutlineView(this);
 }
 
-class OutlineView implements Disposable {
+class OutlineView extends DockedView implements Disposable {
   final OutlineController controller;
-  final TextEditor editor;
 
-  html.Element root;
-  CoreElement content;
   CoreElement fileType;
   CoreElement title;
   ListTreeBuilder treeBuilder;
   CoreElement errorArea;
   _ErrorsList errorsList;
-  AnalysisOutline lastOutline;
+
   StreamSubscriptions subs = new StreamSubscriptions();
 
   List<Outline> _topLevel = [];
 
-  OutlineView(this.controller, this.editor) {
-    subs.add(editor.onDidDestroy.listen((_) => dispose()));
-    subs.add(editor.onDidChangeCursorPosition.listen(_cursorChanged));
-    subs.add(analysisServer.onOutline.listen(_handleOutline));
-    subs.add(onProcessedErrorsChanged.listen(_handleErrorsChanged));
+  TextEditor editor;
+  String get path => editor?.getPath();
 
-    if (atomUsesShadowDOM) {
-      root = editor.view['shadowRoot'];
-      if (root == null) {
-        _logger.warning("The editor's shadow root is null");
+  String get label => 'Outline';
+  String get defaultLocation => 'left';
+
+  OutlineView(this.controller) : super('outline', div(c: 'outline-view source')) {
+
+    atom.workspace.observeActiveTextEditor((activeEditor) {
+      editor = activeEditor.obj == null || !isDartFile(activeEditor.getPath())
+          ? null : activeEditor;
+      subs.cancel();
+      if (editor != null) {
+        subs.add(editor.onDidChangeCursorPosition.listen(_cursorChanged));
       }
-    } else {
-      root = editor.view;
-    }
+      _handleOutline(controller.lastOutline);
+    });
 
-    if (controller.showView) _install();
-  }
-
-  bool get installed => content != null;
-
-  String get path => editor.getPath();
-
-  void _install() {
-    if (root == null) return;
-    if (content != null) return;
-
-    ViewResizer resizer;
-
-    content = div(c: 'outline-view source')..add([
+    content..add([
       div(c: 'title-container')..add([
         div(c: 'title-text')..add([
           fileType = span(c: 'keyword'),
           title = span()
-        ]),
-        div(c: 'close-button')..click(controller._close)
+        ])
       ]),
       treeBuilder = new ListTreeBuilder(_render, hasToggle: false)
         ..toggleClass('outline-tree')
         ..toggleClass('selection'),
       errorArea = div(c: 'outline-errors')..hidden(true)..add([
         errorsList = new _ErrorsList(this)
-      ]),
-      resizer = new ViewResizer.createVertical()
+      ])
     ]);
 
     treeBuilder.onClickNode.listen(_jumpTo);
     treeBuilder.setSelectionClass('region');
-    _setupResizer(resizer);
 
-    root.append(content.element);
-
-    if (lastOutline != null) {
-      _handleOutline(lastOutline);
-    } else {
-      // Ask the manager for the outline data.
-      _handleOutline(controller._getLastOutlineData(path));
-    }
-
-    _handleErrorsChanged();
-  }
-
-  void _setupResizer(ViewResizer resizer) {
-    final String prefName = '_outlineResize';
-
-    if (state[prefName] != null) resizer.position = state[prefName];
-
-    bool _amChanging = false;
-
-    subs.add(state.onValueChanged(prefName).listen((val) {
-      if (!_amChanging) resizer.position = val;
-    }));
-
-    resizer.onPositionChanged.listen((pos) {
-      _amChanging = true;
-      state[prefName] = pos;
-      _amChanging = false;
-    });
-  }
-
-  void _uninstall() {
-    if (content != null && root != null) {
-      root.children.remove(content.element);
-      content = null;
-    }
+    // Ask the manager for the last data.
+    _handleOutline(controller.lastOutline);
+    _handleErrorsChanged(controller.lastErrors);
   }
 
   void dispose() {
-    _uninstall();
     subs.cancel();
-    controller._removeView(this);
-  }
-
-  void _update(bool showView) {
-    if (installed != showView) {
-      if (showView) _install();
-      if (!showView) _uninstall();
-    }
   }
 
   void _handleOutline(AnalysisOutline data) {
-    if (data == null || data.file != editor.getPath()) return;
-
-    lastOutline = data;
-
     if (treeBuilder == null) return;
+    treeBuilder.clear();
+    _topLevel.clear();
+    fileType.text = '';
+    title.text = 'no outline';
+    if (data == null || data.file != path || editor == null) return;
 
     // Update the title.
     if (data.libraryName == null) {
       fileType.text = '';
-      title.text = fs.basename(editor.getPath());
+      title.text = fs.basename(path);
     } else if (data.kind == 'PART') {
       fileType.text = 'part of ';
       title.text = data.libraryName;
@@ -229,10 +138,6 @@ class OutlineView implements Disposable {
       fileType.text = 'library ';
       title.text = data.libraryName;
     }
-
-    treeBuilder.clear();
-
-    _topLevel.clear();
 
     if (data.outline == null) {
       treeBuilder.add(div(text: 'outline not available', c: 'comment'));
@@ -247,16 +152,15 @@ class OutlineView implements Disposable {
     _cursorChanged(editor.getCursorBufferPosition());
   }
 
-  void _handleErrorsChanged([List<analysis.AnalysisError> errors]) {
-    if (errorsList == null) return;
-
-    if (errors == null) errors = (deps[DartLinterConsumer] as DartLinterConsumer).errors;
+  void _handleErrorsChanged(List<analysis.AnalysisError> errors) {
+    if (errors == null) errors = (deps[DartLinterConsumer] as DartLinterConsumer)?.errors;
+    if (errors == null || errorsList == null) return;
     errorsList.updateWith(errors);
     errorArea.hidden(!errorsList.hasErrors);
   }
 
   void _cursorChanged(Point pos) {
-    if (pos == null || treeBuilder == null) return;
+    if (pos == null || editor == null || treeBuilder == null) return;
 
     int offset = editor.getBuffer().characterIndexForPosition(pos);
     List<Node> selected = [];
@@ -369,6 +273,7 @@ class OutlineView implements Disposable {
   void _jumpTo(Node node) => _jumpToLocation(node.data.element.location);
 
   void _jumpToLocation(analysis.Location location) {
+    if (editor == null) return;
     Range range = new Range.fromPoints(
       new Point.coords(location.startLine - 1, location.startColumn - 1),
       new Point.coords(location.startLine - 1, location.startColumn - 1 + location.length)
@@ -379,11 +284,11 @@ class OutlineView implements Disposable {
 
 class _ErrorsList extends CoreElement {
   final OutlineView view;
-  final String path;
+
+  String get path => view.path;
 
   _ErrorsList(OutlineView inView) :
     view = inView,
-    path = inView.path,
     super('div', classes: 'errors-list');
 
   bool get hasErrors => element.children.isNotEmpty;
