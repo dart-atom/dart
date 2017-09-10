@@ -18,6 +18,9 @@ abstract class DebugConnection {
   Stream<DebugIsolate> get onPaused;
   Stream<DebugIsolate> get onResumed;
 
+  // Optional
+  Stream<List<DebugLibrary>> get onLibrariesChanged => null;
+
   Future terminate();
 
   Future get onTerminated;
@@ -59,6 +62,8 @@ abstract class DebugIsolate extends MItem {
   bool get hasFrames => frames != null && frames.isNotEmpty;
 
   List<DebugFrame> get frames;
+
+  List<DebugLibrary> get libraries;
 
   pause();
   Future resume();
@@ -159,4 +164,22 @@ abstract class DebugLocation {
   Future<DebugLocation> resolve();
 
   String toString() => '${path} ${line}:${column}';
+}
+
+abstract class DebugLibrary extends MItem implements Comparable {
+
+  String get id;
+
+  String get name;
+  String get uri;
+
+  String get displayUri;
+
+  bool get private;
+
+  DebugLocation get location;
+
+  int compareTo(other) {
+    return displayUri.compareTo(other.displayUri);
+  }
 }
