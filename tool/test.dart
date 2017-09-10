@@ -165,7 +165,7 @@ Future<Isolate> startIsolate(int seconds) {
   return Isolate.spawn(isolateEntryPoint, seconds);
 }
 
-void isolateEntryPoint(int seconds) {
+void isolateEntryPoint(seconds) {
   print('[${Isolate.current}] starting');
   print('[${Isolate.current}] running for ${seconds} seconds...');
   new Timer(new Duration(seconds: seconds), () {

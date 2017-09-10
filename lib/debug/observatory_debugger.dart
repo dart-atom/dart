@@ -573,8 +573,10 @@ class ObservatoryIsolate extends DebugIsolate {
   autoStepOver() => suspendedAtAsyncSuspension ? stepOverAsyncSuspension() : stepOver();
 
   Future<ObservatoryIsolate> _updateIsolateInfo() {
-    return service.getIsolate(isolateRef.id).then((Isolate isolate) {
-      this.isolate = isolate;
+    return service.getIsolate(isolateRef.id).then((isolate) {
+      if (isolate is Isolate) {
+        this.isolate = isolate;
+      }
       return this;
     });
   }

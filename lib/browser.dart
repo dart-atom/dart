@@ -32,7 +32,7 @@ class BrowserManager implements Disposable {
       _onVersionChangeController.stream;
 
   BrowserManager() {
-    void update(String path) {
+    void update(path) {
       _browser = new Browser(path);
       _onBrowserChangeController.add(_browser);
       // Now get version if possible.
