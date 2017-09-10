@@ -6,7 +6,7 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import 'analysis/analysis_server_lib.dart'
+import 'package:analysis_server_lib/analysis_server_lib.dart'
     show AnalysisErrors, AnalysisError, AnalysisFlushResults;
 import 'utils.dart';
 

@@ -2,6 +2,7 @@ library atom.debugger;
 
 import 'dart:async';
 
+import 'package:analysis_server_lib/analysis_server_lib.dart' show MapUriResult;
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
@@ -9,7 +10,6 @@ import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../analysis/analysis_server_lib.dart' show MapUriResult;
 import '../analysis_server.dart';
 import '../state.dart';
 import 'debugger_ui.dart';
@@ -176,11 +176,11 @@ class UriResolver implements Disposable {
       if (this.projectPath != null) {
         String fakePath = '$projectPath${fs.separator}debugger000.dart';
         await analysisServer.server.analysis.updateContent({
-          fakePath: new AddContentOverlay('add', "import '$uri';")
+          fakePath: new AddContentOverlay("import '$uri';")
         });
         var result = await analysisServer.server.analysis.getNavigation(fakePath, 9, 1);
         await analysisServer.server.analysis.updateContent({
-          fakePath: new RemoveContentOverlay('remove')
+          fakePath: new RemoveContentOverlay()
         });
         path = result?.files?.first;
       }

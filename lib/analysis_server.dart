@@ -8,6 +8,7 @@ library atom.analysis_server;
 
 import 'dart:async';
 
+import 'package:analysis_server_lib/analysis_server_lib.dart';
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
@@ -18,7 +19,6 @@ import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
-import 'analysis/analysis_server_lib.dart';
 import 'dartino/dartino.dart' show dartino;
 import 'jobs.dart';
 import 'plugin.dart' show pluginVersion;
@@ -26,16 +26,30 @@ import 'projects.dart';
 import 'sdk.dart';
 import 'state.dart';
 
-export 'analysis/analysis_server_lib.dart' show FormatResult, HoverInformation,
-    HoverResult, RequestError, AvailableRefactoringsResult, RefactoringResult,
-    RefactoringOptions, SourceEdit, SourceFileEdit, AnalysisOutline, Outline,
-    AddContentOverlay, ChangeContentOverlay, RemoveContentOverlay,
-    AnalysisErrors, AnalysisFlushResults;
+export 'package:analysis_server_lib/analysis_server_lib.dart'
+    show
+        FormatResult,
+        HoverInformation,
+        HoverResult,
+        RequestError,
+        AvailableRefactoringsResult,
+        RefactoringResult,
+        RefactoringOptions,
+        SourceEdit,
+        SourceFileEdit,
+        AnalysisOutline,
+        Outline,
+        AddContentOverlay,
+        ChangeContentOverlay,
+        RemoveContentOverlay,
+        AnalysisErrors,
+        AnalysisFlushResults;
+
 export 'jobs.dart' show Job;
 
 final Logger _logger = new Logger('analysis-server');
 
-class AnalysisServer implements Disposable {
+class AtomAnalysisServer implements Disposable {
   static bool get startWithDiagnostics =>
       atom.config.getBoolValue('${pluginId}.debugAnalysisServer');
   static bool get useChecked =>
@@ -48,13 +62,17 @@ class AnalysisServer implements Disposable {
   StreamSubscriptions subs = new StreamSubscriptions();
   Disposables disposables = new Disposables();
 
-  StreamController<bool> _serverActiveController = new StreamController.broadcast();
-  StreamController<bool> _serverBusyController = new StreamController.broadcast();
+  StreamController<bool> _serverActiveController =
+      new StreamController.broadcast();
+  StreamController<bool> _serverBusyController =
+      new StreamController.broadcast();
   StreamController<String> _onSendController = new StreamController.broadcast();
-  StreamController<String> _onReceiveController = new StreamController.broadcast();
+  StreamController<String> _onReceiveController =
+      new StreamController.broadcast();
   StreamController<AnalysisNavigation> _onNavigatonController =
       new StreamController.broadcast();
-  StreamController<AnalysisOutline> _onOutlineController = new StreamController.broadcast();
+  StreamController<AnalysisOutline> _onOutlineController =
+      new StreamController.broadcast();
 
   _AnalysisServerWrapper _server;
   _AnalyzingJob _job;
@@ -63,7 +81,7 @@ class AnalysisServer implements Disposable {
 
   List<DartProject> knownRoots = [];
 
-  AnalysisServer() {
+  AtomAnalysisServer() {
     Timer.run(_setup);
 
     bool firstNotification = true;
@@ -101,7 +119,7 @@ class AnalysisServer implements Disposable {
   Stream<AnalysisFlushResults> get onAnalysisFlushResults =>
       analysisServer._server.analysis.onFlushResults;
 
-  Server get server => _server;
+  AnalysisServer get server => _server;
 
   set willSend(void fn(String methodName)) {
     _willSend = fn;
@@ -114,14 +132,16 @@ class AnalysisServer implements Disposable {
     subs.add(projectManager.onProjectsChanged.listen(_reconcileRoots));
     subs.add(sdkManager.onSdkChange.listen(_handleSdkChange));
 
-    editorManager.dartProjectEditors.onActiveEditorChanged.listen(_focusedEditorChanged);
+    editorManager.dartProjectEditors.onActiveEditorChanged
+        .listen(_focusedEditorChanged);
 
     knownRoots.clear();
     knownRoots.addAll(projectManager.projects);
 
     _checkTrigger();
 
-    var trim = (String str) => str.length > 260 ? str.substring(0, 260) + '…' : str;
+    var trim =
+        (String str) => str.length > 260 ? str.substring(0, 260) + '…' : str;
 
     onSend.listen((String message) {
       if (_logger.isLoggable(Level.FINER)) {
@@ -132,14 +152,17 @@ class AnalysisServer implements Disposable {
     onReceive.listen((String message) {
       if (message.startsWith('Observatory listening')) {
         message = message.trim();
-        if (AnalysisServer.startWithDiagnostics) {
-          message += '\nAnalysis server diagnostics on ${AnalysisServer.diagnosticsUrl}';
+        if (AtomAnalysisServer.startWithDiagnostics) {
+          message +=
+              '\nAnalysis server diagnostics on ${AtomAnalysisServer.diagnosticsUrl}';
         }
-        atom.notifications.addInfo('Analysis server', detail: message, dismissable: true);
+        atom.notifications
+            .addInfo('Analysis server', detail: message, dismissable: true);
       }
 
       if (message.startsWith('Observatory no longer listening')) {
-        atom.notifications.addInfo('Analysis server', detail: message.trim(), dismissable: true);
+        atom.notifications.addInfo('Analysis server',
+            detail: message.trim(), dismissable: true);
       }
 
       if (_logger.isLoggable(Level.FINER)) {
@@ -246,7 +269,8 @@ class AnalysisServer implements Disposable {
     if (!sdkManager.hasSdk) return;
 
     if (_server == null) {
-      _AnalysisServerWrapper server = _AnalysisServerWrapper.create(sdkManager.sdk);
+      _AnalysisServerWrapper server =
+          _AnalysisServerWrapper.create(sdkManager.sdk);
       _server = server;
       _initNewServer(server);
     } else if (!_server.isRunning) {
@@ -262,8 +286,8 @@ class AnalysisServer implements Disposable {
 
   Stream<SearchResult> _searchResultsStream(String id) {
     StreamSubscription sub;
-    StreamController<SearchResult> controller = new StreamController(
-        onCancel: () => sub.cancel());
+    StreamController<SearchResult> controller =
+        new StreamController(onCancel: () => sub.cancel());
 
     sub = server.search.onResults.listen((SearchResults result) {
       if (id == result.id && !controller.isClosed) {
@@ -285,10 +309,11 @@ class AnalysisServer implements Disposable {
     return _searchResultsStream(searchId).toList();
   }
 
-  Future<FormatResult> format(String path, int selectionOffset, int selectionLength,
+  Future<FormatResult> format(
+      String path, int selectionOffset, int selectionLength,
       {int lineLength}) {
-    return server.edit.format(
-        path, selectionOffset, selectionLength, lineLength: lineLength);
+    return server.edit
+        .format(path, selectionOffset, selectionLength, lineLength: lineLength);
   }
 
   Future<AvailableRefactoringsResult> getAvailableRefactorings(
@@ -329,7 +354,7 @@ class AnalysisServer implements Disposable {
 
   /// Update the given file with a new overlay. [contentOverlay] can be one of
   /// [AddContentOverlay], [ChangeContentOverlay], or [RemoveContentOverlay].
-  Future updateContent(String path, Jsonable contentOverlay) {
+  Future updateContent(String path, ContentOverlayType contentOverlay) {
     return server.analysis.updateContent({path: contentOverlay});
   }
 
@@ -347,7 +372,8 @@ class AnalysisServer implements Disposable {
     } else if (shouldBeRunning) {
       // startup
       if (_server == null) {
-        _AnalysisServerWrapper server = _AnalysisServerWrapper.create(sdkManager.sdk);
+        _AnalysisServerWrapper server =
+            _AnalysisServerWrapper.create(sdkManager.sdk);
         _server = server;
         _initNewServer(server);
       } else if (!_server.isRunning) {
@@ -379,14 +405,14 @@ class AnalysisServer implements Disposable {
     _initExistingServer(server);
   }
 
-  void _initExistingServer(Server server) {
+  void _initExistingServer(AnalysisServer server) {
     server.willSend = _willSend;
     _serverActiveController.add(true);
     updateRoots();
     _focusedEditorChanged(editorManager.dartProjectEditors.activeEditor);
   }
 
-  void _handleServerDeath(Server server) {
+  void _handleServerDeath(AnalysisServer server) {
     if (_server == server) {
       _serverActiveController.add(false);
       _serverBusyController.add(false);
@@ -427,7 +453,7 @@ class _AnalyzingJob extends Job {
 
 typedef void _AnalysisServerWriter(String message);
 
-class _AnalysisServerWrapper extends Server {
+class _AnalysisServerWrapper extends AnalysisServer {
   static _AnalysisServerWrapper create(Sdk sdk) {
     StreamController<String> controller = new StreamController();
     ProcessRunner process = _createProcess(sdk);
@@ -442,12 +468,16 @@ class _AnalysisServerWrapper extends Server {
   ProcessRunner process;
   Completer<int> _processCompleter;
   bool analyzing = false;
-  StreamController<bool> _analyzingController = new StreamController.broadcast();
+  StreamController<bool> _analyzingController =
+      new StreamController.broadcast();
   StreamController<int> _disposedController = new StreamController.broadcast();
 
-  _AnalysisServerWrapper(this.process, this._processCompleter,
-      Stream<String> inStream, void writeMessage(String message)) :
-        super(inStream, writeMessage) {
+  _AnalysisServerWrapper(
+      this.process,
+      this._processCompleter,
+      Stream<String> inStream,
+      void writeMessage(String message))
+      : super(inStream, writeMessage, _processCompleter) {
     _processCompleter.future.then((result) {
       _disposedController.add(result);
       process = null;
@@ -456,11 +486,6 @@ class _AnalysisServerWrapper extends Server {
 
   void setup() {
     server.setSubscriptions(['STATUS']);
-
-    // Tracking `enableSuperMixins` here: github.com/dart-lang/sdk/issues/23772.
-    analysis.updateOptions(new AnalysisOptions(
-      enableSuperMixins: true
-    ));
 
     server.getVersion().then((v) => _logger.info('version ${v.version}'));
     server.onStatus.listen((ServerStatus status) {
@@ -472,8 +497,8 @@ class _AnalysisServerWrapper extends Server {
 
     server.onError.listen((ServerError error) {
       StackTrace st = error.stackTrace == null
-        ? null
-        : new StackTrace.fromString(error.stackTrace);
+          ? null
+          : new StackTrace.fromString(error.stackTrace);
 
       _logger.info(error.message, null, st);
 
@@ -488,18 +513,16 @@ class _AnalysisServerWrapper extends Server {
 
       if (error.isFatal) {
         notification = atom.notifications.addError(
-          'Error from the analysis server: ${error.message}',
-          detail: error.stackTrace,
-          dismissable: true,
-          buttons: buttons
-        );
+            'Error from the analysis server: ${error.message}',
+            detail: error.stackTrace,
+            dismissable: true,
+            buttons: buttons);
       } else {
         notification = atom.notifications.addWarning(
-          'Error from the analysis server: ${error.message}',
-          detail: error.stackTrace,
-          dismissable: true,
-          buttons: buttons
-        );
+            'Error from the analysis server: ${error.message}',
+            detail: error.stackTrace,
+            dismissable: true,
+            buttons: buttons);
       }
     });
   }
@@ -570,14 +593,14 @@ ${error.stackTrace?.trim()}
     if (process != null) {
       try {
         server.shutdown().catchError((e) => null);
-      } catch (e) { }
+      } catch (e) {}
 
       /*Future f =*/ process.kill();
       process = null;
 
       try {
         dispose();
-      } catch (e) { }
+      } catch (e) {}
 
       if (!_processCompleter.isCompleted) _processCompleter.complete(0);
 
@@ -593,11 +616,11 @@ ${error.stackTrace?.trim()}
     List<String> arguments = <String>[];
 
     // Start in checked mode?
-    if (AnalysisServer.useChecked) {
+    if (AtomAnalysisServer.useChecked) {
       arguments.add('--checked');
     }
 
-    if (AnalysisServer.startWithDiagnostics) {
+    if (AtomAnalysisServer.startWithDiagnostics) {
       arguments.add('--enable-vm-service=0');
     }
 
@@ -607,10 +630,8 @@ ${error.stackTrace?.trim()}
     final String pathPref = '${pluginId}.analysisServerPath';
     String serverPath = atom.config.getValue(pathPref);
     if (serverPath is String) {
-      atom.notifications.addSuccess(
-        'Running analysis server from source',
-        detail: serverPath
-      );
+      atom.notifications.addSuccess('Running analysis server from source',
+          detail: serverPath);
       path = serverPath;
     } else if (serverPath != null) {
       atom.notifications.addError('$pathPref is defined but not a String');
@@ -622,10 +643,10 @@ ${error.stackTrace?.trim()}
     arguments.add('--sdk=${sdk.path}');
 
     // Check to see if we should start with diagnostics enabled.
-    if (AnalysisServer.startWithDiagnostics) {
-      arguments.add('--port=${AnalysisServer.DIAGNOSTICS_PORT}');
+    if (AtomAnalysisServer.startWithDiagnostics) {
+      arguments.add('--port=${AtomAnalysisServer.DIAGNOSTICS_PORT}');
       _logger.info('analysis server diagnostics available at '
-          '${AnalysisServer.diagnosticsUrl}.');
+          '${AtomAnalysisServer.diagnosticsUrl}.');
     }
 
     arguments.add('--client-id=atom-dartlang');
@@ -647,7 +668,8 @@ ${error.stackTrace?.trim()}
 
   /// Starts a process, and returns a [Completer] that completes when the
   /// process is no longer running.
-  static Completer<int> _startProcess(ProcessRunner process, StreamController sc) {
+  static Completer<int> _startProcess(
+      ProcessRunner process, StreamController sc) {
     Completer<int> completer = new Completer();
     process.onStderr.listen((String str) => _logger.severe(str.trim()));
 
@@ -700,12 +722,14 @@ class AnalysisRequestJob extends Job {
       if (!analysisServer.isActive) return null;
 
       if (e is RequestError) {
-        atom.notifications.addError('${name} error', detail: '${e.message} (${e.code})');
+        atom.notifications
+            .addError('${name} error', detail: '${e.message} (${e.code})');
 
         if (e.stackTrace == null) {
           _logger.warning('${name} error', e);
         } else {
-          _logger.warning('${name} error', e, new StackTrace.fromString(e.stackTrace));
+          _logger.warning(
+              '${name} error', e, new StackTrace.fromString(e.stackTrace));
         }
 
         return null;

@@ -19,10 +19,10 @@ import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import '../jobs.dart';
-import '../projects.dart';
-import '../state.dart';
 import '../launch/launch.dart';
 import '../launch/run.dart';
+import '../projects.dart';
+import '../state.dart';
 
 const String pubspecFileName = 'pubspec.yaml';
 const String pubspecLockFileName = 'pubspec.lock';

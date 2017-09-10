@@ -1,10 +1,10 @@
 library source_map;
 
-import 'package:source_maps/source_maps.dart';
-
 import 'dart:async';
 import 'dart:convert' show LineSplitter, UTF8;
 import 'dart:io';
+
+import 'package:source_maps/source_maps.dart';
 
 void main(List<String> args) {
   Map<String, List<String>> files = {};
