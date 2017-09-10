@@ -9,7 +9,7 @@ import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
 import 'package:logging/logging.dart';
 
-import '../analysis/analysis_server_lib.dart' show
+import 'package:analysis_server_lib/analysis_server_lib.dart' show
     Refactorings, SourceChange, SourceEdit, SourceFileEdit,
     RenameRefactoringOptions, ExtractLocalVariableRefactoringOptions;
 import '../analysis_server.dart';

@@ -6,6 +6,7 @@ import 'dart:collection';
 import 'dart:html' as html show Element, SpanElement;
 import 'dart:math' as math;
 
+import 'package:analysis_server_lib/analysis_server_lib.dart';
 import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
 import 'package:atom/node/fs.dart';
@@ -18,7 +19,6 @@ import '../analysis_server.dart';
 import '../elements.dart';
 import '../state.dart';
 import '../views.dart';
-import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('references');
 

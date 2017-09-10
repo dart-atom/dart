@@ -14,8 +14,8 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
-    "ws": "1.1.1",
-    "chrome-remote-interface": "0.24.3"
+    "chrome-remote-interface": "0.24.3",
+    "ws": "1.1.1"
   },
   "required-packages": [
     "atom-toolbar",
