@@ -176,11 +176,11 @@ class UriResolver implements Disposable {
       if (this.projectPath != null) {
         String fakePath = '$projectPath${fs.separator}debugger000.dart';
         await analysisServer.server.analysis.updateContent({
-          fakePath: new AddContentOverlay('add', "import '$uri';")
+          fakePath: new AddContentOverlay("import '$uri';")
         });
         var result = await analysisServer.server.analysis.getNavigation(fakePath, 9, 1);
         await analysisServer.server.analysis.updateContent({
-          fakePath: new RemoveContentOverlay('remove')
+          fakePath: new RemoveContentOverlay()
         });
         path = result?.files?.first;
       }
