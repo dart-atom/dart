@@ -8,7 +8,7 @@ import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../analysis/analysis_server_lib.dart' show MapUriResult;
+import 'package:analysis_server_lib/analysis_server_lib.dart' show MapUriResult;
 import '../state.dart';
 import 'debugger_ui.dart';
 import 'model.dart';

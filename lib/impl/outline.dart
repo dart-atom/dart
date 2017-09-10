@@ -10,7 +10,7 @@ import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-import '../analysis/analysis_server_lib.dart' as analysis;
+import 'package:analysis_server_lib/analysis_server_lib.dart' as analysis;
 import '../analysis/quick_fixes.dart';
 import '../analysis_server.dart';
 import '../elements.dart';

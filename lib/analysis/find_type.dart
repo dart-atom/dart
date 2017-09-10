@@ -1,3 +1,4 @@
+import 'package:analysis_server_lib/analysis_server_lib.dart' show FindTopLevelDeclarationsResult, SearchResult, Location;
 import 'package:atom/atom.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/workspace.dart';
@@ -6,7 +7,6 @@ import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../state.dart';
-import 'analysis_server_lib.dart' show FindTopLevelDeclarationsResult, SearchResult, Location;
 import 'references.dart';
 
 final Logger _logger = new Logger('find_type');

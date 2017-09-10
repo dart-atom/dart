@@ -11,7 +11,7 @@ import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import 'analysis/analysis_server_lib.dart' show LinkedEditGroup, Position, SourceEdit;
+import 'package:analysis_server_lib/analysis_server_lib.dart' show LinkedEditGroup, Position, SourceEdit;
 import 'projects.dart';
 import 'state.dart';
 

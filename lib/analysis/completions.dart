@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:analysis_server_lib/analysis_server_lib.dart' show CompletionResults, CompletionSuggestion,
+    SuggestionsResult;
 import 'package:atom/node/config.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:logging/logging.dart';
 
 import '../atom_autocomplete.dart';
 import '../state.dart';
-import 'analysis_server_lib.dart' show CompletionResults, CompletionSuggestion,
-    SuggestionsResult;
 
 final Logger _logger = new Logger('completions');
 

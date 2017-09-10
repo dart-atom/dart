@@ -189,7 +189,7 @@ class OverlayManager implements Disposable {
       overlay = overlays[path] = new OverlayInfo(path, lastSent: data, toSend: data);
       if (analysisServer.isActive) {
         _logger.fine('addContentOverlay ${path}');
-        _log(analysisServer.updateContent(path, new AddContentOverlay('add', data)));
+        _log(analysisServer.updateContent(path, new AddContentOverlay(data)));
         overlay.reset();
       }
     } else {
@@ -225,7 +225,7 @@ class OverlayManager implements Disposable {
       _logger.fine('removeContentOverlay ${path}');
 
       if (analysisServer.isActive) {
-        _log(analysisServer.updateContent(path, new RemoveContentOverlay('remove')));
+        _log(analysisServer.updateContent(path, new RemoveContentOverlay()));
         overlay.reset();
       }
     }
@@ -249,7 +249,7 @@ class OverlayManager implements Disposable {
       Map<String, dynamic> toSend = {};
 
       overlays.forEach((key, OverlayInfo overlay) {
-        toSend[key] = new AddContentOverlay('add', overlay.toSend);
+        toSend[key] = new AddContentOverlay(overlay.toSend);
         overlay.reset();
       });
 
@@ -301,7 +301,7 @@ class OverlayInfo {
 
     _logger.finer('changedOverlayContent ${path}');
 
-    _log(analysisServer.updateContent(path, new ChangeContentOverlay('change', diffs)));
+    _log(analysisServer.updateContent(path, new ChangeContentOverlay(diffs)));
   }
 
   // Mark all data as sent and cancel any timers.

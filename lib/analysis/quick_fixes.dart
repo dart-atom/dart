@@ -3,6 +3,7 @@ library atom.quick_fixes;
 
 import 'dart:async';
 
+import 'package:analysis_server_lib/analysis_server_lib.dart';
 import 'package:atom/atom.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
@@ -13,7 +14,6 @@ import '../analysis_server.dart';
 import '../atom_autocomplete.dart';
 import '../editors.dart';
 import '../state.dart';
-import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('quick-fixes');
 
