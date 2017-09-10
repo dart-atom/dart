@@ -46,7 +46,7 @@ class ChromeDebugger {
   static Future<DebugConnection> connect(Launch launch, LaunchConfiguration configuration,
     String debugHost, String root, String htmlFile) {
     var cdp = new ChromeDebuggingProtocol();
-    int maxTries = 6;
+    int maxTries = 10;
     return Future.doWhile(() async {
       try {
         if (maxTries-- == 0) {
@@ -65,7 +65,8 @@ class ChromeDebugger {
         UriResolver uriResolver = new UriResolver(root,
             translator: new WebUriTranslator(fs.fs.dirname(fullPath),
                 prefix: '${Uri.parse(root)}/'),
-            selfRefName: launch.project?.getSelfRefName());
+            selfRefName: launch.project?.getSelfRefName(),
+            projectPath: configuration.projectPath);
 
         ChromeConnection connection = new ChromeConnection(launch, client, uriResolver);
         var launchId = await connection.navigate('$root/$htmlFile');
@@ -87,6 +88,7 @@ class ChromeConnection extends DebugConnection {
 
   StreamController<DebugIsolate> _isolatePaused = new StreamController.broadcast();
   StreamController<DebugIsolate> _isolateResumed = new StreamController.broadcast();
+  StreamController<List<DebugLibrary>> _librariesChanged = new StreamController.broadcast();
 
   StreamController<String> _dartMapUpdated = new StreamController.broadcast();
   StreamController<ChromeDebugBreakpoint> _breakpointsUpdated = new StreamController.broadcast();
@@ -99,7 +101,7 @@ class ChromeConnection extends DebugConnection {
   Map<String, ScriptParsed> scripts = {};
   Map<String, Future<Mapping>> loadingMaps = {};
   Map<String, Mapping> maps = {};
-  Map<String, Mapping> reversedMaps = {};
+  Map<String, DebugChromeLibrary> libraries = {};
 
   Map<AtomBreakpoint, ChromeDebugBreakpoint> breakpoints = {};
 
@@ -126,6 +128,8 @@ class ChromeConnection extends DebugConnection {
           launch.pipeStdio('  fetching $mapFile\n');
           String text;
           try {
+            // TODO try to minimize re-computing maps we have if the source
+            // hasn't changed.
             text = await HttpRequest.getString(mapFile);
           } catch(e) {
             launch.pipeStdio('  error fetching $mapFile\n');
@@ -262,8 +266,9 @@ class ChromeConnection extends DebugConnection {
       entries.forEach((k, v) {
         k = makeAbsolute(sourceUrl, k);
         launch.pipeStdio('  Adding reverse map for $k -> $sourceUrl\n');
-        reversedMaps[k] = new SingleMapping.fromEntries(v, k);
+        libraries[k] = new DebugChromeLibrary(this, k, new SingleMapping.fromEntries(v, k));
         _dartMapUpdated.add(k);
+        _librariesChanged.add(new List<DebugLibrary>.from(libraries.values));
       });
       return forwardMap;
     }
@@ -286,7 +291,7 @@ class ChromeConnection extends DebugConnection {
 
   Future resolveBreakpoint(ChromeDebugBreakpoint breakpoint) {
     return Future.forEach(breakpoint.uris, (String uri) async {
-      Mapping m = reversedMaps[uri];
+      Mapping m = libraries[uri]?.mapping;
       if (m == null) return;
 
       SourceMapSpan span = SingleMappingProxy.spanFor(m,
@@ -346,6 +351,7 @@ class ChromeConnection extends DebugConnection {
 
   Stream<DebugIsolate> get onPaused => _isolatePaused.stream;
   Stream<DebugIsolate> get onResumed => _isolateResumed.stream;
+  Stream<List<DebugLibrary>> get onLibrariesChanged => _librariesChanged.stream;
 
   Future get onTerminated => completer.future;
 
@@ -432,6 +438,56 @@ class SingleMappingProxy {
   }
 }
 
+class DebugChromeLibrary extends DebugLibrary {
+  final ChromeConnection connection;
+  final String uri;
+  final Mapping mapping;
+
+  String get id => uri;
+  String get displayUri => Uri.decodeComponent(Uri.parse(uri).path);
+  String get name => '';
+
+  bool get private => false;
+
+  DebugChromeLibrary(this.connection, this.uri, this.mapping);
+
+  int compareTo(other) {
+    return displayUri.compareTo(other.displayUri);
+  }
+
+  DebugLocation get location => new ChromDebugLibraryLocation(this);
+}
+
+class ChromDebugLibraryLocation extends DebugLocation {
+  final DebugChromeLibrary library;
+
+  String get path => _resolvedPath ?? library.uri;
+
+  int get line => 1;
+  int get column => 1;
+  String get displayPath => library.displayUri;
+
+  bool resolved = false;
+
+  String _resolvedPath;
+
+  ChromDebugLibraryLocation(this.library);
+
+  Future<DebugLocation> resolve() async {
+    if (path != null) {
+      try {
+        _resolvedPath = await library.connection.uriResolver.resolveUriToPath(path);
+        resolved = true;
+      } catch(e) {
+        _logger.warning('Failed to resolve: $path -> $e');
+      }
+    }
+    return this;
+  }
+
+  String toString() => '${path}';
+}
+
 class ChromeDebugIsolate extends DebugIsolate {
   final ChromeConnection connection;
   final ChromeDebugConnection chrome;
@@ -466,6 +522,9 @@ class ChromeDebugIsolate extends DebugIsolate {
         ..addAll(paused.asyncStackTrace?.callFrames?.map((frame) =>
             new ChromeDebugAsyncFrame(connection, frame)) ?? []);
   }
+
+  List<DebugLibrary> get libraries =>
+      new List<DebugLibrary>.from(connection.libraries.values);
 
   pause() => chrome.debugger.pause();
 
