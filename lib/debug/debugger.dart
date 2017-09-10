@@ -168,9 +168,11 @@ class UriResolver implements Disposable {
       MapUriResult result = await analysisServer.server.execution.mapUri(contextId, uri: uri);
       path = result.file;
     } catch (e) {
-      // Broken and to be deprecated:
-      //var result = await
-      // analysisServer.server.analysis.getLibraryDependencies();
+      // As of now, the execution.mapUri will fail to resolve a package that is
+      // not in the analyzer root list.
+      // analysis.getLibraryDependencies is broken and to be deprecated.
+      // So we go the hack way and create a temp, memory only file, with an
+      // import direction for the package and get navigation information for it.
       if (this.projectPath != null) {
         String fakePath = '$projectPath${fs.separator}debugger000.dart';
         await analysisServer.server.analysis.updateContent({

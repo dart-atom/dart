@@ -123,7 +123,9 @@ class DebuggerView extends DockedView {
     subs.add(connection.isolates.onRemoved.listen(_handleIsolateTerminated));
 
     // Optional events
-    subs.add(connection.onLibrariesChanged?.listen(_handleLibrariesChanged));
+    if (connection.onLibrariesChanged != null) {
+      subs.add(connection.onLibrariesChanged.listen(_handleLibrariesChanged));
+    }
   }
 
   void _createConfigMenu() {
