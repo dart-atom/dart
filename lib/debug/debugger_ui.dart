@@ -517,7 +517,8 @@ class ExecutionTab extends MTab {
     });
   }
 
-  void _renderFrame(DebugFrame frame, CoreElement element) {
+  void _renderFrame(dynamic _frame, CoreElement element) {
+    DebugFrame frame = _frame;
     String style = frame.isSystem ? 'icon icon-git-commit' : 'icon icon-three-bars';
     String locationText = getDisplayUri(frame.location.displayPath);
 
@@ -565,7 +566,8 @@ class ExecutionTab extends MTab {
     }
   }
 
-  void _renderVariable(DebugVariable local, CoreElement element) {
+  void _renderVariable(dynamic _local, CoreElement element) {
+    DebugVariable local = _local;
     final String valueClass = 'debugger-secondary-info overflow-hidden-ellipsis right-aligned';
 
     DebugValue value = local.value;
@@ -678,7 +680,8 @@ class LibrariesTab extends MTab {
     });
   }
 
-  void _render(ObservatoryLibrary lib, CoreElement element) {
+  void _render(dynamic _lib, CoreElement element) {
+    DebugLibrary lib = _lib;
     element..add([
       span(text: lib.displayUri, c: 'icon icon-repo'),
       span(
@@ -690,7 +693,7 @@ class LibrariesTab extends MTab {
 
   int _sort(ObservatoryLibrary a, ObservatoryLibrary b) => a.compareTo(b);
 
-  bool _filter(ObservatoryLibrary lib) => lib.private;
+  bool _filter(dynamic lib) => (lib as ObservatoryLibrary).private;
 
   void dispose() { }
 }
@@ -717,7 +720,8 @@ class IsolatesTab extends MTab {
     list.update(connection.isolates.items);
   }
 
-  void _render(DebugIsolate isolate, CoreElement element) {
+  void _render(dynamic _isolate, CoreElement element) {
+    DebugIsolate isolate = _isolate;
     // TODO: pause button, pause state
     element..add([
       span(text: isolate.displayName, c: 'icon icon-versions'),
@@ -815,7 +819,8 @@ class BreakpointsTab extends MTab {
     list.update(bps);
   }
 
-  void _render(AtomBreakpoint bp, CoreElement element) {
+  void _render(dynamic _bp, CoreElement element) {
+    AtomBreakpoint bp = _bp;
     String pathText = bp.path;
     List<String> rel = atom.project.relativizePath(bp.path);
     if (rel[0] != null) {

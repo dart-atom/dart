@@ -52,7 +52,7 @@ class BreakpointManager implements Disposable, StateStorable {
     disposables.add(atom.commands.add('atom-workspace', 'dartlang:debug-toggle-breakpoint', (_) {
       _toggleBreakpoint();
     }));
-    subs.add(atom.config.onDidChange(_debuggerCaughtExceptions).listen((String val) {
+    subs.add(atom.config.onDidChange(_debuggerCaughtExceptions).listen((val) {
       if (val == 'all') _exceptionController.add(ExceptionBreakType.all);
       else if (val == 'none') _exceptionController.add(ExceptionBreakType.none);
       else _exceptionController.add(ExceptionBreakType.uncaught);

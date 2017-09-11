@@ -589,8 +589,8 @@ class DeviceDomain extends Domain {
   }
 
   Future<List<Device>> getDevices() {
-    return _call('device.getDevices').then((List result) {
-      return result.map(Device.parse).toList();
+    return _call('device.getDevices').then((result) {
+      return (result as List<Map>).map(Device.parse).toList();
     });
   }
 
@@ -603,7 +603,7 @@ class DeviceDomain extends Domain {
       'deviceId': deviceId,
       'devicePort': devicePort,
       'hostPort': hostPort,
-    })).then((Map<String, dynamic> result) => result['hostPort']);
+    })).then((dynamic result) => result['hostPort']);
   }
 
   Future unforward(String deviceId, int devicePort, int hostPort) {

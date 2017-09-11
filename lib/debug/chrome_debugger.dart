@@ -181,7 +181,7 @@ class ChromeConnection extends DebugConnection {
       });
     }));
 
-    subs.add(atom.config.onDidChange(_debuggerDdcParsing).listen((bool val) {
+    subs.add(atom.config.onDidChange(_debuggerDdcParsing).listen((val) {
       // Force update
       if (isPaused && _isolate != null) {
         _isolate = new ChromeDebugIsolate(this, this.chrome, _isolate.paused);
