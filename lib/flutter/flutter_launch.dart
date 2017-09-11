@@ -7,8 +7,8 @@ import 'package:logging/logging.dart';
 
 import '../debug/debugger.dart';
 import '../debug/observatory_debugger.dart' show ObservatoryDebugger;
-import '../flutter/flutter_devices.dart';
 import '../flutter/flutter_daemon.dart';
+import '../flutter/flutter_devices.dart';
 import '../jobs.dart';
 import '../launch/launch.dart';
 import '../projects.dart';

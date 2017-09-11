@@ -7,12 +7,11 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
 import 'package:logging/logging.dart';
 
+import '../browser.dart';
+import '../debug/chrome_debugger.dart';
+import '../state.dart';
 import 'launch.dart';
 import 'launch_serve.dart';
-
-import '../browser.dart';
-import '../state.dart';
-import '../debug/chrome_debugger.dart';
 
 final Logger _logger = new Logger('atom.launch.web');
 

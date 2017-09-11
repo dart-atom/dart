@@ -6,7 +6,7 @@ import 'package:atom/atom.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 
-import 'analysis/analysis_server_lib.dart' show AnalysisError, Location;
+import 'package:analysis_server_lib/analysis_server_lib.dart' show AnalysisError, Location;
 import 'analysis/quick_fixes.dart';
 import 'atom_linter.dart';
 import 'error_repository.dart';

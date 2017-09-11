@@ -9,7 +9,7 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
-import '../analysis/analysis_server_lib.dart' show CreateContextResult;
+import 'package:analysis_server_lib/analysis_server_lib.dart' show CreateContextResult;
 import '../analysis_server.dart';
 import '../debug/debugger.dart';
 import '../projects.dart';
@@ -366,7 +366,7 @@ class CachingServerResolver implements _Resolver {
 
   Map<String, String> _cache = {};
 
-  CachingServerResolver({String cwd, AnalysisServer server}) {
+  CachingServerResolver({String cwd, AtomAnalysisServer server}) {
     if (cwd != null) {
       _pathResolver = new _PathResolver(cwd);
 
@@ -444,7 +444,7 @@ class _PathResolver implements _Resolver {
 
 class _ServerResolver implements _Resolver {
   final String path;
-  final AnalysisServer server;
+  final AtomAnalysisServer server;
 
   Completer<String> _contextCompleter = new Completer();
 

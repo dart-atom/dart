@@ -3,6 +3,7 @@ library atom.declaration_nav;
 
 import 'dart:async';
 
+import 'package:analysis_server_lib/analysis_server_lib.dart';
 import 'package:atom/atom.dart';
 import 'package:atom/node/command.dart';
 import 'package:atom/node/process.dart';
@@ -13,7 +14,6 @@ import 'package:logging/logging.dart';
 import '../editors.dart';
 import '../state.dart';
 import '../usage.dart' show trackCommand;
-import 'analysis_server_lib.dart';
 
 final Logger _logger = new Logger('declaration_nav');
 
