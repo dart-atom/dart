@@ -681,7 +681,7 @@ class LibrariesTab extends MTab {
   }
 
   void _render(dynamic _lib, CoreElement element) {
-    ObservatoryLibrary lib = _lib;
+    DebugLibrary lib = _lib;
     element..add([
       span(text: lib.displayUri, c: 'icon icon-repo'),
       span(
