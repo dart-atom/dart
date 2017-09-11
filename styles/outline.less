@@ -1,24 +1,16 @@
 @import "ui-variables";
 @import "syntax-variables";
 
-atom-text-editor.editor .editor--private {
-  flex: 1;
-}
-
-atom-text-editor.editor .outline-view {
+.outline-view {
   border-left: 1px solid @tool-panel-border-color;
 
   order: 2;
   min-width: 175px;
-  width: 220px;
   overflow-x: hidden;
 
   display: flex;
   position: relative;
   flex-direction: column;
-  flex-shrink: 0;
-  
-  opacity: 0.75;
 
   .title-container {
     border-bottom: 1px solid @tool-panel-border-color;
@@ -91,7 +83,7 @@ atom-text-editor.editor .outline-view {
 
   ul,
   ol {
-    padding-left: 20px;
+    padding-left: 12px;
   }
 
   ol,
@@ -112,8 +104,13 @@ atom-text-editor.editor .outline-view {
     white-space: nowrap;
   }
 
-  .selected {
+  .list-item.region {
     font-weight: bold;
+    background-color: @background-color-selected;
+  }
+
+  .list-item:hover {
+    background-color: @background-color-highlight;
   }
 
   .outline-deprecated {
@@ -134,45 +131,5 @@ atom-text-editor.editor .outline-view {
 
   a:hover {
     text-decoration: underline;
-  }
-
-  .view-resize[vertical] {
-    cursor: ew-resize;
-    z-index: 3;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 8px;
-  }
-
-  .tree-selected,
-  .tree-selected span {
-    font-weight: bold;
-  }
-
-  .close-button {
-    top: -1px;
-    color: @text-color;
-    cursor: default;
-    margin-left: 8px;
-    position: relative;
-  }
-
-  .close-button:hover {
-    color: @text-color-highlight;
-  }
-
-  .close-button:before {
-    font-family: 'Octicons Regular';
-    font-weight: normal;
-    font-style: normal;
-    display: inline-block;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    font-size: 12px;
-    width: 12px;
-    height: 12px;
-    content: "\f081";
   }
 }
