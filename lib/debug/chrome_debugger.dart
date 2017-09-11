@@ -98,9 +98,18 @@ class ChromeConnection extends DebugConnection {
   ChromeDebugConnection chrome;
   UriResolver uriResolver;
 
+  /// Scripts and maps by scriptId
   Map<String, ScriptParsed> scripts = {};
   Map<String, Future<Mapping>> loadingMaps = {};
   Map<String, Mapping> maps = {};
+
+  /// scripIds by file url
+  Map<String, String> scriptIds = {};
+
+  /// Etags by map file url
+  Map<String, String> cachedTags = {};
+
+  /// Librariaries, by url
   Map<String, DebugChromeLibrary> libraries = {};
 
   Map<AtomBreakpoint, ChromeDebugBreakpoint> breakpoints = {};
@@ -117,19 +126,41 @@ class ChromeConnection extends DebugConnection {
       if (launch == this.launch) completer.complete();
     });
 
-    chrome.debugger.scriptParsed((script) {
+    chrome.debugger.scriptParsed((script) async {
       if (script.url == null || script.url.isEmpty) return;
       launch.pipeStdio('Script Parsed: ${script.url}\n');
+
+      String previousScriptId = scriptIds[script.url];
+      if (previousScriptId != null) {
+        loadingMaps[script.scriptId] = loadingMaps.remove(previousScriptId);
+        maps[script.scriptId] = maps.remove(previousScriptId);
+        scripts.remove(previousScriptId);
+      }
+
       scripts[script.scriptId] = script;
+      scriptIds[script.url] = script.scriptId;
       if (script.sourceMapURL != null && script.sourceMapURL.isNotEmpty) {
+        String mapFile = makeAbsolute(script.url, script.sourceMapURL);
+
+        // minimize re-computing maps we have if the source hasn't changed.
+        try {
+          var request = await HttpRequest.request(mapFile, method: 'HEAD');
+          var etag = request.responseHeaders['etag'];
+          if (etag != null && cachedTags[mapFile] == etag) {
+            launch.pipeStdio('  using cache $mapFile\n');
+            return;
+          }
+          cachedTags[mapFile] = etag;
+        } catch (e) {
+          launch.pipeStdio('  file doesn\'t exist $mapFile\n');
+          return;
+        }
+
         // start load source map
-        loadingMaps.putIfAbsent(script.scriptId, () async {
-          String mapFile = makeAbsolute(script.url, script.sourceMapURL);
+        loadMaps() async {
           launch.pipeStdio('  fetching $mapFile\n');
           String text;
           try {
-            // TODO try to minimize re-computing maps we have if the source
-            // hasn't changed.
             text = await HttpRequest.getString(mapFile);
           } catch(e) {
             launch.pipeStdio('  error fetching $mapFile\n');
@@ -149,7 +180,9 @@ class ChromeConnection extends DebugConnection {
           } catch(e) {
             launch.pipeStdio('  error creating reverse maps for ${script.url}.map\n');
           }
-        });
+        }
+
+        loadingMaps[script.scriptId] = loadMaps();
       }
     });
     chrome.debugger.scriptFailedToParse((script) {
@@ -227,7 +260,7 @@ class ChromeConnection extends DebugConnection {
       Uri src = Uri.parse(sourceUrl);
       List<String> pathSegments = new List.from(src.pathSegments);
       pathSegments..removeLast()..add(path);
-      path = src.replace(pathSegments: pathSegments).toString();
+      path = Uri.decodeFull(src.replace(pathSegments: pathSegments).toString());
     }
     return path;
   }
@@ -265,7 +298,7 @@ class ChromeConnection extends DebugConnection {
       // backward maps
       entries.forEach((k, v) {
         k = makeAbsolute(sourceUrl, k);
-        launch.pipeStdio('  Adding reverse map for $k -> $sourceUrl\n');
+        launch.pipeStdio('  adding reverse map for $k -> $sourceUrl\n');
         libraries[k] = new DebugChromeLibrary(this, k, new SingleMapping.fromEntries(v, k));
         _dartMapUpdated.add(k);
         _librariesChanged.add(new List<DebugLibrary>.from(libraries.values));
@@ -284,7 +317,7 @@ class ChromeConnection extends DebugConnection {
       _breakpointsUpdated.add(breakpoint);
     } catch(e) {
       launch.pipeStdio(
-          '  Error resolving uri: ${atomBreakpoint.path}\n'
+          '  error resolving uri: ${atomBreakpoint.path}\n'
           '    ${e}\n');
     }
   }
@@ -444,7 +477,7 @@ class DebugChromeLibrary extends DebugLibrary {
   final Mapping mapping;
 
   String get id => uri;
-  String get displayUri => Uri.decodeComponent(Uri.parse(uri).path);
+  String get displayUri => Uri.parse(uri).path;
   String get name => '';
 
   bool get private => false;
@@ -1008,8 +1041,15 @@ class WebUriTranslator implements UriTranslator {
     } else if (str.startsWith(_rootPrefix)) {
       // Convert file:///foo/bar/lib/main.dart to http://.../lib/main.dart.
       return prefix + str.substring(_rootPrefix.length);
-    } else {
-      return str;
+    } else if (str.startsWith('file://')) {
+      // We are trying to add a breakpoint on a package not a root project
+      var uri = Uri.parse(str);
+      var segments = uri.pathSegments;
+      int lib = segments.indexOf('lib');
+      if (lib > 0) {
+        return prefix + _packagesPrefix + segments[lib - 1] + '/' + segments.skip(lib + 1).join('/');
+      }
     }
+    return str;
   }
 }

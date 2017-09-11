@@ -358,6 +358,13 @@ class AtomDartPackage extends AtomPackage {
         'enum': ['all', 'uncaught', 'none'],
         'order': 8
       },
+      'debuggerDdcParsing': {
+        'title': "Map web debug stack to DDC output",
+        'description': 'Try to unparse javascript debugger stack into dart when using DDC.',
+        'type': 'boolean',
+        'default': true,
+        'order': 9
+      },
 
       // // google analytics
       // 'sendUsage': {
