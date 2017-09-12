@@ -359,7 +359,7 @@ class AtomDartPackage extends AtomPackage {
         'order': 8
       },
       'debuggerDdcParsing': {
-        'title': "Map web debug stack to DDC output",
+        'title': "Convert JavaScript stack traces to Dart",
         'description': 'Try to unparse javascript debugger stack into dart when using DDC.',
         'type': 'boolean',
         'default': true,
