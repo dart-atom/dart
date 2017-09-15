@@ -25,7 +25,7 @@ final Logger _logger = new Logger('atom.outline');
 class OutlineController extends DockedViewManager<OutlineView> {
   static const outlineURI = 'atom://dartlang/outline';
 
-  AnalysisOutline lastOutline;
+  Map<String, AnalysisOutline> lastOutlines = {};
   List<analysis.AnalysisError> lastErrors;
 
   OutlineController() : super(outlineURI) {
@@ -42,13 +42,23 @@ class OutlineController extends DockedViewManager<OutlineView> {
       showView();
     }));
 
+    disposables.add(atom.workspace.observeActiveTextEditor((activeEditor) {
+      // Do memory cleanup on editor swap, easier than tracking each editor
+      // close.
+      Set<String> paths =
+          new Set.from(atom.workspace.getTextEditors().map((e) => e.getPath()));
+      lastOutlines = new Map.fromIterable(
+          lastOutlines.keys.where((k) => paths.contains(k)),
+          value: (k) => lastOutlines[k]);
+    }));
+
     if (state[_keyPath] == true) {
       showView();
     }
   }
 
   void _handleOutline(AnalysisOutline data) {
-    lastOutline = data;
+    lastOutlines[data.file] = data;
     if (singleton != null) singleton._handleOutline(data);
   }
 
@@ -71,6 +81,7 @@ class OutlineView extends DockedView implements Disposable {
   _ErrorsList errorsList;
 
   StreamSubscriptions subs = new StreamSubscriptions();
+  Disposables disposables = new Disposables();
 
   List<Outline> _topLevel = [];
 
@@ -82,15 +93,15 @@ class OutlineView extends DockedView implements Disposable {
 
   OutlineView(this.controller) : super('outline', div(c: 'outline-view source')) {
 
-    atom.workspace.observeActiveTextEditor((activeEditor) {
+    disposables.add(atom.workspace.observeActiveTextEditor((activeEditor) {
       editor = activeEditor.obj == null || !isDartFile(activeEditor.getPath())
           ? null : activeEditor;
       subs.cancel();
       if (editor != null) {
         subs.add(editor.onDidChangeCursorPosition.listen(_cursorChanged));
       }
-      _handleOutline(controller.lastOutline);
-    });
+      _handleOutline(controller.lastOutlines[path]);
+    }));
 
     content..add([
       div(c: 'title-container')..add([
@@ -111,12 +122,13 @@ class OutlineView extends DockedView implements Disposable {
     treeBuilder.setSelectionClass('region');
 
     // Ask the manager for the last data.
-    _handleOutline(controller.lastOutline);
+    _handleOutline(null);
     _handleErrorsChanged(controller.lastErrors);
   }
 
   void dispose() {
     subs.cancel();
+    disposables.dispose();
   }
 
   void _handleOutline(AnalysisOutline data) {
