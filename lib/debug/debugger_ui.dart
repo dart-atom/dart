@@ -20,7 +20,6 @@ import '../views.dart';
 import 'breakpoints.dart';
 import 'debugger.dart';
 import 'model.dart';
-import 'observatory_debugger.dart';
 import 'utils.dart';
 
 final Logger _logger = new Logger('atom.debugger_ui');
@@ -650,7 +649,7 @@ class DetailSection {
 class LibrariesTab extends MTab {
   final DebuggerView view;
   final DebugConnection connection;
-  MList<ObservatoryLibrary> list;
+  MList<DebugLibrary> list;
 
   LibrariesTab(this.view, this.connection) : super('libraries', 'Libraries') {
     content..layoutVertical()..flex();
@@ -691,9 +690,9 @@ class LibrariesTab extends MTab {
     ])..layoutHorizontal();
   }
 
-  int _sort(ObservatoryLibrary a, ObservatoryLibrary b) => a.compareTo(b);
+  int _sort(DebugLibrary a, DebugLibrary b) => a.compareTo(b);
 
-  bool _filter(dynamic lib) => (lib as ObservatoryLibrary).private;
+  bool _filter(dynamic lib) => (lib as DebugLibrary).private;
 
   void dispose() { }
 }
