@@ -819,6 +819,8 @@ class ObservatoryInstanceRefValue extends DebugValue {
     return value.valueAsStringIsTruncated == null ? false : value.valueAsStringIsTruncated;
   }
 
+  bool get replaceValueOnEval => false;
+
   int get itemsLength => value.length;
 
   Future<List<DebugVariable>> getChildren() {
@@ -935,6 +937,8 @@ class ObservatoryObjRefValue extends DebugValue {
 
   bool get valueIsTruncated => false;
 
+  bool get replaceValueOnEval => false;
+
   int get itemsLength => null;
 
   // ClassRef, Code, CodeRef, ContextRef, ErrorRef, FieldRef, FuncRef,
@@ -990,6 +994,8 @@ class SimpleDebugValue extends DebugValue {
 
   bool get valueIsTruncated => false;
 
+  bool get replaceValueOnEval => false;
+
   int get itemsLength => null;
 
   Future<List<DebugVariable>> getChildren() => new Future.value([]);
@@ -1011,6 +1017,8 @@ class SentinelDebugValue extends DebugValue {
   bool get isMap => false;
 
   bool get valueIsTruncated => false;
+
+  bool get replaceValueOnEval => false;
 
   int get itemsLength => null;
 

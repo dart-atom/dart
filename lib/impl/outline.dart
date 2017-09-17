@@ -132,12 +132,12 @@ class OutlineView extends DockedView implements Disposable {
   }
 
   void _handleOutline(AnalysisOutline data) {
-    if (treeBuilder == null) return;
+    if (treeBuilder == null || editor == null) return;
     treeBuilder.clear();
     _topLevel.clear();
     fileType.text = '';
     title.text = 'no outline';
-    if (data == null || data.file != path || editor == null) return;
+    if (data == null || data.file != path) return;
 
     // Update the title.
     if (data.libraryName == null) {

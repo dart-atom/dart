@@ -585,12 +585,19 @@ class ExecutionTab extends MTab {
   }
 
   void _showObjectDetails(DebugVariable variable) {
-    view.detailSection.showDetails(variable);
+    view.detailSection._showDetails(variable, _updateVariable);
   }
 
   Future _updateLocals(List<DebugVariable> vars) {
     locals.toggleClass('debugger-locked', true);
     return locals.update(vars, refreshSelection: true).whenComplete(() {
+      locals.toggleClass('debugger-locked', false);
+    });
+  }
+
+  Future _updateVariable(DebugVariable variable) {
+    locals.toggleClass('debugger-locked', true);
+    return locals.updateItem(variable).whenComplete(() {
       locals.toggleClass('debugger-locked', false);
     });
   }
@@ -601,7 +608,6 @@ class ExecutionTab extends MTab {
 class _LocalTreeModel extends TreeModel<DebugVariable> {
   bool canHaveChildren(DebugVariable variable) {
     DebugValue value = variable.value;
-    // print(value);
     return !value.isPrimitive;
   }
 
@@ -621,9 +627,14 @@ class DetailSection {
     ])..hidden(true);
   }
 
-  void showDetails(DebugVariable variable) {
+  void _showDetails(DebugVariable variable, Future update(DebugVariable variable)) {
     if (variable != null) {
       variable.value.invokeToString().then((DebugValue result) {
+        if (result.replaceValueOnEval) {
+          // Re-render.
+          update(variable);
+        }
+
         String str = result.valueAsString;
         if (result.valueIsTruncated) str += '…';
         _detailsElement.clear();

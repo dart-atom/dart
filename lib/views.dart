@@ -163,7 +163,7 @@ abstract class DockedViewManager<T extends DockedView> implements Disposable {
     }));
   }
 
-  String viewUri(String id) => '$prefixUri/$id';
+  String viewUri([String id = '0']) => '$prefixUri/$id';
   String viewId(String uri) => uri.replaceFirst("$prefixUri/", '');
 
   // Views by uri.

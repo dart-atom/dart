@@ -155,6 +155,9 @@ class MList<T extends MItem> extends CoreElement {
     });
   }
 
+  Future updateItem(T modelObject) =>
+      _updateItem(modelObject, _itemKeyToElement[modelObject.key].right..clear());
+
   void selectItem(T item) {
     if (selectedItem.value != null) {
       CoreElement oldSelected = _itemKeyToElement[selectedItem.value.key]?.right;
@@ -175,12 +178,6 @@ class MList<T extends MItem> extends CoreElement {
     for (T item in modelObjects) {
       CoreElement element = container.add(li());
       String key = '$root/${item.id}';
-      try {
-        futures.add(_render(key, item, element));
-      } catch (e, st) {
-        print('${e}: ${st}');
-      }
-
       item.key = key;
       _itemKeyToElement[key] = new Pair(item, element);
 
@@ -192,8 +189,19 @@ class MList<T extends MItem> extends CoreElement {
       element.dblclick(() {
         _doubleClick.add(item);
       });
+
+      futures.add(_updateItem(item, element));
     }
     return Future.wait(futures);
+  }
+
+  Future _updateItem(T item, CoreElement element) {
+    try {
+      return _render(item.key, item, element);
+    } catch (e, st) {
+      print('${e}: ${st}');
+      return new Future.value();
+    }
   }
 
   Future _render(String id, T item, CoreElement element) {

@@ -119,6 +119,8 @@ abstract class DebugValue {
 
   int get itemsLength;
 
+  bool get replaceValueOnEval;
+
   String get hint {
     if (isString) {
       // We choose not to escape double quotes here; it doesn't work well visually.

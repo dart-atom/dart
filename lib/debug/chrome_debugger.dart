@@ -895,8 +895,10 @@ class ChromeDebugValue extends DebugValue {
   // values.
   int get itemsLength => null;
 
+  bool replaceValueOnEval;
+
   // Warning: value can be null.
-  ChromeDebugValue(this.connection, this.variable, this.value);
+  ChromeDebugValue(this.connection, this.variable, this.value, {this.replaceValueOnEval: false});
 
   Future<List<DebugVariable>> getChildren() async {
     if (!connection.isPaused) return [];
@@ -946,7 +948,11 @@ class ChromeDebugValue extends DebugValue {
       String expression = variable.isSymbol ? symbolEval: path;
       var result = await connection.chrome.debugger.evaluateOnCallFrame(frame.id, expression);
       RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
-      return object != null ? new ChromeDebugValue(connection, variable, object) : this;
+      ChromeDebugValue value = object != null
+          ? new ChromeDebugValue(connection, variable, object, replaceValueOnEval: true)
+          : this;
+      variable._value = value;
+      return value;
     }
     return this;
   }
