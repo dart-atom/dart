@@ -101,6 +101,7 @@ class OutlineView extends DockedView implements Disposable {
         subs.add(editor.onDidChangeCursorPosition.listen(_cursorChanged));
       }
       _handleOutline(controller.lastOutlines[path]);
+      _handleErrorsChanged(controller.lastErrors);
     }));
 
     content..add([
