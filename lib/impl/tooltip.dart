@@ -73,23 +73,43 @@ class TooltipManager implements Disposable {
       if (_tooltipElement?.isInRange(offset) ?? false) return;
 
       analysisServer.getHover(_editor.getPath(), offset).then((HoverResult result) {
-        if (result == null) {
-          _disposeTooltip();
+        if (result == null || result.hovers.isEmpty) {
+          _disposeTooltip(delayed: true);
           return;
         }
 
-        result.hovers.forEach((HoverInformation h) {
+        for (HoverInformation h in result.hovers) {
+          String content = _tooltipContent(h);
+          if (content == null || content.isEmpty) continue;
+
+          // Sometimes it is missing, so we replace with the hover source file.
+          if (h.containingLibraryPath == null || h.containingLibraryPath.isEmpty) {
+            h = new HoverInformation(h.offset, h.length,
+                  containingLibraryPath: _editor.getPath(),
+                  containingLibraryName: h.containingLibraryName,
+                  containingClassDescription: h.containingClassDescription,
+                  dartdoc: h.dartdoc,
+                  elementDescription: h.elementDescription,
+                  elementKind: h.elementKind,
+                  isDeprecated: h.isDeprecated,
+                  parameter: h.parameter,
+                  propagatedType: h.propagatedType,
+                  staticType: h.staticType);
+          }
+
           // Get rid of previous tooltips.
           _disposeTooltip();
           _tooltipElement = new TooltipElement(_editor,
             info: h,
-            content: _tooltipContent(h),
+            content: content,
             position: _positionForScreenPosition(h.offset));
-        });
+
+          debugManager.evalTooltip(_tooltipElement);
+          break;
+        }
       }).catchError((_) => null);
     }));
 
-    _subs.add(_root.onMouseOut.listen((_) => _disposeTooltip()));
     _subs.add(_root.onKeyDown.listen((_) => _disposeTooltip()));
   }
 
@@ -120,13 +140,20 @@ class TooltipManager implements Disposable {
   String _tooltipContent(HoverInformation hover) =>
       hover.elementDescription ?? hover.staticType ?? hover.propagatedType;
 
-  void _disposeTooltip() {
-    _tooltipElement?.dispose();
+  void _disposeTooltip({bool delayed: false}) {
+    if (delayed) {
+      _tooltipElement?.delayedDispose();
+    } else {
+      _tooltipElement?.dispose();
+    }
     _tooltipElement = null;
     _debouncer.cancel();
   }
 
-  void dispose() => _disposeTooltip();
+  void dispose() {
+    _subs.dispose();
+    _disposeTooltip();
+  }
 }
 
 /// Basic tooltip element with single [String] content capable of attaching
@@ -138,14 +165,23 @@ class TooltipElement extends CoreElement {
   final HoverInformation info;
 
   Disposable _cmdDispose;
-  StreamSubscription _sub;
+  bool _locked = false;
+  StreamSubscriptions _subs = new StreamSubscriptions();
 
   TooltipElement(TextEditor editor, {this.content, this.info, html.Point position})
       : super('div', classes: 'hover-tooltip') {
     id = 'hover-tooltip';
 
     _cmdDispose = atom.commands.add('atom-workspace', 'core:cancel', (_) => dispose());
-    _sub = editor.onDidDestroy.listen((_) => dispose());
+
+    _subs.add(editor.onDidDestroy.listen((_) => dispose()));
+    _subs.add(this.element.onMouseOut.listen((_) {
+      _locked = false;
+      delayedDispose();
+    }));
+    _subs.add(this.element.onMouseOver.listen((_) {
+      _locked = true;
+    }));
 
     // Set position at the mouseevent coordinates.
     int x = position.x - _offset;
@@ -164,8 +200,19 @@ class TooltipElement extends CoreElement {
     parent.append(this.element);
   }
 
+  void expand(CoreElement row) {
+    this.toggleClass('multi-rows', true);
+    add(row);
+  }
+
+  void delayedDispose() {
+    new Timer(const Duration(milliseconds: 500), () {
+      if (!_locked) dispose();
+    });
+  }
+
   void dispose() {
-    _sub.cancel();
+    _subs.cancel();
     _cmdDispose.dispose();
     super.dispose();
   }

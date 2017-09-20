@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import '../analysis_server.dart';
 import '../launch/launch.dart';
 import '../utils.dart';
+
+export '../analysis_server.dart' show HoverInformation;
 
 abstract class DebugConnection {
   final Launch launch;
@@ -33,6 +36,8 @@ abstract class DebugConnection {
   autoStepOver();
 
   void dispose();
+
+  Future<DebugVariable> eval(HoverInformation symbol);
 }
 
 abstract class DebugOption {

@@ -225,11 +225,40 @@ class ChromeConnection extends DebugConnection {
     subs.add(_dartMapUpdated.stream.listen((map) {
       // find unresolved breakpoints ready for this map.
       breakpoints.values
-          .where((b) => !b.resolved && b.uris.any((uri) => map == uri))
+          .where((b) => b != null && !b.resolved && b.uris.any((uri) => map == uri))
           .forEach((b) => resolveBreakpoint(b));
     }));
 
     subs.add(_breakpointsUpdated.stream.listen(resolveBreakpoint));
+  }
+
+  Future<DebugVariable> eval(HoverInformation info) async {
+    if (!isPaused || _isolate.frames == null) return null;
+    List<String> uris = await uriResolver.resolvePathToUris(info.containingLibraryPath);
+    if (uris.isEmpty) return null;
+
+    DebugFrame frame = _isolate.frames.firstWhere(
+        (f) => uris.contains(f?.location?.path),
+        orElse: () => null);
+    if (frame != null) {
+      // TODO we can evaluate on this frame, then append result
+      // to _tooltipElement.  Filter by elementKind we can handle.
+      // 'field', 'top level variable'
+      String variable = info.elementDescription?.split(' ')?.last;
+      String expression = variable;
+      if (info.elementKind == 'field') {
+        expression = 'this.$expression';
+      }
+      _logger.info('evaluateOnCallFrame($expression)');
+      var result = await chrome.debugger.evaluateOnCallFrame(frame.id, expression);
+      RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
+      if (object != null) {
+        _logger.info('-> $object');
+        return new ChromeEval(this, frame, expression, object);
+      }
+    }
+
+    return null;
   }
 
   Map<ExceptionBreakType, String> exceptionTypes = {
@@ -528,7 +557,9 @@ class ChromeDebugIsolate extends DebugIsolate {
 
   List<DebugFrame> _frames;
 
-  ChromeDebugIsolate(this.connection, this.chrome, this.paused) : super();
+  ChromeDebugIsolate(this.connection, this.chrome, this.paused) : super() {
+    connection.isolates.add(this);
+  }
 
   // TODO: add Web Workers / Service Workers as isolates
   String get name => 'main';
@@ -778,6 +809,15 @@ class ChromeThis extends ChromeDebugBaseVariable {
       : super(connection, frame);
 }
 
+class ChromeEval extends ChromeDebugBaseVariable {
+  final RemoteObject object;
+
+  String name;
+
+  ChromeEval(ChromeConnection connection, ChromeDebugFrame frame, this.name, this.object)
+      : super(connection, frame);
+}
+
 class ChromeScope extends ChromeDebugBaseVariable {
   final Scope scope;
 
@@ -937,7 +977,9 @@ class ChromeDebugValue extends DebugValue {
 
   String get symbolEval {
     String lookup = '';
-    Match m = extractSymbolKey.firstMatch(variable.name);
+    String name = variable is ChromeDebugVariable ?
+        (variable as ChromeDebugVariable).property.name : variable.name;
+    Match m = extractSymbolKey.firstMatch(name);
     if (m != null) lookup = '[${m.group(1)}]';
     List<String> root = pathParts;
     return '${root.take(root.length - 1).join('.')}$lookup';
@@ -946,8 +988,10 @@ class ChromeDebugValue extends DebugValue {
   Future<DebugValue> invokeToString() async {
     if (value?.meta == RemoteObjectType.getter) {
       String expression = variable.isSymbol ? symbolEval: path;
+      _logger.info('evaluateOnCallFrame($expression)');
       var result = await connection.chrome.debugger.evaluateOnCallFrame(frame.id, expression);
       RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
+      _logger.info('-> $object');
       ChromeDebugValue value = object != null
           ? new ChromeDebugValue(connection, variable, object, replaceValueOnEval: true)
           : this;

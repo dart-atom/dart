@@ -12,3 +12,69 @@
   top: inherit;
   z-index: 10000;
 }
+
+#hover-tooltip.multi-rows,
+#hover-tooltip .debugger-data {
+  display: flex;
+  flex-direction: column;
+}
+
+#hover-tooltip .debugger-data {
+  flex-basis: 26px;
+}
+
+#hover-tooltip .debugger-data.expandable {
+  flex-basis: 148px;
+}
+
+#hover-tooltip ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#hover-tooltip .material-list {
+  ul,
+  ol {
+    margin-bottom: 0;
+    padding-left: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  li {
+    cursor: pointer;
+    display: block;
+    line-height: @component-line-height;
+    min-height: @component-line-height;
+    padding: 0 4px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+
+    .material-icon-button span {
+      margin: 0;
+    }
+  }
+
+  li:hover {
+    background-color: transparent;
+  }
+
+  li.material-list-selected {
+    color: @text-color-selected;
+    background-color: transparent;
+  }
+
+  ul.material-list-indent {
+    margin-left: @component-icon-padding + @component-icon-size;
+  }
+
+  .icon-triangle-right::before {
+    position: relative;
+    left: 3px;
+  }
+
+  .debugger-secondary-info {
+    margin-left: 0.5em;
+  }
+}
