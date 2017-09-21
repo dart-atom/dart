@@ -125,37 +125,6 @@ class DebuggerView extends DockedView {
     if (connection.onLibrariesChanged != null) {
       subs.add(connection.onLibrariesChanged.listen(_handleLibrariesChanged));
     }
-
-    subs.add(debugManager.onEvalTooltip.listen((tooltip) async {
-      // We have to put the tooltip up before going async (not sure why,
-      // but otherwise it fails most of the time)
-      var h = tooltip.info;
-      String variable = h.elementDescription?.split(' ')?.last;
-      if (variable == null || h.containingLibraryPath == null ||
-          h.containingLibraryPath.isEmpty || !connection.isAlive) {
-        return;
-      }
-
-      DebugVariable result = await connection.eval(tooltip.info);
-      if (result == null) return;
-
-      MTree<DebugVariable> row = new MTree(new _LocalTreeModel(), ExecutionTab.renderVariable)
-          ..flex()
-          ..toggleClass('has-debugger-data');
-
-      row.selectedItem.onChanged.listen((variable) async {
-        if (variable == null) return;
-        await variable.value.invokeToString();
-        await row.updateItem(variable);
-      });
-
-      await row.update([result]);
-
-      String clazz = 'debugger-data';
-      // TODO: this might change after eval of a getter
-      if (!result?.value?.isPrimitive ?? false) clazz += ' expandable';
-      tooltip.expand(div(c: clazz)..add(row));
-    }));
   }
 
   void _createConfigMenu() {
@@ -516,7 +485,7 @@ class ExecutionTab extends MTab {
     content.add([
       list = new MList(_renderFrame)
           ..toggleClass('debugger-frame-area'),
-      locals = new MTree(new _LocalTreeModel(), ExecutionTab.renderVariable)
+      locals = new MTree(new LocalTreeModel(), ExecutionTab.renderVariable)
           ..flex()
           ..toggleClass('debugger-local-area')
     ]);
@@ -636,7 +605,7 @@ class ExecutionTab extends MTab {
   void dispose() => subs.dispose();
 }
 
-class _LocalTreeModel extends TreeModel<DebugVariable> {
+class LocalTreeModel extends TreeModel<DebugVariable> {
   bool canHaveChildren(DebugVariable variable) {
     DebugValue value = variable.value;
     return !value.isPrimitive;

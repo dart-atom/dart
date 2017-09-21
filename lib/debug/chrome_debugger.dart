@@ -30,7 +30,6 @@ const _verbose = false;
 // calling pause/resume ?
 // TODO on user reload, should we remove all breakpoints and reset them?
 // TODO put up message when pausing (running -> waiting to pause)
-// TODO tooltips observation of variables
 // TODO investigate why debug launch gets closed properly when restarting
 //   but not serve launch
 // TODO console + find in console

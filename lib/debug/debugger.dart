@@ -11,7 +11,6 @@ import 'package:atom/utils/disposable.dart';
 import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
-import '../impl/tooltip.dart';
 import '../state.dart';
 import 'debugger_ui.dart';
 import 'model.dart';
@@ -36,8 +35,6 @@ class DebugManager implements Disposable {
   StreamController<DebugConnection> _addedController
       = new StreamController.broadcast();
   StreamController<DebugConnection> _removedController
-      = new StreamController.broadcast();
-  StreamController<TooltipElement> _evalTooltip
       = new StreamController.broadcast();
 
   DebugManager() {
@@ -64,10 +61,6 @@ class DebugManager implements Disposable {
   Stream<DebugConnection> get onAdded => _addedController.stream;
 
   Stream<DebugConnection> get onRemoved => _removedController.stream;
-
-  Stream<TooltipElement> get onEvalTooltip => _evalTooltip.stream;
-
-  void evalTooltip(TooltipElement h) => _evalTooltip.add(h);
 
   void addConnection(DebugConnection connection) {
     connections.add(connection);

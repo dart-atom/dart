@@ -104,7 +104,7 @@ class TooltipManager implements Disposable {
             content: content,
             position: _positionForScreenPosition(h.offset));
 
-          debugManager.evalTooltip(_tooltipElement);
+          debugTooltipManager.check(_tooltipElement);
           break;
         }
       }).catchError((_) => null);
@@ -163,12 +163,13 @@ class TooltipElement extends CoreElement {
 
   final String content;
   final HoverInformation info;
+  final TextEditor editor;
 
   Disposable _cmdDispose;
   bool _locked = false;
   StreamSubscriptions _subs = new StreamSubscriptions();
 
-  TooltipElement(TextEditor editor, {this.content, this.info, html.Point position})
+  TooltipElement(this.editor, {this.content, this.info, html.Point position})
       : super('div', classes: 'hover-tooltip') {
     id = 'hover-tooltip';
 

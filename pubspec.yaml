@@ -19,6 +19,7 @@ dependencies:
   vm_service_lib: ^0.3.0
   yaml: ^2.0.0
   source_maps: "^0.10.4"
+  petitparser: "^1.6.1"
 
 dev_dependencies:
   grinder: ^0.8.0+1
