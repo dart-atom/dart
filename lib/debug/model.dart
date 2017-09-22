@@ -1,10 +1,7 @@
 import 'dart:async';
 
-import '../analysis_server.dart';
 import '../launch/launch.dart';
 import '../utils.dart';
-
-export '../analysis_server.dart' show HoverInformation;
 
 abstract class DebugConnection {
   final Launch launch;
@@ -37,7 +34,7 @@ abstract class DebugConnection {
 
   void dispose();
 
-  Future<DebugVariable> eval(HoverInformation symbol);
+  Future<DebugVariable> eval(DebugExpression expression);
 }
 
 abstract class DebugOption {
@@ -45,6 +42,19 @@ abstract class DebugOption {
 
   bool get checked;
   set checked(bool state);
+}
+
+class DebugExpression {
+  String filePath;
+
+  /// This is the simple dart sub-grammar we handle for now:
+  ///   expression :: ref ('.' ref)*
+  ///   ref :: identifier [ index ]
+  ///   index :: '[' expression | number ']'
+  /// expression is in a List tree generate by petitparser.
+  dynamic expression;
+
+  DebugExpression(this.filePath, this.expression);
 }
 
 // TODO: Add an IsolateState class.

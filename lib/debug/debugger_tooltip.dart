@@ -13,6 +13,7 @@ import '../elements.dart';
 import '../impl/tooltip.dart';
 import '../material.dart';
 import '../state.dart';
+import '../utils.dart';
 
 import './debugger_ui.dart';
 import './model.dart';
@@ -21,7 +22,10 @@ final Logger _logger = new Logger('atom.debugger_tooltip');
 
 class DebugTooltipManager implements Disposable {
 
+  final Property<int> endOffset = new Property();
+
   Parser reverseContextParser;
+
 
   DebugTooltipManager() {
     var expression = undefined();
@@ -30,9 +34,9 @@ class DebugTooltipManager implements Disposable {
     var id = undefined();
 
     Parser trim(String c) => char(c).trim();
-    Parser tagged(Parser p) => new TagPositionParser(p);
+    Parser tagged(Parser p) => new TagPositionParser(p, endOffset);
 
-    // This is the simple dart sub-grammar we handle for now:
+    // This is the simple dart sub-grammar we handle for now, backward:
     // expression :: ref ('.' ref)*
     // backward -> (ref '.')* ref
     expression.set((ref & trim('.')).star() & ref);
@@ -49,6 +53,7 @@ class DebugTooltipManager implements Disposable {
     reverseContextParser = expression;
   }
 
+  // Put it back in flowing order.
   dynamic reverseParse(dynamic value) {
     if (value is String) {
       return reverseString(value);
@@ -62,55 +67,38 @@ class DebugTooltipManager implements Disposable {
   String reverseString(String input) =>
       new String.fromCharCodes(input.codeUnits.reversed);
 
+  // This is how many characters back at most we go to get the full context.
   static const backwardBuffer = 160;
 
   Future check(TooltipElement tooltip) async {
     HoverInformation info = tooltip.info;
-    if (info.containingLibraryPath == null || info.containingLibraryPath.isEmpty) return;
-
-    String variable = info.elementDescription?.split(' ')?.last;
-    if (variable == null) return;
-
     TextEditor editor = tooltip.editor;
 
     int startOffset = math.max(0, info.offset - backwardBuffer);
     int endOffset = info.offset + info.length;
     String input = reverseString(editor.getTextInBufferRange(new Range.fromPoints(
-      editor.getBuffer().positionForCharacterIndex(startOffset),
-      editor.getBuffer().positionForCharacterIndex(endOffset))));
+        editor.getBuffer().positionForCharacterIndex(startOffset),
+        editor.getBuffer().positionForCharacterIndex(endOffset))));
 
-    print('input: $input');
-    print(reverseParse(reverseContextParser.parse(input).value));
-
-    // TODO walk tree and generate expression, identifying 'this'
-    // candidates (leftmost ref of each expression)
-    // as you go along.
-    // TODO remap offset: aa.bb -> aa@3 . bb@0 ->
-    // endOffset - offset - symbol.length
-
-
-    // expression :: ref ('.' ref)*
-    // index :: '[' expression | number ']' e
-    // ref :: identifier [ index ]
-    // [[[tagged, 0], null], []]
-    // [[identifier, index], []]
-    // [[[tooltip, 7], null], [[., [[editor, 0], null]]]]
-    // dynamic unparse(dynamic value) {
-    //   if (value is String) {
-    //     return reverseString(value);
-    //   } else if (value is List) {
-    //     return value.reversed.map((v) => reverseParse(v)).toList();
-    //   } else {
-    //     return value;
-    //   }
-    // }
+    this.endOffset.value = endOffset;
 
     for (var connection in debugManager.connections) {
       if (!connection.isAlive) continue;
 
-      DebugVariable result = await connection.eval(info);
-      if (result == null) return;
+      DebugVariable result;
+      try {
+        // Parse in reverse from cursor, then let the evaluator unparse it
+        // adding custom context information if needed.
+        var expression = reverseParse(reverseContextParser.parse(input).value);
+        // Let actual debugger to the eval.
+        result = await connection.eval(new DebugExpression(editor.getPath(), expression));
+        if (result == null) return;
+      } catch (e) {
+        _logger.warning(e);
+        break;
+      }
 
+      // If we have anything we create the MTree to display it in the tooltip.
       MTree<DebugVariable> row = new MTree(new LocalTreeModel(), ExecutionTab.renderVariable)
           ..flex()
           ..toggleClass('has-debugger-data');
@@ -130,23 +118,83 @@ class DebugTooltipManager implements Disposable {
     }
   }
 
-  void dispose() {
+  void dispose() {}
+}
+
+class TooltipEvaluator {
+  final DebugExpression expression;
+
+  TooltipEvaluator(this.expression);
+
+  Future eval() async => visitExpression(expression.expression);
+
+  Future<String> visitExpression(expression) async {
+    if (expression is String) return expression;
+    if (expression is! List || expression.isEmpty) return '';
+    List<String> parts = [];
+    parts.add(await visitFirstReference(expression[0]));
+    for (var sub in expression[1]) {
+      parts.add(await visitNextReference(sub));
+    }
+    return parts.join();
+  }
+
+  Future<String> visitFirstReference(expression) async =>
+      visitReference(true, expression);
+
+  Future<String> visitNextReference(expression) async {
+    if (expression is String) return expression;
+    if (expression is! List || expression.isEmpty) return '';
+    String right  = await visitReference(false, expression[1]);
+    return '.$right';
+  }
+
+  Future<String> visitReference(bool first, expression) async {
+    if (expression is String) return expression;
+    if (expression is! List || expression.isEmpty) return '';
+    String left = await visitReferenceIdentifier(first, expression[0]);
+    String right = await visitIndex(expression[1]);
+    return '$left$right';
+  }
+
+  Future<String> visitReferenceIdentifier(bool first, expression) async {
+    if (expression is String) return expression;
+    if (expression is! List || expression.isEmpty) return '';
+    return mapReferenceIdentifier(first, expression[1], expression[0]);
+  }
+
+  /// For example, here we would override this in a js debugger to add 'this'
+  /// to the first (leftmost) identifier if needed.
+  Future<String> mapReferenceIdentifier(bool first, int offset, String identifier) async {
+    return identifier;
+  }
+
+  Future<String> visitIndex(expression) async {
+    if (expression is String) return expression;
+    if (expression is! List || expression.isEmpty) return '';
+    String inner = await visitExpression(expression[1]);
+    return '[$inner]';
   }
 }
 
 class TagPositionParser extends DelegateParser {
-  TagPositionParser(Parser delegate) : super(delegate);
+  final Property<int> endOffset;
+
+  TagPositionParser(Parser delegate, this.endOffset) : super(delegate);
 
   @override
   Result parseOn(Context context) {
     var result = delegate.parseOn(context);
     if (result.isSuccess) {
-      return result.success([context.position, result.value]);
+      return result.success([
+        endOffset.value - context.position - result.value.length + 1,
+        result.value
+      ]);
     } else {
       return result;
     }
   }
 
   @override
-  Parser copy() => new TagPositionParser(delegate);
+  Parser copy() => new TagPositionParser(delegate, endOffset);
 }

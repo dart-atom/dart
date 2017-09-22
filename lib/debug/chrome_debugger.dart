@@ -13,11 +13,13 @@ import 'package:source_maps/source_maps.dart';
 import 'package:source_maps/src/utils.dart';
 import 'package:source_span/source_span.dart';
 
+import '../analysis_server.dart';
 import '../launch/launch.dart';
 import '../state.dart';
 import 'breakpoints.dart';
 import 'chrome.dart';
 import 'debugger.dart';
+import 'debugger_tooltip.dart';
 import 'model.dart';
 
 final Logger _logger = new Logger('atom.chrome');
@@ -231,29 +233,20 @@ class ChromeConnection extends DebugConnection {
     subs.add(_breakpointsUpdated.stream.listen(resolveBreakpoint));
   }
 
-  Future<DebugVariable> eval(HoverInformation info) async {
+  Future<DebugVariable> eval(DebugExpression expression) async {
     if (!isPaused || _isolate.frames == null) return null;
-    List<String> uris = await uriResolver.resolvePathToUris(info.containingLibraryPath);
-    if (uris.isEmpty) return null;
-
-    DebugFrame frame = _isolate.frames.firstWhere(
-        (f) => uris.contains(f?.location?.path),
-        orElse: () => null);
+    // TODO figure out how to get selected frame
+    DebugFrame frame = _isolate.frames.first;
     if (frame != null) {
-      // TODO we can evaluate on this frame, then append result
-      // to _tooltipElement.  Filter by elementKind we can handle.
-      // 'field', 'top level variable'
-      String variable = info.elementDescription?.split(' ')?.last;
-      String expression = variable;
-      if (info.elementKind == 'field') {
-        expression = 'this.$expression';
-      }
+      // we evaluate on this frame, then return a variable that will be
+      // appended the the tooltip.
+      String debugExpression = await new ChromeTooltipEvaluator(expression).eval();
       _logger.info('evaluateOnCallFrame($expression)');
-      var result = await chrome.debugger.evaluateOnCallFrame(frame.id, expression);
+      var result = await chrome.debugger.evaluateOnCallFrame(frame.id, debugExpression);
       RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
       if (object != null) {
         _logger.info('-> $object');
-        return new ChromeEval(this, frame, expression, object);
+        return new ChromeEval(this, frame, debugExpression, object);
       }
     }
 
@@ -449,6 +442,21 @@ class DdcParsingOption extends DebugOption {
 
   bool get checked => atom.config.getValue(_debuggerDdcParsing);
   set checked(bool state) => atom.config.setValue(_debuggerDdcParsing, state);
+}
+
+class ChromeTooltipEvaluator extends TooltipEvaluator {
+
+  ChromeTooltipEvaluator(DebugExpression expression) : super(expression);
+
+  Future<String> mapReferenceIdentifier(bool first, int offset, String identifier) async {
+    if (first) {
+      HoverResult result = await analysisServer.getHover(expression.filePath, offset);
+      if (result.hovers.isNotEmpty && result.hovers.first.elementKind == 'field') {
+        return 'this.$identifier';
+      }
+    }
+    return identifier;
+  }
 }
 
 class ChromeDebugBreakpoint {

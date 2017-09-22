@@ -127,7 +127,7 @@ class ObservatoryConnection extends DebugConnection {
   stepOverAsyncSuspension() => _selectedIsolate?.stepOverAsyncSuspension();
   autoStepOver() => _selectedIsolate?.autoStepOver();
 
-  Future<DebugVariable> eval(HoverInformation symbol) => new Future.value(null);
+  Future<DebugVariable> eval(DebugExpression expression) => new Future.value(null);
 
   Future terminate() {
     try { ws?.close(); } catch (e) { }

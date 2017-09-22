@@ -82,21 +82,6 @@ class TooltipManager implements Disposable {
           String content = _tooltipContent(h);
           if (content == null || content.isEmpty) continue;
 
-          // Sometimes it is missing, so we replace with the hover source file.
-          if (h.containingLibraryPath == null || h.containingLibraryPath.isEmpty) {
-            h = new HoverInformation(h.offset, h.length,
-                  containingLibraryPath: _editor.getPath(),
-                  containingLibraryName: h.containingLibraryName,
-                  containingClassDescription: h.containingClassDescription,
-                  dartdoc: h.dartdoc,
-                  elementDescription: h.elementDescription,
-                  elementKind: h.elementKind,
-                  isDeprecated: h.isDeprecated,
-                  parameter: h.parameter,
-                  propagatedType: h.propagatedType,
-                  staticType: h.staticType);
-          }
-
           // Get rid of previous tooltips.
           _disposeTooltip();
           _tooltipElement = new TooltipElement(_editor,
@@ -164,12 +149,13 @@ class TooltipElement extends CoreElement {
   final String content;
   final HoverInformation info;
   final TextEditor editor;
+  final html.Point position;
 
   Disposable _cmdDispose;
   bool _locked = false;
   StreamSubscriptions _subs = new StreamSubscriptions();
 
-  TooltipElement(this.editor, {this.content, this.info, html.Point position})
+  TooltipElement(this.editor, {this.content, this.info, this.position})
       : super('div', classes: 'hover-tooltip') {
     id = 'hover-tooltip';
 
@@ -185,12 +171,8 @@ class TooltipElement extends CoreElement {
     }));
 
     // Set position at the mouseevent coordinates.
-    int x = position.x - _offset;
-    int y = position.y;
+    setTipPosition(32);
 
-    var h = (editor.view as html.Element).clientHeight;
-
-    attributes['style'] = 'bottom: ${h - y}px; left: ${x}px;';
     // Actually create the tooltip element.
     add(div(c: 'hover-tooltip-title')).add(div(text: content, c: 'inline-block'));
 
@@ -201,7 +183,17 @@ class TooltipElement extends CoreElement {
     parent.append(this.element);
   }
 
+  void setTipPosition(num verticalLeeway) {
+    var h = (editor.view as html.Element).clientHeight;
+    if (position.y - verticalLeeway < 0) {
+      attributes['style'] = 'top: ${position.y + 20}px; bottom: inherit; left: ${position.x - _offset}px;';
+    } else {
+      attributes['style'] = 'bottom: ${h - position.y}px; left: ${position.x - _offset}px;';
+    }
+  }
+
   void expand(CoreElement row) {
+    setTipPosition(160);
     this.toggleClass('multi-rows', true);
     add(row);
   }
