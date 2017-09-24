@@ -2,6 +2,9 @@ import 'dart:async';
 
 import '../launch/launch.dart';
 import '../utils.dart';
+import './evaluator.dart';
+
+export './evaluator.dart' show EvalExpression;
 
 abstract class DebugConnection {
   final Launch launch;
@@ -34,7 +37,7 @@ abstract class DebugConnection {
 
   void dispose();
 
-  Future<DebugVariable> eval(DebugExpression expression);
+  Future<DebugVariable> eval(EvalExpression expression);
 }
 
 abstract class DebugOption {
@@ -42,19 +45,6 @@ abstract class DebugOption {
 
   bool get checked;
   set checked(bool state);
-}
-
-class DebugExpression {
-  String filePath;
-
-  /// This is the simple dart sub-grammar we handle for now:
-  ///   expression :: ref ('.' ref)*
-  ///   ref :: identifier [ index ]
-  ///   index :: '[' expression | number ']'
-  /// expression is in a List tree generate by petitparser.
-  dynamic expression;
-
-  DebugExpression(this.filePath, this.expression);
 }
 
 // TODO: Add an IsolateState class.

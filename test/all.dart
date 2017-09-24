@@ -6,12 +6,14 @@ library atom.all_test;
 
 import 'dartino_util_test.dart' as dartino_util_test;
 import 'dependencies_test.dart' as dependencies_test;
+import 'evaluator_test.dart' as evaluator_test;
 import 'testing_utils_test.dart' as testing_utils_test;
 import 'utils_test.dart' as utils_test;
 
 main() {
   dartino_util_test.defineTests();
   dependencies_test.defineTests();
+  evaluator_test.defineTests();
   testing_utils_test.defineTests();
   utils_test.defineTests();
 }

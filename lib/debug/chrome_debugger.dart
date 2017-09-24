@@ -19,7 +19,7 @@ import '../state.dart';
 import 'breakpoints.dart';
 import 'chrome.dart';
 import 'debugger.dart';
-import 'debugger_tooltip.dart';
+import 'evaluator.dart';
 import 'model.dart';
 
 final Logger _logger = new Logger('atom.chrome');
@@ -83,6 +83,9 @@ class ChromeDebugger {
 }
 
 class ChromeConnection extends DebugConnection {
+  final ChromeDebugConnection chrome;
+  final UriResolver uriResolver;
+
   final Completer completer;
 
   ChromeDebugIsolate _isolate;
@@ -95,9 +98,6 @@ class ChromeConnection extends DebugConnection {
   StreamController<ChromeDebugBreakpoint> _breakpointsUpdated = new StreamController.broadcast();
 
   StreamSubscriptions subs = new StreamSubscriptions();
-
-  ChromeDebugConnection chrome;
-  UriResolver uriResolver;
 
   /// Scripts and maps by scriptId
   Map<String, ScriptParsed> scripts = {};
@@ -233,14 +233,14 @@ class ChromeConnection extends DebugConnection {
     subs.add(_breakpointsUpdated.stream.listen(resolveBreakpoint));
   }
 
-  Future<DebugVariable> eval(DebugExpression expression) async {
+  Future<DebugVariable> eval(EvalExpression expression) async {
     if (!isPaused || _isolate.frames == null) return null;
     // TODO figure out how to get selected frame
     DebugFrame frame = _isolate.frames.first;
     if (frame != null) {
       // we evaluate on this frame, then return a variable that will be
       // appended the the tooltip.
-      String debugExpression = await new ChromeTooltipEvaluator(expression).eval();
+      String debugExpression = await new ChromeEvaluator(expression).eval();
       _logger.info('evaluateOnCallFrame($expression)');
       var result = await chrome.debugger.evaluateOnCallFrame(frame.id, debugExpression);
       RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
@@ -444,24 +444,40 @@ class DdcParsingOption extends DebugOption {
   set checked(bool state) => atom.config.setValue(_debuggerDdcParsing, state);
 }
 
-class ChromeTooltipEvaluator extends TooltipEvaluator {
+class ChromeEvaluator extends Evaluator {
 
-  ChromeTooltipEvaluator(DebugExpression expression) : super(expression);
+  ChromeEvaluator(EvalExpression expression) : super(expression);
 
   Future<String> mapReferenceIdentifier(bool first, int offset, String identifier) async {
     if (first) {
       HoverResult result = await analysisServer.getHover(expression.filePath, offset);
-      if (result.hovers.isNotEmpty && result.hovers.first.elementKind == 'field') {
-        return 'this.$identifier';
+      if (result.hovers.isNotEmpty) {
+        HoverInformation info = result.hovers.first;
+        String kind = info.elementKind;
+        if (kind == 'field') {
+          return 'this.$identifier';
+        } else if (kind == 'top level variable') {
+          String library = _libraryName(info.containingLibraryPath ?? expression.filePath);
+          return '$library.$identifier';
+        }
       }
     }
     return identifier;
   }
+
+  String _libraryName(String path) {
+    path = new fs.File.fromPath(path).getBaseName();
+    if (path.endsWith('.dart')) {
+      return path.substring(0, path.length - 5);
+    } else {
+      return path;
+    }
+  }
 }
 
 class ChromeDebugBreakpoint {
-  AtomBreakpoint atomBreakpoint;
-  List<String> uris;
+  final AtomBreakpoint atomBreakpoint;
+  final List<String> uris;
 
   List<Breakpoint> chromeBreakpoints = [];
   bool resolved = false;
@@ -609,8 +625,8 @@ class ChromeDebugIsolate extends DebugIsolate {
 
 class ChromeDebugFrame extends DebugFrame {
   final ChromeConnection connection;
-  final CallFrame frame;
   final RemoteObject exception;
+  final CallFrame frame;
 
   List<DebugVariable> _locals;
 
@@ -818,8 +834,7 @@ class ChromeThis extends ChromeDebugBaseVariable {
 
 class ChromeEval extends ChromeDebugBaseVariable {
   final RemoteObject object;
-
-  String name;
+  final String name;
 
   ChromeEval(ChromeConnection connection, ChromeDebugFrame frame, this.name, this.object)
       : super(connection, frame);
@@ -896,6 +911,7 @@ class ChromeDebugValue extends DebugValue {
   final ChromeConnection connection;
   final ChromeDebugBaseVariable variable;
   final RemoteObject value;
+  final bool replaceValueOnEval;
 
   Map<String, DebugVariable> children;
 
@@ -941,8 +957,6 @@ class ChromeDebugValue extends DebugValue {
   // Even after getChildren() we would have to count elements that are actual
   // values.
   int get itemsLength => null;
-
-  bool replaceValueOnEval;
 
   // Warning: value can be null.
   ChromeDebugValue(this.connection, this.variable, this.value, {this.replaceValueOnEval: false});

@@ -171,7 +171,7 @@ class TooltipElement extends CoreElement {
     }));
 
     // Set position at the mouseevent coordinates.
-    setTipPosition(32);
+    setTipPosition(debugTooltipManager.hasOpenedConnection ? 180 : 32);
 
     // Actually create the tooltip element.
     add(div(c: 'hover-tooltip-title')).add(div(text: content, c: 'inline-block'));
@@ -193,7 +193,6 @@ class TooltipElement extends CoreElement {
   }
 
   void expand(CoreElement row) {
-    setTipPosition(160);
     this.toggleClass('multi-rows', true);
     add(row);
   }
