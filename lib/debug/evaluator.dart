@@ -79,7 +79,7 @@ class Evaluator {
 
   Evaluator(this.expression);
 
-  Future eval() async => visitExpression(expression.expression);
+  Future<String> eval() async => visitExpression(expression.expression);
 
   Future<String> visitExpression(dynamic expression) async {
     if (expression is String) return expression;

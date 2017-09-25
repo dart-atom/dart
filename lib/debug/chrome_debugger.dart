@@ -241,7 +241,7 @@ class ChromeConnection extends DebugConnection {
       // we evaluate on this frame, then return a variable that will be
       // appended the the tooltip.
       String debugExpression = await new ChromeEvaluator(expression).eval();
-      _logger.info('evaluateOnCallFrame($expression)');
+      _logger.info('evaluateOnCallFrame($debugExpression)');
       var result = await chrome.debugger.evaluateOnCallFrame(frame.id, debugExpression);
       RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
       if (object != null) {
@@ -985,30 +985,34 @@ class ChromeDebugValue extends DebugValue {
   Iterable<String> get pathParts {
     List<String> tokens = [];
     for (var chain = variable; chain != null; chain = chain.parent) {
+      // if __proto__ or super: ignore
       if (chain.pathPart == null ||
           chain.pathPart == '__proto__' || chain.pathPart == 'super') {
         continue;
       }
-      tokens.add(chain.pathPart);
+      if (chain.isSymbol) {
+        // if symbol -> '[' symbolName ']'
+        String name = chain is ChromeDebugVariable ? chain.property.name : chain.name;
+        Match m = extractSymbolKey.firstMatch(name);
+        tokens.add(m != null ? '[${m.group(1)}]' : name);
+      } else if (chain.parent != null && chain.parent.value.isList) {
+        // if array index -> '[' index ']''
+        tokens.add('[${chain.pathPart}]');
+      } else if (chain.parent == null) {
+        // if field is lefmost field: field
+        tokens.add(chain.pathPart);
+      } else {
+        // if field not leftmost: '.' field
+        tokens.add('.${chain.pathPart}');
+      }
     }
     return tokens.reversed;
   }
 
-  String get path => pathParts.join('.');
-
-  String get symbolEval {
-    String lookup = '';
-    String name = variable is ChromeDebugVariable ?
-        (variable as ChromeDebugVariable).property.name : variable.name;
-    Match m = extractSymbolKey.firstMatch(name);
-    if (m != null) lookup = '[${m.group(1)}]';
-    List<String> root = pathParts;
-    return '${root.take(root.length - 1).join('.')}$lookup';
-  }
-
   Future<DebugValue> invokeToString() async {
     if (value?.meta == RemoteObjectType.getter) {
-      String expression = variable.isSymbol ? symbolEval: path;
+      // String expression = variable.isSymbol ? symbolEval : path;
+      String expression = pathParts.join();
       _logger.info('evaluateOnCallFrame($expression)');
       var result = await connection.chrome.debugger.evaluateOnCallFrame(frame.id, expression);
       RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;

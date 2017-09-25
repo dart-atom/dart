@@ -30139,6 +30139,9 @@ self.showOpenDialog = function(options) {
           return t1.charCodeAt(0) == 0 ? t1 : t1;
         }
       },
+      join$0: function($receiver) {
+        return this.join$1($receiver, "");
+      },
       where$1: function(_, test) {
         return this.super$Iterable$where(0, test);
       },
@@ -60990,7 +60993,7 @@ self.showOpenDialog = function(options) {
                 // returning from await.
                 debugExpression = $async$result;
                 t1 = $.$get$_logger31();
-                t1.info$1("evaluateOnCallFrame(" + H.S(expression) + ")");
+                t1.info$1("evaluateOnCallFrame(" + H.S(debugExpression) + ")");
                 $async$goto = 6;
                 return P._asyncAwait($async$self.chrome.get$$debugger().evaluateOnCallFrame$2(J.get$id$x(frame), debugExpression), $async$eval$1);
               case 6:
@@ -62670,20 +62673,53 @@ self.showOpenDialog = function(options) {
         return J.compareTo$1$ns(t1.get$name(a), t2.get$name(b));
       }, "call$2", "get$variableSorter", 4, 0, 113],
       get$pathParts: function() {
-        var tokens, chain;
+        var tokens, chain, $name, m, t1, t2, t3;
         tokens = [];
         for (chain = this.variable; chain != null; chain = chain.parent) {
           if (chain.get$pathPart() == null || J.$eq$(chain.get$pathPart(), "__proto__") || J.$eq$(chain.get$pathPart(), "super"))
             continue;
-          tokens.push(chain.get$pathPart());
+          if (chain.get$isSymbol()) {
+            $name = !!chain.$isChromeDebugVariable ? J.get$name$x(chain.property) : chain.get$name(chain);
+            m = $.$get$extractSymbolKey().firstMatch$1($name);
+            if (m != null) {
+              t1 = m._match;
+              if (1 >= t1.length)
+                return H.ioore(t1, 1);
+              t1 = "[" + H.S(t1[1]) + "]";
+            } else
+              t1 = $name;
+            tokens.push(t1);
+          } else {
+            t1 = chain.parent;
+            t2 = t1 == null;
+            if (!t2) {
+              t3 = t1._chrome_debugger$_value;
+              if (t3 == null) {
+                t3 = new S.ChromeDebugValue(t1.connection, t1, t1.get$object(), false, null);
+                t1._chrome_debugger$_value = t3;
+                t1 = t3;
+              } else
+                t1 = t3;
+              t1 = t1.value;
+              t3 = t1 == null;
+              if (J.$eq$(t3 ? t1 : t1.get$subtype(), "array"))
+                t1 = (t3 ? t1 : t1.get$objectId()) != null;
+              else
+                t1 = false;
+            } else
+              t1 = false;
+            if (t1)
+              tokens.push("[" + H.S(chain.get$pathPart()) + "]");
+            else if (t2)
+              tokens.push(chain.get$pathPart());
+            else
+              tokens.push("." + H.S(chain.get$pathPart()));
+          }
         }
         return new H.ReversedListIterable(tokens, [H.getTypeArgumentByIndex(tokens, 0)]);
       },
-      get$path: function(_) {
-        return this.get$pathParts().join$1(0, ".");
-      },
       invokeToString$0: function() {
-        var $async$goto = 0, $async$completer = P.Completer_Completer$sync(), $async$returnValue, $async$self = this, t1, $name, m, t2, lookup, root, expression, t3, result, t4, object, value;
+        var $async$goto = 0, $async$completer = P.Completer_Completer$sync(), $async$returnValue, $async$self = this, t1, expression, t2, t3, result, t4, object, value;
         var $async$invokeToString$0 = P._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
           if ($async$errorCode === 1)
             return P._asyncRethrow($async$result, $async$completer);
@@ -62696,30 +62732,13 @@ self.showOpenDialog = function(options) {
                 break;
               case 3:
                 // then
-                t1 = $async$self.variable;
-                if (t1.get$isSymbol()) {
-                  $name = !!t1.$isChromeDebugVariable ? J.get$name$x(t1.property) : t1.get$name(t1);
-                  m = $.$get$extractSymbolKey().firstMatch$1($name);
-                  if (m != null) {
-                    t2 = m._match;
-                    if (1 >= t2.length) {
-                      $async$returnValue = H.ioore(t2, 1);
-                      // goto return
-                      $async$goto = 1;
-                      break;
-                    }
-                    lookup = "[" + H.S(t2[1]) + "]";
-                  } else
-                    lookup = "";
-                  root = $async$self.get$pathParts();
-                  expression = H.SubListIterable$(root, 0, J.$sub$n(J.get$length$asx(root._source), 1), H.getTypeArgumentByIndex(root, 0)).join$1(0, ".") + lookup;
-                } else
-                  expression = $async$self.get$pathParts().join$1(0, ".");
-                t2 = $.$get$_logger31();
-                t2.info$1("evaluateOnCallFrame(" + expression + ")");
-                t3 = $async$self.connection;
+                expression = $async$self.get$pathParts().join$0(0);
+                t1 = $.$get$_logger31();
+                t1.info$1("evaluateOnCallFrame(" + expression + ")");
+                t2 = $async$self.connection;
+                t3 = $async$self.variable;
                 $async$goto = 5;
-                return P._asyncAwait(t3.chrome.get$$debugger().evaluateOnCallFrame$2(J.get$id$x(t1.frame), expression), $async$invokeToString$0);
+                return P._asyncAwait(t2.chrome.get$$debugger().evaluateOnCallFrame$2(J.get$id$x(t3.frame), expression), $async$invokeToString$0);
               case 5:
                 // returning from await.
                 result = $async$result;
@@ -62729,9 +62748,9 @@ self.showOpenDialog = function(options) {
                   t4 = t4 ? result : result.get$exceptionDetails();
                   object = t4 == null ? t4 : t4.get$exception();
                 }
-                t2.info$1("-> " + H.S(object));
-                value = object != null ? new S.ChromeDebugValue(t3, t1, object, true, null) : $async$self;
-                t1._chrome_debugger$_value = value;
+                t1.info$1("-> " + H.S(object));
+                value = object != null ? new S.ChromeDebugValue(t2, t3, object, true, null) : $async$self;
+                t3._chrome_debugger$_value = value;
                 $async$returnValue = value;
                 // goto return
                 $async$goto = 1;
