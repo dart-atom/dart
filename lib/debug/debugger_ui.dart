@@ -485,7 +485,7 @@ class ExecutionTab extends MTab {
     content.add([
       list = new MList(_renderFrame)
           ..toggleClass('debugger-frame-area'),
-      locals = new MTree(new _LocalTreeModel(), _renderVariable)
+      locals = new MTree(new LocalTreeModel(), ExecutionTab.renderVariable)
           ..flex()
           ..toggleClass('debugger-local-area')
     ]);
@@ -565,7 +565,7 @@ class ExecutionTab extends MTab {
     }
   }
 
-  void _renderVariable(dynamic _local, CoreElement element) {
+  static void renderVariable(dynamic _local, CoreElement element) {
     DebugVariable local = _local;
     final String valueClass = 'debugger-secondary-info overflow-hidden-ellipsis right-aligned';
 
@@ -585,7 +585,7 @@ class ExecutionTab extends MTab {
   }
 
   void _showObjectDetails(DebugVariable variable) {
-    view.detailSection.showDetails(variable);
+    view.detailSection._showDetails(variable, _updateVariable);
   }
 
   Future _updateLocals(List<DebugVariable> vars) {
@@ -595,13 +595,19 @@ class ExecutionTab extends MTab {
     });
   }
 
+  Future _updateVariable(DebugVariable variable) {
+    locals.toggleClass('debugger-locked', true);
+    return locals.updateItem(variable).whenComplete(() {
+      locals.toggleClass('debugger-locked', false);
+    });
+  }
+
   void dispose() => subs.dispose();
 }
 
-class _LocalTreeModel extends TreeModel<DebugVariable> {
+class LocalTreeModel extends TreeModel<DebugVariable> {
   bool canHaveChildren(DebugVariable variable) {
     DebugValue value = variable.value;
-    // print(value);
     return !value.isPrimitive;
   }
 
@@ -621,9 +627,14 @@ class DetailSection {
     ])..hidden(true);
   }
 
-  void showDetails(DebugVariable variable) {
+  void _showDetails(DebugVariable variable, Future update(DebugVariable variable)) {
     if (variable != null) {
       variable.value.invokeToString().then((DebugValue result) {
+        if (result.replaceValueOnEval) {
+          // Re-render.
+          update(variable);
+        }
+
         String str = result.valueAsString;
         if (result.valueIsTruncated) str += '…';
         _detailsElement.clear();

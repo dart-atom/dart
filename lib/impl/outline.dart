@@ -101,6 +101,7 @@ class OutlineView extends DockedView implements Disposable {
         subs.add(editor.onDidChangeCursorPosition.listen(_cursorChanged));
       }
       _handleOutline(controller.lastOutlines[path]);
+      _handleErrorsChanged(controller.lastErrors);
     }));
 
     content..add([
@@ -132,12 +133,12 @@ class OutlineView extends DockedView implements Disposable {
   }
 
   void _handleOutline(AnalysisOutline data) {
-    if (treeBuilder == null) return;
+    if (treeBuilder == null || editor == null) return;
     treeBuilder.clear();
     _topLevel.clear();
     fileType.text = '';
     title.text = 'no outline';
-    if (data == null || data.file != path || editor == null) return;
+    if (data == null || data.file != path) return;
 
     // Update the title.
     if (data.libraryName == null) {
@@ -286,11 +287,9 @@ class OutlineView extends DockedView implements Disposable {
 
   void _jumpToLocation(analysis.Location location) {
     if (editor == null) return;
-    Range range = new Range.fromPoints(
-      new Point.coords(location.startLine - 1, location.startColumn - 1),
-      new Point.coords(location.startLine - 1, location.startColumn - 1 + location.length)
-    );
-    editor.setSelectedBufferRange(range);
+    editorManager.jumpToLocation(editor.getPath(),
+        location.startLine - 1,
+        location.startColumn - 1, location.length);
   }
 }
 
@@ -347,27 +346,8 @@ class _ErrorsList extends CoreElement {
   }
 
   Future<TextEditor> _jumpTo(analysis.Location location) {
-    Map options = {
-      'initialLine': location.startLine,
-      'initialColumn': location.startColumn,
-      'searchAllPanes': true
-    };
-
-    // If we're editing the target file, then use the current editor.
-    var ed = atom.workspace.getActiveTextEditor();
-    if (ed != null && ed.getPath() == location.file) {
-      options['searchAllPanes'] = false;
-    }
-
-    return atom.workspace.openPending(location.file, options: options).then(
-        (TextEditor editor) {
-      // Select offset to length.
-      TextBuffer buffer = editor.getBuffer();
-      editor.setSelectedBufferRange(new Range.fromPoints(
-        buffer.positionForCharacterIndex(location.offset),
-        buffer.positionForCharacterIndex(location.offset + location.length)
-      ));
-      return editor;
-    });
+    return editorManager.jumpToLocation(location.file,
+        location.startLine - 1,
+        location.startColumn - 1, location.length);
   }
 }

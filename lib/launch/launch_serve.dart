@@ -86,8 +86,8 @@ args:
   #define: variable=value[,variable=value]
   # The hostname to listen on. (defaults to "localhost")
   #hostname: localhost
-  # The base port to listen on. (defaults to "8080")
-  #port: 8080
+  # The base port to listen on. (defaults to "8084")
+  port: 8084
   # Force the use of a polling filesystem watcher.
   #force-poll: true
   #no-force-poll: true

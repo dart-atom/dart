@@ -39,6 +39,7 @@ import 'browser.dart';
 import 'dartino/dartino.dart' show dartino;
 import 'debug/breakpoints.dart';
 import 'debug/debugger.dart';
+import 'debug/debugger_tooltip.dart';
 import 'debug/debugger_ui.dart';
 import 'editors.dart';
 import 'error_repository.dart';
@@ -146,6 +147,7 @@ class AtomDartPackage extends AtomPackage {
     disposables.add(deps[WorkspaceLaunchManager] = new WorkspaceLaunchManager());
     disposables.add(deps[BreakpointManager] = new BreakpointManager());
     disposables.add(deps[DebugManager] = new DebugManager());
+    disposables.add(deps[DebugTooltipManager] = new DebugTooltipManager());
     disposables.add(deps[NavigationManager] = new NavigationManager());
 
     AnalysisOptionsManager analysisOptionsManager = new AnalysisOptionsManager();

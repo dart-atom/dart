@@ -15,6 +15,7 @@ import '../state.dart';
 import 'debugger_ui.dart';
 import 'model.dart';
 
+export '../impl/tooltip.dart' show TooltipElement;
 export 'model.dart' show DebugConnection;
 
 final Logger _logger = new Logger('atom.debugger');

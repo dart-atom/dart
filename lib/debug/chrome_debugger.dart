@@ -13,11 +13,13 @@ import 'package:source_maps/source_maps.dart';
 import 'package:source_maps/src/utils.dart';
 import 'package:source_span/source_span.dart';
 
+import '../analysis_server.dart';
 import '../launch/launch.dart';
 import '../state.dart';
 import 'breakpoints.dart';
 import 'chrome.dart';
 import 'debugger.dart';
+import 'evaluator.dart';
 import 'model.dart';
 
 final Logger _logger = new Logger('atom.chrome');
@@ -30,7 +32,6 @@ const _verbose = false;
 // calling pause/resume ?
 // TODO on user reload, should we remove all breakpoints and reset them?
 // TODO put up message when pausing (running -> waiting to pause)
-// TODO tooltips observation of variables
 // TODO investigate why debug launch gets closed properly when restarting
 //   but not serve launch
 // TODO console + find in console
@@ -82,6 +83,9 @@ class ChromeDebugger {
 }
 
 class ChromeConnection extends DebugConnection {
+  final ChromeDebugConnection chrome;
+  final UriResolver uriResolver;
+
   final Completer completer;
 
   ChromeDebugIsolate _isolate;
@@ -94,9 +98,6 @@ class ChromeConnection extends DebugConnection {
   StreamController<ChromeDebugBreakpoint> _breakpointsUpdated = new StreamController.broadcast();
 
   StreamSubscriptions subs = new StreamSubscriptions();
-
-  ChromeDebugConnection chrome;
-  UriResolver uriResolver;
 
   /// Scripts and maps by scriptId
   Map<String, ScriptParsed> scripts = {};
@@ -225,11 +226,31 @@ class ChromeConnection extends DebugConnection {
     subs.add(_dartMapUpdated.stream.listen((map) {
       // find unresolved breakpoints ready for this map.
       breakpoints.values
-          .where((b) => !b.resolved && b.uris.any((uri) => map == uri))
+          .where((b) => b != null && !b.resolved && b.uris.any((uri) => map == uri))
           .forEach((b) => resolveBreakpoint(b));
     }));
 
     subs.add(_breakpointsUpdated.stream.listen(resolveBreakpoint));
+  }
+
+  Future<DebugVariable> eval(EvalExpression expression) async {
+    if (!isPaused || _isolate.frames == null) return null;
+    // TODO figure out how to get selected frame
+    DebugFrame frame = _isolate.frames.first;
+    if (frame != null) {
+      // we evaluate on this frame, then return a variable that will be
+      // appended the the tooltip.
+      String debugExpression = await new ChromeEvaluator(expression).eval();
+      _logger.info('evaluateOnCallFrame($debugExpression)');
+      var result = await chrome.debugger.evaluateOnCallFrame(frame.id, debugExpression);
+      RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
+      if (object != null) {
+        _logger.info('-> $object');
+        return new ChromeEval(this, frame, debugExpression, object);
+      }
+    }
+
+    return null;
   }
 
   Map<ExceptionBreakType, String> exceptionTypes = {
@@ -423,9 +444,40 @@ class DdcParsingOption extends DebugOption {
   set checked(bool state) => atom.config.setValue(_debuggerDdcParsing, state);
 }
 
+class ChromeEvaluator extends Evaluator {
+
+  ChromeEvaluator(EvalExpression expression) : super(expression);
+
+  Future<String> mapReferenceIdentifier(bool first, int offset, String identifier) async {
+    if (first) {
+      HoverResult result = await analysisServer.getHover(expression.filePath, offset);
+      if (result.hovers.isNotEmpty) {
+        HoverInformation info = result.hovers.first;
+        String kind = info.elementKind;
+        if (kind == 'field') {
+          return 'this.$identifier';
+        } else if (kind == 'top level variable') {
+          String library = _libraryName(info.containingLibraryPath ?? expression.filePath);
+          return '$library.$identifier';
+        }
+      }
+    }
+    return identifier;
+  }
+
+  String _libraryName(String path) {
+    path = new fs.File.fromPath(path).getBaseName();
+    if (path.endsWith('.dart')) {
+      return path.substring(0, path.length - 5);
+    } else {
+      return path;
+    }
+  }
+}
+
 class ChromeDebugBreakpoint {
-  AtomBreakpoint atomBreakpoint;
-  List<String> uris;
+  final AtomBreakpoint atomBreakpoint;
+  final List<String> uris;
 
   List<Breakpoint> chromeBreakpoints = [];
   bool resolved = false;
@@ -528,7 +580,9 @@ class ChromeDebugIsolate extends DebugIsolate {
 
   List<DebugFrame> _frames;
 
-  ChromeDebugIsolate(this.connection, this.chrome, this.paused) : super();
+  ChromeDebugIsolate(this.connection, this.chrome, this.paused) : super() {
+    connection.isolates.add(this);
+  }
 
   // TODO: add Web Workers / Service Workers as isolates
   String get name => 'main';
@@ -571,8 +625,8 @@ class ChromeDebugIsolate extends DebugIsolate {
 
 class ChromeDebugFrame extends DebugFrame {
   final ChromeConnection connection;
-  final CallFrame frame;
   final RemoteObject exception;
+  final CallFrame frame;
 
   List<DebugVariable> _locals;
 
@@ -778,6 +832,14 @@ class ChromeThis extends ChromeDebugBaseVariable {
       : super(connection, frame);
 }
 
+class ChromeEval extends ChromeDebugBaseVariable {
+  final RemoteObject object;
+  final String name;
+
+  ChromeEval(ChromeConnection connection, ChromeDebugFrame frame, this.name, this.object)
+      : super(connection, frame);
+}
+
 class ChromeScope extends ChromeDebugBaseVariable {
   final Scope scope;
 
@@ -849,6 +911,7 @@ class ChromeDebugValue extends DebugValue {
   final ChromeConnection connection;
   final ChromeDebugBaseVariable variable;
   final RemoteObject value;
+  final bool replaceValueOnEval;
 
   Map<String, DebugVariable> children;
 
@@ -896,7 +959,7 @@ class ChromeDebugValue extends DebugValue {
   int get itemsLength => null;
 
   // Warning: value can be null.
-  ChromeDebugValue(this.connection, this.variable, this.value);
+  ChromeDebugValue(this.connection, this.variable, this.value, {this.replaceValueOnEval: false});
 
   Future<List<DebugVariable>> getChildren() async {
     if (!connection.isPaused) return [];
@@ -922,31 +985,43 @@ class ChromeDebugValue extends DebugValue {
   Iterable<String> get pathParts {
     List<String> tokens = [];
     for (var chain = variable; chain != null; chain = chain.parent) {
+      // if __proto__ or super: ignore
       if (chain.pathPart == null ||
           chain.pathPart == '__proto__' || chain.pathPart == 'super') {
         continue;
       }
-      tokens.add(chain.pathPart);
+      if (chain.isSymbol) {
+        // if symbol -> '[' symbolName ']'
+        String name = chain is ChromeDebugVariable ? chain.property.name : chain.name;
+        Match m = extractSymbolKey.firstMatch(name);
+        tokens.add(m != null ? '[${m.group(1)}]' : name);
+      } else if (chain.parent != null && chain.parent.value.isList) {
+        // if array index -> '[' index ']''
+        tokens.add('[${chain.pathPart}]');
+      } else if (chain.parent == null) {
+        // if field is lefmost field: field
+        tokens.add(chain.pathPart);
+      } else {
+        // if field not leftmost: '.' field
+        tokens.add('.${chain.pathPart}');
+      }
     }
     return tokens.reversed;
   }
 
-  String get path => pathParts.join('.');
-
-  String get symbolEval {
-    String lookup = '';
-    Match m = extractSymbolKey.firstMatch(variable.name);
-    if (m != null) lookup = '[${m.group(1)}]';
-    List<String> root = pathParts;
-    return '${root.take(root.length - 1).join('.')}$lookup';
-  }
-
   Future<DebugValue> invokeToString() async {
     if (value?.meta == RemoteObjectType.getter) {
-      String expression = variable.isSymbol ? symbolEval: path;
+      // String expression = variable.isSymbol ? symbolEval : path;
+      String expression = pathParts.join();
+      _logger.info('evaluateOnCallFrame($expression)');
       var result = await connection.chrome.debugger.evaluateOnCallFrame(frame.id, expression);
       RemoteObject object = result?.result ?? result?.exceptionDetails?.exception;
-      return object != null ? new ChromeDebugValue(connection, variable, object) : this;
+      _logger.info('-> $object');
+      ChromeDebugValue value = object != null
+          ? new ChromeDebugValue(connection, variable, object, replaceValueOnEval: true)
+          : this;
+      variable._value = value;
+      return value;
     }
     return this;
   }

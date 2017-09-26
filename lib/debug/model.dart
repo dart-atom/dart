@@ -2,6 +2,9 @@ import 'dart:async';
 
 import '../launch/launch.dart';
 import '../utils.dart';
+import './evaluator.dart';
+
+export './evaluator.dart' show EvalExpression;
 
 abstract class DebugConnection {
   final Launch launch;
@@ -33,6 +36,8 @@ abstract class DebugConnection {
   autoStepOver();
 
   void dispose();
+
+  Future<DebugVariable> eval(EvalExpression expression);
 }
 
 abstract class DebugOption {
@@ -118,6 +123,8 @@ abstract class DebugValue {
   bool get valueIsTruncated;
 
   int get itemsLength;
+
+  bool get replaceValueOnEval;
 
   String get hint {
     if (isString) {
