@@ -6,7 +6,6 @@ import 'package:logging/logging.dart';
 import 'package:petitparser/petitparser.dart';
 
 import '../utils.dart';
-//import './model.dart';
 
 final Logger _logger = new Logger('atom.evaluator');
 
