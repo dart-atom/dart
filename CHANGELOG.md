@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## unreleased
+## 0.7.1
 - added browser selection
 - added html launch
 - added web debugger from identifying
