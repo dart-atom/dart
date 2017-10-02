@@ -12,9 +12,9 @@ useful for users new to the plugin and users new to Atom as well.
 
 ## Contributing!
 
-This is largely a community maintained project; contributions welcome :)
-
-Please see our contributors [guide](https://github.com/dart-atom/dartlang/blob/master/CONTRIBUTING.md).
+This is largely a community maintained project, so contributions are welcome :)
+Please see our [guide](https://github.com/dart-atom/dartlang/blob/master/CONTRIBUTING.md)
+for contributors.
 
 ## What is it?
 
