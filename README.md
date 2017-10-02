@@ -12,13 +12,9 @@ useful for users new to the plugin and users new to Atom as well.
 
 ## Contributing!
 
-The original developers are less active on this project; that said, contributions are
-welcome :) Please see our contributors
-[guide](https://github.com/dart-atom/dartlang/blob/master/CONTRIBUTING.md).
+This is largely a community maintained project; contributions welcome :)
 
-For more actively maintained Dart tools, see the
-[Dart plugin for IntelliJ](https://plugins.jetbrains.com/plugin/6351-dart), and 
-[DartCode](https://github.com/Dart-Code/Dart-Code), the Dart plugin for VSCode.
+Please see our contributors [guide](https://github.com/dart-atom/dartlang/blob/master/CONTRIBUTING.md).
 
 ## What is it?
 
