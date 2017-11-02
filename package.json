@@ -1,5 +1,5 @@
 {
-  "name": "dartlang",
+  "name": "dart",
   "main": "./web/entry.dart.js",
   "version": "0.8.0",
   "description": "A Dart plugin for Atom.",

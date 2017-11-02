@@ -2,7 +2,7 @@
 
 ## 0.8.0
 
-- republished `dartlang` to apm (`0.7.1` and earlier was accidently unpublished)
+- republished as `dart` to apm (`dartlang` `0.7.1` and earlier were accidently unpublished)
 
 ## 0.7.1
 - added browser selection
