@@ -1,5 +1,9 @@
 # dartlang plugin changelog
 
+## 0.8.0
+
+- republished `dartlang` to apm (`0.7.1` and earlier was accidently unpublished)
+
 ## 0.7.1
 - added browser selection
 - added html launch
