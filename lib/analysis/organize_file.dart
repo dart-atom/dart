@@ -12,8 +12,8 @@ class OrganizeFileManager implements Disposable {
   Disposables disposables = new Disposables();
 
   OrganizeFileManager() {
-    _addEditorCommand('dartlang:sort-members', _handleSortMembers);
-    _addEditorCommand('dartlang:organize-directives', _handleOrganizeDirectives);
+    _addEditorCommand('dart:sort-members', _handleSortMembers);
+    _addEditorCommand('dart:organize-directives', _handleOrganizeDirectives);
   }
 
   void _addEditorCommand(String command, void impl(TextEditor editor)) {

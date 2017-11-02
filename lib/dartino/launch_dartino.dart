@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:atom/node/process.dart';
-import 'package:atom_dartlang/debug/debugger.dart';
-import 'package:atom_dartlang/debug/model.dart';
+import 'package:atom_dart/debug/debugger.dart';
+import 'package:atom_dart/debug/model.dart';
 import 'package:logging/logging.dart';
 
 import '../debug/observatory_debugger.dart';

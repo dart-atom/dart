@@ -25,7 +25,7 @@ class Stm32f extends Device {
       var stdout = await exec('ls', ['-1', '/dev']);
       if (stdout == null) return null;
       for (String line in LineSplitter.split(stdout)) {
-        // TODO(danrubel) move this out of dartlang into the dartino
+        // TODO(danrubel) move this out of the plugin into dartino
         // and SOD command line utilities - dartino show usb devices
         if (line.startsWith('tty.usb') || line.startsWith('ttyACM')) {
           ttyPath = '/dev/$line';

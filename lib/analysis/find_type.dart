@@ -18,7 +18,7 @@ class FindTypeHelper implements Disposable {
 
   FindTypeHelper() {
     disposables.add(atom.commands.add(
-      'atom-text-editor', 'dartlang:find-type', (event) => _handleFindType(event.editor)
+      'atom-text-editor', 'dart:find-type', (event) => _handleFindType(event.editor)
     ));
   }
 

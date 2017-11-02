@@ -58,7 +58,7 @@ class LinterService extends ProxyHolder {
   ProxyHolder _linter;
 
   LinterService(obj) : super(obj) {
-    _linter = new ProxyHolder((obj as JsFunction).apply([jsify({'name': 'dartlang'})]));
+    _linter = new ProxyHolder((obj as JsFunction).apply([jsify({'name': 'dart'})]));
   }
 
   void deleteMessages(LinterProvider provider) {

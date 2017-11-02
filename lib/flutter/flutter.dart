@@ -1,5 +1,5 @@
 import 'package:atom/atom.dart';
-import 'package:atom_dartlang/sdk.dart';
+import 'package:atom_dart/sdk.dart';
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 

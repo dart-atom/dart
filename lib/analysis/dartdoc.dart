@@ -20,7 +20,7 @@ class DartdocHelper implements Disposable {
   DartdocControl _control;
 
   DartdocHelper() {
-    _disposables.add(atom.commands.add('atom-text-editor', 'dartlang:show-dartdoc', (event) {
+    _disposables.add(atom.commands.add('atom-text-editor', 'dart:show-dartdoc', (event) {
       _handleDartdoc(event);
     }));
 

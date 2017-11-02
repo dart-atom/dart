@@ -36,7 +36,7 @@ class ChangelogManager implements Disposable {
       f = new Future.value(_changeLogFile);
     } else {
       f = HttpRequest
-          .getString('atom://dartlang/CHANGELOG.md')
+          .getString('atom://dart/CHANGELOG.md')
           .then((contents) {
         Directory dir = new Directory.fromPath(fs.tmpdir);
         _changeLogFile = dir.getFile('CHANGELOG.md');
@@ -51,25 +51,25 @@ class ChangelogManager implements Disposable {
   }
 
   void _handleGettingStarted() {
-    shell.openExternal('https://dart-atom.github.io/dartlang/');
+    shell.openExternal('https://dart-atom.github.io/dart/');
   }
 
   void dispose() => disposables.dispose();
 }
 
 void _checkChangelog(String currentVersion) {
-  String lastVersion = atom.config.getValue('_dartlang._version');
+  String lastVersion = atom.config.getValue('_dart._version');
 
   if (lastVersion != currentVersion) {
     _logger.info("upgraded from ${lastVersion} to ${currentVersion}");
-    atom.config.setValue('_dartlang._version', currentVersion);
+    atom.config.setValue('_dart._version', currentVersion);
 
     if (lastVersion != null) {
       atom.notifications.addSuccess(
-          'Upgraded to dartlang plugin version ${currentVersion}.');
+          'Upgraded to dart plugin version ${currentVersion}.');
     }
 
-    // HttpRequest.getString('atom://dartlang/CHANGELOG.md').then((str) {
+    // HttpRequest.getString('atom://dart/CHANGELOG.md').then((str) {
     //   String changes;
     //   if (lastVersion != null) {
     //     changes = _extractVersion(str, lastVersion, inclusive: false);
@@ -78,13 +78,13 @@ void _checkChangelog(String currentVersion) {
     //   }
     //   if (changes != null && changes.isNotEmpty) {
     //     atom.notifications.addSuccess(
-    //         'Upgraded to dartlang plugin version ${currentVersion}.',
+    //         'Upgraded to dart plugin version ${currentVersion}.',
     //         description: changes,
     //         dismissable: true);
     //   }
     // });
   } else {
-    _logger.info("dartlang version ${currentVersion}");
+    _logger.info("dart version ${currentVersion}");
   }
 }
 

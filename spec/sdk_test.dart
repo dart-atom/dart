@@ -1,4 +1,4 @@
-import 'package:atom_dartlang/sdk.dart';
+import 'package:atom_dart/sdk.dart';
 
 import '_spec/test.dart';
 

@@ -5,14 +5,14 @@
       {
         label: 'Dart'
         submenu: [
-          { label: 'Package Settings…', command: 'dartlang:settings' }
+          { label: 'Package Settings…', command: 'dart:settings' }
           { type: 'separator' }
-          { label: 'Re-analyze Sources', command: 'dartlang:reanalyze-sources' }
-          { label: 'Analysis Server Status', command: 'dartlang:analysis-server-status' }
+          { label: 'Re-analyze Sources', command: 'dart:reanalyze-sources' }
+          { label: 'Analysis Server Status', command: 'dart:analysis-server-status' }
           { type: 'separator' }
-          { label: 'Getting Started…', command: 'dartlang:getting-started' }
-          { label: 'Release Notes', command: 'dartlang:release-notes' }
-          { label: 'Send Feedback…', command: 'dartlang:send-feedback'}
+          { label: 'Getting Started…', command: 'dart:getting-started' }
+          { label: 'Release Notes', command: 'dart:release-notes' }
+          { label: 'Send Feedback…', command: 'dart:send-feedback'}
         ]
       }
     ]
@@ -20,34 +20,34 @@
   {
     label: 'View'
     submenu: [
-      { label: 'Toggle Outline View', command: 'dartlang:toggle-outline-view'}
+      { label: 'Toggle Outline View', command: 'dart:toggle-outline-view'}
     ]
   }
 ]
 
 'context-menu':
   'atom-pane[data-active-item-path$="pubspec.yaml"] atom-text-editor[data-grammar~="yaml"]': [
-    { label: 'Pub Get', command: 'dartlang:pub-get'}
-    { label: 'Pub Upgrade', command: 'dartlang:pub-upgrade'}
-    { label: 'Pub Serve', command: 'dartlang:pub-serve'}
+    { label: 'Pub Get', command: 'dart:pub-get'}
+    { label: 'Pub Upgrade', command: 'dart:pub-upgrade'}
+    { label: 'Pub Serve', command: 'dart:pub-serve'}
     { type: 'separator'}
   ]
   'atom-pane[data-active-item-path$=".dart"] atom-text-editor[data-grammar~="dart"]': [
-    { label: 'Find References…', command: 'dartlang:find-references' }
-    { label: 'Format', command: 'dartlang:dart-format' }
-    { label: 'Organize Directives', command: 'dartlang:organize-directives' }
+    { label: 'Find References…', command: 'dart:find-references' }
+    { label: 'Format', command: 'dart:dart-format' }
+    { label: 'Organize Directives', command: 'dart:organize-directives' }
     # TODO(danrubel) should rename be moved into the Refactor submenu ?
-    { label: 'Rename…', command: 'dartlang:refactor-rename' }
+    { label: 'Rename…', command: 'dart:refactor-rename' }
     { label: 'Refactor', submenu: [
-        { label: 'Extract Local…', command: 'dartlang:refactor-extract-local' }
-        { label: 'Inline Local…', command: 'dartlang:refactor-inline-local' }
+        { label: 'Extract Local…', command: 'dart:refactor-extract-local' }
+        { label: 'Inline Local…', command: 'dart:refactor-inline-local' }
     ]}
-    { label: 'Sort Members', command: 'dartlang:sort-members' }
-    { label: 'Type Hierarchy', command: 'dartlang:type-hierarchy' }
-    { label: 'Toggle Breakpoint', command: 'dartlang:debug-toggle-breakpoint' }
+    { label: 'Sort Members', command: 'dart:sort-members' }
+    { label: 'Type Hierarchy', command: 'dart:type-hierarchy' }
+    { label: 'Toggle Breakpoint', command: 'dart:debug-toggle-breakpoint' }
     { type: 'separator'}
   ]
   '.tree-view.full-menu li[is="tree-view-file"] span[data-name$=".dart"]': [
-    { label: 'Format', command: 'dartlang:dart-format' }
+    { label: 'Format', command: 'dart:dart-format' }
     { type: 'separator'}
   ]

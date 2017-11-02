@@ -83,7 +83,7 @@ class SdkManager implements Disposable {
         .transform(new Debounce(new Duration(seconds: 1)))
         .listen((value) => _setSdkPath(value));
 
-    _commands.add(atom.commands.add('atom-workspace', 'dartlang:auto-locate-sdk', (_) {
+    _commands.add(atom.commands.add('atom-workspace', 'dart:auto-locate-sdk', (_) {
       new SdkLocationJob(sdkManager).schedule();
     }));
   }

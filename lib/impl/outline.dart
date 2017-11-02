@@ -3,13 +3,12 @@ library atom.outline;
 import 'dart:async';
 import 'dart:html' as html;
 
+import 'package:analysis_server_lib/analysis_server_lib.dart' as analysis;
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
-import 'package:logging/logging.dart';
 
-import 'package:analysis_server_lib/analysis_server_lib.dart' as analysis;
 import '../analysis/quick_fixes.dart';
 import '../analysis_server.dart';
 import '../elements.dart';
@@ -20,10 +19,8 @@ import '../views.dart';
 
 final String _keyPath = '${pluginId}.showOutlineView';
 
-final Logger _logger = new Logger('atom.outline');
-
 class OutlineController extends DockedViewManager<OutlineView> {
-  static const outlineURI = 'atom://dartlang/outline';
+  static const outlineURI = 'atom://dart/outline';
 
   Map<String, AnalysisOutline> lastOutlines = {};
   List<analysis.AnalysisError> lastErrors;

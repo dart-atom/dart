@@ -2,21 +2,18 @@ library atom.refactor;
 
 import 'dart:async';
 
+import 'package:analysis_server_lib/analysis_server_lib.dart' show
+    Refactorings, SourceChange, SourceEdit, SourceFileEdit,
+    RenameRefactoringOptions, ExtractLocalVariableRefactoringOptions;
 import 'package:atom/atom.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
-import 'package:logging/logging.dart';
 
-import 'package:analysis_server_lib/analysis_server_lib.dart' show
-    Refactorings, SourceChange, SourceEdit, SourceFileEdit,
-    RenameRefactoringOptions, ExtractLocalVariableRefactoringOptions;
 import '../analysis_server.dart';
 import '../editors.dart';
 import '../state.dart';
-
-final Logger _logger = new Logger('refactoring');
 
 typedef _RefactorHandler(String path, int offset, int end, String text);
 
@@ -24,9 +21,9 @@ class RefactoringHelper implements Disposable {
   Disposables _commands = new Disposables();
 
   RefactoringHelper() {
-    _addCommand('dartlang:refactor-extract-local', _handleExtractLocal);
-    _addCommand('dartlang:refactor-inline-local', _handleInlineLocal);
-    _addCommand('dartlang:refactor-rename', _handleRenameRefactor);
+    _addCommand('dart:refactor-extract-local', _handleExtractLocal);
+    _addCommand('dart:refactor-inline-local', _handleInlineLocal);
+    _addCommand('dart:refactor-rename', _handleRenameRefactor);
   }
 
   void dispose() => _commands.dispose();

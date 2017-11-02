@@ -10,21 +10,18 @@ import 'dart:html' show Element, NodeValidator;
 import 'package:atom/atom.dart';
 import 'package:atom/node/package.dart';
 import 'package:atom/node/process.dart';
-import 'package:logging/logging.dart';
 
 import 'state.dart';
 
-final Logger _logger = new Logger('atom_utils');
-
 /// Return a description of Atom, the plugin, and the OS.
 Future<String> getSystemDescription({bool sdkPath: false}) async {
-  // 'Atom 1.0.11, dartlang 0.4.3, SDK 1.12 running on Windows.'
+  // 'Atom 1.0.11, atom-dart 0.4.3, SDK 1.12 running on Windows.'
   String atomVer = atom.getVersion();
   String os = isMac ? 'macos' : process.platform;
   String pluginVer = await atomPackage.getPackageVersion();
   String sdkVer = sdkManager.hasSdk ? await sdkManager.sdk.getVersion() : null;
 
-  String description = '\n\nAtom ${atomVer}, dartlang ${pluginVer}';
+  String description = '\n\nAtom ${atomVer}, atom-dart ${pluginVer}';
   if (sdkVer != null) description += ', SDK ${sdkVer}';
   description += ' running on ${os}.';
 

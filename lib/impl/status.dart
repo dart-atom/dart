@@ -23,7 +23,7 @@ final String _statusOpenKey = 'statusOpen';
 final Logger _logger = new Logger('atom.status');
 
 class StatusViewManager extends DockedViewManager<StatusView> {
-  static const statusURI = 'atom://dartlang/status';
+  static const statusURI = 'atom://dart/status';
 
   StatusViewManager() : super(statusURI) {
     disposables.add(atom.commands.add('atom-workspace', '${pluginId}:show-plugin-status', (_) {
@@ -108,13 +108,13 @@ class StatusView extends DockedView {
     });
 
     header.toolbar.add(new MIconButton('icon-tools')..click(() {
-      atom.workspace.openConfigPage(packageID: 'dartlang');
+      atom.workspace.openConfigPage(packageID: 'dart');
     }))..tooltip = 'Settings';
 
     CoreElement text = section.add(div());
     text.setInnerHtml(
       'For help using this plugin, please see our '
-      '<a href="https://dart-atom.github.io/dartlang/">getting started</a> '
+      '<a href="https://dart-atom.github.io/dart/">getting started</a> '
       'guide.'
     );
 
@@ -124,7 +124,7 @@ class StatusView extends DockedView {
     }));
     buttons.add(button(text: 'Report Issue…', c: 'btn')..click(() {
       getSystemDescription().then((String description) {
-        shell.openExternal('https://github.com/dart-atom/dartlang/issues/new?'
+        shell.openExternal('https://github.com/dart-atom/dart/issues/new?'
             'body=${Uri.encodeComponent(description)}');
       });
     }));
@@ -439,17 +439,17 @@ class StatusView extends DockedView {
   }
 
   void _handleServerStart() {
-    usage.trackCommand('dartlang:analysis-server-start');
+    usage.trackCommand('dart:analysis-server-start');
     analysisServer.start();
   }
 
   void _handleReanalyze() {
-    usage.trackCommand('dartlang:reanalyze-sources');
+    usage.trackCommand('dart:reanalyze-sources');
     analysisServer.reanalyzeSources();
   }
 
   void _handleServerStop() {
-    usage.trackCommand('dartlang:analysis-server-stop');
+    usage.trackCommand('dart:analysis-server-stop');
     analysisServer.shutdown();
   }
 
@@ -474,7 +474,7 @@ class StatusHeader {
   }
 }
 
-/// 'Atom 1.0.11, dartlang 0.4.3'
+/// 'Atom 1.0.11, dart 0.4.3'
 Future<String> _getPlatformVersions() {
   return atomPackage.getPackageVersion().then((pluginVer) {
     String atomVer = atom.getVersion();

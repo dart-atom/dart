@@ -19,11 +19,11 @@ class AnalysisOptionsManager implements Disposable, ContextMenuContributor {
 
   AnalysisOptionsManager() {
     // Disable these commands.
-    // disposables.add(atom.commands.add('.tree-view', 'dartlang:analysis-exclude',
+    // disposables.add(atom.commands.add('.tree-view', 'dart:analysis-exclude',
     //     (AtomEvent event) {
     //   _handleExclude(event.targetFilePath);
     // }));
-    // disposables.add(atom.commands.add('.tree-view', 'dartlang:analysis-include',
+    // disposables.add(atom.commands.add('.tree-view', 'dart:analysis-include',
     //     (AtomEvent event) {
     //   _handleInclude(event.targetFilePath);
     // }));
@@ -33,9 +33,9 @@ class AnalysisOptionsManager implements Disposable, ContextMenuContributor {
     return [
       // TODO: Enable when we have a mutable yaml structure.
       // new _AnalysisContextCommand.exclude(
-      //     'Exclude from Analysis', 'dartlang:analysis-exclude'),
+      //     'Exclude from Analysis', 'dart:analysis-exclude'),
       // new _AnalysisContextCommand.include(
-      //     'Include in Analysis', 'dartlang:analysis-include')
+      //     'Include in Analysis', 'dart:analysis-include')
     ];
   }
 

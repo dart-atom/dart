@@ -23,7 +23,7 @@ class NavigationManager implements Disposable {
 
   NavigationManager() {
     _commands.add(atom.commands.add('atom-text-editor',
-      'dartlang:return-from-declaration', _handleNavigateReturn));
+      'dart:return-from-declaration', _handleNavigateReturn));
     _commands.add(atom.commands.add('atom-text-editor[data-grammar~="dart"]',
       'symbols-view:return-from-declaration', _handleNavigateReturn));
   }

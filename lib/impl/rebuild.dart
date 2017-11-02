@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// A library used for rebuilding the `dartlang` project.
+/// A library used for rebuilding the `dart` project.
 library atom.rebuild;
 
 import 'dart:async';
@@ -20,7 +20,7 @@ class RebuildManager implements Disposable {
 
   RebuildManager() {
     disposables.add(atom.commands
-        .add('atom-workspace', 'dartlang:rebuild-restart-dev', (_) {
+        .add('atom-workspace', 'dart:rebuild-restart-dev', (_) {
       if (_projectsToBuild().isNotEmpty) {
         new RebuildJob("Rebuilding Atom plugins").schedule();
       }

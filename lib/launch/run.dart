@@ -39,23 +39,23 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
     };
 
     disposables.add(
-        atom.commands.add('.tree-view', 'dartlang:run-application', (event) {
+        atom.commands.add('.tree-view', 'dart:run-application', (event) {
       stop(event);
       _handleTreeViewRunCommand(event.targetFilePath);
     }));
     disposables.add(
-        atom.commands.add('.tree-view', 'dartlang:app-full-restart', (event) {
+        atom.commands.add('.tree-view', 'dart:app-full-restart', (event) {
       stop(event);
       _handleTreeViewFullRestartCommand(event.targetFilePath);
     }));
     disposables.add(
-        atom.commands.add('atom-text-editor', 'dartlang:run-application', (event) {
+        atom.commands.add('atom-text-editor', 'dart:run-application', (event) {
       stop(event);
       TextEditor editor = event.editor;
       _handleEditorRunCommand(editor.getPath(), editor.getText());
     }));
     disposables.add(
-        atom.commands.add('atom-text-editor', 'dartlang:app-full-restart', (event) {
+        atom.commands.add('atom-text-editor', 'dart:app-full-restart', (event) {
       stop(event);
       TextEditor editor = event.editor;
       _handleEditorFullRestartCommand(editor.getPath(), editor.getText());
@@ -66,7 +66,7 @@ class RunApplicationManager implements Disposable, ContextMenuContributor {
 
   List<ContextMenuItem> getTreeViewContributions() {
     return [
-      new _RunAppContextCommand('Run Application', 'dartlang:run-application')
+      new _RunAppContextCommand('Run Application', 'dart:run-application')
     ];
   }
 

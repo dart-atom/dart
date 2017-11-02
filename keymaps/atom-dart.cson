@@ -5,63 +5,63 @@
 
 # Global commands
 'atom-workspace':
-  'f5': 'dartlang:debug-run'
-  'shift-f5': 'dartlang:debug-terminate'
-  'f9': 'dartlang:debug-toggle-breakpoint'
-  'f10': 'dartlang:debug-step'
-  'f11': 'dartlang:debug-stepin'
-  'shift-f11': 'dartlang:debug-stepout'
+  'f5': 'dart:debug-run'
+  'shift-f5': 'dart:debug-terminate'
+  'f9': 'dart:debug-toggle-breakpoint'
+  'f10': 'dart:debug-step'
+  'f11': 'dart:debug-stepin'
+  'shift-f11': 'dart:debug-stepout'
 
 # Global commands (mac)
 'body.platform-darwin':
-  'ctrl-alt-cmd-t': 'dartlang:run-tests'
+  'ctrl-alt-cmd-t': 'dart:run-tests'
 
 # Global commands (windows and linux)
 'body.platform-win32, body.platform-linux':
-  'ctrl-alt-t': 'dartlang:run-tests'
+  'ctrl-alt-t': 'dart:run-tests'
 
 # Dart editor commands (common to all platforms)
 'atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'ctrl-1': 'dartlang:quick-fix'
-  'alt-enter': 'dartlang:quick-fix'
-  'f1': 'dartlang:show-dartdoc'
-  'f4': 'dartlang:type-hierarchy'
-  'alt-shift-i': 'dartlang:refactor-inline-local'
-  'alt-shift-l': 'dartlang:refactor-extract-local'
-  'alt-shift-r': 'dartlang:refactor-rename'
-  'enter': 'dartlang:newline'
+  'ctrl-1': 'dart:quick-fix'
+  'alt-enter': 'dart:quick-fix'
+  'f1': 'dart:show-dartdoc'
+  'f4': 'dart:type-hierarchy'
+  'alt-shift-i': 'dart:refactor-inline-local'
+  'alt-shift-l': 'dart:refactor-extract-local'
+  'alt-shift-r': 'dart:refactor-rename'
+  'enter': 'dart:newline'
 
 # Dart editor commands (mac)
 'body.platform-darwin atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'cmd-f4': 'dartlang:find-references'
-  'cmd-r': 'dartlang:run-application'
-  'cmd-shift-r': 'dartlang:app-full-restart'
-  'cmd-alt-b': 'dartlang:dart-format'
-  'cmd-alt-o': 'dartlang:organize-directives'
-  'cmd-alt-down': 'dartlang:jump-to-declaration'
-  'cmd-alt-enter': 'dartlang:jump-to-declaration'
-  'shift-cmd-t': 'dartlang:find-type'
+  'cmd-f4': 'dart:find-references'
+  'cmd-r': 'dart:run-application'
+  'cmd-shift-r': 'dart:app-full-restart'
+  'cmd-alt-b': 'dart:dart-format'
+  'cmd-alt-o': 'dart:organize-directives'
+  'cmd-alt-down': 'dart:jump-to-declaration'
+  'cmd-alt-enter': 'dart:jump-to-declaration'
+  'shift-cmd-t': 'dart:find-type'
 
 # Handle cmd-r for launch config files.
 'body.platform-darwin atom-text-editor[data-grammar~="yaml"]:not([mini])':
-  'cmd-r': 'dartlang:run-application'
-  'cmd-shift-r': 'dartlang:app-full-restart'
+  'cmd-r': 'dart:run-application'
+  'cmd-shift-r': 'dart:app-full-restart'
 
 # Dart editor commands (windows and linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'ctrl-alt-enter': 'dartlang:jump-to-declaration'
-  'ctrl-f4': 'dartlang:find-references'
-  'ctrl-r': 'dartlang:run-application'
-  'ctrl-shift-r': 'dartlang:app-full-restart'
-  'ctrl-alt-b': 'dartlang:dart-format'
-  'ctrl-alt-o': 'dartlang:organize-directives'
-  'ctrl-shift-t': 'dartlang:find-type'
+  'ctrl-alt-enter': 'dart:jump-to-declaration'
+  'ctrl-f4': 'dart:find-references'
+  'ctrl-r': 'dart:run-application'
+  'ctrl-shift-r': 'dart:app-full-restart'
+  'ctrl-alt-b': 'dart:dart-format'
+  'ctrl-alt-o': 'dart:organize-directives'
+  'ctrl-shift-t': 'dart:find-type'
 
 # Handle ctrl-r for launch config files.
 'body.platform-linux atom-text-editor[data-grammar~="yaml"]:not([mini]), body.platform-win32 atom-text-editor[data-grammar~="yaml"]:not([mini])':
-  'ctrl-r': 'dartlang:run-application'
-  'ctrl-shift-r': 'dartlang:app-full-restart'
+  'ctrl-r': 'dart:run-application'
+  'ctrl-shift-r': 'dart:app-full-restart'
 
 # Dart editor commands (linux)
 'body.platform-linux atom-text-editor[data-grammar~="dart"]:not([mini])':
-  'ctrl-alt-down': 'dartlang:jump-to-declaration'
+  'ctrl-alt-down': 'dart:jump-to-declaration'

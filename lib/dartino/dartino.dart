@@ -213,7 +213,7 @@ void _checkDirectory(Directory dir) {
     return;
   }
 
-  // dartlang already warns the user if the parent dir is a DartProject
+  // The plugin already warns the user if the parent dir is a DartProject
   if (ProjectManager.isDartProject(dir.getParent())) return;
 
   // Check if project contains *.dart files.

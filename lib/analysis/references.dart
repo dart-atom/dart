@@ -13,21 +13,18 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
-import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../elements.dart';
 import '../state.dart';
 import '../views.dart';
 
-final Logger _logger = new Logger('references');
-
 class FindReferencesHelper extends DockedViewManager<FindReferencesView> {
-  static const referencesURI = 'atom://dartlang/references';
+  static const referencesURI = 'atom://dart/references';
 
   FindReferencesHelper() : super(referencesURI) {
     disposables.add(atom.commands.add(
-      'atom-text-editor', 'dartlang:find-references', _handleReferences
+      'atom-text-editor', 'dart:find-references', _handleReferences
     ));
   }
 

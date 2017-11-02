@@ -35,14 +35,14 @@ class StatusDisplay implements Disposable {
     CoreElement textLabel;
     CoreElement countBadge;
 
-    CoreElement statusElement = div(c: 'job-status-bar dartlang')
+    CoreElement statusElement = div(c: 'job-status-bar dart')
       ..inlineBlock()
       ..click(_showJobsDialog)
       ..add([
         spinner = img()
           ..inlineBlockTight()
           ..clazz('status-spinner')
-          ..src = 'atom://dartlang/images/gear.svg',
+          ..src = 'atom://dart/images/gear.svg',
         textLabel = div(c: 'text-label')..inlineBlockTight(), // text-highlight
         countBadge = span(c: 'badge badge-info badge-count')
       ]);
@@ -96,7 +96,7 @@ class StatusDisplay implements Disposable {
     });
 
     _disposables.add(atom.commands.add(
-        'atom-workspace', 'dartlang:show-jobs', (_) => _showJobsDialog()));
+        'atom-workspace', 'dart:show-jobs', (_) => _showJobsDialog()));
   }
 
   void dispose() {

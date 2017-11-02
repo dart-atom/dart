@@ -25,7 +25,7 @@ import 'sdk.dart';
 
 export 'package:atom/utils/dependencies.dart' show deps;
 
-final String pluginId = 'dartlang';
+final String pluginId = 'dart';
 
 AtomAnalysisServer get analysisServer => deps[AtomAnalysisServer];
 EditorManager get editorManager => deps[EditorManager];

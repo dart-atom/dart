@@ -4,7 +4,7 @@
 
 library atom.dartino_util_test;
 
-import 'package:atom_dartlang/dartino/dartino_util.dart';
+import 'package:atom_dart/dartino/dartino_util.dart';
 import 'package:test/test.dart';
 
 main() => defineTests();

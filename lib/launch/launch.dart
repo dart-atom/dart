@@ -4,12 +4,11 @@ library atom.launch;
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:analysis_server_lib/analysis_server_lib.dart' show CreateContextResult;
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/utils/disposable.dart';
-import 'package:logging/logging.dart';
 
-import 'package:analysis_server_lib/analysis_server_lib.dart' show CreateContextResult;
 import '../analysis_server.dart';
 import '../debug/debugger.dart';
 import '../projects.dart';
@@ -18,8 +17,6 @@ import '../utils.dart';
 import 'launch_configs.dart';
 
 export 'launch_configs.dart' show LaunchConfiguration;
-
-final Logger _logger = new Logger('atom.launch');
 
 final math.Random _rand = new math.Random();
 

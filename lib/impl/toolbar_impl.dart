@@ -41,7 +41,7 @@ class DartToolbarContribution implements Disposable {
     CoreElement configureLaunchButton;
 
     // `settings-view` class added to get proper styling for select elements.
-    CoreElement e = div(c: 'btn-group btn-group dartlang-toolbar settings-view')..add([
+    CoreElement e = div(c: 'btn-group btn-group dart-toolbar settings-view')..add([
       runButton = button(c: 'btn icon icon-playback-play')
         ..click(_handleRunLaunch)
         ..tooltip = "Run",
@@ -63,8 +63,8 @@ class DartToolbarContribution implements Disposable {
     CoreElement runModeList;
 
     // `settings-view` class added to get proper styling for select elements.
-    CoreElement e = div(c: 'btn-group btn-group dartlang-toolbar settings-view')..add([
-      flutterDiv = div(c: 'btn-group btn-group dartlang-toolbar')..add([
+    CoreElement e = div(c: 'btn-group btn-group dart-toolbar settings-view')..add([
+      flutterDiv = div(c: 'btn-group btn-group dart-toolbar')..add([
         div(c: 'icon icon-device-mobile')..id = 'toolbar-mobile-icon'
           ..tooltip = "Available devices",
         deviceList = new CoreElement('select', classes: 'form-control'),
@@ -110,7 +110,7 @@ class DartToolbarContribution implements Disposable {
 
     // `settings-view` class added to get proper styling for select elements.
     CoreElement e = div(c: 'settings-view', a: 'flex-center')..add([
-      div(c: 'btn-group btn-group dartlang-toolbar')..add([
+      div(c: 'btn-group btn-group dart-toolbar')..add([
         div()..add([
           runTestsDiv = button(c: 'btn icon icon-pulse')
             ..click(_runTests)

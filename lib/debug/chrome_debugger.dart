@@ -26,6 +26,7 @@ final Logger _logger = new Logger('atom.chrome');
 
 final RegExp extractSymbolKey = new RegExp(r'Symbol\((.+)\)');
 
+// ignore: unused_element
 const _verbose = false;
 
 // TODO figure out how to set breakpoints them without needing a restart
@@ -40,7 +41,7 @@ const _verbose = false;
 // TODO fix hint being truncated at the right because italic
 // TODO figure out why location is sometimes off near start and end of functions
 
-const String _debuggerDdcParsing = 'dartlang.debuggerDdcParsing';
+const String _debuggerDdcParsing = 'dart.debuggerDdcParsing';
 
 class ChromeDebugger {
   /// Establish a connection to a service protocol server at the given port.

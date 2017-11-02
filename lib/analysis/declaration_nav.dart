@@ -9,13 +9,10 @@ import 'package:atom/node/command.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
-import 'package:logging/logging.dart';
 
 import '../editors.dart';
 import '../state.dart';
 import '../usage.dart' show trackCommand;
-
-final Logger _logger = new Logger('declaration_nav');
 
 final String _keyPref = '${pluginId}.jumpToDeclarationKeys';
 
@@ -28,7 +25,7 @@ class NavigationHelper implements Disposable {
 
   NavigationHelper() {
     _commands.add(atom.commands.add('atom-text-editor',
-        'dartlang:jump-to-declaration', _handleNavigate));
+        'dart:jump-to-declaration', _handleNavigate));
     _commands.add(atom.commands.add('atom-text-editor[data-grammar~="dart"]',
         'symbols-view:go-to-declaration', _handleNavigate));
 

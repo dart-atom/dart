@@ -3,15 +3,12 @@ import 'dart:async';
 
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
-import 'package:logging/logging.dart';
 
 import '../flutter/flutter_devices.dart';
 import '../launch/launch.dart';
 import '../projects.dart';
 import '../state.dart';
 import 'flutter_sdk.dart';
-
-final Logger _logger = new Logger('atom.mojo_launch');
 
 FlutterSdkManager _flutterSdk = deps[FlutterSdkManager];
 FlutterDeviceManager get deviceManager => deps[FlutterDeviceManager];

@@ -649,7 +649,7 @@ ${error.stackTrace?.trim()}
           '${AtomAnalysisServer.diagnosticsUrl}.');
     }
 
-    arguments.add('--client-id=atom-dartlang');
+    arguments.add('--client-id=atom-dart');
     arguments.add('--client-version=${pluginVersion}');
 
     // Allow arbitrary CLI options to the analysis server.

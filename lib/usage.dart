@@ -63,7 +63,7 @@ class UsageManager implements Disposable {
 }
 
 void trackCommand(String command) {
-  String category = 'dartlang';
+  String category = 'dart';
 
   List list = command.split(':');
   if (list.length >= 2) {
@@ -74,7 +74,7 @@ void trackCommand(String command) {
   // Ignore `core:` commands (core:confirm, core:cancel, ...).
   if (category == 'core') return;
 
-  // Ignore `dartlang:newline`.
+  // Ignore `dart:newline`.
   if (command == 'newline') return;
 
   _ga.sendEvent(category, command);

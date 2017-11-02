@@ -1,10 +1,10 @@
-name: atom_dartlang
-version: 1.0.0
+name: atom_dart
+version: 1.0.1
 description: A Dart plugin for Atom.
-homepage: https://github.com/dart-atom/dartlang
+homepage: https://github.com/dart-atom/dart
 
 environment:
-  sdk: '>=1.9.0 <2.0.0-dev.infinity'
+  sdk: '>=1.9.0 <2.0.0'
 
 dependencies:
   analysis_server_lib: ^0.1.2+2

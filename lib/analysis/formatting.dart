@@ -22,10 +22,10 @@ class FormattingManager implements Disposable {
   Disposables _commands = new Disposables();
 
   FormattingManager() {
-    _commands.add(atom.commands.add('.tree-view', 'dartlang:dart-format', (e) {
+    _commands.add(atom.commands.add('.tree-view', 'dart:dart-format', (e) {
       formatFile(e.targetFilePath);
     }));
-    _commands.add(atom.commands.add('atom-text-editor', 'dartlang:dart-format', (e) {
+    _commands.add(atom.commands.add('atom-text-editor', 'dart:dart-format', (e) {
       formatEditor(e.editor);
     }));
   }

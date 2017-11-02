@@ -9,21 +9,18 @@ import 'package:atom/node/command.dart';
 import 'package:atom/node/workspace.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
-import 'package:logging/logging.dart';
 
 import '../analysis_server.dart';
 import '../elements.dart';
 import '../state.dart';
 import '../views.dart';
 
-final Logger _logger = new Logger('type_hierarchy');
-
 class TypeHierarchyHelper extends DockedViewManager<TypeHierarchyView> {
-  static const typesURI = 'atom://dartlang/types';
+  static const typesURI = 'atom://dart/types';
 
   TypeHierarchyHelper() : super(typesURI) {
     disposables.add(atom.commands.add(
-      'atom-text-editor', 'dartlang:type-hierarchy', _handleHierarchy
+      'atom-text-editor', 'dart:type-hierarchy', _handleHierarchy
     ));
   }
 

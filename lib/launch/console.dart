@@ -17,7 +17,7 @@ import '../views.dart';
 import 'launch.dart';
 
 class ConsoleController extends DockedViewManager<ConsoleView> {
-  static const consoleURIPrefix = 'atom://dartlang/console';
+  static const consoleURIPrefix = 'atom://dart/console';
 
   ConsoleStatusElement statusElement;
 
@@ -292,7 +292,7 @@ class ConsoleStatusElement implements Disposable {
   }
 
   void _init(StatusBar statusBar) {
-    _element = div(c: 'dartlang process-status-bar')..inlineBlock()..add([
+    _element = div(c: 'dart process-status-bar')..inlineBlock()..add([
       _badgeSpan = span(c: 'badge')
     ]);
 

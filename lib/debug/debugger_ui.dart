@@ -29,7 +29,7 @@ final Logger _logger = new Logger('atom.debugger_ui');
 // closing a debugger tab doesn't tear down any listening state.
 
 class DebuggerViewManager extends DockedViewManager<DebuggerView> {
-  static const debugURIPrefix = 'atom://dartlang/debug';
+  static const debugURIPrefix = 'atom://dart/debug';
 
   DebuggerViewManager() : super(debugURIPrefix);
 

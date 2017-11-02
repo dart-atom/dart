@@ -6,7 +6,7 @@ import 'package:atom/node/fs.dart';
 import 'package:atom/node/notification.dart';
 import 'package:atom/node/process.dart';
 import 'package:atom/node/shell.dart';
-import 'package:atom_dartlang/jobs.dart';
+import 'package:atom_dart/jobs.dart';
 import 'package:logging/logging.dart';
 
 import '../../impl/pub.dart' show dotPackagesFileName;

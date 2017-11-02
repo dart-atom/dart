@@ -1,4 +1,4 @@
-import 'package:atom_dartlang/impl/testing_utils.dart';
+import 'package:atom_dart/impl/testing_utils.dart';
 import 'package:test/test.dart';
 
 main() => defineTests();

@@ -5,15 +5,12 @@ import 'dart:async';
 import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/node/process.dart';
-import 'package:logging/logging.dart';
 
 import '../browser.dart';
 import '../debug/chrome_debugger.dart';
 import '../state.dart';
 import 'launch.dart';
 import 'launch_serve.dart';
-
-final Logger _logger = new Logger('atom.launch.web');
 
 const launchOptionKeys = const [
   'debugging',
@@ -111,7 +108,7 @@ args:
 
   # chrome
   remote-debugging-port: 9222
-  user-data-dir: ${fs.tmpdir}/dartlang-dbg-host
+  user-data-dir: ${fs.tmpdir}/dart-dbg-host
   no-default-browser-check: true
   no-first-run: true
 ''';

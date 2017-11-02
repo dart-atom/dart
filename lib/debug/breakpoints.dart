@@ -31,7 +31,7 @@ enum ExceptionBreakType {
   none
 }
 
-const String _debuggerCaughtExceptions = 'dartlang.debuggerCaughtExceptions';
+const String _debuggerCaughtExceptions = 'dart.debuggerCaughtExceptions';
 
 class BreakpointManager implements Disposable, StateStorable {
   Disposables disposables = new Disposables();
@@ -49,7 +49,7 @@ class BreakpointManager implements Disposable, StateStorable {
   _GutterTracker _gutterTracker;
 
   BreakpointManager() {
-    disposables.add(atom.commands.add('atom-workspace', 'dartlang:debug-toggle-breakpoint', (_) {
+    disposables.add(atom.commands.add('atom-workspace', 'dart:debug-toggle-breakpoint', (_) {
       _toggleBreakpoint();
     }));
     subs.add(atom.config.onDidChange(_debuggerCaughtExceptions).listen((val) {

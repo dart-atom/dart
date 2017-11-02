@@ -14,7 +14,7 @@ import 'package:atom/node/process.dart';
 import 'package:atom/node/shell.dart';
 import 'package:atom/utils/dependencies.dart';
 import 'package:atom/utils/disposable.dart';
-import 'package:atom_dartlang/impl/tooltip.dart';
+import 'package:atom_dart/impl/tooltip.dart';
 import 'package:logging/logging.dart';
 
 import 'analysis/analysis_options.dart';
@@ -188,11 +188,11 @@ class AtomDartPackage extends AtomPackage {
     _registerLaunchTypes();
 
     // Register commands.
-    //_addCmd('atom-workspace', 'dartlang:smoke-test-dev', (_) => smokeTest());
-    _addCmd('atom-workspace', 'dartlang:settings', (_) {
-      atom.workspace.openConfigPage(packageID: 'dartlang');
+    //_addCmd('atom-workspace', 'dart:smoke-test-dev', (_) => smokeTest());
+    _addCmd('atom-workspace', 'dart:settings', (_) {
+      atom.workspace.openConfigPage(packageID: 'dart');
     });
-    _addCmd('atom-workspace', 'dartlang:reanalyze-sources', (_) {
+    _addCmd('atom-workspace', 'dart:reanalyze-sources', (_) {
       new ProjectScanJob().schedule().then((_) {
         return new Future.delayed((new Duration(milliseconds: 100)));
       }).then((_) {
@@ -211,10 +211,10 @@ class AtomDartPackage extends AtomPackage {
     // properly activated/enabled when/if the Dartino plugin is installed
     // in a running system.
     _addCmd('atom-workspace', 'dartino:enable', dartino.enable);
-    _addCmd('atom-workspace', 'dartlang:send-feedback', (_) => _handleSendFeedback());
+    _addCmd('atom-workspace', 'dart:send-feedback', (_) => _handleSendFeedback());
 
     // Text editor commands.
-    _addCmd('atom-text-editor', 'dartlang:newline', editing.handleEnterKey);
+    _addCmd('atom-text-editor', 'dart:newline', editing.handleEnterKey);
 
     // Set up the context menus.
     List<ContextMenuItem> treeItems = [ContextMenuItem.separator];
@@ -279,7 +279,7 @@ class AtomDartPackage extends AtomPackage {
 
   void _handleSendFeedback() {
     getSystemDescription().then((String description) {
-      shell.openExternal('https://github.com/dart-atom/dartlang/issues/new?'
+      shell.openExternal('https://github.com/dart-atom/dart/issues/new?'
           'body=${Uri.encodeComponent(description)}');
     });
   }

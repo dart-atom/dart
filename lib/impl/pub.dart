@@ -35,46 +35,46 @@ class PubManager implements Disposable, ContextMenuContributor {
 
   PubManager() {
     // get, update, run
-    _addSdkCmd('atom-text-editor', 'dartlang:pub-get', (event) {
+    _addSdkCmd('atom-text-editor', 'dart:pub-get', (event) {
       atom.workspace.saveAll();
       new PubJob.get(fs.dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('atom-text-editor', 'dartlang:pub-upgrade', (event) {
+    _addSdkCmd('atom-text-editor', 'dart:pub-upgrade', (event) {
       atom.workspace.saveAll();
       new PubJob.upgrade(fs.dirname(event.editor.getPath())).schedule();
     });
-    _addSdkCmd('atom-text-editor', 'dartlang:pub-serve', (event) {
+    _addSdkCmd('atom-text-editor', 'dart:pub-serve', (event) {
       atom.workspace.saveAll();
       _handleServe(fs.dirname(event.editor.getPath()));
     });
-    _addSdkCmd('atom-text-editor', 'dartlang:pub-run', (event) {
+    _addSdkCmd('atom-text-editor', 'dart:pub-run', (event) {
       _handleRun(editor: atom.workspace.getActiveTextEditor());
     });
-    _addSdkCmd('atom-text-editor', 'dartlang:pub-global-run', (event) {
+    _addSdkCmd('atom-text-editor', 'dart:pub-global-run', (event) {
       _handleGlobalRun(editor: atom.workspace.getActiveTextEditor());
     });
 
     // activate
-    _addSdkCmd('atom-workspace', 'dartlang:pub-global-activate', (event) {
+    _addSdkCmd('atom-workspace', 'dart:pub-global-activate', (event) {
       _handleGlobalActivate();
     });
 
-    _addSdkCmd('.tree-view', 'dartlang:pub-get', (AtomEvent event) {
+    _addSdkCmd('.tree-view', 'dart:pub-get', (AtomEvent event) {
       atom.workspace.saveAll();
       new PubJob.get(event.targetFilePath).schedule();
     });
-    _addSdkCmd('.tree-view', 'dartlang:pub-upgrade', (AtomEvent event) {
+    _addSdkCmd('.tree-view', 'dart:pub-upgrade', (AtomEvent event) {
       atom.workspace.saveAll();
       new PubJob.upgrade(event.targetFilePath).schedule();
     });
-    _addSdkCmd('.tree-view', 'dartlang:pub-serve', (AtomEvent event) {
+    _addSdkCmd('.tree-view', 'dart:pub-serve', (AtomEvent event) {
       atom.workspace.saveAll();
       _handleServe(event.targetFilePath);
     });
-    _addSdkCmd('.tree-view', 'dartlang:pub-run', (AtomEvent event) {
+    _addSdkCmd('.tree-view', 'dart:pub-run', (AtomEvent event) {
       _handleRun(path: event.targetFilePath);
     });
-    _addSdkCmd('.tree-view', 'dartlang:pub-global-run', (AtomEvent event) {
+    _addSdkCmd('.tree-view', 'dart:pub-global-run', (AtomEvent event) {
       _handleGlobalRun(path: event.targetFilePath);
     });
 
@@ -84,11 +84,11 @@ class PubManager implements Disposable, ContextMenuContributor {
 
   List<ContextMenuItem> getTreeViewContributions() {
     return [
-      new PubContextCommand('Pub Get', 'dartlang:pub-get', true),
-      new PubContextCommand('Pub Upgrade', 'dartlang:pub-upgrade', true),
-      new PubContextCommand('Pub Serve', 'dartlang:pub-serve', true),
-      new PubContextCommand('Pub Run…', 'dartlang:pub-run', false),
-      new PubContextCommand('Pub Global Run…', 'dartlang:pub-global-run', false)
+      new PubContextCommand('Pub Get', 'dart:pub-get', true),
+      new PubContextCommand('Pub Upgrade', 'dart:pub-upgrade', true),
+      new PubContextCommand('Pub Serve', 'dart:pub-serve', true),
+      new PubContextCommand('Pub Run…', 'dart:pub-run', false),
+      new PubContextCommand('Pub Global Run…', 'dart:pub-global-run', false)
     ];
   }
 

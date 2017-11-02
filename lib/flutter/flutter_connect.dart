@@ -2,7 +2,6 @@ import 'package:atom/atom.dart';
 import 'package:atom/node/fs.dart';
 import 'package:atom/utils/disposable.dart';
 import 'package:atom/utils/string_utils.dart';
-import 'package:logging/logging.dart';
 
 import '../elements.dart';
 import '../launch/launch.dart';
@@ -12,8 +11,6 @@ import '../state.dart';
 import 'flutter_daemon.dart';
 import 'flutter_devices.dart';
 import 'flutter_launch.dart';
-
-final Logger _logger = new Logger('flutter.connect');
 
 /// Connect the tools to a Flutter app that is already running on a device.
 class FlutterConnectManager implements Disposable {

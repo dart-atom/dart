@@ -4,12 +4,9 @@ import 'package:analysis_server_lib/analysis_server_lib.dart' show CompletionRes
     SuggestionsResult;
 import 'package:atom/node/config.dart';
 import 'package:atom/node/workspace.dart';
-import 'package:logging/logging.dart';
 
 import '../atom_autocomplete.dart';
 import '../state.dart';
-
-final Logger _logger = new Logger('completions');
 
 const CompletionSuggestionKind_IDENTIFIER = 'IDENTIFIER';
 

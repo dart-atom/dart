@@ -43,7 +43,7 @@ class DebugManager implements Disposable {
     });
 
     var add = (String cmd, Function closure) {
-      disposables.add(atom.commands.add('atom-workspace', 'dartlang:${cmd}', (_) {
+      disposables.add(atom.commands.add('atom-workspace', 'dart:${cmd}', (_) {
         closure();
       }));
     };
@@ -84,7 +84,7 @@ class DebugManager implements Disposable {
     } else {
       TextEditor editor = atom.workspace.getActiveTextEditor();
       if (editor != null) {
-        atom.commands.dispatch(atom.views.getView(editor), 'dartlang:run-application');
+        atom.commands.dispatch(atom.views.getView(editor), 'dart:run-application');
       }
     }
   }

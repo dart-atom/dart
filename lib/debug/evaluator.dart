@@ -2,12 +2,9 @@ library atom.evaluator;
 
 import 'dart:async';
 
-import 'package:logging/logging.dart';
 import 'package:petitparser/petitparser.dart';
 
 import '../utils.dart';
-
-final Logger _logger = new Logger('atom.evaluator');
 
 class EvaluatorReverseParser {
   final Property<int> endOffset = new Property();
