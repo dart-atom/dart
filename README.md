@@ -2,18 +2,18 @@
 
 A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 
-[![Build Status](https://travis-ci.org/dart-atom/dartlang.svg)](https://travis-ci.org/dart-atom/dartlang)
+[![Build Status](https://travis-ci.org/dart-atom/dart.svg)](https://travis-ci.org/dart-atom/dart)
 [![Join the chat at https://gitter.im/dart-atom/dartlang](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dart-atom/dartlang?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Getting started
 
-See our [getting started guide](https://dart-atom.github.io/dartlang/)! This is
+See our [getting started guide](https://dart-atom.github.io/dart/)! This is
 useful for users new to the plugin and users new to Atom as well.
 
 ## Contributing!
 
 This is largely a community maintained project, so contributions are welcome :)
-Please see our [guide](https://github.com/dart-atom/dartlang/blob/master/CONTRIBUTING.md)
+Please see our [guide](https://github.com/dart-atom/dart/blob/master/CONTRIBUTING.md)
 for contributors.
 
 ## What is it?
@@ -23,19 +23,19 @@ supports features like auto-discovery of the Dart SDK, errors and warnings shown
 as you type, code completion, refactorings, debugging, and integration with Pub
 and other tools.
 
-![Dart plugin for Atom screenshot](https://raw.githubusercontent.com/dart-atom/dartlang/master/assets/dart-plugin-atom-screenshot.png)
+![Dart plugin for Atom screenshot](https://raw.githubusercontent.com/dart-atom/dart/master/assets/dart-plugin-atom-screenshot.png)
 
 ## Installing
 
 - install Atom [atom.io](https://atom.io/)
-- install this [dartlang][] package (with `apm install dartlang` or through the
+- install this [dart][] package (with `apm install dart` or through the
   Atom UI)
 
 ## Sending feedback
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: https://github.com/dart-atom/dartlang/issues
+[tracker]: https://github.com/dart-atom/dart/issues
 
 ## Get notified of news
 
@@ -51,7 +51,7 @@ Terms of Service and Google's general
 
 ## License
 
-See the [LICENSE](https://github.com/dart-atom/dartlang/blob/master/LICENSE)
+See the [LICENSE](https://github.com/dart-atom/dart/blob/master/LICENSE)
 file.
 
-[dartlang]: https://atom.io/packages/dartlang
+[dart]: https://atom.io/packages/dart

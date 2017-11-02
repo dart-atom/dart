@@ -1,6 +1,6 @@
 # dartlang plugin changelog
 
-## 0.8.0
+## 1.0.0
 
 - republished as `dart` to apm (`dartlang` `0.7.1` and earlier were accidently unpublished)
 
