@@ -36,7 +36,9 @@ class OutlineController extends DockedViewManager<OutlineView> {
     );
 
     disposables.add(atom.config.observe(_keyPath, null, (val) {
-      showView();
+      if (val == true) {
+        showView();
+      }
     }));
 
     disposables.add(atom.workspace.observeActiveTextEditor((activeEditor) {
