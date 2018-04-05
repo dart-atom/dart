@@ -13,10 +13,10 @@ markdown: kramdown
 highlighter: rouge
 
 ### content configuration ###
-title:       "dartlang - Dart plugin for Atom"
-keywords:    "Dart, Atom, dartlang, IDE"
+title:       "dart - Dart plugin for Atom"
+keywords:    "Dart, Atom, IDE"
 description: "A Dart plugin for Atom."
-source_link: "https://github.com/dart-atom/dartlang.git"
+source_link: "https://github.com/dart-atom/dart.git"
 favicon:     "dartlang-atom.png"
 touch_icon:  #put a path like: "img/apple-touch-icon.png"
 google_analytics_key: ## put YOUR key here to enable tracking! (blank to disable)

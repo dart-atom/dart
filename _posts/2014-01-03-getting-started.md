@@ -17,14 +17,14 @@ Many commands can also be accessed using associated key bindings.
 To open the settings for Atom, hit `cmd-,` / `ctrl-,` or select the
 `Atom > Preferences…` menu item. From here you can configure general text editor
 settings, customize key bindings, customize the theme and look of Atom, and
-adjust settings for various Atom packages, including the `dartlang` package.
+adjust settings for various Atom packages, including the `dart` package.
 
 <img src="img/settings.png" width="40%" class="img-centered"/>
 
-The `dartlang` plugin will attempt to auto-locate the Dart SDK. If it fails, you
+The `dart` plugin will attempt to auto-locate the Dart SDK. If it fails, you
 can adjust your operating system's `PATH` settings and manually run the SDK
 auto-locate command (`'auto locate sdk'`). Or, you can configure the SDK's path
-in `dartlang` settings section.
+in `dart` settings section.
 
 In addition, the `autocomplete-plus` plugin has settings that are useful to
 customize. This plugin controls the UI of the code completion popup. From its
@@ -43,21 +43,21 @@ proliferation of open tabs.
 
 To open a project, use the `'add project folder'` command, or select the
 `File > Add Project Folder…` menu item. When a project is added to Atom, the
-`dartlang` plugin will recursively scan through the project, two directory levels
+`dart` plugin will recursively scan through the project, two directory levels
 deep, looking for Dart projects. These are directories with `pubspec.yaml` or
 `.packages` files.
 
-When there are any Dart projects open in Atom, the `dartlang` plugin will
+When there are any Dart projects open in Atom, the `dart` plugin will
 automatically start the Dart analysis server. This is an external process that
 provides functionality like analyzing code for errors and warnings, providing
 code completion information, and various code searching and refactoring tools.
-This process is automatically managed by the `dartlang` plugin.
+This process is automatically managed by the `dart` plugin.
 
 If the plugin is not able to identify your Dart projects, you can manually tell
 it to treat a directory as a Dart project. Right click on the top-level
 directory and choose the `Mark as a Dart Project` option, or run the Atom
 command `'mark as dart project'`. This will create an `.analysis_options`
-file in the directory; the `dartlang` plugin will use that as a hint to treat
+file in the directory; the `dart` plugin will use that as a hint to treat
 the directory as a Dart project, even without a `pubspec.yaml` or `.packages`
 file present.
 
@@ -87,7 +87,7 @@ that project (referenced from the pubspec).
 
 ## Working with code
 
-The `dartlang` plugin shows errors and warnings in your code as you type. These
+The `dart` plugin shows errors and warnings in your code as you type. These
 are displayed in a problems view at the bottom of Atom, in-line in the code, and
 in a summary in the status line.
 
