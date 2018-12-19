@@ -8,5 +8,6 @@
 set -e
 
 # Analyze, build and test.
+# TODO: Re-enable the CI.
 # Disable analysis and tests for now, until the codebase works under Dart 2.0.
 #pub run grinder bot
