@@ -2,27 +2,18 @@
 
 A [Dart](https://www.dartlang.org) plugin for [Atom](https://atom.io).
 
-[![Build Status](https://travis-ci.org/dart-atom/dart.svg)](https://travis-ci.org/dart-atom/dart)
-[![Join the chat at https://gitter.im/dart-atom/dartlang](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dart-atom/dartlang?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+## DEPRECATED
 
-## Note!
-
-This plugin has not been actively maintained since before Dart 2.0 was released.
+**Note**: This plugin is deprecated, and is no longer actively maintained.
 
 It's recommended that people investigate more actively maintained Dart plugins, such as those for
-[IntelliJ][https://dart.dev/tools/jetbrains-plugin] and
-[VS Code][https://dart.dev/tools/vs-code].
+[IntelliJ](https://dart.dev/tools/jetbrains-plugin) and
+[VS Code](https://dart.dev/tools/vs-code).
 
 ## Getting started
 
 See our [getting started guide](https://dart-atom.github.io/dart/)! This is
 useful for users new to the plugin and users new to Atom as well.
-
-## Contributing!
-
-This is largely a community maintained project, so contributions are welcome :)
-Please see our [guide](https://github.com/dart-atom/dart/blob/master/CONTRIBUTING.md)
-for contributors.
 
 ## What is it?
 
@@ -38,17 +29,6 @@ and other tools.
 - install Atom [atom.io](https://atom.io/)
 - install this [dart][] package (with `apm install dart` or through the
   Atom UI)
-
-## Sending feedback
-
-Please file feature requests and bugs at the [issue tracker][tracker].
-
-[tracker]: https://github.com/dart-atom/dart/issues
-
-## Get notified of news
-
-Follow [@dartpluginatom](https://twitter.com/dartpluginatom) for news and
-announcements.
 
 ## Terms and Privacy
 
